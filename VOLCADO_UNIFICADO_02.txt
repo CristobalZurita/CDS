@@ -1,0 +1,6136 @@
+###############################################
+# VOLCADO_UNIFICADO_02.txt
+# Thu Jan  8 15:57:57 -03 2026
+# Proyecto: cirujano-front
+###############################################
+
+================ TREE ESTRUCTURAL ================
+src
+├── assets
+│   ├── data
+│   │   ├── VIEJOS
+│   │   │   ├── brands.json
+│   │   │   ├── faults.json
+│   │   │   └── instruments.json
+│   │   ├── brands.json
+│   │   ├── faults.json
+│   │   └── instruments.json
+│   └── icons
+├── components
+│   └── prototypes
+│       ├── InventoryCard.vue
+│       └── __tests__
+│           └── InventoryCard.spec.js
+├── composables
+│   ├── emails.js
+│   ├── layout.js
+│   ├── scheduler.js
+│   ├── settings.js
+│   ├── strings.js
+│   ├── useApi.js
+│   ├── useAuth.js
+│   ├── useCalculator.ts
+│   ├── useCategories.js
+│   ├── useDiagnostic.js
+│   ├── useDiagnostics.js
+│   ├── useInstruments.js
+│   ├── useInstrumentsCatalog.js
+│   ├── useInventory.js
+│   ├── useQuotation.js
+│   ├── useRepairs.js
+│   ├── useStockMovements.js
+│   ├── useUsers.js
+│   ├── useValidation.ts
+│   └── utils.js
+├── domain
+│   ├── awg
+│   │   ├── contract.ts
+│   │   └── model.ts
+│   ├── common
+│   │   ├── calculationState.ts
+│   │   └── types.ts
+│   ├── length
+│   │   ├── contract.ts
+│   │   └── model.ts
+│   ├── numberSystem
+│   │   ├── contract.ts
+│   │   └── model.ts
+│   ├── ohmsLaw
+│   │   ├── contract.ts
+│   │   └── model.ts
+│   ├── resistorColor
+│   │   ├── contract.ts
+│   │   └── model.ts
+│   ├── smdCapacitor
+│   │   ├── contract.ts
+│   │   └── model.ts
+│   ├── smdResistor
+│   │   ├── contract.ts
+│   │   └── model.ts
+│   ├── temperature
+│   │   ├── contract.ts
+│   │   └── model.ts
+│   └── timer555
+│       ├── contract.ts
+│       └── model.ts
+├── main.js
+├── models
+│   └── SectionInfo.js
+├── modules
+│   ├── awg
+│   │   └── AwgView.vue
+│   ├── length
+│   │   └── LengthView.vue
+│   ├── numberSystem
+│   │   └── NumberSystemView.vue
+│   ├── ohmsLaw
+│   │   └── OhmsLawView.vue
+│   ├── resistorColor
+│   │   └── ResistorColorView.vue
+│   ├── smdCapacitor
+│   │   └── SmdCapacitorView.vue
+│   ├── smdResistor
+│   │   └── SmdResistorView.vue
+│   ├── temperature
+│   │   └── TemperatureView.vue
+│   └── timer555
+│       └── Timer555View.vue
+├── router
+│   ├── index.js
+│   └── index.ts
+├── scss
+│   ├── _brand.scss
+│   ├── _layout.scss
+│   ├── _mixins.scss
+│   ├── _theming.scss
+│   ├── _typography.scss
+│   ├── _variables.scss
+│   └── style.scss
+├── services
+│   └── toastService.js
+├── stores
+│   ├── __tests__
+│   │   └── inventory.spec.js
+│   ├── auth.js
+│   ├── categories.js
+│   ├── diagnostics.js
+│   ├── instruments.js
+│   ├── inventory.js
+│   ├── quotation.js
+│   ├── repairs.js
+│   ├── stockMovements.js
+│   └── users.js
+├── validation
+│   ├── index.ts
+│   ├── numeric.ts
+│   ├── physical.ts
+│   └── rules.ts
+├── views
+│   ├── HomeView.vue
+│   └── InventoryUnified.vue
+└── vue
+    ├── components
+    │   ├── admin
+    │   │   ├── CategoryForm.vue
+    │   │   ├── CategoryList.vue
+    │   │   ├── CategoryManager.vue
+    │   │   ├── ClientDetail.vue
+    │   │   ├── ClientList.vue
+    │   │   ├── DiagnosticsList.vue
+    │   │   ├── InstrumentForm.vue
+    │   │   ├── InstrumentList.vue
+    │   │   ├── InventoryAlerts.vue
+    │   │   ├── InventoryForm.vue
+    │   │   ├── InventoryTable.vue
+    │   │   ├── RepairForm.vue
+    │   │   ├── RepairManager.vue
+    │   │   ├── RepairStatusEditor.vue
+    │   │   ├── RepairsList.vue
+    │   │   ├── StatsCards.vue
+    │   │   ├── StockMovements.vue
+    │   │   ├── StockMovementsList.vue
+    │   │   ├── UserForm.vue
+    │   │   ├── UserList.vue
+    │   │   └── __tests__
+    │   │       └── InventoryForm.spec.js
+    │   ├── ai
+    │   │   ├── AIAnalysisResult.vue
+    │   │   ├── FaultDetector.vue
+    │   │   ├── FaultMarker.vue
+    │   │   ├── ImageUploader.vue
+    │   │   └── QuoteGenerator.vue
+    │   ├── articles
+    │   │   ├── ArticleCustomContent.vue
+    │   │   ├── ArticleFaq.vue
+    │   │   ├── ArticleFeatures.vue
+    │   │   ├── ArticleInfoBlock.vue
+    │   │   ├── ArticleParagraph.vue
+    │   │   ├── ArticleProjectGrid.vue
+    │   │   ├── ArticleQuotes.vue
+    │   │   ├── ArticleTestimonials.vue
+    │   │   ├── ArticleTimeline.vue
+    │   │   ├── DiagnosticWizard.vue
+    │   │   └── items
+    │   │       ├── ItemFaqQuestion.vue
+    │   │       ├── ItemFeature.vue
+    │   │       ├── ItemProjectGrid.vue
+    │   │       ├── ItemQuote.vue
+    │   │       ├── ItemTestimonial.vue
+    │   │       └── ItemTimelineEntry.vue
+    │   ├── auth
+    │   │   ├── AccountDelete.vue
+    │   │   ├── LoginForm.vue
+    │   │   ├── PasswordReset.vue
+    │   │   └── RegisterForm.vue
+    │   ├── dashboard
+    │   │   ├── DashboardPanel.vue
+    │   │   ├── QuickStats.vue
+    │   │   ├── RepairCard.vue
+    │   │   ├── RepairTimeline.vue
+    │   │   ├── RepairsList.vue
+    │   │   ├── StatusBadge.vue
+    │   │   └── UserProfile.vue
+    │   ├── footer
+    │   │   ├── Footer.vue
+    │   │   ├── FooterBlock.vue
+    │   │   ├── FooterColumn.vue
+    │   │   └── FooterCopyright.vue
+    │   ├── forms
+    │   │   └── contact
+    │   │       ├── ContactForm.vue
+    │   │       ├── ContactFormFields.vue
+    │   │       └── ContactFormSuccess.vue
+    │   ├── generic
+    │   │   ├── ImageView.vue
+    │   │   └── Link.vue
+    │   ├── layout
+    │   │   ├── BackgroundPromo.vue
+    │   │   ├── PageHeader.vue
+    │   │   ├── PageSection.vue
+    │   │   ├── PageSectionContent.vue
+    │   │   ├── PageSectionFooter.vue
+    │   │   ├── PageSectionHeader.vue
+    │   │   └── PageWrapper.vue
+    │   ├── loaders
+    │   │   ├── ActivitySpinner.vue
+    │   │   └── Loader.vue
+    │   ├── nav
+    │   │   ├── Navigation.vue
+    │   │   ├── navbar
+    │   │   │   ├── Navbar.vue
+    │   │   │   ├── NavbarBrand.vue
+    │   │   │   ├── NavbarLinks.vue
+    │   │   │   └── NavbarToggleButton.vue
+    │   │   └── navbar-wrappers
+    │   │       ├── InPageNavbar.vue
+    │   │       └── RouteNavbar.vue
+    │   ├── projects
+    │   │   ├── ProjectInfo.vue
+    │   │   ├── ProjectInfoContent.vue
+    │   │   ├── ProjectInfoFeaturedContent.vue
+    │   │   └── ProjectModal.vue
+    │   ├── quotation
+    │   │   ├── DisclaimerModal.vue
+    │   │   ├── InstrumentSelector.vue
+    │   │   └── QuotationResult.vue
+    │   ├── system
+    │   │   └── ToastNotification.vue
+    │   └── widgets
+    │       ├── Alert.vue
+    │       ├── Breadcrumbs.vue
+    │       ├── CircleIcon.vue
+    │       ├── Divider.vue
+    │       ├── FilterTabs.vue
+    │       ├── FloatingQuoteButton.vue
+    │       ├── InlineLinkList.vue
+    │       ├── ProgressBar.vue
+    │       ├── QuotedText.vue
+    │       ├── SocialLinks.vue
+    │       ├── Spinner.vue
+    │       └── XLButton.vue
+    ├── content
+    │   ├── Master.vue
+    │   ├── pages
+    │   │   ├── CotizadorIAPage.vue
+    │   │   ├── DashboardPage.vue
+    │   │   ├── HomePage.vue
+    │   │   ├── LicensePage.vue
+    │   │   ├── LoginPage.vue
+    │   │   ├── PolicyPage.vue
+    │   │   ├── PrivacyPage.vue
+    │   │   ├── ProfilePage.vue
+    │   │   ├── RegisterPage.vue
+    │   │   ├── RepairsPage.vue
+    │   │   ├── SchedulePage.vue
+    │   │   ├── TermsPage.vue
+    │   │   └── admin
+    │   │       ├── AdminDashboard.vue
+    │   │       ├── CategoriesPage.vue
+    │   │       ├── ClientsPage.vue
+    │   │       ├── InventoryPage.vue
+    │   │       ├── RepairsAdminPage.vue
+    │   │       └── StatsPage.vue
+    │   └── sections
+    │       ├── AboutSection.vue
+    │       ├── ContactSection.vue
+    │       ├── FaqSection.vue
+    │       ├── FeaturedProjectSection.vue
+    │       ├── HeroSection.vue
+    │       ├── HistorySection.vue
+    │       ├── LicenseSection.vue
+    │       ├── PolicySection.vue
+    │       ├── PortfolioSection.vue
+    │       ├── ReviewsSection.vue
+    │       ├── ServicesSection.vue
+    │       └── TeamSection.vue
+    ├── sections
+    │   └── DiagnosticSection.vue
+    └── stack
+        ├── App.vue
+        ├── ContentLayer.vue
+        ├── FeedbacksLayer.vue
+        └── StateProviderLayer.vue
+backend
+├── .python-version
+├── .venv
+│   ├── bin
+│   │   ├── Activate.ps1
+│   │   ├── activate
+│   │   ├── activate.csh
+│   │   ├── activate.fish
+│   │   ├── alembic
+│   │   ├── black
+│   │   ├── blackd
+│   │   ├── celery
+│   │   ├── dotenv
+│   │   ├── email_validator
+│   │   ├── f2py
+│   │   ├── httpx
+│   │   ├── mako-render
+│   │   ├── numpy-config
+│   │   ├── pip
+│   │   ├── pip3
+│   │   ├── pip3.11
+│   │   ├── py.test
+│   │   ├── pyrsa-decrypt
+│   │   ├── pyrsa-encrypt
+│   │   ├── pyrsa-keygen
+│   │   ├── pyrsa-priv2pub
+│   │   ├── pyrsa-sign
+│   │   ├── pyrsa-verify
+│   │   ├── pytest
+│   │   ├── python -> /home/cz/.pyenv/versions/3.11.14/bin/python
+│   │   ├── python3 -> python
+│   │   ├── python3.11 -> python
+│   │   ├── ruff
+│   │   ├── uvicorn
+│   │   ├── watchfiles
+│   │   ├── websockets
+│   │   └── wheel
+│   ├── include
+│   │   ├── python3.11
+│   │   └── site
+│   │       └── python3.11
+│   │           └── greenlet
+│   ├── lib
+│   │   └── python3.11
+│   │       └── site-packages
+│   │           ├── 629853fdff261ed89b74__mypyc.cpython-311-x86_64-linux-gnu.so
+│   │           ├── PIL
+│   │           ├── Pillow-10.1.0.dist-info
+│   │           ├── Pillow.libs
+│   │           ├── SQLAlchemy-2.0.23.dist-info
+│   │           ├── _black_version.py
+│   │           ├── _cffi_backend.cpython-311-x86_64-linux-gnu.so
+│   │           ├── _distutils_hack
+│   │           ├── _pytest
+│   │           ├── _yaml
+│   │           ├── aiohappyeyeballs
+│   │           ├── aiohappyeyeballs-2.6.1.dist-info
+│   │           ├── aiohttp
+│   │           ├── aiohttp-3.13.3.dist-info
+│   │           ├── aiosignal
+│   │           ├── aiosignal-1.4.0.dist-info
+│   │           ├── alembic
+│   │           ├── alembic-1.12.1.dist-info
+│   │           ├── amqp
+│   │           ├── amqp-5.3.1.dist-info
+│   │           ├── annotated_types
+│   │           ├── annotated_types-0.7.0.dist-info
+│   │           ├── anyio
+│   │           ├── anyio-3.7.1.dist-info
+│   │           ├── async_timeout
+│   │           ├── async_timeout-5.0.1.dist-info
+│   │           ├── asyncpg
+│   │           ├── asyncpg-0.29.0.dist-info
+│   │           ├── attr
+│   │           ├── attrs
+│   │           ├── attrs-25.4.0.dist-info
+│   │           ├── bcrypt
+│   │           ├── bcrypt-5.0.0.dist-info
+│   │           ├── billiard
+│   │           ├── billiard-4.2.4.dist-info
+│   │           ├── black
+│   │           ├── black-23.12.0.dist-info
+│   │           ├── blackd
+│   │           ├── blib2to3
+│   │           ├── celery
+│   │           ├── celery-5.3.4.dist-info
+│   │           ├── certifi
+│   │           ├── certifi-2026.1.4.dist-info
+│   │           ├── cffi
+│   │           ├── cffi-2.0.0.dist-info
+│   │           ├── click
+│   │           ├── click-8.3.1.dist-info
+│   │           ├── click_didyoumean
+│   │           ├── click_didyoumean-0.3.1.dist-info
+│   │           ├── click_plugins
+│   │           ├── click_plugins-1.1.1.2.dist-info
+│   │           ├── click_plugins.py
+│   │           ├── click_repl
+│   │           ├── click_repl-0.3.0.dist-info
+│   │           ├── cryptography
+│   │           ├── cryptography-46.0.3.dist-info
+│   │           ├── dateutil
+│   │           ├── distutils-precedence.pth
+│   │           ├── dns
+│   │           ├── dnspython-2.8.0.dist-info
+│   │           ├── dotenv
+│   │           ├── ecdsa
+│   │           ├── ecdsa-0.19.1.dist-info
+│   │           ├── email_validator
+│   │           ├── email_validator-2.1.0.dist-info
+│   │           ├── et_xmlfile
+│   │           ├── et_xmlfile-2.0.0.dist-info
+│   │           ├── fastapi
+│   │           ├── fastapi-0.104.1.dist-info
+│   │           ├── frozenlist
+│   │           ├── frozenlist-1.8.0.dist-info
+│   │           ├── greenlet
+│   │           ├── greenlet-3.3.0.dist-info
+│   │           ├── h11
+│   │           ├── h11-0.16.0.dist-info
+│   │           ├── httpcore
+│   │           ├── httpcore-1.0.9.dist-info
+│   │           ├── httptools
+│   │           ├── httptools-0.7.1.dist-info
+│   │           ├── httpx
+│   │           ├── httpx-0.25.1.dist-info
+│   │           ├── idna
+│   │           ├── idna-3.11.dist-info
+│   │           ├── iniconfig
+│   │           ├── iniconfig-2.3.0.dist-info
+│   │           ├── jose
+│   │           ├── kombu
+│   │           ├── kombu-5.6.2.dist-info
+│   │           ├── limits
+│   │           ├── limits-1.6.dist-info
+│   │           ├── magic
+│   │           ├── mako
+│   │           ├── mako-1.3.10.dist-info
+│   │           ├── markupsafe
+│   │           ├── markupsafe-3.0.3.dist-info
+│   │           ├── multidict
+│   │           ├── multidict-6.7.0.dist-info
+│   │           ├── multipart
+│   │           ├── mypy_extensions-1.1.0.dist-info
+│   │           ├── mypy_extensions.py
+│   │           ├── numpy
+│   │           ├── numpy-2.4.0.dist-info
+│   │           ├── numpy.libs
+│   │           ├── openpyxl
+│   │           ├── openpyxl-3.1.5.dist-info
+│   │           ├── packaging
+│   │           ├── packaging-25.0.dist-info
+│   │           ├── pandas
+│   │           ├── pandas-2.3.3.dist-info
+│   │           ├── passlib
+│   │           ├── passlib-1.7.4.dist-info
+│   │           ├── pathspec
+│   │           ├── pathspec-1.0.1.dist-info
+│   │           ├── pip
+│   │           ├── pip-25.3.dist-info
+│   │           ├── pkg_resources
+│   │           ├── platformdirs
+│   │           ├── platformdirs-4.5.1.dist-info
+│   │           ├── pluggy
+│   │           ├── pluggy-1.6.0.dist-info
+│   │           ├── prompt_toolkit
+│   │           ├── prompt_toolkit-3.0.52.dist-info
+│   │           ├── propcache
+│   │           ├── propcache-0.4.1.dist-info
+│   │           ├── psycopg2
+│   │           ├── psycopg2_binary-2.9.9.dist-info
+│   │           ├── psycopg2_binary.libs
+│   │           ├── py.py
+│   │           ├── pyasn1
+│   │           ├── pyasn1-0.6.1.dist-info
+│   │           ├── pycparser
+│   │           ├── pycparser-2.23.dist-info
+│   │           ├── pydantic
+│   │           ├── pydantic-2.5.0.dist-info
+│   │           ├── pydantic_core
+│   │           ├── pydantic_core-2.14.1.dist-info
+│   │           ├── pydantic_settings
+│   │           ├── pydantic_settings-2.1.0.dist-info
+│   │           ├── pytest
+│   │           ├── pytest-7.4.3.dist-info
+│   │           ├── pytest_asyncio
+│   │           ├── pytest_asyncio-0.21.1.dist-info
+│   │           ├── python_dateutil-2.9.0.post0.dist-info
+│   │           ├── python_dotenv-1.0.0.dist-info
+│   │           ├── python_jose-3.3.0.dist-info
+│   │           ├── python_json_logger-2.0.6.dist-info
+│   │           ├── python_magic-0.4.27.dist-info
+│   │           ├── python_multipart-0.0.6.dist-info
+│   │           ├── pythonjsonlogger
+│   │           ├── pytz
+│   │           ├── pytz-2025.2.dist-info
+│   │           ├── pyyaml-6.0.3.dist-info
+│   │           ├── redis
+│   │           ├── redis-3.5.3.dist-info
+│   │           ├── rsa
+│   │           ├── rsa-4.9.1.dist-info
+│   │           ├── ruff
+│   │           ├── ruff-0.1.8.dist-info
+│   │           ├── setuptools
+│   │           ├── setuptools-80.9.0.dist-info
+│   │           ├── six-1.17.0.dist-info
+│   │           ├── six.py
+│   │           ├── slowapi
+│   │           ├── slowapi-0.1.5.dist-info
+│   │           ├── sniffio
+│   │           ├── sniffio-1.3.1.dist-info
+│   │           ├── sqlalchemy
+│   │           ├── starlette
+│   │           ├── starlette-0.27.0.dist-info
+│   │           ├── typing_extensions-4.15.0.dist-info
+│   │           ├── typing_extensions.py
+│   │           ├── tzdata
+│   │           ├── tzdata-2025.3.dist-info
+│   │           ├── uvicorn
+│   │           ├── uvicorn-0.24.0.dist-info
+│   │           ├── uvloop
+│   │           ├── uvloop-0.22.1.dist-info
+│   │           ├── vine
+│   │           ├── vine-5.1.0.dist-info
+│   │           ├── watchfiles
+│   │           ├── watchfiles-1.1.1.dist-info
+│   │           ├── wcwidth
+│   │           ├── wcwidth-0.2.14.dist-info
+│   │           ├── websockets
+│   │           ├── websockets-15.0.1.dist-info
+│   │           ├── wheel
+│   │           ├── wheel-0.45.1.dist-info
+│   │           ├── yaml
+│   │           ├── yarl
+│   │           └── yarl-1.22.0.dist-info
+│   ├── lib64 -> lib
+│   └── pyvenv.cfg
+├── app
+│   ├── __init__.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   └── v1
+│   │       ├── __init__.py
+│   │       ├── endpoints
+│   │       │   ├── ai.py
+│   │       │   ├── auth.py
+│   │       │   ├── brands.py
+│   │       │   ├── categories.py
+│   │       │   ├── diagnostics.py
+│   │       │   ├── imports.py
+│   │       │   ├── instruments.py
+│   │       │   ├── inventory.py
+│   │       │   ├── repairs.py
+│   │       │   ├── stats.py
+│   │       │   └── users.py
+│   │       └── router.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   ├── dependencies.py
+│   │   ├── logging_config.py
+│   │   ├── ratelimit.py
+│   │   └── security.py
+│   ├── crud
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── category.py
+│   │   ├── inventory.py
+│   │   ├── repair.py
+│   │   └── user.py
+│   ├── main.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── audit.py
+│   │   ├── brand.py
+│   │   ├── category.py
+│   │   ├── diagnostic.py
+│   │   ├── instrument.py
+│   │   ├── inventory.py
+│   │   ├── payment.py
+│   │   ├── repair.py
+│   │   ├── stock_movement.py
+│   │   └── user.py
+│   ├── routers
+│   │   ├── __init__.py
+│   │   ├── category.py
+│   │   ├── contact.py
+│   │   ├── diagnostic.py
+│   │   ├── instrument.py
+│   │   ├── payments.py
+│   │   ├── quotation.py
+│   │   ├── repair.py
+│   │   ├── stock_movement.py
+│   │   ├── uploads.py
+│   │   └── user.py
+│   ├── schemas
+│   │   ├── __init__.py
+│   │   ├── auth.py
+│   │   ├── category.py
+│   │   ├── diagnostic.py
+│   │   ├── inventory.py
+│   │   ├── repair.py
+│   │   └── user.py
+│   ├── schemas.py
+│   ├── services
+│   │   ├── ai_detector.py
+│   │   ├── email_service.py
+│   │   ├── event_handlers.py
+│   │   ├── event_system.py
+│   │   ├── image_analysis.py
+│   │   ├── logging_service.py
+│   │   ├── pdf_generator.py
+│   │   └── quote_calculator.py
+│   └── utils
+│       └── uploads.py
+├── cirujano.db
+├── instance
+│   └── cirujano.sqlite
+├── requirements.txt
+├── scripts
+│   ├── create_admin.py
+│   ├── init_db_and_seed.py
+│   └── promote_to_admin.py
+├── test_cirujano.db
+└── tests
+    ├── __init__.py
+    ├── conftest.py
+    ├── test_audit_hooks.py
+    ├── test_audit_logging.py
+    ├── test_config.py
+    ├── test_import_endpoints.py
+    ├── test_ingest.py
+    ├── test_items_api.py
+    ├── test_payments_concurrency.py
+    ├── test_payments_endpoints.py
+    ├── test_ratelimit.py
+    ├── test_security_scan.py
+    └── test_uploads.py
+public
+├── fonts
+│   ├── CERVO
+│   │   ├── CervoNeueCon-Black.otf
+│   │   ├── CervoNeueCon-BlackItalic.otf
+│   │   ├── CervoNeueCon-Medium.otf
+│   │   ├── CervoNeueCon-MediumItalic.otf
+│   │   ├── CervoNeueCon-Regular.otf
+│   │   ├── CervoNeueCon-RegularItalic.otf
+│   │   ├── CervoNeueCon-SemiBold.otf
+│   │   ├── CervoNeueCon-SemiBoldItalic.otf
+│   │   ├── CervoNeueCon-Thin.otf
+│   │   ├── CervoNeueCon-ThinItalic.otf
+│   │   ├── CervoNeueCon-XtrBold.otf
+│   │   ├── CervoNeueCon-XtrBoldItalic.otf
+│   │   ├── CervoNeueCon-XtrLight.otf
+│   │   └── CervoNeueCon-XtrLightItalic.otf
+│   └── steelfish rg.otf
+└── images
+    ├── avatars
+    ├── clients
+    ├── history
+    ├── instrumentos
+    │   └── LOGOS
+    ├── logo
+    └── portfolio
+
+284 directories, 366 files
+
+================ CONFIGURACIÓN PROYECTO ==========
+----- FILE: package.json -----
+Do you want to install it? (N/y){
+  "name": "cirujano-front",
+  "private": true,
+  "version": "2.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "vitest --environment jsdom",
+    "build": "vite build",
+    "preview": "vite preview",
+    "ghdeploy": "vite build && cd dist && cp index.html 404.html"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@popperjs/core": "^2.11.7",
+    "axios": "^1.13.2",
+    "bootstrap": "^5.2.3",
+    "emailjs": "^4.0.3",
+    "gh-pages": "^6.3.0",
+    "pinia": "^3.0.4",
+    "primeicons": "^7.0.0",
+    "swiper": "^10.0.4",
+    "vue": "^3.2.47",
+    "vue-router": "^4.2.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.52.0",
+    "@typescript-eslint/parser": "^8.52.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/test-utils": "^2.4.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-vue": "^10.6.2",
+    "jsdom": "^27.4.0",
+    "sass": "^1.62.1",
+    "typescript": "^5.2.2",
+    "vite": "^6.2.5",
+    "vitest": "^1.0.0",
+    "vue-eslint-parser": "^10.2.0"
+  }
+}
+
+----- FILE: vite.config.js -----
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from 'node:url'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+    // Para dominio propio: '/'
+    base: '/',
+    plugins: [vue()],
+    
+    // Configuración del alias @ para resolver rutas
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url))
+        }
+    },
+    
+    // Proxy: Frontend → Backend
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: false,
+        // Avoid scanning or watching vendored MODELOS subprojects
+        watch: {
+            ignored: ['**/MODELOS/**']
+        },
+        optimizeDeps: {
+            // limit dependency scanning to the primary index
+            entries: ['./index.html']
+        },
+        proxy: {
+            // Cualquier request a /api se reenvía al backend
+            '/api': {
+                target: 'http://127.0.0.1:8000',
+                changeOrigin: true,
+                secure: false,
+                rewrite: (path) => path.replace(/^\/api/, '/api')
+            }
+        }
+    },
+    
+    css: {
+        preprocessorOptions: {
+            scss: {
+                silenceDeprecations: ["color-functions", "global-builtin", "import"],
+            },
+        },
+    },
+})
+
+
+================ FRONTEND CORE ==================
+
+----- FILE: src/composables/emails.js -----
+/**
+ * Created by Ryan Balieiro on 03.05.2025
+ * API integration with EmailJS for sending e-mails.
+ */
+import emailjs from "@emailjs/browser"
+import {useSettings} from "/src/composables/settings.js"
+import {useUtils} from "/src/composables/utils.js"
+
+const settings = useSettings()
+const utils = useUtils()
+
+export const useEmails = () => {
+    /**
+     * @public
+     */
+    const init = () => {
+        const credentials = settings.getCredentialsForEmailJS()
+        emailjs.init(credentials.publicKey)
+    }
+
+    /**
+     * @param {String} fromName
+     * @param {String} fromEmail
+     * @param {String} customSubject
+     * @param {String} message
+     * @return {Promise<boolean>}
+     */
+    const sendContact = async (fromName, fromEmail, customSubject, message) => {
+        const params = {
+            name: fromName,
+            from_name: fromName,
+            email: fromEmail,
+            from_email: fromEmail,
+            custom_subject: customSubject,
+            message: message,
+            custom_source: utils.getAbsoluteLocation(),
+            custom_source_name: "Foxy Agency"
+        }
+
+        const credentials = settings.getCredentialsForEmailJS()
+
+        try {
+            const response = await emailjs.send(
+                credentials.serviceId,
+                credentials.templateId,
+                params
+            )
+            return true
+        } catch (error) {
+            return false
+        }
+    }
+
+    return {
+        init,
+        sendContact
+    }
+}
+
+----- FILE: src/composables/layout.js -----
+/**
+ * Created by Ryan Balieiro on 08.26.2023
+ * This composable will implement helper methods that manipulate DOM elements.
+ */
+import {useUtils} from "/src/composables/utils.js"
+
+const utils = useUtils()
+
+export function useLayout() {
+    /**
+     * @param {Boolean} enabled
+     */
+    const setBodyScrollEnabled = (enabled) => {
+        const body = document.body
+
+        if(!enabled) {
+            window.savedScrollY = window.scrollY
+            body.classList.add(`body-no-scroll`)
+            if(utils.isIOS()) {
+                body.classList.add(`position-fixed`)
+            }
+        }
+        else {
+            body.classList.remove(`body-no-scroll`)
+            body.classList.remove(`position-fixed`)
+
+            if(window.savedScrollY) {
+                window.scrollTo({
+                    top: window.savedScrollY,
+                    behavior: "instant"
+                })
+                window.savedScrollY = null
+            }
+        }
+    }
+
+    /**
+     * @param {HTMLElement} element
+     * @return {boolean}
+     */
+    const isElementOutsideBounds = (element) => {
+        const rect = element.getBoundingClientRect()
+
+        return (
+            rect.bottom < 0 ||
+            rect.right < 0 ||
+            rect.left > window.innerWidth ||
+            rect.top > window.innerHeight
+        )
+    }
+
+    /**
+     * @param {HTMLElement} element
+     * @return {boolean}
+     */
+    const scrollIntoView = (element) => {
+        const elNavbar = document.querySelector('.foxy-navbar-compressed')
+        const navOffset = elNavbar ? elNavbar.getBoundingClientRect().height - 2 : 70
+
+        const elementPosition = element.getBoundingClientRect().top + window.scrollY
+        const offsetPosition = elementPosition - navOffset
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
+    }
+
+    return {
+        setBodyScrollEnabled,
+        isElementOutsideBounds,
+        scrollIntoView
+    }
+}
+
+----- FILE: src/composables/scheduler.js -----
+/**
+ * Created by Ryan Balieiro on 03.05.2025
+ * Bulk manager for timeouts and intervals.
+ */
+const timeouts = []
+const intervals = []
+
+export const useScheduler = () => {
+    /**
+     * @param {function} callback
+     * @param {Number} timeInMilliseconds
+     * @param {string} tag
+     */
+    const schedule = (callback, timeInMilliseconds, tag) => {
+        const timeoutId = setTimeout(callback, timeInMilliseconds)
+        timeouts.push({id: timeoutId, tag: tag})
+    }
+
+    /**
+     * @param {function} callback
+     * @param {Number} timeInMilliseconds
+     * @param {string} tag
+     */
+    const interval = (callback, timeInMilliseconds, tag) => {
+        const intervalId = setInterval(callback, timeInMilliseconds)
+        intervals.push({id: intervalId, tag: tag})
+    }
+
+    /**
+     * @param {String} tag
+     */
+    const clearAllWithTag = (tag) => {
+        for (let i = timeouts.length - 1; i >= 0; i--) {
+            if (timeouts[i].tag === tag) {
+                clearTimeout(timeouts[i].id)
+                timeouts.splice(i, 1)
+            }
+        }
+
+        for (let i = intervals.length - 1; i >= 0; i--) {
+            if (intervals[i].tag === tag) {
+                clearInterval(intervals[i].id)
+                intervals.splice(i, 1)
+            }
+        }
+    }
+
+    /**
+     * @return {void}
+     */
+    const clearAll = () => {
+        timeouts.forEach(timeout => {
+            clearTimeout(timeout.id)
+        })
+
+        intervals.forEach(interval => {
+            clearInterval(interval.id)
+        })
+
+        timeouts.length = 0
+        intervals.length = 0
+    }
+
+    return {
+        schedule,
+        interval,
+        clearAllWithTag,
+        clearAll
+    }
+}
+
+----- FILE: src/composables/settings.js -----
+/**
+ * Created by Ryan Balieiro on 03.02.2025
+ */
+export function useSettings() {
+    /**
+     * @return {boolean}
+     */
+    const getLoaderEnabled = () => {
+        return true
+    }
+
+    /**
+     * @return {{publicKey: string, serviceId: string, templateId: string}}
+     */
+    const getCredentialsForEmailJS = () => {
+        return {
+            publicKey: "tzObcsmOwHvPy6Rhp",
+            serviceId: "service_4h8g7vb",
+            templateId: "template_react"
+        }
+    }
+
+    return {
+        getLoaderEnabled,
+        getCredentialsForEmailJS
+    }
+}
+
+----- FILE: src/composables/strings.js -----
+/**
+ * Created by Ryan Balieiro on 03.01.2025
+ */
+const MAP = {
+    "about": "About",
+    "all_categories": "All",
+    "contact_thank_you": "*Thank you* for getting in touch!",
+    "contact_thank_you_description": "Your message has been received, and our team will be in touch with you shortly.",
+    "contact_thank_you_reply": "Our reply will be sent to your email address *{email}*.",
+    "copyright_message": "Copyright ©{year} <a href='{url}' target='_blank'>{holder}</a> – {license}",
+    "email": "E-mail",
+    "error_fill_all_fields": "Please fill all the fields.",
+    "error_invalid_email": "Please enter a valid e-mail address.",
+    "error_sending_message": "There was an error sending the message.",
+    "latest_release": "Novedades",
+    "loading": "Loading...",
+    "message": "Message",
+    "name": "Name",
+    "project_available_here": "<strong>@{title}</strong> is available on the following platforms or services:",
+    "send": "Send Message",
+    "sending_message": "Sending Message...",
+    "subject": "Subject",
+    "tags": "Tags:",
+    "where_to_find": "Where To Find"
+}
+
+export function useStrings() {
+    /**
+     * @param {String} key
+     * @param {{key:String, replacement:String}[]} [replacements=null]
+     * @return {*|string}
+     */
+    const get = (key, replacements) => {
+        let string = MAP[key] || 'strings.' + key
+
+        if(replacements) {
+            replacements.forEach(({key, replacement}) => {
+                string = string.replaceAll('@{'+key+'}', replacement)
+            })
+        }
+
+        return string
+    }
+
+    /**
+     * @param {String|Number} year
+     * @param {String} holder
+     * @param {String} url
+     * @return {string}
+     */
+    const getCopyrightMessage = (year, holder, url, license) => {
+        return get("copyright_message").replaceAll("{year}", year.toString())
+            .replaceAll("{url}", url)
+            .replaceAll("{holder}", holder)
+            .replaceAll("{license}", license)
+    }
+
+    return {
+        get,
+        getCopyrightMessage
+    }
+}
+
+----- FILE: src/composables/useApi.js -----
+/**
+ * Composable useApi.js - Cliente HTTP para API
+ * 
+ * Proporciona un cliente Axios configurado con:
+ * - Base URL
+ * - Autenticación automática
+ * - Manejo de errores
+ * - Refresh token automático
+ */
+
+import axios from 'axios'
+import { useAuth } from './useAuth'
+
+const API_URL = 'http://localhost:8000/api/v1'
+
+// Instancia de axios
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
+// Interceptor para agregar token en requests
+api.interceptors.request.use(
+  (config) => {
+    const { token } = useAuth()
+    if (token.value) {
+      config.headers.Authorization = `Bearer ${token.value}`
+    }
+    return config
+  },
+  (error) => Promise.reject(error)
+)
+
+// Interceptor para manejar respuestas y refresh token
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const { token, refreshAccessToken, logout } = useAuth()
+    const originalRequest = error.config
+
+    // Si es error 401 y aún no hemos reintentado
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+
+      try {
+        // Intentar refrescar token
+        await refreshAccessToken()
+        
+        // Reintentar request original con nuevo token
+        return api(originalRequest)
+      } catch (refreshError) {
+        // Si refresh falla, logout
+        logout()
+        return Promise.reject(refreshError)
+      }
+    }
+
+    return Promise.reject(error)
+  }
+)
+
+export function useApi() {
+  /**
+   * GET request
+   */
+  async function get(url, config = {}) {
+    try {
+      const response = await api.get(url, config)
+      return response.data
+    } catch (error) {
+      throw handleError(error)
+    }
+  }
+
+  /**
+   * POST request
+   */
+  async function post(url, data = {}, config = {}) {
+    try {
+      const response = await api.post(url, data, config)
+      return response.data
+    } catch (error) {
+      throw handleError(error)
+    }
+  }
+
+  /**
+   * PUT request
+   */
+  async function put(url, data = {}, config = {}) {
+    try {
+      const response = await api.put(url, data, config)
+      return response.data
+    } catch (error) {
+      throw handleError(error)
+    }
+  }
+
+  /**
+   * PATCH request
+   */
+  async function patch(url, data = {}, config = {}) {
+    try {
+      const response = await api.patch(url, data, config)
+      return response.data
+    } catch (error) {
+      throw handleError(error)
+    }
+  }
+
+  /**
+   * DELETE request
+   */
+  async function del(url, config = {}) {
+    try {
+      const response = await api.delete(url, config)
+      return response.data
+    } catch (error) {
+      throw handleError(error)
+    }
+  }
+
+  /**
+   * Manejo centralizado de errores
+   */
+  function handleError(error) {
+    const message = error.response?.data?.detail || 
+                   error.message || 
+                   'Error en la solicitud'
+    
+    return {
+      message,
+      status: error.response?.status,
+      data: error.response?.data
+    }
+  }
+
+  return {
+    get,
+    post,
+    put,
+    patch,
+    delete: del
+  }
+}
+
+----- FILE: src/composables/useAuth.js -----
+/**
+ * Composable useAuth.js - Gestión de autenticación
+ * 
+ * Proporciona funciones para:
+ * - Login/Register
+ * - Logout
+ * - Verificación de sesión
+ * - Almacenamiento de tokens
+ */
+
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
+
+// Estado global de autenticación
+const user = ref(null)
+const token = ref(localStorage.getItem('access_token'))
+const refreshToken = ref(localStorage.getItem('refresh_token'))
+const isLoading = ref(false)
+const error = ref(null)
+
+// Computed properties
+const isAuthenticated = computed(() => !!token.value && !!user.value)
+const isAdmin = computed(() => user.value?.role === 'admin')
+
+export function useAuth() {
+  const router = useRouter()
+
+  /**
+   * Registrar nuevo usuario
+   * @param {Object} data - { email, username, full_name, password, phone }
+   */
+  async function register(data) {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const response = await axios.post(`${API_URL}/auth/register`, {
+        email: data.email,
+        username: data.username,
+        full_name: data.full_name,
+        password: data.password,
+        phone: data.phone || null
+      })
+
+      user.value = response.data
+      return user.value
+    } catch (err) {
+      error.value = err.response?.data?.detail || 'Error en el registro'
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * Login
+   * @param {string} email - Email del usuario
+   * @param {string} password - Contraseña
+   */
+  async function login(email, password) {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const response = await axios.post(`${API_URL}/auth/login`, {
+        email,
+        password
+      })
+
+      const { access_token, refresh_token } = response.data
+
+      // Guardar tokens
+      token.value = access_token
+      refreshToken.value = refresh_token
+      localStorage.setItem('access_token', access_token)
+      localStorage.setItem('refresh_token', refresh_token)
+
+      // Obtener información del usuario
+      await fetchUserInfo()
+
+      return user.value
+    } catch (err) {
+      error.value = err.response?.data?.detail || 'Email o contraseña incorrectos'
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * Obtener información del usuario actual
+   */
+  async function fetchUserInfo() {
+    if (!token.value) return null
+
+    try {
+      const response = await axios.get(`${API_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token.value}`
+        }
+      })
+
+      user.value = response.data
+      return user.value
+    } catch (err) {
+      // Token expirado o inválido
+      logout()
+      throw err
+    }
+  }
+
+  /**
+   * Refrescar access token
+   */
+  async function refreshAccessToken() {
+    if (!refreshToken.value) {
+      logout()
+      return null
+    }
+
+    try {
+      const response = await axios.post(`${API_URL}/auth/refresh`, {
+        refresh_token: refreshToken.value
+      })
+
+      const { access_token, refresh_token: new_refresh_token } = response.data
+
+      token.value = access_token
+      refreshToken.value = new_refresh_token
+      localStorage.setItem('access_token', access_token)
+      localStorage.setItem('refresh_token', new_refresh_token)
+
+      return access_token
+    } catch (err) {
+      logout()
+      throw err
+    }
+  }
+
+  /**
+   * Logout
+   */
+  function logout() {
+    user.value = null
+    token.value = null
+    refreshToken.value = null
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
+    router.push('/login')
+  }
+
+  /**
+   * Verificar autenticación en app init
+   */
+  async function checkAuth() {
+    if (token.value) {
+      try {
+        await fetchUserInfo()
+      } catch (err) {
+        logout()
+      }
+    }
+  }
+
+  return {
+    // Estado
+    user,
+    token,
+    refreshToken,
+    isLoading,
+    error,
+
+    // Computed
+    isAuthenticated,
+    isAdmin,
+
+    // Métodos
+    register,
+    login,
+    logout,
+    checkAuth,
+    fetchUserInfo,
+    refreshAccessToken
+  }
+}
+
+----- FILE: src/composables/useCalculator.ts -----
+import { ref } from 'vue';
+import { CalculationResult } from '@/domain/common/types';
+import { ValidationResult } from '@/validation/rules';
+import { applyValidation } from './useValidation';
+
+export function useCalculator<I, O>(
+  validator: (input: I) => ValidationResult,
+  calculator: (input: I) => O
+) {
+  const result = ref<CalculationResult<O> | null>(null);
+
+  function calculate(input: I) {
+    const validation = validator(input);
+    result.value = applyValidation(validation, () => calculator(input));
+  }
+
+  return {
+    result,
+    calculate
+  };
+}
+
+----- FILE: src/composables/useCategories.js -----
+import { useCategoriesStore } from '@/stores/categories'
+export function useCategories() {
+  const store = useCategoriesStore()
+  return {
+    categories: store.categories,
+    loading: store.loading,
+    error: store.error,
+    fetchCategories: store.fetchCategories,
+    createCategory: store.createCategory,
+    updateCategory: store.updateCategory,
+    deleteCategory: store.deleteCategory
+  }
+}
+
+----- FILE: src/composables/useDiagnostic.js -----
+import { ref, computed } from 'vue'
+import brandsData from '@/assets/data/brands.json'
+import instrumentsData from '@/assets/data/instruments.json'
+import faultsData from '@/assets/data/faults.json'
+
+export function useDiagnostic() {
+  // State
+  const selectedBrand = ref(null)
+  const selectedModel = ref(null)
+  const selectedFaults = ref([])
+  const clientName = ref('')
+  const clientEmail = ref('')
+  const clientPhone = ref('')
+  const equipmentValue = ref(null)
+
+  // Data
+  const brands = computed(() => brandsData.brands)
+  const instruments = computed(() => instrumentsData.instruments)
+  const faults = computed(() => faultsData.faults)
+
+  /**
+   * Get all available brands
+   */
+  const getBrands = () => brands.value
+
+  /**
+   * Get models for a specific brand
+   */
+  const getModelsByBrand = (brandId) => {
+    return instruments.value.filter(item => item.brand === brandId)
+  }
+
+  /**
+   * Get a specific instrument details
+   */
+  const getInstrument = (instrumentId) => {
+    return instruments.value.find(item => item.id === instrumentId)
+  }
+
+  /**
+   * Get brand details
+   */
+  const getBrand = (brandId) => {
+    return brands.value.find(item => item.id === brandId)
+  }
+
+  /**
+   * Get applicable components for an instrument
+   */
+  const getApplicableComponents = (instrumentId) => {
+    const instrument = getInstrument(instrumentId)
+    if (!instrument) return []
+
+    const applicableComponents = []
+
+    // Keyboard components
+    if (instrument.components.faders > 0) {
+      applicableComponents.push({
+        type: 'faders',
+        count: instrument.components.faders,
+        faultIds: ['FADER_INTERMITTENT']
+      })
+    }
+
+    if (instrument.components.encoders_rotativos > 0) {
+      applicableComponents.push({
+        type: 'encoders',
+        count: instrument.components.encoders_rotativos,
+        faultIds: ['ENCODER_INTERMITTENT']
+      })
+    }
+
+    if (instrument.components.botones > 0) {
+      applicableComponents.push({
+        type: 'buttons',
+        count: instrument.components.botones,
+        faultIds: ['BUTTON_STUCK', 'BUTTON_DEAD']
+      })
+    }
+
+    // Keyboard
+    if (instrument.type.toLowerCase().includes('teclado')) {
+      applicableComponents.push({
+        type: 'keyboard',
+        faultIds: ['KEYBOARD_DEAD_KEY', 'KEYBOARD_STUCK_KEY', 'AFTERTOUCH_BROKEN']
+      })
+    }
+
+    // LCD
+    if (instrument.components.lcd) {
+      applicableComponents.push({
+        type: 'lcd',
+        faultIds: ['LCD_DEAD', 'LCD_LOW_CONTRAST']
+      })
+    }
+
+    // Connectivity
+    if (instrument.components.usb) {
+      applicableComponents.push({
+        type: 'usb',
+        faultIds: ['USB_NOT_RECOGNIZED']
+      })
+    }
+
+    if (instrument.components.midi_din) {
+      applicableComponents.push({
+        type: 'midi',
+        faultIds: ['MIDI_NOT_RECOGNIZED']
+      })
+    }
+
+    // Wheels
+    if (instrument.components.rueda_pitch) {
+      applicableComponents.push({
+        type: 'pitch_wheel',
+        faultIds: ['PITCH_WHEEL_BROKEN']
+      })
+    }
+
+    return applicableComponents
+  }
+
+  /**
+   * Get available faults for current selection
+   */
+  const getAvailableFaults = () => {
+    if (!selectedModel.value) return Object.values(faults.value)
+
+    const instrument = getInstrument(selectedModel.value)
+    if (!instrument) return Object.values(faults.value)
+
+    // Get faults specific to this instrument type
+    const applicableComponents = getApplicableComponents(selectedModel.value)
+    const applicableFaultIds = new Set()
+
+    // Add all applicable faults from components
+    applicableComponents.forEach(component => {
+      component.faultIds.forEach(faultId => {
+        applicableFaultIds.add(faultId)
+      })
+    })
+
+    // Always add general faults
+    applicableFaultIds.add('POWER')
+    applicableFaultIds.add('POWER_UNSTABLE')
+    applicableFaultIds.add('AUDIO_DISTORTED')
+    applicableFaultIds.add('AUDIO_NO_OUTPUT')
+    applicableFaultIds.add('AUDIO_WEAK')
+    applicableFaultIds.add('COSMETIC_DAMAGE')
+    applicableFaultIds.add('WATER_DAMAGE')
+    applicableFaultIds.add('CAPACITOR_BLOWN')
+    applicableFaultIds.add('CONNECTOR_LOOSE')
+
+    return Array.from(applicableFaultIds)
+      .map(faultId => faults.value[faultId])
+      .filter(fault => fault)
+  }
+
+  /**
+   * Add a fault to the selection
+   */
+  const addFault = (faultId) => {
+    const fault = faults.value[faultId]
+    if (!fault) return
+
+    // Check for precedence faults
+    if (fault.isPrecedence) {
+      selectedFaults.value = [faultId]
+    } else {
+      // Check if any precedence fault is already selected
+      const hasPrecedence = selectedFaults.value.some(id => faults.value[id]?.isPrecedence)
+
+      if (!hasPrecedence && !selectedFaults.value.includes(faultId)) {
+        selectedFaults.value.push(faultId)
+      }
+    }
+  }
+
+  /**
+   * Remove a fault from the selection
+   */
+  const removeFault = (faultId) => {
+    selectedFaults.value = selectedFaults.value.filter(id => id !== faultId)
+  }
+
+  /**
+   * Clear all selected faults
+   */
+  const clearFaults = () => {
+    selectedFaults.value = []
+  }
+
+  /**
+   * Get effective faults (considering precedence rules)
+   */
+  const getEffectiveFaults = () => {
+    // Check for precedence faults
+    const precedenceFault = selectedFaults.value.find(id => faults.value[id]?.isPrecedence)
+
+    if (precedenceFault) {
+      return [precedenceFault]
+    }
+
+    return selectedFaults.value
+  }
+
+  /**
+   * Calculate quote based on faults and equipment value
+   */
+  const calculateQuote = () => {
+    if (!selectedModel.value || selectedFaults.value.length === 0) {
+      return null
+    }
+
+    const instrument = getInstrument(selectedModel.value)
+    if (!instrument) return null
+
+    const effectiveFaults = getEffectiveFaults()
+    let totalPrice = 0
+
+    // Sum base prices
+    effectiveFaults.forEach(faultId => {
+      const fault = faults.value[faultId]
+      if (fault) {
+        totalPrice += fault.basePrice
+      }
+    })
+
+    // Apply complexity factor based on equipment tier
+    let complexityFactor = 1.0
+    const tier = getBrand(selectedBrand.value)?.tier
+
+    const complexityFactors = {
+      legendary: 1.8,
+      professional: 1.5,
+      standard: 1.2,
+      specialized: 1.3,
+      boutique: 1.4,
+      historic: 1.3
+    }
+
+    complexityFactor = complexityFactors[tier] || 1.0
+
+    // Apply equipment value factor
+    let valueFactor = 1.0
+    const estValue = instrument.valor_estimado
+
+    if (estValue) {
+      const minValue = estValue.min
+      if (minValue > 5000000) {
+        valueFactor = 2.0
+      } else if (minValue > 2000000) {
+        valueFactor = 1.6
+      } else if (minValue > 500000) {
+        valueFactor = 1.3
+      }
+    }
+
+    // Calculate final price with multipliers
+    const finalPrice = Math.round(totalPrice * complexityFactor * valueFactor)
+
+    return {
+      baseCost: totalPrice,
+      complexityFactor,
+      valueFactor,
+      finalCost: finalPrice,
+      instrument,
+      brand: getBrand(selectedBrand.value),
+      faults: effectiveFaults.map(id => faults.value[id])
+    }
+  }
+
+  /**
+   * Validate name: Letters (including accents) and spaces, 2-50 chars
+   */
+  const validateName = (name) => {
+    if (!name) return false
+    return /^[A-Za-zÀ-ÿ\s]{2,50}$/.test(name.trim())
+  }
+
+  /**
+   * Validate email: Standard email format
+   */
+  const validateEmail = (email) => {
+    if (!email) return false
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())
+  }
+
+  /**
+   * Validate phone: Optional, but if provided must be 8-15 digits with optional +
+   */
+  const validatePhone = (phone) => {
+    if (!phone) return true // Phone is optional
+    return /^\+?[0-9]{8,15}$/.test(phone.trim().replace(/\s/g, ''))
+  }
+
+  /**
+   * Validate current selection
+   */
+  const isValid = () => {
+
+----- FILE: src/composables/useDiagnostics.js -----
+import { useDiagnosticsStore } from '@/stores/diagnostics'
+export function useDiagnostics() {
+  const store = useDiagnosticsStore()
+  return {
+    diagnostics: store.diagnostics,
+    loading: store.loading,
+    error: store.error,
+    fetchDiagnostics: store.fetchDiagnostics,
+    createDiagnostic: store.createDiagnostic,
+    updateDiagnostic: store.updateDiagnostic,
+    deleteDiagnostic: store.deleteDiagnostic
+  }
+}
+
+----- FILE: src/composables/useInstruments.js -----
+import { useInstrumentsStore } from '@/stores/instruments'
+export function useInstruments() {
+  const store = useInstrumentsStore()
+  return {
+    instruments: store.instruments,
+    loading: store.loading,
+    error: store.error,
+    fetchInstruments: store.fetchInstruments,
+    createInstrument: store.createInstrument,
+    updateInstrument: store.updateInstrument,
+    deleteInstrument: store.deleteInstrument
+  }
+}
+
+----- FILE: src/composables/useInstrumentsCatalog.js -----
+import { ref, computed } from 'vue'
+import brandsData from '@/assets/data/brands.json'
+import instrumentsData from '@/assets/data/instruments.json'
+
+/**
+ * useInstrumentsCatalog - Central data catalog for brands and instruments
+ * 
+ * This composable provides:
+ * - Unified access to brands and instruments
+ * - Brand → Instruments mapping
+ * - Image path generation based on instrument ID
+ * - No database needed; all data derived from JSON
+ */
+export function useInstrumentsCatalog() {
+  // Raw data
+  const brands = ref(brandsData.brands || [])
+  const instruments = ref(instrumentsData.instruments || [])
+
+  /**
+   * Get a brand by ID
+   */
+  const getBrandById = (brandId) => {
+    return brands.value.find(b => b.id === brandId)
+  }
+
+  /**
+   * Get all brands, optionally sorted A→Z
+   */
+  const getAllBrands = (sorted = true) => {
+    const list = [...brands.value]
+    if (sorted) {
+      return list.sort((a, b) => a.name.localeCompare(b.name))
+    }
+    return list
+  }
+
+  /**
+   * Get instruments for a specific brand
+   * Returns array of instrument objects with image path included
+   */
+  const getInstrumentsByBrand = (brandId) => {
+    return instruments.value
+      .filter(inst => inst.brand === brandId)
+      .map(inst => enrichInstrument(inst))
+      .sort((a, b) => a.model.localeCompare(b.model))
+  }
+
+  /**
+   * Get a specific instrument by ID
+   */
+  const getInstrumentById = (instrumentId) => {
+    const inst = instruments.value.find(i => i.id === instrumentId)
+    return inst ? enrichInstrument(inst) : null
+  }
+
+  /**
+   * Generate image path for an instrument
+   * Convention: /images/instruments/{instrument.id}.jpg
+   * Falls back to placeholder if not found
+   */
+  const getInstrumentImage = (instrument) => {
+    // Priority 1: Use existing imagen_url if valid
+    if (instrument?.imagen_url) {
+      return instrument.imagen_url
+    }
+
+    // Priority 2: Generate from convention (use Spanish 'instrumentos' directory)
+    if (instrument?.id) {
+      // Try common filename variations so we match existing images in /public/images/instrumentos
+      const id = instrument.id
+      const model = (instrument.model || '').replace(/\s+/g, '_')
+      const brand = (instrument.brand || '').toUpperCase()
+      const brandModel = `${brand}_${model.toUpperCase()}`
+      // Prefer common extensions and case patterns so the most likely existing file is used
+      const candidates = [
+        // Brand logo fallbacks (many repos include LOGO_BRAND.png)
+        `/images/instrumentos/LOGO_${brand}.png`,
+        `/images/instrumentos/LOGO_${brand}.jpg`,
+
+        // BRAND_MODEL uppercase with common extensions
+        `/images/instrumentos/${brandModel}.jpg`,
+        `/images/instrumentos/${brandModel}.png`,
+        `/images/instrumentos/${brandModel}.webp`,
+        `/images/instrumentos/${brandModel}.avif`,
+
+        // ID derived variants (uppercase underscore), try common extensions
+        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.jpg`,
+        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.png`,
+        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
+
+        // ID uppercase
+        `/images/instrumentos/${id.toUpperCase()}.jpg`,
+        `/images/instrumentos/${id.toUpperCase()}.png`,
+
+        // Original id (lowercase) fallbacks
+        `/images/instrumentos/${id}.jpg`,
+        `/images/instrumentos/${id}.png`,
+
+        // Model-based fallbacks
+        `/images/instrumentos/${model}.jpg`,
+        `/images/instrumentos/${model}.png`
+      ]
+
+      // Return the most likely candidate (first in list). If a given file doesn't exist,
+      // the browser will 404 and the UI will show the placeholder. This ordering improves
+      // hit-rate for images that are present in the repo (many are .jpg and uppercase).
+      return candidates[0]
+    }
+
+    // Priority 3: Placeholder
+    return '/images/placeholder.svg'
+  }
+
+  /**
+   * Enrich instrument object with computed fields
+   * (adds image path, formatted price, etc.)
+   */
+  const enrichInstrument = (inst) => {
+    if (!inst) return null
+
+    return {
+      ...inst,
+      imagePath: getInstrumentImage(inst),
+      // Do not include any price/valor fields for frontend rendering
+      // Prices are not rendered in the frontend by design
+      displayName: `${inst.model} (${inst.year || '?'})`,
+      brandLabel: getBrandById(inst.brand)?.name || inst.brand
+    }
+  }
+
+  /**
+   * Search instruments by text
+   */
+  const searchInstruments = (query) => {
+    if (!query || query.trim() === '') return []
+
+    const lower = query.toLowerCase()
+    return instruments.value
+      .filter(
+        inst =>
+          inst.model.toLowerCase().includes(lower) ||
+          inst.brand.toLowerCase().includes(lower) ||
+          inst.description?.toLowerCase().includes(lower)
+      )
+      .map(inst => enrichInstrument(inst))
+  }
+
+  /**
+   * Get a summary of the catalog
+   */
+  const getCatalogStats = computed(() => {
+    const brandsCount = brands.value.length
+    const instrumentsCount = instruments.value.length
+    const instrumentsWithImage = instruments.value.filter(
+      i => i.imagen_url || i.image?.url
+    ).length
+
+    return {
+      totalBrands: brandsCount,
+      totalInstruments: instrumentsCount,
+      instrumentsWithImage,
+      coverage: instrumentsCount > 0
+        ? Math.round((instrumentsWithImage / instrumentsCount) * 100)
+        : 0
+    }
+  })
+
+  return {
+    // Data refs
+    brands,
+    instruments,
+
+    // Query methods
+    getBrandById,
+    getAllBrands,
+    getInstrumentsByBrand,
+    getInstrumentById,
+    getInstrumentImage,
+    searchInstruments,
+
+    // Stats
+    getCatalogStats
+  }
+}
+
+----- FILE: src/composables/useInventory.js -----
+
+----- FILE: src/composables/useQuotation.js -----
+/**
+ * useQuotation - Composable para gestionar cotizaciones
+ * 
+ * Este composable conecta el frontend con el endpoint /quotations/estimate del backend.
+ * Maneja los estados de loading, error y result de las cotizaciones.
+ */
+
+import { ref, computed } from 'vue'
+import { useApi } from './useApi'
+import { useQuotationStore } from '@/stores/quotation'
+import { showSuccess, showError } from '@/services/toastService'
+
+export function useQuotation() {
+  const { api } = useApi()
+  const quotationStore = useQuotationStore()
+  
+  // State
+  const loading = ref(false)
+  const error = ref(null)
+  const quotation = ref(null)
+  const lastRequestTime = ref(null)
+  
+  /**
+   * Genera una cotización estimada basada en instrumento y fallas
+   * 
+   * @param {string} instrumentId - ID del instrumento (ej: 'moog-minimoog')
+   * @param {Array<string>} faults - Lista de IDs de fallas (ej: ['POWER', 'FILTER_PROBLEM'])
+   * @returns {Promise<Object>} - Cotización generada
+   * @throws {Error} - Si hay error en la solicitud
+   */
+  const estimate = async (instrumentId, faults) => {
+    if (!instrumentId) {
+      error.value = 'Debe seleccionar un instrumento'
+      throw new Error('Instrumento no seleccionado')
+    }
+    
+    if (!faults || faults.length === 0) {
+      error.value = 'Debe seleccionar al menos una falla'
+      throw new Error('No hay fallas seleccionadas')
+    }
+    
+    loading.value = true
+    error.value = null
+    lastRequestTime.value = new Date()
+    
+    try {
+      const response = await api.post('/quotations/estimate', {
+        instrument_id: instrumentId,
+        faults: faults
+      })
+      
+      quotation.value = response.data
+      quotationStore.setQuotation(response.data)
+      showSuccess('Cotización generada exitosamente')
+      return response.data
+      
+    } catch (err) {
+      const errorMessage = err.response?.data?.detail || 
+                          err.message || 
+                          'Error al generar cotización'
+      error.value = errorMessage
+      quotation.value = null
+      showError(errorMessage)
+      throw err
+      
+    } finally {
+      loading.value = false
+    }
+  }
+  
+  /**
+   * Reinicia los estados de la cotización
+   */
+  const reset = () => {
+    quotation.value = null
+    error.value = null
+    loading.value = false
+    lastRequestTime.value = null
+    quotationStore.reset()
+  }
+  
+  /**
+   * Copia el rango de precio al portapapeles
+   */
+  const copyPriceRange = () => {
+    if (!quotation.value) return false
+    
+    const text = `Cotización: $${quotation.value.min_price} - $${quotation.value.max_price} CLP`
+    navigator.clipboard.writeText(text).then(() => {
+      return true
+    }).catch(() => {
+      return false
+    })
+  }
+  
+  // Computed properties
+  const hasQuotation = computed(() => quotation.value !== null)
+  
+  const exceedsRecommendation = computed(() => 
+    quotation.value?.exceeds_recommendation ?? false
+  )
+  
+  const minPrice = computed(() => quotation.value?.min_price ?? 0)
+  
+  const maxPrice = computed(() => quotation.value?.max_price ?? 0)
+  
+  const midPrice = computed(() => {
+    if (!quotation.value) return 0
+    return Math.round((quotation.value.min_price + quotation.value.max_price) / 2)
+  })
+  
+  const formattedMinPrice = computed(() => {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(minPrice.value)
+  })
+  
+  const formattedMaxPrice = computed(() => {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(maxPrice.value)
+  })
+  
+  const formattedMidPrice = computed(() => {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(midPrice.value)
+  })
+  
+  const priceRange = computed(() => ({
+    min: minPrice.value,
+    max: maxPrice.value,
+    mid: midPrice.value,
+    formattedMin: formattedMinPrice.value,
+    formattedMax: formattedMaxPrice.value,
+    formattedMid: formattedMidPrice.value
+  }))
+  
+  return {
+    // State
+    loading,
+    error,
+    quotation,
+    lastRequestTime,
+    
+    // Methods
+    estimate,
+    reset,
+    copyPriceRange,
+    
+    // Computed
+    hasQuotation,
+    exceedsRecommendation,
+    priceRange,
+    minPrice,
+    maxPrice,
+    midPrice,
+    formattedMinPrice,
+    formattedMaxPrice,
+    formattedMidPrice
+  }
+}
+
+----- FILE: src/composables/useRepairs.js -----
+import { useRepairsStore } from '@/stores/repairs'
+export function useRepairs() {
+  const store = useRepairsStore()
+  return {
+    repairs: store.repairs,
+    loading: store.loading,
+    error: store.error,
+    fetchRepairs: store.fetchRepairs,
+    createRepair: store.createRepair,
+    updateRepair: store.updateRepair,
+    deleteRepair: store.deleteRepair
+  }
+}
+
+----- FILE: src/composables/useStockMovements.js -----
+import { useStockMovementsStore } from '@/stores/stockMovements'
+export function useStockMovements() {
+  const store = useStockMovementsStore()
+  return {
+    movements: store.movements,
+    loading: store.loading,
+    error: store.error,
+    fetchMovements: store.fetchMovements,
+    createMovement: store.createMovement
+  }
+}
+
+----- FILE: src/composables/useUsers.js -----
+import { useUsersStore } from '@/stores/users'
+export function useUsers() {
+  const store = useUsersStore()
+  return {
+    users: store.users,
+    loading: store.loading,
+    error: store.error,
+    fetchUsers: store.fetchUsers,
+    createUser: store.createUser,
+    updateUser: store.updateUser,
+    deleteUser: store.deleteUser
+  }
+}
+
+----- FILE: src/composables/useValidation.ts -----
+import { CalculationResult } from '@/domain/common/types';
+import { CalculationState } from '@/domain/common/calculationState';
+import { ValidationResult } from '@/validation/rules';
+
+export function applyValidation<T>(
+  validation: ValidationResult,
+  compute: () => T
+): CalculationResult<T> {
+  if (!validation.valid) {
+    return {
+      state: CalculationState.INVALID,
+      errors: validation.errors.map(e => e.message),
+      warnings: validation.warnings.map(w => w.message)
+    };
+  }
+
+  try {
+    const value = compute();
+    return {
+      state: CalculationState.OK,
+      value,
+      warnings: validation.warnings.map(w => w.message)
+    };
+  } catch (e: any) {
+    return {
+      state: CalculationState.INVALID,
+      errors: [e.message ?? 'Unknown error']
+    };
+  }
+}
+
+----- FILE: src/composables/utils.js -----
+/**
+ * Created by Ryan Balieiro on 08.26.2023
+ * This composable will implement helper functions that can be used by multiple components within the architecture.
+ */
+export function useUtils() {
+    /**
+     * @type {{xl: number, md: number, sm: number, xs: number, lg: number, xxl: number}}
+     */
+    const BOOTSTRAP_BREAKPOINTS = {
+        xs: 0,
+        sm: 576,
+        md: 768,
+        lg: 992,
+        xl: 1200,
+        xxl: 1400,
+    }
+
+    /**
+     * @param {Number} value
+     * @param {Number} min
+     * @param {Number} max
+     * @return {number}
+     */
+    const clamp = (value, min, max) => {
+        if(isNaN(Number(value)) || value === null || value === undefined)
+            return min
+
+        return Math.min(Math.max(value, min), max)
+    }
+
+    /**
+     * @return {boolean}
+     */
+    const isIOS = () => {
+        const userAgent = window.navigator.userAgent.toLowerCase()
+        return /iphone|ipad|ipod/.test(userAgent)
+    }
+
+    /**
+     * @param {String} string
+     * @return {boolean}
+     */
+    const isStringAnImageUrl = (string) => {
+        return /\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(string)
+    }
+
+    /**
+     * @return {boolean}
+     */
+    const isTouchDevice = () => {
+        return (('ontouchstart' in window) ||
+            (navigator.maxTouchPoints > 0) ||
+            (navigator.msMaxTouchPoints > 0))
+    }
+
+    /**
+     * @param {String} string
+     * @return {boolean}
+     */
+    const isValidEmail = (string) => {
+        return Boolean(String(string)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            ))
+    }
+
+    /**
+     * @param {String} title
+     * @param {Boolean} [contrastTitle=false]
+     * @return {String}
+     */
+    const parseCustomText = (title, contrastTitle) => {
+        if(!title)
+            return ``
+
+        const titleClass = contrastTitle ?
+            "text-primary-light" :
+            "text-primary"
+
+        return title.replace(/\*(.*?)\*/g, `<span class="${titleClass}">$1</span>`)
+    }
+
+    /**
+     * Returns the absolute location of the current page.
+     * @return {String}
+     */
+    const getAbsoluteLocation = () => {
+        const { protocol, host, pathname, search, hash } = window.location
+        return `${protocol}//${host}${pathname}${search}${hash}`
+    }
+
+    /**
+     * @return {string}
+     */
+    const getRootLocation = () => {
+        const { protocol, host } = window.location
+        const basePath = import.meta.env.BASE_URL
+        const path = `${protocol}//${host}${basePath}`
+        return path.endsWith('/') ? path : `${path}/`
+    }
+
+    return {
+        BOOTSTRAP_BREAKPOINTS,
+        clamp,
+        isIOS,
+        isStringAnImageUrl,
+        isTouchDevice,
+        isValidEmail,
+        parseCustomText,
+        getAbsoluteLocation,
+        getRootLocation
+    }
+}
+
+----- FILE: src/main.js -----
+import "./scss/style.scss"
+import { createApp } from "vue"
+import { createPinia } from "pinia"
+import App from "/src/vue/stack/App.vue"
+import router from "@/router"
+import { useAuthStore } from "@/stores/auth"
+
+const app = createApp(App)
+
+// Install Pinia for state management
+const pinia = createPinia()
+app.use(pinia)
+
+// Install Vue Router
+app.use(router)
+
+// Initialize auth on app startup
+const authStore = useAuthStore()
+authStore.checkAuth()
+
+// Mount app
+app.mount("#app")
+
+----- FILE: src/router/index.js -----
+/**
+ * Router - Vue Router configuration
+ * Define todas las rutas de la aplicación
+ */
+
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+// Layouts
+import Master from '@/vue/content/Master.vue'
+
+// Pages
+import HomePage from '@/vue/content/pages/HomePage.vue'
+import LoginPage from '@/vue/content/pages/LoginPage.vue'
+import RegisterPage from '@/vue/content/pages/RegisterPage.vue'
+import DashboardPage from '@/vue/content/pages/DashboardPage.vue'
+import RepairsPage from '@/vue/content/pages/RepairsPage.vue'
+import ProfilePage from '@/vue/content/pages/ProfilePage.vue'
+import CotizadorIAPage from '@/vue/content/pages/CotizadorIAPage.vue'
+import LicensePage from '@/vue/content/pages/LicensePage.vue'
+import PolicyPage from '@/vue/content/pages/PolicyPage.vue'
+import TermsPage from '@/vue/content/pages/TermsPage.vue'
+import PrivacyPage from '@/vue/content/pages/PrivacyPage.vue'
+import SchedulePage from '@/vue/content/pages/SchedulePage.vue'
+
+// Admin Pages
+import AdminDashboard from '@/vue/content/pages/admin/AdminDashboard.vue'
+import InventoryPage from '@/vue/content/pages/admin/InventoryPage.vue'
+import InventoryUnified from '@/views/InventoryUnified.vue'
+import ClientsPage from '@/vue/content/pages/admin/ClientsPage.vue'
+import RepairsAdminPage from '@/vue/content/pages/admin/RepairsAdminPage.vue'
+import StatsPage from '@/vue/content/pages/admin/StatsPage.vue'
+import CategoriesPage from '@/vue/content/pages/admin/CategoriesPage.vue'
+
+const routes = [
+  // Public routes
+  {
+    path: '/',
+    component: Master,
+    children: [
+      {
+        path: '',
+        name: 'home',
+        component: HomePage
+      },
+      {
+        path: 'license',
+        name: 'license',
+        component: LicensePage
+      },
+      {
+        path: 'policy',
+        name: 'policy',
+        component: PolicyPage
+      },
+      {
+        path: 'terminos',
+        name: 'terminos',
+        component: TermsPage
+      },
+      {
+        path: 'privacidad',
+        name: 'privacidad',
+        component: PrivacyPage
+      },
+      {
+        path: 'agendar',
+        name: 'agendar',
+        component: SchedulePage,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'cotizador-ia',
+        name: 'cotizador-ia',
+        component: CotizadorIAPage,
+        meta: { requiresAuth: false }
+      }
+    ]
+  },
+
+  // Auth routes
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginPage,
+    meta: { requiresAuth: false, requiresGuest: true }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterPage,
+    meta: { requiresAuth: false, requiresGuest: true }
+  },
+
+  // Client routes (requieren autenticación)
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: DashboardPage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/repairs',
+    name: 'repairs',
+    component: RepairsPage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: ProfilePage,
+    meta: { requiresAuth: true }
+  },
+
+  // Admin routes (requieren autenticación y rol admin)
+  {
+    path: '/admin',
+    component: Master,
+    meta: { requiresAuth: true, requiresAdmin: true },
+    children: [
+      {
+        path: '',
+        name: 'admin-dashboard',
+        component: AdminDashboard
+      },
+      {
+        path: 'inventory',
+        name: 'admin-inventory',
+        component: InventoryPage
+      },
+      {
+        path: 'inventory/unified',
+        name: 'admin-inventory-unified',
+        component: InventoryUnified
+      },
+      {
+        path: 'clients',
+        name: 'admin-clients',
+        component: ClientsPage
+      },
+      {
+        path: 'repairs',
+        name: 'admin-repairs',
+        component: RepairsAdminPage
+      },
+      {
+        path: 'stats',
+        name: 'admin-stats',
+        component: StatsPage
+      },
+      {
+        path: 'categories',
+        name: 'admin-categories',
+        component: CategoriesPage
+      }
+    ]
+  },
+
+  // 404 - Ruta no encontrada
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/'
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL || '/'),
+  routes
+})
+
+/**
+ * Navigation guards - Proteger rutas según autenticación
+ */
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+
+  // Verificar autenticación si no está hecho aún
+  if (!authStore.token && to.meta.requiresAuth) {
+    // Intentar recuperar sesión del localStorage
+    await authStore.checkAuth()
+  }
+
+  // Ruta requiere autenticación
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next({ name: 'login', query: { redirect: to.fullPath } })
+    return
+  }
+
+  // Ruta requiere rol admin
+  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    next({ name: 'home' })
+    return
+  }
+
+  // Ruta requiere que NO esté autenticado (login, register)
+  if (to.meta.requiresGuest && authStore.isAuthenticated) {
+    next({ name: 'dashboard' })
+    return
+  }
+
+  next()
+})
+
+export default router
+
+----- FILE: src/router/index.ts -----
+import { createRouter, createWebHistory } from 'vue-router';
+
+export const routes = [
+  { path: '/', component: () => import('@/views/HomeView.vue') },
+  { path: '/calc/555', component: () => import('@/modules/timer555/Timer555View.vue') },
+  { path: '/calc/resistor-color', component: () => import('@/modules/resistorColor/ResistorColorView.vue') },
+  { path: '/calc/smd-capacitor', component: () => import('@/modules/smdCapacitor/SmdCapacitorView.vue') },
+  { path: '/calc/smd-resistor', component: () => import('@/modules/smdResistor/SmdResistorView.vue') },
+  { path: '/calc/ohms-law', component: () => import('@/modules/ohmsLaw/OhmsLawView.vue') },
+  { path: '/calc/temperature', component: () => import('@/modules/temperature/TemperatureView.vue') },
+  { path: '/calc/number-system', component: () => import('@/modules/numberSystem/NumberSystemView.vue') },
+  { path: '/calc/length', component: () => import('@/modules/length/LengthView.vue') },
+  { path: '/calc/awg', component: () => import('@/modules/awg/AwgView.vue') }
+];
+
+export default createRouter({
+  history: createWebHistory(),
+  routes
+});
+
+----- FILE: src/stores/auth.js -----
+import axios from 'axios'
+import { defineStore } from 'pinia'
+
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    token: typeof localStorage !== 'undefined' ? localStorage.getItem('auth.token') : null,
+    user: null,
+    error: null
+  }),
+  getters: {
+    isAuthenticated: (state) => !!state.token,
+    isAdmin: (state) => state.user ? !!state.user.is_admin : false
+  },
+  actions: {
+    setAuthHeader() {
+      if (this.token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+      } else {
+        delete axios.defaults.headers.common['Authorization']
+      }
+    },
+
+    async login(email, password) {
+      this.error = null
+      try {
+        const res = await axios.post('/api/v1/auth/login', { email, password })
+        const data = res.data || {}
+        const token = data.access_token || data.token || null
+        if (!token) {
+          this.error = data.detail || data.message || 'Login failed'
+          throw new Error(this.error)
+        }
+
+        this.token = token
+        if (typeof localStorage !== 'undefined') localStorage.setItem('auth.token', token)
+        this.setAuthHeader()
+
+        // optionally set user if returned
+        if (data.user) this.user = data.user
+
+        return true
+      } catch (err) {
+        this.error = err?.response?.data?.detail || err.message || 'Error during login'
+        throw err
+      }
+    },
+
+    logout() {
+      this.token = null
+      this.user = null
+      this.error = null
+      if (typeof localStorage !== 'undefined') localStorage.removeItem('auth.token')
+      this.setAuthHeader()
+    },
+
+    async checkAuth() {
+      if (this.token) {
+        this.setAuthHeader()
+        try {
+          // If backend exposes a profile endpoint, try to fetch user info
+          const res = await axios.get('/api/v1/auth/me')
+          if (res?.data) this.user = res.data
+        } catch (e) {
+          // ignore - token might still be valid for API use
+        }
+      }
+    }
+  }
+})
+/**
+ * Store Pinia - auth.js
+ * Gestiona el estado global de autenticación
+ * 
+ * Uso en componentes:
+ * import { useAuthStore } from '@/stores/auth'
+ * const auth = useAuthStore()
+ * auth.login(email, password)
+ */
+
+import { defineStore } from 'pinia'
+import { useAuth } from '@/composables/useAuth'
+
+export const useAuthStore = defineStore('auth', () => {
+  const authComposable = useAuth()
+
+  // State properties
+  const user = authComposable.user
+  const token = authComposable.token
+  const refreshToken = authComposable.refreshToken
+  const isLoading = authComposable.isLoading
+  const error = authComposable.error
+
+  // Computed properties
+  const isAuthenticated = authComposable.isAuthenticated
+  const isAdmin = authComposable.isAdmin
+
+  // Actions
+  const register = authComposable.register
+  const login = authComposable.login
+  const logout = authComposable.logout
+  const checkAuth = authComposable.checkAuth
+  const fetchUserInfo = authComposable.fetchUserInfo
+  const refreshAccessToken = authComposable.refreshAccessToken
+
+  return {
+    // State
+    user,
+    token,
+    refreshToken,
+    isLoading,
+    error,
+
+    // Computed
+    isAuthenticated,
+    isAdmin,
+
+    // Actions
+    register,
+    login,
+    logout,
+    checkAuth,
+    fetchUserInfo,
+    refreshAccessToken
+  }
+})
+
+----- FILE: src/stores/categories.js -----
+import { defineStore } from 'pinia'
+import { useApi } from '@/composables/useApi'
+
+export const useCategoriesStore = defineStore('categories', {
+  state: () => ({
+    categories: [],
+    loading: false,
+    error: null
+  }),
+  actions: {
+    async fetchCategories() {
+      this.loading = true
+      try {
+        this.categories = await useApi().get('/api/categories')
+      } catch (e) {
+        this.error = e
+      } finally {
+        this.loading = false
+      }
+    },
+    async createCategory(data) {
+      return await useApi().post('/api/categories', data)
+    },
+    async updateCategory(id, data) {
+      return await useApi().put(`/api/categories/${id}`, data)
+    },
+    async deleteCategory(id) {
+      return await useApi().delete(`/api/categories/${id}`)
+    }
+  }
+})
+
+----- FILE: src/stores/diagnostics.js -----
+import { defineStore } from 'pinia'
+import { useApi } from '@/composables/useApi'
+
+export const useDiagnosticsStore = defineStore('diagnostics', {
+  state: () => ({
+    diagnostics: [],
+    loading: false,
+    error: null
+  }),
+  actions: {
+    async fetchDiagnostics() {
+      this.loading = true
+      try {
+        this.diagnostics = await useApi().get('/api/diagnostics')
+      } catch (e) {
+        this.error = e
+      } finally {
+        this.loading = false
+      }
+    },
+    async createDiagnostic(data) {
+      return await useApi().post('/api/diagnostics', data)
+    },
+    async updateDiagnostic(id, data) {
+      return await useApi().put(`/api/diagnostics/${id}`, data)
+    },
+    async deleteDiagnostic(id) {
+      return await useApi().delete(`/api/diagnostics/${id}`)
+    }
+  }
+})
+
+----- FILE: src/stores/instruments.js -----
+import { defineStore } from 'pinia'
+import { useApi } from '@/composables/useApi'
+
+export const useInstrumentsStore = defineStore('instruments', {
+  state: () => ({
+    instruments: [],
+    loading: false,
+    error: null
+  }),
+  actions: {
+    async fetchInstruments() {
+      this.loading = true
+      try {
+        this.instruments = await useApi().get('/api/instruments')
+      } catch (e) {
+        this.error = e
+      } finally {
+        this.loading = false
+      }
+    },
+    async createInstrument(data) {
+      return await useApi().post('/api/instruments', data)
+    },
+    async updateInstrument(id, data) {
+      return await useApi().put(`/api/instruments/${id}`, data)
+    },
+    async deleteInstrument(id) {
+      return await useApi().delete(`/api/instruments/${id}`)
+    }
+  }
+})
+
+----- FILE: src/stores/inventory.js -----
+import { defineStore } from 'pinia'
+
+export const useInventoryStore = defineStore('inventory', {
+  state: () => ({
+    items: [],
+    loading: false,
+    page: 1,
+    limit: 20
+  }),
+  actions: {
+    async fetchItems(page = 1, limit = 20, category = null) {
+      this.loading = true
+      this.page = page
+      this.limit = limit
+      const q = new URLSearchParams({ limit: String(limit), page: String(page) })
+      if (category) q.set('category', category)
+      const res = await fetch(`/api/v1/items?${q.toString()}`)
+      if (!res.ok) {
+        this.items = []
+        this.loading = false
+        return
+      }
+      this.items = await res.json()
+      this.loading = false
+    }
+      ,
+    async deleteItem(itemId) {
+      const token = localStorage.getItem('access_token')
+      const headers = token ? { Authorization: `Bearer ${token}` } : {}
+      try {
+        const res = await fetch(`/api/v1/items/${itemId}`, { method: 'DELETE', headers })
+        if (!res.ok) {
+          const text = await res.text()
+          console.error('Failed to delete item', res.status, text)
+          return false
+        }
+        // refresh list
+        await this.fetchItems(this.page, this.limit)
+        return true
+      } catch (e) {
+        console.error('Error deleting item', e)
+        return false
+      }
+    },
+    async updateItem(itemId, payload) {
+      const token = localStorage.getItem('access_token')
+      const headers = Object.assign({ 'Content-Type': 'application/json' }, token ? { Authorization: `Bearer ${token}` } : {})
+      // Normalize payload: backend expects `stock` (some MODELOS use `quantity`)
+      const body = Object.assign({}, payload)
+      if (body.quantity !== undefined && body.stock === undefined) body.stock = body.quantity
+      delete body.quantity
+      const res = await fetch(`/api/v1/items/${itemId}`, { method: 'PUT', headers, body: JSON.stringify(body) })
+      if (!res.ok) {
+        const text = await res.text()
+        throw new Error(`Update failed: ${res.status} ${text}`)
+      }
+      const updated = await res.json()
+      await this.fetchItems(this.page, this.limit)
+      return updated
+    },
+    async createItem(payload) {
+      const token = localStorage.getItem('access_token')
+      const headers = Object.assign({ 'Content-Type': 'application/json' }, token ? { Authorization: `Bearer ${token}` } : {})
+      const body = Object.assign({}, payload)
+      if (body.quantity !== undefined && body.stock === undefined) body.stock = body.quantity
+      delete body.quantity
+      const res = await fetch(`/api/v1/items`, { method: 'POST', headers, body: JSON.stringify(body) })
+      if (!res.ok) {
+        const text = await res.text()
+        throw new Error(`Create failed: ${res.status} ${text}`)
+      }
+      const created = await res.json()
+      await this.fetchItems(this.page, this.limit)
+      return created
+    }
+  }
+})
+
+----- FILE: src/stores/quotation.js -----
+/**
+ * Quotation Store - Pinia
+ * Manages quotation state and selected instrument data
+ */
+
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+
+export const useQuotationStore = defineStore('quotation', () => {
+  // State
+  const selectedInstrument = ref(null)
+  const selectedFaults = ref([])
+  const currentQuotation = ref(null)
+  const quotationHistory = ref([])
+
+  // Computed
+  const hasSelected = computed(() => selectedInstrument.value !== null)
+  const hasFaults = computed(() => selectedFaults.value.length > 0)
+  const hasQuotation = computed(() => currentQuotation.value !== null)
+
+  // Methods
+  const setInstrument = (instrument) => {
+    selectedInstrument.value = instrument
+  }
+
+  const setFaults = (faults) => {
+    selectedFaults.value = faults
+  }
+
+  const setQuotation = (quotation) => {
+    currentQuotation.value = quotation
+    // Add to history
+    quotationHistory.value.push({
+      ...quotation,
+      savedAt: new Date()
+    })
+  }
+
+  const reset = () => {
+    selectedInstrument.value = null
+    selectedFaults.value = []
+    currentQuotation.value = null
+  }
+
+  const clearInstrument = () => {
+    selectedInstrument.value = null
+  }
+
+  const clearFaults = () => {
+    selectedFaults.value = []
+  }
+
+  return {
+    // State
+    selectedInstrument,
+    selectedFaults,
+    currentQuotation,
+    quotationHistory,
+    // Computed
+    hasSelected,
+    hasFaults,
+    hasQuotation,
+    // Methods
+    setInstrument,
+    setFaults,
+    setQuotation,
+    reset,
+    clearInstrument,
+    clearFaults
+  }
+})
+
+----- FILE: src/stores/repairs.js -----
+import { defineStore } from 'pinia'
+import { useApi } from '@/composables/useApi'
+
+export const useRepairsStore = defineStore('repairs', {
+  state: () => ({
+    repairs: [],
+    loading: false,
+    error: null
+  }),
+  actions: {
+    async fetchRepairs() {
+      this.loading = true
+      try {
+        this.repairs = await useApi().get('/api/repairs')
+      } catch (e) {
+        this.error = e
+      } finally {
+        this.loading = false
+      }
+    },
+    async createRepair(data) {
+      return await useApi().post('/api/repairs', data)
+    },
+    async updateRepair(id, data) {
+      return await useApi().put(`/api/repairs/${id}`, data)
+    },
+    async deleteRepair(id) {
+      return await useApi().delete(`/api/repairs/${id}`)
+    }
+  }
+})
+
+----- FILE: src/stores/stockMovements.js -----
+import { defineStore } from 'pinia'
+import { useApi } from '@/composables/useApi'
+
+export const useStockMovementsStore = defineStore('stockMovements', {
+  state: () => ({
+    movements: [],
+    loading: false,
+    error: null
+  }),
+  actions: {
+    async fetchMovements() {
+      this.loading = true
+      try {
+        this.movements = await useApi().get('/api/stock-movements')
+      } catch (e) {
+        this.error = e
+      } finally {
+        this.loading = false
+      }
+    },
+    async createMovement(data) {
+      return await useApi().post('/api/stock-movements', data)
+    }
+  }
+})
+
+----- FILE: src/stores/users.js -----
+import { defineStore } from 'pinia'
+import { useApi } from '@/composables/useApi'
+
+export const useUsersStore = defineStore('users', {
+  state: () => ({
+    users: [],
+    loading: false,
+    error: null
+  }),
+  actions: {
+    async fetchUsers() {
+      this.loading = true
+      try {
+        this.users = await useApi().get('/api/users')
+      } catch (e) {
+        this.error = e
+      } finally {
+        this.loading = false
+      }
+    },
+    async createUser(data) {
+      return await useApi().post('/api/users', data)
+    },
+    async updateUser(id, data) {
+      return await useApi().put(`/api/users/${id}`, data)
+    },
+    async deleteUser(id) {
+      return await useApi().delete(`/api/users/${id}`)
+    }
+  }
+})
+
+----- FILE: src/vue/stack/App.vue -----
+<template>
+    <StateProviderLayer>
+        <FeedbacksLayer>
+            <ContentLayer>
+                <Master/>
+            </ContentLayer>
+        </FeedbacksLayer>
+    </StateProviderLayer>
+    
+    <!-- Botón flotante global -->
+    <FloatingQuoteButton />
+</template>
+
+<script setup>
+import StateProviderLayer from "/src/vue/stack/StateProviderLayer.vue"
+import FeedbacksLayer from "/src/vue/stack/FeedbacksLayer.vue"
+import ContentLayer from "/src/vue/stack/ContentLayer.vue"
+import Master from "/src/vue/content/Master.vue"
+import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"  // ← AGREGAR
+import {useEmails} from "/src/composables/emails.js"
+import {onMounted} from "vue"
+
+const emails = useEmails()
+
+onMounted(() => {
+    emails.init()
+})
+</script>
+
+<style lang="scss" scoped>
+</style>
+
+========== FRONTEND COMPONENTES (TOP) ===========
+
+----- FILE: src/components/prototypes/InventoryCard.vue -----
+<template>
+  <div class="inventory-card p-3 border rounded bg-white shadow-sm">
+    <div class="d-flex align-items-center">
+      <div class="flex-grow-1 d-flex align-items-center">
+        <img
+          v-if="item.image_url"
+          :src="item.image_url"
+          alt=""
+          class="img-thumbnail me-3"
+          style="width:64px;height:64px;object-fit:cover;"
+        />
+        <div>
+          <h5 class="mb-0">{{ item.name }}</h5>
+          <small class="text-muted">{{ item.category || '-' }}</small>
+          <div><small class="text-muted">SKU: {{ item.sku || item.sku_code || '-' }}</small></div>
+        </div>
+      </div>
+      <div class="text-end ms-3">
+        <div class="small text-muted">Stock</div>
+        <div class="fs-5 fw-bold">{{ item.stock ?? item.quantity ?? item.cantidad ?? 0 }} <small class="fw-normal">{{ item.stock_unit || '' }}</small></div>
+        <div class="small text-muted">${{ formatPrice(item.price) }}</div>
+        <div class="mt-2 d-flex gap-2 justify-content-end">
+          <button @click="$emit('request-edit', item)" class="btn btn-sm btn-primary">Editar</button>
+          <button @click="$emit('request-delete', item)" class="btn btn-sm btn-danger">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'InventoryCard',
+  props: {
+    item: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    formatPrice(p) {
+      if (!p && p !== 0) return '-'
+      try {
+        return Number(p).toFixed(2)
+      } catch (e) {
+        return p
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.inventory-card { max-width: 420px }
+</style>
+
+----- FILE: src/modules/awg/AwgView.vue -----
+<template>
+  <section>
+    <h1>Awg Calculator</h1>
+    <form @submit.prevent="onCalculate">
+      <pre>Inputs definidos por contrato</pre>
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div v-if="result">
+      <pre v-if="result.state === 'OK'">{{ result.value }}</pre>
+      <ul v-if="result.errors">
+        <li v-for="e in result.errors" :key="e">{{ e }}</li>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useCalculator } from '@/composables/useCalculator';
+import { AwgInput } from '@/domain/awg/contract';
+import { calculateAwg } from '@/domain/awg/model';
+import { createValidationResult } from '@/validation';
+
+const input = reactive<AwgInput>({} as AwgInput);
+
+function validator() {
+  return createValidationResult();
+}
+
+const { result, calculate } = useCalculator(validator, calculateAwg);
+
+function onCalculate() {
+  calculate(input);
+}
+</script>
+
+----- FILE: src/modules/length/LengthView.vue -----
+<template>
+  <section>
+    <h1>Length Calculator</h1>
+    <form @submit.prevent="onCalculate">
+      <pre>Inputs definidos por contrato</pre>
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div v-if="result">
+      <pre v-if="result.state === 'OK'">{{ result.value }}</pre>
+      <ul v-if="result.errors">
+        <li v-for="e in result.errors" :key="e">{{ e }}</li>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useCalculator } from '@/composables/useCalculator';
+import { LengthInput } from '@/domain/length/contract';
+import { convertLength } from '@/domain/length/model';
+import { createValidationResult } from '@/validation';
+
+const input = reactive<LengthInput>({} as LengthInput);
+
+function validator() {
+  return createValidationResult();
+}
+
+const { result, calculate } = useCalculator(validator, convertLength);
+
+function onCalculate() {
+  calculate(input);
+}
+</script>
+
+----- FILE: src/modules/numberSystem/NumberSystemView.vue -----
+<template>
+  <section>
+    <h1>NumberSystem Calculator</h1>
+    <form @submit.prevent="onCalculate">
+      <pre>Inputs definidos por contrato</pre>
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div v-if="result">
+      <pre v-if="result.state === 'OK'">{{ result.value }}</pre>
+      <ul v-if="result.errors">
+        <li v-for="e in result.errors" :key="e">{{ e }}</li>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useCalculator } from '@/composables/useCalculator';
+import { NumberSystemInput } from '@/domain/numberSystem/contract';
+import { convertNumberSystem } from '@/domain/numberSystem/model';
+import { createValidationResult } from '@/validation';
+
+const input = reactive<NumberSystemInput>({} as NumberSystemInput);
+
+function validator() {
+  return createValidationResult();
+}
+
+const { result, calculate } = useCalculator(validator, convertNumberSystem);
+
+function onCalculate() {
+  calculate(input);
+}
+</script>
+
+----- FILE: src/modules/ohmsLaw/OhmsLawView.vue -----
+<template>
+  <section>
+    <h1>OhmsLaw Calculator</h1>
+    <form @submit.prevent="onCalculate">
+      <pre>Inputs definidos por contrato</pre>
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div v-if="result">
+      <pre v-if="result.state === 'OK'">{{ result.value }}</pre>
+      <ul v-if="result.errors">
+        <li v-for="e in result.errors" :key="e">{{ e }}</li>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useCalculator } from '@/composables/useCalculator';
+import { OhmsLawInput } from '@/domain/ohmsLaw/contract';
+import { calculateOhmsLaw } from '@/domain/ohmsLaw/model';
+import { createValidationResult } from '@/validation';
+
+const input = reactive<OhmsLawInput>({} as OhmsLawInput);
+
+function validator() {
+  return createValidationResult();
+}
+
+const { result, calculate } = useCalculator(validator, calculateOhmsLaw);
+
+function onCalculate() {
+  calculate(input);
+}
+</script>
+
+----- FILE: src/modules/resistorColor/ResistorColorView.vue -----
+<template>
+  <section>
+    <h1>ResistorColor Calculator</h1>
+    <form @submit.prevent="onCalculate">
+      <pre>Inputs definidos por contrato</pre>
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div v-if="result">
+      <pre v-if="result.state === 'OK'">{{ result.value }}</pre>
+      <ul v-if="result.errors">
+        <li v-for="e in result.errors" :key="e">{{ e }}</li>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useCalculator } from '@/composables/useCalculator';
+import { ResistorColorInput } from '@/domain/resistorColor/contract';
+import { calculateResistorColor } from '@/domain/resistorColor/model';
+import { createValidationResult } from '@/validation';
+
+const input = reactive<ResistorColorInput>({} as ResistorColorInput);
+
+function validator() {
+  return createValidationResult();
+}
+
+const { result, calculate } = useCalculator(validator, calculateResistorColor);
+
+function onCalculate() {
+  calculate(input);
+}
+</script>
+
+----- FILE: src/modules/smdCapacitor/SmdCapacitorView.vue -----
+<template>
+  <section>
+    <h1>SmdCapacitor Calculator</h1>
+    <form @submit.prevent="onCalculate">
+      <pre>Inputs definidos por contrato</pre>
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div v-if="result">
+      <pre v-if="result.state === 'OK'">{{ result.value }}</pre>
+      <ul v-if="result.errors">
+        <li v-for="e in result.errors" :key="e">{{ e }}</li>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useCalculator } from '@/composables/useCalculator';
+import { SmdCapacitorInput } from '@/domain/smdCapacitor/contract';
+import { calculateSmdCapacitor } from '@/domain/smdCapacitor/model';
+import { createValidationResult } from '@/validation';
+
+const input = reactive<SmdCapacitorInput>({} as SmdCapacitorInput);
+
+function validator() {
+  return createValidationResult();
+}
+
+const { result, calculate } = useCalculator(validator, calculateSmdCapacitor);
+
+function onCalculate() {
+  calculate(input);
+}
+</script>
+
+----- FILE: src/modules/smdResistor/SmdResistorView.vue -----
+<template>
+  <section>
+    <h1>SmdResistor Calculator</h1>
+    <form @submit.prevent="onCalculate">
+      <pre>Inputs definidos por contrato</pre>
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div v-if="result">
+      <pre v-if="result.state === 'OK'">{{ result.value }}</pre>
+      <ul v-if="result.errors">
+        <li v-for="e in result.errors" :key="e">{{ e }}</li>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useCalculator } from '@/composables/useCalculator';
+import { SmdResistorInput } from '@/domain/smdResistor/contract';
+import { calculateSmdResistor } from '@/domain/smdResistor/model';
+import { createValidationResult } from '@/validation';
+
+const input = reactive<SmdResistorInput>({} as SmdResistorInput);
+
+function validator() {
+  return createValidationResult();
+}
+
+const { result, calculate } = useCalculator(validator, calculateSmdResistor);
+
+function onCalculate() {
+  calculate(input);
+}
+</script>
+
+----- FILE: src/modules/temperature/TemperatureView.vue -----
+<template>
+  <section>
+    <h1>Temperature Calculator</h1>
+    <form @submit.prevent="onCalculate">
+      <pre>Inputs definidos por contrato</pre>
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div v-if="result">
+      <pre v-if="result.state === 'OK'">{{ result.value }}</pre>
+      <ul v-if="result.errors">
+        <li v-for="e in result.errors" :key="e">{{ e }}</li>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useCalculator } from '@/composables/useCalculator';
+import { TemperatureInput } from '@/domain/temperature/contract';
+import { convertTemperature } from '@/domain/temperature/model';
+import { createValidationResult } from '@/validation';
+
+const input = reactive<TemperatureInput>({} as TemperatureInput);
+
+function validator() {
+  return createValidationResult();
+}
+
+const { result, calculate } = useCalculator(validator, convertTemperature);
+
+function onCalculate() {
+  calculate(input);
+}
+</script>
+
+----- FILE: src/modules/timer555/Timer555View.vue -----
+<template>
+  <section>
+    <h1>NE555 Timer Calculator</h1>
+
+    <form @submit.prevent="onCalculate">
+      <label>
+        Mode
+        <select v-model="input.mode">
+          <option value="monostable">Monostable</option>
+          <option value="astable_standard">Astable</option>
+        </select>
+      </label>
+
+      <label v-if="input.mode === 'monostable'">
+        R (Ω)
+        <input type="number" v-model.number="input.R_ohm" />
+      </label>
+
+      <label v-if="input.mode === 'astable_standard'">
+        R1 (Ω)
+        <input type="number" v-model.number="input.R1_ohm" />
+      </label>
+
+      <label v-if="input.mode === 'astable_standard'">
+        R2 (Ω)
+        <input type="number" v-model.number="input.R2_ohm" />
+      </label>
+
+      <label>
+        C (F)
+        <input type="number" v-model.number="input.C_farad" />
+      </label>
+
+      <label>
+        Vcc (V)
+        <input type="number" v-model.number="input.Vcc_volt" />
+      </label>
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div v-if="result">
+      <h2>Result</h2>
+
+      <pre v-if="result.state === 'OK'">
+{{ result.value }}
+      </pre>
+
+      <ul v-if="result.errors">
+        <li v-for="e in result.errors" :key="e">{{ e }}</li>
+      </ul>
+
+      <ul v-if="result.warnings">
+        <li v-for="w in result.warnings" :key="w">{{ w }}</li>
+      </ul>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { useCalculator } from '@/composables/useCalculator';
+import { Timer555Input } from '@/domain/timer555/contract';
+import { calculateTimer555 } from '@/domain/timer555/model';
+import { createValidationResult } from '@/validation';
+import { validateCapacitance, validateResistance, validateVoltage } from '@/validation/physical';
+
+const input = reactive<Timer555Input>({
+  mode: 'monostable',
+  C_farad: 0,
+  Vcc_volt: 5
+});
+
+function validator(i: Timer555Input) {
+  const result = createValidationResult();
+
+  if (i.C_farad !== undefined) {
+    const e = validateCapacitance(i.C_farad);
+    if (e) result.errors.push(e);
+  }
+
+  if (i.Vcc_volt !== undefined) {
+    const e = validateVoltage(i.Vcc_volt);
+    if (e) result.errors.push(e);
+  }
+
+  if (i.mode === 'monostable' && i.R_ohm !== undefined) {
+    const e = validateResistance(i.R_ohm);
+    if (e) result.errors.push(e);
+  }
+
+  if (i.mode === 'astable_standard') {
+    if (i.R1_ohm !== undefined) {
+      const e = validateResistance(i.R1_ohm);
+      if (e) result.errors.push(e);
+    }
+    if (i.R2_ohm !== undefined) {
+      const e = validateResistance(i.R2_ohm);
+      if (e) result.errors.push(e);
+    }
+  }
+
+  if (result.errors.length > 0) {
+    result.valid = false;
+  }
+
+  return result;
+}
+
+const { result, calculate } = useCalculator(validator, calculateTimer555);
+
+function onCalculate() {
+  calculate(input);
+}
+</script>
+
+----- FILE: src/views/HomeView.vue -----
+
+----- FILE: src/views/InventoryUnified.vue -----
+<template>
+  <div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">Inventario Unificado (POC)</h1>
+    <div class="mb-4">
+      <input v-model="filter" @keyup.enter="load" placeholder="Filtrar por categoría" class="input" />
+      <button @click="load" class="btn btn-primary ml-2">Buscar</button>
+      <button @click="triggerImport" class="btn btn-secondary ml-4" :disabled="importing">{{ importing ? 'Importando...' : 'Iniciar importación' }}</button>
+    </div>
+
+    <div v-if="store.loading">Cargando...</div>
+    <div v-if="lastRunId" class="mt-4">Última importación: <strong>{{ lastRunId }}</strong> <em v-if="runStatus">({{ runStatus }})</em></div>
+    <div v-else class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <InventoryCard
+        v-for="it in store.items"
+        :key="it.id"
+        :item="it"
+        @request-edit="onRequestEdit"
+        @request-delete="onRequestDelete"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+import { useInventoryStore } from '@/stores/inventory'
+import InventoryCard from '@/components/prototypes/InventoryCard.vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+export default {
+  name: 'InventoryUnified',
+  components: { InventoryCard },
+  setup() {
+    const filter = ref('')
+    const store = useInventoryStore()
+    const importing = ref(false)
+    const lastRunId = ref(null)
+    const runStatus = ref(null)
+    const router = useRouter()
+    const load = () => store.fetchItems(1, 20, filter.value || null)
+
+    async function onRequestDelete(item) {
+      const ok = confirm(`Eliminar item "${item.name || item.id}"?`)
+      if (!ok) return
+      try {
+        const success = await store.deleteItem(item.id)
+        if (!success) alert('No se pudo eliminar el item')
+      } catch (e) {
+        console.error(e)
+        alert('Error eliminando item')
+      }
+    }
+
+    function onRequestEdit(item) {
+      // Navigate to admin inventory edit page; InventoryPage can read query param `edit`
+      router.push({ name: 'admin-inventory', query: { edit: item.id } })
+    }
+
+    async function triggerImport() {
+      importing.value = true
+      runStatus.value = null
+      try {
+        const token = localStorage.getItem('access_token')
+        const headers = token ? { Authorization: `Bearer ${token}` } : {}
+        const res = await fetch('/api/v1/imports/run', { method: 'POST', headers })
+        if (!res.ok) {
+          const text = await res.text()
+          alert('Error iniciando importación: ' + res.status + ' ' + text)
+          return
+        }
+        const data = await res.json()
+        lastRunId.value = data.run_id || null
+        runStatus.value = data.status || 'started'
+      } finally {
+        importing.value = false
+      }
+    }
+    onMounted(() => load())
+    return { filter, store, load, importing, triggerImport, lastRunId, runStatus, onRequestDelete, onRequestEdit }
+  }
+}
+</script>
+
+<style scoped>
+.input { padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px }
+.btn { padding: 0.5rem 0.75rem }
+</style>
+
+----- FILE: src/vue/components/admin/CategoryForm.vue -----
+<template>
+  <form @submit.prevent="onSubmit">
+    <div>
+      <label>Nombre</label>
+      <input v-model="form.name" required />
+    </div>
+    <div>
+      <label>Descripción</label>
+      <input v-model="form.description" />
+    </div>
+    <button type="submit">Guardar</button>
+  </form>
+</template>
+<script setup>
+import { ref } from 'vue'
+import { useCategories } from '@/composables/useCategories'
+const { createCategory } = useCategories()
+const form = ref({ name: '', description: '' })
+function onSubmit() {
+  createCategory(form.value)
+}
+</script>
+
+----- FILE: src/vue/components/admin/CategoryList.vue -----
+<template>
+  <div>
+    <h2>Categorías</h2>
+    <button @click="fetchCategories">Actualizar</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="cat in categories" :key="cat.id">
+          <td>{{ cat.name }}</td>
+          <td>{{ cat.description }}</td>
+          <td>
+            <button @click="editCategory(cat)">Editar</button>
+            <button @click="deleteCategory(cat.id)">Borrar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+<script setup>
+import { useCategories } from '@/composables/useCategories'
+const { categories, fetchCategories, deleteCategory } = useCategories()
+function editCategory(cat) {
+  // Implementar edición
+}
+</script>
+
+----- FILE: src/vue/components/admin/CategoryManager.vue -----
+
+----- FILE: src/vue/components/admin/ClientDetail.vue -----
+
+----- FILE: src/vue/components/admin/ClientList.vue -----
+
+----- FILE: src/vue/components/admin/DiagnosticsList.vue -----
+<template>
+  <div>
+    <h2>Diagnósticos</h2>
+    <button @click="fetchDiagnostics">Actualizar</button>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Reparación</th>
+          <th>Costo estimado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="d in diagnostics" :key="d.id">
+          <td>{{ d.id }}</td>
+          <td>{{ d.repair_id }}</td>
+          <td>{{ d.quote_total }}</td>
+          <td>
+            <button @click="editDiagnostic(d)">Editar</button>
+            <button @click="deleteDiagnostic(d.id)">Borrar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+<script setup>
+import { useDiagnostics } from '@/composables/useDiagnostics'
+const { diagnostics, fetchDiagnostics, deleteDiagnostic } = useDiagnostics()
+function editDiagnostic(d) {
+  // Implementar edición
+}
+</script>
+
+----- FILE: src/vue/components/admin/InstrumentForm.vue -----
+<template>
+  <form @submit.prevent="onSubmit">
+    <div>
+      <label>Nombre</label>
+      <input v-model="form.name" required />
+    </div>
+    <div>
+      <label>Marca (id)</label>
+      <input v-model="form.brand_id" />
+    </div>
+    <div>
+      <label>Modelo</label>
+      <input v-model="form.model" required />
+    </div>
+    <div>
+      <label>Tipo</label>
+      <input v-model="form.type" />
+    </div>
+    <button type="submit">Guardar</button>
+  </form>
+</template>
+<script setup>
+import { ref } from 'vue'
+import { useInstruments } from '@/composables/useInstruments'
+const { createInstrument } = useInstruments()
+const form = ref({ name: '', brand_id: null, model: '', type: '' })
+function onSubmit() {
+  createInstrument(form.value)
+}
+</script>
+
+----- FILE: src/vue/components/admin/InstrumentList.vue -----
+<template>
+  <div>
+    <h2>Instrumentos</h2>
+    <button @click="fetchInstruments">Actualizar</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Tipo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="inst in instruments" :key="inst.id">
+          <td>{{ inst.brand_id }}</td>
+          <td>{{ inst.model }}</td>
+          <td>{{ inst.type }}</td>
+          <td>
+            <button @click="editInstrument(inst)">Editar</button>
+            <button @click="deleteInstrument(inst.id)">Borrar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+<script setup>
+import { useInstruments } from '@/composables/useInstruments'
+const { instruments, fetchInstruments, deleteInstrument } = useInstruments()
+function editInstrument(inst) {
+  // Implementar navegación o modal de edición
+}
+</script>
+
+====== FRONTEND COMPONENTES (RESTO - ÍNDICE) ====
+src/vue/components/admin/InventoryAlerts.vue
+src/vue/components/admin/InventoryForm.vue
+src/vue/components/admin/InventoryTable.vue
+src/vue/components/admin/RepairForm.vue
+src/vue/components/admin/RepairManager.vue
+src/vue/components/admin/RepairStatusEditor.vue
+src/vue/components/admin/RepairsList.vue
+src/vue/components/admin/StatsCards.vue
+src/vue/components/admin/StockMovements.vue
+src/vue/components/admin/StockMovementsList.vue
+src/vue/components/admin/UserForm.vue
+src/vue/components/admin/UserList.vue
+src/vue/components/ai/AIAnalysisResult.vue
+src/vue/components/ai/FaultDetector.vue
+src/vue/components/ai/FaultMarker.vue
+src/vue/components/ai/ImageUploader.vue
+src/vue/components/ai/QuoteGenerator.vue
+src/vue/components/articles/ArticleCustomContent.vue
+src/vue/components/articles/ArticleFaq.vue
+src/vue/components/articles/ArticleFeatures.vue
+src/vue/components/articles/ArticleInfoBlock.vue
+src/vue/components/articles/ArticleParagraph.vue
+src/vue/components/articles/ArticleProjectGrid.vue
+src/vue/components/articles/ArticleQuotes.vue
+src/vue/components/articles/ArticleTestimonials.vue
+src/vue/components/articles/ArticleTimeline.vue
+src/vue/components/articles/DiagnosticWizard.vue
+src/vue/components/articles/items/ItemFaqQuestion.vue
+src/vue/components/articles/items/ItemFeature.vue
+src/vue/components/articles/items/ItemProjectGrid.vue
+src/vue/components/articles/items/ItemQuote.vue
+src/vue/components/articles/items/ItemTestimonial.vue
+src/vue/components/articles/items/ItemTimelineEntry.vue
+src/vue/components/auth/AccountDelete.vue
+src/vue/components/auth/LoginForm.vue
+src/vue/components/auth/PasswordReset.vue
+src/vue/components/auth/RegisterForm.vue
+src/vue/components/dashboard/DashboardPanel.vue
+src/vue/components/dashboard/QuickStats.vue
+src/vue/components/dashboard/RepairCard.vue
+src/vue/components/dashboard/RepairTimeline.vue
+src/vue/components/dashboard/RepairsList.vue
+src/vue/components/dashboard/StatusBadge.vue
+src/vue/components/dashboard/UserProfile.vue
+src/vue/components/footer/Footer.vue
+src/vue/components/footer/FooterBlock.vue
+src/vue/components/footer/FooterColumn.vue
+src/vue/components/footer/FooterCopyright.vue
+src/vue/components/forms/contact/ContactForm.vue
+src/vue/components/forms/contact/ContactFormFields.vue
+src/vue/components/forms/contact/ContactFormSuccess.vue
+src/vue/components/generic/ImageView.vue
+src/vue/components/generic/Link.vue
+src/vue/components/layout/BackgroundPromo.vue
+src/vue/components/layout/PageHeader.vue
+src/vue/components/layout/PageSection.vue
+src/vue/components/layout/PageSectionContent.vue
+src/vue/components/layout/PageSectionFooter.vue
+src/vue/components/layout/PageSectionHeader.vue
+src/vue/components/layout/PageWrapper.vue
+src/vue/components/loaders/ActivitySpinner.vue
+src/vue/components/loaders/Loader.vue
+src/vue/components/nav/Navigation.vue
+src/vue/components/nav/navbar-wrappers/InPageNavbar.vue
+src/vue/components/nav/navbar-wrappers/RouteNavbar.vue
+src/vue/components/nav/navbar/Navbar.vue
+src/vue/components/nav/navbar/NavbarBrand.vue
+src/vue/components/nav/navbar/NavbarLinks.vue
+src/vue/components/nav/navbar/NavbarToggleButton.vue
+src/vue/components/projects/ProjectInfo.vue
+src/vue/components/projects/ProjectInfoContent.vue
+src/vue/components/projects/ProjectInfoFeaturedContent.vue
+src/vue/components/projects/ProjectModal.vue
+src/vue/components/quotation/DisclaimerModal.vue
+src/vue/components/quotation/InstrumentSelector.vue
+src/vue/components/quotation/QuotationResult.vue
+src/vue/components/system/ToastNotification.vue
+src/vue/components/widgets/Alert.vue
+src/vue/components/widgets/Breadcrumbs.vue
+src/vue/components/widgets/CircleIcon.vue
+src/vue/components/widgets/Divider.vue
+src/vue/components/widgets/FilterTabs.vue
+src/vue/components/widgets/FloatingQuoteButton.vue
+src/vue/components/widgets/InlineLinkList.vue
+src/vue/components/widgets/ProgressBar.vue
+src/vue/components/widgets/QuotedText.vue
+src/vue/components/widgets/SocialLinks.vue
+src/vue/components/widgets/Spinner.vue
+src/vue/components/widgets/XLButton.vue
+src/vue/content/Master.vue
+src/vue/content/pages/CotizadorIAPage.vue
+src/vue/content/pages/DashboardPage.vue
+src/vue/content/pages/HomePage.vue
+src/vue/content/pages/LicensePage.vue
+src/vue/content/pages/LoginPage.vue
+src/vue/content/pages/PolicyPage.vue
+src/vue/content/pages/PrivacyPage.vue
+src/vue/content/pages/ProfilePage.vue
+src/vue/content/pages/RegisterPage.vue
+src/vue/content/pages/RepairsPage.vue
+src/vue/content/pages/SchedulePage.vue
+src/vue/content/pages/TermsPage.vue
+src/vue/content/pages/admin/AdminDashboard.vue
+src/vue/content/pages/admin/CategoriesPage.vue
+src/vue/content/pages/admin/ClientsPage.vue
+src/vue/content/pages/admin/InventoryPage.vue
+src/vue/content/pages/admin/RepairsAdminPage.vue
+src/vue/content/pages/admin/StatsPage.vue
+src/vue/content/sections/AboutSection.vue
+src/vue/content/sections/ContactSection.vue
+src/vue/content/sections/FaqSection.vue
+src/vue/content/sections/FeaturedProjectSection.vue
+src/vue/content/sections/HeroSection.vue
+src/vue/content/sections/HistorySection.vue
+src/vue/content/sections/LicenseSection.vue
+src/vue/content/sections/PolicySection.vue
+src/vue/content/sections/PortfolioSection.vue
+src/vue/content/sections/ReviewsSection.vue
+src/vue/content/sections/ServicesSection.vue
+src/vue/content/sections/TeamSection.vue
+src/vue/sections/DiagnosticSection.vue
+src/vue/stack/App.vue
+src/vue/stack/ContentLayer.vue
+src/vue/stack/FeedbacksLayer.vue
+src/vue/stack/StateProviderLayer.vue
+
+=============== BACKEND ESTRUCTURA ==============
+----- FILE: backend/app/main.py -----
+"""
+Cirujano de Sintetizadores - Backend API
+Sistema integral de gestión para taller de reparación de sintetizadores
+
+FastAPI application with async database support, JWT authentication,
+and comprehensive diagnostic/quotation system.
+"""
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
+from fastapi.responses import JSONResponse
+from contextlib import asynccontextmanager
+import logging
+
+from backend.app.core.config import settings
+from backend.app.core.database import init_db, close_db
+from backend.app.api.v1.router import api_router
+from backend.app.core.ratelimit import limiter
+from slowapi.errors import RateLimitExceeded
+
+
+async def _rate_limit_exceeded_handler(request, exc):
+    return JSONResponse(status_code=429, content={"detail": "Rate limit exceeded"})
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+# Lifespan context manager for app startup/shutdown
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup logic
+    logger.info("🚀 Application startup")
+    # Setup structured logging early
+    try:
+        from backend.app.core.logging_config import setup_logging
+        setup_logging()
+    except Exception as e:
+        logger.warning(f"Could not configure structured logging: {e}")
+    
+    # Initialize event system
+    try:
+        from backend.app.services.event_handlers import setup_event_handlers
+        setup_event_handlers()
+        logger.info("✓ Event system initialized")
+    except Exception as e:
+        logger.error(f"✗ Event system initialization failed: {e}")
+    
+    try:
+        await init_db()
+        logger.info("✓ Database initialized")
+    except Exception as e:
+        logger.error(f"✗ Database initialization failed: {e}")
+
+    # Attempt to import and register any routers that may have failed to import at module load
+    try:
+        import importlib
+        from backend.app.api.v1 import router as v1router
+        for mod_name in ("backend.app.routers.diagnostic", "backend.app.routers.payments"):
+            try:
+                mod = importlib.import_module(mod_name)
+                if hasattr(mod, "router"):
+                    # Avoid double-registration by checking for an existing path
+                    prefix = getattr(mod.router, "prefix", "")
+                    exists = any(r.path.startswith(f"{v1router.api_router.prefix}{prefix}") for r in app.routes)
+                    if not exists:
+                        v1router.api_router.include_router(mod.router)
+                        logger.info(f"Included router from {mod_name}")
+            except Exception:
+                # Non-fatal: continue if router import fails in trimmed test envs
+                logger.debug(f"Router {mod_name} not available at startup")
+    except Exception:
+        logger.debug("Dynamic router registration skipped")
+    
+    yield
+    
+    # Shutdown logic
+    logger.info("🛑 Application shutdown")
+    try:
+        await close_db()
+        logger.info("✓ Database connection closed")
+    except Exception as e:
+        logger.error(f"✗ Error during shutdown: {e}")
+
+
+# Initialize FastAPI app
+app = FastAPI(
+    title="Cirujano de Sintetizadores API",
+    description="Sistema integral de gestión para taller de reparación de sintetizadores",
+    version="1.0.0",
+    lifespan=lifespan,
+    docs_url="/docs",
+    openapi_url="/openapi.json"
+)
+
+# Configure CORS with settings
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+logger.info(f"CORS configured for origins: {settings.allowed_origins}")
+
+# Enforce HTTPS and add basic security headers when running in production
+if settings.environment and settings.environment.lower() in ("production", "prod"):
+    # Redirect HTTP to HTTPS
+    app.add_middleware(HTTPSRedirectMiddleware)
+
+    @app.middleware("http")
+    async def add_security_headers(request, call_next):
+        response = await call_next(request)
+        # HSTS: 2 years, include subdomains, preload
+        response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains; preload"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "no-referrer-when-downgrade"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=()"
+        return response
+
+
+    # Attach rate limiter to the application state and register handler
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+    # Expose audit service for internal use
+    try:
+        from backend.app.services import logging_service  # noqa: F401
+    except Exception:
+        # Import failures are non-fatal; logging service may not be available in trimmed test envs
+        pass
+
+# Include API v1 routes
+app.include_router(api_router)
+
+
+# Middleware: block unexpected HTML/XML payloads for API endpoints to reduce attack surface
+@app.middleware("http")
+async def block_html_payloads(request, call_next):
+    try:
+        if request.method in ("POST", "PUT", "PATCH"):
+            ct = request.headers.get("content-type", "").lower()
+            if any(x in ct for x in ("text/html", "application/xhtml+xml", "application/xml")):
+                return JSONResponse(status_code=400, content={"detail": "Unexpected HTML/XML content type"})
+    except Exception:
+        # Best-effort: don't let middleware crash the app
+        pass
+    return await call_next(request)
+
+
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    return {"status": "ok", "message": "Cirujano de Sintetizadores API is running"}
+
+
+# Root endpoint
+@app.get("/")
+async def root():
+    return {
+        "service": "Cirujano de Sintetizadores",
+        "version": "1.0.0",
+        "environment": settings.environment,
+        "docs": "/docs",
+        "openapi": "/openapi.json"
+    }
+
+
+# Error handling
+@app.exception_handler(Exception)
+async def general_exception_handler(request, exc):
+    logger.error(f"Unhandled exception: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error"}
+    )
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=settings.DEBUG)
+
+
+============= BACKEND CONFIG (SEGURO) ===========
+----- FILE: backend/requirements.txt -----
+# FastAPI and Uvicorn
+fastapi
+uvicorn[standard]
+
+# Database
+sqlalchemy
+alembic
+psycopg2-binary
+pydantic-settings
+
+# Authentication
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+
+# Validation
+pydantic[email]
+email-validator
+
+# Utilities
+python-dotenv
+httpx
+
+# Development
+pytest
+pytest-asyncio
+black
+ruff
+
+# Optional: For async PostgreSQL support
+asyncpg
+
+# Optional: For Redis caching (compatible with slowapi)
+redis
+
+# Rate limiting
+slowapi
+
+# Rate limiting (compatible with slowapi <2.0)
+limits
+
+# File validation
+Pillow
+python-magic
+# Structured logging
+python-json-logger
+
+# Optional: For Celery async tasks
+celery
+
+----- FILE: backend/app/core/config.py -----
+"""
+Configuration settings for Cirujano de Sintetizadores API
+"""
+
+from pydantic import BaseModel
+from functools import lru_cache
+from typing import Optional
+import os
+from dotenv import load_dotenv
+
+# Load .env file only for non-production environments (tests and production should not rely on .env)
+if os.getenv("ENVIRONMENT", "development").lower() not in ("production", "prod"):
+    load_dotenv()
+
+
+class Settings(BaseModel):
+    """Application settings"""
+
+    # API Configuration
+    api_title: str = "Cirujano de Sintetizadores API"
+    api_version: str = "1.0.0"
+    debug: bool = os.getenv("DEBUG", "false").lower() == "true"
+    environment: str = os.getenv("ENVIRONMENT", "development")
+
+    # Database Configuration
+    database_url: str = os.getenv("DATABASE_URL", "sqlite:///./cirujano.db")
+    database_echo: bool = False
+
+    # JWT Configuration - do NOT include production secrets in code
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+
+    # CORS Configuration
+    # ALLOWED_ORIGINS can be provided as a comma-separated env var
+    _allowed_origins_env: Optional[str] = os.getenv("ALLOWED_ORIGINS")
+    if _allowed_origins_env:
+        allowed_origins: list = [o.strip() for o in _allowed_origins_env.split(",") if o.strip()]
+    else:
+        # sensible defaults for development
+        allowed_origins: list = [
+            "http://localhost:3000",
+            "http://localhost:5173",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:5173",
+        ]
+
+    # Email Configuration
+    smtp_server: Optional[str] = None
+    smtp_port: Optional[int] = None
+    smtp_user: Optional[str] = None
+    smtp_password: Optional[str] = None
+    from_email: Optional[str] = None
+
+    # Pricing Configuration
+    diagnostic_fee: int = 0  # Free diagnostic
+    service_multipliers: dict = {
+        "legendary": 1.8,
+        "professional": 1.5,
+        "standard": 1.2,
+        "specialized": 1.3,
+        "boutique": 1.4,
+        "historic": 1.3,
+    }
+
+    value_multipliers: dict = {
+        "low": 1.0,  # < 500000 CLP
+        "medium": 1.3,  # 500000 - 2000000 CLP
+        "high": 1.6,  # 2000000 - 5000000 CLP
+        "premium": 2.0,  # > 5000000 CLP
+    }
+    class Config:
+        case_sensitive = False
+
+
+# Instantiate settings with environment variables
+settings = Settings()
+
+# Validate critical secrets in production-like environments
+if settings.environment and settings.environment.lower() in ("production", "prod"):
+    missing = []
+    if not settings.secret_key:
+    if not settings.jwt_secret:
+    if missing:
+        raise ValueError(f"Missing required environment variables for production: {', '.join(missing)}")
+
+
+def get_settings() -> Settings:
+    """Get settings instance"""
+    return settings
+
+
+=============== BACKEND API/ROUTERS =============
+
+----- FILE: backend/app/api/__init__.py -----
+
+----- FILE: backend/app/api/v1/__init__.py -----
+
+----- FILE: backend/app/api/v1/endpoints/ai.py -----
+
+----- FILE: backend/app/api/v1/endpoints/auth.py -----
+"""
+Endpoints de autenticación: login, register, logout
+"""
+from fastapi import APIRouter, HTTPException, status, Request
+from sqlalchemy.orm import Session
+from fastapi.params import Depends
+from backend.app.core.database import get_db
+from backend.app.core.security import (
+    hash_password, verify_password, create_access_token, create_refresh_token
+)
+from backend.app.core.dependencies import get_current_user
+from backend.app.core.ratelimit import limiter
+from backend.app.services.logging_service import create_audit
+from backend.app.models.user import User
+from backend.app.schemas.auth import (
+    LoginRequest, RegisterRequest, Token, PasswordResetRequest
+)
+from backend.app.schemas.user import UserResponse
+
+router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+async def register(
+    request: RegisterRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Registrar un nuevo usuario
+    
+    - **email**: Email único del usuario
+    - **username**: Username único (3-100 caracteres)
+    - **full_name**: Nombre completo (3+ caracteres)
+    - **password**: Contraseña (8+ caracteres)
+    - **phone**: Teléfono (opcional)
+    """
+    
+    # Verificar si el email ya existe
+    existing_email = db.query(User).filter(User.email == request.email).first()
+    if existing_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email ya registrado"
+        )
+    
+    # Verificar si el username ya existe
+    existing_username = db.query(User).filter(User.username == request.username).first()
+    if existing_username:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username ya existe"
+        )
+    
+    # Crear nuevo usuario
+    new_user = User(
+        email=request.email,
+        username=request.username,
+        full_name=request.full_name,
+        hashed_password=hash_password(request.password),
+        phone=request.phone
+    )
+    
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    # Audit registration
+    try:
+        create_audit(event_type="auth.register", user_id=new_user.id, ip_address=None, details={"email": new_user.email, "username": new_user.username})
+    except Exception:
+        pass
+    
+    return new_user
+
+
+@router.post("/login", response_model=Token)
+@limiter.limit("5/minute")  # limit login attempts to mitigate brute-force
+async def login(
+    request: Request,
+    payload: LoginRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Login: obtener token de acceso
+    
+    - **email**: Email del usuario
+    - **password**: Contraseña
+    
+    Retorna:
+    - **access_token**: JWT token para usar en endpoints protegidos
+    - **refresh_token**: Token para obtener nuevo access_token
+    """
+    
+    # Buscar usuario por email (gracefully handle DB issues during tests)
+    try:
+        user = db.query(User).filter(User.email == payload.email).first()
+    except Exception as e:
+        # In test or minimal environments the DB may not be initialized; treat as invalid credentials
+        # and let rate limiting still apply without raising an internal error.
+        user = None
+    if not user:
+        # Audit failed login attempt
+        try:
+            ip = getattr(request.client, "host", None)
+            create_audit(event_type="auth.login.failed", user_id=None, ip_address=ip, details={"email": payload.email})
+        except Exception:
+            pass
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Email o contraseña incorrectos"
+        )
+    
+    # Verificar contraseña
+    if not user or not verify_password(payload.password, user.hashed_password):
+        # Audit failed login attempt
+        try:
+            ip = getattr(request.client, "host", None)
+            create_audit(event_type="auth.login.failed", user_id=(user.id if user else None), ip_address=ip, details={"email": payload.email})
+        except Exception:
+            pass
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Email o contraseña incorrectos"
+        )
+    
+    # Verificar que el usuario esté activo
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Usuario inactivo"
+        )
+    
+    # Crear tokens
+    access_token = create_access_token(data={
+        "sub": str(user.id),
+        "username": user.username,
+        "email": user.email,
+        "role": user.role.value
+    })
+    
+    refresh_token = create_refresh_token(data={
+        "sub": str(user.id)
+    })
+    # Audit successful login
+    try:
+        ip = getattr(request.client, "host", None)
+        create_audit(event_type="auth.login.success", user_id=user.id, ip_address=ip, details={"username": user.username})
+    except Exception:
+        pass
+    
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+
+@router.post("/logout")
+async def logout(user: dict = Depends(get_current_user)):
+    """
+    Logout: invalida el token actual (cliente)
+    
+    En la práctica, el logout se maneja desde el frontend
+    eliminando el token del localStorage.
+    Este endpoint es opcional para implementar blacklist en backend.
+    """
+    return {"message": "Logout exitoso"}
+
+
+@router.get("/me", response_model=UserResponse)
+async def get_current_user_info(
+    user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtener información del usuario actual (autenticado)
+    
+    Requiere: Header Authorization: Bearer {token}
+    """
+    user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
+    if not user_obj:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    return user_obj
+
+
+@router.post("/refresh")
+async def refresh_access_token(request_body: dict):
+    """
+    Refrescar access token usando refresh token
+    
+    - **refresh_token**: Token de refresco obtenido en login (enviar en JSON body)
+    
+    Retorna nuevo access_token y refresh_token
+    """
+    from backend.app.core.security import verify_refresh_token
+    
+    refresh_token = request_body.get("refresh_token")
+    if not refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="refresh_token requerido en body"
+        )
+    
+    try:
+        payload = verify_refresh_token(refresh_token)
+        user_id = payload.get("sub")
+        
+        new_access_token = create_access_token(data={"sub": user_id})
+        new_refresh_token = create_refresh_token(data={"sub": user_id})
+        
+        return {
+            "access_token": new_access_token,
+            "refresh_token": new_refresh_token,
+            "token_type": "bearer"
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token inválido"
+        )
+
+----- FILE: backend/app/api/v1/endpoints/brands.py -----
+from fastapi import APIRouter
+from typing import List
+import json
+from pathlib import Path
+
+router = APIRouter(prefix="/brands", tags=["brands"])
+
+DATA_PATH = Path(__file__).resolve().parents[5] / "src" / "assets" / "data"
+
+@router.get("/", response_model=List[dict])
+async def list_brands():
+    """Return list of brands sorted A-Z by name"""
+    with open(DATA_PATH / "brands.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    brands = data.get("brands", [])
+    sorted_brands = sorted(brands, key=lambda b: b.get("name", "").lower())
+    # Return minimal fields
+    return [{"id": b["id"], "name": b["name"], "tier": b.get("tier")} for b in sorted_brands]
+
+@router.get("/{brand_id}/models", response_model=List[dict])
+async def list_models_by_brand(brand_id: str):
+    """Return instruments for a given brand with image metadata"""
+    with open(DATA_PATH / "instruments.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    instruments = [i for i in data.get("instruments", []) if i.get("brand") == brand_id]
+    sorted_instruments = sorted(instruments, key=lambda i: i.get("model", "").lower())
+    # Return basic info + image metadata
+    return [
+        {
+            "id": i["id"],
+            "model": i["model"],
+            "year": i.get("year"),
+            "description": i.get("description"),
+            "imagen_url": i.get("imagen_url"),
+            "image": i.get("image", {"url": None, "status": "pending"}),
+            "valor_estimado": i.get("valor_estimado")
+        }
+        for i in sorted_instruments
+    ]
+
+----- FILE: backend/app/api/v1/endpoints/categories.py -----
+
+----- FILE: backend/app/api/v1/endpoints/diagnostics.py -----
+
+----- FILE: backend/app/api/v1/endpoints/imports.py -----
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Depends, status
+from typing import Dict
+import threading
+import sqlite3
+import os
+import json
+from datetime import datetime
+import uuid
+
+from backend.app.core.config import settings
+from backend.app.core.dependencies import get_current_admin
+
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
+DB_PATH = os.path.join(REPO_ROOT, 'backend', 'instance', 'cirujano.sqlite')
+
+router = APIRouter(prefix="/imports", tags=["imports"])
+
+
+def _get_db_conn():
+    if not os.path.exists(DB_PATH):
+        raise FileNotFoundError('Import DB not initialized')
+    return sqlite3.connect(DB_PATH)
+
+
+def _write_audit(actor: str, action: str, details: Dict):
+    """Write an audit_logs entry into the import DB (best-effort)."""
+    try:
+        conn = _get_db_conn()
+    except FileNotFoundError:
+        return
+    cur = conn.cursor()
+    cur.execute('INSERT INTO audit_logs (actor, action, object_type, object_id, details, created_at) VALUES (?, ?, ?, ?, ?, ?)', (
+        actor, action, 'import_run', None, json.dumps(details, ensure_ascii=False), datetime.utcnow().isoformat() + 'Z'
+    ))
+    conn.commit()
+    conn.close()
+
+
+def _run_import_sync(user_id: str | None = None, run_id: str | None = None):
+    # Import by invoking the scripts used in ETAPA 4
+    try:
+        from scripts.ingest import normalize_excel, import_to_db
+        normalize_excel.main()
+        # Run import and propagate user_id/run_id so scripts can log and reuse provided run_id
+        import_to_db.run_import(user_id=user_id if user_id else None, run_id=run_id if run_id else None)
+        # best-effort: write finished audit (import_to_db will also emit its own logs)
+        _write_audit(actor=(user_id or 'system'), action='import.finished', details={'note': 'import completed'})
+    except Exception as e:
+        # Best-effort: record failure and re-raise
+        _write_audit(actor=(user_id or 'system'), action='import.failed', details={'error': str(e)})
+        raise
+
+
+@router.post('/run', status_code=status.HTTP_200_OK)
+def create_import(background_tasks: BackgroundTasks, user: dict = Depends(get_current_admin)) -> Dict:
+    """Start an import run asynchronously and return run_id.
+
+    Requires: admin role (via dependency `get_current_admin`).
+    """
+    # For POC we run import in a background thread so request returns quickly
+    # record request immediately for auditability
+    try:
+        _write_audit(actor=str(user.get('user_id')), action='import.requested', details={'initiated_by': user.get('username')})
+    except Exception:
+        pass
+
+    # generate a run id so caller can reference it immediately
+    run_id = str(uuid.uuid4())
+    # Ensure DB/tables exist before inserting queued run
+    try:
+        conn = _get_db_conn()
+        cur = conn.cursor()
+        # attempt to ensure tables exist by loading DDL if available
+        ddl_path = os.path.join(REPO_ROOT, 'database', 'ddl_cirujano.sql')
+        if os.path.exists(ddl_path):
+            try:
+                cur.executescript(open(ddl_path, 'r', encoding='utf-8').read())
+            except Exception:
+                # be best-effort
+                pass
+
+        cur.execute('INSERT INTO import_runs (run_id, source_file, started_at, status) VALUES (?, ?, ?, ?)', (run_id, os.path.basename(REPO_ROOT), None, 'queued'))
+        conn.commit()
+    except Exception:
+        # best-effort: ignore DB insertion failures here
+        pass
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+    th = threading.Thread(target=_run_import_sync, kwargs={'user_id': str(user.get('user_id')), 'run_id': run_id}, daemon=True)
+    th.start()
+    return {"status": "started", "run_id": run_id}
+
+
+@router.get('/{run_id}')
+def get_import_status(run_id: str, user: dict = Depends(get_current_admin)):
+    try:
+        conn = _get_db_conn()
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail='Import DB not initialized')
+    cur = conn.cursor()
+    cur.execute('SELECT run_id, status, started_at, finished_at, summary FROM import_runs WHERE run_id = ?', (run_id,))
+    row = cur.fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail='Run not found')
+    return {
+        'run_id': row[0],
+        'status': row[1],
+        'started_at': row[2],
+        'finished_at': row[3],
+        'summary': row[4]
+    }
+
+----- FILE: backend/app/api/v1/endpoints/instruments.py -----
+from fastapi import APIRouter, HTTPException
+from pathlib import Path
+import json
+
+router = APIRouter(prefix="/instruments", tags=["instruments"]) 
+
+DATA_PATH = Path(__file__).resolve().parents[5] / "src" / "assets" / "data"
+
+@router.get("/{instrument_id}")
+async def get_instrument(instrument_id: str):
+    with open(DATA_PATH / "instruments.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    instruments = data.get("instruments", [])
+    inst = next((i for i in instruments if i.get("id") == instrument_id), None)
+    if not inst:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+    return inst
+
+@router.get("/{instrument_id}/image")
+async def get_instrument_image(instrument_id: str):
+    # Return imagen_url as-is; frontend should handle relative paths
+    with open(DATA_PATH / "instruments.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    instruments = data.get("instruments", [])
+    inst = next((i for i in instruments if i.get("id") == instrument_id), None)
+    if not inst:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+    img = inst.get("imagen_url")
+    if not img:
+        raise HTTPException(status_code=404, detail="No image for instrument")
+    return {"imagen_url": img}
+
+----- FILE: backend/app/api/v1/endpoints/inventory.py -----
+from fastapi import APIRouter, Query, HTTPException
+from typing import List, Optional
+from functools import lru_cache
+import os
+import pandas as pd
+
+from backend.app.schemas.inventory import ItemSummary
+
+router = APIRouter(prefix="/items", tags=["items"])
+
+
+@lru_cache(maxsize=1)
+def _load_excel(path: Optional[str] = None):
+	if path is None:
+		path = os.path.abspath(os.path.join(os.getcwd(), 'Inventario_Cirujanosintetizadores.xlsx'))
+	if not os.path.exists(path):
+		raise FileNotFoundError(f'Excel file not found: {path}')
+	df = pd.read_excel(path, sheet_name=0, dtype=object, engine='openpyxl')
+	return df.fillna('')
+
+
+def _row_to_item(idx: int, row: pd.Series) -> ItemSummary:
+	# For POC: pick first non-empty value among prioritized columns
+	priority = ["Ic's", 'Transistores', 'Resistencias', 'Diodos', 'Diodo Led', 'otros', 'herramientas taller', 'insumos taller']
+	name = None
+	category = None
+	for col in priority:
+		if col in row and str(row[col]).strip():
+			name = str(row[col]).strip()
+			category = col
+			break
+	if name is None:
+		# fallback: use the 'otros' column or the first non-empty
+		for c in row.index:
+			if str(row[c]).strip():
+				name = str(row[c]).strip()
+				category = str(c)
+				break
+	item = ItemSummary(
+		id=int(row.get('N°') or idx),
+		name=name or f'row-{idx}',
+		category=category or 'unknown',
+		stock=10,
+		sku=str(row.get('N°') or idx)
+	)
+	return item
+
+
+@router.get('', response_model=List[ItemSummary])
+def list_items(limit: int = Query(20, ge=1, le=200), page: int = Query(1, ge=1), category: Optional[str] = None):
+	"""List items derived from the Excel master (POC - read-only, non-persistent)
+
+	This POC endpoint reads the Excel file and returns a flattened list of items for UI prototyping.
+	"""
+	try:
+		df = _load_excel()
+	except FileNotFoundError:
+		raise HTTPException(status_code=404, detail="Excel master file not found on server")
+
+	items: List[ItemSummary] = []
+	for idx, row in df.iterrows():
+		item = _row_to_item(idx + 1, row)
+		if category and category.lower() not in item.category.lower():
+			continue
+		items.append(item)
+
+	start = (page - 1) * limit
+	end = start + limit
+	return items[start:end]
+
+
+@router.get('/{item_id}', response_model=ItemSummary)
+def get_item(item_id: int):
+	try:
+		df = _load_excel()
+	except FileNotFoundError:
+		raise HTTPException(status_code=404, detail="Excel master file not found on server")
+	for idx, row in df.iterrows():
+		if int(row.get('N°') or (idx + 1)) == item_id:
+			return _row_to_item(idx + 1, row)
+	raise HTTPException(status_code=404, detail='Item not found')
+
+----- FILE: backend/app/api/v1/endpoints/repairs.py -----
+
+----- FILE: backend/app/api/v1/endpoints/stats.py -----
+
+----- FILE: backend/app/api/v1/endpoints/users.py -----
+
+----- FILE: backend/app/api/v1/router.py -----
+from fastapi import APIRouter
+from .endpoints import brands, instruments, auth, inventory, imports
+from backend.app.routers import uploads as uploads_router
+
+# Routers adicionales (creados por copilot) - si existen, se incluyen
+try:
+	from backend.app.routers import user as user_router
+	from backend.app.routers import repair as repair_router
+	from backend.app.routers import instrument as instrument_router
+	from backend.app.routers import category as category_router
+	from backend.app.routers import stock_movement as stock_movement_router
+	from backend.app.routers import contact as contact_router
+	from backend.app.routers import diagnostic as diagnostic_router
+	from backend.app.routers import quotation as quotation_router
+	from backend.app.routers import payments as payments_router
+except Exception:
+	# Si los módulos no existen en este entorno, se ignoran
+	user_router = repair_router = instrument_router = category_router = stock_movement_router = contact_router = None
+
+# If any router failed to import previously (e.g., due to transient import errors),
+# attempt a second import pass so that fixes applied at runtime are picked up.
+import importlib
+for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation"):
+	var_name = f"{name}_router"
+	if globals().get(var_name) is None:
+		try:
+			mod = importlib.import_module(f"backend.app.routers.{name}")
+			globals()[var_name] = mod
+		except Exception:
+			globals()[var_name] = None
+
+# Ensure payments router is also available on a second import pass
+if globals().get("payments_router") is None:
+	try:
+		mod = importlib.import_module("backend.app.routers.payments")
+		globals()["payments_router"] = mod
+	except Exception:
+		globals()["payments_router"] = None
+
+# Ensure diagnostic router is picked up on the second import pass as well
+if globals().get("diagnostic_router") is None:
+	try:
+		mod = importlib.import_module("backend.app.routers.diagnostic")
+		globals()["diagnostic_router"] = mod
+	except Exception:
+		globals()["diagnostic_router"] = None
+
+api_router = APIRouter(prefix="/api/v1")
+
+api_router.include_router(brands.router)
+api_router.include_router(instruments.router)
+api_router.include_router(auth.router)
+api_router.include_router(uploads_router.router)
+api_router.include_router(inventory.router)
+api_router.include_router(imports.router)
+
+# Incluir routers adicionales si están disponibles
+if user_router:
+	api_router.include_router(user_router.router)
+if repair_router:
+	api_router.include_router(repair_router.router)
+if instrument_router:
+	api_router.include_router(instrument_router.router)
+if category_router:
+	api_router.include_router(category_router.router)
+if stock_movement_router:
+	api_router.include_router(stock_movement_router.router)
+if contact_router:
+	api_router.include_router(contact_router.router)
+if globals().get("diagnostic_router"):
+	api_router.include_router(globals()["diagnostic_router"].router)
+if globals().get("quotation_router"):
+	api_router.include_router(globals()["quotation_router"].router)
+if globals().get("payments_router"):
+	api_router.include_router(globals()["payments_router"].router)
+
+----- FILE: backend/app/routers/__init__.py -----
+
+----- FILE: backend/app/routers/category.py -----
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from backend.app.models.category import Category
+from backend.app.core.database import get_db
+
+router = APIRouter(prefix="/api/categories", tags=["Categories"])
+
+@router.get("/")
+def list_categories(db: Session = Depends(get_db)):
+    return db.query(Category).all()
+
+@router.post("/")
+def create_category(payload: dict, db: Session = Depends(get_db)):
+    db_cat = Category(**payload)
+    db.add(db_cat)
+    db.commit()
+    db.refresh(db_cat)
+    return db_cat
+
+@router.put("/{category_id}")
+def update_category(category_id: int, payload: dict, db: Session = Depends(get_db)):
+    db_cat = db.query(Category).get(category_id)
+    if not db_cat:
+        raise HTTPException(status_code=404, detail="Category not found")
+    for k, v in payload.items():
+        setattr(db_cat, k, v)
+    db.commit()
+    db.refresh(db_cat)
+    return db_cat
+
+@router.delete("/{category_id}")
+def delete_category(category_id: int, db: Session = Depends(get_db)):
+    db_cat = db.query(Category).get(category_id)
+    if not db_cat:
+        raise HTTPException(status_code=404, detail="Category not found")
+    db.delete(db_cat)
+    db.commit()
+    return {"ok": True}
+
+----- FILE: backend/app/routers/contact.py -----
+from fastapi import APIRouter, HTTPException
+
+router = APIRouter(prefix="/api/contact", tags=["Contact"])
+
+@router.post("/")
+def send_contact(payload: dict):
+    # Aquí podrías validar y enviar email o guardar en DB
+    # Por ahora solo retornamos OK
+    if not payload.get('email') or not payload.get('message'):
+        raise HTTPException(status_code=400, detail="Missing email or message")
+    return {"ok": True, "received": payload}
+
+----- FILE: backend/app/routers/diagnostic.py -----
+"""
+API routes for diagnostic and quotation system
+"""
+
+from fastapi import APIRouter, HTTPException, Depends
+from typing import List
+import json
+from pathlib import Path
+
+# Avoid importing application schemas directly to keep router import lightweight in tests
+from backend.app.core.config import get_settings, Settings
+from backend.app.services.logging_service import create_audit
+
+router = APIRouter(prefix="/diagnostic", tags=["diagnostic"])
+
+# Load static data (resolve paths relative to project root)
+_root = Path(__file__).resolve().parents[3]
+data_dir = _root / "src" / "assets" / "data"
+with open(data_dir / "brands.json", "r") as f:
+    brands_data = json.load(f)
+
+with open(data_dir / "instruments.json", "r") as f:
+    instruments_data = json.load(f)
+
+with open(data_dir / "faults.json", "r") as f:
+    faults_data = json.load(f)
+
+
+@router.get("/instruments/brands")
+async def get_brands():
+    """Get all available instrument brands"""
+    return brands_data["brands"]
+
+
+@router.get("/instruments/models/{brand_id}")
+async def get_models_by_brand(brand_id: str):
+    """Get all models for a specific brand"""
+    models = [
+        instrument
+        for instrument in instruments_data["instruments"]
+        if instrument["brand"] == brand_id
+    ]
+    return models
+
+
+@router.get("/instruments/{instrument_id}")
+async def get_instrument(instrument_id: str):
+    """Get detailed information about a specific instrument"""
+    for instrument in instruments_data["instruments"]:
+        if instrument["id"] == instrument_id:
+            return instrument
+    raise HTTPException(status_code=404, detail="Instrument not found")
+
+
+@router.get("/faults")
+async def get_all_faults():
+    """Get all available faults"""
+    return faults_data["faults"]
+
+
+@router.get("/faults/applicable/{instrument_id}")
+async def get_applicable_faults(instrument_id: str):
+    """Get faults applicable to a specific instrument"""
+    # Find the instrument
+    instrument = None
+    for inst in instruments_data["instruments"]:
+        if inst["id"] == instrument_id:
+            instrument = inst
+            break
+
+    if not instrument:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+
+    # Build list of applicable faults based on instrument components
+    applicable_faults = {}
+
+    # Always include general faults
+    general_fault_ids = [
+        "POWER",
+        "POWER_UNSTABLE",
+        "AUDIO_DISTORTED",
+        "AUDIO_NO_OUTPUT",
+        "AUDIO_WEAK",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "CAPACITOR_BLOWN",
+        "CONNECTOR_LOOSE",
+    ]
+
+    for fault_id in general_fault_ids:
+        if fault_id in faults_data["faults"]:
+            applicable_faults[fault_id] = faults_data["faults"][fault_id]
+
+    # Add component-specific faults based on instrument components
+    components = instrument["components"]
+
+    # Keyboard faults
+    if "teclado" in instrument["type"].lower():
+        keyboard_faults = ["KEYBOARD_DEAD_KEY", "KEYBOARD_STUCK_KEY"]
+        for fault_id in keyboard_faults:
+            if fault_id in faults_data["faults"]:
+                applicable_faults[fault_id] = faults_data["faults"][fault_id]
+
+    # LCD faults
+    if components.get("lcd"):
+        lcd_faults = ["LCD_DEAD", "LCD_LOW_CONTRAST"]
+        for fault_id in lcd_faults:
+            if fault_id in faults_data["faults"]:
+                applicable_faults[fault_id] = faults_data["faults"][fault_id]
+
+    # Control faults
+    if components.get("encoders_rotativos", 0) > 0:
+        if "ENCODER_INTERMITTENT" in faults_data["faults"]:
+            applicable_faults["ENCODER_INTERMITTENT"] = faults_data["faults"][
+                "ENCODER_INTERMITTENT"
+            ]
+
+    if components.get("faders", 0) > 0:
+        if "FADER_INTERMITTENT" in faults_data["faults"]:
+            applicable_faults["FADER_INTERMITTENT"] = faults_data["faults"][
+                "FADER_INTERMITTENT"
+            ]
+
+    if components.get("botones", 0) > 0:
+        button_faults = ["BUTTON_STUCK", "BUTTON_DEAD"]
+        for fault_id in button_faults:
+            if fault_id in faults_data["faults"]:
+                applicable_faults[fault_id] = faults_data["faults"][fault_id]
+
+    # Connectivity faults
+    if components.get("usb"):
+        if "USB_NOT_RECOGNIZED" in faults_data["faults"]:
+            applicable_faults["USB_NOT_RECOGNIZED"] = faults_data["faults"][
+                "USB_NOT_RECOGNIZED"
+            ]
+
+    if components.get("midi_din"):
+        if "MIDI_NOT_RECOGNIZED" in faults_data["faults"]:
+            applicable_faults["MIDI_NOT_RECOGNIZED"] = faults_data["faults"][
+                "MIDI_NOT_RECOGNIZED"
+            ]
+
+    # Aftertouch
+    if components.get("aftertouch"):
+        if "AFTERTOUCH_BROKEN" in faults_data["faults"]:
+            applicable_faults["AFTERTOUCH_BROKEN"] = faults_data["faults"][
+                "AFTERTOUCH_BROKEN"
+            ]
+
+    return list(applicable_faults.values())
+
+
+@router.post("/calculate")
+async def calculate_diagnostic(diagnostic: dict, settings: Settings = Depends(get_settings)):
+    """
+    Calculate diagnostic quote based on instrument and faults
+
+    The quote calculation follows these rules:
+    1. If POWER fault is present, it takes precedence over all others
+    2. Base price is sum of all fault prices
+    3. Applied multipliers:
+       - Instrument tier (brand tier complexity factor)
+       - Equipment value (estimated value multiplier)
+    """
+
+    # Find the instrument
+    instrument = None
+    for inst in instruments_data["instruments"]:
+        if inst["id"] == diagnostic.get("equipment", {}).get("model"):
+            instrument = inst
+            break
+
+    if not instrument:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+
+    # Find the brand
+    brand = None
+    for b in brands_data["brands"]:
+        if b["id"] == diagnostic.get("equipment", {}).get("brand"):
+            brand = b
+            break
+
+    if not brand:
+        raise HTTPException(status_code=404, detail="Brand not found")
+
+    # Check for precedence faults (POWER)
+    effective_faults = diagnostic.get("faults", [])
+    if "POWER" in effective_faults:
+        effective_faults = ["POWER"]
+
+    # Calculate base cost
+    base_cost = 0
+    for fault_id in effective_faults:
+        if fault_id in faults_data["faults"]:
+            fault = faults_data["faults"][fault_id]
+            base_cost += fault.get("basePrice", 0)
+
+    # Get complexity factor from settings
+    complexity_factor = settings.service_multipliers.get(brand.get("tier"), 1.0)
+
+    # Get value factor based on equipment value
+    equipment_value = instrument["valor_estimado"]["min"]
+    value_factor = 1.0
+
+    if equipment_value > 5000000:
+        value_factor = 2.0
+    elif equipment_value > 2000000:
+        value_factor = 1.6
+    elif equipment_value > 500000:
+        value_factor = 1.3
+
+    # Calculate final cost
+    final_cost = int(base_cost * complexity_factor * value_factor)
+
+    # Audit the diagnostic calculation (non-fatal)
+    try:
+        create_audit(
+            event_type="diagnostic.calculate",
+            user_id=None,
+            details={
+                "brand": brand.get("id"),
+                "model": instrument.get("id"),
+                "faults": effective_faults,
+                "final_cost": final_cost,
+            },
+            message="Diagnostic calculated",
+        )
+    except Exception:
+        pass
+
+    return {
+        "equipment_info": {"brand": brand["name"], "model": instrument["model"], "value": equipment_value},
+        "faults": effective_faults,
+        "base_cost": base_cost,
+        "complexity_factor": complexity_factor,
+        "value_factor": value_factor,
+        "final_cost": final_cost,
+    }
+
+
+@router.post("/quotes")
+async def create_quote(quote: dict):
+    """
+    Create a new quote from diagnostic data
+
+    TODO: Implement database storage and email sending
+    """
+    # TODO: Save to database
+    # TODO: Send confirmation email
+    raise HTTPException(status_code=501, detail="Quote creation not yet implemented")
+
+----- FILE: backend/app/routers/instrument.py -----
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from backend.app.models.instrument import Instrument
+from backend.app.core.database import get_db
+
+router = APIRouter(prefix="/api/instruments", tags=["Instruments"])
+
+@router.get("/")
+def list_instruments(db: Session = Depends(get_db)):
+    return db.query(Instrument).all()
+
+@router.post("/")
+def create_instrument(payload: dict, db: Session = Depends(get_db)):
+    db_inst = Instrument(**payload)
+    db.add(db_inst)
+    db.commit()
+    db.refresh(db_inst)
+    return db_inst
+
+@router.put("/{instrument_id}")
+def update_instrument(instrument_id: int, payload: dict, db: Session = Depends(get_db)):
+    db_inst = db.query(Instrument).get(instrument_id)
+    if not db_inst:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+    for k, v in payload.items():
+        setattr(db_inst, k, v)
+    db.commit()
+    db.refresh(db_inst)
+    return db_inst
+
+@router.delete("/{instrument_id}")
+def delete_instrument(instrument_id: int, db: Session = Depends(get_db)):
+    db_inst = db.query(Instrument).get(instrument_id)
+    if not db_inst:
+        raise HTTPException(status_code=404, detail="Instrument not found")
+    db.delete(db_inst)
+    db.commit()
+    return {"ok": True}
+
+----- FILE: backend/app/routers/payments.py -----
+from fastapi import APIRouter, Depends, HTTPException
+from typing import Dict, List
+from pydantic import ValidationError
+from backend.app.core.database import get_db
+from sqlalchemy.orm import Session
+from backend.app.models.payment import Payment, PaymentStatus
+from backend.app.services.logging_service import create_audit
+from sqlalchemy.exc import IntegrityError
+from backend.app.schemas import PaymentCreate, PaymentRead
+
+router = APIRouter(prefix="/payments", tags=["payments"])
+
+
+@router.post("/", response_model=PaymentRead)
+def create_payment(payload: PaymentCreate, db: Session = Depends(get_db)):
+    # Pydantic validation already ensures basic correctness
+    data = payload.dict()
+
+    # Idempotency: if transaction_id provided and a payment already exists, return it
+    tx = data.get("transaction_id")
+    if tx:
+        # Be tolerant: there may be duplicates in older data or race conditions that created
+        # more than one row. Use first() ordered by id so we consistently return the
+        # earliest existing payment rather than raising MultipleResultsFound.
+        # Prefer the most recent payment for this transaction id (highest id)
+        existing = db.query(Payment).filter(Payment.transaction_id == tx).order_by(Payment.id.desc()).first()
+        if existing:
+            try:
+                create_audit(event_type="payment.duplicate", user_id=existing.user_id, details={"payment_id": existing.id, "transaction_id": tx}, message="Duplicate payment request detected")
+            except Exception:
+                pass
+            return existing
+
+    payment = Payment(
+        user_id=data.get("user_id"),
+        repair_id=data.get("repair_id"),
+        amount=data.get("amount"),
+        payment_method=data.get("payment_method"),
+        transaction_id=data.get("transaction_id"),
+        status=PaymentStatus.SUCCESS if (data.get("status") or "").lower() == "success" else PaymentStatus.PENDING,
+        notes=data.get("notes"),
+    )
+    db.add(payment)
+    try:
+        db.commit()
+        db.refresh(payment)
+    except IntegrityError:
+        # Handle race: another request created the same transaction_id concurrently
+        # Roll back and return the existing payment.
+        db.rollback()
+        existing = None
+        if tx:
+            existing = db.query(Payment).filter(Payment.transaction_id == tx).order_by(Payment.id.desc()).first()
+        if existing:
+            try:
+                create_audit(event_type="payment.duplicate", user_id=existing.user_id, details={"payment_id": existing.id, "transaction_id": tx}, message="Duplicate payment request detected (race)")
+            except Exception:
+                pass
+            return existing
+        # If we couldn't find the existing row, re-raise so callers/tests notice
+        raise
+
+    # audit with richer details
+    try:
+        create_audit(event_type="payment.create", user_id=payment.user_id, details={"payment_id": payment.id, "repair_id": payment.repair_id, "amount": payment.amount, "method": payment.payment_method, "transaction_id": payment.transaction_id, "status": payment.status}, message="Payment created")
+    except Exception:
+        pass
+
+    return payment
+
+
+@router.get("/", response_model=List[PaymentRead])
+def list_payments(repair_id: int = None, user_id: int = None, db: Session = Depends(get_db)):
+    q = db.query(Payment)
+    if repair_id:
+        q = q.filter(Payment.repair_id == repair_id)
+    if user_id:
+        q = q.filter(Payment.user_id == user_id)
+    results = q.all()
+    try:
+        create_audit(event_type="payment.list", details={"repair_id": repair_id, "user_id": user_id}, message="Payments listed")
+    except Exception:
+        pass
+    return results
+
+
+@router.get("/{payment_id}", response_model=PaymentRead)
+def get_payment(payment_id: int, db: Session = Depends(get_db)):
+    payment = db.query(Payment).filter(Payment.id == payment_id).one_or_none()
+    if not payment:
+        raise HTTPException(status_code=404, detail="Payment not found")
+    try:
+        create_audit(event_type="payment.get", details={"payment_id": payment_id}, message="Payment fetched")
+    except Exception:
+        pass
+    return payment
+
+----- FILE: backend/app/routers/quotation.py -----
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import List
+import json
+from pathlib import Path
+from backend.app.services.event_system import event_bus, Events
+
+router = APIRouter(prefix="/quotations", tags=["quotations"])
+
+# Load data from frontend data assets so quotation logic uses same dataset
+# DATA_PATH should point to the frontend data folder within the project
+# The module sits at backend/app/routers, so parents[3] resolves to the project root
+DATA_PATH = Path(__file__).resolve().parents[3] / "src" / "assets" / "data"
+
+def _load_json(name: str):
+    try:
+        with open(DATA_PATH / name, 'r', encoding='utf-8') as fh:
+            return json.load(fh)
+    except Exception:
+        return {}
+
+BRANDS = {b['id']: b for b in _load_json('brands.json').get('brands', [])}
+INSTRUMENTS = {i['id']: i for i in _load_json('instruments.json').get('instruments', [])}
+FAULTS = _load_json('faults.json').get('faults', {})
+
+# Simple tier configuration (can be tuned later)
+TIER_CONFIG = {
+    'legendary': {'multiplier': 1.5},
+    'professional': {'multiplier': 1.3},
+    'historic': {'multiplier': 1.4},
+    'boutique': {'multiplier': 1.2},
+    'specialized': {'multiplier': 1.1},
+    'standard': {'multiplier': 1.0},
+}
+
+
+class QuotationRequest(BaseModel):
+    instrument_id: str
+    faults: List[str]
+
+
+class FaultBreakdown(BaseModel):
+    fault_id: str
+    name: str
+    base_price: int
+
+
+class QuotationResponse(BaseModel):
+    instrument_id: str
+    instrument_name: str
+    brand_name: str
+    tier: str
+
+    base_total: int
+    multiplier: float
+    min_price: int
+    max_price: int
+
+    breakdown: List[FaultBreakdown]
+
+    instrument_value_avg: int
+    max_recommended: int
+    exceeds_recommendation: bool
+
+    disclaimer: str
+
+
+@router.post("/estimate", response_model=QuotationResponse)
+async def estimate_quotation(request: QuotationRequest):
+    instrument = INSTRUMENTS.get(request.instrument_id)
+    if not instrument:
+        raise HTTPException(status_code=404, detail="Instrumento no encontrado")
+
+    brand = BRANDS.get(instrument.get('brand'))
+    if not brand:
+        raise HTTPException(status_code=404, detail="Marca no encontrada")
+
+    tier = brand.get('tier', 'standard')
+    multiplier = TIER_CONFIG.get(tier, TIER_CONFIG['standard'])['multiplier']
+
+    # Precedence: if POWER present, only consider POWER
+    effective_faults = request.faults
+    if 'POWER' in request.faults:
+        effective_faults = ['POWER']
+
+    breakdown = []
+    base_total = 0
+    for fid in effective_faults:
+        f = FAULTS.get(fid)
+        if not f:
+            continue
+        price = int(f.get('basePrice', 0))
+        base_total += price
+        breakdown.append(FaultBreakdown(fault_id=fid, name=f.get('name', fid), base_price=price))
+
+    adjusted_total = int(base_total * multiplier)
+    min_price = int(adjusted_total * 0.8)
+    max_price = int(adjusted_total * 1.3)
+
+    valor_min = instrument.get('valor_min') or instrument.get('valor_estimado', {}).get('min') or 0
+    valor_max = instrument.get('valor_max') or instrument.get('valor_estimado', {}).get('max') or 0
+    valor_avg = (valor_min + valor_max) // 2 if valor_min and valor_max else 0
+    max_recommended = int(valor_avg * 0.5) if valor_avg else 999999999
+    exceeds = max_price > max_recommended
+
+    disclaimer_text = (
+        "⚠️ IMPORTANTE - INFORMACIÓN DE COTIZACIÓN\n\n"
+        "Esta cotización es INDICATIVA y NO VINCULANTE.\n\n"
+        "• El precio final se confirma tras revisión presencial del equipo en nuestro taller.\n"
+        "• El diagnóstico completo requiere abrir el instrumento, lo que puede revelar fallas "
+        "adicionales no detectables externamente.\n"
+        "• El presupuesto formal tiene un costo de $20.000 CLP, que es:\n"
+        "  - ABONABLE: Se descuenta del total si decide proceder con la reparación\n"
+        "  - NO REEMBOLSABLE: Queda como pago por diagnóstico si rechaza la reparación\n\n"
+        "• Reparación de síntesis: Nuestro compromiso es que nunca cobramos más del 50% "
+        "del valor de mercado actual del instrumento."
+    )
+    
+    if exceeds:
+        disclaimer_text += (
+            f"\n\n⚠️ ATENCIÓN: El costo estimado (${max_price:,}) sobrepasa el 50% del valor "
+            f"del instrumento (${max_recommended:,}). Considere si es rentable reparar versus comprar otro."
+        )
+
+    return QuotationResponse(
+        instrument_id=request.instrument_id,
+        instrument_name=f"{brand.get('name')} {instrument.get('model')}",
+        brand_name=brand.get('name'),
+        tier=tier,
+        base_total=base_total,
+        multiplier=multiplier,
+        min_price=min_price,
+        max_price=max_price,
+        breakdown=breakdown,
+        instrument_value_avg=valor_avg,
+        max_recommended=max_recommended,
+        exceeds_recommendation=exceeds,
+        disclaimer=disclaimer_text,
+    )
+
+----- FILE: backend/app/routers/repair.py -----
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from backend.app.models.repair import Repair
+from typing import Dict
+from backend.app.core.database import get_db
+from backend.app.services.logging_service import create_audit
+
+router = APIRouter(prefix="/repairs", tags=["Repairs"])
+
+@router.get("/")
+def list_repairs(db: Session = Depends(get_db)):
+    return db.query(Repair).all()
+
+@router.post("/")
+def create_repair(repair: Dict, db: Session = Depends(get_db)):
+    # Accept a flexible payload for now to avoid schema package conflicts
+    db_repair = Repair(**repair)
+    db.add(db_repair)
+    db.commit()
+    db.refresh(db_repair)
+    # Audit: repair created
+    try:
+        # Keep audit payload minimal and defensive: avoid referencing optional attrs
+        create_audit(event_type="repair.create", user_id=None, details={"repair_id": db_repair.id}, message="Repair created")
+    except Exception:
+        # Non-fatal: auditing should not break main flow
+        pass
+    return db_repair
+
+@router.put("/{repair_id}")
+def update_repair(repair_id: int, repair: Dict, db: Session = Depends(get_db)):
+    db_repair = db.query(Repair).get(repair_id)
+    if not db_repair:
+        raise HTTPException(status_code=404, detail="Repair not found")
+    for key, value in repair.items():
+        setattr(db_repair, key, value)
+    db.commit()
+    db.refresh(db_repair)
+    # Audit: repair updated
+    try:
+        create_audit(event_type="repair.update", user_id=None, details={"repair_id": db_repair.id}, message="Repair updated")
+    except Exception:
+        pass
+    return db_repair
+
+@router.delete("/{repair_id}")
+def delete_repair(repair_id: int, db: Session = Depends(get_db)):
+    db_repair = db.query(Repair).get(repair_id)
+    if not db_repair:
+        raise HTTPException(status_code=404, detail="Repair not found")
+    db.delete(db_repair)
+    db.commit()
+    # Audit: repair deleted
+    try:
+        create_audit(event_type="repair.delete", user_id=None, details={"repair_id": repair_id}, message="Repair deleted")
+    except Exception:
+        pass
+    return {"ok": True}
+
+----- FILE: backend/app/routers/stock_movement.py -----
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from backend.app.models.stock_movement import StockMovement
+from backend.app.core.database import get_db
+
+router = APIRouter(prefix="/api/stock-movements", tags=["StockMovements"])
+
+@router.get("/")
+def list_movements(db: Session = Depends(get_db)):
+    return db.query(StockMovement).all()
+
+@router.post("/")
+def create_movement(payload: dict, db: Session = Depends(get_db)):
+    db_obj = StockMovement(**payload)
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+----- FILE: backend/app/routers/uploads.py -----
+from fastapi import APIRouter, UploadFile, File, Depends, status, Request
+from backend.app.utils.uploads import validate_image, save_upload
+from backend.app.core.ratelimit import limiter
+from backend.app.services.logging_service import create_audit
+
+router = APIRouter(prefix="/uploads", tags=["uploads"])
+
+
+@router.post("/images", status_code=status.HTTP_201_CREATED)
+@limiter.limit("20/minute")  # limit image uploads to protect abuse
+async def upload_image(request: Request, file: UploadFile = File(...)):
+    """Upload an image with validation (size, type)."""
+    await validate_image(file)
+    path = await save_upload(file)
+    # Audit upload
+    try:
+        ip = None
+        if request.client:
+            ip = request.client.host
+        create_audit(event_type="upload.image", user_id=None, ip_address=ip, details={"path": path, "filename": file.filename}, message="Image uploaded")
+    except Exception:
+        pass
+    return {"path": path, "filename": file.filename}
+
+----- FILE: backend/app/routers/user.py -----
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from backend.app.models.user import User
+from backend.app.schemas.user import UserCreate, UserRead, UserUpdate
+from backend.app.core.database import get_db
+
+router = APIRouter(prefix="/api/users", tags=["Users"])
+
+@router.get("/", response_model=list[UserRead])
+def list_users(db: Session = Depends(get_db)):
+    return db.query(User).all()
+
+@router.post("/", response_model=UserRead)
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = User(**user.dict())
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@router.put("/{user_id}", response_model=UserRead)
+def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
+    db_user = db.query(User).get(user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    for key, value in user.dict(exclude_unset=True).items():
+        setattr(db_user, key, value)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@router.delete("/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = db.query(User).get(user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    db.delete(db_user)
+    db.commit()
+    return {"ok": True}
+
+============== BACKEND SCHEMAS ==================
+
+----- FILE: backend/app/models/audit.py -----
+from sqlalchemy import Column, Integer, String, DateTime, JSON, Text, Index
+from datetime import datetime
+from backend.app.core.database import Base
+
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    event_type = Column(String(120), nullable=False, index=True)
+    user_id = Column(Integer, nullable=True, index=True)
+    ip_address = Column(String(45), nullable=True)
+    details = Column(JSON, nullable=True)
+    message = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+# Optional index on (event_type, created_at) for fast lookups
+Index("ix_audit_event_created", AuditLog.event_type, AuditLog.created_at)
+
+----- FILE: backend/app/models/brand.py -----
+"""
+Modelo Brand para marcas de instrumentos
+"""
+from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from backend.app.core.database import Base
+
+
+class Brand(Base):
+    """Marca de instrumentos musicales"""
+    
+    __tablename__ = "brands"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), unique=True, nullable=False, index=True)
+    country = Column(String(100), nullable=True)
+    founded = Column(Integer, nullable=True)  # Año de fundación
+    description = Column(Text, nullable=True)
+    tier = Column(String(50), nullable=True)  # "budget", "mid-range", "premium", "luxury"
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    # Relaciones
+    instruments = relationship("Instrument", back_populates="brand")
+    
+    def __repr__(self):
+        return f"<Brand(id={self.id}, name={self.name})>"
+
+----- FILE: backend/app/models/category.py -----
+"""
+Modelo Category para categorías de inventario
+"""
+from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from backend.app.core.database import Base
+
+
+class Category(Base):
+    """Categoría de productos/inventario"""
+    
+    __tablename__ = "categories"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), unique=True, nullable=False, index=True)
+    description = Column(String(500), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    # Relaciones
+    products = relationship("Product", back_populates="category")
+    
+    def __repr__(self):
+        return f"<Category(id={self.id}, name={self.name})>"
+
+----- FILE: backend/app/models/diagnostic.py -----
+"""
+Modelo Diagnostic para cotizaciones y análisis IA
+"""
+from sqlalchemy import Column, Integer, String, DateTime, JSON, ForeignKey, Text
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from backend.app.core.database import Base
+
+
+class Diagnostic(Base):
+    """
+    Modelo para almacenar diagnósticos (análisis IA, cotizaciones)
+    """
+    
+    __tablename__ = "diagnostics"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    repair_id = Column(Integer, ForeignKey("repairs.id"), nullable=True)
+    
+    # Imagen analizada
+    image_path = Column(String(500), nullable=True)
+    
+    # Resultados del análisis IA
+    ai_analysis = Column(JSON, nullable=True)  # Resultado de Claude Vision
+    detected_faults = Column(JSON, nullable=True)  # [{"fault": "...", "severity": 0-100}]
+    ai_confidence = Column(Integer, default=0)  # 0-100
+    
+    # Cotización generada
+    quote_total = Column(Integer, nullable=True)  # en centavos
+    quote_breakdown = Column(JSON, nullable=True)  # Desglose por items
+    labor_hours = Column(Integer, nullable=True)  # Horas de trabajo estimadas
+    
+    # Metadatos
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    notes = Column(Text, nullable=True)
+    
+    # Relaciones
+    repair = relationship("Repair", back_populates="diagnostic", foreign_keys=[repair_id], uselist=False)
+    
+    def __repr__(self):
+        return f"<Diagnostic(id={self.id}, ai_confidence={self.ai_confidence})>"
+
+----- FILE: backend/app/models/instrument.py -----
+"""
+Modelo Instrument para instrumentos musicales (sintetizadores, etc.)
+"""
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, JSON
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from backend.app.core.database import Base
+
+
+class Instrument(Base):
+    """Modelo de instrumento musical en el catálogo"""
+    
+    __tablename__ = "instruments"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    brand_id = Column(Integer, ForeignKey("brands.id"), nullable=True)
+    
+    # Información básica
+    name = Column(String(255), nullable=False, index=True)
+    model = Column(String(255), nullable=False, index=True)
+    type = Column(String(100), nullable=True)  # "synthesizer", "keyboard", "drum_machine", etc.
+    year = Column(Integer, nullable=True)
+    description = Column(Text, nullable=True)
+    
+    # Estimación de precio (para cotización automática)
+    valor_estimado = Column(Integer, nullable=True)  # Valor estimado en centavos
+    
+    # Imagen
+    image = Column(JSON, nullable=True)  # {"url": "...", "status": "pending|loaded|failed"}
+    
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    # Relaciones
+    brand = relationship("Brand", back_populates="instruments")
+    repairs = relationship("Repair", back_populates="instrument")
+    
+    def __repr__(self):
+        return f"<Instrument(id={self.id}, model={self.model})>"
+
+----- FILE: backend/app/models/inventory.py -----
+"""
+Modelo Product para inventario
+"""
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from backend.app.core.database import Base
+
+
+class Product(Base):
+    """Producto en inventario (repuestos, componentes, etc.)"""
+    
+    __tablename__ = "products"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False, index=True)
+    name = Column(String(255), nullable=False, index=True)
+    sku = Column(String(100), unique=True, nullable=False, index=True)
+    description = Column(Text, nullable=True)
+    price = Column(Integer, nullable=False)  # Precio en centavos
+    quantity = Column(Integer, default=0, nullable=False)
+    min_quantity = Column(Integer, default=5, nullable=False)  # Para alertas de stock bajo
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    # Relaciones
+    category = relationship("Category", back_populates="products")
+    stock_movements = relationship("StockMovement", back_populates="product")
+    
+    @property
+    def is_low_stock(self):
+        """Retorna True si el stock está bajo"""
+        return self.quantity <= self.min_quantity
+    
+    def __repr__(self):
+        return f"<Product(id={self.id}, sku={self.sku}, quantity={self.quantity})>"
+
+----- FILE: backend/app/models/payment.py -----
+"""
+Modelo Payment para registrar pagos asociados a reparaciones
+"""
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Text
+from sqlalchemy.orm import relationship
+from datetime import datetime
+import enum
+from backend.app.core.database import Base
+
+
+class PaymentStatus(str, enum.Enum):
+    PENDING = "pending"
+    SUCCESS = "success"
+    FAILED = "failed"
+    REFUNDED = "refunded"
+
+
+class Payment(Base):
+    __tablename__ = "payments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
+    repair_id = Column(Integer, ForeignKey("repairs.id"), nullable=True, index=True)
+
+    amount = Column(Integer, nullable=False)  # in cents
+    payment_method = Column(String(50), nullable=False)
+    transaction_id = Column(String(255), nullable=True, index=True, unique=True)
+    status = Column(Enum(PaymentStatus), default=PaymentStatus.PENDING, nullable=False)
+    notes = Column(Text, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    user = relationship("User")
+    repair = relationship("Repair")
+
+    def __repr__(self):
+        return f"<Payment(id={self.id}, repair_id={self.repair_id}, amount={self.amount})>"
+
+----- FILE: backend/app/models/repair.py -----
+"""
+Modelo Repair para gestionar reparaciones
+"""
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Text, Enum
+from sqlalchemy.orm import relationship
+from datetime import datetime
+import enum
+from backend.app.core.database import Base
+
+
+class RepairStatus(str, enum.Enum):
+    """Estados posibles de una reparación"""
+    PENDING = "pending"           # Pendiente de revisión
+    IN_PROGRESS = "in_progress"   # En reparación
+    WAITING_PARTS = "waiting_parts"  # Esperando repuestos
+    COMPLETED = "completed"       # Reparación completada
+    READY_PICKUP = "ready_pickup" # Listo para recoger
+    DELIVERED = "delivered"       # Entregado
+    CANCELLED = "cancelled"       # Cancelado
+
+
+class Repair(Base):
+    """Modelo de reparación"""
+    
+    __tablename__ = "repairs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    client_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    instrument_id = Column(Integer, ForeignKey("instruments.id"), nullable=True)
+    # diagnostic_id removed to avoid circular FK ambiguity; Diagnostic.repair_id references Repair.id
+    
+    # Información general
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    status = Column(Enum(RepairStatus), default=RepairStatus.PENDING, nullable=False)
+    
+    # Estimados
+    estimated_price = Column(Integer, nullable=True)  # en centavos
+    final_price = Column(Integer, nullable=True)
+    estimated_days = Column(Integer, nullable=True)
+    
+    # Fechas
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    started_at = Column(DateTime, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    # Control
+    notes = Column(Text, nullable=True)
+    is_priority = Column(Boolean, default=False)
+    
+    # Relaciones
+    client = relationship("User", back_populates="repairs", foreign_keys=[client_id])
+    instrument = relationship("Instrument", back_populates="repairs")
+    diagnostic = relationship("Diagnostic", back_populates="repair", uselist=False)
+    
+    def __repr__(self):
+        return f"<Repair(id={self.id}, client_id={self.client_id}, status={self.status})>"
+
+----- FILE: backend/app/models/stock_movement.py -----
+"""
+Modelo StockMovement para historial de movimientos de inventario
+"""
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, Enum
+from sqlalchemy.orm import relationship
+from datetime import datetime
+import enum
+from backend.app.core.database import Base
+
+
+class MovementType(str, enum.Enum):
+    """Tipos de movimientos de inventario"""
+    ENTRY = "entry"           # Entrada de stock
+    WITHDRAWAL = "withdrawal" # Salida de stock
+    ADJUSTMENT = "adjustment" # Ajuste de inventario
+    DAMAGE = "damage"         # Producto dañado
+
+
+class StockMovement(Base):
+    """Registro de movimiento de stock"""
+    
+    __tablename__ = "stock_movements"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False, index=True)
+    
+    # Información del movimiento
+    movement_type = Column(Enum(MovementType), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    reason = Column(String(255), nullable=True)  # Motivo del movimiento
+    notes = Column(Text, nullable=True)
+    
+    # Fecha
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    
+    # Relaciones
+    product = relationship("Product", back_populates="stock_movements")
+    
+    def __repr__(self):
+        return f"<StockMovement(id={self.id}, type={self.movement_type}, qty={self.quantity})>"
+
+----- FILE: backend/app/models/user.py -----
+"""
+Modelo User para SQLAlchemy
+"""
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Enum
+from sqlalchemy.orm import relationship
+from datetime import datetime
+import enum
+from backend.app.core.database import Base
+
+
+class UserRole(str, enum.Enum):
+    """Roles de usuario disponibles"""
+    CLIENT = "client"
+    TECHNICIAN = "technician"
+    ADMIN = "admin"
+
+
+class User(Base):
+    """Modelo de usuario para la base de datos"""
+    
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(255), unique=True, index=True, nullable=False)
+    username = Column(String(100), unique=True, index=True, nullable=False)
+    full_name = Column(String(255), nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    phone = Column(String(20), nullable=True)
+    role = Column(Enum(UserRole), default=UserRole.CLIENT, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    # Relaciones
+    repairs = relationship("Repair", back_populates="client", foreign_keys="Repair.client_id")
+    
+    def __repr__(self):
+        return f"<User(id={self.id}, email={self.email}, role={self.role})>"
+
+----- FILE: backend/app/schemas/auth.py -----
+"""
+Pydantic schemas para autenticación
+"""
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
+
+
+class Token(BaseModel):
+    """Respuesta de token"""
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+
+class TokenData(BaseModel):
+    """Datos decodificados del token"""
+    user_id: int
+    username: str
+    email: str
+    role: str
+
+
+class LoginRequest(BaseModel):
+    """Request de login"""
+    email: EmailStr
+    password: str = Field(..., min_length=6)
+
+
+class RegisterRequest(BaseModel):
+    """Request de registro"""
+    email: EmailStr
+    username: str = Field(..., min_length=3, max_length=100)
+    full_name: str = Field(..., min_length=3)
+    password: str = Field(..., min_length=8)
+    phone: Optional[str] = None
+
+
+class PasswordResetRequest(BaseModel):
+    """Request para recuperar contraseña"""
+    email: EmailStr
+
+
+class PasswordResetConfirm(BaseModel):
+    """Confirmación de reset de contraseña"""
+    token: str
+    new_password: str = Field(..., min_length=8)
+
+
+class RefreshTokenRequest(BaseModel):
+    """Request para refrescar token"""
+    refresh_token: str
+
+----- FILE: backend/app/schemas/category.py -----
+
+----- FILE: backend/app/schemas/diagnostic.py -----
+
+----- FILE: backend/app/schemas/inventory.py -----
+from pydantic import BaseModel
+from typing import Optional
+
+
+class ItemSummary(BaseModel):
+	id: int
+	sku: Optional[str]
+	name: str
+	category: str
+	stock: int = 0
+
+	class Config:
+		orm_mode = True
+
+----- FILE: backend/app/schemas/repair.py -----
+
+----- FILE: backend/app/schemas/user.py -----
+"""
+Pydantic schemas para usuarios
+"""
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
+from datetime import datetime
+
+
+class UserCreate(BaseModel):
+    """Schema para crear usuario"""
+    email: EmailStr
+    username: str = Field(..., min_length=3)
+    full_name: str
+    password: str = Field(..., min_length=8)
+    phone: Optional[str] = None
+
+
+class UserUpdate(BaseModel):
+    """Schema para actualizar usuario"""
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+
+
+class UserResponse(BaseModel):
+    """Schema para respuesta de usuario (sin contraseña)"""
+    id: int
+    email: str
+    username: str
+    full_name: str
+    phone: Optional[str]
+    role: str
+    is_active: bool
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class UserDetailResponse(UserResponse):
+    """Detalle completo del usuario"""
+    updated_at: datetime
+
+======== BACKEND SERVICIOS/CRUD (ÍNDICE) ========
+backend/app/crud/__init__.py
+backend/app/crud/base.py
+backend/app/crud/category.py
+backend/app/crud/inventory.py
+backend/app/crud/repair.py
+backend/app/crud/user.py
+backend/app/services/ai_detector.py
+backend/app/services/email_service.py
+backend/app/services/event_handlers.py
+backend/app/services/event_system.py
+backend/app/services/image_analysis.py
+backend/app/services/logging_service.py
+backend/app/services/pdf_generator.py
+backend/app/services/quote_calculator.py
+
+================ BACKEND TESTS ==================
+backend/tests/test_audit_hooks.py
+backend/tests/test_audit_logging.py
+backend/tests/test_config.py
+backend/tests/test_import_endpoints.py
+backend/tests/test_ingest.py
+backend/tests/test_items_api.py
+backend/tests/test_payments_concurrency.py
+backend/tests/test_payments_endpoints.py
+backend/tests/test_ratelimit.py
+backend/tests/test_security_scan.py
+
+###############################################
+# FIN DEL VOLCADO
+# Archivos sensibles excluidos:
+#   - .env, .env.*, secrets/
+#   - node_modules/, __pycache__/
+#   - Líneas con API_KEY, SECRET, PASSWORD
+#   - URLs de DB con credenciales
+###############################################

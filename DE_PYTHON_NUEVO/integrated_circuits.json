@@ -1,0 +1,1010 @@
+[
+  {
+    "part_number": "12320VH25V",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "12F629",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "16F628",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "16F648",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "16F684",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "16F84",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "16F877",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "16F88",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "16F886",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "16F887",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "18F4520",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "18F4550",
+    "function_type": "MCU",
+    "manufacturer": "Microchip",
+    "family": "PIC"
+  },
+  {
+    "part_number": "24LC04",
+    "function_type": "MEMORY",
+    "manufacturer": "Various",
+    "family": "EEPROM"
+  },
+  {
+    "part_number": "24LC16",
+    "function_type": "MEMORY",
+    "manufacturer": "Various",
+    "family": "EEPROM"
+  },
+  {
+    "part_number": "44LS157",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "4N25",
+    "function_type": "OPTOCOUPLER",
+    "manufacturer": "Various",
+    "family": "OPTO"
+  },
+  {
+    "part_number": "4N26",
+    "function_type": "OPTOCOUPLER",
+    "manufacturer": "Various",
+    "family": "OPTO"
+  },
+  {
+    "part_number": "4N36",
+    "function_type": "OPTOCOUPLER",
+    "manufacturer": "Various",
+    "family": "OPTO"
+  },
+  {
+    "part_number": "5218A",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "6N137",
+    "function_type": "OPTOCOUPLER",
+    "manufacturer": "Various",
+    "family": "OPTO"
+  },
+  {
+    "part_number": "74HC04",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74HC132",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74HC138",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74HC14",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74HC154",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74HC245",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74HC373",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74HC4051",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74HC75",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74LS04",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74LS08",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74LS14",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "74LS48",
+    "function_type": "LOGIC_TTL",
+    "manufacturer": "Various",
+    "family": "74_SERIES"
+  },
+  {
+    "part_number": "7555",
+    "function_type": "TIMER",
+    "manufacturer": "Various",
+    "family": "555"
+  },
+  {
+    "part_number": "7660",
+    "function_type": "DC_CONVERTER",
+    "manufacturer": "Various",
+    "family": "CHARGE_PUMP"
+  },
+  {
+    "part_number": "AC3105I",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "AK4318",
+    "function_type": "AUDIO_IC",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "AK4526VQ",
+    "function_type": "AUDIO_IC",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "AN7147N",
+    "function_type": "AUDIO_IC",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "ATMEGA328P",
+    "function_type": "MCU",
+    "manufacturer": "Microchip/Atmel",
+    "family": "AVR"
+  },
+  {
+    "part_number": "ATTINY2313",
+    "function_type": "MCU",
+    "manufacturer": "Microchip/Atmel",
+    "family": "AVR"
+  },
+  {
+    "part_number": "ATTINY4313",
+    "function_type": "MCU",
+    "manufacturer": "Microchip/Atmel",
+    "family": "AVR"
+  },
+  {
+    "part_number": "BA5417",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "CA3046",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "CA3080",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "CD14538",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "CD40106",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD40109",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4011",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4013",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4015",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4016",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4017",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4020",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4027",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4029",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4040",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4047",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4049",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4051",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4052",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4053",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4060",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4066",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4067",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4069",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4072",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4073",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4081",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4093",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4094",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CD4096",
+    "function_type": "LOGIC_CMOS",
+    "manufacturer": "Various",
+    "family": "4000_SERIES"
+  },
+  {
+    "part_number": "CPH6302",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "D41416C",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "D72064LM",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "DG412",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "FT232RL",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "FW828",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "HJ238",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "HT8950",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "JCR4556",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "JCR4558",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "JCR4560",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "JCR4565",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "JCR4580",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "JRC2903",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "KA2206",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "KA2535",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LA4227",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LM051A",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LM13600",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM13700",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM1496",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LM1881",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LM2574",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LM311",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM324",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM339",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM3578AN",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM358",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM386",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM3900",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM393",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM394",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "LM741",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LM831N",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LNK3046N",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LT8304",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "LV125A",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "MAX1044",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "MAX232",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "MB81C4526A",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "MC1489",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "MCP4822",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "MCP6004",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "MOC3021",
+    "function_type": "OPTOCOUPLER",
+    "manufacturer": "Various",
+    "family": "OPTO"
+  },
+  {
+    "part_number": "MP1470GJ",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "MX7528",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "NE5532",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "NE5534",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "NE555",
+    "function_type": "TIMER",
+    "manufacturer": "Various",
+    "family": "555"
+  },
+  {
+    "part_number": "NE556",
+    "function_type": "TIMER",
+    "manufacturer": "Various",
+    "family": "555"
+  },
+  {
+    "part_number": "NE567",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "NJM2374",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "NNC6.2MG-T1",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "OB2269CP",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "OP07",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "OPA2137PA",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "P721F",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "PC2581V",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "PCA9532",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "PT2399",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "RN5RG33AA",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "RRL025P03TR",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "SM76489AN",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "SN74157",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "SN74173",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "SN7517",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "SN75176",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "SN75240W",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "SN75441",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "SN754410",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TDA2822M",
+    "function_type": "AUDIO_IC",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "TDA7294",
+    "function_type": "AUDIO_IC",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "TDA9108",
+    "function_type": "AUDIO_IC",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "TEA2025",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TGA2025",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "THAT1646",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TL071",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "TL072",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "TL074",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "TL082",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "TL084",
+    "function_type": "OP_AMP",
+    "manufacturer": "Various",
+    "family": "AUDIO"
+  },
+  {
+    "part_number": "TLC2272",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TLC5940",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TMS4145",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TPS54240DGQR",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TPS5430",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TPS7A3401DGNR",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TSB41AB2",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "TUSB3200",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "UC3843",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "UL26",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "UMG9NTR (G9)",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "USB3343",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "V54C3256164VDI7",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "VA220M",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  },
+  {
+    "part_number": "WOOA",
+    "function_type": "GENERAL",
+    "manufacturer": "Unknown",
+    "family": "MISC"
+  }
+]

@@ -1,0 +1,8 @@
+id,username,password,name,position,image
+1,purchasing,weiming,Zhuang Weiming,Purchasing,src/assets/avatar/matthew.png
+2,inbound,weiming,Feng Jiwei,Inbounder,src/assets/avatar/matt.jpg
+3,receiving,weiming,Zhou Shaowen,Receiver,src/assets/avatar/matthew.png
+4,checking,weiming,Luo Shaohuai,Quality Checker,src/assets/avatar/matthew.png
+5,storing,weiming,Liu Xin,Keeper,src/assets/avatar/matthew.png
+6,picking,weiming,Wu Cai,Picker,src/assets/avatar/matthew.png
+7,admin,weiming,Wang Jinghan,Admin,src/assets/avatar/elliot.jpg

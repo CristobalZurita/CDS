@@ -1,0 +1,107 @@
+{
+  "stores": [
+    {
+      "file": "src/stores/users.js",
+      "var": "useUsersStore",
+      "occurrences": 3,
+      "occ_files": [
+        "./src/composables/useUsers.js",
+        "./src/stores/users.js"
+      ]
+    },
+    {
+      "file": "src/stores/stockMovements.js",
+      "var": "useStockMovementsStore",
+      "occurrences": 3,
+      "occ_files": [
+        "./src/composables/useStockMovements.js",
+        "./src/stores/stockMovements.js"
+      ]
+    },
+    {
+      "file": "src/stores/categories.js",
+      "var": "useCategoriesStore",
+      "occurrences": 3,
+      "occ_files": [
+        "./src/composables/useCategories.js",
+        "./src/stores/categories.js"
+      ]
+    },
+    {
+      "file": "src/stores/instruments.js",
+      "var": "useInstrumentsStore",
+      "occurrences": 3,
+      "occ_files": [
+        "./src/composables/useInstruments.js",
+        "./src/stores/instruments.js"
+      ]
+    },
+    {
+      "file": "src/stores/repairs.js",
+      "var": "useRepairsStore",
+      "occurrences": 3,
+      "occ_files": [
+        "./src/composables/useRepairs.js",
+        "./src/stores/repairs.js"
+      ]
+    },
+    {
+      "file": "src/stores/quotation.js",
+      "var": "useQuotationStore",
+      "occurrences": 9,
+      "occ_files": [
+        "./src/composables/useQuotation.js",
+        "./src/stores/quotation.js",
+        "./src/vue/components/quotation/InstrumentSelector.vue",
+        "./src/vue/content/pages/CotizadorIAPage.vue",
+        "./src/vue/content/pages/SchedulePage.vue"
+      ]
+    },
+    {
+      "file": "src/stores/diagnostics.js",
+      "var": "useDiagnosticsStore",
+      "occurrences": 3,
+      "occ_files": [
+        "./src/composables/useDiagnostics.js",
+        "./src/stores/diagnostics.js"
+      ]
+    },
+    {
+      "file": "src/stores/inventory.js",
+      "var": "useInventoryStore",
+      "occurrences": 16,
+      "occ_files": [
+        "./tests/unit/stores/inventory.spec.js",
+        "./src/views/InventoryUnified.vue",
+        "./src/stores/inventory.js",
+        "./src/stores/__tests__/inventory.spec.js",
+        "./src/vue/content/pages/admin/InventoryPage.vue"
+      ]
+    },
+    {
+      "file": "src/stores/auth.js",
+      "var": "useAuthStore",
+      "occurrences": 48,
+      "occ_files": [
+        "./node_modules/.vite/deps/pinia.js",
+        "./node_modules/pinia/dist/pinia.esm-browser.js",
+        "./node_modules/pinia/dist/pinia.iife.js",
+        "./MODELOS/Geeker-Admin-master/src/hooks/useAuthButtons.ts",
+        "./MODELOS/Geeker-Admin-master/src/routers/index.ts"
+      ]
+    },
+    {
+      "file": "src/stores/auth.js",
+      "var": "useAuthStore",
+      "occurrences": 48,
+      "occ_files": [
+        "./node_modules/.vite/deps/pinia.js",
+        "./node_modules/pinia/dist/pinia.esm-browser.js",
+        "./node_modules/pinia/dist/pinia.iife.js",
+        "./MODELOS/Geeker-Admin-master/src/hooks/useAuthButtons.ts",
+        "./MODELOS/Geeker-Admin-master/src/routers/index.ts"
+      ]
+    }
+  ],
+  "unused": []
+}

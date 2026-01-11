@@ -1,0 +1,15 @@
+[
+  {
+    "file": "./src/vue/components/admin/InventoryForm.vue",
+    "element": "toRefs",
+    "type": "import",
+    "evidence": "occurrences: 1",
+    "total_occurrences": 1,
+    "matches": [
+      {
+        "file": "./src/vue/components/admin/InventoryForm.vue",
+        "occurrences": 1
+      }
+    ]
+  }
+]

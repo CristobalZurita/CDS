@@ -1,0 +1,200 @@
+backend/app/main.py:132:9: 'backend.app.services.logging_service' imported but unused
+backend/app/core/config.py:6:1: 'functools.lru_cache' imported but unused
+backend/app/routers/diagnostic.py:6:1: 'typing.List' imported but unused
+backend/app/routers/payments.py:2:1: 'typing.Dict' imported but unused
+backend/app/routers/payments.py:3:1: 'pydantic.ValidationError' imported but unused
+backend/app/routers/quotation.py:6:1: 'backend.app.services.event_system.event_bus' imported but unused
+backend/app/routers/quotation.py:6:1: 'backend.app.services.event_system.Events' imported but unused
+backend/app/routers/uploads.py:1:1: 'fastapi.Depends' imported but unused
+backend/app/routers/stock_movement.py:1:1: 'fastapi.HTTPException' imported but unused
+backend/app/services/logging_service.py:5:1: 'backend.app.core.database.engine' imported but unused
+backend/app/services/logging_service.py:5:1: 'backend.app.core.database.Base' imported but unused
+backend/app/services/email_service.py:13:1: 'typing.List' imported but unused
+backend/app/services/email_service.py:13:1: 'typing.Dict' imported but unused
+backend/app/services/email_service.py:13:1: 'typing.Any' imported but unused
+backend/app/services/email_service.py:19:5: 'sendgrid.helpers.mail.Email' imported but unused
+backend/app/services/email_service.py:19:5: 'sendgrid.helpers.mail.To' imported but unused
+backend/app/services/email_service.py:19:5: 'sendgrid.helpers.mail.Content' imported but unused
+backend/app/api/v1/router.py:13:2: 'backend.app.routers.diagnostic as diagnostic_router' imported but unused
+backend/app/api/v1/router.py:14:2: 'backend.app.routers.quotation as quotation_router' imported but unused
+backend/app/api/v1/router.py:15:2: 'backend.app.routers.payments as payments_router' imported but unused
+backend/app/api/v1/endpoints/auth.py:15:1: 'backend.app.schemas.auth.PasswordResetRequest' imported but unused
+backend/app/api/v1/endpoints/auth.py:96:5: local variable 'e' is assigned to but never used
+backend/app/api/v1/endpoints/auth.py:216:5: local variable 'e' is assigned to but never used
+backend/app/api/v1/endpoints/imports.py:10:1: 'backend.app.core.config.settings' imported but unused
+backend/scripts/promote_to_admin.py:14:1: 'os' imported but unused
+backend/scripts/init_db_and_seed.py:67:19: f-string is missing placeholders
+backend/scripts/init_db_and_seed.py:68:19: f-string is missing placeholders
+backend/scripts/init_db_and_seed.py:88:19: f-string is missing placeholders
+backend/scripts/init_db_and_seed.py:89:19: f-string is missing placeholders
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'AbstractSet' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'AnyStr' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'BinaryIO' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Callable' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Collection' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Container' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Dict' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'FrozenSet' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Hashable' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'IO' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'ItemsView' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Iterable' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Iterator' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'KeysView' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'List' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Mapping' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'MappingView' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Match' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'MutableMapping' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'MutableSequence' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'MutableSet' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Optional' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Pattern' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Reversible' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Sequence' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Set' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Sized' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'TextIO' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Tuple' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'Union' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'ValuesView' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'cast' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'no_type_check' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:21:1: undefined name 'no_type_check_decorator' in __all__
+backend/.venv/lib/python3.11/site-packages/typing_extensions.py:2076:9: redefinition of unused '_ConcatenateGenericAlias' from line 2071
+backend/.venv/lib/python3.11/site-packages/six.py:49:20: undefined name 'basestring'
+backend/.venv/lib/python3.11/site-packages/six.py:50:27: undefined name 'long'
+backend/.venv/lib/python3.11/site-packages/six.py:52:17: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/six.py:679:16: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/six.py:771:37: undefined name 'basestring'
+backend/.venv/lib/python3.11/site-packages/six.py:774:32: undefined name 'file'
+backend/.venv/lib/python3.11/site-packages/six.py:775:38: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/six.py:785:32: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/six.py:791:32: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/six.py:799:36: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/six.py:803:23: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/six.py:804:21: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/click_plugins.py:157:13: f-string is missing placeholders
+backend/.venv/lib/python3.11/site-packages/pytest_asyncio/__init__.py:2:1: '._version.version as __version__' imported but unused
+backend/.venv/lib/python3.11/site-packages/attrs/exceptions.py:3:1: 'from attr.exceptions import *' used; unable to detect undefined names
+backend/.venv/lib/python3.11/site-packages/attrs/exceptions.py:3:1: 'attr.exceptions.*' imported but unused
+backend/.venv/lib/python3.11/site-packages/attrs/converters.py:3:1: 'from attr.converters import *' used; unable to detect undefined names
+backend/.venv/lib/python3.11/site-packages/attrs/converters.py:3:1: 'attr.converters.*' imported but unused
+backend/.venv/lib/python3.11/site-packages/attrs/validators.py:3:1: 'from attr.validators import *' used; unable to detect undefined names
+backend/.venv/lib/python3.11/site-packages/attrs/validators.py:3:1: 'attr.validators.*' imported but unused
+backend/.venv/lib/python3.11/site-packages/attrs/setters.py:3:1: 'from attr.setters import *' used; unable to detect undefined names
+backend/.venv/lib/python3.11/site-packages/attrs/setters.py:3:1: 'attr.setters.*' imported but unused
+backend/.venv/lib/python3.11/site-packages/attrs/filters.py:3:1: 'from attr.filters import *' used; unable to detect undefined names
+backend/.venv/lib/python3.11/site-packages/attrs/filters.py:3:1: 'attr.filters.*' imported but unused
+backend/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py:634:9: local variable '__traceback_hide__' is assigned to but never used
+backend/.venv/lib/python3.11/site-packages/pyasn1/type/base.py:7:1: 'sys' imported but unused
+backend/.venv/lib/python3.11/site-packages/pyasn1/type/constraint.py:9:1: 'sys' imported but unused
+backend/.venv/lib/python3.11/site-packages/pyasn1/type/namedtype.py:7:1: 'sys' imported but unused
+backend/.venv/lib/python3.11/site-packages/pyasn1/type/univ.py:3080:9: local variable '__doc__' is assigned to but never used
+backend/.venv/lib/python3.11/site-packages/pyasn1/type/char.py:7:1: 'sys' imported but unused
+backend/.venv/lib/python3.11/site-packages/pyasn1/codec/ber/encoder.py:7:1: 'sys' imported but unused
+backend/.venv/lib/python3.11/site-packages/pyasn1/codec/ber/decoder.py:9:1: 'sys' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/_compat.py:522:5: redefinition of unused 'auto_wrap_for_ansi' from line 15
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:10:1: '.core.Argument' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:11:1: '.core.Command' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:12:1: '.core.CommandCollection' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:13:1: '.core.Context' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:14:1: '.core.Group' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:15:1: '.core.Option' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:16:1: '.core.Parameter' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:17:1: '.decorators.argument' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:18:1: '.decorators.command' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:19:1: '.decorators.confirmation_option' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:20:1: '.decorators.group' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:21:1: '.decorators.help_option' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:22:1: '.decorators.make_pass_decorator' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:23:1: '.decorators.option' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:24:1: '.decorators.pass_context' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:25:1: '.decorators.pass_obj' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:26:1: '.decorators.password_option' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:27:1: '.decorators.version_option' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:28:1: '.exceptions.Abort' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:29:1: '.exceptions.BadArgumentUsage' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:30:1: '.exceptions.BadOptionUsage' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:31:1: '.exceptions.BadParameter' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:32:1: '.exceptions.ClickException' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:33:1: '.exceptions.FileError' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:34:1: '.exceptions.MissingParameter' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:35:1: '.exceptions.NoSuchOption' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:36:1: '.exceptions.UsageError' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:37:1: '.formatting.HelpFormatter' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:38:1: '.formatting.wrap_text' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:39:1: '.globals.get_current_context' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:40:1: '.termui.clear' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:41:1: '.termui.confirm' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:42:1: '.termui.echo_via_pager' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:43:1: '.termui.edit' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:44:1: '.termui.getchar' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:45:1: '.termui.launch' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:46:1: '.termui.pause' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:47:1: '.termui.progressbar' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:48:1: '.termui.prompt' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:49:1: '.termui.secho' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:50:1: '.termui.style' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:51:1: '.termui.unstyle' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:52:1: '.types.BOOL' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:53:1: '.types.Choice' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:54:1: '.types.DateTime' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:55:1: '.types.File' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:56:1: '.types.FLOAT' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:57:1: '.types.FloatRange' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:58:1: '.types.INT' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:59:1: '.types.IntRange' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:60:1: '.types.ParamType' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:61:1: '.types.Path' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:62:1: '.types.STRING' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:63:1: '.types.Tuple' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:64:1: '.types.UNPROCESSED' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:65:1: '.types.UUID' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:66:1: '.utils.echo' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:67:1: '.utils.format_filename' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:68:1: '.utils.get_app_dir' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:69:1: '.utils.get_binary_stream' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:70:1: '.utils.get_text_stream' imported but unused
+backend/.venv/lib/python3.11/site-packages/click/__init__.py:71:1: '.utils.open_file' imported but unused
+backend/.venv/lib/python3.11/site-packages/redis/utils.py:5:5: 'hiredis' imported but unused
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:147:14: undefined name 'unichr'
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:148:14: undefined name 'xrange'
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:149:18: undefined name 'basestring'
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:150:15: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:151:12: undefined name 'long'
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:154:5: 'urllib.parse.unquote' imported but unused
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:154:5: 'urllib.parse.parse_qs' imported but unused
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:154:5: 'urllib.parse.urlparse' imported but unused
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:155:5: 'string.ascii_letters' imported but unused
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:156:5: 'queue.Queue' imported but unused
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:188:5: 'Queue.LifoQueue' imported but unused
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:188:5: 'Queue.Empty' imported but unused
+backend/.venv/lib/python3.11/site-packages/redis/_compat.py:188:5: 'Queue.Full' imported but unused
+backend/.venv/lib/python3.11/site-packages/sniffio/__init__.py:10:1: '._version.__version__' imported but unused
+backend/.venv/lib/python3.11/site-packages/sniffio/_impl.py:2:1: 'typing.Optional' imported but unused
+backend/.venv/lib/python3.11/site-packages/sniffio/_tests/test_sniffio.py:1:1: 'os' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:11:1: 'shutil' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:21:20: undefined name 'basestring'
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:22:17: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:31:26: undefined name 'unicode'
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:46:17: undefined name 'raw_input'
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:64:5: 'io.StringIO' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:67:5: 'io.TextIOWrapper as file_type' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:68:5: 'builtins' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:69:5: 'configparser' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:70:5: 'urllib.parse.urlparse' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:70:5: 'urllib.parse.urlunparse' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:70:5: 'urllib.parse.urljoin' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:70:5: 'urllib.parse.urlsplit' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:70:5: 'urllib.parse.urlunsplit' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:70:5: 'urllib.parse.unquote' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:70:5: 'urllib.parse.splittype' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:70:5: 'urllib.parse.quote' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:72:5: 'urllib.request.urlretrieve' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:72:5: 'urllib.request.url2pathname' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:72:5: 'urllib.request.pathname2url' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:72:5: 'urllib.request.Request' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:72:5: 'urllib.request.urlopen' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:72:5: 'urllib.request.HTTPBasicAuthHandler' imported but unused
+backend/.venv/lib/python3.11/site-packages/pip/_vendor/distlib/compat.py:72:5: 'urllib.request.HTTPPasswordMgr' imported but unused

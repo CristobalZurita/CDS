@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":disableDependencyDashboard"
+  ],
+  "packageRules": [
+    {
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "groupName": "devDependencies (non-major)"
+    }
+  ],
+  "schedule": [
+    "before 5am on the first day of the month"
+  ],
+  "ignoreDeps": [
+    "@fortawesome/fontawesome-svg-core",
+    "@fortawesome/free-regular-svg-icons",
+    "@fortawesome/free-solid-svg-icons",
+    "@fortawesome/vue-fontawesome",
+    "vue",
+    "cypress",
+    "@vue/tsconfig"
+  ],
+  "ignorePaths": [
+    "**/.circleci/**",
+    "docker-compose.yml"
+  ]
+}

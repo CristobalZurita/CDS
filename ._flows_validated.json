@@ -1,0 +1,437 @@
+[
+  {
+    "path": "/api/v1/profile",
+    "backend_files": [
+      "backend/app/core/dependencies.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/core/dependencies.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/admin/stats",
+    "backend_files": [
+      "backend/app/core/dependencies.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/core/dependencies.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/instruments/brands",
+    "backend_files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/instruments/models/{brand_id}",
+    "backend_files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/instruments/{instrument_id}",
+    "backend_files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/faults",
+    "backend_files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/faults/applicable/{instrument_id}",
+    "backend_files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/calculate",
+    "backend_files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/quotes",
+    "backend_files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/quotes/{quote_id}",
+    "backend_files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/",
+    "backend_files": [
+      "backend/app/routers/payments.py",
+      "backend/app/routers/payments.py",
+      "backend/app/routers/stock_movement.py",
+      "backend/app/routers/stock_movement.py",
+      "backend/app/routers/repair.py",
+      "backend/app/routers/repair.py",
+      "backend/app/routers/instrument.py",
+      "backend/app/routers/instrument.py",
+      "backend/app/routers/category.py",
+      "backend/app/routers/category.py",
+      "backend/app/routers/user.py",
+      "backend/app/routers/user.py",
+      "backend/app/routers/contact.py",
+      "backend/app/api/v1/endpoints/brands.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/payments.py",
+      "backend/app/routers/payments.py",
+      "backend/app/routers/stock_movement.py",
+      "backend/app/routers/stock_movement.py",
+      "backend/app/routers/repair.py",
+      "backend/app/routers/repair.py",
+      "backend/app/routers/instrument.py",
+      "backend/app/routers/instrument.py",
+      "backend/app/routers/category.py",
+      "backend/app/routers/category.py",
+      "backend/app/routers/user.py",
+      "backend/app/routers/user.py",
+      "backend/app/routers/contact.py",
+      "backend/app/api/v1/endpoints/brands.py"
+    ],
+    "frontend_matches": [
+      "src/views/InventoryUnified.vue",
+      "src/stores/inventory.js",
+      "src/stores/auth.js",
+      "src/stores/__tests__/inventory.spec.js",
+      "src/vue/components/ai/QuoteGenerator.vue",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/{payment_id}",
+    "backend_files": [
+      "backend/app/routers/payments.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/payments.py"
+    ],
+    "frontend_matches": [
+      "src/views/InventoryUnified.vue",
+      "src/stores/inventory.js",
+      "src/stores/auth.js",
+      "src/stores/__tests__/inventory.spec.js",
+      "src/vue/components/ai/QuoteGenerator.vue",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/estimate",
+    "backend_files": [
+      "backend/app/routers/quotation.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/quotation.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/images",
+    "backend_files": [
+      "backend/app/routers/uploads.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/uploads.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/{repair_id}",
+    "backend_files": [
+      "backend/app/routers/repair.py",
+      "backend/app/routers/repair.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/repair.py",
+      "backend/app/routers/repair.py"
+    ],
+    "frontend_matches": [
+      "src/views/InventoryUnified.vue",
+      "src/stores/inventory.js",
+      "src/stores/auth.js",
+      "src/stores/__tests__/inventory.spec.js",
+      "src/vue/components/ai/QuoteGenerator.vue",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/{instrument_id}",
+    "backend_files": [
+      "backend/app/routers/instrument.py",
+      "backend/app/routers/instrument.py",
+      "backend/app/api/v1/endpoints/instruments.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/instrument.py",
+      "backend/app/routers/instrument.py",
+      "backend/app/api/v1/endpoints/instruments.py"
+    ],
+    "frontend_matches": [
+      "src/views/InventoryUnified.vue",
+      "src/stores/inventory.js",
+      "src/stores/auth.js",
+      "src/stores/__tests__/inventory.spec.js",
+      "src/vue/components/ai/QuoteGenerator.vue",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/{category_id}",
+    "backend_files": [
+      "backend/app/routers/category.py",
+      "backend/app/routers/category.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/category.py",
+      "backend/app/routers/category.py"
+    ],
+    "frontend_matches": [
+      "src/views/InventoryUnified.vue",
+      "src/stores/inventory.js",
+      "src/stores/auth.js",
+      "src/stores/__tests__/inventory.spec.js",
+      "src/vue/components/ai/QuoteGenerator.vue",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/{user_id}",
+    "backend_files": [
+      "backend/app/routers/user.py",
+      "backend/app/routers/user.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/routers/user.py",
+      "backend/app/routers/user.py"
+    ],
+    "frontend_matches": [
+      "src/views/InventoryUnified.vue",
+      "src/stores/inventory.js",
+      "src/stores/auth.js",
+      "src/stores/__tests__/inventory.spec.js",
+      "src/vue/components/ai/QuoteGenerator.vue",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/{brand_id}/models",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/brands.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/brands.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/inventory.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/inventory.py"
+    ],
+    "frontend_matches": [
+      "src/views/InventoryUnified.vue",
+      "src/composables/useApi.js",
+      "src/composables/useAuth.js",
+      "src/stores/inventory.js",
+      "src/stores/auth.js",
+      "src/stores/__tests__/inventory.spec.js",
+      "src/vue/components/ai/QuoteGenerator.vue",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/{item_id}",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/inventory.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/inventory.py"
+    ],
+    "frontend_matches": [
+      "src/views/InventoryUnified.vue",
+      "src/stores/inventory.js",
+      "src/stores/auth.js",
+      "src/stores/__tests__/inventory.spec.js",
+      "src/vue/components/ai/QuoteGenerator.vue",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/register",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/login",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/logout",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/me",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/refresh",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/{instrument_id}/image",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/instruments.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/instruments.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/run",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/imports.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/imports.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/{run_id}",
+    "backend_files": [
+      "backend/app/api/v1/endpoints/imports.py"
+    ],
+    "backend_files_exist": [
+      "backend/app/api/v1/endpoints/imports.py"
+    ],
+    "frontend_matches": [
+      "src/views/InventoryUnified.vue",
+      "src/stores/inventory.js",
+      "src/stores/auth.js",
+      "src/stores/__tests__/inventory.spec.js",
+      "src/vue/components/ai/QuoteGenerator.vue",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/users/",
+    "backend_files": [
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+    ],
+    "backend_files_exist": [
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+    ],
+    "frontend_matches": []
+  },
+  {
+    "path": "/api/v1/items/",
+    "backend_files": [
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+    ],
+    "backend_files_exist": [
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+    ],
+    "frontend_matches": [
+      "src/stores/inventory.js",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  },
+  {
+    "path": "/api/v1/items/{item_id}",
+    "backend_files": [
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+    ],
+    "backend_files_exist": [
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+    ],
+    "frontend_matches": [
+      "src/stores/inventory.js",
+      "src/vue/content/pages/admin/InventoryPage.vue"
+    ]
+  }
+]

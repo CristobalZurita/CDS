@@ -1,0 +1,76 @@
+{
+  "name": "vue-cal",
+  "version": "5.0.1-rc.34",
+  "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
+  "author": "Antoni Andre <antoniandre.web@gmail.com>",
+  "homepage": "https://antoniandre.github.io/vue-cal",
+  "repository": "https://github.com/antoniandre/vue-cal",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/antoniandre",
+  "main": "dist/vue-cal.umd.js",
+  "types": "dist/vue-cal.d.ts",
+  "module": "dist/vue-cal.es.js",
+  "type": "module",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/vue-cal.es.js",
+      "require": "./dist/vue-cal.cjs.js"
+    },
+    "./style": {
+      "default": "./dist/vue-cal.css"
+    },
+    "./style.css": {
+      "default": "./dist/vue-cal.css"
+    },
+    "./i18n/*": "./dist/i18n/*",
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "vuecal",
+    "vue cal",
+    "vue calendar",
+    "full calendar",
+    "calendar events",
+    "vue",
+    "vuejs",
+    "vue 3",
+    "ui"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --base /vue-cal/",
+    "build-bundle": "BUNDLE=true vite build && cp src/types/vue-cal.ts dist/vue-cal.d.ts",
+    "preview": "vite preview --base /vue-cal/",
+    "lint": "vite lint",
+    "publish-doc": "npm run build && npm run build-bundle && git add . && git commit -m 'Publish documentation on Github.' && git push && git push --tag"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/eslint-parser": "^7.28.5",
+    "@mdi/font": "^7.4.47",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "autoprefixer": "^10.4.23",
+    "eslint": "^8.57.1",
+    "pinia": "^3.0.4",
+    "postcss": "^8.5.6",
+    "pug": "^3.0.3",
+    "rollup": "^4.54.0",
+    "sass": "^1.97.1",
+    "simple-syntax-highlighter": "^3.1.1",
+    "vite": "^6.4.1",
+    "vite-plugin-static-copy": "^2.3.2",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4",
+    "wave-ui": "^3.25.6"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.11"
+  },
+  "packageManager": "pnpm@10.26.0"
+}

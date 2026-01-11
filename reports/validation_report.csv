@@ -1,0 +1,12 @@
+column,index,non_null_count,null_count,detected_types,multi_value,formula_cells,matched_ics,matched_transistors
+N°,0,168,5,integer,False,0,0,0
+Resistencias,1,168,5,float|integer,False,0,0,0
+Capacitores Ceramicos,2,76,97,integer,False,0,0,0
+Capacitores Electrolíticos,3,20,153,text|float|integer,False,0,0,0
+Transistores,4,123,50,text,False,0,0,103
+Ic's,5,173,0,text|integer,False,0,165,0
+Diodos,6,29,144,text|date,False,0,0,0
+Diodo Led,7,15,158,text,True,0,0,0
+otros,8,92,81,text,True,0,0,0
+herramientas taller,9,90,83,text,False,0,0,0
+insumos taller,10,38,135,text,False,0,0,0

@@ -1,0 +1,189 @@
+.Password__field {
+  background-color: white !important;
+  border: transparent !important;
+}
+
+html {
+  background: #172b4d;
+}
+
+.vue-notification {
+  margin: 10px !important;
+  border-radius: .3rem;
+  -webkit-box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  zoom: 1.2;
+}
+
+.alert.server {
+  top: 0;
+  left: 0;
+  width: auto;
+  z-index: 999;
+  margin: 10px;
+  position: fixed;
+
+  .alert-inner--icon {
+    padding: 10px;
+  }
+
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  min-width: 10rem;
+}
+
+.not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(87deg, #2dce89, #2dcecc) !important;
+}
+
+html {
+  background: linear-gradient(87deg, #2dce89, #2dcecc) !important;
+}
+
+body {
+  background-color: transparent;
+}
+
+.footer {
+  z-index: -1;
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 250px);
+  padding: 1rem;
+}
+
+.ticket-reply {
+  border-radius: .3rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.container-fluid.table {
+  margin-bottom: 5rem;
+}
+
+.ticket-editor {
+  background: transparent;
+}
+
+//a[href="https://froala.com/wysiwyg-editor"] {
+//  display: none;
+//}
+
+/* On screens that are 767px or less, set the background color to olive */
+@media screen and (max-width: 767px) {
+  .footer {
+    width: 100%;
+  }
+
+  .ticket-reply, .ticket-editor {
+    margin: 10px !important;
+  }
+}
+
+.modal-dialog.reply {
+  max-width: 1080px;
+}
+
+.modal.show {
+  background-color: unset !important;
+}
+
+.reply-editor {
+  z-index: 999;
+  bottom: -850px;
+  position: fixed;
+  width: calc(100% - 50px);
+  margin-left: 30px;
+  transition: .3s;
+  border: unset !important;
+  padding: 20px;
+  border-radius: .3rem;
+  background: transparent;
+  height: 780px;
+}
+
+.reply-editor.active {
+  bottom: 5px;
+}
+
+.reply-editor.mni-active {
+  bottom: -750px;
+}
+
+.tox-notifications-container {
+  display: none !important;
+  z-index: -1 !important;
+}
+
+.tox-tinymce {
+  border: unset !important;
+  border-radius: .4rem !important;
+  box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15) !important;
+}
+
+.tox .tox-toolbar, .tox .tox-toolbar__overflow, .tox .tox-toolbar__primary {
+  border-top: unset !important;
+}
+
+.tox .tox-edit-area {
+  border-top: unset !important;
+}
+
+.tox .tox-menu {
+  background-color: #fff !important;
+  border: unset !important;
+}
+
+.tox .tox-statusbar {
+  border-top: unset !important;
+}
+
+.flip {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+.vs__dropdown-toggle {
+  border: unset !important;
+}
+
+.form-control, .input-group-text {
+  border: unset !important;
+}
+
+.input-group {
+  box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02) !important;
+}
+
+.style-chooser .vs__search::placeholder,
+.style-chooser .vs__dropdown-toggle,
+.style-chooser .vs__dropdown-menu {
+  background: #dfe5fb;
+  border: none;
+  color: #394066;
+  text-transform: lowercase;
+  font-variant: small-caps;
+}
+
+.style-chooser .vs__clear,
+.style-chooser .vs__open-indicator {
+  fill: #394066;
+}
+
+select {
+  border-color: transparent !important;
+  border-style: none !important;
+}
+
+.footer {
+  z-index: 99;
+}

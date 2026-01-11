@@ -1,0 +1,603 @@
+###############################################
+# VOLCADO_UNIFICADO_01.txt
+# Thu Jan  8 10:55:12 -03 2026
+# Proyecto: cirujano-front
+###############################################
+
+================ TREE ESTRUCTURAL ================
+src
+├── assets
+│   ├── data
+│   │   ├── VIEJOS
+│   │   │   ├── brands.json
+│   │   │   ├── faults.json
+│   │   │   └── instruments.json
+│   │   ├── brands.json
+│   │   ├── faults.json
+│   │   └── instruments.json
+│   └── icons
+├── components
+│   └── prototypes
+│       ├── InventoryCard.vue
+│       └── __tests__
+│           └── InventoryCard.spec.js
+├── composables
+│   ├── emails.js
+│   ├── layout.js
+│   ├── scheduler.js
+│   ├── settings.js
+│   ├── strings.js
+│   ├── useApi.js
+│   ├── useAuth.js
+│   ├── useCategories.js
+│   ├── useDiagnostic.js
+│   ├── useDiagnostics.js
+│   ├── useInstruments.js
+│   ├── useInstrumentsCatalog.js
+│   ├── useInventory.js
+│   ├── useQuotation.js
+│   ├── useRepairs.js
+│   ├── useStockMovements.js
+│   ├── useUsers.js
+│   └── utils.js
+├── main.js
+├── models
+│   └── SectionInfo.js
+├── router
+│   └── index.js
+├── scss
+│   ├── _brand.scss
+│   ├── _layout.scss
+│   ├── _mixins.scss
+│   ├── _theming.scss
+│   ├── _typography.scss
+│   ├── _variables.scss
+│   └── style.scss
+├── services
+│   └── toastService.js
+├── stores
+│   ├── __tests__
+│   │   └── inventory.spec.js
+│   ├── auth.js
+│   ├── categories.js
+│   ├── diagnostics.js
+│   ├── instruments.js
+│   ├── inventory.js
+│   ├── quotation.js
+│   ├── repairs.js
+│   ├── stockMovements.js
+│   └── users.js
+├── views
+│   └── InventoryUnified.vue
+└── vue
+    ├── components
+    │   ├── admin
+    │   │   ├── CategoryForm.vue
+    │   │   ├── CategoryList.vue
+    │   │   ├── CategoryManager.vue
+    │   │   ├── ClientDetail.vue
+    │   │   ├── ClientList.vue
+    │   │   ├── DiagnosticsList.vue
+    │   │   ├── InstrumentForm.vue
+    │   │   ├── InstrumentList.vue
+    │   │   ├── InventoryAlerts.vue
+    │   │   ├── InventoryForm.vue
+    │   │   ├── InventoryTable.vue
+    │   │   ├── RepairForm.vue
+    │   │   ├── RepairManager.vue
+    │   │   ├── RepairStatusEditor.vue
+    │   │   ├── RepairsList.vue
+    │   │   ├── StatsCards.vue
+    │   │   ├── StockMovements.vue
+    │   │   ├── StockMovementsList.vue
+    │   │   ├── UserForm.vue
+    │   │   ├── UserList.vue
+    │   │   └── __tests__
+    │   │       └── InventoryForm.spec.js
+    │   ├── ai
+    │   │   ├── AIAnalysisResult.vue
+    │   │   ├── FaultDetector.vue
+    │   │   ├── FaultMarker.vue
+    │   │   ├── ImageUploader.vue
+    │   │   └── QuoteGenerator.vue
+    │   ├── articles
+    │   │   ├── ArticleCustomContent.vue
+    │   │   ├── ArticleFaq.vue
+    │   │   ├── ArticleFeatures.vue
+    │   │   ├── ArticleInfoBlock.vue
+    │   │   ├── ArticleParagraph.vue
+    │   │   ├── ArticleProjectGrid.vue
+    │   │   ├── ArticleQuotes.vue
+    │   │   ├── ArticleTestimonials.vue
+    │   │   ├── ArticleTimeline.vue
+    │   │   ├── DiagnosticWizard.vue
+    │   │   └── items
+    │   │       ├── ItemFaqQuestion.vue
+    │   │       ├── ItemFeature.vue
+    │   │       ├── ItemProjectGrid.vue
+    │   │       ├── ItemQuote.vue
+    │   │       ├── ItemTestimonial.vue
+    │   │       └── ItemTimelineEntry.vue
+    │   ├── auth
+    │   │   ├── AccountDelete.vue
+    │   │   ├── LoginForm.vue
+    │   │   ├── PasswordReset.vue
+    │   │   └── RegisterForm.vue
+    │   ├── dashboard
+    │   │   ├── DashboardPanel.vue
+    │   │   ├── QuickStats.vue
+    │   │   ├── RepairCard.vue
+    │   │   ├── RepairTimeline.vue
+    │   │   ├── RepairsList.vue
+    │   │   ├── StatusBadge.vue
+    │   │   └── UserProfile.vue
+    │   ├── footer
+    │   │   ├── Footer.vue
+    │   │   ├── FooterBlock.vue
+    │   │   ├── FooterColumn.vue
+    │   │   └── FooterCopyright.vue
+    │   ├── forms
+    │   │   └── contact
+    │   │       ├── ContactForm.vue
+    │   │       ├── ContactFormFields.vue
+    │   │       └── ContactFormSuccess.vue
+    │   ├── generic
+    │   │   ├── ImageView.vue
+    │   │   └── Link.vue
+    │   ├── layout
+    │   │   ├── BackgroundPromo.vue
+    │   │   ├── PageHeader.vue
+    │   │   ├── PageSection.vue
+    │   │   ├── PageSectionContent.vue
+    │   │   ├── PageSectionFooter.vue
+    │   │   ├── PageSectionHeader.vue
+    │   │   └── PageWrapper.vue
+    │   ├── loaders
+    │   │   ├── ActivitySpinner.vue
+    │   │   └── Loader.vue
+    │   ├── nav
+    │   │   ├── Navigation.vue
+    │   │   ├── navbar
+    │   │   │   ├── Navbar.vue
+    │   │   │   ├── NavbarBrand.vue
+    │   │   │   ├── NavbarLinks.vue
+    │   │   │   └── NavbarToggleButton.vue
+    │   │   └── navbar-wrappers
+    │   │       ├── InPageNavbar.vue
+    │   │       └── RouteNavbar.vue
+    │   ├── projects
+    │   │   ├── ProjectInfo.vue
+    │   │   ├── ProjectInfoContent.vue
+    │   │   ├── ProjectInfoFeaturedContent.vue
+    │   │   └── ProjectModal.vue
+    │   ├── quotation
+    │   │   ├── DisclaimerModal.vue
+    │   │   ├── InstrumentSelector.vue
+    │   │   └── QuotationResult.vue
+    │   ├── system
+    │   │   └── ToastNotification.vue
+    │   └── widgets
+    │       ├── Alert.vue
+    │       ├── Breadcrumbs.vue
+    │       ├── CircleIcon.vue
+    │       ├── Divider.vue
+    │       ├── FilterTabs.vue
+    │       ├── FloatingQuoteButton.vue
+    │       ├── InlineLinkList.vue
+    │       ├── ProgressBar.vue
+    │       ├── QuotedText.vue
+    │       ├── SocialLinks.vue
+    │       ├── Spinner.vue
+    │       └── XLButton.vue
+    ├── content
+    │   ├── Master.vue
+    │   ├── pages
+    │   │   ├── CotizadorIAPage.vue
+    │   │   ├── DashboardPage.vue
+    │   │   ├── HomePage.vue
+    │   │   ├── LicensePage.vue
+    │   │   ├── LoginPage.vue
+    │   │   ├── PolicyPage.vue
+    │   │   ├── PrivacyPage.vue
+    │   │   ├── ProfilePage.vue
+    │   │   ├── RegisterPage.vue
+    │   │   ├── RepairsPage.vue
+    │   │   ├── SchedulePage.vue
+    │   │   ├── TermsPage.vue
+    │   │   └── admin
+    │   │       ├── AdminDashboard.vue
+    │   │       ├── CategoriesPage.vue
+    │   │       ├── ClientsPage.vue
+    │   │       ├── InventoryPage.vue
+    │   │       ├── RepairsAdminPage.vue
+    │   │       └── StatsPage.vue
+    │   └── sections
+    │       ├── AboutSection.vue
+    │       ├── ContactSection.vue
+    │       ├── FaqSection.vue
+    │       ├── FeaturedProjectSection.vue
+    │       ├── HeroSection.vue
+    │       ├── HistorySection.vue
+    │       ├── LicenseSection.vue
+    │       ├── PolicySection.vue
+    │       ├── PortfolioSection.vue
+    │       ├── ReviewsSection.vue
+    │       ├── ServicesSection.vue
+    │       └── TeamSection.vue
+    ├── sections
+    │   └── DiagnosticSection.vue
+    └── stack
+        ├── App.vue
+        ├── ContentLayer.vue
+        ├── FeedbacksLayer.vue
+        └── StateProviderLayer.vue
+backend
+├── .python-version
+├── .venv
+│   ├── bin
+│   │   ├── Activate.ps1
+│   │   ├── activate
+│   │   ├── activate.csh
+│   │   ├── activate.fish
+│   │   ├── alembic
+│   │   ├── black
+│   │   ├── blackd
+│   │   ├── celery
+│   │   ├── dotenv
+│   │   ├── email_validator
+│   │   ├── f2py
+│   │   ├── httpx
+│   │   ├── mako-render
+│   │   ├── numpy-config
+│   │   ├── pip
+│   │   ├── pip3
+│   │   ├── pip3.11
+│   │   ├── py.test
+│   │   ├── pyrsa-decrypt
+│   │   ├── pyrsa-encrypt
+│   │   ├── pyrsa-keygen
+│   │   ├── pyrsa-priv2pub
+│   │   ├── pyrsa-sign
+│   │   ├── pyrsa-verify
+│   │   ├── pytest
+│   │   ├── python -> /home/cz/.pyenv/versions/3.11.14/bin/python
+│   │   ├── python3 -> python
+│   │   ├── python3.11 -> python
+│   │   ├── ruff
+│   │   ├── uvicorn
+│   │   ├── watchfiles
+│   │   ├── websockets
+│   │   └── wheel
+│   ├── include
+│   │   ├── python3.11
+│   │   └── site
+│   │       └── python3.11
+│   │           └── greenlet
+│   ├── lib
+│   │   └── python3.11
+│   │       └── site-packages
+│   │           ├── 629853fdff261ed89b74__mypyc.cpython-311-x86_64-linux-gnu.so
+│   │           ├── PIL
+│   │           ├── Pillow-10.1.0.dist-info
+│   │           ├── Pillow.libs
+│   │           ├── SQLAlchemy-2.0.23.dist-info
+│   │           ├── _black_version.py
+│   │           ├── _cffi_backend.cpython-311-x86_64-linux-gnu.so
+│   │           ├── _distutils_hack
+│   │           ├── _pytest
+│   │           ├── _yaml
+│   │           ├── aiohappyeyeballs
+│   │           ├── aiohappyeyeballs-2.6.1.dist-info
+│   │           ├── aiohttp
+│   │           ├── aiohttp-3.13.3.dist-info
+│   │           ├── aiosignal
+│   │           ├── aiosignal-1.4.0.dist-info
+│   │           ├── alembic
+│   │           ├── alembic-1.12.1.dist-info
+│   │           ├── amqp
+│   │           ├── amqp-5.3.1.dist-info
+│   │           ├── annotated_types
+│   │           ├── annotated_types-0.7.0.dist-info
+│   │           ├── anyio
+│   │           ├── anyio-3.7.1.dist-info
+│   │           ├── async_timeout
+│   │           ├── async_timeout-5.0.1.dist-info
+│   │           ├── asyncpg
+│   │           ├── asyncpg-0.29.0.dist-info
+│   │           ├── attr
+│   │           ├── attrs
+│   │           ├── attrs-25.4.0.dist-info
+│   │           ├── bcrypt
+│   │           ├── bcrypt-5.0.0.dist-info
+│   │           ├── billiard
+│   │           ├── billiard-4.2.4.dist-info
+│   │           ├── black
+│   │           ├── black-23.12.0.dist-info
+│   │           ├── blackd
+│   │           ├── blib2to3
+│   │           ├── celery
+│   │           ├── celery-5.3.4.dist-info
+│   │           ├── certifi
+│   │           ├── certifi-2026.1.4.dist-info
+│   │           ├── cffi
+│   │           ├── cffi-2.0.0.dist-info
+│   │           ├── click
+│   │           ├── click-8.3.1.dist-info
+│   │           ├── click_didyoumean
+│   │           ├── click_didyoumean-0.3.1.dist-info
+│   │           ├── click_plugins
+│   │           ├── click_plugins-1.1.1.2.dist-info
+│   │           ├── click_plugins.py
+│   │           ├── click_repl
+│   │           ├── click_repl-0.3.0.dist-info
+│   │           ├── cryptography
+│   │           ├── cryptography-46.0.3.dist-info
+│   │           ├── dateutil
+│   │           ├── distutils-precedence.pth
+│   │           ├── dns
+│   │           ├── dnspython-2.8.0.dist-info
+│   │           ├── dotenv
+│   │           ├── ecdsa
+│   │           ├── ecdsa-0.19.1.dist-info
+│   │           ├── email_validator
+│   │           ├── email_validator-2.1.0.dist-info
+│   │           ├── et_xmlfile
+│   │           ├── et_xmlfile-2.0.0.dist-info
+│   │           ├── fastapi
+│   │           ├── fastapi-0.104.1.dist-info
+│   │           ├── frozenlist
+│   │           ├── frozenlist-1.8.0.dist-info
+│   │           ├── greenlet
+│   │           ├── greenlet-3.3.0.dist-info
+│   │           ├── h11
+│   │           ├── h11-0.16.0.dist-info
+│   │           ├── httpcore
+│   │           ├── httpcore-1.0.9.dist-info
+│   │           ├── httptools
+│   │           ├── httptools-0.7.1.dist-info
+│   │           ├── httpx
+│   │           ├── httpx-0.25.1.dist-info
+│   │           ├── idna
+│   │           ├── idna-3.11.dist-info
+│   │           ├── iniconfig
+│   │           ├── iniconfig-2.3.0.dist-info
+│   │           ├── jose
+│   │           ├── kombu
+│   │           ├── kombu-5.6.2.dist-info
+│   │           ├── limits
+│   │           ├── limits-1.6.dist-info
+│   │           ├── magic
+│   │           ├── mako
+│   │           ├── mako-1.3.10.dist-info
+│   │           ├── markupsafe
+│   │           ├── markupsafe-3.0.3.dist-info
+│   │           ├── multidict
+│   │           ├── multidict-6.7.0.dist-info
+│   │           ├── multipart
+│   │           ├── mypy_extensions-1.1.0.dist-info
+│   │           ├── mypy_extensions.py
+│   │           ├── numpy
+│   │           ├── numpy-2.4.0.dist-info
+│   │           ├── numpy.libs
+│   │           ├── openpyxl
+│   │           ├── openpyxl-3.1.5.dist-info
+│   │           ├── packaging
+│   │           ├── packaging-25.0.dist-info
+│   │           ├── pandas
+│   │           ├── pandas-2.3.3.dist-info
+│   │           ├── passlib
+│   │           ├── passlib-1.7.4.dist-info
+│   │           ├── pathspec
+│   │           ├── pathspec-1.0.1.dist-info
+│   │           ├── pip
+│   │           ├── pip-25.3.dist-info
+│   │           ├── pkg_resources
+│   │           ├── platformdirs
+│   │           ├── platformdirs-4.5.1.dist-info
+│   │           ├── pluggy
+│   │           ├── pluggy-1.6.0.dist-info
+│   │           ├── prompt_toolkit
+│   │           ├── prompt_toolkit-3.0.52.dist-info
+│   │           ├── propcache
+│   │           ├── propcache-0.4.1.dist-info
+│   │           ├── psycopg2
+│   │           ├── psycopg2_binary-2.9.9.dist-info
+│   │           ├── psycopg2_binary.libs
+│   │           ├── py.py
+│   │           ├── pyasn1
+│   │           ├── pyasn1-0.6.1.dist-info
+│   │           ├── pycparser
+│   │           ├── pycparser-2.23.dist-info
+│   │           ├── pydantic
+│   │           ├── pydantic-2.5.0.dist-info
+│   │           ├── pydantic_core
+│   │           ├── pydantic_core-2.14.1.dist-info
+│   │           ├── pydantic_settings
+│   │           ├── pydantic_settings-2.1.0.dist-info
+│   │           ├── pytest
+│   │           ├── pytest-7.4.3.dist-info
+│   │           ├── pytest_asyncio
+│   │           ├── pytest_asyncio-0.21.1.dist-info
+│   │           ├── python_dateutil-2.9.0.post0.dist-info
+│   │           ├── python_dotenv-1.0.0.dist-info
+│   │           ├── python_jose-3.3.0.dist-info
+│   │           ├── python_json_logger-2.0.6.dist-info
+│   │           ├── python_magic-0.4.27.dist-info
+│   │           ├── python_multipart-0.0.6.dist-info
+│   │           ├── pythonjsonlogger
+│   │           ├── pytz
+│   │           ├── pytz-2025.2.dist-info
+│   │           ├── pyyaml-6.0.3.dist-info
+│   │           ├── redis
+│   │           ├── redis-3.5.3.dist-info
+│   │           ├── rsa
+│   │           ├── rsa-4.9.1.dist-info
+│   │           ├── ruff
+│   │           ├── ruff-0.1.8.dist-info
+│   │           ├── setuptools
+│   │           ├── setuptools-80.9.0.dist-info
+│   │           ├── six-1.17.0.dist-info
+│   │           ├── six.py
+│   │           ├── slowapi
+│   │           ├── slowapi-0.1.5.dist-info
+│   │           ├── sniffio
+│   │           ├── sniffio-1.3.1.dist-info
+│   │           ├── sqlalchemy
+│   │           ├── starlette
+│   │           ├── starlette-0.27.0.dist-info
+│   │           ├── typing_extensions-4.15.0.dist-info
+│   │           ├── typing_extensions.py
+│   │           ├── tzdata
+│   │           ├── tzdata-2025.3.dist-info
+│   │           ├── uvicorn
+│   │           ├── uvicorn-0.24.0.dist-info
+│   │           ├── uvloop
+│   │           ├── uvloop-0.22.1.dist-info
+│   │           ├── vine
+│   │           ├── vine-5.1.0.dist-info
+│   │           ├── watchfiles
+│   │           ├── watchfiles-1.1.1.dist-info
+│   │           ├── wcwidth
+│   │           ├── wcwidth-0.2.14.dist-info
+│   │           ├── websockets
+│   │           ├── websockets-15.0.1.dist-info
+│   │           ├── wheel
+│   │           ├── wheel-0.45.1.dist-info
+│   │           ├── yaml
+│   │           ├── yarl
+│   │           └── yarl-1.22.0.dist-info
+│   ├── lib64 -> lib
+│   └── pyvenv.cfg
+├── app
+│   ├── __init__.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   └── v1
+│   │       ├── __init__.py
+│   │       ├── endpoints
+│   │       │   ├── ai.py
+│   │       │   ├── auth.py
+│   │       │   ├── brands.py
+│   │       │   ├── categories.py
+│   │       │   ├── diagnostics.py
+│   │       │   ├── imports.py
+│   │       │   ├── instruments.py
+│   │       │   ├── inventory.py
+│   │       │   ├── repairs.py
+│   │       │   ├── stats.py
+│   │       │   └── users.py
+│   │       └── router.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   ├── dependencies.py
+│   │   ├── logging_config.py
+│   │   ├── ratelimit.py
+│   │   └── security.py
+│   ├── crud
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── category.py
+│   │   ├── inventory.py
+│   │   ├── repair.py
+│   │   └── user.py
+│   ├── main.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── audit.py
+│   │   ├── brand.py
+│   │   ├── category.py
+│   │   ├── diagnostic.py
+│   │   ├── instrument.py
+│   │   ├── inventory.py
+│   │   ├── payment.py
+│   │   ├── repair.py
+│   │   ├── stock_movement.py
+│   │   └── user.py
+│   ├── routers
+│   │   ├── __init__.py
+│   │   ├── category.py
+│   │   ├── contact.py
+│   │   ├── diagnostic.py
+│   │   ├── instrument.py
+│   │   ├── payments.py
+│   │   ├── quotation.py
+│   │   ├── repair.py
+│   │   ├── stock_movement.py
+│   │   ├── uploads.py
+│   │   └── user.py
+│   ├── schemas
+│   │   ├── __init__.py
+│   │   ├── auth.py
+│   │   ├── category.py
+│   │   ├── diagnostic.py
+│   │   ├── inventory.py
+│   │   ├── repair.py
+│   │   └── user.py
+│   ├── schemas.py
+│   ├── services
+│   │   ├── ai_detector.py
+│   │   ├── email_service.py
+│   │   ├── event_handlers.py
+│   │   ├── event_system.py
+│   │   ├── image_analysis.py
+│   │   ├── logging_service.py
+│   │   ├── pdf_generator.py
+│   │   └── quote_calculator.py
+│   └── utils
+│       └── uploads.py
+├── cirujano.db
+├── instance
+│   └── cirujano.sqlite
+├── requirements.txt
+├── scripts
+│   ├── create_admin.py
+│   ├── init_db_and_seed.py
+│   └── promote_to_admin.py
+├── test_cirujano.db
+└── tests
+    ├── __init__.py
+    ├── conftest.py
+    ├── test_audit_hooks.py
+    ├── test_audit_logging.py
+    ├── test_config.py
+    ├── test_import_endpoints.py
+    ├── test_ingest.py
+    ├── test_items_api.py
+    ├── test_payments_concurrency.py
+    ├── test_payments_endpoints.py
+    ├── test_ratelimit.py
+    ├── test_security_scan.py
+    └── test_uploads.py
+public
+├── fonts
+│   ├── CERVO
+│   │   ├── CervoNeueCon-Black.otf
+│   │   ├── CervoNeueCon-BlackItalic.otf
+│   │   ├── CervoNeueCon-Medium.otf
+│   │   ├── CervoNeueCon-MediumItalic.otf
+│   │   ├── CervoNeueCon-Regular.otf
+│   │   ├── CervoNeueCon-RegularItalic.otf
+│   │   ├── CervoNeueCon-SemiBold.otf
+│   │   ├── CervoNeueCon-SemiBoldItalic.otf
+│   │   ├── CervoNeueCon-Thin.otf
+│   │   ├── CervoNeueCon-ThinItalic.otf
+│   │   ├── CervoNeueCon-XtrBold.otf
+│   │   ├── CervoNeueCon-XtrBoldItalic.otf
+│   │   ├── CervoNeueCon-XtrLight.otf
+│   │   └── CervoNeueCon-XtrLightItalic.otf
+│   └── steelfish rg.otf
+└── images
+    ├── avatars
+    ├── clients
+    ├── history
+    ├── instrumentos
+    ├── logo
+    └── portfolio
+
+261 directories, 329 files
+
+================ CONFIGURACIÓN PROYECTO ==========
+----- FILE: package.json -----
+Do you want to install it? (N/y)

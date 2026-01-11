@@ -1,0 +1,302 @@
+[
+  {
+    "file": "./scripts/dedupe_payments_transaction_ids.py",
+    "element": "settings",
+    "type": "import",
+    "evidence": "line 11"
+  },
+  {
+    "file": "./scripts/ingest/generate_semantic_map.py",
+    "element": "annotations",
+    "type": "import",
+    "evidence": "line 7"
+  },
+  {
+    "file": "./scripts/ingest/normalize_excel.py",
+    "element": "annotations",
+    "type": "import",
+    "evidence": "line 6"
+  },
+  {
+    "file": "./scripts/ingest/import_to_db.py",
+    "element": "annotations",
+    "type": "import",
+    "evidence": "line 6"
+  },
+  {
+    "file": "./scripts/ingest/validate_excel.py",
+    "element": "annotations",
+    "type": "import",
+    "evidence": "line 13"
+  },
+  {
+    "file": "./backend/app/main.py",
+    "element": "logging_service",
+    "type": "import",
+    "evidence": "line 132"
+  },
+  {
+    "file": "./backend/app/core/config.py",
+    "element": "lru_cache",
+    "type": "import",
+    "evidence": "line 6"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "User",
+    "type": "import",
+    "evidence": "line 4"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "UserRole",
+    "type": "import",
+    "evidence": "line 4"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "Repair",
+    "type": "import",
+    "evidence": "line 5"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "RepairStatus",
+    "type": "import",
+    "evidence": "line 5"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "Diagnostic",
+    "type": "import",
+    "evidence": "line 6"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "Category",
+    "type": "import",
+    "evidence": "line 7"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "Product",
+    "type": "import",
+    "evidence": "line 8"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "Brand",
+    "type": "import",
+    "evidence": "line 9"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "Instrument",
+    "type": "import",
+    "evidence": "line 10"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "StockMovement",
+    "type": "import",
+    "evidence": "line 11"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "MovementType",
+    "type": "import",
+    "evidence": "line 11"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "Payment",
+    "type": "import",
+    "evidence": "line 12"
+  },
+  {
+    "file": "./backend/app/models/__init__.py",
+    "element": "PaymentStatus",
+    "type": "import",
+    "evidence": "line 12"
+  },
+  {
+    "file": "./backend/app/routers/diagnostic.py",
+    "element": "List",
+    "type": "import",
+    "evidence": "line 6"
+  },
+  {
+    "file": "./backend/app/routers/payments.py",
+    "element": "Dict",
+    "type": "import",
+    "evidence": "line 2"
+  },
+  {
+    "file": "./backend/app/routers/payments.py",
+    "element": "ValidationError",
+    "type": "import",
+    "evidence": "line 3"
+  },
+  {
+    "file": "./backend/app/routers/quotation.py",
+    "element": "event_bus",
+    "type": "import",
+    "evidence": "line 6"
+  },
+  {
+    "file": "./backend/app/routers/quotation.py",
+    "element": "Events",
+    "type": "import",
+    "evidence": "line 6"
+  },
+  {
+    "file": "./backend/app/routers/uploads.py",
+    "element": "Depends",
+    "type": "import",
+    "evidence": "line 1"
+  },
+  {
+    "file": "./backend/app/routers/stock_movement.py",
+    "element": "HTTPException",
+    "type": "import",
+    "evidence": "line 1"
+  },
+  {
+    "file": "./backend/app/services/logging_service.py",
+    "element": "engine",
+    "type": "import",
+    "evidence": "line 5"
+  },
+  {
+    "file": "./backend/app/services/logging_service.py",
+    "element": "Base",
+    "type": "import",
+    "evidence": "line 5"
+  },
+  {
+    "file": "./backend/app/services/email_service.py",
+    "element": "List",
+    "type": "import",
+    "evidence": "line 13"
+  },
+  {
+    "file": "./backend/app/services/email_service.py",
+    "element": "Dict",
+    "type": "import",
+    "evidence": "line 13"
+  },
+  {
+    "file": "./backend/app/services/email_service.py",
+    "element": "Any",
+    "type": "import",
+    "evidence": "line 13"
+  },
+  {
+    "file": "./backend/app/services/email_service.py",
+    "element": "Email",
+    "type": "import",
+    "evidence": "line 19"
+  },
+  {
+    "file": "./backend/app/services/email_service.py",
+    "element": "To",
+    "type": "import",
+    "evidence": "line 19"
+  },
+  {
+    "file": "./backend/app/services/email_service.py",
+    "element": "Content",
+    "type": "import",
+    "evidence": "line 19"
+  },
+  {
+    "file": "./backend/app/api/v1/router.py",
+    "element": "diagnostic_router",
+    "type": "import",
+    "evidence": "line 13"
+  },
+  {
+    "file": "./backend/app/api/v1/router.py",
+    "element": "quotation_router",
+    "type": "import",
+    "evidence": "line 14"
+  },
+  {
+    "file": "./backend/app/api/v1/router.py",
+    "element": "payments_router",
+    "type": "import",
+    "evidence": "line 15"
+  },
+  {
+    "file": "./backend/app/api/v1/endpoints/auth.py",
+    "element": "PasswordResetRequest",
+    "type": "import",
+    "evidence": "line 16"
+  },
+  {
+    "file": "./backend/app/api/v1/endpoints/imports.py",
+    "element": "settings",
+    "type": "import",
+    "evidence": "line 10"
+  },
+  {
+    "file": "./backend/tests/test_audit_hooks.py",
+    "element": "_db_core",
+    "type": "import",
+    "evidence": "line 5"
+  },
+  {
+    "file": "./backend/tests/test_ingest.py",
+    "element": "Path",
+    "type": "import",
+    "evidence": "line 4"
+  },
+  {
+    "file": "./DE_PYTHON_NUEVO/cirujano_db_generator.py",
+    "element": "Optional",
+    "type": "import",
+    "evidence": "line 18"
+  },
+  {
+    "file": "./alembic/env.py",
+    "element": "with_statement",
+    "type": "import",
+    "evidence": "line 1"
+  },
+  {
+    "file": "./alembic/env.py",
+    "element": "engine_from_config",
+    "type": "import",
+    "evidence": "line 6"
+  },
+  {
+    "file": "./alembic/env.py",
+    "element": "pool",
+    "type": "import",
+    "evidence": "line 6"
+  },
+  {
+    "file": "./alembic/versions/0001_initial.py",
+    "element": "op",
+    "type": "import",
+    "evidence": "line 7"
+  },
+  {
+    "file": "./alembic/versions/0001_initial.py",
+    "element": "sa",
+    "type": "import",
+    "evidence": "line 8"
+  },
+  {
+    "file": "./alembic/versions/0004_add_unique_index_concurrently_postgres.py",
+    "element": "sa",
+    "type": "import",
+    "evidence": "line 8"
+  },
+  {
+    "file": "./alembic/versions/0003_add_unique_transaction_id.py",
+    "element": "sa",
+    "type": "import",
+    "evidence": "line 8"
+  }
+]

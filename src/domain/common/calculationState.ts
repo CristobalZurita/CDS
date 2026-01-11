@@ -1,0 +1,7 @@
+export enum CalculationState {
+  OK = 'OK',
+  WARNING = 'WARNING',
+  INVALID = 'INVALID',
+  OUT_OF_RANGE = 'OUT_OF_RANGE',
+  PHYSICALLY_IMPOSSIBLE = 'PHYSICALLY_IMPOSSIBLE'
+}

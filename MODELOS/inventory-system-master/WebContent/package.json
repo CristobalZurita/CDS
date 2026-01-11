@@ -1,0 +1,58 @@
+{
+  "name": "inventory-system",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "webpack -d --watch --display-error-details"
+  },
+  "dependencies": {
+    "vue": "^2.2.6",
+    "vue-router": "^2.4.0"
+  },
+  "author": "Weiming <wingalong@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/weimingwill/vue-tut/issues"
+  },
+  "homepage": "https://github.com/weimingwill/vue-tut#readme",
+  "devDependencies": {
+    "autoprefixer": "^6.7.7",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.4.1",
+    "babel-preset-env": "^1.4.0",
+    "buble": "^0.15.2",
+    "buble-loader": "^0.4.1",
+    "chart.js": "^2.5.0",
+    "css-loader": "^0.28.0",
+    "dsv-loader": "^2.0.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.11.1",
+    "gulp": "^3.9.1",
+    "html-webpack-plugin": "^2.28.0",
+    "jquery": "^3.2.1",
+    "lodash": "^4.17.4",
+    "lodash-webpack-plugin": "^0.11.3",
+    "node-sass": "^4.5.2",
+    "nostradamus": "^0.1.0",
+    "sass-loader": "^6.0.3",
+    "semantic-ui": "^2.2.10",
+    "style-loader": "^0.16.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "url-loader": "^0.5.8",
+    "vee-validate": "^2.0.0-beta.25",
+    "vue": "^2.2.6",
+    "vue-loader": "^11.3.4",
+    "vue-logger": "^1.0.0",
+    "vue-router": "^2.4.0",
+    "vue-spinner": "^1.0.2",
+    "vue-style-loader": "^3.0.0",
+    "vue-template-compiler": "^2.2.6",
+    "vuetify": "^0.11.1",
+    "vuex": "^2.3.1",
+    "vuex-router-sync": "^4.1.2",
+    "webpack": "^2.5.1",
+    "webpack-material-design-icons": "^0.1.0",
+    "webpack-merge": "^4.1.0"
+  }
+}

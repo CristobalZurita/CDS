@@ -1,0 +1,1146 @@
+[
+  [
+    "./._classification.json",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./database/seeds/004_faults.sql",
+    "Empty file"
+  ],
+  [
+    "./database/seeds/001_categories.sql",
+    "Empty file"
+  ],
+  [
+    "./database/seeds/003_instruments.sql",
+    "Empty file"
+  ],
+  [
+    "./database/seeds/005_admin_user.sql",
+    "Empty file"
+  ],
+  [
+    "./database/seeds/002_brands.sql",
+    "Empty file"
+  ],
+  [
+    "./adempiere-vue-develop/postcss.config.js",
+    "Small file without imports/exports"
+  ],
+  [
+    "./adempiere-vue-develop/plop-templates/utils.js",
+    "Small file without imports/exports"
+  ],
+  [
+    "./adempiere-vue-develop/.vscode/launch.json",
+    "Invalid or empty JSON"
+  ],
+  [
+    "./adempiere-vue-develop/mock/utils.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/tests/unit/.eslintrc.js",
+    "Small file without imports/exports"
+  ],
+  [
+    "./adempiere-vue-develop/.github/workflows/publish.yml",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/main.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/lang/ADempiere/es/smartBrowser.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/user.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/persistence.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/fieldValue.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/reportManager.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/languageManager.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/documentManager.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/windowManager.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/lookupManager.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/defaultValueManager.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/dashboard.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/processManager.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/browserManager.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/data/actions.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/form/VPOS/options.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/form/VPOS/collection.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/form/VPOS/options/cashManagement/cashOpen.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/form/VPOS/options/cashManagement/cashwithdrawal.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/field/search/invoiceFieldSearch.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/field/search/businessPartnerSearch.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/field/search/orderFieldSearch.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/field/search/productFieldSearch.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/panel/actions.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/panel/getters.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/pointOfSales/getters/index.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/pointOfSales/point/actions.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/pointOfSales/order/actions.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/pointOfSales/payments/actions.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/report/actions.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/browser/actions.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/browser/getters.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/window/actions.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/window/getters.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/store/modules/ADempiere/containerInfo/index.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/index.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dataUtils.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionaryUtils.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/valueFormat.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/exportUtil.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/filters.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/lookupFactory.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/request.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/contextUtils/evaluator.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/contextUtils/contextBrowser.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/contextUtils/index.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionary/process.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionary/workflow.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionary/panel.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionary/form/VPOS.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionary/field/locationAddress.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionary/report/actionsMenu.ts",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionary/browser/templateBrowser.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionary/browser/index.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/dictionary/window/index.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/apiConverts/field.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/formatValue/numberFormat.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/utils/ADempiere/formatValue/dateFormat.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/layout/components/Sidebar/SidebarItem.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/GithubCorner/index.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/Kanban/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/DropdownMenu/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/DropdownMenu/menuCard.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/TabManager/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/TabManager/convenienceButtons/DeleteRecordButton.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/TabManager/convenienceButtons/documentAction.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/TabManager/convenienceButtons/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VAllocation/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/businessPartnerField.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VBankStatementMatch/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VBankStatementMatch/SaveData/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VFileImport/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VFileImport/SelectTable/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/MarkDown/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/WorkflowActivity/index2.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPayPrint/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/TimeRecord/fieldsList.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/AcctViewer/fieldsList.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/TimeControl/fieldsList.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/WFPanel/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/ProductInfo/productList.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/ProductInfo/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/posMixin.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Order/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Order/line/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Order/line/editLineMobile.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/businessPartnerCreate.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/billingAddressFieldLocation/locationAddressForm.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/BillingFieldLocation/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/BillingFieldLocation/locationAddressForm.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/shippingAddressFieldLocation/locationAddressForm.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/AddNewFieldLocation/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/AddNewFieldLocation/locationAddressForm.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/shippingFieldLocation/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/shippingFieldLocation/locationAddressForm.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/KeyLayout/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/typeCollection.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/GiftCards/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/ACH/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/Zelle/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/MobilePayment/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/Cash/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Options/generalOptions.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Options/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Options/CashOpening/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Options/Cashwithdrawal/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/ProductInfo/productList.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/ProductInfo/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/OrderList/FindOrders/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/ConfirmDelivery/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FilterFields/fieldsDisplayOptions.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FilterFields/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldDate.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/useFieldDefinition.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldImage.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldAutocomplete.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldOptions/fieldOptionsList.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldOptions/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldOptions/DocumentStatus/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldOptions/PreferenceValue/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldWarehouseLocator/API-COMPOSITION.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldWarehouseLocator/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldWarehouseLocator/list.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/mixin/mixinField.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldProductAttribute/listAttributeInstance.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldProductAttribute/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/Order/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/Order/PanelForm/useOrder.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/PanelForm/useInvoce.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/useProduct.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch/panel.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/Payment/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/Payment/PanelForm/usePayment.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo/PanelForm/useBusinessPartner.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSelect/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldAccountingCombination/tableQueryCriteria2.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldAccountingCombination/fieldsList.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldAccountingCombination/tableQueryCriteria.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldLocationAddress/mixinLocationAddress.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldLocationAddress/locationAddressForm.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/PanelInfo/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/PanelInfo/Component/AttachmentManager/modeDesktop.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/PanelInfo/Component/AttachmentManager/modeMobile.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/PanelDefinition/SortPanel.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/PanelDefinition/StandardPanel.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/PanelDefinition/TreePanel.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/DataTable/Browser/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/DataTable/Windows/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Dashboard/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Dashboard/charts/Gauge.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/RecordNavigation/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/Report/Data/DataCells.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/components/ADempiere/ContainerOptions/ProgressPercentage.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/dashboard/admin/components/TodoList/Todo.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/nested/menu2/index.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/nested/menu1/index.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/nested/menu1/menu1-2/index.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/nested/menu1/menu1-2/menu1-2-2/index.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/nested/menu1/menu1-2/menu1-2-1/index.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/nested/menu1/menu1-3/index.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/nested/menu1/menu1-1/index.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/example/components/Warning.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/pdf/index.vue",
+    "No <script> block"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/ADempiere/Browser/index.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/ADempiere/ProcessActivity/modeDesktop.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/views/ADempiere/ProcessActivity/modeMobile.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/api/ADempiere/user-interface/persistence.js",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/api/ADempiere/fields/search/invoice.ts",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./adempiere-vue-develop/src/api/ADempiere/fields/search/order.ts",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/ESTADO_REAL_PROYECTO.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/PLAN_INTEGRACION_REAL.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/RESUMEN_EJECUTIVO_OPINION.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/ANALISIS_ENTERPRISE_vs_REALIDAD.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/AUDITORIA_CDS _08012026.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/IMPLEMENTACION_PRAGMATICA_45MIN.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/RESUMEN_ARCHIVOS.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/AUDITORIA_CDS.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/00_EMPIEZA_AQUI.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/IMPLEMENTACION.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./DOCUMJENTOS_EXTRAS/IMPLEMENTACION_COMPLETA.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./scripts/ingest/validate_excel.py",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./backend/app/__init__.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/core/__init__.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/routers/diagnostic.py",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./backend/app/routers/quotation.py",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./backend/app/routers/__init__.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/services/pdf_generator.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/services/ai_detector.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/services/quote_calculator.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/schemas/diagnostic.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/schemas/repair.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/schemas/category.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/crud/inventory.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/crud/repair.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/crud/category.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/crud/user.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/crud/__init__.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/api/__init__.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/api/v1/__init__.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/api/v1/endpoints/users.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/api/v1/endpoints/stats.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/api/v1/endpoints/ai.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/api/v1/endpoints/categories.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/api/v1/endpoints/diagnostics.py",
+    "Empty file"
+  ],
+  [
+    "./backend/app/api/v1/endpoints/repairs.py",
+    "Empty file"
+  ],
+  [
+    "./backend/tests/__init__.py",
+    "Empty file"
+  ],
+  [
+    "./src/composables/useInventory.js",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/dashboard/RepairCard.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/dashboard/QuickStats.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/dashboard/RepairTimeline.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/dashboard/DashboardPanel.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/dashboard/UserProfile.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/dashboard/RepairsList.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/dashboard/StatusBadge.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/auth/PasswordReset.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/auth/AccountDelete.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/auth/RegisterForm.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/footer/Footer.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/layout/PageSectionContent.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/layout/BackgroundPromo.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/widgets/CircleIcon.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/widgets/Spinner.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/widgets/Divider.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/loaders/ActivitySpinner.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/ai/FaultDetector.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/ai/ImageUploader.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/ai/AIAnalysisResult.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/ai/FaultMarker.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/admin/DiagnosticsList.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/admin/CategoryForm.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/admin/InventoryAlerts.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/admin/ClientList.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/admin/InstrumentForm.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/admin/ClientDetail.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/admin/StockMovementsList.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/admin/UserList.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/admin/StatsCards.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/admin/InstrumentList.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/admin/CategoryList.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/admin/RepairManager.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/admin/RepairStatusEditor.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/admin/StockMovements.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/admin/CategoryManager.vue",
+    "Empty file"
+  ],
+  [
+    "./src/vue/components/admin/RepairsList.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/forms/contact/ContactFormFields.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./src/vue/components/projects/ProjectInfo.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/articles/ArticleFeatures.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/articles/DiagnosticWizard.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./src/vue/components/articles/ArticleCustomContent.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/articles/ArticleTestimonials.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/articles/ArticleTimeline.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/articles/ArticleFaq.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/components/articles/ArticleQuotes.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/sections/DiagnosticSection.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/content/pages/LicensePage.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/content/pages/CotizadorIAPage.vue",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ],
+  [
+    "./src/vue/content/pages/LoginPage.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/content/pages/PrivacyPage.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/content/pages/PolicyPage.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/content/pages/admin/StatsPage.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/content/pages/admin/AdminDashboard.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/content/pages/admin/RepairsAdminPage.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/content/pages/admin/ClientsPage.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./src/vue/content/pages/admin/CategoriesPage.vue",
+    "Script minimal or absent"
+  ],
+  [
+    "./AUDITORIA_REVISAR/AUDITORIA_TECNICA_VOLCADO_01.md",
+    "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+  ]
+]

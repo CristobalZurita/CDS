@@ -1,0 +1,10 @@
+// Central theming import for Vue components.
+// Order matters: import Bootstrap functions first, then project variables (which can use those functions),
+// then Bootstrap variables, then mixins.
+@import "/node_modules/bootstrap/scss/functions";
+@import "./_brand";
+@import "./_variables";
+@import "/node_modules/bootstrap/scss/variables";
+@import "./_mixins.scss";
+@import "/node_modules/bootstrap/scss/mixins";
+

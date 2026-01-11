@@ -1,0 +1,620 @@
+[
+  {
+    "part_number": "20N60",
+    "device_type": "MOSFET_N",
+    "package": "TO-220",
+    "application": "POWER"
+  },
+  {
+    "part_number": "2387A",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N222",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N2907",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N3904",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N3906",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N4401",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N5087",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N5088",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N5089",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N5401",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N5457",
+    "device_type": "JFET_N",
+    "package": "TO-92",
+    "application": "AUDIO"
+  },
+  {
+    "part_number": "2N5458",
+    "device_type": "JFET_N",
+    "package": "TO-92",
+    "application": "AUDIO"
+  },
+  {
+    "part_number": "2N5460",
+    "device_type": "JFET_P",
+    "package": "TO-92",
+    "application": "AUDIO"
+  },
+  {
+    "part_number": "2N5551",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2N6111G",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2SA1037AK (FR)",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2SC2060",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2SC4207-Y",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "2SK30A",
+    "device_type": "JFET_N",
+    "package": "TO-92",
+    "application": "AUDIO"
+  },
+  {
+    "part_number": "742669095252 (K2-2)",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "A1015",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "A1273",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "A42",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "A933",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "AZ1117",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "B1342",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "B1568",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "B772P",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "B824",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC327",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC337",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC517",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC547",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC548",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC549",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC550",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC556",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC557",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC558",
+    "device_type": "BJT_PNP",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BC847PN",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BD138",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BD438",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BD651",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BS170",
+    "device_type": "MOSFET_N",
+    "package": "TO-220",
+    "application": "POWER"
+  },
+  {
+    "part_number": "BT136",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BT137",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BTA10",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BTA12",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BTA16",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "BZT52C5V6 (W9)",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "C1740",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "C18158",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "C2655",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "C3199",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "C3421-Y",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "C4408",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "C945",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "D313",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "EL817",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "IRF1010",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "IRF4227",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "IRF540NS",
+    "device_type": "MOSFET_N",
+    "package": "TO-220",
+    "application": "POWER"
+  },
+  {
+    "part_number": "IRF630",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "IRF634",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "J112",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "J113",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "J175",
+    "device_type": "JFET_P",
+    "package": "TO-92",
+    "application": "AUDIO"
+  },
+  {
+    "part_number": "J201",
+    "device_type": "JFET_N",
+    "package": "TO-92",
+    "application": "AUDIO"
+  },
+  {
+    "part_number": "K163",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "K246",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "LL2705",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "LM2576",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "LM2596",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "LM317",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "LM334",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "LM337",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "LM35",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "MBR20100",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "MIC29302",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "MPF102",
+    "device_type": "JFET_N",
+    "package": "TO-92",
+    "application": "AUDIO"
+  },
+  {
+    "part_number": "MPSA13",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "MPSA18",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "MUR1620R6",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "OGBCON",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "P20N06",
+    "device_type": "MOSFET_N",
+    "package": "TO-220",
+    "application": "POWER"
+  },
+  {
+    "part_number": "P20N60",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "PQ10621H",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "R6775",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "S8050",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "S8550",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "S9012",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "S9013",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "S9014",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "S9015",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "SK3050",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "SRF2060L",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "SS13J532R",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "TF8N80",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "TL431A",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "TOP224YN",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "TSF1060M",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  },
+  {
+    "part_number": "TSP73801DCQR",
+    "device_type": "BJT_NPN",
+    "package": "TO-92",
+    "application": "GENERAL"
+  }
+]

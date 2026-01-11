@@ -1,0 +1,70 @@
+# This workflow will run tests using node and then publish a package to GitHub Container Registry and Docker Hub Regitry when a pushed into main branches
+# This file was contributed by EdwinBetanc0urt@outlook.com from ERP Consultores y Asociados, C.A
+
+name: Continuous Integration
+
+on:
+  # Triggers the workflow on push events but only for the develop branch
+  push:
+    branches:
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+    paths-ignore:
+      - README.md
+      - README.es.md
+      - 'docs/**'
+      - .github/workflows/docs.yml
+      - .github/**.md # Templates
+
+  pull_request:
+    paths-ignore:
+      - README.md
+      - README.es.md
+      - 'docs/**'
+      - .github/workflows/docs.yml
+      - .github/**.md # Templates
+
+jobs:
+
+  # Build dist application ADempiere-Vue
+  build-app:
+    name: Build dist adempiere-vue
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+          uses: actions/checkout@v4
+
+      - name: Node configuration
+          uses: actions/setup-node@v4
+        with:
+          node-version: 14.x
+          cache: 'yarn'
+
+      - name: Enable https to install packages
+        run: git config --global url."https://".insteadOf git://
+
+      # - name: Install packages lerna
+      #   run: yarn global add lerna
+
+      # - name: Update sub module
+      #   run: git submodule update --init --remote
+
+      - name: Install packages
+        run: yarn ci
+
+      - name: Run Linter
+        run: yarn lint
+
+      # - name: Run Unit Test
+      #   run: test:unit
+
+      - name: Compile dist
+        run: yarn build:prod
+
+      - name: Upload dist app
+        uses: actions/upload-artifact@v3
+        with:
+          name: adempiere-vue
+          path: dist
