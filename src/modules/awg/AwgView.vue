@@ -18,9 +18,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useCalculator } from '@/composables/useCalculator';
-import { AwgInput } from '@/domain/awg/contract';
-import { calculateAwg } from '@/domain/awg/model';
-import { createValidationResult } from '@/validation';
+// import { AwgInput } from '@/domain/awg/contract';
+// import { calculateAwg } from '@/domain/awg/model';
+// import { createValidationResult } from '@/validation';
 
 const input = reactive<AwgInput>({} as AwgInput);
 

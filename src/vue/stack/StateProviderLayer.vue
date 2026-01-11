@@ -4,7 +4,7 @@
 
 <script setup>
 import {provide, ref} from "vue"
-import {useSettings} from "/src/composables/settings.js"
+import {useSettings} from "@/composables/settings.js"
 
 const settings = useSettings()
 

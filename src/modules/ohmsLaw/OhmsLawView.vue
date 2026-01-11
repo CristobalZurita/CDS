@@ -18,9 +18,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useCalculator } from '@/composables/useCalculator';
-import { OhmsLawInput } from '@/domain/ohmsLaw/contract';
-import { calculateOhmsLaw } from '@/domain/ohmsLaw/model';
-import { createValidationResult } from '@/validation';
+// import { OhmsLawInput } from '@/domain/ohmsLaw/contract';
+// import { calculateOhmsLaw } from '@/domain/ohmsLaw/model';
+// import { createValidationResult } from '@/validation';
 
 const input = reactive<OhmsLawInput>({} as OhmsLawInput);
 

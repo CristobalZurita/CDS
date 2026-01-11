@@ -36,8 +36,8 @@
 </template>
 
 <script setup>
-import {useUtils} from "/src/composables/utils.js"
-import ImageView from "/src/vue/components/generic/ImageView.vue"
+import {useUtils} from "@/composables/utils.js"
+import ImageView from "@/vue/components/generic/ImageView.vue"
 import {computed} from "vue"
 
 const utils = useUtils()

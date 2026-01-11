@@ -26,9 +26,9 @@
 <script setup>
 
 import {computed} from "vue"
-import facebookIcon from "/src/assets/icons/facebook.svg"
-import instagramIcon from "/src/assets/icons/instagram.svg"
-import twitterIcon from "/src/assets/icons/twitter.svg"
+// import facebookIcon from "@/assets/icons/facebook.svg"
+// import instagramIcon from "@/assets/icons/instagram.svg"
+// import twitterIcon from "@/assets/icons/twitter.svg"
 /**
  * @property {Array} items
  * @property {String} size

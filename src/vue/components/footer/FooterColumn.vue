@@ -33,8 +33,8 @@
 </template>
 
 <script setup>
-import SocialLinks from "/src/vue/components/widgets/SocialLinks.vue"
-import InlineLinkList from "/src/vue/components/widgets/InlineLinkList.vue"
+import SocialLinks from "@/vue/components/widgets/SocialLinks.vue"
+import InlineLinkList from '@/vue/components/widgets/InlineLinkList.vue'
 
 const props = defineProps(({
     title: String,

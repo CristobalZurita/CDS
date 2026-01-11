@@ -22,11 +22,11 @@
 </template>
 
 <script setup>
-import PageSection from "/src/vue/components/layout/PageSection.vue"
-import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
-import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
-import ArticleTeamMembers from "/src/vue/components/articles/ArticleTeamMembers.vue"
-import ItemTeamMember from "/src/vue/components/articles/items/ItemTeamMember.vue"
+import PageSection from "@/vue/components/layout/PageSection.vue"
+import PageSectionHeader from "@/vue/components/layout/PageSectionHeader.vue"
+import PageSectionContent from '@/vue/components/layout/PageSectionContent.vue'
+import ArticleTeamMembers from "@/vue/components/articles/ArticleTeamMembers.vue"
+import ItemTeamMember from "@/vue/components/articles/items/ItemTeamMember.vue"
 
 const props = defineProps({
     id: String

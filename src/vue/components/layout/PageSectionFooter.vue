@@ -26,11 +26,11 @@
 </template>
 
 <script setup>
-import Divider from "/src/vue/components/widgets/Divider.vue"
+import Divider from '@/vue/components/widgets/Divider.vue'
 import {computed} from "vue"
-import {useUtils} from "/src/composables/utils.js"
-import Link from "/src/vue/components/generic/Link.vue"
-import XLButton from "/src/vue/components/widgets/XLButton.vue"
+import {useUtils} from "@/composables/utils.js"
+import Link from "@/vue/components/generic/Link.vue"
+import XLButton from "@/vue/components/widgets/XLButton.vue"
 
 const utils = useUtils()
 

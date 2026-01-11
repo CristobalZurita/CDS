@@ -60,11 +60,11 @@
 </template>
 
 <script setup>
-import PageSection from "/src/vue/components/layout/PageSection.vue"
-import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
-import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
-import ArticleTimeline from "/src/vue/components/articles/ArticleTimeline.vue"
-import ItemTimelineEntry from "/src/vue/components/articles/items/ItemTimelineEntry.vue"
+import PageSection from "@/vue/components/layout/PageSection.vue"
+import PageSectionHeader from "@/vue/components/layout/PageSectionHeader.vue"
+import PageSectionContent from '@/vue/components/layout/PageSectionContent.vue'
+import ArticleTimeline from "@/vue/components/articles/ArticleTimeline.vue"
+import ItemTimelineEntry from "@/vue/components/articles/items/ItemTimelineEntry.vue"
 
 const props = defineProps({
     id: String

@@ -18,9 +18,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useCalculator } from '@/composables/useCalculator';
-import { ResistorColorInput } from '@/domain/resistorColor/contract';
-import { calculateResistorColor } from '@/domain/resistorColor/model';
-import { createValidationResult } from '@/validation';
+// import { ResistorColorInput } from '@/domain/resistorColor/contract';
+// import { calculateResistorColor } from '@/domain/resistorColor/model';
+// import { createValidationResult } from '@/validation';
 
 const input = reactive<ResistorColorInput>({} as ResistorColorInput);
 
