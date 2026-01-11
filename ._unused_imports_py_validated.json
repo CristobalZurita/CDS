@@ -1,0 +1,177 @@
+[
+  {
+    "file": "backend/app/main.py",
+    "line": 132,
+    "col": 9,
+    "message": "'backend.app.services.logging_service' imported but unused",
+    "element": "backend.app.services.logging_service"
+  },
+  {
+    "file": "backend/app/core/config.py",
+    "line": 6,
+    "col": 1,
+    "message": "'functools.lru_cache' imported but unused",
+    "element": "functools.lru_cache"
+  },
+  {
+    "file": "backend/app/routers/diagnostic.py",
+    "line": 6,
+    "col": 1,
+    "message": "'typing.List' imported but unused",
+    "element": "typing.List"
+  },
+  {
+    "file": "backend/app/routers/payments.py",
+    "line": 2,
+    "col": 1,
+    "message": "'typing.Dict' imported but unused",
+    "element": "typing.Dict"
+  },
+  {
+    "file": "backend/app/routers/payments.py",
+    "line": 3,
+    "col": 1,
+    "message": "'pydantic.ValidationError' imported but unused",
+    "element": "pydantic.ValidationError"
+  },
+  {
+    "file": "backend/app/routers/quotation.py",
+    "line": 6,
+    "col": 1,
+    "message": "'backend.app.services.event_system.event_bus' imported but unused",
+    "element": "backend.app.services.event_system.event_bus"
+  },
+  {
+    "file": "backend/app/routers/quotation.py",
+    "line": 6,
+    "col": 1,
+    "message": "'backend.app.services.event_system.Events' imported but unused",
+    "element": "backend.app.services.event_system.Events"
+  },
+  {
+    "file": "backend/app/routers/uploads.py",
+    "line": 1,
+    "col": 1,
+    "message": "'fastapi.Depends' imported but unused",
+    "element": "fastapi.Depends"
+  },
+  {
+    "file": "backend/app/routers/stock_movement.py",
+    "line": 1,
+    "col": 1,
+    "message": "'fastapi.HTTPException' imported but unused",
+    "element": "fastapi.HTTPException"
+  },
+  {
+    "file": "backend/app/services/logging_service.py",
+    "line": 5,
+    "col": 1,
+    "message": "'backend.app.core.database.engine' imported but unused",
+    "element": "backend.app.core.database.engine"
+  },
+  {
+    "file": "backend/app/services/logging_service.py",
+    "line": 5,
+    "col": 1,
+    "message": "'backend.app.core.database.Base' imported but unused",
+    "element": "backend.app.core.database.Base"
+  },
+  {
+    "file": "backend/app/services/email_service.py",
+    "line": 13,
+    "col": 1,
+    "message": "'typing.List' imported but unused",
+    "element": "typing.List"
+  },
+  {
+    "file": "backend/app/services/email_service.py",
+    "line": 13,
+    "col": 1,
+    "message": "'typing.Dict' imported but unused",
+    "element": "typing.Dict"
+  },
+  {
+    "file": "backend/app/services/email_service.py",
+    "line": 13,
+    "col": 1,
+    "message": "'typing.Any' imported but unused",
+    "element": "typing.Any"
+  },
+  {
+    "file": "backend/app/services/email_service.py",
+    "line": 19,
+    "col": 5,
+    "message": "'sendgrid.helpers.mail.Email' imported but unused",
+    "element": "sendgrid.helpers.mail.Email"
+  },
+  {
+    "file": "backend/app/services/email_service.py",
+    "line": 19,
+    "col": 5,
+    "message": "'sendgrid.helpers.mail.To' imported but unused",
+    "element": "sendgrid.helpers.mail.To"
+  },
+  {
+    "file": "backend/app/services/email_service.py",
+    "line": 19,
+    "col": 5,
+    "message": "'sendgrid.helpers.mail.Content' imported but unused",
+    "element": "sendgrid.helpers.mail.Content"
+  },
+  {
+    "file": "backend/app/api/v1/router.py",
+    "line": 13,
+    "col": 2,
+    "message": "'backend.app.routers.diagnostic as diagnostic_router' imported but unused",
+    "element": "backend.app.routers.diagnostic as diagnostic_router"
+  },
+  {
+    "file": "backend/app/api/v1/router.py",
+    "line": 14,
+    "col": 2,
+    "message": "'backend.app.routers.quotation as quotation_router' imported but unused",
+    "element": "backend.app.routers.quotation as quotation_router"
+  },
+  {
+    "file": "backend/app/api/v1/router.py",
+    "line": 15,
+    "col": 2,
+    "message": "'backend.app.routers.payments as payments_router' imported but unused",
+    "element": "backend.app.routers.payments as payments_router"
+  },
+  {
+    "file": "backend/app/api/v1/endpoints/auth.py",
+    "line": 15,
+    "col": 1,
+    "message": "'backend.app.schemas.auth.PasswordResetRequest' imported but unused",
+    "element": "backend.app.schemas.auth.PasswordResetRequest"
+  },
+  {
+    "file": "backend/app/api/v1/endpoints/auth.py",
+    "line": 96,
+    "col": 5,
+    "message": "local variable 'e' is assigned to but never used",
+    "element": "e"
+  },
+  {
+    "file": "backend/app/api/v1/endpoints/auth.py",
+    "line": 216,
+    "col": 5,
+    "message": "local variable 'e' is assigned to but never used",
+    "element": "e"
+  },
+  {
+    "file": "backend/app/api/v1/endpoints/imports.py",
+    "line": 10,
+    "col": 1,
+    "message": "'backend.app.core.config.settings' imported but unused",
+    "element": "backend.app.core.config.settings"
+  },
+  {
+    "file": "backend/scripts/promote_to_admin.py",
+    "line": 14,
+    "col": 1,
+    "message": "'os' imported but unused",
+    "element": "os"
+  }
+]

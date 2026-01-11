@@ -1,0 +1,254 @@
+[
+  {
+    "path": "/api/v1/profile",
+    "files": [
+      "backend/app/core/dependencies.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/core/dependencies.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/admin/stats",
+    "files": [
+      "backend/app/core/dependencies.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/core/dependencies.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/instruments/brands",
+    "files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/diagnostic.py",
+        "reason": "contains TODO/pass/NotImplemented"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/instruments/models/{brand_id}",
+    "files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/diagnostic.py",
+        "reason": "contains TODO/pass/NotImplemented"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/instruments/{instrument_id}",
+    "files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/diagnostic.py",
+        "reason": "contains TODO/pass/NotImplemented"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/faults",
+    "files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/diagnostic.py",
+        "reason": "contains TODO/pass/NotImplemented"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/faults/applicable/{instrument_id}",
+    "files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/diagnostic.py",
+        "reason": "contains TODO/pass/NotImplemented"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/calculate",
+    "files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/diagnostic.py",
+        "reason": "contains TODO/pass/NotImplemented"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/quotes",
+    "files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/diagnostic.py",
+        "reason": "contains TODO/pass/NotImplemented"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/quotes/{quote_id}",
+    "files": [
+      "backend/app/routers/diagnostic.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/diagnostic.py",
+        "reason": "contains TODO/pass/NotImplemented"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/estimate",
+    "files": [
+      "backend/app/routers/quotation.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/quotation.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/images",
+    "files": [
+      "backend/app/routers/uploads.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/routers/uploads.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/{brand_id}/models",
+    "files": [
+      "backend/app/api/v1/endpoints/brands.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/api/v1/endpoints/brands.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/register",
+    "files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/api/v1/endpoints/auth.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/login",
+    "files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/api/v1/endpoints/auth.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/logout",
+    "files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/api/v1/endpoints/auth.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/me",
+    "files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/api/v1/endpoints/auth.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/refresh",
+    "files": [
+      "backend/app/api/v1/endpoints/auth.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/api/v1/endpoints/auth.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/{instrument_id}/image",
+    "files": [
+      "backend/app/api/v1/endpoints/instruments.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/api/v1/endpoints/instruments.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/run",
+    "files": [
+      "backend/app/api/v1/endpoints/imports.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/app/api/v1/endpoints/imports.py",
+        "reason": "no frontend callers found (implementation may exist)"
+      }
+    ]
+  },
+  {
+    "path": "/api/v1/users/",
+    "files": [
+      "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+    ],
+    "reasons": [
+      {
+        "file": "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+        "reason": "contains TODO/pass/NotImplemented"
+      }
+    ]
+  }
+]

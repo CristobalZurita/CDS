@@ -1,0 +1,60 @@
+@use './variables' as *;
+
+h1 {
+  line-height: 1;
+  margin-bottom: 3rem;
+}
+
+h2 {
+  font-size: 1.9em;
+  line-height: 1.1;
+  margin-top: 6rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.3rem;
+  color: var(--headline-color);
+  border-bottom: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 12%, transparent);
+  font-weight: normal;
+
+  h1 + & {margin-top: 3rem;}
+}
+
+h3 {
+  margin-top: 70px;
+  padding: 10px 0 0;
+  font-weight: normal;
+
+  a {
+    font-size: 24px;
+
+    .w-icon {
+      vertical-align: middle;
+      margin-bottom: 2px;
+    }
+  }
+}
+
+h4 {margin: 70px 0 8px;}
+h3 + h4 {margin-top: 20px;}
+h5 {
+  font-size: 1.1em;
+  color: #555;
+  margin-top: 0.5em;
+}
+
+h2 a, h3 a, h4 a {color: inherit;}
+
+code, .code {
+  font-family: monospace, sans-serif;
+  font-size: 0.85em;
+  padding: 1px 0.3em;
+  border-radius: 4px;
+  color: var(--code-color);
+  background: var(--code-bg-color);
+}
+span.code {color: var(--w-base-color);}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: $xxs) {
+  code, .code {letter-spacing: -0.3px;}
+}

@@ -1,0 +1,360 @@
+{
+  "instruments": [
+    {
+      "id": "waldorf-blofeld",
+      "brand": "waldorf",
+      "model": "Blofeld",
+      "type": "Digital Synthesizer",
+      "year": 2005,
+      "description": "Sintetizador digital portátil con potente síntesis wavetable",
+      "components": {
+        "encoders_rotativos": 4,
+        "botones": 23,
+        "lcd": true,
+        "leds": 8,
+        "usb": true,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": 0,
+        "aftertouch": false,
+        "rueda_pitch": false,
+        "pedal": false
+      },
+      "valor_estimado": {
+        "min": 400000,
+        "max": 600000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "encoders_intermitentes",
+        "lcd_sin_contraste",
+        "usb_no_conecta",
+        "no_prende",
+        "botones_pegados",
+        "audio_distorsionado"
+      ],
+      "imagen_url": "/images/instruments/waldorf-blofeld.jpg",
+      "manual_url": "https://waldorf-music.com/manuals/blofeld"
+    },
+    {
+      "id": "moog-minimoog-d",
+      "brand": "minimoog",
+      "model": "Minimoog Model D",
+      "type": "Analog Synthesizer",
+      "year": 1971,
+      "description": "Sintetizador analógico monofónico legendario",
+      "components": {
+        "encoders_rotativos": 0,
+        "botones": 12,
+        "lcd": false,
+        "leds": 0,
+        "usb": false,
+        "midi_din": false,
+        "salidas_audio": 1,
+        "faders": 18,
+        "aftertouch": false,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 5000000,
+        "max": 8000000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "faders_intermitentes",
+        "oscilador_inestable",
+        "no_prende",
+        "filtro_dañado",
+        "ruido_blanco",
+        "envolvente_rota"
+      ],
+      "imagen_url": "/images/instruments/moog-minimoog.jpg",
+      "manual_url": "https://moogmusic.com/manuals"
+    },
+    {
+      "id": "roland-tr808",
+      "brand": "roland",
+      "model": "TR-808",
+      "type": "Drum Machine",
+      "year": 1980,
+      "description": "Máquina de ritmos analógica legendaria",
+      "components": {
+        "encoders_rotativos": 0,
+        "botones": 24,
+        "lcd": false,
+        "leds": 8,
+        "usb": false,
+        "midi_din": false,
+        "salidas_audio": 4,
+        "faders": 16,
+        "aftertouch": false,
+        "rueda_pitch": false,
+        "pedal": false
+      },
+      "valor_estimado": {
+        "min": 2000000,
+        "max": 4000000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "no_prende",
+        "bateria_muerta",
+        "faders_intermitentes",
+        "botones_pegados",
+        "condensador_dañado",
+        "no_genera_sonido"
+      ],
+      "imagen_url": "/images/instruments/roland-tr808.jpg",
+      "manual_url": "https://roland.com/manuals"
+    },
+    {
+      "id": "roland-jupiter8",
+      "brand": "roland",
+      "model": "Jupiter-8",
+      "type": "Analog Synthesizer",
+      "year": 1981,
+      "description": "Sintetizador analógico polifónico premium",
+      "components": {
+        "encoders_rotativos": 0,
+        "botones": 32,
+        "lcd": false,
+        "leds": 20,
+        "usb": false,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": 24,
+        "aftertouch": true,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 4000000,
+        "max": 7000000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "teclas_muertas",
+        "faders_intermitentes",
+        "aftertouch_no_funciona",
+        "no_prende",
+        "oscilador_inestable",
+        "condensador_electrolítico_dañado"
+      ],
+      "imagen_url": "/images/instruments/roland-jupiter8.jpg",
+      "manual_url": "https://roland.com/manuals"
+    },
+    {
+      "id": "korg-volca-keys",
+      "brand": "korg",
+      "model": "Volca Keys",
+      "type": "Digital Synthesizer",
+      "year": 2013,
+      "description": "Sintetizador portátil digital compacto",
+      "components": {
+        "encoders_rotativos": 3,
+        "botones": 12,
+        "lcd": false,
+        "leds": 4,
+        "usb": true,
+        "midi_din": true,
+        "salidas_audio": 1,
+        "faders": 0,
+        "aftertouch": false,
+        "rueda_pitch": false,
+        "pedal": false
+      },
+      "valor_estimado": {
+        "min": 200000,
+        "max": 350000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "teclas_pegadas",
+        "no_prende",
+        "bateria_muerta",
+        "botones_intermitentes",
+        "sonido_distorsionado"
+      ],
+      "imagen_url": "/images/instruments/korg-volca.jpg",
+      "manual_url": "https://korg.com/manuals"
+    },
+    {
+      "id": "access-virus-ti",
+      "brand": "access",
+      "model": "Virus TI",
+      "type": "Digital Synthesizer",
+      "year": 2010,
+      "description": "Sintetizador digital profesional con USB y controles",
+      "components": {
+        "encoders_rotativos": 9,
+        "botones": 32,
+        "lcd": true,
+        "leds": 16,
+        "usb": true,
+        "midi_din": true,
+        "salidas_audio": 4,
+        "faders": 8,
+        "aftertouch": true,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 1000000,
+        "max": 2000000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "lcd_muerto",
+        "no_reconoce_usb",
+        "botones_pegados",
+        "no_prende",
+        "condensador_dañado",
+        "ruido_excesivo"
+      ],
+      "imagen_url": "/images/instruments/access-virus.jpg",
+      "manual_url": "https://access-music.com/manuals"
+    },
+    {
+      "id": "yamaha-dx7",
+      "brand": "yamaha",
+      "model": "DX7",
+      "type": "Digital Synthesizer",
+      "year": 1983,
+      "description": "Sintetizador digital de síntesis FM revolucionario",
+      "components": {
+        "encoders_rotativos": 1,
+        "botones": 16,
+        "lcd": true,
+        "leds": 4,
+        "usb": false,
+        "midi_din": true,
+        "salidas_audio": 1,
+        "faders": 6,
+        "aftertouch": false,
+        "rueda_pitch": true,
+        "pedal": false
+      },
+      "valor_estimado": {
+        "min": 500000,
+        "max": 1000000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "lcd_muerto",
+        "teclas_muertas",
+        "no_prende",
+        "bateria_rtc_muerta",
+        "botones_pegados",
+        "sine_wave_distorsionada"
+      ],
+      "imagen_url": "/images/instruments/yamaha-dx7.jpg",
+      "manual_url": "https://yamaha.com/manuals"
+    },
+    {
+      "id": "nord-lead",
+      "brand": "nord",
+      "model": "Nord Lead",
+      "type": "Analog Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador analógico compacto con síntesis sustractiva",
+      "components": {
+        "encoders_rotativos": 4,
+        "botones": 20,
+        "lcd": true,
+        "leds": 8,
+        "usb": false,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": 12,
+        "aftertouch": false,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 800000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "lcd_muerto",
+        "botones_pegados",
+        "encoders_intermitentes",
+        "no_prende",
+        "oscilador_inestable"
+      ],
+      "imagen_url": "/images/instruments/nord-lead.jpg",
+      "manual_url": "https://nordkeyboards.com/manuals"
+    },
+    {
+      "id": "arturia-minibrute",
+      "brand": "arturia",
+      "model": "MiniBrute",
+      "type": "Analog Synthesizer",
+      "year": 2013,
+      "description": "Sintetizador analógico monofónico compacto",
+      "components": {
+        "encoders_rotativos": 0,
+        "botones": 16,
+        "lcd": false,
+        "leds": 8,
+        "usb": false,
+        "midi_din": true,
+        "salidas_audio": 1,
+        "faders": 16,
+        "aftertouch": false,
+        "rueda_pitch": true,
+        "pedal": false
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "faders_intermitentes",
+        "botones_pegados",
+        "no_prende",
+        "oscilador_inestable",
+        "filtro_dañado"
+      ],
+      "imagen_url": "/images/instruments/arturia-minibrute.jpg",
+      "manual_url": "https://arturia.com/manuals"
+    },
+    {
+      "id": "elektron-analog4",
+      "brand": "elektron",
+      "model": "Analog Four",
+      "type": "Analog Synthesizer",
+      "year": 2015,
+      "description": "Sintetizador analógico cuadrófono compacto",
+      "components": {
+        "encoders_rotativos": 16,
+        "botones": 24,
+        "lcd": true,
+        "leds": 32,
+        "usb": true,
+        "midi_din": true,
+        "salidas_audio": 4,
+        "faders": 0,
+        "aftertouch": false,
+        "rueda_pitch": false,
+        "pedal": false
+      },
+      "valor_estimado": {
+        "min": 600000,
+        "max": 1000000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "lcd_muerto",
+        "encoders_intermitentes",
+        "no_reconoce_usb",
+        "botones_pegados",
+        "no_prende"
+      ],
+      "imagen_url": "/images/instruments/elektron-analog4.jpg",
+      "manual_url": "https://elektron.se/manuals"
+    }
+  ]
+}

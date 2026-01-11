@@ -1,0 +1,42 @@
+{
+  "name": "cirujano-front",
+  "private": true,
+  "version": "2.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "vitest --environment jsdom",
+    "build": "vite build",
+    "preview": "vite preview",
+    "ghdeploy": "vite build && cd dist && cp index.html 404.html"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@popperjs/core": "^2.11.7",
+    "axios": "^1.13.2",
+    "bootstrap": "^5.2.3",
+    "emailjs": "^4.0.3",
+    "gh-pages": "^6.3.0",
+    "leaflet": "^1.9.4",
+    "pinia": "^3.0.4",
+    "primeicons": "^7.0.0",
+    "swiper": "^10.0.4",
+    "vue": "^3.2.47",
+    "vue-router": "^4.2.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.52.0",
+    "@typescript-eslint/parser": "^8.52.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/test-utils": "^2.4.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-vue": "^10.6.2",
+    "jsdom": "^27.4.0",
+    "sass": "^1.62.1",
+    "typescript": "^5.2.2",
+    "vite": "^6.2.5",
+    "vitest": "^1.0.0",
+    "vue-eslint-parser": "^10.2.0"
+  }
+}

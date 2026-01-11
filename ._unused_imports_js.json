@@ -1,0 +1,1556 @@
+[
+  {
+    "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/report/actions.js",
+    "element": "requestProcessMetadata",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/report/actions.js",
+    "element": "generateProcess",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/docs/.vitepress/theme/index.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/docs/.vitepress/theme/components/examples/LinkAuthenticationExample.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/docs/.vitepress/theme/components/examples/CardElementExample.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/docs/.vitepress/theme/components/examples/IdealPaymentExample.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/docs/.vitepress/theme/components/examples/SplitCardElementExample.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/docs/.vitepress/theme/components/examples/PaymentElementExample.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/docs/.vitepress/theme/composables/useAnalytics.ts",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/docs/.vitepress/theme/composables/useAnalytics.ts",
+    "element": "onUnmounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/backend/next.config.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/backend/tailwind.config.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/backend/src/lib/utils.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/tailwind.config.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/router.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/dialog-title.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/table-row.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/switch.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/table-header.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/card-header.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/tabs-content.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/tabs-trigger.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/tabs-list.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/label.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/label.vue",
+    "element": "Label",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/alert-title.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/card-description.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/card.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/input.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/card-title.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/dialog-content.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/alert-description.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/table-body.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/table-cell.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/dialog-header.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/card-footer.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/table.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/card-content.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/separator.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/table-head.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/dialog-footer.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/scroll-area.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/dialog-description.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarSeparator.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarInput.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarGroupContent.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarHeader.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarFooter.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarMenu.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarMenuBadge.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarRail.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarMenuItem.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarMenuSub.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/utils.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarGroup.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/Sidebar.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarContent.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarInset.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarTrigger.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarProvider.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sidebar/SidebarMenuSkeleton.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/input/Input.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sheet/SheetFooter.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sheet/SheetTrigger.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sheet/SheetClose.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sheet/Sheet.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/sheet/SheetHeader.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/tooltip/TooltipTrigger.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/tooltip/TooltipProvider.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/tooltip/Tooltip.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/components/ui/skeleton/Skeleton.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/views/AddressElementView.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/views/IdealBankElementView.vue",
+    "element": "StripeIdealBankElement",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/views/P24BankElementView.vue",
+    "element": "StripeP24BankElement",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/views/SplitCardView.vue",
+    "element": "StripeCardNumberElement",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/views/IbanElementView.vue",
+    "element": "StripeIbanElement",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/apps/playground/src/views/EpsBankElementView.vue",
+    "element": "StripeEpsBankElement",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/tests/plugin.test.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/tests/components/VueStripeCheckout.test.ts",
+    "element": "afterEach",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/tests/components/VueStripeElements.test.ts",
+    "element": "stripeInjectionKey",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/tests/composables/useStripe.test.ts",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/tests/composables/usePaymentIntent.test.ts",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/tests/composables/useStripeElements.test.ts",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/src/shims-vue.d.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/src/composables/useStripe.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/src/composables/useStripeCheckout.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-stripe-main/packages/vue-stripe/src/composables/useStripeElements.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Stock-App-master/src/components/Modal.vue",
+    "element": "watch",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Stock-App-master/src/components/CategoryBar.vue",
+    "element": "reactive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Stock-App-master/src/components/FormProduct.vue",
+    "element": "reactive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Stock-App-master/src/views/Category.vue",
+    "element": "reactive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/stock-app-main/src/components/Modal.vue",
+    "element": "watch",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/stock-app-main/src/components/CategoryBar.vue",
+    "element": "reactive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/stock-app-main/src/components/FormProduct.vue",
+    "element": "reactive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/stock-app-main/src/views/Category.vue",
+    "element": "reactive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vuejs-nation-main/client/src/components/CheckoutTotalsLine.vue",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/qalendar-master/tests/unit/helpers/EventChange.test.ts",
+    "element": "EventImpl",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/qalendar-master/src/env.d.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/qalendar-master/src/components/month/AgendaEvents.vue",
+    "element": "PerfectScrollbar",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/qalendar-master/src/helpers/EventConcurrency.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/qalendar-master/src/helpers/EventChange.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/qalendar-master/src/helpers/Week.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/qalendar-master/src/helpers/EventsFilter.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/App.vue",
+    "element": "RouterLink",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/components/Maps.vue",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/components/Graph.vue",
+    "element": "GetStatusName",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/components/TicketStatus.vue",
+    "element": "TicketStatusOptions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/components/Nav.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/components/Nav.vue",
+    "element": "onUpdated",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/components/Nav.vue",
+    "element": "RouterView",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/views/TicketViewUser.vue",
+    "element": "computed",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/views/TicketViewUser.vue",
+    "element": "flashMessage",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/views/TicketViewUser.vue",
+    "element": "useRouter",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/views/TicketViewUser.vue",
+    "element": "convertTimeToLocal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/views/TicketViewAdmin.vue",
+    "element": "convertTimeToLocal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/views/Admin/TicketsView.vue",
+    "element": "flashMessage",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/views/Repairs/RepairListView.vue",
+    "element": "markRaw",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/views/Repairs/RepairListView.vue",
+    "element": "inject",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/router/index.js",
+    "element": "inject",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/FixitFastRepairs-Project-main/client/src/router/index.js",
+    "element": "VueAxios",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/store/modules/adjustment.js",
+    "element": "log",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/store/modules/menu/index.js",
+    "element": "stockControl",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/purchasing/recommendations.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/purchasing/reorder.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/purchasing/purchase-orders.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/purchasing/dashboard.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/purchasing/components/to-store-items.vue",
+    "element": "calculateStockAft",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/purchasing/components/demand-forecast.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/purchasing/components/to-check-items.vue",
+    "element": "calculateStockAft",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/purchasing/components/purchase-order-summary.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/inventory-control/components/product-details.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/inventory-control/components/variant-content.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/inventory-control/components/product-variant-content.vue",
+    "element": "mapGetters",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/inventory-control/components/product-content.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/warehouse/index.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/warehouse/components/warehouse-map.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/inbound/storing.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/inbound/receiving.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/inbound/checking.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/stock-control/inbound.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/supplier/suppliers.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/inventory-system-master/WebContent/src/views/supplier/supplierContacts.vue",
+    "element": "mapActions",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-tickets-master/resources/js/lib/utils.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-tickets-master/resources/js/hooks/useFetchData.ts",
+    "element": "useRef",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/App.vue",
+    "element": "ElConfigProvider",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/vite-env.d.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/home.vue",
+    "element": "vHeader",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/home.vue",
+    "element": "vSidebar",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/home.vue",
+    "element": "vTabs",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/dashboard.vue",
+    "element": "VChart",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/pages/ucenter.vue",
+    "element": "VueCropper",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/pages/editor.vue",
+    "element": "reactive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/pages/markdown.vue",
+    "element": "MdEditor",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/table/import.vue",
+    "element": "reactive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/chart/echarts.vue",
+    "element": "VChart",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-manage-system-master/src/views/chart/schart.vue",
+    "element": "Schart",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/docs/assets/customization-BQgwex4g.js",
+    "element": "VueCal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "computed",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "watch",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "toRefs",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "onBeforeUnmount",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "nextTick",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "inject",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "createElementBlock",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "openBlock",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "renderSlot",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "createCommentVNode",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "unref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "$",
+    "type": "import",
+    "evidence": "occurrences: 0"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "Fragment",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "renderList",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "normalizeClass",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "createElementVNode",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "createVNode",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "Transition",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "withCtx",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "createBlock",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "resolveDynamicComponent",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "mergeProps",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "toHandlers",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "normalizeProps",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "toDisplayString",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "createTextVNode",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "withModifiers",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "normalizeStyle",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "$e",
+    "type": "import",
+    "evidence": "occurrences: 0"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "TransitionGroup",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "createSlots",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "useTemplateRef",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "useId",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "useAttrs",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "provide",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/dist/vue-cal.es.js",
+    "element": "guardReactiveProps",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/app.vue",
+    "element": "Documentation",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/release-notes.vue",
+    "element": "IssueLink",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/home.vue",
+    "element": "TopBar",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/home.vue",
+    "element": "Hero",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/hero.vue",
+    "element": "VueCal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/index.vue",
+    "element": "TopBar",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/isolated-test-view.vue",
+    "element": "VueCal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/components/top-bar.vue",
+    "element": "ExamplesMenu",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/calendar-events-display.vue",
+    "element": "VueCal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/date-and-time.vue",
+    "element": "VueCal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/dom-events.vue",
+    "element": "computed",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/dom-events.vue",
+    "element": "VueCal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/index.vue",
+    "element": "ExamplesMenu",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/calendar-events-interactions.vue",
+    "element": "VueCal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/calendar-events-interactions.vue",
+    "element": "stringToDate",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/playground.vue",
+    "element": "VueCal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/schedules.vue",
+    "element": "computed",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/documentation/examples/schedules.vue",
+    "element": "VueCal",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/vue-cal/components/body.vue",
+    "element": "reactive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/vue-cal/components/event.vue",
+    "element": "percentageToMinutes",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/vue-cal/components/headings-bar.vue",
+    "element": "Cell",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/vue-cal/components/cell.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/vue-cal-main/src/router/index.js",
+    "element": "Documentation",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Geeker-Admin-master/src/App.vue",
+    "element": "ElConfigProvider",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Geeker-Admin-master/src/directives/modules/debounce.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Geeker-Admin-master/src/directives/modules/auth.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Geeker-Admin-master/src/directives/modules/throttle.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Geeker-Admin-master/src/directives/modules/waterMarker.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Geeker-Admin-master/src/directives/modules/draggable.ts",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Geeker-Admin-master/src/layouts/indexAsync.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/Geeker-Admin-master/src/layouts/index.vue",
+    "element": "type",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Pages/Products/Edit.vue",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Pages/Roles/Create.vue",
+    "element": "Link",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Pages/Roles/Create.vue",
+    "element": "vSelect",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Pages/Roles/Edit.vue",
+    "element": "Link",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Pages/Roles/Edit.vue",
+    "element": "vSelect",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Layouts/GuestLayout.vue",
+    "element": "Link",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/ChatCard.vue",
+    "element": "RouterLink",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/ChatCard.vue",
+    "element": "UserThree",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/Forms/InputGroup.vue",
+    "element": "defineComponent",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/Auths/InputGroup.vue",
+    "element": "defineComponent",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/Header/DropdownUser.vue",
+    "element": "Link",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/Tables/TableOne.vue",
+    "element": "BrandOne",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/Tables/TableOne.vue",
+    "element": "BrandTwo",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/Tables/TableOne.vue",
+    "element": "BrandThree",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/Tables/TableOne.vue",
+    "element": "BrandFour",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./MODELOS/laravel-inertia-vue-main/resources/js/Components/Tables/TableOne.vue",
+    "element": "BrandFive",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/stack/FeedbacksLayer.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/quotation/QuotationResult.vue",
+    "element": "computed",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/layout/PageWrapper.vue",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/generic/ImageView.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/nav/Navigation.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/nav/Navigation.vue",
+    "element": "onUnmounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/nav/Navigation.vue",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/nav/Navigation.vue",
+    "element": "watch",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/admin/InventoryForm.vue",
+    "element": "toRefs",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/admin/InventoryForm.vue",
+    "element": "useRoute",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/forms/contact/ContactFormFields.vue",
+    "element": "inject",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/forms/contact/ContactForm.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/forms/contact/ContactForm.vue",
+    "element": "provide",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/forms/contact/ContactForm.vue",
+    "element": "watch",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/projects/ProjectModal.vue",
+    "element": "computed",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/articles/DiagnosticWizard.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/articles/ArticleTestimonials.vue",
+    "element": "SwiperSlide",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/articles/ArticleQuotes.vue",
+    "element": "SwiperSlide",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  }
+]

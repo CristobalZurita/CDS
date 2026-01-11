@@ -1,0 +1,102 @@
+/**
+ * ADempiere-Vue (Frontend) for ADempiere ERP & CRM Smart Business Solution
+ * Copyright (C) 2018-Present E.R.P. Consultores y Asociados, C.A. www.erpya.com
+ * Contributor(s): Edwin Betancourt EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+.input-as-password,
+input[type=text].input-as-password {
+  // text-security: disc;
+  -webkit-text-security: disc;
+  -mox-text-security: disc;
+  -ms-text-security: disc;
+  -o-text-security: disc;
+
+  input[type=text],
+  >input[type=text] {
+    // text-security: disc;
+    -webkit-text-security: disc;
+    -mox-text-security: disc;
+    -ms-text-security: disc;
+    -o-text-security: disc;
+  }
+}
+
+button.button-base-icon {
+  padding: 4px 8px;
+  font-size: 24px;
+}
+
+/**
+ * Search Button icon suffix
+ */
+button.button-show-popover {
+  padding-left: 9px !important;
+  padding-right: 0px !important;
+  i, svg {
+    font-size: 20px !important;
+  }
+}
+
+.form-min-label {
+  /**
+   * Reduce the spacing between the form element and its label
+   */
+   .el-form-item__label {
+    padding-bottom: 0px !important;
+  }
+}
+
+.form-base {
+  /**
+   * To select element and input number
+   */
+  .el-form-item {
+    width: 100%;
+
+    /**
+    * Reduce the spacing between the form element and its label
+    */
+    .el-form-item__label {
+      padding-bottom: 0px !important;
+    }
+
+    /**
+     * width all
+     */
+    .el-input, .el-input-number, .el-select {
+      width: 100%;
+    }
+
+    /**
+     * Number align to rigth
+     */
+    .el-input-number {
+      .el-input__inner {
+        text-align-last: end !important;
+      }
+    }
+  }
+  
+}
+
+.divider {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 0.2em 0;
+  padding: 0;
+}

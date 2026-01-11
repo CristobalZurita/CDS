@@ -1,0 +1,594 @@
+[
+  {
+    "value_farads": 1e-06,
+    "display_value": "1.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 2e-06,
+    "display_value": "2.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 3e-06,
+    "display_value": "3.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 4e-06,
+    "display_value": "4.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 4.9999999999999996e-06,
+    "display_value": "5.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 6e-06,
+    "display_value": "6.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 7e-06,
+    "display_value": "7.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 8e-06,
+    "display_value": "8.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 9e-06,
+    "display_value": "9.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 9.999999999999999e-06,
+    "display_value": "10.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 1.4999999999999999e-05,
+    "display_value": "15.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 1.8e-05,
+    "display_value": "18.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 1.9999999999999998e-05,
+    "display_value": "20.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 2.2e-05,
+    "display_value": "22.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 2.7e-05,
+    "display_value": "27.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 2.9999999999999997e-05,
+    "display_value": "30.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 3.2999999999999996e-05,
+    "display_value": "33.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 3.9999999999999996e-05,
+    "display_value": "40.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 4.7e-05,
+    "display_value": "47.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 4.9999999999999996e-05,
+    "display_value": "50.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 5.6e-05,
+    "display_value": "56.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 5.9999999999999995e-05,
+    "display_value": "60.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 6.8e-05,
+    "display_value": "68.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 7.5e-05,
+    "display_value": "75.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 8.2e-05,
+    "display_value": "82.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 9.999999999999999e-05,
+    "display_value": "100.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000101,
+    "display_value": "101.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000102,
+    "display_value": "102.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000103,
+    "display_value": "103.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000104,
+    "display_value": "104.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00010499999999999999,
+    "display_value": "105.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000106,
+    "display_value": "106.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000121,
+    "display_value": "121.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00014099999999999998,
+    "display_value": "141.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00015,
+    "display_value": "150.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00015099999999999998,
+    "display_value": "151.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00015199999999999998,
+    "display_value": "152.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000153,
+    "display_value": "153.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000154,
+    "display_value": "154.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00018099999999999998,
+    "display_value": "181.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00020099999999999998,
+    "display_value": "201.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000202,
+    "display_value": "202.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000203,
+    "display_value": "203.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00021999999999999998,
+    "display_value": "220.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00022099999999999998,
+    "display_value": "221.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000222,
+    "display_value": "222.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000223,
+    "display_value": "223.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000224,
+    "display_value": "224.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000254,
+    "display_value": "254.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000271,
+    "display_value": "271.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00027299999999999997,
+    "display_value": "273.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.0003,
+    "display_value": "300.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00030399999999999996,
+    "display_value": "304.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00033099999999999997,
+    "display_value": "331.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000332,
+    "display_value": "332.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00033299999999999996,
+    "display_value": "333.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000334,
+    "display_value": "334.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000385,
+    "display_value": "385.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00044199999999999996,
+    "display_value": "442.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00047,
+    "display_value": "470.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.00047099999999999996,
+    "display_value": "471.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000472,
+    "display_value": "472.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000473,
+    "display_value": "473.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000474,
+    "display_value": "474.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000561,
+    "display_value": "561.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000562,
+    "display_value": "562.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.0005639999999999999,
+    "display_value": "564.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.0006039999999999999,
+    "display_value": "604.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000681,
+    "display_value": "681.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000682,
+    "display_value": "682.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000683,
+    "display_value": "683.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000821,
+    "display_value": "821.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.0008219999999999999,
+    "display_value": "822.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  },
+  {
+    "value_farads": 0.000823,
+    "display_value": "823.0µF",
+    "dielectric": "CERAMIC",
+    "voltage_volts": 25.0,
+    "polarized": true,
+    "package": "TH_RADIAL"
+  }
+]

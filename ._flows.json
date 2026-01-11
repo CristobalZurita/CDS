@@ -1,0 +1,221 @@
+{
+  "frontend_calls_count": 3,
+  "backend_endpoints_count": 32,
+  "missing_frontend": [],
+  "backend_not_consumed": [
+    {
+      "path": "/api/v1/profile",
+      "files": [
+        "backend/app/core/dependencies.py"
+      ]
+    },
+    {
+      "path": "/api/v1/admin/stats",
+      "files": [
+        "backend/app/core/dependencies.py"
+      ]
+    },
+    {
+      "path": "/api/v1/instruments/brands",
+      "files": [
+        "backend/app/routers/diagnostic.py"
+      ]
+    },
+    {
+      "path": "/api/v1/instruments/models/{brand_id}",
+      "files": [
+        "backend/app/routers/diagnostic.py"
+      ]
+    },
+    {
+      "path": "/api/v1/instruments/{instrument_id}",
+      "files": [
+        "backend/app/routers/diagnostic.py"
+      ]
+    },
+    {
+      "path": "/api/v1/faults",
+      "files": [
+        "backend/app/routers/diagnostic.py"
+      ]
+    },
+    {
+      "path": "/api/v1/faults/applicable/{instrument_id}",
+      "files": [
+        "backend/app/routers/diagnostic.py"
+      ]
+    },
+    {
+      "path": "/api/v1/calculate",
+      "files": [
+        "backend/app/routers/diagnostic.py"
+      ]
+    },
+    {
+      "path": "/api/v1/quotes",
+      "files": [
+        "backend/app/routers/diagnostic.py"
+      ]
+    },
+    {
+      "path": "/api/v1/quotes/{quote_id}",
+      "files": [
+        "backend/app/routers/diagnostic.py"
+      ]
+    },
+    {
+      "path": "/api/v1/",
+      "files": [
+        "backend/app/routers/payments.py",
+        "backend/app/routers/payments.py",
+        "backend/app/routers/stock_movement.py",
+        "backend/app/routers/stock_movement.py",
+        "backend/app/routers/repair.py",
+        "backend/app/routers/repair.py",
+        "backend/app/routers/instrument.py",
+        "backend/app/routers/instrument.py",
+        "backend/app/routers/category.py",
+        "backend/app/routers/category.py",
+        "backend/app/routers/user.py",
+        "backend/app/routers/user.py",
+        "backend/app/routers/contact.py",
+        "backend/app/api/v1/endpoints/brands.py"
+      ]
+    },
+    {
+      "path": "/api/v1/{payment_id}",
+      "files": [
+        "backend/app/routers/payments.py"
+      ]
+    },
+    {
+      "path": "/api/v1/estimate",
+      "files": [
+        "backend/app/routers/quotation.py"
+      ]
+    },
+    {
+      "path": "/api/v1/images",
+      "files": [
+        "backend/app/routers/uploads.py"
+      ]
+    },
+    {
+      "path": "/api/v1/{repair_id}",
+      "files": [
+        "backend/app/routers/repair.py",
+        "backend/app/routers/repair.py"
+      ]
+    },
+    {
+      "path": "/api/v1/{instrument_id}",
+      "files": [
+        "backend/app/routers/instrument.py",
+        "backend/app/routers/instrument.py",
+        "backend/app/api/v1/endpoints/instruments.py"
+      ]
+    },
+    {
+      "path": "/api/v1/{category_id}",
+      "files": [
+        "backend/app/routers/category.py",
+        "backend/app/routers/category.py"
+      ]
+    },
+    {
+      "path": "/api/v1/{user_id}",
+      "files": [
+        "backend/app/routers/user.py",
+        "backend/app/routers/user.py"
+      ]
+    },
+    {
+      "path": "/api/v1/{brand_id}/models",
+      "files": [
+        "backend/app/api/v1/endpoints/brands.py"
+      ]
+    },
+    {
+      "path": "/api/v1",
+      "files": [
+        "backend/app/api/v1/endpoints/inventory.py"
+      ]
+    },
+    {
+      "path": "/api/v1/{item_id}",
+      "files": [
+        "backend/app/api/v1/endpoints/inventory.py"
+      ]
+    },
+    {
+      "path": "/api/v1/register",
+      "files": [
+        "backend/app/api/v1/endpoints/auth.py"
+      ]
+    },
+    {
+      "path": "/api/v1/login",
+      "files": [
+        "backend/app/api/v1/endpoints/auth.py"
+      ]
+    },
+    {
+      "path": "/api/v1/logout",
+      "files": [
+        "backend/app/api/v1/endpoints/auth.py"
+      ]
+    },
+    {
+      "path": "/api/v1/me",
+      "files": [
+        "backend/app/api/v1/endpoints/auth.py"
+      ]
+    },
+    {
+      "path": "/api/v1/refresh",
+      "files": [
+        "backend/app/api/v1/endpoints/auth.py"
+      ]
+    },
+    {
+      "path": "/api/v1/{instrument_id}/image",
+      "files": [
+        "backend/app/api/v1/endpoints/instruments.py"
+      ]
+    },
+    {
+      "path": "/api/v1/run",
+      "files": [
+        "backend/app/api/v1/endpoints/imports.py"
+      ]
+    },
+    {
+      "path": "/api/v1/{run_id}",
+      "files": [
+        "backend/app/api/v1/endpoints/imports.py"
+      ]
+    },
+    {
+      "path": "/api/v1/users/",
+      "files": [
+        "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+      ]
+    },
+    {
+      "path": "/api/v1/items/",
+      "files": [
+        "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+        "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+        "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+      ]
+    },
+    {
+      "path": "/api/v1/items/{item_id}",
+      "files": [
+        "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+        "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py",
+        "backend/.venv/lib/python3.11/site-packages/fastapi/routing.py"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1340 @@
+{
+  "unused_imports_py": [
+    {
+      "file": "backend/app/main.py",
+      "line": 132,
+      "col": 9,
+      "message": "'backend.app.services.logging_service' imported but unused",
+      "element": "backend.app.services.logging_service"
+    },
+    {
+      "file": "backend/app/core/config.py",
+      "line": 6,
+      "col": 1,
+      "message": "'functools.lru_cache' imported but unused",
+      "element": "functools.lru_cache"
+    },
+    {
+      "file": "backend/app/routers/diagnostic.py",
+      "line": 6,
+      "col": 1,
+      "message": "'typing.List' imported but unused",
+      "element": "typing.List"
+    },
+    {
+      "file": "backend/app/routers/payments.py",
+      "line": 2,
+      "col": 1,
+      "message": "'typing.Dict' imported but unused",
+      "element": "typing.Dict"
+    },
+    {
+      "file": "backend/app/routers/payments.py",
+      "line": 3,
+      "col": 1,
+      "message": "'pydantic.ValidationError' imported but unused",
+      "element": "pydantic.ValidationError"
+    },
+    {
+      "file": "backend/app/routers/quotation.py",
+      "line": 6,
+      "col": 1,
+      "message": "'backend.app.services.event_system.event_bus' imported but unused",
+      "element": "backend.app.services.event_system.event_bus"
+    },
+    {
+      "file": "backend/app/routers/quotation.py",
+      "line": 6,
+      "col": 1,
+      "message": "'backend.app.services.event_system.Events' imported but unused",
+      "element": "backend.app.services.event_system.Events"
+    },
+    {
+      "file": "backend/app/routers/uploads.py",
+      "line": 1,
+      "col": 1,
+      "message": "'fastapi.Depends' imported but unused",
+      "element": "fastapi.Depends"
+    },
+    {
+      "file": "backend/app/routers/stock_movement.py",
+      "line": 1,
+      "col": 1,
+      "message": "'fastapi.HTTPException' imported but unused",
+      "element": "fastapi.HTTPException"
+    },
+    {
+      "file": "backend/app/services/logging_service.py",
+      "line": 5,
+      "col": 1,
+      "message": "'backend.app.core.database.engine' imported but unused",
+      "element": "backend.app.core.database.engine"
+    },
+    {
+      "file": "backend/app/services/logging_service.py",
+      "line": 5,
+      "col": 1,
+      "message": "'backend.app.core.database.Base' imported but unused",
+      "element": "backend.app.core.database.Base"
+    },
+    {
+      "file": "backend/app/services/email_service.py",
+      "line": 13,
+      "col": 1,
+      "message": "'typing.List' imported but unused",
+      "element": "typing.List"
+    },
+    {
+      "file": "backend/app/services/email_service.py",
+      "line": 13,
+      "col": 1,
+      "message": "'typing.Dict' imported but unused",
+      "element": "typing.Dict"
+    },
+    {
+      "file": "backend/app/services/email_service.py",
+      "line": 13,
+      "col": 1,
+      "message": "'typing.Any' imported but unused",
+      "element": "typing.Any"
+    },
+    {
+      "file": "backend/app/services/email_service.py",
+      "line": 19,
+      "col": 5,
+      "message": "'sendgrid.helpers.mail.Email' imported but unused",
+      "element": "sendgrid.helpers.mail.Email"
+    },
+    {
+      "file": "backend/app/services/email_service.py",
+      "line": 19,
+      "col": 5,
+      "message": "'sendgrid.helpers.mail.To' imported but unused",
+      "element": "sendgrid.helpers.mail.To"
+    },
+    {
+      "file": "backend/app/services/email_service.py",
+      "line": 19,
+      "col": 5,
+      "message": "'sendgrid.helpers.mail.Content' imported but unused",
+      "element": "sendgrid.helpers.mail.Content"
+    },
+    {
+      "file": "backend/app/api/v1/router.py",
+      "line": 13,
+      "col": 2,
+      "message": "'backend.app.routers.diagnostic as diagnostic_router' imported but unused",
+      "element": "backend.app.routers.diagnostic as diagnostic_router"
+    },
+    {
+      "file": "backend/app/api/v1/router.py",
+      "line": 14,
+      "col": 2,
+      "message": "'backend.app.routers.quotation as quotation_router' imported but unused",
+      "element": "backend.app.routers.quotation as quotation_router"
+    },
+    {
+      "file": "backend/app/api/v1/router.py",
+      "line": 15,
+      "col": 2,
+      "message": "'backend.app.routers.payments as payments_router' imported but unused",
+      "element": "backend.app.routers.payments as payments_router"
+    },
+    {
+      "file": "backend/app/api/v1/endpoints/auth.py",
+      "line": 15,
+      "col": 1,
+      "message": "'backend.app.schemas.auth.PasswordResetRequest' imported but unused",
+      "element": "backend.app.schemas.auth.PasswordResetRequest"
+    },
+    {
+      "file": "backend/app/api/v1/endpoints/auth.py",
+      "line": 96,
+      "col": 5,
+      "message": "local variable 'e' is assigned to but never used",
+      "element": "e"
+    },
+    {
+      "file": "backend/app/api/v1/endpoints/auth.py",
+      "line": 216,
+      "col": 5,
+      "message": "local variable 'e' is assigned to but never used",
+      "element": "e"
+    },
+    {
+      "file": "backend/app/api/v1/endpoints/imports.py",
+      "line": 10,
+      "col": 1,
+      "message": "'backend.app.core.config.settings' imported but unused",
+      "element": "backend.app.core.config.settings"
+    },
+    {
+      "file": "backend/scripts/promote_to_admin.py",
+      "line": 14,
+      "col": 1,
+      "message": "'os' imported but unused",
+      "element": "os"
+    }
+  ],
+  "unused_imports_js": [
+    {
+      "file": "./src/vue/components/admin/InventoryForm.vue",
+      "element": "toRefs",
+      "type": "import",
+      "evidence": "occurrences: 1",
+      "total_occurrences": 1,
+      "matches": [
+        {
+          "file": "./src/vue/components/admin/InventoryForm.vue",
+          "occurrences": 1
+        }
+      ]
+    }
+  ],
+  "placeholders": [
+    {
+      "file": "./._classification.json",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./database/seeds/004_faults.sql",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./database/seeds/001_categories.sql",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./database/seeds/003_instruments.sql",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./database/seeds/005_admin_user.sql",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./database/seeds/002_brands.sql",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./adempiere-vue-develop/postcss.config.js",
+      "reason": "Small file without imports/exports"
+    },
+    {
+      "file": "./adempiere-vue-develop/plop-templates/utils.js",
+      "reason": "Small file without imports/exports"
+    },
+    {
+      "file": "./adempiere-vue-develop/.vscode/launch.json",
+      "reason": "Invalid or empty JSON"
+    },
+    {
+      "file": "./adempiere-vue-develop/mock/utils.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/tests/unit/.eslintrc.js",
+      "reason": "Small file without imports/exports"
+    },
+    {
+      "file": "./adempiere-vue-develop/.github/workflows/publish.yml",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/main.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/lang/ADempiere/es/smartBrowser.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/user.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/persistence.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/fieldValue.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/reportManager.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/languageManager.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/documentManager.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/windowManager.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/lookupManager.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/defaultValueManager.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dashboard.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/processManager.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/browserManager.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/data/actions.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/form/VPOS/options.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/form/VPOS/collection.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/form/VPOS/options/cashManagement/cashOpen.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/form/VPOS/options/cashManagement/cashwithdrawal.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/field/search/invoiceFieldSearch.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/field/search/businessPartnerSearch.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/field/search/orderFieldSearch.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/field/search/productFieldSearch.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/panel/actions.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/panel/getters.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/pointOfSales/getters/index.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/pointOfSales/point/actions.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/pointOfSales/order/actions.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/pointOfSales/payments/actions.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/report/actions.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/browser/actions.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/browser/getters.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/window/actions.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/window/getters.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/store/modules/ADempiere/containerInfo/index.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/index.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dataUtils.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionaryUtils.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/valueFormat.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/exportUtil.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/filters.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/lookupFactory.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/request.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/contextUtils/evaluator.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/contextUtils/contextBrowser.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/contextUtils/index.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionary/process.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionary/workflow.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionary/panel.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionary/form/VPOS.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionary/field/locationAddress.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionary/report/actionsMenu.ts",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionary/browser/templateBrowser.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionary/browser/index.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/dictionary/window/index.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/apiConverts/field.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/formatValue/numberFormat.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/utils/ADempiere/formatValue/dateFormat.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/layout/components/Sidebar/SidebarItem.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/GithubCorner/index.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/Kanban/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/DropdownMenu/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/DropdownMenu/menuCard.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/TabManager/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/TabManager/convenienceButtons/DeleteRecordButton.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/TabManager/convenienceButtons/documentAction.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/TabManager/convenienceButtons/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VAllocation/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/businessPartnerField.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VAllocation/SearchCriteria/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VBankStatementMatch/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VBankStatementMatch/SaveData/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VFileImport/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FormDefinition/VFileImport/SelectTable/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/MarkDown/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/WorkflowActivity/index2.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPayPrint/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/TimeRecord/fieldsList.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/AcctViewer/fieldsList.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/TimeControl/fieldsList.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS2/MainOrder/OptionLine/editLine/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/WFPanel/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/ProductInfo/productList.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/ProductInfo/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/posMixin.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Order/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Order/line/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Order/line/editLineMobile.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/businessPartnerCreate.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/billingAddressFieldLocation/locationAddressForm.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/BillingFieldLocation/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/BillingFieldLocation/locationAddressForm.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/shippingAddressFieldLocation/locationAddressForm.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/AddNewFieldLocation/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/AddNewFieldLocation/locationAddressForm.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/shippingFieldLocation/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/BusinessPartner/shippingFieldLocation/locationAddressForm.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/KeyLayout/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/typeCollection.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/GiftCards/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/ACH/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/Zelle/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/MobilePayment/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Collection/overdrawnInvoice/paymentTypeChange/Cash/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Options/generalOptions.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Options/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Options/CashOpening/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/Options/Cashwithdrawal/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/ProductInfo/productList.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/ProductInfo/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/OrderList/FindOrders/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Form/VPOS/ConfirmDelivery/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FilterFields/fieldsDisplayOptions.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FilterFields/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldDate.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/useFieldDefinition.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldImage.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldAutocomplete.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldOptions/fieldOptionsList.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldOptions/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldOptions/DocumentStatus/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldOptions/PreferenceValue/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldWarehouseLocator/API-COMPOSITION.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldWarehouseLocator/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldWarehouseLocator/list.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/mixin/mixinField.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldProductAttribute/listAttributeInstance.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldProductAttribute/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/Order/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/Order/PanelForm/useOrder.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/InvoiceInfo/PanelForm/useInvoce.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/ProductInfo/PanelForm/useProduct.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/GeneralInfoSearch/panel.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/Payment/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/Payment/PanelForm/usePayment.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSearch/BusinessPartnerInfo/PanelForm/useBusinessPartner.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldSelect/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldAccountingCombination/tableQueryCriteria2.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldAccountingCombination/fieldsList.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldAccountingCombination/tableQueryCriteria.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldLocationAddress/mixinLocationAddress.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/FieldDefinition/FieldLocationAddress/locationAddressForm.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/PanelInfo/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/PanelInfo/Component/AttachmentManager/modeDesktop.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/PanelInfo/Component/AttachmentManager/modeMobile.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/PanelDefinition/SortPanel.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/PanelDefinition/StandardPanel.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/PanelDefinition/TreePanel.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/DataTable/Browser/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/DataTable/Windows/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Dashboard/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Dashboard/charts/Gauge.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/RecordNavigation/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/Report/Data/DataCells.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/components/ADempiere/ContainerOptions/ProgressPercentage.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/dashboard/admin/components/TodoList/Todo.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/nested/menu2/index.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/nested/menu1/index.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/nested/menu1/menu1-2/index.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/nested/menu1/menu1-2/menu1-2-2/index.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/nested/menu1/menu1-2/menu1-2-1/index.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/nested/menu1/menu1-3/index.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/nested/menu1/menu1-1/index.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/example/components/Warning.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/pdf/index.vue",
+      "reason": "No <script> block"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/ADempiere/Browser/index.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/ADempiere/ProcessActivity/modeDesktop.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/views/ADempiere/ProcessActivity/modeMobile.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/api/ADempiere/user-interface/persistence.js",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/api/ADempiere/fields/search/invoice.ts",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./adempiere-vue-develop/src/api/ADempiere/fields/search/order.ts",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/ESTADO_REAL_PROYECTO.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/PLAN_INTEGRACION_REAL.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/RESUMEN_EJECUTIVO_OPINION.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/ANALISIS_ENTERPRISE_vs_REALIDAD.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/AUDITORIA_CDS _08012026.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/IMPLEMENTACION_PRAGMATICA_45MIN.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/RESUMEN_ARCHIVOS.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/AUDITORIA_CDS.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/00_EMPIEZA_AQUI.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/IMPLEMENTACION.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./DOCUMJENTOS_EXTRAS/IMPLEMENTACION_COMPLETA.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./scripts/ingest/validate_excel.py",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./backend/app/__init__.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/core/__init__.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/routers/diagnostic.py",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./backend/app/routers/quotation.py",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./backend/app/routers/__init__.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/services/pdf_generator.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/services/ai_detector.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/services/quote_calculator.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/schemas/diagnostic.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/schemas/repair.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/schemas/category.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/crud/inventory.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/crud/repair.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/crud/category.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/crud/user.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/crud/__init__.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/api/__init__.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/api/v1/__init__.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/api/v1/endpoints/users.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/api/v1/endpoints/stats.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/api/v1/endpoints/ai.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/api/v1/endpoints/categories.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/api/v1/endpoints/diagnostics.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/app/api/v1/endpoints/repairs.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./backend/tests/__init__.py",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/composables/useInventory.js",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/dashboard/RepairCard.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/dashboard/QuickStats.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/dashboard/RepairTimeline.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/dashboard/DashboardPanel.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/dashboard/UserProfile.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/dashboard/RepairsList.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/dashboard/StatusBadge.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/auth/PasswordReset.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/auth/AccountDelete.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/auth/RegisterForm.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/footer/Footer.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/layout/PageSectionContent.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/layout/BackgroundPromo.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/widgets/CircleIcon.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/widgets/Spinner.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/widgets/Divider.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/loaders/ActivitySpinner.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/ai/FaultDetector.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/ai/ImageUploader.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/ai/AIAnalysisResult.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/ai/FaultMarker.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/admin/DiagnosticsList.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/admin/CategoryForm.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/admin/InventoryAlerts.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/admin/ClientList.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/admin/InstrumentForm.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/admin/ClientDetail.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/admin/StockMovementsList.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/admin/UserList.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/admin/StatsCards.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/admin/InstrumentList.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/admin/CategoryList.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/admin/RepairManager.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/admin/RepairStatusEditor.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/admin/StockMovements.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/admin/CategoryManager.vue",
+      "reason": "Empty file"
+    },
+    {
+      "file": "./src/vue/components/admin/RepairsList.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/forms/contact/ContactFormFields.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./src/vue/components/projects/ProjectInfo.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/articles/ArticleFeatures.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/articles/DiagnosticWizard.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./src/vue/components/articles/ArticleCustomContent.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/articles/ArticleTestimonials.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/articles/ArticleTimeline.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/articles/ArticleFaq.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/components/articles/ArticleQuotes.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/sections/DiagnosticSection.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/content/pages/LicensePage.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/content/pages/CotizadorIAPage.vue",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    },
+    {
+      "file": "./src/vue/content/pages/LoginPage.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/content/pages/PrivacyPage.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/content/pages/PolicyPage.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/content/pages/admin/StatsPage.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/content/pages/admin/AdminDashboard.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/content/pages/admin/RepairsAdminPage.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/content/pages/admin/ClientsPage.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./src/vue/content/pages/admin/CategoriesPage.vue",
+      "reason": "Script minimal or absent"
+    },
+    {
+      "file": "./AUDITORIA_REVISAR/AUDITORIA_TECNICA_VOLCADO_01.md",
+      "reason": "Contains TODO/PLACEHOLDER/dummy or NotImplemented"
+    }
+  ]
+}

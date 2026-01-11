@@ -1,0 +1,122 @@
+[
+  {
+    "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/report/actions.js",
+    "element": "requestProcessMetadata",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./adempiere-vue-develop/src/store/modules/ADempiere/dictionary/report/actions.js",
+    "element": "generateProcess",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/stack/FeedbacksLayer.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/quotation/QuotationResult.vue",
+    "element": "computed",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/layout/PageWrapper.vue",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/generic/ImageView.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/nav/Navigation.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/nav/Navigation.vue",
+    "element": "onUnmounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/nav/Navigation.vue",
+    "element": "ref",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/nav/Navigation.vue",
+    "element": "watch",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/admin/InventoryForm.vue",
+    "element": "toRefs",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/admin/InventoryForm.vue",
+    "element": "useRoute",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/forms/contact/ContactFormFields.vue",
+    "element": "inject",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/forms/contact/ContactForm.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/forms/contact/ContactForm.vue",
+    "element": "provide",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/forms/contact/ContactForm.vue",
+    "element": "watch",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/projects/ProjectModal.vue",
+    "element": "computed",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/articles/DiagnosticWizard.vue",
+    "element": "onMounted",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/articles/ArticleTestimonials.vue",
+    "element": "SwiperSlide",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  },
+  {
+    "file": "./src/vue/components/articles/ArticleQuotes.vue",
+    "element": "SwiperSlide",
+    "type": "import",
+    "evidence": "occurrences: 1"
+  }
+]

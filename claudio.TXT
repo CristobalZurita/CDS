@@ -1,0 +1,2114 @@
+# PLAN DE TRABAJO TÉCNICO DETALLADO
+## Proyecto: Cirujano de Sintetizadores - Ruta a Producción
+
+---
+
+## RESUMEN EJECUTIVO
+
+**Situación Actual:** MVP funcional al 70% - Arquitectura sólida pero features críticas incompletas  
+**Objetivo:** Sistema production-ready con IA funcional, pagos integrados y estabilidad garantizada  
+**Timeline:** 16 semanas (4 meses)  
+**Equipo Sugerido:** 1-2 desarrolladores full-stack + 1 DevOps part-time  
+
+---
+
+## FASE 1: ESTABILIZACIÓN Y SEGURIDAD (Semanas 1-3)
+**Objetivo:** Hacer el sistema seguro y estable antes de agregar features
+
+### SPRINT 1.1: Seguridad Crítica (Semana 1)
+**Prioridad:** 🔴 CRÍTICO
+
+#### Tareas:
+
+1. **Eliminar secretos hardcodeados**
+   ```bash
+   # backend/app/core/config.py
+   - ELIMINAR: cualquier secreto en código
+   - CREAR: .env.example con plantilla
+   - DOCUMENTAR: README con setup de variables
+   ```
+   
+   ```python
+   # Implementar validación estricta:
+   if settings.environment == "production":
+       required = ["SECRET_KEY", "JWT_SECRET", "DATABASE_URL"]
+       missing = [k for k in required if not getattr(settings, k.lower())]
+       if missing:
+           raise ValueError(f"Missing: {missing}")
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Backend dev  
+   **Entregable:** PR con secrets movidos a env vars
+
+2. **Remover localStorage de Pinia stores**
+   ```javascript
+   // src/stores/auth.js - ANTES:
+   token: localStorage.getItem('auth.token')
+   
+   // DESPUÉS:
+   token: null  // Se carga via API en checkAuth()
+   ```
+   
+   **Cambios necesarios:**
+   - `auth.js`: Eliminar lectura directa de localStorage
+   - `checkAuth()`: Validar token vía endpoint `/auth/me`
+   - Persistencia: Solo via HTTP-only cookies o session
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Frontend dev  
+   **Entregable:** Stores sin localStorage
+
+3. **Implementar rate limiting global**
+   ```python
+   # backend/app/main.py
+   from slowapi import Limiter, _rate_limit_exceeded_handler
+   from slowapi.util import get_remote_address
+   
+   limiter = Limiter(key_func=get_remote_address)
+   app.state.limiter = limiter
+   app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+   
+   # Aplicar a todos los endpoints críticos:
+   # - /auth/login: 5/minute
+   # - /auth/register: 3/minute
+   # - /uploads/*: 20/minute
+   # - /api/*: 100/minute (general)
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Backend dev  
+   **Entregable:** Rate limits en producción
+
+4. **Security audit automatizado**
+   ```bash
+   # Instalar herramientas
+   npm install -g snyk
+   pip install safety bandit
+   
+   # Escanear dependencias
+   snyk test
+   safety check
+   bandit -r backend/
+   
+   # Configurar pre-commit hooks
+   # .pre-commit-config.yaml
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** DevOps/Backend  
+   **Entregable:** Reporte de vulnerabilidades + fixes
+
+**Entregable Sprint 1.1:** Sistema seguro sin secretos expuestos
+
+---
+
+### SPRINT 1.2: Backups y Disaster Recovery (Semana 2)
+**Prioridad:** 🔴 CRÍTICO
+
+#### Tareas:
+
+1. **Configurar backups automáticos PostgreSQL**
+   ```bash
+   # scripts/backup_db.sh
+   #!/bin/bash
+   TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+   BACKUP_DIR="/var/backups/cirujano"
+   
+   pg_dump -h $DB_HOST -U $DB_USER -d cirujano \
+     -F c -b -v -f "$BACKUP_DIR/cirujano_$TIMESTAMP.backup"
+   
+   # Retener: 7 diarios, 4 semanales, 3 mensuales
+   find $BACKUP_DIR -name "*.backup" -mtime +7 -delete
+   ```
+   
+   **Cron job:**
+   ```bash
+   # Diario a las 3 AM
+   0 3 * * * /opt/cirujano/scripts/backup_db.sh
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** DevOps  
+   **Entregable:** Backups automáticos funcionando
+
+2. **Implementar backup de uploads/imágenes**
+   ```bash
+   # scripts/backup_uploads.sh
+   rsync -avz --delete \
+     /var/www/cirujano/public/uploads/ \
+     /var/backups/cirujano/uploads/
+   
+   # Sincronizar a S3/cloud storage
+   aws s3 sync /var/backups/cirujano/ \
+     s3://cirujano-backups/ --delete
+   ```
+   
+   **Tiempo:** 0.5 días  
+   **Responsable:** DevOps
+
+3. **Documentar procedimiento de restore**
+   ```markdown
+   # docs/DISASTER_RECOVERY.md
+   
+   ## Escenario 1: Pérdida de base de datos
+   1. Detener aplicación: `systemctl stop cirujano`
+   2. Restaurar último backup: `pg_restore -d cirujano backup.dump`
+   3. Verificar integridad: `psql -c "SELECT COUNT(*) FROM users;"`
+   4. Reiniciar: `systemctl start cirujano`
+   
+   ## Escenario 2: Pérdida de servidor completo
+   [...]
+   
+   ## RTO/RPO
+   - RTO (Recovery Time Objective): 2 horas
+   - RPO (Recovery Point Objective): 24 horas
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** DevOps + Backend lead  
+   **Entregable:** Documento DR + script de restore
+
+4. **Test de restore en staging**
+   ```bash
+   # Crear ambiente de staging
+   # Restaurar backup del día anterior
+   # Validar que todo funciona
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Todo el equipo  
+   **Entregable:** Restore exitoso documentado
+
+**Entregable Sprint 1.2:** Backups automáticos + procedimiento DR probado
+
+---
+
+### SPRINT 1.3: Testing Básico (Semana 3)
+**Prioridad:** 🟡 ALTO
+
+#### Tareas:
+
+1. **Tests unitarios backend - cobertura mínima 60%**
+   ```python
+   # Priorizar:
+   # - backend/tests/test_auth_endpoints.py ✅
+   # - backend/tests/test_repairs_crud.py (NUEVO)
+   # - backend/tests/test_inventory_crud.py (NUEVO)
+   # - backend/tests/test_quotation_logic.py (NUEVO)
+   
+   # Ejemplo: test_repairs_crud.py
+   import pytest
+   from backend.app.models.repair import Repair, RepairStatus
+   
+   def test_create_repair(test_db, test_user):
+       repair = Repair(
+           client_id=test_user.id,
+           title="Test repair",
+           status=RepairStatus.PENDING
+       )
+       test_db.add(repair)
+       test_db.commit()
+       
+       assert repair.id is not None
+       assert repair.status == RepairStatus.PENDING
+   
+   def test_repair_status_transition(test_db, test_repair):
+       test_repair.status = RepairStatus.IN_PROGRESS
+       test_db.commit()
+       assert test_repair.status == RepairStatus.IN_PROGRESS
+   ```
+   
+   **Meta de cobertura:**
+   - Auth: 80%
+   - CRUD operations: 70%
+   - Business logic: 60%
+   
+   **Tiempo:** 4 días  
+   **Responsable:** Backend dev  
+   **Entregable:** 30+ tests, cobertura >60%
+
+2. **Tests E2E críticos con Playwright**
+   ```javascript
+   // tests/e2e/auth.spec.js
+   import { test, expect } from '@playwright/test';
+   
+   test('user can register and login', async ({ page }) => {
+     // Register
+     await page.goto('/register');
+     await page.fill('[name="email"]', 'test@example.com');
+     await page.fill('[name="password"]', 'SecurePass123');
+     await page.click('button[type="submit"]');
+     
+     // Should redirect to dashboard
+     await expect(page).toHaveURL(/.*dashboard/);
+     
+     // Logout
+     await page.click('[data-testid="logout-button"]');
+     
+     // Login again
+     await page.goto('/login');
+     await page.fill('[name="email"]', 'test@example.com');
+     await page.fill('[name="password"]', 'SecurePass123');
+     await page.click('button[type="submit"]');
+     
+     await expect(page).toHaveURL(/.*dashboard/);
+   });
+   
+   test('admin can create repair', async ({ page }) => {
+     // Login as admin
+     await loginAsAdmin(page);
+     
+     // Navigate to repairs
+     await page.goto('/admin/repairs');
+     await page.click('[data-testid="new-repair-button"]');
+     
+     // Fill form
+     await page.fill('[name="title"]', 'Moog repair');
+     await page.selectOption('[name="status"]', 'pending');
+     await page.click('button[type="submit"]');
+     
+     // Should see success message
+     await expect(page.locator('.toast-success')).toBeVisible();
+   });
+   ```
+   
+   **Flujos a testear:**
+   - ✅ Register → Login → Dashboard
+   - ✅ Create repair (admin)
+   - ✅ Upload image for diagnostic
+   - ✅ Generate quotation
+   
+   **Tiempo:** 3 días  
+   **Responsable:** Frontend dev  
+   **Entregable:** 5 tests E2E en CI
+
+**Entregable Sprint 1.3:** Cobertura de tests >60% + E2E funcionando
+
+---
+
+## FASE 2: FEATURES CORE (Semanas 4-9)
+**Objetivo:** Implementar IA y pagos - las dos features críticas faltantes
+
+### SPRINT 2.1: Sistema de IA - Opción A (Semanas 4-5)
+**Prioridad:** 🔴 CRÍTICO
+
+#### Opción A: Google Cloud Vision API (RECOMENDADO)
+
+**Ventajas:**
+- Más simple de implementar
+- Detección de objetos out-of-the-box
+- OCR incluido para números de serie
+- $1.50 por 1000 requests (muy económico)
+
+**Desventaja:**
+- Requiere entrenamiento manual de mapeo componente→falla
+
+#### Implementación:
+
+1. **Setup Google Cloud Vision**
+   ```bash
+   # Crear proyecto en Google Cloud
+   # Habilitar Vision API
+   # Crear service account y descargar credentials.json
+   
+   pip install google-cloud-vision
+   ```
+   
+   **Tiempo:** 0.5 días  
+   **Responsable:** Backend dev
+
+2. **Implementar detector de componentes**
+   ```python
+   # backend/app/services/ai_detector.py
+   from google.cloud import vision
+   import os
+   
+   class ComponentDetector:
+       def __init__(self):
+           os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "credentials.json"
+           self.client = vision.ImageAnnotatorClient()
+       
+       def detect_components(self, image_path: str) -> dict:
+           """Detectar componentes electrónicos en imagen"""
+           with open(image_path, 'rb') as f:
+               content = f.read()
+           
+           image = vision.Image(content=content)
+           
+           # Object detection
+           objects = self.client.object_localization(
+               image=image
+           ).localized_object_annotations
+           
+           # Label detection
+           labels = self.client.label_detection(
+               image=image
+           ).label_annotations
+           
+           # Text detection (para números de serie)
+           texts = self.client.text_detection(
+               image=image
+           ).text_annotations
+           
+           return {
+               "objects": [
+                   {
+                       "name": obj.name,
+                       "confidence": obj.score,
+                       "bounding_box": [
+                           (vertex.x, vertex.y) 
+                           for vertex in obj.bounding_poly.normalized_vertices
+                       ]
+                   }
+                   for obj in objects
+               ],
+               "labels": [
+                   {"name": label.description, "confidence": label.score}
+                   for label in labels
+               ],
+               "text": texts[0].description if texts else None
+           }
+       
+       def analyze_damage(self, image_path: str, instrument_type: str) -> dict:
+           """Analizar posibles daños basado en componentes detectados"""
+           components = self.detect_components(image_path)
+           
+           # Mapeo de componentes a fallas comunes
+           fault_mapping = {
+               "capacitor": ["CAPACITOR_BLOWN", "CAPACITOR_LEAKING"],
+               "circuit_board": ["POWER", "CONNECTOR_LOOSE"],
+               "display": ["LCD_DEAD", "LCD_LOW_CONTRAST"],
+               "button": ["BUTTON_STUCK", "BUTTON_DEAD"],
+               "knob": ["ENCODER_INTERMITTENT"],
+               "keyboard": ["KEYBOARD_DEAD_KEY", "KEYBOARD_STUCK_KEY"]
+           }
+           
+           detected_faults = []
+           
+           for obj in components["objects"]:
+               component_type = self._map_to_component(obj["name"])
+               if component_type in fault_mapping:
+                   detected_faults.extend([
+                       {
+                           "fault_id": fault_id,
+                           "confidence": obj["confidence"],
+                           "location": obj["bounding_box"]
+                       }
+                       for fault_id in fault_mapping[component_type]
+                   ])
+           
+           return {
+               "detected_components": components,
+               "suggested_faults": detected_faults,
+               "confidence_overall": self._calculate_confidence(detected_faults)
+           }
+       
+       def _map_to_component(self, vision_label: str) -> str:
+           """Mapear labels de Vision API a componentes conocidos"""
+           mapping = {
+               "Electronic component": "capacitor",
+               "Circuit component": "circuit_board",
+               "Display device": "display",
+               "Input device": "button",
+               # ... expandir según necesidad
+           }
+           return mapping.get(vision_label, "unknown")
+       
+       def _calculate_confidence(self, faults: list) -> float:
+           if not faults:
+               return 0.0
+           return sum(f["confidence"] for f in faults) / len(faults)
+   ```
+   
+   **Tiempo:** 3 días  
+   **Responsable:** Backend dev  
+   **Entregable:** Detector funcional
+
+3. **Integrar con endpoint de diagnóstico**
+   ```python
+   # backend/app/api/v1/endpoints/ai.py
+   from fastapi import APIRouter, UploadFile, File, HTTPException
+   from backend.app.services.ai_detector import ComponentDetector
+   
+   router = APIRouter(prefix="/ai", tags=["AI"])
+   detector = ComponentDetector()
+   
+   @router.post("/analyze")
+   async def analyze_image(
+       image: UploadFile = File(...),
+       instrument_type: str = "synthesizer"
+   ):
+       # Validar imagen
+       if not image.content_type.startswith("image/"):
+           raise HTTPException(400, "Must be an image")
+       
+       # Guardar temporalmente
+       temp_path = f"/tmp/{image.filename}"
+       with open(temp_path, "wb") as f:
+           f.write(await image.read())
+       
+       try:
+           # Analizar
+           result = detector.analyze_damage(temp_path, instrument_type)
+           
+           # Limpiar
+           os.remove(temp_path)
+           
+           return result
+       except Exception as e:
+           os.remove(temp_path)
+           raise HTTPException(500, str(e))
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Backend dev
+
+4. **Conectar frontend con IA**
+   ```javascript
+   // src/composables/useDiagnostic.js
+   async function analyzeImage(imageFile, instrumentType) {
+     loading.value = true
+     error.value = null
+     
+     const formData = new FormData()
+     formData.append('image', imageFile)
+     formData.append('instrument_type', instrumentType)
+     
+     try {
+       const response = await api.post('/ai/analyze', formData, {
+         headers: { 'Content-Type': 'multipart/form-data' }
+       })
+       
+       aiResult.value = response.data
+       
+       // Auto-seleccionar fallas detectadas
+       response.data.suggested_faults.forEach(fault => {
+         if (fault.confidence > 0.7) {
+           addFault(fault.fault_id)
+         }
+       })
+       
+       return response.data
+     } catch (err) {
+       error.value = err.message
+       throw err
+     } finally {
+       loading.value = false
+     }
+   }
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Frontend dev  
+   **Entregable:** UI con análisis IA
+
+5. **Tests del sistema IA**
+   ```python
+   # backend/tests/test_ai_detector.py
+   import pytest
+   from backend.app.services.ai_detector import ComponentDetector
+   
+   def test_detect_capacitor():
+       detector = ComponentDetector()
+       result = detector.detect_components("test_images/capacitor_blown.jpg")
+       
+       assert any("capacitor" in obj["name"].lower() 
+                  for obj in result["objects"])
+   
+   def test_analyze_damage_suggests_faults():
+       detector = ComponentDetector()
+       result = detector.analyze_damage(
+           "test_images/power_issue.jpg", 
+           "synthesizer"
+       )
+       
+       assert len(result["suggested_faults"]) > 0
+       assert result["confidence_overall"] > 0
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Backend dev  
+   **Entregable:** Tests IA >80% cobertura
+
+**Entregable Sprint 2.1:** Sistema IA funcional con Google Vision
+
+---
+
+### SPRINT 2.2: Sistema de IA - Fine-tuning (Semana 6)
+**Prioridad:** 🟡 MEDIO
+
+**Objetivo:** Mejorar precisión del detector
+
+#### Tareas:
+
+1. **Crear dataset de entrenamiento**
+   ```bash
+   # Estructura:
+   data/
+     train/
+       capacitor_blown/
+         img001.jpg
+         img002.jpg
+       lcd_damaged/
+       button_stuck/
+     test/
+       [mismo estructura]
+   ```
+   
+   **Recolectar:**
+   - 50 imágenes por tipo de falla
+   - Fotografiar instrumentos reales del taller
+   - Descargar de Google Images (uso fair use)
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Técnico + Backend dev
+
+2. **Ajustar mapeo componente→falla**
+   ```python
+   # Basado en resultados reales, refinar:
+   fault_mapping = {
+       "capacitor": {
+           "faults": ["CAPACITOR_BLOWN", "CAPACITOR_LEAKING"],
+           "confidence_threshold": 0.75,
+           "visual_indicators": ["bulging", "leaking", "discoloration"]
+       },
+       # ...
+   }
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Backend dev + Técnico  
+   **Entregable:** Precisión >70% en fallas comunes
+
+**Entregable Sprint 2.2:** IA con precisión mejorada
+
+---
+
+### SPRINT 2.3: Sistema de Pagos - Transbank (Semanas 7-8)
+**Prioridad:** 🔴 CRÍTICO
+
+**Por qué Transbank:**
+- Estándar en Chile
+- Integración oficial con WebPay Plus
+- Soporta tarjetas chilenas e internacionales
+- Certificación PCI DSS incluida
+
+#### Tareas:
+
+1. **Setup cuenta Transbank**
+   ```bash
+   # 1. Registrarse en transbank.cl
+   # 2. Obtener credenciales de integración:
+   #    - Commerce Code
+   #    - API Key
+   # 3. Configurar ambiente de pruebas
+   ```
+   
+   **Tiempo:** 1 día (trámites)  
+   **Responsable:** Product Owner + Backend dev
+
+2. **Instalar SDK Transbank**
+   ```bash
+   pip install transbank-sdk
+   ```
+   
+   ```python
+   # backend/app/services/payment_service.py
+   from transbank.webpay.webpay_plus.transaction import Transaction
+   from transbank.common.integration_type import IntegrationType
+   
+   class TransbankService:
+       def __init__(self):
+           # En producción, usar IntegrationType.LIVE
+           Transaction.commerce_code = settings.TRANSBANK_COMMERCE_CODE
+           Transaction.api_key = settings.TRANSBANK_API_KEY
+           Transaction.integration_type = IntegrationType.TEST
+       
+       def create_transaction(
+           self, 
+           amount: int,  # en pesos CLP
+           buy_order: str,  # ID único de la orden
+           session_id: str,  # ID de sesión del usuario
+           return_url: str  # URL de retorno
+       ) -> dict:
+           """Crear transacción WebPay Plus"""
+           response = Transaction.create(
+               buy_order=buy_order,
+               session_id=session_id,
+               amount=amount,
+               return_url=return_url
+           )
+           
+           return {
+               "token": response.token,
+               "url": response.url
+           }
+       
+       def commit_transaction(self, token: str) -> dict:
+           """Confirmar transacción después del pago"""
+           response = Transaction.commit(token)
+           
+           return {
+               "vci": response.vci,
+               "amount": response.amount,
+               "status": response.status,
+               "buy_order": response.buy_order,
+               "session_id": response.session_id,
+               "authorization_code": response.authorization_code,
+               "payment_type_code": response.payment_type_code,
+               "response_code": response.response_code,
+               "installments_number": response.installments_number
+           }
+       
+       def refund_transaction(self, token: str, amount: int) -> dict:
+           """Reembolsar una transacción"""
+           response = Transaction.refund(token, amount)
+           return {"type": response.type, "balance": response.balance}
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Backend dev  
+   **Entregable:** Service de pagos
+
+3. **Crear endpoints de pago**
+   ```python
+   # backend/app/api/v1/endpoints/payments.py
+   from fastapi import APIRouter, HTTPException, Depends
+   from backend.app.services.payment_service import TransbankService
+   from backend.app.models.payment import Payment, PaymentStatus
+   from backend.app.core.database import get_db
+   from sqlalchemy.orm import Session
+   
+   router = APIRouter(prefix="/payments", tags=["payments"])
+   transbank = TransbankService()
+   
+   @router.post("/create")
+   async def create_payment(
+       repair_id: int,
+       db: Session = Depends(get_db)
+   ):
+       # Obtener reparación
+       repair = db.query(Repair).filter(Repair.id == repair_id).first()
+       if not repair:
+           raise HTTPException(404, "Reparación no encontrada")
+       
+       if not repair.final_price:
+           raise HTTPException(400, "Reparación sin precio final")
+       
+       # Generar orden única
+       buy_order = f"REP-{repair.id}-{int(time.time())}"
+       
+       # Crear transacción en Transbank
+       result = transbank.create_transaction(
+           amount=repair.final_price,
+           buy_order=buy_order,
+           session_id=str(repair.client_id),
+           return_url=f"{settings.FRONTEND_URL}/payment/result"
+       )
+       
+       # Guardar en DB como PENDING
+       payment = Payment(
+           repair_id=repair.id,
+           user_id=repair.client_id,
+           amount=repair.final_price,
+           payment_method="webpay",
+           transaction_id=result["token"],
+           status=PaymentStatus.PENDING
+       )
+       db.add(payment)
+       db.commit()
+       
+       return {
+           "payment_url": result["url"],
+           "token": result["token"]
+       }
+   
+   @router.post("/confirm")
+   async def confirm_payment(
+       token_ws: str,  # Token retornado por Transbank
+       db: Session = Depends(get_db)
+   ):
+       # Confirmar transacción
+       result = transbank.commit_transaction(token_ws)
+       
+       # Buscar payment en DB
+       payment = db.query(Payment).filter(
+           Payment.transaction_id == token_ws
+       ).first()
+       
+       if not payment:
+           raise HTTPException(404, "Pago no encontrado")
+       
+       # Actualizar estado según respuesta
+       if result["response_code"] == 0:  # Aprobada
+           payment.status = PaymentStatus.SUCCESS
+           payment.notes = f"Auth: {result['authorization_code']}"
+           
+           # Actualizar estado de reparación
+           repair = payment.repair
+           repair.status = RepairStatus.COMPLETED
+       else:
+           payment.status = PaymentStatus.FAILED
+           payment.notes = f"Error: {result['response_code']}"
+       
+       db.commit()
+       
+       return {
+           "status": payment.status,
+           "amount": result["amount"],
+           "authorization_code": result.get("authorization_code")
+       }
+   
+   @router.post("/refund/{payment_id}")
+   async def refund_payment(
+       payment_id: int,
+       amount: int,  # Monto a reembolsar (puede ser parcial)
+       db: Session = Depends(get_db)
+   ):
+       payment = db.query(Payment).filter(Payment.id == payment_id).first()
+       if not payment:
+           raise HTTPException(404, "Pago no encontrado")
+       
+       if payment.status != PaymentStatus.SUCCESS:
+           raise HTTPException(400, "Solo pagos exitosos pueden reembolsarse")
+       
+       # Ejecutar reembolso
+       result = transbank.refund_transaction(
+           payment.transaction_id, 
+           amount
+       )
+       
+       # Actualizar estado
+       payment.status = PaymentStatus.REFUNDED
+       payment.notes = f"Refund: {amount} CLP"
+       db.commit()
+       
+       return {"status": "refunded", "amount": amount}
+   ```
+   
+   **Tiempo:** 3 días  
+   **Responsable:** Backend dev  
+   **Entregable:** Endpoints de pago completos
+
+4. **Integrar frontend**
+   ```vue
+   <!-- src/vue/components/payment/PaymentButton.vue -->
+   <template>
+     <div>
+       <button 
+         @click="initPayment" 
+         :disabled="loading"
+         class="btn btn-primary btn-lg"
+       >
+         <span v-if="!loading">Pagar ${{ formatPrice(amount) }}</span>
+         <span v-else>Procesando...</span>
+       </button>
+       
+       <p class="text-muted mt-2">
+         <i class="fas fa-lock"></i>
+         Pago seguro procesado por Transbank
+       </p>
+     </div>
+   </template>
+   
+   <script setup>
+   import { ref } from 'vue'
+   import { useApi } from '@/composables/useApi'
+   
+   const props = defineProps({
+     repairId: { type: Number, required: true },
+     amount: { type: Number, required: true }
+   })
+   
+   const { post } = useApi()
+   const loading = ref(false)
+   
+   async function initPayment() {
+     loading.value = true
+     
+     try {
+       const response = await post(`/payments/create`, {
+         repair_id: props.repairId
+       })
+       
+       // Redirigir a Transbank
+       window.location.href = response.payment_url
+     } catch (error) {
+       alert('Error al iniciar pago: ' + error.message)
+     } finally {
+       loading.value = false
+     }
+   }
+   
+   function formatPrice(amount) {
+     return new Intl.NumberFormat('es-CL').format(amount)
+   }
+   </script>
+   ```
+   
+   ```vue
+   <!-- src/vue/content/pages/PaymentResultPage.vue -->
+   <template>
+     <div class="container py-5">
+       <div v-if="loading" class="text-center">
+         <Spinner />
+         <p>Confirmando pago...</p>
+       </div>
+       
+       <div v-else-if="success" class="alert alert-success">
+         <h3>✅ ¡Pago Exitoso!</h3>
+         <p>Tu pago de ${{ formatPrice(amount) }} ha sido procesado.</p>
+         <p>Código de autorización: {{ authCode }}</p>
+         <router-link to="/repairs" class="btn btn-primary">
+           Ver mis reparaciones
+         </router-link>
+       </div>
+       
+       <div v-else class="alert alert-danger">
+         <h3>❌ Pago Rechazado</h3>
+         <p>{{ errorMessage }}</p>
+         <button @click="retry" class="btn btn-primary">
+           Reintentar pago
+         </button>
+       </div>
+     </div>
+   </template>
+   
+   <script setup>
+   import { ref, onMounted } from 'vue'
+   import { useRoute, useRouter } from 'vue-router'
+   import { useApi } from '@/composables/useApi'
+   
+   const route = useRoute()
+   const router = useRouter()
+   const { post } = useApi()
+   
+   const loading = ref(true)
+   const success = ref(false)
+   const amount = ref(0)
+   const authCode = ref(null)
+   const errorMessage = ref(null)
+   
+   onMounted(async () => {
+     const token = route.query.token_ws
+     
+     if (!token) {
+       errorMessage.value = "Token de pago no encontrado"
+       loading.value = false
+       return
+     }
+     
+     try {
+       const response = awaitpost('/payments/confirm', { 
+         token_ws: token 
+       })
+       
+       success.value = response.status === 'success'
+       amount.value = response.amount
+       authCode.value = response.authorization_code
+       
+       if (!success.value) {
+         errorMessage.value = "El pago fue rechazado por el banco"
+       }
+     } catch (error) {
+       errorMessage.value = error.message
+     } finally {
+       loading.value = false
+     }
+   })
+   
+   function retry() {
+     router.push(`/repairs/${route.query.repair_id}`)
+   }
+   </script>
+   ```
+   
+   **Tiempo:** 3 días  
+   **Responsable:** Frontend dev  
+   **Entregable:** Flow de pago completo
+
+5. **Webhooks para notificaciones**
+   ```python
+   # backend/app/api/v1/endpoints/webhooks.py
+   from fastapi import APIRouter, Request, HTTPException
+   from backend.app.services.email_service import send_payment_confirmation
+   
+   router = APIRouter(prefix="/webhooks", tags=["webhooks"])
+   
+   @router.post("/transbank")
+   async def transbank_webhook(request: Request):
+       """Recibir notificaciones de Transbank"""
+       data = await request.json()
+       
+       # Validar firma (importante para seguridad)
+       if not validate_transbank_signature(data, request.headers):
+           raise HTTPException(401, "Invalid signature")
+       
+       # Procesar evento
+       if data["event"] == "payment.success":
+           payment = db.query(Payment).filter(
+               Payment.transaction_id == data["token"]
+           ).first()
+           
+           # Enviar email de confirmación
+           send_payment_confirmation(
+               payment.user.email,
+               payment.repair,
+               payment.amount
+           )
+       
+       return {"status": "ok"}
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Backend dev
+
+6. **Tests de integración pagos**
+   ```python
+   # backend/tests/test_payments_integration.py
+   import pytest
+   from backend.app.services.payment_service import TransbankService
+   
+   @pytest.mark.integration
+   def test_create_payment():
+       service = TransbankService()
+       result = service.create_transaction(
+           amount=50000,
+           buy_order="TEST-001",
+           session_id="user-123",
+           return_url="http://localhost/result"
+       )
+       
+       assert "token" in result
+       assert "url" in result
+   
+   @pytest.mark.integration
+   def test_payment_flow_end_to_end(client, test_repair):
+       # Iniciar pago
+       response = client.post("/payments/create", json={
+           "repair_id": test_repair.id
+       })
+       assert response.status_code == 200
+       
+       # Simular callback de Transbank (usar tarjeta de prueba)
+       # ...
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Backend dev  
+   **Entregable:** Tests de pagos >80%
+
+**Entregable Sprint 2.3:** Sistema de pagos funcional con Transbank
+
+---
+
+### SPRINT 2.4: Email y Notificaciones (Semana 9)
+**Prioridad:** 🟡 MEDIO
+
+#### Tareas:
+
+1. **Configurar SMTP**
+   ```python
+   # backend/app/services/email_service.py
+   import smtplib
+   from email.mime.text import MIMEText
+   from email.mime.multipart import MIMEMultipart
+   from jinja2 import Template
+   
+   class EmailService:
+       def __init__(self):
+           self.smtp_server = settings.SMTP_SERVER
+           self.smtp_port = settings.SMTP_PORT
+           self.smtp_user = settings.SMTP_USER
+           self.smtp_password = settings.SMTP_PASSWORD
+       
+       def send_email(self, to: str, subject: str, html: str):
+           msg = MIMEMultipart('alternative')
+           msg['Subject'] = subject
+           msg['From'] = settings.FROM_EMAIL
+           msg['To'] = to
+           
+           part = MIMEText(html, 'html')
+           msg.attach(part)
+           
+           with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+               server.starttls()
+               server.login(self.smtp_user, self.smtp_password)
+               server.send_message(msg)
+       
+       def send_repair_created(self, user_email: str, repair: Repair):
+           template = Template("""
+           <h2>Reparación Recibida</h2>
+           <p>Hola {{ user.full_name }},</p>
+           <p>Hemos recibido tu {{ repair.title }} para reparación.</p>
+           <p><strong>Número de orden:</strong> #{{ repair.id }}</p>
+           <p>Te contactaremos pronto con el diagnóstico.</p>
+           """)
+           
+           html = template.render(user=repair.client, repair=repair)
+           self.send_email(user_email, "Reparación recibida", html)
+       
+       def send_payment_confirmation(
+           self, 
+           user_email: str, 
+           repair: Repair, 
+           amount: int
+       ):
+           # Template similar
+           pass
+       
+       def send_repair_ready(self, user_email: str, repair: Repair):
+           # Notificar que está lista para recoger
+           pass
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Backend dev
+
+2. **Integrar emails en flujo**
+   ```python
+   # En endpoints relevantes, agregar:
+   from backend.app.services.email_service import EmailService
+   
+   email_service = EmailService()
+   
+   # Después de crear repair:
+   email_service.send_repair_created(user.email, repair)
+   
+   # Después de pago exitoso:
+   email_service.send_payment_confirmation(user.email, repair, amount)
+   
+   # Cuando cambia a READY_PICKUP:
+   email_service.send_repair_ready(user.email, repair)
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Backend dev
+
+3. **Plantillas HTML profesionales**
+   ```html
+   <!-- templates/email/base.html -->
+   <!DOCTYPE html>
+   <html>
+   <head>
+     <style>
+       body { font-family: Arial, sans-serif; }
+       .header { background: #2c3e50; color: white; padding: 20px; }
+       .content { padding: 20px; }
+       .footer { background: #ecf0f1; padding: 10px; text-align: center; }
+     </style>
+   </head>
+   <body>
+     <div class="header">
+       <h1>Cirujano de Sintetizadores</h1>
+     </div>
+     <div class="content">
+       {% block content %}{% endblock %}
+     </div>
+     <div class="footer">
+       <p>© 2026 Cirujano de Sintetizadores</p>
+       <p>contacto@cirujanodesintetizadores.cl</p>
+     </div>
+   </body>
+   </html>
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Frontend dev (diseño) + Backend dev (implementación)  
+   **Entregable:** 5 templates de email
+
+**Entregable Sprint 2.4:** Sistema de emails funcionando
+
+---
+
+## FASE 3: OPTIMIZACIÓN Y PRODUCCIÓN (Semanas 10-13)
+**Objetivo:** Preparar sistema para escalar y operar en producción
+
+### SPRINT 3.1: Performance (Semanas 10-11)
+**Prioridad:** 🟡 ALTO
+
+#### Tareas:
+
+1. **Implementar cache con Redis**
+   ```python
+   # backend/app/core/cache.py
+   import redis
+   import json
+   from functools import wraps
+   
+   redis_client = redis.Redis(
+       host=settings.REDIS_HOST,
+       port=settings.REDIS_PORT,
+       db=0,
+       decode_responses=True
+   )
+   
+   def cache(ttl: int = 300):  # TTL en segundos
+       """Decorator para cachear resultados"""
+       def decorator(func):
+           @wraps(func)
+           async def wrapper(*args, **kwargs):
+               # Generar key único
+               cache_key = f"{func.__name__}:{str(args)}:{str(kwargs)}"
+               
+               # Buscar en cache
+               cached = redis_client.get(cache_key)
+               if cached:
+                   return json.loads(cached)
+               
+               # Ejecutar función
+               result = await func(*args, **kwargs)
+               
+               # Guardar en cache
+               redis_client.setex(
+                   cache_key, 
+                   ttl, 
+                   json.dumps(result, default=str)
+               )
+               
+               return result
+           return wrapper
+       return decorator
+   
+   # Uso:
+   @router.get("/instruments")
+   @cache(ttl=3600)  # 1 hora
+   async def list_instruments():
+       return db.query(Instrument).all()
+   ```
+   
+   **Aplicar cache a:**
+   - GET /instruments (1 hora)
+   - GET /brands (1 hora)
+   - GET /faults (1 hora)
+   - GET /repairs (5 minutos)
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Backend dev  
+   **Entregable:** Cache funcionando
+
+2. **Optimizar queries N+1**
+   ```python
+   # ANTES (N+1):
+   repairs = db.query(Repair).all()
+   for repair in repairs:
+       print(repair.client.name)  # Query por cada repair
+   
+   # DESPUÉS (eager loading):
+   repairs = db.query(Repair)\
+       .options(joinedload(Repair.client))\
+       .all()
+   for repair in repairs:
+       print(repair.client.name)  # Sin queries extra
+   ```
+   
+   **Auditar con:**
+   ```python
+   # backend/app/middleware/query_counter.py
+   from sqlalchemy import event
+   from sqlalchemy.engine import Engine
+   
+   query_count = 0
+   
+   @event.listens_for(Engine, "before_cursor_execute")
+   def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+       global query_count
+       query_count += 1
+   
+   # Agregar a logging en dev
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Backend dev
+
+3. **Lazy loading de imágenes frontend**
+   ```vue
+   <!-- src/vue/components/generic/LazyImage.vue -->
+   <template>
+     <div class="lazy-image-container">
+       <img 
+         v-if="loaded"
+         :src="src"
+         :alt="alt"
+         @load="onLoad"
+       />
+       <div v-else class="skeleton"></div>
+     </div>
+   </template>
+   
+   <script setup>
+   import { ref, onMounted } from 'vue'
+   
+   const props = defineProps({
+     src: String,
+     alt: String
+   })
+   
+   const loaded = ref(false)
+   
+   onMounted(() => {
+     const img = new Image()
+     img.src = props.src
+     img.onload = () => loaded.value = true
+   })
+   </script>
+   
+   <style scoped>
+   .skeleton {
+     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+     background-size: 200% 100%;
+     animation: loading 1.5s infinite;
+     min-height: 200px;
+   }
+   
+   @keyframes loading {
+     0% { background-position: 200% 0; }
+     100% { background-position: -200% 0; }
+   }
+   </style>
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Frontend dev
+
+4. **Code splitting Vue**
+   ```javascript
+   // src/router/index.js
+   const routes = [
+     {
+       path: '/admin',
+       component: () => import('@/vue/content/pages/admin/AdminDashboard.vue')
+       // Lazy load: solo carga cuando se navega a admin
+     },
+     {
+       path: '/cotizador-ia',
+       component: () => import('@/vue/content/pages/CotizadorIAPage.vue')
+     }
+   ]
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Frontend dev
+
+5. **Comprimir assets**
+   ```javascript
+   // vite.config.js
+   import compression from 'vite-plugin-compression'
+   
+   export default defineConfig({
+     plugins: [
+       vue(),
+       compression({
+         algorithm: 'gzip',
+         ext: '.gz'
+       })
+     ],
+     build: {
+       rollupOptions: {
+         output: {
+           manualChunks: {
+             'vendor': ['vue', 'vue-router', 'pinia'],
+             'bootstrap': ['bootstrap'],
+             'ui': ['@/components']
+           }
+         }
+       }
+     }
+   })
+   ```
+   
+   **Tiempo:** 0.5 días  
+   **Responsable:** Frontend dev  
+   **Entregable:** Build size <500KB gzipped
+
+6. **Tests de carga**
+   ```python
+   # locustfile.py
+   from locust import HttpUser, task, between
+   
+   class CirujanoUser(HttpUser):
+       wait_time = between(1, 3)
+       
+       def on_start(self):
+           # Login
+           response = self.client.post("/api/v1/auth/login", json={
+               "email": "test@example.com",
+               "password": "test123"
+           })
+           self.token = response.json()["access_token"]
+       
+       @task(3)
+       def list_instruments(self):
+           self.client.get(
+               "/api/v1/instruments",
+               headers={"Authorization": f"Bearer {self.token}"}
+           )
+       
+       @task(2)
+       def list_repairs(self):
+           self.client.get(
+               "/api/v1/repairs",
+               headers={"Authorization": f"Bearer {self.token}"}
+           )
+       
+       @task(1)
+       def create_repair(self):
+           self.client.post(
+               "/api/v1/repairs",
+               headers={"Authorization": f"Bearer {self.token}"},
+               json={
+                   "title": "Test repair",
+                   "description": "Load test"
+               }
+           )
+   ```
+   
+   ```bash
+   # Ejecutar test
+   locust -f locustfile.py --host=http://localhost:8000
+   
+   # Meta: 100 usuarios concurrentes sin errores
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** DevOps + Backend dev  
+   **Entregable:** Sistema soporta 100 usuarios concurrentes
+
+**Entregable Sprint 3.1:** Sistema optimizado (cache, queries, lazy loading)
+
+---
+
+### SPRINT 3.2: Monitoreo y Observabilidad (Semana 12)
+**Prioridad:** 🟡 ALTO
+
+#### Tareas:
+
+1. **Integrar Sentry para error tracking**
+   ```bash
+   pip install sentry-sdk[fastapi]
+   npm install @sentry/vue
+   ```
+   
+   ```python
+   # backend/app/main.py
+   import sentry_sdk
+   from sentry_sdk.integrations.fastapi import FastApiIntegration
+   
+   sentry_sdk.init(
+       dsn=settings.SENTRY_DSN,
+       integrations=[FastApiIntegration()],
+       traces_sample_rate=0.1,  # 10% de traces
+       environment=settings.ENVIRONMENT
+   )
+   ```
+   
+   ```javascript
+   // src/main.js
+   import * as Sentry from "@sentry/vue"
+   
+   Sentry.init({
+     app,
+     dsn: import.meta.env.VITE_SENTRY_DSN,
+     integrations: [
+       new Sentry.BrowserTracing({
+         routingInstrumentation: Sentry.vueRouterInstrumentation(router)
+       })
+     ],
+     tracesSampleRate: 0.1
+   })
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Backend + Frontend dev  
+   **Entregable:** Sentry configurado
+
+2. **Health checks avanzados**
+   ```python
+   # backend/app/api/v1/endpoints/health.py
+   from fastapi import APIRouter
+   from backend.app.core.database import engine
+   from backend.app.core.cache import redis_client
+   
+   router = APIRouter(prefix="/health", tags=["health"])
+   
+   @router.get("/")
+   async def health_check():
+       """Health check básico"""
+       return {"status": "ok"}
+   
+   @router.get("/db")
+   async def health_check_db():
+       """Verificar conexión a DB"""
+       try:
+           with engine.connect() as conn:
+               conn.execute("SELECT 1")
+           return {"status": "ok", "database": "connected"}
+       except Exception as e:
+           return {"status": "error", "database": str(e)}
+   
+   @router.get("/cache")
+   async def health_check_cache():
+       """Verificar conexión a Redis"""
+       try:
+           redis_client.ping()
+           return {"status": "ok", "cache": "connected"}
+       except Exception as e:
+           return {"status": "error", "cache": str(e)}
+   
+   @router.get("/ready")
+   async def readiness_check():
+       """Kubernetes readiness probe"""
+       checks = {
+           "database": False,
+           "cache": False
+       }
+       
+       # Check DB
+       try:
+           with engine.connect() as conn:
+               conn.execute("SELECT 1")
+           checks["database"] = True
+       except:
+           pass
+       
+       # Check Redis
+       try:
+           redis_client.ping()
+           checks["cache"] = True
+       except:
+           pass
+       
+       if all(checks.values()):
+           return {"status": "ready", "checks": checks}
+       else:
+           return {"status": "not ready", "checks": checks}, 503
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Backend dev
+
+3. **Logging estructurado**
+   ```python
+   # backend/app/core/logging_config.py
+   import logging
+   import json_log_formatter
+   
+   def setup_logging():
+       formatter = json_log_formatter.JSONFormatter()
+       
+       json_handler = logging.FileHandler('logs/app.json')
+       json_handler.setFormatter(formatter)
+       
+       logger = logging.getLogger()
+       logger.addHandler(json_handler)
+       logger.setLevel(logging.INFO)
+       
+       return logger
+   ```
+   
+   **Agregar contexto a logs:**
+   ```python
+   logger.info("Payment created", extra={
+       "user_id": user.id,
+       "repair_id": repair.id,
+       "amount": amount,
+       "payment_method": "webpay"
+   })
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Backend dev
+
+4. **Alertas críticas**
+   ```yaml
+   # alerts/sentry_alerts.yml
+   alerts:
+     - name: High Error Rate
+       condition: error_count > 50 per hour
+       notify: email, slack
+     
+     - name: Payment Failure Rate
+       condition: payment_failure_rate > 5%
+       notify: email, sms
+     
+     - name: Slow Response Time
+       condition: p95_response_time > 2s
+       notify: slack
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** DevOps  
+   **Entregable:** Alertas configuradas
+
+**Entregable Sprint 3.2:** Sistema monitoreado con Sentry + alertas
+
+---
+
+### SPRINT 3.3: CI/CD Pipeline (Semana 13)
+**Prioridad:** 🟡 ALTO
+
+#### Tareas:
+
+1. **GitHub Actions workflow**
+   ```yaml
+   # .github/workflows/ci.yml
+   name: CI/CD Pipeline
+   
+   on:
+     push:
+       branches: [main, develop]
+     pull_request:
+       branches: [main, develop]
+   
+   jobs:
+     test-backend:
+       runs-on: ubuntu-latest
+       
+       services:
+         postgres:
+           image: postgres:15
+           env:
+             POSTGRES_PASSWORD: postgres
+           options: >-
+             --health-cmd pg_isready
+             --health-interval 10s
+             --health-timeout 5s
+             --health-retries 5
+       
+       steps:
+         - uses: actions/checkout@v3
+         
+         - name: Setup Python
+           uses: actions/setup-python@v4
+           with:
+             python-version: '3.11'
+         
+         - name: Install dependencies
+           run: |
+             cd backend
+             pip install -r requirements.txt
+         
+         - name: Run tests
+           env:
+             DATABASE_URL: postgresql://postgres:postgres@localhost/test
+           run: |
+             cd backend
+             pytest --cov=app --cov-report=xml
+         
+         - name: Upload coverage
+           uses: codecov/codecov-action@v3
+           with:
+             files: ./backend/coverage.xml
+     
+     test-frontend:
+       runs-on: ubuntu-latest
+       
+       steps:
+         - uses: actions/checkout@v3
+         
+         - name: Setup Node
+           uses: actions/setup-node@v3
+           with:
+             node-version: '18'
+         
+         - name: Install dependencies
+           run: npm install
+         
+         - name: Run tests
+           run: npm test
+         
+         - name: Build
+           run: npm run build
+     
+     deploy-staging:
+       needs: [test-backend, test-frontend]
+       if: github.ref == 'refs/heads/develop'
+       runs-on: ubuntu-latest
+       
+       steps:
+         - name: Deploy to staging
+           run: |
+             # SSH to staging server
+             # Pull latest code
+             # Restart services
+     
+     deploy-production:
+       needs: [test-backend, test-frontend]
+       if: github.ref == 'refs/heads/main'
+       runs-on: ubuntu-latest
+       
+       steps:
+         - name: Deploy to production
+           run: |
+             # Deploy with zero downtime
+             # Run database migrations
+             # Health check before switching traffic
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** DevOps
+
+2. **Configurar staging environment**
+   ```bash
+   # staging-server
+   # URL: staging.cirujanodesintetizadores.cl
+   # DB: PostgreSQL staging
+   # Redis: Redis staging
+   # Same setup as production but smaller resources
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** DevOps
+
+3. **Pre-commit hooks**
+   ```yaml
+   # .pre-commit-config.yaml
+   repos:
+     - repo: https://github.com/pre-commit/pre-commit-hooks
+       rev: v4.4.0
+       hooks:
+         - id: trailing-whitespace
+         - id: end-of-file-fixer
+         - id: check-yaml
+     
+     - repo: https://github.com/psf/black
+       rev: 23.3.0
+       hooks:
+         - id: black
+     
+     - repo: https://github.com/charliermarsh/ruff-pre-commit
+       rev: v0.0.272
+       hooks:
+         - id: ruff
+   ```
+   
+   ```bash
+   # Instalar
+   pip install pre-commit
+   pre-commit install
+   ```
+   
+   **Tiempo:** 0.5 días  
+   **Responsable:** Backend dev
+
+**Entregable Sprint 3.3:** Pipeline CI/CD funcionando
+
+---
+
+## FASE 4: FEATURES ADICIONALES (Semanas 14-16)
+**Objetivo:** PWA, internacionalización, mejoras UX
+
+### SPRINT 4.1: PWA (Semana 14)
+**Prioridad:** 🟢 MEDIO
+
+#### Tareas:
+
+1. **Configurar PWA**
+   ```javascript
+   // vite.config.js
+   import { VitePWA } from 'vite-plugin-pwa'
+   
+   export default defineConfig({
+     plugins: [
+       vue(),
+       VitePWA({
+         registerType: 'autoUpdate',
+         includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+         manifest: {
+           name: 'Cirujano de Sintetizadores',
+           short_name: 'Cirujano',
+           description: 'Sistema de gestión de reparaciones',
+           theme_color: '#2c3e50',
+           icons: [
+             {
+               src: 'pwa-192x192.png',
+               sizes: '192x192',
+               type: 'image/png'
+             },
+             {
+               src: 'pwa-512x512.png',
+               sizes: '512x512',
+               type: 'image/png'
+             }
+           ]
+         }
+       })
+     ]
+   })
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Frontend dev
+
+2. **Service Worker para offline**
+   ```javascript
+   // src/sw.js
+   self.addEventListener('install', (event) => {
+     event.waitUntil(
+       caches.open('cirujano-v1').then((cache) => {
+         return cache.addAll([
+           '/',
+           '/index.html',
+           '/manifest.json'
+         ])
+       })
+     )
+   })
+   
+   self.addEventListener('fetch', (event) => {
+     event.respondWith(
+       caches.match(event.request).then((response) => {
+         return response || fetch(event.request)
+       })
+     )
+   })
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Frontend dev
+
+3. **Push notifications**
+   ```javascript
+   // src/composables/usePushNotifications.js
+   export function usePushNotifications() {
+     const isSupported = 'Notification' in window
+     
+     async function requestPermission() {
+       if (!isSupported) return false
+       
+       const permission = await Notification.requestPermission()
+       return permission === 'granted'
+     }
+     
+     function sendNotification(title, options) {
+       if (Notification.permission === 'granted') {
+         new Notification(title, options)
+       }
+     }
+     
+     return {
+       isSupported,
+       requestPermission,
+       sendNotification
+     }
+   }
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Frontend dev  
+   **Entregable:** PWA instalable
+
+**Entregable Sprint 4.1:** PWA funcional con notificaciones
+
+---
+
+### SPRINT 4.2: Internacionalización (Semana 15)
+**Prioridad:** 🟢 BAJO
+
+#### Tareas:
+
+1. **Instalar vue-i18n**
+   ```bash
+   npm install vue-i18n@9
+   ```
+   
+   ```javascript
+   // src/i18n/index.js
+   import { createI18n } from 'vue-i18n'
+   import es from './locales/es.json'
+   import en from './locales/en.json'
+   
+   export default createI18n({
+     legacy: false,
+     locale: 'es',
+     fallbackLocale: 'es',
+     messages: {
+       es,
+       en
+     }
+   })
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Frontend dev
+
+2. **Migrar strings a i18n**
+   ```json
+   // src/i18n/locales/es.json
+   {
+     "common": {
+       "save": "Guardar",
+       "cancel": "Cancelar",
+       "delete": "Eliminar"
+     },
+     "auth": {
+       "login": "Iniciar Sesión",
+       "register": "Registrarse",
+       "logout": "Cerrar Sesión"
+     },
+     "repairs": {
+       "title": "Reparaciones",
+       "create": "Nueva Reparación",
+       "status": {
+         "pending": "Pendiente",
+         "in_progress": "En Progreso"
+       }
+     }
+   }
+   ```
+   
+   ```vue
+   <!-- Uso en componentes -->
+   <template>
+     <button>{{ $t('common.save') }}</button>
+   </template>
+   ```
+   
+   **Tiempo:** 3 días  
+   **Responsable:** Frontend dev
+
+3. **Selector de idioma**
+   ```vue
+   <template>
+     <select v-model="locale" @change="changeLocale">
+       <option value="es">Español</option>
+       <option value="en">English</option>
+     </select>
+   </template>
+   
+   <script setup>
+   import { useI18n } from 'vue-i18n'
+   
+   const { locale } = useI18n()
+   
+   function changeLocale() {
+     localStorage.setItem('locale', locale.value)
+   }
+   </script>
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Frontend dev  
+   **Entregable:** Sistema bilingüe (ES/EN)
+
+**Entregable Sprint 4.2:** Internacionalización completa
+
+---
+
+### SPRINT 4.3: Mejoras UX/UI (Semana 16)
+**Prioridad:** 🟢 BAJO
+
+#### Tareas:
+
+1. **Loading skeletons**
+   ```vue
+   <!-- src/vue/components/loaders/SkeletonCard.vue -->
+   <template>
+     <div class="skeleton-card">
+       <div class="skeleton-header"></div>
+       <div class="skeleton-body">
+         <div class="skeleton-line"></div>
+         <div class="skeleton-line short"></div>
+       </div>
+     </div>
+   </template>
+   
+   <style scoped>
+   .skeleton-card {
+     animation: pulse 1.5s infinite;
+   }
+   
+   @keyframes pulse {
+     0%, 100% { opacity: 1; }
+     50% { opacity: 0.5; }
+   }
+   </style>
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Frontend dev
+
+2. **Animaciones y transiciones**
+   ```vue
+   <!-- Transiciones de página -->
+   <template>
+     <router-view v-slot="{ Component }">
+       <transition name="fade" mode="out-in">
+         <component :is="Component" />
+       </transition>
+     </router-view>
+   </template>
+   
+   <style>
+   .fade-enter-active, .fade-leave-active {
+     transition: opacity 0.3s;
+   }
+   .fade-enter-from, .fade-leave-to {
+     opacity: 0;
+   }
+   </style>
+   ```
+   
+   **Tiempo:** 2 días  
+   **Responsable:** Frontend dev
+
+3. **Toast notifications mejoradas**
+   ```bash
+   npm install vue-toastification
+   ```
+   
+   ```
+
+   javascript
+   // src/main.js
+   import Toast from "vue-toastification"
+   import "vue-toastification/dist/index.css"
+   
+   app.use(Toast, {
+     transition: "Vue-Toastification__bounce",
+     maxToasts: 3,
+     newestOnTop: true
+   })
+   ```
+   
+   **Tiempo:** 1 día  
+   **Responsable:** Frontend dev  
+   **Entregable:** UX pulida
+
+**Entregable Sprint 4.3:** Interfaz mejorada y pulida
+
+---
+
+## DOCUMENTACIÓN Y ENTREGA FINAL
+
+### Documentación Técnica
+**Responsable:** Todo el equipo  
+**Tiempo:** Semana 16
+
+1. **README.md completo**
+   ```markdown
+   # Cirujano de Sintetizadores
+   
+   ## Setup Development
+   
+   ### Backend
+   \`\`\`bash
+   cd backend
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   cp .env.example .env
+   # Editar .env con tus credenciales
+   alembic upgrade head
+   uvicorn app.main:app --reload
+   \`\`\`
+   
+   ### Frontend
+   \`\`\`bash
+   npm install
+   npm run dev
+   \`\`\`
+   
+   ## Deployment
+   [...]
+   
+   ## API Documentation
+   Swagger UI: http://localhost:8000/docs
+   ```
+
+2. **API Documentation**
+   - Expandir docstrings en todos los endpoints
+   - Agregar ejemplos de uso
+   - Documentar códigos de error
+
+3. **User Guide**
+   - Manual de usuario final
+   - Manual de administrador
+   - FAQ
+
+---
+
+## RESUMEN DEL PLAN
+
+### Timeline Completo
+
+| Semana | Sprint | Entregable Principal |
+|--------|--------|---------------------|
+| 1 | 1.1 | Sistema seguro |
+| 2 | 1.2 | Backups automáticos |
+| 3 | 1.3 | Tests básicos |
+| 4-5 | 2.1 | IA con Google Vision |
+| 6 | 2.2 | IA fine-tuned |
+| 7-8 | 2.3 | Pagos Transbank |
+| 9 | 2.4 | Emails |
+| 10-11 | 3.1 | Performance optimizado |
+| 12 | 3.2 | Monitoreo Sentry |
+| 13 | 3.3 | CI/CD pipeline |
+| 14 | 4.1 | PWA |
+| 15 | 4.2 | i18n |
+| 16 | 4.3 | UX pulida + docs |
+
+### Recursos Necesarios
+
+**Equipo:**
+- 1 Backend Developer (16 semanas)
+- 1 Frontend Developer (16 semanas)
+- 1 DevOps (part-time, 8 semanas)
+
+**Servicios Externos:**
+- Google Cloud Vision API: ~$50/mes
+- Transbank: Setup + comisiones por transacción
+- Sentry: ~$26/mes (plan Team)
+- GitHub Actions: Incluido en plan free
+- Hosting: ~$100/mes (VPS + PostgreSQL + Redis)
+
+**Total estimado:** $3,000 - $5,000 USD en 4 meses
+
+### Criterios de Aceptación
+
+**Fase 1 (Estabilización):**
+- ✅ Cero secretos en código
+- ✅ Backups diarios automáticos
+- ✅ Cobertura de tests >60%
+
+**Fase 2 (Features Core):**
+- ✅ IA detecta al menos 5 tipos de fallas con >70% precisión
+- ✅ Pagos funcionan end-to-end con tarjeta de prueba
+- ✅ Emails se envían en todos los eventos clave
+
+**Fase 3 (Producción):**
+- ✅ Sistema soporta 100 usuarios concurrentes
+- ✅ Error tracking con Sentry configurado
+- ✅ CI/CD despliega a staging automáticamente
+
+**Fase 4 (Adicionales):**
+- ✅ PWA instalable en móviles
+- ✅ Sistema disponible en ES/EN
+- ✅ Documentación completa
+
+---
+
+## RIESGOS Y MITIGACIONES
+
+| Riesgo | Probabilidad | Impacto | Mitigación |
+|--------|--------------|---------|------------|
+| Google Vision no detecta componentes específicos | Media | Alto | Crear dataset custom + fine-tuning |
+| Transbank demora aprobación de cuenta | Alta | Medio | Empezar trámites en Semana 1 |
+| Tests E2E flaky | Media | Medio | Usar Playwright con retry logic |
+| Performance issues en producción | Baja | Alto | Load testing en Semana 10 |
+| Scope creep | Alta | Alto | **NO agregar features** fuera del plan |
+
+---
+
+## RECOMENDACIONES FINALES
+
+1. **Priorizar ruthlessly:** Si algo se retrasa, cortar Fase 4 completa antes que comprometer Fases 1-3
+
+2. **Weekly demos:** Mostrar progreso cada viernes al stakeholder
+
+3. **Test en producción:** Desplegar a staging cada 2 semanas mínimo
+
+4. **Documentar decisiones:** Usar ADRs (Architecture Decision Records) para cambios importantes
+
+5. **Monitoring desde día 1:** Instalar Sentry en Semana 1, no Semana 12

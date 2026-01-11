@@ -1,0 +1,20 @@
+{
+  "page_count": 21,
+  "fonts": [
+    "CervoNeueCon-Medium",
+    "CervoNeueCon-Regular",
+    "CervoNeueCon-SemiBold",
+    "CervoNeueCon-XtrBold",
+    "CormorantGaramond-Regula",
+    "Digna04-Bold",
+    "Digna04-Regular",
+    "Digna04-Thin",
+    "SteelfishRg-Regular"
+  ],
+  "images": [
+    "scripts/brand_assets/page_17_img_1.jpeg",
+    "scripts/brand_assets/page_18_img_1.jpeg",
+    "scripts/brand_assets/page_19_img_1.jpeg",
+    "scripts/brand_assets/page_20_img_1.jpeg"
+  ]
+}

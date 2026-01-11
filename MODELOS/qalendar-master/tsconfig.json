@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "outDir": "dist",
+    "declaration": true,
+    "types": ["vite/client", "cypress"],
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "cypress/**/*.cy.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

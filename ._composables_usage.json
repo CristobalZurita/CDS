@@ -1,0 +1,195 @@
+{
+  "composables": [
+    {
+      "file": "src/composables/useQuotation.js",
+      "name": "useQuotation",
+      "occurrences": 14,
+      "occ_files": [
+        "./src/composables/useQuotation.js",
+        "./src/stores/quotation.js",
+        "./src/vue/components/quotation/InstrumentSelector.vue",
+        "./src/vue/content/pages/CotizadorIAPage.vue",
+        "./src/vue/content/pages/SchedulePage.vue"
+      ]
+    },
+    {
+      "file": "src/composables/strings.js",
+      "name": "useStrings",
+      "occurrences": 17,
+      "occ_files": [
+        "./src/composables/strings.js",
+        "./src/vue/components/footer/FooterCopyright.vue",
+        "./src/vue/components/forms/contact/ContactFormSuccess.vue",
+        "./src/vue/components/forms/contact/ContactFormFields.vue",
+        "./src/vue/components/forms/contact/ContactForm.vue"
+      ]
+    },
+    {
+      "file": "src/composables/scheduler.js",
+      "name": "useScheduler",
+      "occurrences": 3,
+      "occ_files": [
+        "./src/composables/scheduler.js",
+        "./src/vue/components/loaders/Loader.vue"
+      ]
+    },
+    {
+      "file": "src/composables/layout.js",
+      "name": "useLayout",
+      "occurrences": 17,
+      "occ_files": [
+        "./src/composables/layout.js",
+        "./src/vue/components/generic/Link.vue",
+        "./src/vue/components/loaders/Loader.vue",
+        "./src/vue/components/nav/Navigation.vue",
+        "./src/vue/components/nav/navbar-wrappers/InPageNavbar.vue"
+      ]
+    },
+    {
+      "file": "src/composables/settings.js",
+      "name": "useSettings",
+      "occurrences": 5,
+      "occ_files": [
+        "./src/composables/settings.js",
+        "./src/composables/emails.js",
+        "./src/vue/stack/StateProviderLayer.vue"
+      ]
+    },
+    {
+      "file": "src/composables/utils.js",
+      "name": "useUtils",
+      "occurrences": 41,
+      "occ_files": [
+        "./src/composables/layout.js",
+        "./src/composables/utils.js",
+        "./src/composables/emails.js",
+        "./src/vue/stack/ContentLayer.vue",
+        "./src/vue/components/layout/PageSectionHeader.vue"
+      ]
+    },
+    {
+      "file": "src/composables/useApi.js",
+      "name": "useApi",
+      "occurrences": 44,
+      "occ_files": [
+        "./node_modules/vue-router/dist/vue-router.global.js",
+        "./node_modules/vue-router/dist/vue-router.esm-browser.js",
+        "./src/composables/useQuotation.js",
+        "./src/composables/useApi.js",
+        "./src/stores/users.js"
+      ]
+    },
+    {
+      "file": "src/composables/emails.js",
+      "name": "useEmails",
+      "occurrences": 5,
+      "occ_files": [
+        "./src/composables/emails.js",
+        "./src/vue/stack/App.vue",
+        "./src/vue/components/forms/contact/ContactForm.vue"
+      ]
+    },
+    {
+      "file": "src/composables/useRepairs.js",
+      "name": "useRepairs",
+      "occurrences": 10,
+      "occ_files": [
+        "./src/composables/useRepairs.js",
+        "./src/stores/repairs.js",
+        "./src/vue/components/admin/RepairForm.vue",
+        "./src/vue/components/admin/RepairsList.vue"
+      ]
+    },
+    {
+      "file": "src/composables/useInstrumentsCatalog.js",
+      "name": "useInstrumentsCatalog",
+      "occurrences": 11,
+      "occ_files": [
+        "./src/composables/useInstrumentsCatalog.js",
+        "./src/vue/components/quotation/InstrumentSelector.vue",
+        "./src/vue/components/ai/QuoteGenerator.vue",
+        "./src/vue/components/articles/DiagnosticWizard.vue"
+      ]
+    },
+    {
+      "file": "src/composables/useUsers.js",
+      "name": "useUsers",
+      "occurrences": 10,
+      "occ_files": [
+        "./src/composables/useUsers.js",
+        "./src/stores/users.js",
+        "./src/vue/components/admin/UserList.vue",
+        "./src/vue/components/admin/UserForm.vue"
+      ]
+    },
+    {
+      "file": "src/composables/useDiagnostic.js",
+      "name": "useDiagnostic",
+      "occurrences": 21,
+      "occ_files": [
+        "./node_modules/typescript/lib/tsc.js",
+        "./node_modules/typescript/lib/typescript.js",
+        "./node_modules/typescript/lib/tsserver.js",
+        "./node_modules/typescript/lib/tsserverlibrary.js",
+        "./src/composables/useDiagnostic.js"
+      ]
+    },
+    {
+      "file": "src/composables/useStockMovements.js",
+      "name": "useStockMovements",
+      "occurrences": 4,
+      "occ_files": [
+        "./src/composables/useStockMovements.js",
+        "./src/stores/stockMovements.js"
+      ]
+    },
+    {
+      "file": "src/composables/useAuth.js",
+      "name": "useAuth",
+      "occurrences": 64,
+      "occ_files": [
+        "./node_modules/.vite/deps/pinia.js",
+        "./node_modules/pinia/dist/pinia.esm-browser.js",
+        "./node_modules/pinia/dist/pinia.iife.js",
+        "./MODELOS/Geeker-Admin-master/src/hooks/useAuthButtons.ts",
+        "./MODELOS/Geeker-Admin-master/src/routers/index.ts"
+      ]
+    },
+    {
+      "file": "src/composables/useInstruments.js",
+      "name": "useInstruments",
+      "occurrences": 21,
+      "occ_files": [
+        "./src/composables/useInstrumentsCatalog.js",
+        "./src/composables/useInstruments.js",
+        "./src/stores/instruments.js",
+        "./src/vue/components/quotation/InstrumentSelector.vue",
+        "./src/vue/components/ai/QuoteGenerator.vue"
+      ]
+    },
+    {
+      "file": "src/composables/useDiagnostics.js",
+      "name": "useDiagnostics",
+      "occurrences": 15,
+      "occ_files": [
+        "./node_modules/typescript/lib/tsc.js",
+        "./node_modules/typescript/lib/typescript.js",
+        "./node_modules/typescript/lib/tsserver.js",
+        "./node_modules/typescript/lib/tsserverlibrary.js",
+        "./src/composables/useDiagnostics.js"
+      ]
+    },
+    {
+      "file": "src/composables/useCategories.js",
+      "name": "useCategories",
+      "occurrences": 10,
+      "occ_files": [
+        "./src/composables/useCategories.js",
+        "./src/stores/categories.js",
+        "./src/vue/components/admin/CategoryForm.vue",
+        "./src/vue/components/admin/CategoryList.vue"
+      ]
+    }
+  ],
+  "unused": []
+}
