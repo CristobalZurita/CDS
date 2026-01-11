@@ -1,8 +1,0 @@
-.logo-text {
-   letter-spacing: 1px;
-}
-
-.nav-title {
-   @apply text-xl font-medium text-gray-100 absolute left-1/2;
-   transform: translateX(-50%);
-}

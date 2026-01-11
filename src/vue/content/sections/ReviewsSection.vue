@@ -41,12 +41,12 @@
 </template>
 
 <script setup>
-import PageSection from "/src/vue/components/layout/PageSection.vue"
-import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
-import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
-import PageSectionFooter from "/src/vue/components/layout/PageSectionFooter.vue"
-import ArticleTestimonials from "/src/vue/components/articles/ArticleTestimonials.vue"
-import ItemTestimonial from "/src/vue/components/articles/items/ItemTestimonial.vue"
+import PageSection from "@/vue/components/layout/PageSection.vue"
+import PageSectionHeader from "@/vue/components/layout/PageSectionHeader.vue"
+import PageSectionContent from '@/vue/components/layout/PageSectionContent.vue'
+import PageSectionFooter from "@/vue/components/layout/PageSectionFooter.vue"
+import ArticleTestimonials from "@/vue/components/articles/ArticleTestimonials.vue"
+import ItemTestimonial from "@/vue/components/articles/items/ItemTestimonial.vue"
 
 const props = defineProps({
     id: String

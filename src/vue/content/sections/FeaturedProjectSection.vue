@@ -27,11 +27,11 @@
 </template>
 
 <script setup>
-import PageSection from "/src/vue/components/layout/PageSection.vue"
-import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
-import ArticleCustomContent from "/src/vue/components/articles/ArticleCustomContent.vue"
-import ProjectInfo from "/src/vue/components/projects/ProjectInfo.vue"
-import ProjectInfoFeaturedContent from "/src/vue/components/projects/ProjectInfoFeaturedContent.vue"
+import PageSection from "@/vue/components/layout/PageSection.vue"
+import PageSectionContent from '@/vue/components/layout/PageSectionContent.vue'
+import ArticleCustomContent from "@/vue/components/articles/ArticleCustomContent.vue"
+import ProjectInfo from "@/vue/components/projects/ProjectInfo.vue"
+import ProjectInfoFeaturedContent from "@/vue/components/projects/ProjectInfoFeaturedContent.vue"
 
 const props = defineProps({
     id: String

@@ -7,7 +7,7 @@
 
 <script setup>
 import {computed} from "vue"
-import {useUtils} from "/src/composables/utils.js"
+import {useUtils} from "@/composables/utils.js"
 
 const utils = useUtils()
 

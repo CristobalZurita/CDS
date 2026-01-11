@@ -30,10 +30,10 @@
 </template>
 
 <script setup>
-import ImageView from "/src/vue/components/generic/ImageView.vue"
+import ImageView from "@/vue/components/generic/ImageView.vue"
 import {computed} from "vue"
-import {useUtils} from "/src/composables/utils.js"
-import QuotedText from "/src/vue/components/widgets/QuotedText.vue"
+import {useUtils} from "@/composables/utils.js"
+import QuotedText from "@/vue/components/widgets/QuotedText.vue"
 
 const utils = useUtils()
 

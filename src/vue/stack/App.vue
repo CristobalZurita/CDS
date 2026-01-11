@@ -13,11 +13,11 @@
 </template>
 
 <script setup>
-import StateProviderLayer from "/src/vue/stack/StateProviderLayer.vue"
-import FeedbacksLayer from "/src/vue/stack/FeedbacksLayer.vue"
-import ContentLayer from "/src/vue/stack/ContentLayer.vue"
-import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"
-import {useEmails} from "/src/composables/emails.js"
+import StateProviderLayer from "@/vue/stack/StateProviderLayer.vue"
+import FeedbacksLayer from "@/vue/stack/FeedbacksLayer.vue"
+import ContentLayer from '@/vue/stack/ContentLayer.vue'
+import FloatingQuoteButton from "@/vue/components/widgets/FloatingQuoteButton.vue"
+import {useEmails} from "@/composables/emails.js"
 import {onMounted} from "vue"
 
 const emails = useEmails()

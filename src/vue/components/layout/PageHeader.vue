@@ -51,13 +51,13 @@
 </template>
 
 <script setup>
-import BackgroundPromo from "/src/vue/components/layout/BackgroundPromo.vue"
-import ImageView from "/src/vue/components/generic/ImageView.vue"
-import {useUtils} from "/src/composables/utils.js"
+import BackgroundPromo from '@/vue/components/layout/BackgroundPromo.vue'
+import ImageView from "@/vue/components/generic/ImageView.vue"
+import {useUtils} from "@/composables/utils.js"
 import {computed, ref} from "vue"
-import Link from "/src/vue/components/generic/Link.vue"
-import XLButton from "/src/vue/components/widgets/XLButton.vue"
-import AppointmentModal from "/src/vue/components/modals/AppointmentModal.vue"
+import Link from "@/vue/components/generic/Link.vue"
+import XLButton from "@/vue/components/widgets/XLButton.vue"
+import AppointmentModal from "@/vue/components/modals/AppointmentModal.vue"
 
 const utils = useUtils()
 const showAppointmentModal = ref(false)

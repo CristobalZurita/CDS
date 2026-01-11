@@ -60,10 +60,10 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useCalculator } from '@/composables/useCalculator';
-import { Timer555Input } from '@/domain/timer555/contract';
-import { calculateTimer555 } from '@/domain/timer555/model';
-import { createValidationResult } from '@/validation';
-import { validateCapacitance, validateResistance, validateVoltage } from '@/validation/physical';
+// import { Timer555Input } from '@/domain/timer555/contract';
+// import { calculateTimer555 } from '@/domain/timer555/model';
+// import { createValidationResult } from '@/validation';
+// import { validateCapacitance, validateResistance, validateVoltage } from '@/validation/physical';
 
 const input = reactive<Timer555Input>({
   mode: 'monostable',

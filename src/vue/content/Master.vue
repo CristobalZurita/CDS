@@ -65,14 +65,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import Navigation from "/src/vue/components/nav/Navigation.vue"
-import Footer from "/src/vue/components/footer/Footer.vue"
-import FooterBlock from "/src/vue/components/footer/FooterBlock.vue"
-import FooterCopyright from "/src/vue/components/footer/FooterCopyright.vue"
-import FooterColumn from "/src/vue/components/footer/FooterColumn.vue"
-import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"
-import ToastNotification from "/src/vue/components/system/ToastNotification.vue"
-import { setToastComponent } from '/src/services/toastService.js'
+import Navigation from '@/vue/components/nav/Navigation.vue'
+import Footer from "@/vue/components/footer/Footer.vue"
+import FooterBlock from "@/vue/components/footer/FooterBlock.vue"
+import FooterCopyright from "@/vue/components/footer/FooterCopyright.vue"
+import FooterColumn from "@/vue/components/footer/FooterColumn.vue"
+import FloatingQuoteButton from "@/vue/components/widgets/FloatingQuoteButton.vue"
+import ToastNotification from "@/vue/components/system/ToastNotification.vue"
+// import { setToastComponent } from '@/services/toastService.js'
 
 const toastComponent = ref(null)
 

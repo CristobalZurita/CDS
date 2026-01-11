@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import ImageView from "/src/vue/components/generic/ImageView.vue"
+import ImageView from "@/vue/components/generic/ImageView.vue"
 import {computed} from "vue"
 
 const props = defineProps({

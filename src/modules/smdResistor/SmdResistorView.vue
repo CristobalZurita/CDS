@@ -18,9 +18,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useCalculator } from '@/composables/useCalculator';
-import { SmdResistorInput } from '@/domain/smdResistor/contract';
-import { calculateSmdResistor } from '@/domain/smdResistor/model';
-import { createValidationResult } from '@/validation';
+// import { SmdResistorInput } from '@/domain/smdResistor/contract';
+// import { calculateSmdResistor } from '@/domain/smdResistor/model';
+// import { createValidationResult } from '@/validation';
 
 const input = reactive<SmdResistorInput>({} as SmdResistorInput);
 

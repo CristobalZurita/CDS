@@ -91,9 +91,9 @@
 
 <script setup>
 import { ref, computed } from "vue"
-import PageSection from "/src/vue/components/layout/PageSection.vue"
-import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
-import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
+import PageSection from "@/vue/components/layout/PageSection.vue"
+import PageSectionHeader from "@/vue/components/layout/PageSectionHeader.vue"
+import PageSectionContent from '@/vue/components/layout/PageSectionContent.vue'
 
 const props = defineProps({
     id: String

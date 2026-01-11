@@ -2,8 +2,8 @@ import "./scss/style.scss"
 import "@fortawesome/fontawesome-free/css/all.css"
 import { createApp } from "vue"
 import { createPinia } from "pinia"
-import App from "/src/vue/stack/App.vue"
-import router from "@/router"
+import App from "@/vue/stack/App.vue"
+// import router from "@/router"
 import { useAuthStore } from "@/stores/auth"
 
 const app = createApp(App)

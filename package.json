@@ -36,7 +36,7 @@
     "sass": "^1.62.1",
     "typescript": "^5.2.2",
     "vite": "^6.2.5",
-    "vitest": "^1.0.0",
+    "vitest": "^4.0.16",
     "vue-eslint-parser": "^10.2.0"
   }
 }
