@@ -44,15 +44,16 @@ export function useQuotation() {
     lastRequestTime.value = new Date()
     
     try {
-      const response = await api.post('/quotations/estimate', {
+      const response = await api.post('/api/v1/quotes/estimate', {
         instrument_id: instrumentId,
+        brand_id: instrumentId.split('-')[0],
         faults: faults
       })
-      
-      quotation.value = response.data
-      quotationStore.setQuotation(response.data)
-      showSuccess('Cotización generada exitosamente')
-      return response.data
+
+      quotation.value = response
+      quotationStore.setQuotation(response)
+      // showSuccess('Cotización generada exitosamente')
+      return response
       
     } catch (err) {
       const errorMessage = err.response?.data?.detail || 
