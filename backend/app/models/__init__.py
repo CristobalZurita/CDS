@@ -24,7 +24,3 @@ __all__ = [
     "Payment", "PaymentStatus",
     "Appointment"
 ]
-    "Instrument",
-    "StockMovement", "MovementType",
-    "Payment", "PaymentStatus",
-]
