@@ -11,21 +11,41 @@ export const useDiagnosticsStore = defineStore('diagnostics', {
     async fetchDiagnostics() {
       this.loading = true
       try {
-        this.diagnostics = await useApi().get('/api/diagnostics')
+        const { api } = useApi()
+        this.diagnostics = await api.get('/api/v1/diagnostics')
       } catch (e) {
-        this.error = e
+        this.error = e.message || String(e)
+        this.diagnostics = []
       } finally {
         this.loading = false
       }
     },
     async createDiagnostic(data) {
-      return await useApi().post('/api/diagnostics', data)
+      try {
+        const { api } = useApi()
+        return await api.post('/api/v1/diagnostics', data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     },
     async updateDiagnostic(id, data) {
-      return await useApi().put(`/api/diagnostics/${id}`, data)
+      try {
+        const { api } = useApi()
+        return await api.put(`/api/v1/diagnostics/${id}`, data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     },
     async deleteDiagnostic(id) {
-      return await useApi().delete(`/api/diagnostics/${id}`)
+      try {
+        const { api } = useApi()
+        return await api.delete(`/api/v1/diagnostics/${id}`)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     }
   }
 })

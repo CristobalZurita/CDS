@@ -11,15 +11,41 @@ export const useStockMovementsStore = defineStore('stockMovements', {
     async fetchMovements() {
       this.loading = true
       try {
-        this.movements = await useApi().get('/api/stock-movements')
+        const { api } = useApi()
+        this.movements = await api.get('/api/v1/stock-movements')
       } catch (e) {
-        this.error = e
+        this.error = e.message || String(e)
+        this.movements = []
       } finally {
         this.loading = false
       }
     },
     async createMovement(data) {
-      return await useApi().post('/api/stock-movements', data)
+      try {
+        const { api } = useApi()
+        return await api.post('/api/v1/stock-movements', data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
+    },
+    async updateMovement(id, data) {
+      try {
+        const { api } = useApi()
+        return await api.put(`/api/v1/stock-movements/${id}`, data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
+    },
+    async deleteMovement(id) {
+      try {
+        const { api } = useApi()
+        return await api.delete(`/api/v1/stock-movements/${id}`)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     }
   }
 })

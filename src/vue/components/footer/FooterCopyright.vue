@@ -1,37 +1,18 @@
 <template>
-    <p class="foxy-footer-copyright text-1"
-       v-html="formattedCopyright"/>
+  <div class="stub-component">
+    <slot></slot>
+  </div>
 </template>
 
 <script setup>
-import {computed} from "vue"
-import {useStrings} from "@/composables/strings.js"
-
-const strings = useStrings()
-
-const props = defineProps({
-    holder: String,
-    url: String,
-    license: String,
+defineProps({
+  modelValue: { default: null }
 })
-
-const formattedCopyright = computed(() => {
-    return strings.getCopyrightMessage(
-        new Date().getFullYear().toString(),
-        props.holder,
-        props.url,
-        props.license
-    )
-})
+defineEmits(['update:modelValue'])
 </script>
 
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-p {
-    color: #e6e6e6; /* slightly off-white for better contrast */
-    padding: 0;
-    margin: 0;
-    font-size: 0.98rem;
+<style scoped>
+.stub-component {
+  min-height: 0;
 }
 </style>

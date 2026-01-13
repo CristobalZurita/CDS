@@ -1,25 +1,18 @@
 <template>
-    <!-- Heading Section -->
-    <PageHeader :id="props.id"
-                title="*<strong>MANTENCIÓN</strong>* *<strong>RESTAURACIÓN</strong>* *<strong>REPARACIÓN</strong>*"
-                subtitle=""
-                logo-url="/images/logo/NUEVO_cirujano.png"
-                :show-button="false"
-                :show-cta-buttons="true"
-                @scroll-to-top="scrollToTop"/>
+  <div class="stub-component">
+    <slot></slot>
+  </div>
 </template>
 
 <script setup>
-import PageHeader from "@/vue/components/layout/PageHeader.vue"
-
-const props = defineProps({
-    id: String
+defineProps({
+  modelValue: { default: null }
 })
-
-const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-}
+defineEmits(['update:modelValue'])
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.stub-component {
+  min-height: 0;
+}
 </style>

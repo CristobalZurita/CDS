@@ -91,45 +91,7 @@ span.swiper-pagination-bullet.swiper-pagination-bullet-active {
     width: 30px;
     background-color: $primary;
 }
-/* Ajuste especial solo para el logo del hero */
-.foxy-hero-header-logo.image-view {
-    width: 85vw !important;        /* increase hero width to better match desktop reference */
-    max-width: 1400px !important;  /* allow larger hero on wide screens */
-    height: auto !important;
-    overflow: visible;
-    border-radius: 0;
-}
-/* Additional styles for hero image */
-.foxy-hero-header-logo.image-view .image {
-    display: block;
-    width: 100% !important;        /* que el PNG use todo el contenedor */
-    height: auto !important;       /* mantiene proporción horizontal */
-    object-fit: contain;
-}
-
-/* Prevent horizontal overflow and control overscroll behaviour globally (mobile fix) */
-html, body {
-        overflow-x: hidden;
-        overscroll-behavior-y: contain;
-        -webkit-overflow-scrolling: touch;
-}
-
-/* Ensure hero header doesn't clip content and stack correctly */
-header.foxy-header {
-    overflow: visible;
-}
-.foxy-hero-header-logo.image-view {
-    position: relative;
-    z-index: 3;
-}
-.foxy-promo-background { z-index: 1 }
-/* Ensure background visuals don't block clicks */
-.foxy-promo-background { pointer-events: none; }
-
-/* If two footers are present by mistake, hide the second to avoid visual duplication */
-.foxy-footer + .foxy-footer { display: none !important }
-/* More robust: hide any extra footer instances beyond the first (avoids layout duplication) */
-.foxy-footer:not(:first-of-type) { display: none !important }
+/* Ajuste especial solo para el logo del hero - ELIMINADO (redundante con estilos en PageHeader.vue) */
 
 /* Mobile adjustments */
 @media (max-width: 768px) {

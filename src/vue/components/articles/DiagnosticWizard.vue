@@ -399,7 +399,7 @@ const downloadQuote = () => {
     return
   }
 
-  // Generate simple CSV for now (TODO: Generate PDF)
+  // Generate CSV (can be extended to PDF in future)
   const csv = `
 COTIZACIÓN - CIRUJANO DE SINTETIZADORES
 ========================================

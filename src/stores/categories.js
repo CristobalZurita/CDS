@@ -11,21 +11,41 @@ export const useCategoriesStore = defineStore('categories', {
     async fetchCategories() {
       this.loading = true
       try {
-        this.categories = await useApi().get('/api/categories')
+        const { api } = useApi()
+        this.categories = await api.get('/api/v1/categories')
       } catch (e) {
-        this.error = e
+        this.error = e.message || String(e)
+        this.categories = []
       } finally {
         this.loading = false
       }
     },
     async createCategory(data) {
-      return await useApi().post('/api/categories', data)
+      try {
+        const { api } = useApi()
+        return await api.post('/api/v1/categories', data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     },
     async updateCategory(id, data) {
-      return await useApi().put(`/api/categories/${id}`, data)
+      try {
+        const { api } = useApi()
+        return await api.put(`/api/v1/categories/${id}`, data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     },
     async deleteCategory(id) {
-      return await useApi().delete(`/api/categories/${id}`)
+      try {
+        const { api } = useApi()
+        return await api.delete(`/api/v1/categories/${id}`)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     }
   }
 })

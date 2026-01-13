@@ -113,7 +113,7 @@ button.foxy-nav-link {
         text-align: left;
         margin-left: 12px;
         margin-bottom: 8px;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
 
         transition: 0.2s ease-in margin-left, 0.2s ease-in opacity;
     }

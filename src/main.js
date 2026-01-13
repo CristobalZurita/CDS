@@ -3,21 +3,16 @@ import "@fortawesome/fontawesome-free/css/all.css"
 import { createApp } from "vue"
 import { createPinia } from "pinia"
 import App from "@/vue/stack/App.vue"
-// import router from "@/router"
-import { useAuthStore } from "@/stores/auth"
+import router from "@/router"
 
 const app = createApp(App)
 
-// Install Pinia for state management
+// Install Pinia FIRST - before creating stores
 const pinia = createPinia()
 app.use(pinia)
 
 // Install Vue Router
 app.use(router)
-
-// Initialize auth on app startup
-const authStore = useAuthStore()
-authStore.checkAuth()
 
 // Mount app
 app.mount("#app")

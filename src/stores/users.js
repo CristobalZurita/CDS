@@ -11,21 +11,41 @@ export const useUsersStore = defineStore('users', {
     async fetchUsers() {
       this.loading = true
       try {
-        this.users = await useApi().get('/api/users')
+        const { api } = useApi()
+        this.users = await api.get('/api/v1/users')
       } catch (e) {
-        this.error = e
+        this.error = e.message || String(e)
+        this.users = []
       } finally {
         this.loading = false
       }
     },
     async createUser(data) {
-      return await useApi().post('/api/users', data)
+      try {
+        const { api } = useApi()
+        return await api.post('/api/v1/users', data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     },
     async updateUser(id, data) {
-      return await useApi().put(`/api/users/${id}`, data)
+      try {
+        const { api } = useApi()
+        return await api.put(`/api/v1/users/${id}`, data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     },
     async deleteUser(id) {
-      return await useApi().delete(`/api/users/${id}`)
+      try {
+        const { api } = useApi()
+        return await api.delete(`/api/v1/users/${id}`)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     }
   }
 })

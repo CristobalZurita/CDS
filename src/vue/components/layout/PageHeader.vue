@@ -172,11 +172,11 @@ header.foxy-header {
         text-align: center;
         font-family: 'Cervo Neue', 'Steelfish', sans-serif;
         font-weight: 800;
-        font-size: clamp(60px, 7vw, 10px);
+        font-size: clamp(32px, 5vw, 72px);
            transform: scale(2);            /* agranda visualmente */
     transform-origin: center top;
-        padding: 1.5rem 0 1.95rem;
-        letter-spacing: 0.08em;
+        padding: 1.5rem 0 1rem;
+        letter-spacing: 2px;
         line-height: 0.5;
         position: relative;
         z-index: 5;
@@ -187,9 +187,9 @@ header.foxy-header {
         font-family: 'Cervo Neue', $font-family-base;
         color: $light-5;
         font-weight: 400;
-        font-size: clamp(16px, calc(var(--logo-proportion)/14), 100px);
-        padding: calc(var(--logo-proportion)/20) 0;
-        line-height: 24px;
+        font-size: clamp(18px, 1.2vw + 14px, 24px);
+        padding: 0.5rem 0 1rem;
+        line-height: 1.6;
         text-align: center;
     }
 
@@ -198,7 +198,7 @@ header.foxy-header {
         justify-content: center;
         align-items: center;
         gap: 2.5rem;
-        margin-top: 2.5rem;
+        margin: 2rem 0 3rem 0;
         position: relative;
         z-index: 6; /* Ensure CTAs sit above decorative background */
 

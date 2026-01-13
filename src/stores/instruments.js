@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useApi } from '@/composables/useApi'
+import { useInstrumentsCatalog } from '@/composables/useInstrumentsCatalog'
 
 export const useInstrumentsStore = defineStore('instruments', {
   state: () => ({
@@ -11,21 +12,43 @@ export const useInstrumentsStore = defineStore('instruments', {
     async fetchInstruments() {
       this.loading = true
       try {
-        this.instruments = await useApi().get('/api/instruments')
+        const { api } = useApi()
+        this.instruments = await api.get('/api/instruments')
       } catch (e) {
-        this.error = e
+        // Fallback: use catalog data
+        const catalog = useInstrumentsCatalog()
+        this.instruments = catalog.getAllInstruments()
+        this.error = 'Using local data: API unavailable'
       } finally {
         this.loading = false
       }
     },
     async createInstrument(data) {
-      return await useApi().post('/api/instruments', data)
+      try {
+        const { api } = useApi()
+        return await api.post('/api/instruments', data)
+      } catch (e) {
+        this.error = e.message
+        throw e
+      }
     },
     async updateInstrument(id, data) {
-      return await useApi().put(`/api/instruments/${id}`, data)
+      try {
+        const { api } = useApi()
+        return await api.put(`/api/instruments/${id}`, data)
+      } catch (e) {
+        this.error = e.message
+        throw e
+      }
     },
     async deleteInstrument(id) {
-      return await useApi().delete(`/api/instruments/${id}`)
+      try {
+        const { api } = useApi()
+        return await api.delete(`/api/instruments/${id}`)
+      } catch (e) {
+        this.error = e.message
+        throw e
+      }
     }
   }
 })

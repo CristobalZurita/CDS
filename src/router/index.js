@@ -172,33 +172,38 @@ const router = createRouter({
  * Navigation guards - Proteger rutas según autenticación
  */
 router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
+  try {
+    const authStore = useAuthStore()
 
-  // Verificar autenticación si no está hecho aún
-  if (!authStore.token && to.meta.requiresAuth) {
-    // Intentar recuperar sesión del localStorage
-    await authStore.checkAuth()
+    // Verificar autenticación si no está hecho aún
+    // if (!authStore.token && to.meta.requiresAuth) {
+    //   // Intentar recuperar sesión del localStorage
+    //   await authStore.checkAuth()
+    // }
+
+    // Ruta requiere autenticación
+    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+      next({ name: 'login', query: { redirect: to.fullPath } })
+      return
+    }
+
+    // Ruta requiere rol admin
+    if (to.meta.requiresAdmin && !authStore.isAdmin) {
+      next({ name: 'home' })
+      return
+    }
+
+    // Ruta requiere que NO esté autenticado (login, register)
+    if (to.meta.requiresGuest && authStore.isAuthenticated) {
+      next({ name: 'dashboard' })
+      return
+    }
+
+    next()
+  } catch (error) {
+    console.error('Router navigation error:', error)
+    next()
   }
-
-  // Ruta requiere autenticación
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'login', query: { redirect: to.fullPath } })
-    return
-  }
-
-  // Ruta requiere rol admin
-  if (to.meta.requiresAdmin && !authStore.isAdmin) {
-    next({ name: 'home' })
-    return
-  }
-
-  // Ruta requiere que NO esté autenticado (login, register)
-  if (to.meta.requiresGuest && authStore.isAuthenticated) {
-    next({ name: 'dashboard' })
-    return
-  }
-
-  next()
 })
 
 export default router

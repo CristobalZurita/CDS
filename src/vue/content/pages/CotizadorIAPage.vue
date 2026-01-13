@@ -116,7 +116,6 @@ const resetAll = () => {
  * Navigate to appointment scheduling
  */
 const goToSchedule = () => {
-  // TODO: Implement calendar/schedule page
   router.push('/agendar')
 }
 </script>

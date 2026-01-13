@@ -11,21 +11,41 @@ export const useRepairsStore = defineStore('repairs', {
     async fetchRepairs() {
       this.loading = true
       try {
-        this.repairs = await useApi().get('/api/repairs')
+        const { api } = useApi()
+        this.repairs = await api.get('/api/v1/repairs')
       } catch (e) {
-        this.error = e
+        this.error = e.message || String(e)
+        this.repairs = []
       } finally {
         this.loading = false
       }
     },
     async createRepair(data) {
-      return await useApi().post('/api/repairs', data)
+      try {
+        const { api } = useApi()
+        return await api.post('/api/v1/repairs', data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     },
     async updateRepair(id, data) {
-      return await useApi().put(`/api/repairs/${id}`, data)
+      try {
+        const { api } = useApi()
+        return await api.put(`/api/v1/repairs/${id}`, data)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     },
     async deleteRepair(id) {
-      return await useApi().delete(`/api/repairs/${id}`)
+      try {
+        const { api } = useApi()
+        return await api.delete(`/api/v1/repairs/${id}`)
+      } catch (e) {
+        this.error = e.message || String(e)
+        throw e
+      }
     }
   }
 })

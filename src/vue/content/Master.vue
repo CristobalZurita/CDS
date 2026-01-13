@@ -1,93 +1,64 @@
 <template>
-    <!-- Navigation -->
-    <Navigation logo="images/logo/logo_square_002.png"
-                label="*Cirujano* de Sintetizadores"/>
-
-        <!-- Content Display -->
-        <main class="site-body">
-            <router-view/>
+    <div class="master-layout">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <span class="logo-text">Cirujano de Sintetizadores</span>
+            </div>
+            <ul class="nav-links">
+                <li><router-link to="/">Inicio</router-link></li>
+                <li><router-link to="/dashboard">Dashboard</router-link></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <router-view />
         </main>
-
-    <!-- Floating Quote Button - Visible in all pages -->
-    <FloatingQuoteButton/>
-
-    <!-- Toast Notifications -->
-    <ToastNotification ref="toastComponent" />
-
-    <!-- Footer -->
-    <Footer>
-        <FooterBlock :darken="false"
-                     :row="true">
-            <FooterColumn title="Sobre el taller"
-                          faIcon="pi pi-lightbulb me-2"
-                          :description="[
-                              `Cirujano de Sintetizadores es un taller especializado en reparación, restauración y modificación de sintetizadores, teclados y equipos de audio profesionales.`,
-                              `Trabajamos con diagnóstico detallado, repuestos de calidad y un enfoque orientado a conservar y realzar el carácter sonoro original de cada instrumento.`
-                          ]"
-                          :links="[
-                              {label: `Política de privacidad`, href: `/privacy-policy`, faIcon: null},
-                              {label: `Términos y condiciones`, href: `/license`, faIcon: null},
-                              {label: `Repositorio del proyecto`, href: `https://github.com/CristobalZurita/cirujano-front`, faIcon: null},
-                          ]"
-                          :displayLinksAsButtons="false"/>
-
-            <FooterColumn title="Redes y presencia"
-                          faIcon=""
-                          :description="[
-                          ]"
-                          :links="[
-                              {label: `Instagram`, href: `https://www.instagram.com/cirujanodesintetizadores/`, faIcon: `fa-brands fa-instagram`},
-                              {label: `Facebook`, href: `https://www.facebook.com/Cirujanodesintetizadores/`, faIcon: `fa-brands fa-facebook`},
-                          ]"
-                          :displayLinksAsButtons="true"/>
-
-            <FooterColumn title="Información de contacto"
-                          faIcon="pi pi-envelope me-2 pe-1"
-                          :description="[
-                              `Valparaíso – Chile`,
-                              `Atención con coordinación previa.`
-                          ]"
-                          :links="[
-                              {label: `+56 9 8295 7538`, href: `tel:+56982957538`, faIcon: 'pi pi-phone'},
-                              {label: `contacto@cirujanodesintetizadores.com`, href: `mailto:contacto@cirujanodesintetizadores.com`, faIcon: 'fa-regular fa-envelope'},
-                          ]"
-                          :displayLinksAsButtons="false"/>
-        </FooterBlock>
-
-        <FooterBlock :darken="true"
-                     :row="false">
-            <FooterCopyright holder="Cirujano de Sintetizadores"
-                             url="https://www.cirujanodesintetizadores.cl"
-                             license="Todos los derechos reservados"/>
-        </FooterBlock>
-    </Footer>
+    </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import Navigation from '@/vue/components/nav/Navigation.vue'
-import Footer from "@/vue/components/footer/Footer.vue"
-import FooterBlock from "@/vue/components/footer/FooterBlock.vue"
-import FooterCopyright from "@/vue/components/footer/FooterCopyright.vue"
-import FooterColumn from "@/vue/components/footer/FooterColumn.vue"
-import FloatingQuoteButton from "@/vue/components/widgets/FloatingQuoteButton.vue"
-import ToastNotification from "@/vue/components/system/ToastNotification.vue"
-// import { setToastComponent } from '@/services/toastService.js'
-
-const toastComponent = ref(null)
-
-onMounted(() => {
-  // Initialize toast service with component reference
-  if (toastComponent.value) {
-    setToastComponent(toastComponent.value)
-  }
-})
 </script>
 
-<style lang="scss">
-@import "/src/scss/_theming.scss";
+<style scoped>
+.master-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-.site-body {
-  padding-top: var(--navbar-height, 120px);
+.navbar {
+    background: #333;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    color: #ccc;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    background: #f9f9f9;
 }
 </style>
