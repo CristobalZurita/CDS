@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .endpoints import brands, instruments, auth, inventory, imports, repairs, users
+from .endpoints import brands, instruments, auth, inventory, imports, repairs, users, diagnostics, quotes
 from backend.app.routers import uploads as uploads_router
 
 # Routers adicionales (creados por copilot) - si existen, se incluyen
@@ -57,6 +57,8 @@ api_router.include_router(inventory.router)
 api_router.include_router(imports.router)
 api_router.include_router(repairs.router)
 api_router.include_router(users.router)
+api_router.include_router(diagnostics.router)
+api_router.include_router(quotes.router)
 
 # Incluir routers adicionales si están disponibles
 if user_router:

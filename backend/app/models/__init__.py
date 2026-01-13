@@ -4,6 +4,7 @@ Import all SQLAlchemy models
 from backend.app.models.user import User, UserRole
 from backend.app.models.repair import Repair, RepairStatus
 from backend.app.models.diagnostic import Diagnostic
+from backend.app.models.quote import Quote, QuoteStatus
 from backend.app.models.category import Category
 from backend.app.models.inventory import Product
 from backend.app.models.brand import Brand
@@ -16,6 +17,7 @@ __all__ = [
     "User", "UserRole",
     "Repair", "RepairStatus",
     "Diagnostic",
+    "Quote", "QuoteStatus",
     "Category",
     "Product",
     "Brand",
