@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, 'cirujano-copilot' ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        database: [sqlite, postgres]
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres" --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      # Default to sqlite; will be overridden for postgres matrix
+      DATABASE_URL: sqlite:///./cirujano.db
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r backend/requirements.txt
+
+      - name: Configure DB URL for Postgres
+        if: matrix.database == 'postgres'
+        run: echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres" >> $GITHUB_ENV
+
+      - name: Show DB URL
+        run: echo "Using DATABASE_URL=$DATABASE_URL"
+
+      - name: Apply Alembic migrations
+        working-directory: ./
+        run: |
+          # ensure alembic uses the runtime settings (backend.app.core.config)
+          python -c "from backend.app.core.config import settings; print('settings.database_url=', settings.database_url)"
+          alembic upgrade head
+
+      - name: Run tests
+        run: python -m pytest backend -q -r a

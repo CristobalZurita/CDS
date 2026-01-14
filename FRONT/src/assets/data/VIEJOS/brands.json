@@ -1,0 +1,340 @@
+{
+  "brands": [
+    {
+      "id": "moog",
+      "name": "Moog",
+      "tier": "legendary",
+      "founded": 1954,
+      "country": "USA",
+      "description": "Legendarios sintetizadores analógicos"
+    },
+    {
+      "id": "sequential",
+      "name": "Sequential / DSI",
+      "tier": "legendary",
+      "founded": 1974,
+      "country": "USA",
+      "description": "Prophet y equipos de Dave Smith"
+    },
+    {
+      "id": "oberheim",
+      "name": "Oberheim",
+      "tier": "legendary",
+      "founded": 1969,
+      "country": "USA",
+      "description": "Clásicos Matrix y Matrix-12"
+    },
+    {
+      "id": "fairlight",
+      "name": "Fairlight",
+      "tier": "legendary",
+      "founded": 1979,
+      "country": "Australia",
+      "description": "CMI - Computador Musical Avanzado"
+    },
+    {
+      "id": "ppg",
+      "name": "PPG",
+      "tier": "legendary",
+      "founded": 1978,
+      "country": "Germany",
+      "description": "Wave series - Wave 2.3, Wave 2.2"
+    },
+    {
+      "id": "ems",
+      "name": "EMS",
+      "tier": "legendary",
+      "founded": 1969,
+      "country": "UK",
+      "description": "VCS3, Synthi AKS"
+    },
+    {
+      "id": "buchla",
+      "name": "Buchla",
+      "tier": "legendary",
+      "founded": 1963,
+      "country": "USA",
+      "description": "Síntesis modular experimental"
+    },
+    {
+      "id": "roland",
+      "name": "Roland",
+      "tier": "professional",
+      "founded": 1972,
+      "country": "Japan",
+      "description": "TR-808, TR-909, Juno, Jupiter"
+    },
+    {
+      "id": "korg",
+      "name": "Korg",
+      "tier": "professional",
+      "founded": 1963,
+      "country": "Japan",
+      "description": "Minimoog, Monotron, Volca"
+    },
+    {
+      "id": "yamaha",
+      "name": "Yamaha",
+      "tier": "professional",
+      "founded": 1887,
+      "country": "Japan",
+      "description": "DX7, CS, VL-Tone"
+    },
+    {
+      "id": "nord",
+      "name": "Nord",
+      "tier": "professional",
+      "founded": 1995,
+      "country": "Sweden",
+      "description": "Nord Lead, Nord Modular"
+    },
+    {
+      "id": "waldorf",
+      "name": "Waldorf",
+      "tier": "professional",
+      "founded": 1992,
+      "country": "Germany",
+      "description": "Staccato, Blofeld, Pulse"
+    },
+    {
+      "id": "access",
+      "name": "Access",
+      "tier": "professional",
+      "founded": 1992,
+      "country": "Germany",
+      "description": "Virus - sintetizador digital líder"
+    },
+    {
+      "id": "clavia",
+      "name": "Clavia",
+      "tier": "professional",
+      "founded": 1983,
+      "country": "Sweden",
+      "description": "Nord (ver Nord)"
+    },
+    {
+      "id": "kurzweil",
+      "name": "Kurzweil",
+      "tier": "professional",
+      "founded": 1984,
+      "country": "USA",
+      "description": "K-series, sampler/sintetizador"
+    },
+    {
+      "id": "novation",
+      "name": "Novation",
+      "tier": "standard",
+      "founded": 1987,
+      "country": "UK",
+      "description": "Bass Station, Supernova"
+    },
+    {
+      "id": "arturia",
+      "name": "Arturia",
+      "tier": "standard",
+      "founded": 2007,
+      "country": "France",
+      "description": "Minibrute, Microbrute, MiniBrute 3"
+    },
+    {
+      "id": "behringer",
+      "name": "Behringer",
+      "tier": "standard",
+      "founded": 1989,
+      "country": "Germany",
+      "description": "Modelo, Crave, UB-Xa"
+    },
+    {
+      "id": "casio",
+      "name": "Casio",
+      "tier": "standard",
+      "founded": 1957,
+      "country": "Japan",
+      "description": "VZ-1, MT-65"
+    },
+    {
+      "id": "m-audio",
+      "name": "M-Audio",
+      "tier": "standard",
+      "founded": 1997,
+      "country": "USA",
+      "description": "Keystation, teclados MIDI"
+    },
+    {
+      "id": "alesis",
+      "name": "Alesis",
+      "tier": "standard",
+      "founded": 1980,
+      "country": "USA",
+      "description": "Micron, Ion, controladores MIDI"
+    },
+    {
+      "id": "akai",
+      "name": "Akai",
+      "tier": "standard",
+      "founded": 1929,
+      "country": "Japan",
+      "description": "APC, MPC - Controladores"
+    },
+    {
+      "id": "hammond",
+      "name": "Hammond",
+      "tier": "specialized",
+      "founded": 1935,
+      "country": "USA",
+      "description": "Órgano electromecánico B3"
+    },
+    {
+      "id": "rhodes",
+      "name": "Rhodes",
+      "tier": "specialized",
+      "founded": 1959,
+      "country": "USA",
+      "description": "Piano eléctrico clásico"
+    },
+    {
+      "id": "wurlitzer",
+      "name": "Wurlitzer",
+      "tier": "specialized",
+      "founded": 1856,
+      "country": "USA",
+      "description": "Electric Piano"
+    },
+    {
+      "id": "hohner",
+      "name": "Hohner",
+      "tier": "specialized",
+      "founded": 1857,
+      "country": "Germany",
+      "description": "Harmónica, pianica, instrumentos mecánicos"
+    },
+    {
+      "id": "elektron",
+      "name": "Elektron",
+      "tier": "boutique",
+      "founded": 1998,
+      "country": "Sweden",
+      "description": "Analog Four, Rytm, grooveboxes"
+    },
+    {
+      "id": "teenage-engineering",
+      "name": "Teenage Engineering",
+      "tier": "boutique",
+      "founded": 2002,
+      "country": "Sweden",
+      "description": "OP-1, OP-Z, síntesis portátil"
+    },
+    {
+      "id": "make-noise",
+      "name": "Make Noise",
+      "tier": "boutique",
+      "founded": 2005,
+      "country": "USA",
+      "description": "Síntesis modular eurorack"
+    },
+    {
+      "id": "mutable-instruments",
+      "name": "Mutable Instruments",
+      "tier": "boutique",
+      "founded": 2007,
+      "country": "France",
+      "description": "Módulos digitales eurorack"
+    },
+    {
+      "id": "dreadbox",
+      "name": "Dreadbox",
+      "tier": "boutique",
+      "founded": 2013,
+      "country": "Greece",
+      "description": "Síntesis analógica boutique"
+    },
+    {
+      "id": "modal-electronics",
+      "name": "Modal Electronics",
+      "tier": "boutique",
+      "founded": 2015,
+      "country": "UK",
+      "description": "CRAFTsynth, síntesis digital"
+    },
+    {
+      "id": "crumar",
+      "name": "Crumar",
+      "tier": "historic",
+      "founded": 1980,
+      "country": "Italy",
+      "description": "Teclados vintage italianos"
+    },
+    {
+      "id": "siel",
+      "name": "Siel",
+      "tier": "historic",
+      "founded": 1975,
+      "country": "Italy",
+      "description": "Sintetizadores vintage"
+    },
+    {
+      "id": "elka",
+      "name": "Elka",
+      "tier": "historic",
+      "founded": 1906,
+      "country": "Italy",
+      "description": "Órganos eléctricos"
+    },
+    {
+      "id": "quasimidi",
+      "name": "Quasimidi",
+      "tier": "historic",
+      "founded": 1990,
+      "country": "Germany",
+      "description": "Quasar M8, síntesis digital"
+    },
+    {
+      "id": "ensoniq",
+      "name": "Ensoniq",
+      "tier": "historic",
+      "founded": 1982,
+      "country": "USA",
+      "description": "Mirage, Transwave, teclados"
+    },
+    {
+      "id": "e-mu",
+      "name": "E-mu",
+      "tier": "historic",
+      "founded": 1971,
+      "country": "USA",
+      "description": "Emulator, Morpheus"
+    },
+    {
+      "id": "arp",
+      "name": "ARP",
+      "tier": "legendary",
+      "founded": 1968,
+      "country": "USA",
+      "description": "Odyssey, Mini Moog competition"
+    },
+    {
+      "id": "minimoog",
+      "name": "Minimoog",
+      "tier": "legendary",
+      "founded": 1970,
+      "country": "USA",
+      "description": "Modelo D, síntesis analógica"
+    },
+    {
+      "id": "prophet",
+      "name": "Prophet",
+      "tier": "legendary",
+      "founded": 1974,
+      "country": "USA",
+      "description": "Prophet-5, Prophet-10"
+    },
+    {
+      "id": "juno",
+      "name": "Juno",
+      "tier": "professional",
+      "founded": 1984,
+      "country": "Japan",
+      "description": "Roland Juno - línea de sintetizadores"
+    }
+  ]
+}
