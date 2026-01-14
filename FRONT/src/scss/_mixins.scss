@@ -1,0 +1,33 @@
+// Normalize extended breakpoint aliases (xxxl, xxxxl) to Bootstrap-supported keys.
+// NOTE: Sass forbids declaring functions inside mixins; keep this at top-level.
+@function normalize-breakpoint($bp) {
+    @if $bp == 'xxxl' { @return 'xxl'; }
+    @if $bp == 'xxxxl' { @return 'xxl'; }
+    @return $bp;
+}
+
+// This mixin generates dynamic styles based on a hash object containing breakpoint-specific styles.
+// It loops through the provided styles for each breakpoint and applies them within the appropriate media query.
+@mixin generate-dynamic-styles-with-hash($stylesHash) {
+    @each $breakpoint, $styles in $stylesHash {
+        $bp: normalize-breakpoint($breakpoint);
+        @include media-breakpoint-down($bp) {
+            @each $property, $value in $styles {
+                #{$property}: $value;
+            }
+        }
+    }
+}
+
+// This mixin generates dynamic styles where the base sizes (e.g., font sizes, padding) are multiplied
+// by different factors for each breakpoint. This allows scaling of styles based on the screen size.
+@mixin generate-dynamic-styles-with-multipliers($baseSizes, $breakpointMultipliers) {
+    @each $breakpoint, $multiplier in $breakpointMultipliers {
+        $bp: normalize-breakpoint($breakpoint);
+        @include media-breakpoint-down($bp) {
+            @each $property, $value in $baseSizes {
+                #{$property}: $value * $multiplier;
+            }
+        }
+    }
+}

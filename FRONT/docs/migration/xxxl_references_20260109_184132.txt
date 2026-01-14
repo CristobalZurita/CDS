@@ -1,0 +1,104 @@
+Buscando en archivos .scss y .css...
+
+\033[0;31m⚠️  Se encontraron referencias en archivos SCSS/CSS:\033[0m
+
+src/scss/_variables.scss:69:    xxxxl: 1.15,    // >1920px - 4K monitors
+src/scss/_variables.scss:70:    xxxl: 1.1,      // Desktop
+src/scss/_variables.scss:80:    xxxxl: 1.2,     // >1920px - 4K monitors
+src/scss/_variables.scss:81:    xxxl: 1.15,     // Desktop
+src/scss/_mixins.scss:1:// Normalize extended breakpoint aliases (xxxl, xxxxl) to Bootstrap-supported keys.
+src/scss/_mixins.scss:4:    @if $bp == 'xxxl' { @return 'xxl'; }
+src/scss/_mixins.scss:5:    @if $bp == 'xxxxl' { @return 'xxl'; }
+src/scss/_layout.scss:44:        xxxl:(padding: 0),
+
+\033[1;33mTotal de líneas con referencias: 8\033[0m
+
+
+Buscando en archivos .vue...
+
+\033[0;31m⚠️  Se encontraron referencias en componentes Vue:\033[0m
+
+src/vue/components/footer/FooterColumn.vue:88:        xxxl: (padding-top:0.5rem),
+src/vue/components/layout/PageSectionHeader.vue:34:        xxxl: (margin-bottom: 4rem),
+src/vue/components/layout/PageSection.vue:50:        xxxl: (padding: 5rem 0em 5.5rem),  // Increased for large screens
+src/vue/components/layout/PageSectionFooter.vue:61:        xxxl: (margin-top: 2rem),
+src/vue/components/layout/PageWrapper.vue:40:        xxxl: (padding-top:2rem),
+src/vue/components/widgets/XLButton.vue:33:        xxxl: (padding: 1.125rem 2.3rem, font-size: 1.125rem),
+src/vue/components/widgets/CircleIcon.vue:23:        xxxl: (font-size: 3rem),
+src/vue/components/widgets/Spinner.vue:20:        xxxl:   (max-width: 200px,  max-height:200px),
+src/vue/components/widgets/FilterTabs.vue:58:        xxxl: (padding: 0.3rem 2rem),
+src/vue/components/loaders/ActivitySpinner.vue:42:        xxxl:   (max-width: 200px,  max-height:200px),
+src/vue/components/nav/navbar/NavbarBrand.vue:40:        xxxl: (font-size: 1.4rem),
+src/vue/components/nav/navbar/NavbarBrand.vue:71:        xxxl: (height: 3.4rem, width: 3.4rem),
+src/vue/components/projects/ProjectInfo.vue:31:        xxxl: (flex-direction: row, width: 100%, padding: 2rem),
+src/vue/components/projects/ProjectInfo.vue:41:        xxxl: (height: 320px, min-width: 320px, margin-right: 6rem),
+src/vue/components/projects/ProjectInfo.vue:53:        xxxl: (height: 280px, width: 280px, min-width: 280px, margin-right: 3rem),
+src/vue/components/projects/ProjectInfo.vue:69:        xxxl: (text-align: justify),
+src/vue/components/articles/items/ItemFeature.vue:45:        xxxl: (flex-direction: column, padding: 0 1rem),
+src/vue/components/articles/items/ItemFeature.vue:55:        xxxl: (margin-top: 1rem),
+src/vue/components/articles/items/ItemTestimonial.vue:66:        xxxl: (min-height: calc(100% - 25px), padding: 15px),
+src/vue/components/articles/items/ItemTestimonial.vue:95:        xxxl: (padding-top: 1rem),
+src/vue/components/articles/items/ItemQuote.vue:75:        xxxl: (height: 170px),
+src/vue/components/articles/ArticleCustomContent.vue:19:        xxxl: (padding: 2rem 0),
+src/vue/components/articles/ArticleInfoBlock.vue:55:        xxxl: (min-width: 30px, margin-right: 4rem),
+
+\033[1;33mTotal de líneas con referencias: 23\033[0m
+
+
+Buscando en archivos .js y .ts...
+
+\033[0;32m✅ No se encontraron referencias a xxxl/xxxxl en archivos JS/TS\033[0m
+
+
+Buscando en archivos de configuración...
+
+\033[0;32m✅ No se encontraron referencias a xxxl/xxxxl en archivos de config\033[0m
+
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN EJECUTIVO - 2026-01-09 18:41:40
+═══════════════════════════════════════════════════════════════════
+
+\033[0;31m⚠️  RESULTADO: Se encontraron 31 líneas con referencias\033[0m
+
+\033[1;33m📋 ACCIÓN REQUERIDA:\033[0m
+1. Revisar cada referencia en el archivo de resultados
+2. Crear plan de migración para cada archivo afectado
+3. Reemplazar xxxl → xxl y xxxxl → xxl según contexto
+4. Re-ejecutar este script para verificar
+
+\033[1;33m⏸️  NO PROCEDER con P03 hasta resolver estas referencias\033[0m
+
+═══════════════════════════════════════════════════════════════════
+
+
+\033[0;34m📁 ARCHIVOS ÚNICOS AFECTADOS:\033[0m
+
+
+src/scss/_layout.scss
+src/scss/_mixins.scss
+src/scss/_variables.scss
+src/vue/components/articles/ArticleCustomContent.vue
+src/vue/components/articles/ArticleInfoBlock.vue
+src/vue/components/articles/items/ItemFeature.vue
+src/vue/components/articles/items/ItemQuote.vue
+src/vue/components/articles/items/ItemTestimonial.vue
+src/vue/components/footer/FooterColumn.vue
+src/vue/components/layout/PageSection.vue
+src/vue/components/layout/PageSectionFooter.vue
+src/vue/components/layout/PageSectionHeader.vue
+src/vue/components/layout/PageWrapper.vue
+src/vue/components/loaders/ActivitySpinner.vue
+src/vue/components/nav/navbar/NavbarBrand.vue
+src/vue/components/projects/ProjectInfo.vue
+src/vue/components/widgets/CircleIcon.vue
+src/vue/components/widgets/FilterTabs.vue
+src/vue/components/widgets/Spinner.vue
+src/vue/components/widgets/XLButton.vue
+
+\033[1;33mTotal de archivos afectados: 21\033[0m
+
+
+═══════════════════════════════════════════════════════════════════
+\033[0;34m📄 Resultados guardados en:\033[0m docs/migration/xxxl_references_20260109_184132.txt
+═══════════════════════════════════════════════════════════════════

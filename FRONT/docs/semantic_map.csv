@@ -1,0 +1,12 @@
+excel_column,suggested_semantic,suggested_table,detected_types,null_ratio,notes
+N°,source_row,imports,integer,0.029,
+Resistencias,resistor,items,float|integer,0.029,mixed_types
+Capacitores Ceramicos,capacitor_ceramic,items,integer,0.561,high_null_ratio
+Capacitores Electrolíticos,capacitor_electrolytic,items,text|float|integer,0.884,"mixed_types,high_null_ratio"
+Transistores,transistor,items,text,0.289,
+Ic's,ic,items,text|integer,0.0,mixed_types
+Diodos,diode,items,text|date,0.832,"mixed_types,high_null_ratio"
+Diodo Led,led,items,text,0.913,"multi_value,high_null_ratio"
+otros,other,items,text,0.468,multi_value
+herramientas taller,tool,items,text,0.48,
+insumos taller,supply,items,text,0.78,high_null_ratio

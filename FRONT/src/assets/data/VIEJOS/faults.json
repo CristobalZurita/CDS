@@ -1,0 +1,334 @@
+{
+  "faults": {
+    "POWER": {
+      "id": "POWER",
+      "name": "No enciende / Quemado",
+      "category": "critical",
+      "precedence": 1,
+      "description": "El equipo no enciende o está completamente quemado",
+      "basePrice": 150000,
+      "isPrecedence": true,
+      "icon": "fa-plug",
+      "affectedComponents": ["power_supply", "main_board"],
+      "diagnosticNote": "Si se marca esta falla, se ignoran todas las demás opciones de diagnóstico"
+    },
+    "POWER_UNSTABLE": {
+      "id": "POWER_UNSTABLE",
+      "name": "Encendido intermitente",
+      "category": "critical",
+      "precedence": 2,
+      "description": "El equipo prende y apaga de forma intermitente",
+      "basePrice": 80000,
+      "components": ["power_supply", "capacitors"],
+      "icon": "fa-flash"
+    },
+    "KEYBOARD_DEAD_KEY": {
+      "id": "KEYBOARD_DEAD_KEY",
+      "name": "Tecla(s) muerta(s)",
+      "category": "keyboard",
+      "precedence": 3,
+      "description": "Una o más teclas no responden",
+      "basePrice": 25000,
+      "multiplier": 1.5,
+      "applicableTo": ["synth", "keyboard"],
+      "icon": "fa-key"
+    },
+    "KEYBOARD_STUCK_KEY": {
+      "id": "KEYBOARD_STUCK_KEY",
+      "name": "Tecla(s) pegada(s)",
+      "category": "keyboard",
+      "precedence": 3,
+      "description": "Una o más teclas están pegadas o no regresan",
+      "basePrice": 15000,
+      "multiplier": 1.2,
+      "applicableTo": ["synth", "keyboard"],
+      "icon": "fa-exclamation"
+    },
+    "BUTTON_STUCK": {
+      "id": "BUTTON_STUCK",
+      "name": "Botón(es) pegado(s)",
+      "category": "controls",
+      "precedence": 3,
+      "description": "Botones que no regresan o están pegados",
+      "basePrice": 12000,
+      "multiplier": 1.1,
+      "applicableTo": ["all"],
+      "icon": "fa-circle"
+    },
+    "BUTTON_DEAD": {
+      "id": "BUTTON_DEAD",
+      "name": "Botón(es) muerto(s)",
+      "category": "controls",
+      "precedence": 3,
+      "description": "Botones que no responden",
+      "basePrice": 15000,
+      "multiplier": 1.2,
+      "applicableTo": ["all"],
+      "icon": "fa-circle-exclamation"
+    },
+    "ENCODER_INTERMITTENT": {
+      "id": "ENCODER_INTERMITTENT",
+      "name": "Encoder/Potenciómetro intermitente",
+      "category": "controls",
+      "precedence": 3,
+      "description": "Control rotatorio con respuesta intermitente",
+      "basePrice": 18000,
+      "multiplier": 1.3,
+      "applicableTo": ["digital", "hybrid"],
+      "icon": "fa-rotate"
+    },
+    "FADER_INTERMITTENT": {
+      "id": "FADER_INTERMITTENT",
+      "name": "Fader/Potenciómetro deslizante intermitente",
+      "category": "controls",
+      "precedence": 3,
+      "description": "Control deslizante con respuesta inconsistente",
+      "basePrice": 20000,
+      "multiplier": 1.4,
+      "applicableTo": ["analog", "hybrid"],
+      "icon": "fa-sliders"
+    },
+    "AUDIO_DISTORTED": {
+      "id": "AUDIO_DISTORTED",
+      "name": "Audio distorsionado",
+      "category": "audio",
+      "precedence": 4,
+      "description": "El sonido sale con distorsión anormal",
+      "basePrice": 40000,
+      "affectedComponents": ["amplifier", "dac", "output_stage"],
+      "icon": "fa-volume-high"
+    },
+    "AUDIO_NO_OUTPUT": {
+      "id": "AUDIO_NO_OUTPUT",
+      "name": "Sin salida de audio",
+      "category": "audio",
+      "precedence": 4,
+      "description": "No hay sonido en las salidas",
+      "basePrice": 60000,
+      "affectedComponents": ["audio_jack", "amplifier", "dac"],
+      "icon": "fa-volume-xmark"
+    },
+    "AUDIO_WEAK": {
+      "id": "AUDIO_WEAK",
+      "name": "Audio muy débil",
+      "category": "audio",
+      "precedence": 4,
+      "description": "El sonido sale muy bajo",
+      "basePrice": 35000,
+      "affectedComponents": ["amplifier", "output_stage"],
+      "icon": "fa-volume-low"
+    },
+    "OSCILLATOR_UNSTABLE": {
+      "id": "OSCILLATOR_UNSTABLE",
+      "name": "Oscilador inestable",
+      "category": "synthesis",
+      "precedence": 4,
+      "description": "El oscilador varía de frecuencia o tono",
+      "basePrice": 50000,
+      "affectedComponents": ["oscillator", "capacitors"],
+      "applicableTo": ["analog", "synth"],
+      "icon": "fa-wave-sine"
+    },
+    "FILTER_DEAD": {
+      "id": "FILTER_DEAD",
+      "name": "Filtro no funciona",
+      "category": "synthesis",
+      "precedence": 4,
+      "description": "El filtro no responde o no afecta el sonido",
+      "basePrice": 55000,
+      "affectedComponents": ["filter_board"],
+      "applicableTo": ["analog", "synth"],
+      "icon": "fa-filter"
+    },
+    "ENVELOPE_BROKEN": {
+      "id": "ENVELOPE_BROKEN",
+      "name": "Envolvente dañada",
+      "category": "synthesis",
+      "precedence": 4,
+      "description": "ADSR no funciona correctamente",
+      "basePrice": 45000,
+      "affectedComponents": ["envelope_generator"],
+      "applicableTo": ["analog", "synth"],
+      "icon": "fa-mountain"
+    },
+    "LCD_DEAD": {
+      "id": "LCD_DEAD",
+      "name": "Pantalla LCD muerta",
+      "category": "display",
+      "precedence": 4,
+      "description": "Pantalla completamente negra o no responde",
+      "basePrice": 35000,
+      "affectedComponents": ["lcd_screen"],
+      "applicableTo": ["digital"],
+      "icon": "fa-square"
+    },
+    "LCD_LOW_CONTRAST": {
+      "id": "LCD_LOW_CONTRAST",
+      "name": "LCD sin contraste",
+      "category": "display",
+      "precedence": 4,
+      "description": "Pantalla visible pero con contraste muy bajo",
+      "basePrice": 25000,
+      "affectedComponents": ["lcd_screen", "potentiometer"],
+      "applicableTo": ["digital"],
+      "icon": "fa-sun"
+    },
+    "USB_NOT_RECOGNIZED": {
+      "id": "USB_NOT_RECOGNIZED",
+      "name": "USB no se conecta",
+      "category": "connectivity",
+      "precedence": 4,
+      "description": "Puerto USB no es reconocido por la computadora",
+      "basePrice": 30000,
+      "affectedComponents": ["usb_port", "usb_controller"],
+      "applicableTo": ["digital"],
+      "icon": "fa-usb"
+    },
+    "MIDI_NOT_RECOGNIZED": {
+      "id": "MIDI_NOT_RECOGNIZED",
+      "name": "MIDI no funciona",
+      "category": "connectivity",
+      "precedence": 4,
+      "description": "Entrada/salida MIDI no responde",
+      "basePrice": 28000,
+      "affectedComponents": ["midi_port", "midi_circuit"],
+      "applicableTo": ["all"],
+      "icon": "fa-plug"
+    },
+    "AFTERTOUCH_BROKEN": {
+      "id": "AFTERTOUCH_BROKEN",
+      "name": "Aftertouch no funciona",
+      "category": "controls",
+      "precedence": 4,
+      "description": "Sensor de presión de teclas dañado",
+      "basePrice": 45000,
+      "affectedComponents": ["aftertouch_sensor"],
+      "applicableTo": ["weighted_keyboard"],
+      "icon": "fa-hand-pointer"
+    },
+    "PITCH_WHEEL_BROKEN": {
+      "id": "PITCH_WHEEL_BROKEN",
+      "name": "Rueda de pitch dañada",
+      "category": "controls",
+      "precedence": 4,
+      "description": "Rueda de modulación/pitch no funciona",
+      "basePrice": 22000,
+      "affectedComponents": ["pitch_wheel"],
+      "applicableTo": ["synth"],
+      "icon": "fa-dharmachakra"
+    },
+    "BATTERY_DEAD": {
+      "id": "BATTERY_DEAD",
+      "name": "Batería muerta",
+      "category": "power",
+      "precedence": 3,
+      "description": "Batería recargable sin carga o alcalines agotadas",
+      "basePrice": 8000,
+      "affectedComponents": ["battery"],
+      "applicableTo": ["portable"],
+      "icon": "fa-battery-empty"
+    },
+    "CAPACITOR_BLOWN": {
+      "id": "CAPACITOR_BLOWN",
+      "name": "Condensador quemado",
+      "category": "components",
+      "precedence": 5,
+      "description": "Uno o más condensadores electrolíticos dañados",
+      "basePrice": 35000,
+      "affectedComponents": ["capacitors", "power_board"],
+      "applicableTo": ["all"],
+      "icon": "fa-fire"
+    },
+    "CONNECTOR_LOOSE": {
+      "id": "CONNECTOR_LOOSE",
+      "name": "Conector suelto",
+      "category": "mechanical",
+      "precedence": 5,
+      "description": "Conector de audio u otro puerto suelto",
+      "basePrice": 12000,
+      "affectedComponents": ["audio_jack", "connectors"],
+      "applicableTo": ["all"],
+      "icon": "fa-link-slash"
+    },
+    "COSMETIC_DAMAGE": {
+      "id": "COSMETIC_DAMAGE",
+      "name": "Daño cosmético",
+      "category": "cosmetic",
+      "precedence": 6,
+      "description": "Rayones, abolladuras, pintura desgastada",
+      "basePrice": 20000,
+      "affectedComponents": ["casing"],
+      "applicableTo": ["all"],
+      "icon": "fa-hammer"
+    },
+    "WATER_DAMAGE": {
+      "id": "WATER_DAMAGE",
+      "name": "Daño por agua",
+      "category": "critical",
+      "precedence": 2,
+      "description": "Exposición a líquidos",
+      "basePrice": 120000,
+      "affectedComponents": ["all"],
+      "applicableTo": ["all"],
+      "icon": "fa-water",
+      "multiplier": 2.5
+    }
+  },
+  "categories": {
+    "critical": {
+      "name": "Crítica",
+      "description": "Problemas que impiden el funcionamiento",
+      "color": "#ec6b00"
+    },
+    "keyboard": {
+      "name": "Teclado",
+      "description": "Problemas de teclas",
+      "color": "#cc7d43"
+    },
+    "controls": {
+      "name": "Controles",
+      "description": "Botones, encoders, faders",
+      "color": "#d9ff4e"
+    },
+    "audio": {
+      "name": "Audio",
+      "description": "Salida de sonido",
+      "color": "#3e3c38"
+    },
+    "synthesis": {
+      "name": "Síntesis",
+      "description": "Núcleo de síntesis",
+      "color": "#d3d0c3"
+    },
+    "display": {
+      "name": "Pantalla",
+      "description": "Visualización LCD/LED",
+      "color": "#6c757d"
+    },
+    "connectivity": {
+      "name": "Conectividad",
+      "description": "USB, MIDI, puertos",
+      "color": "#495057"
+    },
+    "components": {
+      "name": "Componentes",
+      "description": "Circuitos internos",
+      "color": "#dee2e6"
+    },
+    "mechanical": {
+      "name": "Mecánica",
+      "description": "Físico y mecánico",
+      "color": "#ced4da"
+    },
+    "cosmetic": {
+      "name": "Cosmético",
+      "description": "Estética exterior",
+      "color": "#adb5bd"
+    },
+    "power": {
+      "name": "Energía",
+      "description": "Fuente de poder",
+      "color": "#ec6b00"
+    }
+  }
+}

@@ -1,0 +1,1944 @@
+Quiero que diseñes una base de datos relacional profesional para un taller de reparación electrónica de instrumentos musicales (sintetizadores, teclados, pedales, amplificadores).
+
+Condiciones OBLIGATORIAS (no omitas ninguna):
+
+1) Debe ser UNA sola base de datos.
+2) El motor debe ser SQLite.
+3) Debe entregarse como UN SOLO SCRIPT SQL ejecutable completo.
+4) La base debe servir simultáneamente para:
+   - gestión de reparaciones
+   - gestión de inventario / stock
+5) La REPARACIÓN debe ser el eje del modelo (todo se relaciona con ella).
+6) Debe existir separación clara entre:
+   - definición del componente (ficha técnica)
+   - stock del componente (cantidad, ubicación)
+7) No se permite una sola tabla genérica de “componentes”.
+8) Los componentes deben estar modelados por familias reales, como mínimo:
+   - resistencias
+   - capacitores
+   - inductores
+   - transformadores
+   - semiconductores discretos
+   - circuitos integrados
+   - potenciómetros
+   - switches
+   - conectores
+   - cables
+   - displays
+   - fuentes / potencia
+   - mecánica (teclas, faders, knobs)
+   - chasis / ferretería (tornillos, tuercas, separadores)
+   - consumibles / químicos (estaño, flux, alcohol)
+9) Cada familia debe tener campos técnicos propios (no solo texto genérico).
+10) El stock debe gestionarse en una tabla separada y referenciar al componente correcto.
+11) Debe permitir registrar qué componentes se usaron en cada reparación y en qué cantidad.
+12) Debe permitir registrar qué herramientas se usaron en cada reparación.
+13) No debe haber duplicación de información.
+14) El modelo debe poder crecer en el tiempo sin romperse.
+15) El resultado debe ser estrictamente técnico, sin explicaciones extensas ni texto de relleno.
+
+El resultado esperado:
+- Un único bloque de código SQL
+- Todas las tablas necesarias
+- Claves primarias y foráneas bien definidas
+- Listo para ejecutarse en DBeaver / SQLite
+
+
+### 1. MÓDULO DE TECLADO (KEYBED & ACTION)
+*(La parte más mecánica y propensa a desgaste)*
+
+#### 1.1 Teclas
+*   **Tecla Blanca** - Plástico (varias longitudes/despuntes según octava)
+*   **Tecla Negra** - Plástico (varias formas: cuadrada, estilo piano, estilo Hammond)
+*   **Tapas de Tecla** - Intercambiables (Para teclas dañadas)
+
+#### 1.2 Mecanismo de Contacto
+*   **Matriz de Goma (Rubber Dome)** - Contactos de carbón (Switch de membrana)
+*   **Buscador de Contacto (Keypad Contact Strip)** - PCB metálica con domos
+*   **Pasta de Restauración** - Para contactos de goma oxidados (Graphite)
+*   **Contactos de Oro (Gold Contacts)** - Para mecanismos pesados
+*   **Placa PCB de Escaneo** - Debajo del teclado (Matrix board)
+
+#### 1.3 Mecanismo de Acción (Pianos Ponderados/Sintetizadores)
+*   **Martillo (Hammer)** - Acción ponderada (Madera o plástico)
+*   **Palanca de Gatillo (Whippen)** - Mecanismo interno
+*   **Resortes de Retorno** - Para teclas
+*   **Feltro (Fieltro)** - Para amortiguación (varios grosores)
+*   **Contrapesos (Balance Weights)** - Plomo insertado en teclas frontales
+*   **Stop Felt** - Fieltro de parada
+*   **Bumpers de Silicona** - Tope inferior de tecla
+
+---
+
+### 2. INTERFAZ DE USUARIO (CONTROLES)
+*(Todo lo que el músico toca para editar sonido)*
+
+#### 2.1 Perillas y Mandos (Knobs)
+*   **Perilla Push-On** - Eje estriado (Splined), estilo Moog/Roland
+*   **Perilla de Tornillo** - Eje liso (D-Shaft), con set screw
+*   **Perilla Tipo "Skirted" (Falda)** - Cubre el eje
+*   **Perilla Golpeada (Knurled)** - Textura metálica
+*   **Perilla Slider** - Tapa de plástico para faders
+*   **Tapa de Encoders** - Often smaller or specific shape
+*   **Tampón / Botón de Goma (Rubber Button)** - Botones flexibles membrana
+*   **Indicador de Nivel (Pointer)** - Pequeña flecha de plástico sobre el pote
+
+#### 2.2 Potenciómetros y Faders
+*   **Pote Lineal (Slide Fader)** - 10k, 50k, 100k (Canales, Volumen maestro)
+*   **Pote Rotatorio** - Lineal (A), Logarítmico (C/B), Audio Taper
+*   **Encoder Rotativo Incremental** - Sin fin (Para control de parámetros digital)
+*   **Encoder con Push** - Encoder que también se presiona
+*   **Pote Dual / Estéreo** - Para control panorámico
+*   **Motorized Fader** - Fader con motor (Automatización)
+
+#### 2.3 Interruptores y Selectores
+*   **Botón de Panel (Panel Mount Switch)** - Momentáneo o Latch
+*   **Switch de Palanca (Toggle Switch)** - SPDT, DPDT
+*   **Switch de Palanca Miniatura** - Para funciones internas
+*   **DIP Switch** - Configuración de sistema (a veces externo)
+*   **Switch de Pala (Rocker Switch)** - Power o funciones
+
+---
+
+### 3. MÓDULO DE EXPRESIÓN
+*(Control de pitch y modulación extra)*
+
+#### 3.1 Ruedas y Joysticks
+*   **Ensamblaje de Rueda (Pitch Bend/Mod Wheel)** - Plástico, eje, óptico o potenciómetro integrado
+*   **Tapa de Rueda** - Parte exterior que se desgasta
+*   **Resorte de Retorno** - Para la rueda de Pitch Bend
+*   **Joystick (Stick Controller)** - Asignable (X/Y)
+*   **Potenciómetro de Joystick** - Cermet (gimbal)
+
+#### 3.2 Pedales y Conexión
+*   **Jack de Pedal (Sustain/Expression)** - 1/4" TS o TRS (Chasis o PCB)
+*   **Inversor de Polarity Switch** - Para pedal de sustain (en el cable o panel)
+*   **Pedal de Expresión** - Externo (Pieza de repuesto)
+*   **Pedal de Sustain** - Externo (Pieza de repuesto)
+
+---
+
+### 4. VISUALIZACIÓN Y PANEL
+*(Pantallas e indicadores)*
+
+#### 4.1 Pantallas (Displays)
+*   **LCD Monocromático** - Caracteres (16x2, 40x2)
+*   **LCD Gráfico** - Puntos (128x64, 240x64)
+*   **TFT LCD / OLED** - Pantallas a color modernas
+*   **Pantalla VFD** - Tubo de vacío fluorescente (Clásicos Nord/Yamaha)
+*   **Panel Táctil (Touch Panel)** - Vidrio con digitizer
+*   **Contraste Polarizador** - Para LCDs antiguos
+*   **Backlight (Retroiluminación)** - Tiras LED o Tubo CCFL
+*   **Inversor CCFL** - Driver de luz antigua
+
+#### 4.2 Indicadores (LEDs)
+*   **LED 3mm** - Panel mount (Panelado)
+*   **LED 5mm** - Panel mount
+*   **LED Difuso** - Para iluminación uniforme
+*   **LED Transparente** - Para botones con ventana
+*   **LED SMD** - Soldered directly to PCB
+*   **Lente LED / Portaleds** - Tubo de plástico colorado
+*   **Electroluminiscente (EL Backlight)** - Láminas de luz
+
+---
+
+### 5. ESTRUCTURA Y CHASIS
+*(Carrocería y soporte)*
+
+#### 5.1 Carrocería Externa
+*   **Chasis Metálico Inferior** - Base de acero/aluminio
+*   **Chasis Metálico Superior** - Carátula frontal (Punched metal)
+*   **End Cheeks (Pomos Laterales)** - Alas de madera o plástico (Estilo sintetizador)
+*   **Placa Posterior (Jack Plate)** - Chapa con perforaciones
+*   **Panel Superior Metálico** - Para controladores externos
+*   **Tapa de Ventilación** - Si aplica
+
+#### 5.2 Ferretería de Montaje
+*   **Tornillo Autotaladrante** - Para unir metal a plástico o chapa delgada
+*   **Tornillo Máquina** - 4-40, 6-32, M3 (Para unir PCBs)
+*   **Tuerca Hexagonal** - Para Potes y Jacks
+*   **Arandela de Presión** - Estrella (Lock washer)
+*   **Arandela Plana** - Semicircular o completa
+*   **Soporte (Standoff)** - Espaciador Hembra-Hembra o Macho-Hembra
+*   **Pies de Goma** - Rubber feet (Self-adhesive)
+*   **Bumper de Goma** - Protectors de esquina
+
+#### 5.3 Soporte Interno
+*   **Bandeja Teclado (Keybed Tray)** - Soporte metálico del teclado
+*   **Soporte de Placa (PCB Bracket)** - Ángulo de metal
+*   **Tornillo Torx / Pana** - Específicos de marca (Yamaha/Korg hex)
+
+---
+
+### 6. CONECTIVIDAD (PUERTOS)
+*(Puntos de entrada y salida)*
+
+#### 6.1 Audio
+*   **Jack 1/4" TRS** - Salida balanceada / Auriculares (Chasis o PCB)
+*   **Jack 1/4" TS** - Salida mono / Entrada Aux (Chasis o PCB)
+*   **Jack XLR** - Salida de micrófono (Rara en sintes, común en workstations)
+*   **Jack RCA** - Entradas auxiliares
+*   **Nut Hexagonal para Jack** - Tuerca ciega
+*   **Isolador Plástico** - Para jacks montados en chasis metálico (Hot/Chassis)
+
+#### 6.2 Datos y Control
+*   **DIN 5 Hembra (Socket)** - MIDI In/Out/Thru (Circuito metálico)
+*   **DIN 5 Plástico** - Económicos
+*   **USB B Socket** - Impresora tipo (Clásico)
+*   **USB Micro B Socket** - SMT o Through-hole
+*   **USB C Socket** - Modernos
+*   **Pedal Jack** - 1/4" TS/TRS (Sustain, Exp, Footswitch)
+
+#### 6.3 Potencia
+*   **IEC 320 C14 Inlet** - Conector de red (Computadora)
+*   **Portafusible IEC** - Conector con fusible integrado
+*   **Jack DC Barrel** - 5.5x2.1mm o 5.5x2.5mm (Chasis o PCB)
+*   **Terminal de Bloque** (Terminal Block) - Para cableado interno de AC
+
+---
+
+### 7. COMPONENTES INTERNOS (SUB-ENSAMBLES)
+*(Placas principales y cableado)*
+
+#### 7.1 Cableado Interno
+*   **Cable Cinta (Ribbon Cable)** - Diferentes anchos (10, 14, 16, 20, 26, 34, 40 vías)
+*   **Conector IDC** - Housing para ribbon cable (Recto o Angulado)
+*   **Cable Blindado Multiconductor** - Para cables de audio internos
+*   **Jumper Wire** - Cable punto a punto
+
+#### 7.2 Circuitos Impresos (PCBs)
+*   **Placa Madre (Mainboard)** - CPU, Sintesis
+*   **Placa de Salidas (Output Board)** - Jacks, amplificadores de auriculares
+*   **Placa de Teclado (Keybed PCB)** - Montada en el teclado
+*   **Placa de Panel (Front Panel PCB)** - Botones, LEDs
+*   **Placa de Potencia (Power Supply Board)** - Reguladores, transformador
+*   **Placa de Controladores (Controller PCB)** - Ruedas, Joystick
+
+#### 7.3 Componentes de Montaje en PCB
+*   **Header Pin Macho** - Para recibir cables ribbon
+*   **Header Pin Hembra** - Para conectar sub-placas
+*   **Jumper Shunt** - Tapas para configuración
+*   **DIP Socket** - Para ICs (ZIF o Standard)
+*   **Transformador de Voltaje** - Principal
+*   **Disipador de Calor** - Para reguladores y amplificadores
+
+
+
+```sql
+-- =============================================
+-- CIRUJANO DE SINTETIZADORES - INVENTARIO DE HERRAMIENTAS
+-- Base de datos: SQLite (herramientas_cirujano.db)
+-- Ejecutar en DBeaver o SQLite Browser
+-- =============================================
+
+-- =============================================
+-- PASO 1: ELIMINAR TABLAS EXISTENTES (SI LAS HAY)
+-- =============================================
+DROP TABLE IF EXISTS tool_maintenance_logs;
+DROP TABLE IF EXISTS tools;
+DROP TABLE IF EXISTS storage_locations;
+DROP TABLE IF EXISTS tool_categories;
+DROP TABLE IF EXISTS tool_brands;
+
+-- =============================================
+-- PASO 2: CREAR TABLAS
+-- =============================================
+
+-- MARCAS DE HERRAMIENTAS
+CREATE TABLE tool_brands (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    country TEXT,
+    website TEXT,
+    is_active INTEGER DEFAULT 1
+);
+
+-- CATEGORÍAS DE HERRAMIENTAS
+CREATE TABLE tool_categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    description TEXT,
+    is_active INTEGER DEFAULT 1
+);
+
+-- UBICACIONES DE ALMACENAMIENTO
+CREATE TABLE storage_locations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    type TEXT CHECK(type IN ('banco_de_trabajo', 'armario', 'carrito', 'caja_portatil')),
+    description TEXT
+);
+
+-- HERRAMIENTAS (ACTIVOS DEL TALLER)
+CREATE TABLE tools (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code TEXT UNIQUE, -- Código interno de activo
+    name TEXT NOT NULL,
+    model TEXT,
+    brand_id INTEGER,
+    category_id INTEGER,
+    location_id INTEGER,
+    
+    -- Especificaciones
+    serial_number TEXT,
+    specifications TEXT, -- Detalles técnicos (ej: "100MHz", "30V 5A")
+    
+    -- Estado y Mantenimiento
+    status TEXT DEFAULT 'disponible' CHECK(status IN (
+        'disponible', 
+        'en_uso', 
+        'mantenimiento', 
+        'calibracion_vencida', 
+        'daniado', 
+        'prestado'
+    )),
+    requires_calibration INTEGER DEFAULT 0, -- 0 = No, 1 = Sí
+    last_calibration_date DATE,
+    next_calibration_date DATE,
+    
+    -- Económico
+    purchase_price REAL,
+    purchase_date DATE,
+    warranty_expiry DATE,
+    
+    -- Multimedia y Notas
+    image_url TEXT,
+    manual_url TEXT,
+    notes TEXT,
+    
+    -- Auditoría
+    is_active INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (brand_id) REFERENCES tool_brands(id),
+    FOREIGN KEY (category_id) REFERENCES tool_categories(id),
+    FOREIGN KEY (location_id) REFERENCES storage_locations(id)
+);
+
+-- HISTORIAL DE MANTENIMIENTO DE HERRAMIENTAS
+CREATE TABLE tool_maintenance_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tool_id INTEGER NOT NULL,
+    action_type TEXT CHECK(action_type IN ('calibracion', 'reparacion', 'limpieza', 'verificacion')),
+    description TEXT,
+    cost REAL,
+    performed_by TEXT, -- Técnico o empresa externa
+    performed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    next_action_date DATE,
+    FOREIGN KEY (tool_id) REFERENCES tools(id)
+);
+
+-- =============================================
+-- PASO 3: CREAR ÍNDICES PARA RENDIMIENTO
+-- =============================================
+CREATE INDEX idx_tools_category ON tools(category_id);
+CREATE INDEX idx_tools_brand ON tools(brand_id);
+CREATE INDEX idx_tools_location ON tools(location_id);
+CREATE INDEX idx_tools_status ON tools(status);
+CREATE INDEX idx_calibration_due ON tools(next_calibration_date) WHERE requires_calibration = 1;
+
+-- =============================================
+-- PASO 4: DATOS INICIALES
+-- =============================================
+
+-- Marcas de Herramientas
+INSERT INTO tool_brands (name, country) VALUES 
+('Fluke', 'USA'),
+('Keysight', 'USA'),
+('Tektronix', 'USA'),
+('Rigol', 'China'),
+('Siglent', 'China'),
+('Hakko', 'Japón'),
+('Weller', 'Alemania/USA'),
+('Quick', 'Taiwán'),
+('JBC', 'España'),
+('Unitron', 'China'),
+('iFixit', 'USA'),
+('Wiha', 'Alemania'),
+('Knipex', 'Alemania'),
+('Proxxon', 'Alemania'),
+('Tenma', 'China'),
+('Mastech', 'China'),
+('Greenlee', 'USA'),
+('Klein Tools', 'USA'),
+('Velleman', 'Bélgica'),
+('Seeed Studio', 'China'),
+('B&K Precision', 'USA');
+
+-- Categorías de Herramientas
+INSERT INTO tool_categories (name, description) VALUES 
+('Instrumentación de Medición', 'Osciloscopios, Multímetros, Analizadores'),
+('Soldadura y Retrabajo', 'Estaciones de soldar, Aire caliente, Fundentes'),
+('Fuentes de Alimentación', 'Fuentes de laboratorio, Variacs, Cargas'),
+('Mecanizado y Fabricación', 'CNC, Impresoras 3D, Taladros, Sierra'),
+('Herramientas de Mano', 'Destornilladores, Alicates, Cortadores'),
+('Seguridad y Limpieza', 'ESD, Extractor de humo, Limpieza química'),
+('Óptica e Inspección', 'Microscopios, Lupas, Cámaras térmicas');
+
+-- Ubicaciones
+INSERT INTO storage_locations (name, type, description) VALUES 
+('Banco de Medición Principal', 'banco_de_trabajo', 'Sitio principal para osciloscopios y generadores'),
+('Carrito de Soldadura', 'carrito', 'Estaciones de soldar y aire caliente'),
+('Armario de Pruebas Eléctricas', 'armario', 'Multímetros, pinzas y cargas'),
+('Mesa de Mecanizado', 'banco_de_trabajo', 'Zona de CNC y herramientas manuales'),
+('Caja de Herramientas Móvil', 'caja_portatil', 'Herramientas para trabajo a domicilio'),
+('Almacén de Seguridad', 'armario', 'Equipos sensibles y repuestos de valor');
+
+-- HERRAMIENTAS DETALLADAS (INVENTARIO INICIAL)
+
+-- 1. INSTRUMENTACIÓN DE MEDICIÓN
+INSERT INTO tools (code, name, model, brand_id, category_id, location_id, specifications, status, requires_calibration) VALUES 
+('OSC-ANA-01', 'Osciloscopio Análogo 2 Canales', '2245A', 3, 1, 1, '100MHz, 4 Canales (Nota: Pedido 2 canales, modelo tiene 4), Cursor digital', 'disponible', 1),
+('OSC-DIG-01', 'Osciloscopio Digital 4 Canales', 'DS1054Z', 4, 1, 1, '50MHz (Hackeable a 100MHz), 12Mpts, Decodificación Serial', 'disponible', 1),
+('OSC-PRT-01', 'Osciloscopio Digital Portátil', 'DSO Nano', 20, 1, 5, '1 Canal, 200kHz, Batería recargable', 'disponible', 1),
+('MULT-PRE-01', 'Multímetro de Precisión (Banco)', '8846A', 1, 1, 2, '6.5 Digitos, True RMS, Dual Display', 'disponible', 1),
+('MULT-GEN-01', 'Multímetro Uso General', '117', 1, 1, 2, 'CAT III 600V, True RMS, Min/Max/Avg', 'disponible', 1),
+('MULT-CMP-01', 'Multímetro de Componentes', 'LCR Meter T7', 16, 1, 2, 'LCR + ESR Meter, Prueba in-circuit', 'disponible', 1),
+('MULT-AMP-01', 'Pinza Amperimétrica', '902', 19, 1, 2, 'AC/DC, 1000A, Salida mV para Scope', 'disponible', 1),
+('IMG-TER-01', 'Cámara Térmica', 'Thermal Imager', 15, 1, 1, 'Resolución 220x160, Rango -20°C a +300°C', 'disponible', 1),
+('SIG-GEN-01', 'Generador de Funciones/Arbitrario', 'SDG1025', 5, 1, 1, '25MHz, DDS, 2 Canales', 'disponible', 1),
+('LOG-ANA-01', 'Analizador Lógico USB', 'Saleae Logic 8', 21, 1, 1, '8 Canales, 100MS/s, Decodificación MIDI/I2C', 'disponible', 0),
+('FREQ-CNT-01', 'Contador de Frecuencia', 'Universal Counter', 21, 1, 1, '10Hz - 2.4GHz, Alta precisión', 'disponible', 1);
+
+-- 2. SOLDADURA Y RETRABAJO
+INSERT INTO tools (code, name, model, brand_id, category_id, location_id, specifications, status, notes) VALUES 
+('SOL-DIG-01', 'Estación de Soldadura Digital', 'FX-951', 6, 2, 2, 'Potencia 70W, Control Sleep, TIP Temps', 'disponible', 'Hakko estándar de la industria'),
+('SOL-HOT-01', 'Estación de Aire Caliente', 'Quick 861DW', 4, 2, 2, 'Potencia 1000W, 3 Memorias de aire', 'disponible', 'Pistola de reposo automático'),
+('SOL-VAC-01', 'Estación de Desoldadura por Vacío', 'FR-810B', 6, 2, 2, 'Pistola de vacío integrada, Filtro cerámico', 'disponible', NULL),
+('SOL-GUN-01', 'Pistola de Soldar Potencia', 'Weller 8200', 2, 2, 2, '140W/100W, Bipositional', 'disponible', 'Para chasis y masas térmicas'),
+('ACC-WICK-01', 'Mecha de Desoldar (Solda Wick)', 'Rosin Core 2.0mm', 0, 2, 2, 'Carrete de cobre con flux', 'disponible', 'Consumible'),
+('ACC-FLUX-01', 'Flux Líquido (No Clean)', 'RA-Flux', 0, 2, 2, 'Botella con pincel aplicador', 'disponible', 'Consumible'),
+('ACC-PUMP-01', 'Soplador de Soldadura Manual', 'Soldapullt', 0, 2, 2, 'Antiestático, Boquilla PTFE', 'disponible', NULL);
+
+-- 3. MAQUINARIA Y FABRICACIÓN (CNC)
+INSERT INTO tools (code, name, model, brand_id, category_id, location_id, specifications, status) VALUES 
+('MAC-CNC-01', 'CNC Completa para PCB', '3018 PRO', 14, 3, 4, 'Ejes XYZ, Husillo 775, GRBL Control', 'disponible'),
+('MAC-DRILL-01', 'Taladro de Presión de Precisión', 'Micromo 2800', 14, 3, 4, 'Velocidad variable, Base de hierro fundido', 'disponible'),
+('MAC-3DP-01', 'Impresora 3D (FDM)', 'Ender 3', 21, 3, 4, 'Volumen 220x220x250mm, PLA/PETG', 'disponible'),
+('MAC-SAW-01', 'Sierra de Calar de Mesa', 'Scroll Saw', 0, 3, 4, 'Variable speed, Hojas para metal', 'disponible'),
+('MAC-CUT-01', 'Cortador de Tubos y Perfiles', 'Cutoff Saw', 0, 3, 4, 'Disco abrasivo 355mm', 'disponible');
+
+-- 4. FUENTES DE ALIMENTACIÓN Y CARGAS
+INSERT INTO tools (code, name, model, brand_id, category_id, location_id, specifications, status) VALUES 
+('PWR-LAB-01', 'Fuente de Laboratorio Doble', 'DP832', 5, 4, 2, '0-30V 0-3A x2 + USB 5V/3A (Tracking +/- 15V)', 'disponible'),
+('PWR-ISO-01', 'Variac (Autotransformador)', 'TDGC2-2KVA', 16, 4, 2, '0-250V AC, 2000VA, Salida universal', 'disponible'),
+('PWR-SAF-01', 'Transformador de Aislamiento', '1:1 Isolation', 17, 4, 2, '500VA, Entrada 220V, Salida 220V', 'disponible'),
+('PWR-DUM-01', 'Carga Electrónica (Dummy Load)', 'DL24M', 21, 4, 2, 'Max 120W, 4 Ohm / 8 Ohm / 16 Ohm', 'disponible'),
+('PWR-RES-01', 'Banco de Resistencias de Potencia', '100W Power Bank', 0, 4, 2, 'Aluminio, 4 Ohm x 2 (Canales estereo)', 'disponible');
+
+-- 5. HERRAMIENTAS MANUALES (Mecánica y Precisión)
+INSERT INTO tools (code, name, model, brand_id, category_id, location_id, specifications, status) VALUES 
+('MAN-JIS-01', 'Destornilladores JIS (Japoneses)', 'Vessel 900', 0, 5, 4, 'Juego #000, #00, #0, #1, #2', 'disponible'),
+('MAN-PRE-01', 'Destornilladores de Precisión', 'iFixit Mako', 11, 5, 4, '64 bits, Incluye Torx, Hex, Phillips', 'disponible'),
+('MAN-STD-01', 'Destornilladores Estándar', 'Wiha 326', 12, 5, 4, 'Juego Ergonomic, Pala/Phillips', 'disponible'),
+('MAN-ELE-01', 'Destornillador Eléctrico de Precisión', 'Xiaomi Wowstick', 0, 5, 4, 'Par de torque ajustable, LED', 'disponible'),
+('MAN-CUT-01', 'Alicates de Corte Diagonal', 'Knipex 78 71 125', 13, 5, 4, 'Punta semi-plana, Corte limpio', 'disponible'),
+('MAN-PLI-01', 'Alicates de Punta Fina', 'Knipex 00 20 04', 13, 5, 4, 'Largos (125mm), Asientos estriados', 'disponible'),
+('MAN-HEX-01', 'Juego de Llaves Allen', 'Wera Hex-Plus', 2, 5, 4, 'Ball-end, Largas y cortas, Caja imantada', 'disponible'),
+('MAN-STR-01', 'Llave Ciega (Basin Wrench)', 'Adjustable Wrench', 17, 5, 4, 'Para tuercas de potenciómetro en chasis', 'disponible'),
+('MAN-SPL-01', 'Kit de Palancas de Abrir (Spudgers)', 'Plastic Opening Tools', 11, 5, 5, 'Nylon y Metal, Antideslizante', 'disponible'),
+('MAN-EXT-01', 'Extractor de Tuercas de Potenciómetro', 'Potentiometer Nut Wrench', 0, 5, 4, 'Varios tamaños de cuchara', 'disponible');
+
+-- 6. SEGURIDAD, LIMPIEZA Y ÓPTICA
+INSERT INTO tools (code, name, model, brand_id, category_id, location_id, specifications, status) VALUES 
+('SAF-ESD-01', 'Kit de Protección ESD', 'ESD Kit', 11, 6, 1, 'Pulsera + Tapete + Cable de tierra', 'disponible'),
+('SAF-FUM-01', 'Extractor de Humos', 'Fume Extractor', 21, 6, 2, 'Filtro Carbón Activado, Flujo ajustable', 'disponible'),
+('OPT-MIC-01', 'Microscopio Digital', 'LCD Digital Microscope', 15, 7, 1, 'Zoom 10x-200x, Pantalla 3", Foto/Video', 'disponible'),
+('OPT-LUP-01', 'Lupa con Brazo Articulado', 'Helping Hand Mag', 0, 7, 1, 'Lente 5 dioptrías, Luz LED + UV', 'disponible'),
+('CLN-SPR-01', 'Limpiador de Contactos (Spray)', 'DeoxIT D5', 0, 6, 5, 'Aerosol 142g, Para Pots y Faders', 'disponible'),
+('CLN-BRU-01', 'Cepillo Antiestático', 'ESD Brush', 0, 6, 5, 'Cerdas suaves sintéticas', 'disponible');
+```
+
+```sql
+-- =====================================================================
+-- BASE DE DATOS ÚNICA Y COMPLETA (VERSIÓN FINAL)
+-- CIRUJANO DE SINTETIZADORES
+-- MOTOR: SQLite
+-- UN SOLO SCRIPT – EJECUTAR COMPLETO
+-- =====================================================================
+
+PRAGMA foreign_keys = ON;
+
+-- =====================================================================
+-- LIMPIEZA TOTAL
+-- =====================================================================
+DROP TABLE IF EXISTS repair_component_usage;
+DROP TABLE IF EXISTS repair_tool_usage;
+DROP TABLE IF EXISTS tool_maintenance_logs;
+DROP TABLE IF EXISTS repairs;
+DROP TABLE IF EXISTS devices;
+DROP TABLE IF EXISTS device_types;
+DROP TABLE IF EXISTS states;
+
+DROP TABLE IF EXISTS tools;
+DROP TABLE IF EXISTS tool_brands;
+DROP TABLE IF EXISTS tool_categories;
+DROP TABLE IF EXISTS storage_locations;
+
+DROP TABLE IF EXISTS components_stock;
+DROP TABLE IF EXISTS components_resistors;
+DROP TABLE IF EXISTS components_capacitors;
+DROP TABLE IF EXISTS components_inductors;
+DROP TABLE IF EXISTS components_transformers;
+DROP TABLE IF EXISTS components_semiconductors;
+DROP TABLE IF EXISTS components_ic;
+DROP TABLE IF EXISTS components_potentiometers;
+DROP TABLE IF EXISTS components_switches;
+DROP TABLE IF EXISTS components_connectors;
+DROP TABLE IF EXISTS components_cables;
+DROP TABLE IF EXISTS components_displays;
+DROP TABLE IF EXISTS components_power;
+DROP TABLE IF EXISTS components_mechanics;
+DROP TABLE IF EXISTS components_chassis;
+DROP TABLE IF EXISTS components_chemicals;
+
+-- =====================================================================
+-- ESTADOS Y TIPOS DE APARATO
+-- =====================================================================
+CREATE TABLE states (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE device_types (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL
+);
+
+-- =====================================================================
+-- APARATOS
+-- =====================================================================
+CREATE TABLE devices (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    device_type_id INTEGER NOT NULL,
+    brand TEXT NOT NULL,
+    model TEXT NOT NULL,
+    serial_number TEXT,
+    state_id INTEGER,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (device_type_id) REFERENCES device_types(id),
+    FOREIGN KEY (state_id) REFERENCES states(id)
+);
+
+-- =====================================================================
+-- REPARACIONES
+-- =====================================================================
+CREATE TABLE repairs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    device_id INTEGER NOT NULL,
+    opened_at DATETIME NOT NULL,
+    closed_at DATETIME,
+    description TEXT NOT NULL,
+    diagnosis TEXT,
+    result TEXT,
+    FOREIGN KEY (device_id) REFERENCES devices(id)
+);
+
+-- =====================================================================
+-- HERRAMIENTAS
+-- =====================================================================
+CREATE TABLE tool_brands (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    country TEXT
+);
+
+CREATE TABLE tool_categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE storage_locations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    type TEXT
+);
+
+CREATE TABLE tools (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code TEXT UNIQUE,
+    name TEXT NOT NULL,
+    model TEXT,
+    brand_id INTEGER,
+    category_id INTEGER,
+    location_id INTEGER,
+    serial_number TEXT,
+    specifications TEXT,
+    status TEXT,
+    requires_calibration INTEGER DEFAULT 0,
+    notes TEXT,
+    FOREIGN KEY (brand_id) REFERENCES tool_brands(id),
+    FOREIGN KEY (category_id) REFERENCES tool_categories(id),
+    FOREIGN KEY (location_id) REFERENCES storage_locations(id)
+);
+
+CREATE TABLE tool_maintenance_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tool_id INTEGER NOT NULL,
+    action_type TEXT,
+    description TEXT,
+    performed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (tool_id) REFERENCES tools(id)
+);
+
+-- =====================================================================
+-- STOCK CENTRAL
+-- =====================================================================
+CREATE TABLE components_stock (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    component_table TEXT NOT NULL,
+    component_id INTEGER NOT NULL,
+    stock INTEGER DEFAULT 0,
+    unit TEXT DEFAULT 'pcs',
+    location TEXT,
+    notes TEXT
+);
+
+-- =====================================================================
+-- COMPONENTES ELECTRÓNICOS
+-- =====================================================================
+
+CREATE TABLE components_resistors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    technology TEXT,
+    value_ohms REAL,
+    tolerance_percent REAL,
+    power_watts REAL,
+    voltage_volts REAL,
+    package TEXT,
+    series TEXT
+);
+
+CREATE TABLE components_capacitors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dielectric TEXT,
+    value_farads REAL,
+    voltage_volts REAL,
+    tolerance_percent REAL,
+    temperature_rating TEXT,
+    package TEXT,
+    polarity INTEGER
+);
+
+CREATE TABLE components_inductors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    value_henry REAL,
+    current_max REAL,
+    resistance_ohms REAL,
+    core_type TEXT,
+    package TEXT
+);
+
+CREATE TABLE components_transformers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    primary_voltage REAL,
+    secondary_voltage REAL,
+    power_va REAL,
+    type TEXT,
+    mounting TEXT
+);
+
+CREATE TABLE components_semiconductors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    semiconductor_type TEXT,
+    part_number TEXT,
+    polarity TEXT,
+    package TEXT,
+    voltage_max REAL,
+    current_max REAL,
+    power_max REAL
+);
+
+CREATE TABLE components_ic (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ic_type TEXT,
+    part_number TEXT,
+    function TEXT,
+    package TEXT,
+    voltage_supply REAL,
+    notes TEXT
+);
+
+-- =====================================================================
+-- CONTROLES Y UI
+-- =====================================================================
+
+CREATE TABLE components_potentiometers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    value_ohms REAL,
+    taper TEXT,
+    mount_type TEXT,
+    shaft_type TEXT,
+    notes TEXT
+);
+
+CREATE TABLE components_switches (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    switch_type TEXT,
+    poles INTEGER,
+    throws INTEGER,
+    mount_type TEXT,
+    notes TEXT
+);
+
+CREATE TABLE components_displays (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    display_type TEXT,
+    resolution TEXT,
+    interface TEXT,
+    voltage_volts REAL,
+    backlight TEXT
+);
+
+-- =====================================================================
+-- CONECTIVIDAD
+-- =====================================================================
+
+CREATE TABLE components_connectors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    connector_type TEXT,
+    format TEXT,
+    mount_type TEXT,
+    notes TEXT
+);
+
+CREATE TABLE components_cables (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cable_type TEXT,
+    conductors INTEGER,
+    gauge TEXT,
+    shielded INTEGER,
+    length_m REAL
+);
+
+-- =====================================================================
+-- POTENCIA
+-- =====================================================================
+
+CREATE TABLE components_power (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    power_type TEXT,
+    voltage REAL,
+    current REAL,
+    regulation TEXT,
+    notes TEXT
+);
+
+-- =====================================================================
+-- MECÁNICA Y CHASIS
+-- =====================================================================
+
+CREATE TABLE components_mechanics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    mechanic_type TEXT,
+    description TEXT,
+    material TEXT,
+    compatible_models TEXT
+);
+
+CREATE TABLE components_chassis (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_type TEXT,
+    size TEXT,
+    material TEXT,
+    notes TEXT
+);
+
+-- =====================================================================
+-- CONSUMIBLES / QUÍMICOS
+-- =====================================================================
+
+CREATE TABLE components_chemicals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    chemical_type TEXT,
+    brand TEXT,
+    purpose TEXT,
+    safety_notes TEXT
+);
+
+-- =====================================================================
+-- USO EN REPARACIONES
+-- =====================================================================
+
+CREATE TABLE repair_component_usage (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    repair_id INTEGER NOT NULL,
+    component_table TEXT NOT NULL,
+    component_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    FOREIGN KEY (repair_id) REFERENCES repairs(id)
+);
+
+CREATE TABLE repair_tool_usage (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    repair_id INTEGER NOT NULL,
+    tool_id INTEGER NOT NULL,
+    FOREIGN KEY (repair_id) REFERENCES repairs(id),
+    FOREIGN KEY (tool_id) REFERENCES tools(id)
+);
+
+-- =====================================================================
+-- FIN DEFINITIVO
+-- =====================================================================
+```
+
+
+
+
+Entendido. He revisado y expandido el documento radicalmente. He vuelto los puntos 1 y 2 (Pasivos) **extensos y detallados** con series de valores, potencias, voltajes y códigos. Por contra, he dejado los puntos 3 y 4 (Semiconductores) en un formato **listado conciso y directo**, pero añadiendo muchísimos más modelos de los que tenías antes.
+
+Aquí tienes la versión ampliada:
+
+---
+
+### 1. RESISTENCIAS (FIXED & VARIABLE)
+
+#### 1.1 Tipos de Construcción / Tecnología
+*   **Película de Carbón** (Carbon Film)
+    *   *Estándar:* E24 (5% tolerancia).
+    *   *Valores críticos (Ω):* 1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2 (y decenas/centenas: 10, 12, 15...).
+    *   *Potencia:* 1/4W, 1/2W, 1W, 2W.
+    *   *Tensión:* 250V - 350V máx.
+    *   *Uso:* Pull-ups, limitación de corriente general, restauración vintage.
+*   **Película Metálica** (Metal Film)
+    *   *Estándar:* E96 (1% tolerancia) para precisión.
+    *   *Serie E24 común:* 100R, 120R, 150R, 180R, 220R, 270R, 330R, 390R, 470R, 560R, 680R, 820R, 1k, 1.2k, 1.5k, 1.8k, 2.2k, 2.7k, 3.3k, 3.9k, 4.7k, 5.6k, 6.8k, 8.2k, 10k, 12k, 15k, 18k, 22k, 27k, 33k, 39k, 47k, 56k, 68k, 82k, 100k, 120k, 150k, 180k, 220k, 270k, 330k, 390k, 470k, 560k, 680k, 820k, 1M.
+    *   *Potencia:* 1/4W (0.6W máx), 1/2W (1W máx), 1W, 2W, 3W.
+    *   *Tensión:* Hasta 500V.
+    *   *Coeficiente de temp:* 50ppm, 25ppm (Precision).
+    *   *Uso:* VCFs, VCOs, etapas de audio críticas, división de voltaje.
+*   **Óxido Metálico** (Metal Oxide)
+    *   *Características:* No inflamable (flameproof), resistencia a pulsos.
+    *   *Valores:* 0.1R, 0.22R, 0.33R, 0.47R, 0.68R, 1R, 2.2R, 3.3R, 4.7R, 10R.
+    *   *Potencia:* 1W, 2W, 3W, 5W.
+    *   *Tensión:* Hasta 350V - 400V.
+*   **Bobinada / Devanada** (Wirewound)
+    *   *Valores:* 0.01Ω (10mΩ) hasta 100kΩ.
+    *   *Potencia:* 5W, 10W (cuerpo cuadrado), 20W (tubular aluminado), 25W, 50W.
+    *   *Tensión:* Baja resistencia vs Alta potencia.
+*   **Fusible**
+    *   *Características:* Resistencia que actúa como fusible, se abre permanentemente ante sobrecarga.
+    *   *Valores:* 0.1Ω, 0.22Ω, 0.47Ω, 1R.
+    *   *Potencia:* 0.5W, 1W, 2W, 3W.
+*   **Cemento**
+    *   *Construcción:* Resistencia bobinada encapsulada en cemento/cerámica.
+    *   *Valores:* 0.1Ω a 100kΩ.
+    *   *Potencia:* 5W, 7W, 10W, 20W.
+*   **Red / Array** (Resistor Network)
+    *   *Configuraciones:* SIP (Single Inline), DIP.
+    *   *Tipos:* Bussed (un pin común) o Isolated (independientes).
+    *   *Valores:* 10k x 4, 10k x 7, 10k x 9, 33k x 4, 100k x 4.
+    *   *Potencia:* 1/8W por elemento.
+*   **Shunt / Current Sense**
+    *   *Valores ultra bajos:* 0.001Ω (1mΩ), 0.005Ω (5mΩ), 0.01Ω (10mΩ).
+    *   *Potencia:* 1W, 2W, 3W, 5W (SMD y Through-hole).
+    *   *Tolerancia:* 1%, 0.5%, 0.25%.
+
+#### 1.2 Variables (Ajustables)
+*   **Potenciómetro Deslizante** (Fader)
+    *   *Ley:* Lineal (A/B) o Logarítmica (Audio).
+    *   *Valores (Ω):* 10k, 20k, 50k, 100k.
+    *   *Tamaño:* 45mm, 60mm, 100mm.
+*   **Potenciómetro Rotatorio** (Pote)
+    *   *Ley:* Lineal (B), Logarítmica (A), Anti-log (C - rara).
+    *   *Ejes:* Sólido (Split) 6mm, Estriado (Knurled).
+    *   *Doble:* Stereo (ganged).
+    *   *Valores (Ω):* 1k, 5k, 10k, 20k, 50k, 100k, 250k, 500k, 1M.
+    *   *Tensión:* 50V AC/DC para audio.
+*   **Trimmer / Trimpot**
+    *   *Tecnología:* Cermet (ajuste fino), Carbón (barato), Multi-giro (25 vueltas).
+    *   *Ajuste:* Top (superior), Side (lateral).
+    *   *Valores (Ω):* 100, 200, 500, 1k, 2k, 5k, 10k, 20k, 50k, 100k, 200k, 500k, 1M.
+*   **Reóstato**
+    *   *Potencia:* 3W, 5W, 10W, 25W.
+    *   *Valores:* Bajos (10Ω - 5kΩ).
+*   **Chips SMD** (Surface Mount)
+    *   *Tamaños:* 0201, 0402, 0603, 0805, 1206, 1210, 2010, 2512.
+    *   *Códigos comunes:*
+        *   R100 = 0.1Ω (1R)
+        *   1R00 = 1Ω
+        *   102 = 1kΩ
+        *   103 = 10kΩ
+        *   104 = 100kΩ
+        *   473 = 47kΩ
+        *   0 = 0Ω (Jumper).
+    *   *Potencia:* 1/16W, 1/10W, 1/8W, 1/4W, 1/2W, 1W, 2W.
+    *   *Tolerancia:* 1% (F), 5% (J).
+
+---
+
+### 2. CAPACITORES (FIXED & VARIABLE)
+
+#### 2.1 Tipos de Dieléctrico / Construcción
+*   **Electrolítico de Aluminio** (General Purpose)
+    *   *Tipo:* Radial (patas abajo) o Axial (patas a los lados).
+    *   *Temperatura:* 85°C (Estándar), 105°C (Alta fiabilidad).
+    *   *Valores (µF) - Tensiones (V):*
+        *   0.1µF (100nF): 25V, 50V.
+        *   0.47µF, 1µF, 2.2µF: 50V, 100V.
+        *   4.7µF: 16V, 25V, 50V, 100V.
+        *   10µF, 22µF, 33µF, 47µF: 16V, 25V, 35V, 50V, 63V.
+        *   100µF: 16V, 25V, 35V, 50V.
+        *   220µF, 330µF, 470µF: 16V, 25V, 35V, 50V, 63V.
+        *   1000µF, 2200µF, 4700µF: 10V, 16V, 25V, 35V, 50V.
+        *   6800µF, 10000µF: 10V, 16V, 25V, 35V.
+*   **Electrolítico SMD** (Chip Can)
+    *   *Valores:* 1µF, 2.2µF, 4.7µF, 10µF, 22µF, 47µF, 100µF, 220µF, 470µF.
+    *   *Códigos:* A, B, C, D, E, V (indican tamaño en mm).
+*   **Tántalo** (MnO2)
+    *   *Formato:* Radial (gota), SMD (moldeado).
+    *   *Valores:* 0.1µF, 0.22µF, 0.33µF, 0.47µF, 1µF, 2.2µF, 4.7µF, 10µF, 22µF, 47µF, 100µF.
+    *   *Tensiones:* 2.5V, 3.15V, 4V, 6.3V, 10V, 16V, 25V, 35V, 50V.
+    *   *Caso SMD:* 3216, 3528, 6032, 7343.
+*   **Cerámica Multicapa** (MLCC)
+    *   *Dieléctricos (Clase I/II):*
+        *   **C0G (NP0):** Ultra estable, baja pérdida. Valores: 1pF - 100nF. Tensiones: 50V, 100V, 500V, 1kV, 2kV, 3kV.
+        *   **X7R:** General propósito, tolerancia moderada. Valores: 100pF - 10µF. Tensiones: 6.3V, 10V, 16V, 25V, 50V, 100V, 250V, 630V.
+        *   **Y5V / Z5U:** Alta capacidad, inestable. Valores: 100nF - 10µF. Tensiones bajas (6.3V - 25V).
+    *   *Valores comunes (Código):* 101 (100pF), 102 (1nF), 103 (10nF), 104 (100nF), 105 (1µF), 106 (10µF).
+*   **Poliéster** (MKT / Mylar) - *Caja verde/roja*
+    *   *Valores:* 1nF, 2.2nF, 3.3nF, 4.7nF, 10nF, 15nF, 22nF, 33nF, 47nF, 68nF, 100nF (0.1µF), 150nF, 220nF, 330nF, 470nF, 680nF, 1µF.
+    *   *Tensiones:* 63V, 100V, 250V, 400V (RKP), 630V.
+    *   *Tolerancia:* 5% (J), 10% (K).
+*   **Polipropileno** (MKP) - *Caja rectangular/blanca o naranja*
+    *   *Valores:* 1nF, 2.2nF, 4.7nF, 10nF, 22nF, 33nF, 47nF, 100nF, 150nF, 220nF, 330nF, 470nF, 1µF, 2.2µF, 3.3µF, 4.7µF, 6.8µF, 10µF.
+    *   *Tensiones:* 250V, 275VAC, 400V, 630VAC (X2), 800V, 1000V, 1200V, 1600V, 2000V.
+    *   *Uso:* Snubbers, filtros de entrada, cruce activo, coupling de calidad.
+*   **Poliestireno** (KS) - *Caja transparente/roja*
+    *   *Valores:* 100pF - 47nF.
+    *   *Tensiones:* 50V, 63V, 100V, 160V, 250V, 400V, 630V.
+*   **Policarbonato** (KC) - *Amarillo/Lámina*
+    *   *Valores:* 100pF - 10µF.
+    *   *Tensiones:* 63V, 100V, 250V, 400V, 630V.
+*   **Mica** (Placas plateadas)
+    *   *Valores:* 1pF - 10nF.
+    *   *Tensiones:* 100V, 250V, 500V.
+    *   *Uso:* RF, Osciladores de alta precisión.
+*   **Variable / Trimmer**
+    *   *Tipo:* Aire (Aircap), Mica (Mica trimmer), Película (Plastic trimmer), Pistón.
+    *   *Valores:* 1.5-10pF, 2-20pF, 3-30pF, 5-60pF, 6-100pF, 10-150pF.
+    *   *Tensiones:* 100V, 250V, 500V.
+
+---
+
+### 3. SEMICONDUCTORES: TRANSISTORES
+*(Formato breve, listado extenso)*
+
+#### 3.1 BJT Propósito General (Small Signal - TO-92)
+2N3904, 2N3906, 2N2222, PN2222, 2N2907, PN2907, 2N4124, 2N4125, 2N4401, 2N4403, BC547, BC548, BC549, BC550, BC557, BC558, BC559, BC560, BC337, BC327, BC237, BC307, BC639, BC640, MPSA06, MPSA56, KSP2222, KSP2907, S9013, S9014, S9015, S9018, C1815, A1015, KSC945, KSA733, 2N2484, 2N5088, 2N5089, MPSA18, MPSA42, MPSA92.
+
+#### 3.2 BJT Potencia & Drivers (TO-126 / TO-220 / TO-247)
+BD139, BD140, BD135, BD136, BD237, BD238, MJE15030, MJE15031, MJE15032, MJE15033, TIP29, TIP30, TIP31, TIP32, TIP41, TIP42, TIP41C, TIP42C, TIP120, TIP121, TIP122 (Darlington), TIP125, TIP126, TIP127 (Darlington), 2N3055, MJ2955, 2N3771, 2N3772, 2N3773, 2N6287, 2N6288, 2N6289, MJ11015, MJ11016, 2SD667, 2SB647, 2SD882, 2SB772, 2SC2073, 2SA940, 2SC3280, 2SA1301, 2SC3856, 2SA1494.
+
+#### 3.3 Pares de Alta Fidelidad (Complementarios)
+2SC5200 / 2SA1943, 2SC3264 / 2SA1295, 2SC3858 / 2SA1494, 2SA1216 / 2SC2922 (Sankens), 2SA1186 / 2SC2837, 2SA1302 / 2SC3281, 2SA1941 / 2SC5198.
+
+#### 3.4 FET (JFET - TO-92 / SMD)
+J201, J202, J204, J210, J211, J212, J113, J114, J175, J176, J177, J270, 2N3819, 2N3820, 2N4117, 2N4118, 2N4119, 2N4338, 2N4339, 2N4340, 2N4341, 2N4342, 2N5114, 2N5115, 2N5116, 2N5265, 2N5266, 2N5267, 2N5358, 2N5457, 2N5458, 2N5459, 2N5460, 2N5461, 2N5462, 2N5484, 2N5485, 2N5486, MPF102, MPF103, MPF104, MPF105, MPF106, MPF107, 2SK30, 2SK30A, 2SK108, 2SK117, 2SK118, 2SK152, 2SK163, 2SK170, 2SK187, 2SK209, 2SK241, 2SK301, 2SK302, 2SK304, 2SK389, 2SJ74, 2SJ103, 2SJ108, 2SJ109, 2SJ112, 2SJ113, 2SJ161, 2SJ74, U304, U309, J310, J309, 2N5432, 2N5433, 2N5434.
+
+#### 3.5 MOSFET (Potencia y Switching - TO-220)
+IRF510, IRF511, IRF512, IRF520, IRF530, IRF540, IRF541, IRF610, IRF620, IRF630, IRF634, IRF640, IRF710, IRF720, IRF730, IRF740, IRF830, IRF840, IRF842, IRF848, IRF4905, IRF9540, IRF9541, IRF9610, IRF9620, IRF9630, IRF9640, IRFZ44N, IRFZ34N, IRFZ14, IRFZ24, IRFZ44, IRFZ48, IRFZ46N, IRF3205, IRF3710, IRF1404, IRF2807, IRF3205, BUZ10, BUZ11, BUZ20, BUZ21, BUZ22, BUZ23, BUZ30, BUZ31, BUZ41, BUZ71, BUZ72, BUZ90, BUZ91, BUZ100, BUZ101, BS170, BS250, 2N7000, 2N7002, VN10KM, VN2212, VN2222, IRLZ44N, IRLZ34N, IRLZ14, IRLZ24, IRLD024, IRLML2502, 2SK1058, 2SJ162, 2SK1057, 2SJ162, 2SK214, 2SJ77, 2SK216, 2SJ79, 2SK176, 2SJ56.
+
+---
+
+### 4. SEMICONDUCTORES: CIRCUITOS INTEGRADOS (ICs)
+*(Formato breve, listado extenso)*
+
+#### 4.1 Amplificadores Operacionales & Audio (Op-Amps)
+TL071, TL072, TL074, TL081, TL082, TL084, TL061, TL062, TL064, NE5532, NE5534, RC4558, RC4559, RC4560, RC4580, LM741, LM748, LM301, LM1458, LM358, LM358N, LM2904, LM324, LM833, LM393, LF351, LF353, LF347, LF411, LF412, OPA2134, OPA2604, OPA227, OPA228, OPA275, OPA134, OPA4134, OPA4131, AD711, AD712, AD713, AD826, AD8021, AD823, AD843, AD844, AD8610, AD8605, AD8065, AD8099, OPA627, OPA637, OPA690, LM4562, LME49720, LME49710, LME49740, LME49860, NJM4558, NJM4558D, NJM4560, NJM4565, NJM2068, NJM2114, NJM5532, JRC4558, JRC4560, JRC2068, M5218, M5218P, MC33171, MC33172, MC33173, MC33174, MC33178, MC33179, MC33078, MC33079, MC34071, MC34072, MC34073, MC34074, MAX410, MAX427, MAX428, MAX4475, CA3140, CA3130, CA3080, CA3094, HA17741, HA17358.
+
+#### 4.2 Reguladores de Voltaje
+L7805, L7806, L7808, L7809, L7812, L7815, L7818, L7824, L7905, L7906, L7908, L7912, L7915, L7918, L7924, LM7805, LM7812, LM7815, LM7905, LM7912, LM7915, 78L05, 78L08, 78L12, 78L15, 79L05, 79L12, 79L15, LM317, LM337, LM338, LM350, LM2940 (5V, 8V, 9V, 12V, 15V), LM1117 (1.8V, 2.5V, 3.3V, 5V, Adj), AMS1117 (1.2, 1.5, 1.8, 2.5, 3.3, 5.0, Adj), LT1083, LT1084, LT1085, LT1086, LM2576 (5, 12, Adj), LM2596 (3.3, 5, 12, Adj), LM2679, LM2937, UA78Mxx, UA79Mxx, MC7800, MC7900, TPS7350, LP2950, LP2951, MAX663, MAX664, MAX666, MIC29150, MIC29300, AS1117, AP1117, LM2984.
+
+#### 4.3 Amplificadores de Potencia (Power Amps)
+LM386N-1, LM386N-3, LM386N-4, LM380, LM384, LM390, LM1875, LM1876, LM3886, LM4780, TDA2003, TDA2004, TDA2005, TDA2009, TDA2030, TDA2030A, TDA2040, TDA2050, TDA2051, TDA2052, TDA7240, TDA7265, TDA7267, TDA7293, TDA7294, TDA7295, TDA7296, TDA7498, TDA7498E (Class D), TDA7499, TDA7313, TDA7317, TDA7318, TDA7388, TDA7850, TDA7851, TDA7560, STA540, LA4440, LA4445, LA4508, LA4570, LA4750, TA7222AP, TA7240AP, TA7250, TA7270, TA8205, TA8210, TA8250, TA8225, AN7148, AN7149, AN7154, AN7156, AN7168, AN7178, STK4024, STK4028, STK4030, STK4036, STK4038, STK4044, STK4046, STK4048, STK4101, STK4111, STK4121, STK4131, STK4141, STK4151, STK4161, STK4171, STK4191, STK4201, STK4231.
+
+#### 4.4 Lógica Digital (CMOS - CD4xxx & HEF4xxx)
+CD4000, CD4001, CD4002, CD4006, CD4007, CD4008, CD4009, CD4010, CD4011, CD4012, CD4013, CD4014, CD4015, CD4016, CD4017, CD4018, CD4019, CD4020, CD4021, CD4022, CD4023, CD4024, CD4025, CD4026, CD4027, CD4028, CD4029, CD4030, CD4031, CD4032, CD4033, CD4034, CD4035, CD4040, CD4041, CD4042, CD4043, CD4044, CD4046, CD4047, CD4048, CD4049, CD4050, CD4051, CD4052, CD4053, CD4060, CD4063, CD4066, CD4067, CD4068, CD4069, CD4070, CD4071, CD4072, CD4073, CD4075, CD4076, CD4077, CD4078, CD4081, CD4082, CD4085, CD4086, CD4089, CD4093, CD4094, CD4095, CD4096, CD4097, CD4098, CD4099, CD40100, CD40101, CD40102, CD40103, CD40104, CD40105, CD40106, CD40107, CD40108, CD40109, CD40110, CD40147, CD40160, CD40161, CD40162, CD40163, CD40174, CD40175, CD40181, CD40182, CD40192, CD40193, CD40194, CD40195, CD40208, CD40208, CD40240, CD40245, CD40257, CD40257, CD40298, CD4502, CD4503, CD4504, CD4508, CD4510, CD4511, CD4512, CD4514, CD4515, CD4516, CD4517, CD4518, CD4519, CD4520, CD4521, CD4522, CD4526, CD4527, CD4528, CD4529, CD4532, CD4534, CD4536, CD4538, CD4541, CD4543, CD4544, CD4547, CD4549, CD4551, CD4553, CD4554, CD4555, CD4556, CD4557, CD4558, CD4559, CD4560, CD4561, CD4562, CD4566, CD4568, CD4569, CD4572, CD4573, CD4574, CD4581, CD4583, CD4584, CD4585, CD4590, CD4599, HEF4001, HEF4011, HEF4013, HEF4017, HEF4021, HEF4046, HEF4049, HEF4050, HEF4051, HEF4052, HEF4053, HEF4060, HEF4066, HEF4069, HEF4071, HEF4081, HEF4093, HEF4511, HEF4514, HEF4520, HEF4538, HEF4543, HEF4584, HCF4001, HCF4013, HCF4017, HCF4046, HCF4060, HCF4066, HCF4069, HCF4093, HCF4511, HCF4520, HCF4538, HCF4543, HCF4584.
+
+#### 4.5 Lógica Digital (TTL & CMOS 74xxx)
+74L00, 74LS00, 74ALS00, 74F00, 74HC00, 74HCT00, 74AHC00, 74LV00, 74LVC00, 74ABT00, 74ACT00, 74L01, 74LS01, 74ALS01, 74F01, 74L02, 74LS02, 74ALS02, 74F02, 74HC02, 74HCT02, 74AHC02, 74LVC02, 74ABT02, 74ACT02, 74L03, 74LS03, 74ALS03, 74F03, 74HC03, 74AHC03, 74LVC03, 74L04, 74LS04, 74ALS04, 74F04, 74HC04, 74HCT04, 74AHC04, 74LV04, 74LVC04, 74ABT04, 74ACT04, 74HC05, 74HCT05, 74LVC05, 74AC05, 74L07, 74LS07, 74ALS07, 74HC07, 74LVC07, 74L08, 74LS08, 74ALS08, 74F08, 74HC08, 74HCT08, 74AHC08, 74LV08, 74LVC08, 74ABT08, 74ACT08, 74L09, 74LS09, 74ALS09, 74F09, 74HC09, 74AHC09, 74LVC09, 74L10, 74LS10, 74ALS10, 74F10, 74HC10, 74HCT10, 74AHC10, 74LVC10, 74ABT10, 74ACT10, 74L11, 74LS11, 74ALS11, 74F11, 74HC11, 74HCT11, 74AHC11, 74LV11, 74LVC11, 74ABT11, 74ACT11, 74L12, 74LS12, 74ALS12, 74F12, 74HC12, 74AHC12, 74L13, 74LS13, 74ALS13, 74F13, 74HC13, 74AHC13, 74LVC13, 74ACT13, 74L14, 74LS14, 74ALS14, 74F14, 74HC14, 74HCT14, 74AHC14, 74LV14, 74LVC14, 74ABT14, 74ACT14, 74L15, 74LS15, 74ALS15, 74F15, 74HC15, 74AHC15, 74LVC15, 74ACT15, 74L16, 74LS16, 74ALS16, 74HC16, 74LVC16, 74L17, 74LS17, 74ALS17, 74HC17, 74L18, 74LS19, 74LS21, 74ALS21, 74F21, 74HC21, 74AHC21, 74LVC21, 74ABT21, 74ACT21, 74L22, 74LS22, 74ALS22, 74F22, 74HC22, 74AHC22, 74LVC22, 74ACT22, 74L26, 74LS26, 74ALS26, 74HC26, 74L27, 74LS27, 74ALS27, 74F27, 74HC27, 74HCT27, 74AHC27, 74LVC27, 74ABT27, 74ACT27, 74L28, 74LS28, 74ALS28, 74HC28, 74L30, 74LS30, 74ALS30, 74F30, 74HC30, 74HCT30, 74AHC30, 74LV30, 74LVC30, 74ABT30, 74ACT30, 74L32, 74LS32, 74ALS32, 74F32, 74HC32, 74HCT32, 74AHC32, 74LV32, 74LVC32, 74ABT32, 74ACT32, 74L33, 74LS33, 74ALS33, 74HC33, 74L34, 74LS36, 74LS37, 74ALS37, 74F37, 74HC37, 74AHC37, 74L38, 74LS38, 74ALS38, 74F38, 74HC38, 74AHC38, 74L39, 74LS39, 74ALS39, 74HC39, 74L40, 74LS42, 74ALS42, 74F42, 74HC42, 74HCT42, 74AHC42, 74LVC42, 74ABT42, 74ACT42, 74L47, 74LS48, 74ALS48, 74HC48, 74LS49, 74HC49, 74L50, 74LS51, 74ALS51, 74F51, 74HC51, 74HCT51, 74AHC51, 74LVC51, 74ACT51, 74L52, 74LS53, 74ALS53, 74F53, 74HC53, 74L54, 74LS54, 74ALS54, 74F54, 74HC54, 74HCT54, 74AHC54, 74LVC54, 74ACT54, 74L55, 74LS55, 74ALS55, 74F55, 74HC55, 74AHC55, 74L58, 74LS58, 74ALS58, 74F58, 74HC58, 74L60, 74LS61, 74HC61, 74L62, 74LS63, 74HC63, 74L64, 74LS65, 74HC65, 74L70, 74LS72, 74ALS72, 74HC72, 74AHC72, 74L73, 74LS73, 74ALS73, 74F73, 74HC73, 74HCT73, 74AHC73, 74LVC73, 74ABT73, 74ACT73, 74L74, 74LS74, 74ALS74, 74F74, 74HC74, 74HCT74, 74AHC74, 74LV74, 74LVC74, 74ABT74, 74ACT74, 74L75, 74LS75, 74ALS75, 74HC75, 74L76, 74LS76, 74ALS76, 74F76, 74HC76, 74AHC76, 74L77, 74LS77, 74ALS77, 74HC77, 74L78, 74LS78, 74ALS78, 74F78, 74HC78, 74AHC78, 74L80, 74LS81, 74HC81, 74L82, 74LS82, 74HC82, 74L83, 74LS83, 74ALS83, 74F83, 74HC83, 74L84, 74LS85, 74ALS85, 74F85, 74HC85, 74HCT85, 74AHC85, 74LVC85, 74ABT85, 74ACT85, 74L86, 74LS86, 74ALS86, 74F86, 74HC86, 74HCT86, 74AHC86, 74LV86, 74LVC86, 74ABT86, 74ACT86, 74L87, 74LS90, 74ALS90, 74F90, 74HC90, 74L91, 74LS91, 74HC91, 74L92, 74LS92, 74ALS92, 74HC92, 74L93, 74LS93, 74ALS93, 74F93, 74HC93, 74L95, 74LS95, 74ALS95, 74F95, 74HC95, 74L96, 74LS96, 74HC96, 74L97, 74LS100, 74HC100, 74L101, 74LS102, 74HC102, 74L107, 74LS107, 74ALS107, 74F107, 74HC107, 74AHC107, 74L108, 74LS108, 74ALS108, 74F108, 74HC108, 74AHC108, 74L109, 74LS109, 74ALS109, 74F109, 74HC109, 74HCT109, 74AHC109, 74LVC109, 74ABT109, 74ACT109, 74L110, 74LS110, 74HC110, 74L111, 74LS111, 74HC111, 74L112, 74LS112, 74ALS112, 74F112, 74HC112, 74HCT112, 74AHC112, 74LVC112, 74ABT112, 74ACT112, 74L113, 74LS113, 74ALS113, 74F113, 74HC113, 74AHC113, 74LVC113, 74ACT113, 74L114, 74LS114, 74ALS114, 74F114, 74HC114, 74AHC114, 74LVC114, 74ACT114, 74L116, 74LS116, 74HC116, 74L120, 74LS121, 74HC121, 74AHC121, 74L122, 74LS122, 74HC122, 74AHC122, 74L123, 74LS123, 74ALS123, 74F123, 74HC123, 74HCT123, 74AHC123, 74LVC123, 74ABT123, 74ACT123, 74L124, 74LS125, 74ALS125, 74F125, 74HC125, 74HCT125, 74AHC125, 74LV125, 74LVC125, 74ABT125, 74ACT125, 74L126, 74LS126, 74ALS126, 74F126, 74HC126, 74HCT126, 74AHC126, 74LV126, 74LVC126, 74ABT126, 74ACT126, 74L128, 74LS130, 74HC130, 74L131, 74LS132, 74ALS132, 74F132, 74HC132, 74HCT132, 74AHC132, 74LV132, 74LVC132, 74ABT132, 74ACT132, 74L133, 74LS133, 74ALS133, 74F133, 74HC133, 74HCT133, 74AHC133, 74LVC133, 74ACT133, 74L134, 74LS135, 74ALS135, 74F135, 74HC135, 74AHC135, 74LVC135, 74ACT135, 74L136, 74LS136, 74ALS136, 74F136, 74HC136, 74HCT136, 74AHC136, 74LV136, 74LVC136, 74ABT136, 74ACT136, 74L137, 74LS137, 74ALS137, 74F137, 74HC137, 74HCT137, 74AHC137, 74LVC137, 74ABT137, 74ACT137, 74L138, 74LS138, 74ALS138, 74F138, 74HC138, 74HCT138, 74AHC138, 74LV138, 74LVC138, 74ABT138, 74ACT138, 74L139, 74LS139, 74ALS139, 74F139, 74HC139, 74HCT139, 74AHC139, 74LV139, 74LVC139, 74ABT139, 74ACT139, 74L140, 74LS141, 74HC141, 74L142, 74LS145, 74ALS145, 74F145, 74HC145, 74AHC145, 74L147, 74LS147, 74ALS147, 74F147, 74HC147, 74HCT147, 74AHC147, 74LVC147, 74ABT147, 74ACT147, 74L148, 74LS148, 74ALS148, 74F148, 74HC148, 74HCT148, 74AHC148, 74LVC148, 74ABT148, 74ACT148, 74L150, 74LS150, 74ALS150, 74F150, 74HC150, 74AHC150, 74L151, 74LS151, 74ALS151, 74F151, 74HC151, 74HCT151, 74AHC151, 74LV151, 74LVC151, 74ABT151, 74ACT151, 74L152, 74LS152, 74ALS152, 74HC152, 74AHC152, 74L153, 74LS153, 74ALS153, 74F153, 74HC153, 74HCT153, 74AHC153, 74LV153, 74LVC153, 74ABT153, 74ACT153, 74L154, 74LS154, 74ALS154, 74F154, 74HC154, 74HCT154, 74AHC154, 74LVC154, 74ACT154, 74L155, 74LS155, 74ALS155, 74F155, 74HC155, 74HCT155, 74AHC155, 74LVC155, 74ABT155, 74ACT155, 74L156, 74LS156, 74ALS156, 74F156, 74HC156, 74HCT156, 74AHC156, 74LVC156, 74ABT156, 74ACT156, 74L157, 74LS157, 74ALS157, 74F157, 74HC157, 74HCT157, 74AHC157, 74LV157, 74LVC157, 74ABT157, 74ACT157, 74L158, 74LS158, 74ALS158, 74F158, 74HC158, 74HCT158, 74AHC158, 74LV158, 74LVC158, 74ABT158, 74ACT158, 74L159, 74LS160, 74ALS160, 74F160, 74HC160, 74HCT160, 74AHC160, 74LVC160, 74ABT160, 74ACT160, 74L161, 74LS161, 74ALS161, 74F161, 74HC161, 74HCT161, 74AHC161, 74LV161, 74LVC161, 74ABT161, 74ACT161, 74L162, 74LS162, 74ALS162, 74F162, 74HC162, 74HCT162, 74AHC162, 74LVC162, 74ABT162, 74ACT162, 74L163, 74LS163, 74ALS163, 74F163, 74HC163, 74HCT163, 74AHC163, 74LV163, 74LVC163, 74ABT163, 74ACT163, 74L164, 74LS164, 74ALS164, 74F164, 74HC164, 74HCT164, 74AHC164, 74LV164, 74LVC164, 74ABT164, 74ACT164, 74L165, 74LS165, 74ALS165, 74F165, 74HC165, 74HCT165, 74AHC165, 74LV165, 74LVC165, 74ABT165, 74ACT165, 74L166, 74LS166, 74ALS166, 74F166, 74HC166, 74AHC166, 74LVC166, 74L167, 74LS169, 74ALS169, 74F169, 74HC169, 74HCT169, 74AHC169, 74LVC169, 74ABT169, 74ACT169, 74L170, 74LS170, 74HC170, 74AHC170, 74L171, 74LS172, 74HC172, 74AHC172, 74L173, 74LS173, 74ALS173, 74F173, 74HC173, 74HCT173, 74AHC173, 74LVC173, 74ACT173, 74L174, 74LS174, 74ALS174, 74F174, 74HC174, 74HCT174, 74AHC174, 74LV174, 74LVC174, 74ABT174, 74ACT174, 74L175, 74LS175, 74ALS175, 74F175, 74HC175, 74HCT175, 74AHC175, 74LV175, 74LVC175, 74ABT175, 74ACT175, 74L176, 74LS177, 74HC177, 74AHC177, 74L178, 74LS179, 74HC179, 74AHC179, 74L180, 74LS181, 74ALS181, 74F181, 74HC181, 74HCT181, 74AHC181, 74LVC181, 74ACT181, 74L182, 74LS182, 74ALS182, 74F182, 74HC182, 74HCT182, 74AHC182, 74LVC182, 74ACT182, 74L183, 74LS183, 74HC183, 74AHC183, 74L184, 74LS185, 74HC185, 74AHC185, 74L190, 74LS190, 74ALS190, 74F190, 74HC190, 74HCT190, 74AHC190, 74LVC190, 74ABT190, 74ACT190, 74L191, 74LS191, 74ALS191, 74F191, 74HC191, 74HCT191, 74AHC191, 74LVC191, 74ABT191, 74ACT191, 74L192, 74LS192, 74ALS192, 74F192, 74HC192, 74HCT192, 74AHC192, 74LVC192, 74ABT192, 74ACT192, 74L193, 74LS193, 74ALS193, 74F193, 74HC193, 74HCT193, 74AHC193, 74LVC193, 74ABT193, 74ACT193, 74L194, 74LS194, 74ALS194, 74F194, 74HC194, 74HCT194, 74AHC194, 74LVC194, 74ABT194, 74ACT194, 74L195, 74LS195, 74ALS195, 74F195, 74HC195, 74HCT195, 74AHC195, 74LVC195, 74ABT195, 74ACT195, 74L196, 74LS197, 74ALS197, 74F197, 74HC197, 74HCT197, 74AHC197, 74LVC197, 74ABT197, 74ACT197, 74L198, 74LS199, 74HC199, 74AHC199, 74L221, 74LS221, 74ALS221, 74F221, 74HC221, 74AHC221, 74LVC221, 74ACT221, 74L230, 74LS231, 74HC231, 74L232, 74LS237, 74ALS237, 74F237, 74HC237, 74HCT237, 74AHC237, 74LVC237, 74ABT237, 74ACT237, 74L238, 74LS238, 74ALS238, 74F238, 74HC238, 74HCT238, 74AHC238, 74LV238, 74LVC238, 74ABT238, 74ACT238, 74L239, 74LS239, 74ALS239, 74F239, 74HC239, 74AHC239, 74LVC239, 74ABT239, 74ACT239, 74L240, 74LS240, 74ALS240, 74F240, 74HC240, 74HCT240, 74AHC240, 74LV240, 74LVC240, 74ABT240, 74ACT240, 74L241, 74LS241, 74ALS241, 74F241, 74HC241, 74HCT241, 74AHC241, 74LV241, 74LVC241, 74ABT241, 74ACT241, 74L242, 74LS242, 74ALS242, 74F242, 74HC242, 74HCT242, 74AHC242, 74LVC242, 74ABT242, 74ACT242, 74L243, 74LS243, 74ALS243, 74F243, 74HC243, 74HCT243, 74AHC243, 74LVC243, 74ABT243, 74ACT243, 74L244, 74LS244, 74ALS244, 74F244, 74HC244, 74HCT244, 74AHC244, 74LV244, 74LVC244, 74ABT244, 74ACT244, 74L245, 74LS245, 74ALS245, 74F245, 74HC245, 74HCT245, 74AHC245, 74LV245, 74LVC245, 74ABT245, 74ACT245, 74L246, 74LS247, 74ALS247, 74F247, 74HC247, 74HCT247, 74AHC247, 74LVC247, 74ABT247, 74ACT247, 74L248, 74LS248, 74ALS248, 74F248, 74HC248, 74HCT248, 74AHC248, 74LVC248, 74ABT248, 74ACT248, 74L249, 74LS249, 74ALS249, 74F249, 74HC249, 74HCT249, 74AHC249, 74LVC249, 74ABT249, 74ACT249, 74L250, 74LS251, 74ALS251, 74F251, 74HC251, 74HCT251, 74AHC251, 74LV251, 74LVC251, 74ABT251, 74ACT251, 74L253, 74LS253, 74ALS253, 74F253, 74HC253, 74HCT253, 74AHC253, 74LV253, 74LVC253, 74ABT253, 74ACT253, 74L256, 74LS257, 74ALS257, 74F257, 74HC257, 74HCT257, 74AHC257, 74LV257, 74LVC257, 74ABT257, 74ACT257, 74L258, 74LS258, 74ALS258, 74F258, 74HC258, 74HCT258, 74AHC258, 74LV258, 74LVC258, 74ABT258, 74ACT258, 74L259, 74LS259, 74ALS259, 74F259, 74HC259, 74HCT259, 74AHC259, 74LVC259, 74ABT259, 74ACT259, 74L260, 74LS261, 74HC261, 74L266, 74LS266, 74ALS266, 74F266, 74HC266, 74HCT266, 74AHC266, 74LVC266, 74ACT266, 74L273, 74LS273, 74ALS273, 74F273, 74HC273, 74HCT273, 74AHC273, 74LV273, 74LVC273, 74ABT273, 74ACT273, 74L275, 74LS279, 74ALS279, 74F279, 74HC279, 74HCT279, 74AHC279, 74LVC279, 74ACT279, 74L280, 74LS281, 74ALS281, 74F281, 74HC281, 74HCT281, 74AHC281, 74LVC281, 74ACT281, 74L282, 74LS283, 74ALS283, 74F283, 74HC283, 74HCT283, 74AHC283, 74LVC283, 74ABT283, 74ACT283, 74L284, 74LS285, 74HC285, 74L290, 74LS290, 74ALS290, 74F290, 74HC290, 74HCT290, 74AHC290, 74LVC290, 74ACT290, 74L292, 74LS293, 74ALS293, 74F293, 74HC293, 74HCT293, 74AHC293, 74LVC293, 74ABT293, 74ACT293, 74L294, 74LS295, 74ALS295, 74F295, 74HC295, 74AHC295, 74L298, 74LS298, 74ALS298, 74F298, 74HC298, 74AHC298, 74L299, 74LS299, 74ALS299, 74F299, 74HC299, 74HCT299, 74AHC299, 74LV299, 74LVC299, 74ABT299, 74ACT299, 74L320, 74LS321, 74HC321, 74L322, 74LS323, 74ALS323, 74F323, 74HC323, 74HCT323, 74AHC323, 74LV323, 74LVC323, 74ABT323, 74ACT323, 74L324, 74LS347, 74HC347, 74L348, 74LS349, 74HC349, 74L350, 74LS352, 74ALS352, 74F352, 74HC352, 74HCT352, 74AHC352, 74LVC352, 74ACT352, 74L353, 74LS353, 74ALS353, 74F353, 74HC353, 74HCT353, 74AHC353, 74LVC353, 74ACT353, 74L354, 74LS355, 74HC355, 74L356, 74LS356, 74HC356, 74L365, 74LS365, 74ALS365, 74F365, 74HC365, 74HCT365, 74AHC365, 74LVC365, 74ACT365, 74L366, 74LS366, 74ALS366, 74F366, 74HC366, 74HCT366, 74AHC366, 74LVC366, 74ACT366, 74L367, 74LS367, 74ALS367, 74F367, 74HC367, 74HCT367, 74AHC367, 74LVC367, 74ACT367, 74L368, 74LS368, 74ALS368, 74F368, 74HC368, 74HCT368, 74AHC368, 74LVC368, 74ACT368, 74L373, 74LS373, 74ALS373, 74F373, 74HC373, 74HCT373, 74AHC373, 74LV373, 74LVC373, 74ABT373, 74ACT373, 74L374, 74LS374, 74ALS374, 74F374, 74HC374, 74HCT374, 74AHC374, 74LV374, 74LVC374, 74ABT374, 74ACT374, 74L375, 74LS375, 74ALS375, 74HC375, 74HCT375, 74AHC375, 74LVC375, 74ACT375, 74L376, 74LS377, 74ALS377, 74F377, 74HC377, 74HCT377, 74AHC377, 74LVC377, 74ABT377, 74ACT377, 74L378, 74LS378, 74ALS378, 74F378, 74HC378, 74HCT378, 74AHC378, 74LVC378, 74ACT378, 74L379, 74LS379, 74ALS379, 74F379, 74HC379, 74HCT379, 74AHC379, 74LVC379, 74ACT379, 74L381, 74LS381, 74ALS381, 74F381, 74HC381, 74HCT381, 74AHC381, 74LVC381, 74ACT381, 74L382, 74LS382, 74ALS382, 74F382, 74HC382, 74HCT382, 74AHC382, 74LVC382, 74ACT382, 74L385, 74LS386, 74ALS386, 74F386, 74HC386, 74HCT386, 74AHC386, 74LV386, 74LVC386, 74ABT386, 74ACT386, 74L390, 74LS390, 74ALS390, 74F390, 74HC390, 74HCT390, 74AHC390, 74LVC390, 74ABT390, 74ACT390, 74L393, 74LS393, 74ALS393, 74F393, 74HC393, 74HCT393, 74AHC393, 74LV393, 74LVC393, 74ABT393, 74ACT393, 74L395, 74LS395, 74ALS395, 74F395, 74HC395, 74AHC395, 74L396, 74LS398, 74ALS398, 74F398, 74HC398, 74AHC398, 74L399, 74LS399, 74ALS399, 74F399, 74HC399, 74AHC399, 74L422, 74LS423, 74ALS423, 74F423, 74HC423, 74AHC423, 74L424, 74LS425, 74HC425, 74L426, 74LS426, 74HC426, 74L428, 74LS436, 74HC436, 74L440, 74LS441, 74HC441, 74L442, 74LS442, 74HC442, 74L443, 74LS443, 74HC443, 74L444, 74LS444, 74HC444, 74L445, 74LS445, 74HC445, 74L447, 74LS448, 74HC448, 74L449, 74LS490, 74ALS490, 74F490, 74HC490, 74HCT490, 74AHC490, 74LVC490, 74ABT490, 74ACT490, 74L521, 74LS521, 74ALS521, 74F521, 74HC521, 74HCT521, 74AHC521, 74LVC521, 74ACT521, 74L533, 74LS533, 74ALS533, 74F533, 74HC533, 74HCT533, 74AHC533, 74LVC533, 74ACT533, 74L534, 74LS534, 74ALS534, 74F534, 74HC534, 74HCT534, 74AHC534, 74LVC534, 74ACT534, 74L540, 74LS540, 74ALS540, 74F540, 74HC540, 74HCT540, 74AHC540, 74LV540, 74LVC540, 74ABT540, 74ACT540, 74L541, 74LS541, 74ALS541, 74F541, 74HC541, 74HCT541, 74AHC541, 74LV541, 74LVC541, 74ABT541, 74ACT541, 74L563, 74LS563, 74ALS563, 74F563, 74HC563, 74HCT563, 74AHC563, 74LVC563, 74ACT563, 74L564, 74LS564, 74ALS564, 74F564, 74HC564, 74HCT564, 74AHC564, 74LVC564, 74ACT564, 74L568, 74LS569, 74ALS569, 74F569, 74HC569, 74HCT569, 74AHC569, 74LVC569, 74ACT569, 74L573, 74LS573, 74ALS573, 74F573, 74HC573, 74HCT573, 74AHC573, 74LV573, 74LVC573, 74ABT573, 74ACT573, 74L574, 74LS574, 74ALS574, 74F574, 74HC574, 74HCT574, 74AHC574, 74LV574, 74LVC574, 74ABT574, 74ACT574, 74L575, 74LS575, 74ALS575, 74F575, 74HC575, 74HCT575, 74AHC575, 74LVC575, 74ACT575, 74L576, 74LS576, 74ALS576, 74F576, 74HC576, 74HCT576, 74AHC576, 74LVC576, 74ACT576, 74L577, 74LS577, 74ALS577, 74F577, 74HC577, 74HCT577, 74AHC577, 74LVC577, 74ACT577, 74L580, 74LS580, 74ALS580, 74F580, 74HC580, 74HCT580, 74AHC580, 74LVC580, 74ACT580, 74L582, 74LS583, 74HC583, 74L589, 74LS589, 74ALS589, 74F589, 74HC589, 74AHC589, 74L590, 74LS590, 74ALS590, 74F590, 74HC590, 74HCT590, 74AHC590, 74LVC590, 74ACT590, 74L591, 74LS591, 74HC591, 74AHC591, 74L592, 74LS592, 74HC592, 74AHC592, 74L593, 74LS593, 74HC593, 74AHC593, 74L594, 74LS594, 74ALS594, 74F594, 74HC594, 74HCT594, 74AHC594, 74LVC594, 74ACT594, 74L595, 74LS595, 74ALS595, 74F595, 74HC595, 74HCT595, 74AHC595, 74LV595, 74LVC595, 74ABT595, 74ACT595, 74L596, 74LS596, 74ALS596, 74F596, 74HC596, 74HCT596, 74AHC596, 74LVC596, 74ACT596, 74L597, 74LS597, 74ALS597, 74F597, 74HC597, 74HCT597, 74AHC597, 74LVC597, 74ACT597, 74L598, 74LS598, 74ALS598, 74F598, 74HC598, 74HCT598, 74AHC598, 74LVC598, 74ACT598, 74L599, 74LS599, 74ALS599, 74F599, 74HC599, 74HCT599, 74AHC599, 74LVC599, 74ACT599, 74L600, 74LS601, 74HC601, 74L602, 74LS603, 74HC603, 74L604, 74LS605, 74HC605, 74L606, 74LS607, 74HC607, 74L608, 74LS620, 74ALS620, 74F620, 74HC620, 74HCT620, 74AHC620, 74LVC620, 74ACT620, 74L621, 74LS621, 74ALS621, 74F621, 74HC621, 74HCT621, 74AHC621, 74LVC621, 74ACT621, 74L622, 74LS622, 74ALS622, 74F622, 74HC622, 74HCT622, 74AHC622, 74LVC622, 74ACT622, 74L623, 74LS623, 74ALS623, 74F623, 74HC623, 74HCT623, 74AHC623, 74LVC623, 74ACT623, 74L640, 74LS640, 74ALS640, 74F640, 74HC640, 74HCT640, 74AHC640, 74LV640, 74LVC640, 74ABT640, 74ACT640, 74L641, 74LS641, 74ALS641, 74F641, 74HC641, 74HCT641, 74AHC641, 74LVC641, 74ACT641, 74L642, 74LS642, 74ALS642, 74F642, 74HC642, 74HCT642, 74AHC642, 74LVC642, 74ACT642, 74L643, 74LS643, 74ALS643, 74F643, 74HC643, 74HCT643, 74AHC643, 74LVC643, 74ACT643, 74L644, 74LS644, 74ALS644, 74F644, 74HC644, 74HCT644, 74AHC644, 74LVC644, 74ACT644, 74L645, 74LS645, 74ALS645, 74F645, 74HC645, 74HCT645, 74AHC645, 74LV645, 74LVC645, 74ABT645, 74ACT645, 74L646, 74LS646, 74ALS646, 74F646, 74HC646, 74HCT646, 74AHC646, 74LVC646, 74ACT646, 74L647, 74LS647, 74ALS647, 74F647, 74HC647, 74HCT647, 74AHC647, 74LVC647, 74ACT647, 74L648, 74LS648, 74ALS648, 74F648, 74HC648, 74HCT648, 74AHC648, 74LVC648, 74ACT648, 74L649, 74LS649, 74ALS649, 74F649, 74HC649, 74HCT649, 74AHC649, 74LVC649, 74ACT649, 74L652, 74LS652, 74ALS652, 74F652, 74HC652, 74HCT652, 74AHC652, 74LVC652, 74ACT652, 74L653, 74LS653, 74ALS653, 74F653, 74HC653, 74HCT653, 74AHC653, 74LVC653, 74ACT653, 74L664, 74LS665, 74ALS665, 74F665, 74HC665, 74HCT665, 74AHC665, 74LVC665, 74ACT665, 74L666, 74LS667, 74ALS667, 74F667, 74HC667, 74HCT667, 74AHC667, 74LVC667, 74ACT667, 74L668, 74LS668, 74ALS668, 74F668, 74HC668, 74HCT668, 74AHC668, 74LVC668, 74ACT668, 74L669, 74LS669, 74ALS669, 74F669, 74HC669, 74HCT669, 74AHC669, 74LVC669, 74ACT669, 74L673, 74LS674, 74ALS674, 74F674, 74HC674, 74HCT674, 74AHC674, 74LVC674, 74ACT674, 74L677, 74LS678, 74ALS678, 74F678, 74HC678, 74HCT678, 74AHC678, 74LVC678, 74ACT678, 74L679, 74LS679, 74ALS679, 74F679, 74HC679, 74HCT679, 74AHC679, 74LVC679, 74ACT679, 74L680, 74LS680, 74ALS680, 74F680, 74HC680, 74HCT680, 74AHC680, 74LVC680, 74ACT680, 74L681, 74LS681, 74ALS681, 74F681, 74HC681, 74HCT681, 74AHC681, 74LVC681, 74ACT681, 74L682, 74LS682, 74ALS682, 74F682, 74HC682, 74HCT682, 74AHC682, 74LVC682, 74ACT682, 74L683, 74LS683, 74ALS683, 74F683, 74HC683, 74HCT683, 74AHC683, 74LVC683, 74ACT683, 74L684, 74LS684, 74ALS684, 74F684, 74HC684, 74HCT684, 74AHC684, 74LVC684, 74ACT684, 74L685, 74LS685, 74ALS685, 74F685, 74HC685, 74HCT685, 74AHC685, 74LVC685, 74ACT685, 74L686, 74LS686, 74ALS686, 74F686, 74HC686, 74HCT686, 74AHC686, 74LVC686, 74ACT686, 74L687, 74LS687, 74ALS687, 74F687, 74HC687, 74HCT687, 74AHC687, 74LVC687, 74ACT687, 74L688, 74LS688, 74ALS688, 74F688, 74HC688, 74HCT688, 74AHC688, 74LV688, 74LVC688, 74ACT688, 74L689, 74LS689, 74ALS689, 74F689, 74HC689, 74HCT689, 74AHC689, 74LVC689, 74ACT689, 74L690, 74LS691, 74ALS691, 74F691, 74HC691, 74HCT691, 74AHC691, 74LVC691, 74ACT691, 74L692, 74LS692, 74ALS692, 74F692, 74HC692, 74HCT692, 74AHC692, 74LVC692, 74ACT692, 74L693, 74LS693, 74ALS693, 74F693, 74HC693, 74HCT693, 74AHC693, 74LVC693, 74ACT693, 74L694, 74LS694, 74ALS694, 74F694, 74HC694, 74HCT694, 74AHC694, 74LVC694, 74ACT694, 74L695, 74LS696, 74ALS696, 74F696, 74HC696, 74HCT696, 74AHC696, 74LVC696, 74ACT696, 74L697, 74LS697, 74ALS697, 74F697, 74HC697, 74HCT697, 74AHC697, 74LVC697, 74ACT697, 74L698, 74LS698, 74ALS698, 74F698, 74HC698, 74HCT698, 74AHC698, 74LVC698, 74ACT698, 74L699, 74LS699, 74ALS699, 74F699, 74HC699, 74HCT699, 74AHC699, 74LVC699, 74ACT699, 74L795, 74LS796, 74HC796, 74L797, 74LS798, 74HC798, 74L799, 74LS821, 74HC821, 74L822, 74LS823, 74HC823, 74L824, 74LS825, 74HC825, 74L826, 74LS827, 74HC827, 74L828, 74LS832, 74HC832, 74L850, 74LS851, 74HC851, 74L852, 74LS852, 74HC852, 74L856, 74LS857, 74HC857, 74L867, 74LS868, 74HC868, 74L869, 74LS869, 74HC869, 74L870, 74LS871, 74HC871, 74L872, 74LS873, 74HC873, 74L874, 74LS874, 74HC874, 74L876, 74LS876, 74HC876, 74L878, 74LS878, 74HC878, 74L879, 74LS879, 74HC879, 74L880, 74LS880, 74HC880, 74L881, 74LS881, 74HC881, 74L882, 74LS882, 74HC882, 74L885, 74LS885, 74HC885, 74L886, 74LS886, 74HC886, 74L990, 74LS991, 74HC991, 74L992, 74LS992, 74HC992, 74L993, 74LS993, 74HC993, 74L994, 74LS994, 74HC994, 74L995, 74LS995, 74HC995, 74L996, 74LS996, 74HC996, 74L997, 74LS997, 74HC997, 74L998, 74LS998, 74HC998, 74L999, 74LS999, 74HC999.
+
+#### 4.6 Temporizadores y Drivers Varios
+NE555, LM555, SA555, NE556, LM556, NE558, LMC555, TLC555, TLC551, LM567, NE567, LM567, XR2206, XR2209, ICL8038, MAX038, ULN2003, ULN2004, ULN2803, ULN2804, MC1413, TD62083, KID65004, L293, L293D, L293E, L298, L298N, L6201, L6202, L6203, LMD18200, DRV8825, A4988, TB6600, TC4420, TC4429, MC34063, MC34063A, MC33063, MC33063A, LM2575, LM2576, LM2596, MAX1771, LT1073, LT1372, MAX770, MAX771, MAX772.
+
+#### 4.7 Memorias
+AT24C01, AT24C02, AT24C04, AT24C08, AT24C16, AT24C32, AT24C64, AT24C128, AT24C256, AT24C512, AT24C1024, 24C01, 24C02, 24C04, 24C08, 24C16, 24C32, 24C64, 24C128, 24C256, 24C512, 24LC256, 24LC512, 93C06, 93C46, 93C56, 93C66, 93C76, 93C86, 25C040, 25C080, 25C160, 25C320, 25C640, M95M01, M95M02, M95M04, M95M08, M95M16, M95M32, M95M64, 27C64, 27C128, 27C256, 27C512, 27C010, 27C020, 27C040, 27C080, 27C1001, 27C2001, 27C4001, 27C8001, 28C64, 28C256, 28F256, 28F010, 28F020, 28F040, 29F010, 29F020, 29F040, 29F080, 29F256, 29F512, W27C512, W27E257, AT29C256, AT29C512, 6116, 6164, 6264, 62256, 628128, 628512, HM62256, HM628128, AS6C4008, IS61C256, IS61C512, IS62WV51216, CY62167EV30, IDT71V416S, SST39SF010, SST39SF020, SST39SF040, AM29F040, AM29F080, M29W320, M29W800, M29W640.
+
+#### 4.8 Conversores, Audio Digital y DSP
+PCM2706, PCM2707, PCM2713, PCM2900, PCM2902, PCM2912, PCM2906, CS4272, CS4270, CS4351, CS4344, CS4345, CS4340, CS4341, CS4342, AK4113, AK4114, AK4118, AK4118A, AK4381, AK4382, AK4384, AK4358, AK4356, AK4393, AK4396, AK4531, AK4528, AK4524, AK4525, AK4526, WM8731, WM8740, WM8741, WM8742, WM8772, WM8775, WM8776, WM8782, WM8785, WM8523, WM8524, WM8580, PT2399, ADAU1701, ADAU1761, ADAU1401A, ADAU7002, TMS320VC5402, TMS320C6713, DSP56367, DSP56720, DSP67001, TLV320AIC23B, TLV320AIC3101, TLV320DAC3100, SGTL5000, SSM2164, SSM2166, SSM2019, SSM2141, SSM2142, SSM2135, SSM2143, SSM2604, SSM2518, SSM2602, SSM2161.
+
+#### 4.9 Optoacopladores
+PC817, PC817A, PC817B, PC817C, PC817D, PC817X, PC817X2, PC817X3, PC817X4, PC814, PC816, PC818, PC819, PC827, PC828, PC829, PC847, PC874, PC875, PC877, PC878, PC879, PC927, PC928, PC929, PC930, PC931, PC932, PC933, PC934, PC935, PC936, PC937, PC938, PC939, PC940, PC941, PC942, PC943, PC944, PC945, PC946, PC947, PC948, PC949, PC950, PC951, PC952, PC953, PC954, PC955, PC956, PC957, PC958, PC959, PC960, PC961, PC962, PC963, PC964, PC965, PC966, PC967, PC968, PC969, PC970, PC971, PC972, PC973, PC974, PC975, PC976, PC977, PC978, PC979, PC980, PC981, PC982, PC983, PC984, PC985, PC986, PC987, PC988, PC989, PC990, PC991, PC992, PC993, PC994, PC995, PC996, PC997, PC998, PC999, 4N25, 4N26, 4N27, 4N28, 4N29, 4N30, 4N32, 4N33, 4N35, 4N36, 4N37, 4N38, 4N39, 4N40, 4N41, 4N42, 4N43, 4N44, 4N45, 4N46, 4N47, 4N48, 4N49, 4N60, 6N135, 6N136, 6N137, 6N138, 6N139, 6N140, 6N141, CNY17-1, CNY17-2, CNY17-3, CNY17-4, CNY17-5, CNY17-6, CNY65-1, CNY65-2, CNY65-3, CNY74-1, CNY74-2, CNY74-3, CNY74-4, CNY74-5, CNY74-6, CNY75-1, CNY75-2, CNY75-3, CNY75-4, CNY75-5, CNY75-6, HCPL-2730, HCPL-2731, HCPL-2732, HCPL-2733, HCPL-3700, HCPL-3701, HCPL-3760, HCPL-3761, MOC3020, MOC3021, MOC3022, MOC3023, MOC3030, MOC3031, MOC3032, MOC3033, MOC3040, MOC3041, MOC3042, MOC3043, MOC3051, MOC3052, MOC3061, MOC3062, MOC3063, MOC3081, MOC3082, MOC3083, H11AA1, H11AA4, H11G1, H11G2, H11G3, IL300, ILD1, ILD2, ILD5, ILD6, ILDQ1, ILDQ2, ILDQ5, ILDQ6, ILQ1, ILQ2, ILQ3, ILQ4, ILQ5, ILQ6, ILQ74, ILQ300, ILQ317, ILD213T, ILD265T, ILD271T, ILQ274T, LTV814, LTV815, LTV817, LTV824, LTV844, LTV847, LTV848, PS2501-1, PS2501-2, PS2501-3, PS2501-4, PS2502-1, PS2502-2, PS2502-3, PS2502-4, PS2503-1, PS2503-2, PS2503-3, PS2503-4, PS2504-1, PS2504-2, PS2504-3, PS2504-4, PS8702, PS8702L, PS8802, PS8802L, PS9002, PS9002L, PS9102, PS9102L, PS9202, PS9202L, PS9302, PS9302L, PS9402, PS9402L, PS9502, PS9502L, PS9602, PS9602L, PS9702, PS9702L, PS9802, PS9802L, PS9902, PS9902L.
+
+
+
+
+
+
+
+Entendido. Vamos a abordar esto con el máximo nivel de detalle posible. He revisado el documento original, lo he reestructurado y **expandido masivamente** (especialmente los puntos 3 y 4, que ahora incluyen una lista extensa de modelos, rangos de voltaje, corrientes, encapsulados y valores específicos).
+
+Esta guía está diseñada como una "Hoja de Especificaciones Rápida" para inventarios de laboratorio, diseño de síntesis analógica y reparación de audio.
+
+---
+
+# GUÍA TÉCNICA DE COMPONENTES ELECTRÓNICOS (DATOS DETALLADOS)
+
+---
+
+### 1. RESISTENCIAS (FIXED & VARIABLE)
+
+#### 1.1 Tipos de Construcción / Tecnología (Especificaciones Técnicas)
+
+*   **Película de Carbón** (Carbon Film)
+    *   *Uso:* Electrónica general, prototipos, restauración vintage.
+    *   *Serie E24:* 1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2 (y décadas).
+    *   *Valores Comunes:* **10Ω, 100Ω, 220Ω, 330Ω, 470Ω, 680Ω, 1kΩ, 2.2kΩ, 4.7kΩ, 10kΩ, 22kΩ, 47kΩ, 100kΩ, 220kΩ, 470kΩ, 1MΩ, 2.2MΩ**.
+    *   *Potencias:* **1/4W (0.25W), 1/2W (0.5W), 1W**.
+    *   *Tensión Máx:* 250V - 350V (operacional).
+    *   *Tolerancia:* 5% (Banda Dorada).
+
+*   **Película Metálica** (Metal Film) - *Estándar Audio*
+    *   *Uso:* Audio Hi-Fi, preamplificadores, filtros precisos.
+    *   *Serie E96 (1%):* Aumenta el número de valores disponibles (ej. 102, 105, 113, etc.).
+    *   *Valores Comunes:* **10R, 22R, 47R, 100R, 220R, 330R, 470R, 680R, 1k, 1.5k, 2k, 2.2k, 2.4k, 3k, 3.3k, 3.9k, 4.3k, 4.7k, 5.1k, 5.6k, 6.2k, 6.8k, 7.5k, 8.2k, 9.1k, 10k, 12k, 15k, 18k, 20k, 22k, 27k, 30k, 33k, 36k, 39k, 43k, 47k, 51k, 56k, 62k, 68k, 75k, 82k, 91k, 100k, 150k, 180k, 200k, 220k, 270k, 300k, 330k, 360k, 390k, 430k, 470k, 510k, 560k, 620k, 680k, 750k, 820k, 910k, 1M**.
+    *   *Potencias:* **0.125W, 0.25W, 0.4W, 0.5W, 0.6W, 1W, 2W**.
+    *   *Tolerancia:* **1% (Marrón), 0.5% (Verde), 0.25% (Azul)**.
+    *   *Temperatura:* -55ºC a +155ºC.
+
+*   **Óxido Metálico** (Metal Oxide)
+    *   *Características:* No flamable (anti-ignición), mejor manejo de sobretensiones.
+    *   *Valores Comunes (Bajo Ohm):** **0.1Ω, 0.22Ω, 0.33Ω, 0.47Ω, 0.68Ω, 1Ω, 2.2Ω, 4.7Ω, 10Ω, 22Ω, 47Ω**.
+    *   *Potencias:* **1W, 2W, 3W, 5W**.
+    *   *Tensión:* Hasta 350V - 500V.
+
+*   **Bobinada / Devanada** (Wirewound)
+    *   *Uso:* Fuentes de alimentación, resistencias de carga, frenado de motores.
+    *   *Valores Comunes:* **0.01Ω hasta 100kΩ** (se especializan en bajos valores).
+    *   *Potencias:* **5W, 10W, 25W (Cuerpo de aluminio), 50W, 100W, 250W**.
+    *   *Tipos:* Inductivas (comunes) y No-Inductivas (Bifilares - para circuitos de conmutación rápida).
+    *   *Tolerancia:* Generalmente 5% o 10%.
+
+*   **Cemento** (Wirewound Cement Coated)
+    *   *Valores:* **0.1Ω, 0.5Ω, 1Ω, 2.2Ω, 4.7Ω, 10Ω, 22Ω, 47Ω, 100Ω, 220Ω, 470Ω, 1kΩ**.
+    *   *Potencias:* **5W, 7W, 10W, 14W, 20W**.
+    *   *Aplicación:* Atenuadores de entrada, fuentes de laboratorio, balastos.
+
+*   **Red / Array** (Resistor Network)
+    *   *Configuraciones:* Isolado, Bussed (un pin común), Dual Terminator.
+    *   *Valores:* **10k, 33k, 47k, 100k**.
+    *   *Pines:* SIP4 (2 resistencias), SIP5 (4 resistencias), SIP6 (5 resistencias), SIP8-10 (buses de datos). DIP16.
+
+*   **Chips SMD** (Surface Mount Device)
+    *   *Códigos de Potencia y Tamaño:*
+        *   **0201:** 0.05W (Miniatura extrema)
+        *   **0402:** 0.063W (1/16W)
+        *   **0603:** 0.1W (1/10W) - Estándar industrial.
+        *   **0805:** 0.125W (1/8W)
+        *   **1206:** 0.25W (1/4W)
+        *   **1210:** 0.5W (1/2W)
+        *   **2010:** 0.75W (3/4W)
+        *   **2512:** 1W a 2W (Potencia en SMD)
+    *   *Códigos Marcados:* 103 = 10k, 102 = 1k, 470 = 47Ω, 1R0 = 1Ω.
+    *   *Tensiones de Operación:* 25V (0402), 50V (0603), 100V (0805), 200V (1206).
+
+#### 1.2 Variables (Ajustables)
+*   **Potenciómetro Rotatorio (Eje Sólido/Estriado)**
+    *   *Leyes de Tensión:* **A (Logarítmico/Audio), B (Lineal), C (Anti-Log/Rare)**.
+    *   *Valores (Ω):* **10kA, 50kA, 100kA, 500kA (Audio/Vol), 1k, 5k, 10k, 20k, 50k, 100k, 250k, 500k, 1M, 2M**.
+    *   *Potencia:* 0.1W a 0.5W (señal).
+    *   *Tensión:* 250V AC.
+
+*   **Trimmer / Trimpot (SMD o PTH)**
+    *   *Tecnología:* Cermet (estable), Carbono (barato), Multi-giro (15 o 25 vueltas).
+    *   *Valores Comunes:* **100R, 200R, 500R, 1k, 2k, 5k, 10k, 20k, 50k, 100k, 200k, 500k, 1M**.
+    *   *Potencia:* 0.05W a 0.25W.
+    *   *Formatos:* 3296W (Cuadrado multi-giro), 3362P (Rectangular horario), 3386 (Círculo), SMD (3mmx3mm).
+
+*   **Reóstato**
+    *   *Valores:* Bajos valores de alta corriente (ej: **10Ω, 25Ω, 50Ω, 100Ω**).
+    *   *Potencia:* **10W, 25W, 50W, 100W+**.
+
+---
+
+### 2. CAPACITORES (FIXED & VARIABLE)
+
+#### 2.1 Tipos de Dieléctrico / Construcción
+
+*   **Electrolítico de Aluminio (Radial/Axial)**
+    *   *Series Generales:* Panasonic FR/FC, Elna RFS, Nichicon PW/UPW, Rubycon ZL.
+    *   *Valores (uF):* **0.1uF, 0.22uF, 0.47uF, 1uF, 2.2uF, 3.3uF, 4.7uF, 10uF, 22uF, 33uF, 47uF, 100uF, 220uF, 330uF, 470uF, 680uF, 1000uF, 2200uF, 3300uF, 4700uF, 6800uF, 10,000uF**.
+    *   *Tensiones (V):* **6.3V, 10V, 16V, 25V, 35V, 50V, 63V, 80V, 100V, 160V, 250V, 350V, 400V**.
+    *   *Especificaciones:* **Low ESR**, **High Ripple Current** (importante en fuentes switching), **105ºC** (calidad industrial).
+    *   *Mounting:* Snap-in (para grandes capacidades), Screw terminal (fuentes).
+
+*   **Tántalo (SMD/Encapsulado Dipped)**
+    *   *Códigos de Caso (Tamaño):* 3216 (A case), 3528 (B), 6032 (D), 7343 (E).
+    *   *Valores (uF):* **0.1uF, 0.22uF, 0.33uF, 0.47uF, 1uF, 2.2uF, 4.7uF, 10uF, 15uF, 22uF, 33uF, 47uF, 68uF, 100uF**.
+    *   *Tensiones (V):* **2.5V, 3.15V, 4V, 6.3V, 10V, 16V, 20V, 25V, 35V, 50V**.
+    *   *Polaridad:* ¡Crítica! Se rompen al revés. A veces fallan cortocircuitados (incendio).
+
+*   **Cerámica Multicapa (MLCC)**
+    *   *Códigos Tamaño SMD:* 0201, 0402, 0603, 0805, 1206, 1210, 1812, 2220.
+    *   *Códigos Valor (pF/nF):*
+        *   101 = 100pF
+        *   102 = 1nF (1000pF)
+        *   103 = 10nF (0.01uF)
+        *   104 = 100nF (0.1uF) - *El estándar universal de desacople*.
+        *   105 = 1uF (1000nF)
+        *   106 = 10uF (Tamaño 1210 o 1812)
+        *   474 = 470nF
+        *   224 = 220nF
+    *   *Tensiones (V):* **6.3V, 10V, 16V, 25V, 50V, 100V, 200V, 500V, 1kV, 2kV, 3kV**.
+    *   *Tipos Dieléctricos:*
+        *   **C0G / NP0:** Estabilidad total (uso en RF/temp). Baja capacitancia (hasta 10nF).
+        *   **X7R:** Estabilidad media. Temperatura -55/+125ºC. Uso general.
+        *   **Y5V:** Muy inestable con temperatura, evitar en circuitos críticos.
+
+*   **Poliéster / Mylar (MKT, Green Caps)**
+    *   *Valores:* **1nF, 2.2nF, 4.7nF, 10nF, 15nF, 22nF, 33nF, 47nF, 68nF, 100nF (0.1), 150nF, 220nF, 330nF, 470nF, 680nF, 1uF**.
+    *   *Tensiones:* **63V, 100V, 250V, 275V (AC - X2), 400V, 630V**.
+    *   *Tolerancia:* 5%, 10%.
+    *   *Formato:* Radial (MKT) o Axial (Box).
+
+*   **Polipropileno (MKP, KP, PPS)**
+    *   *Valores:* **100nF, 220nF, 470nF, 1uF, 1.5uF, 2.2uF, 3.3uF, 4.7uF, 6.8uF, 10uF**.
+    *   *Tensiones:* **160V, 250V, 275V, 400V, 630V, 800V, 1000V, 2000V**.
+    *   *Uso:* Cruces de audio (Crossovers), corrección de factor de potencia (PFC), Snubbers.
+
+*   **Poliestireno (KS, PS)**
+    *   *Valores:* **47pF, 100pF, 220pF, 470pF, 1nF, 2.2nF, 4.7nF**.
+    *   *Tensiones:* **50V, 100V, 160V**.
+    *   *Nota:* Excelente estabilidad, baja absorción dieléctrica. Ideal para filtros VCF analógicos vintage. No toleran mucho calor (soldar rápido).
+
+*   **Mica (Silver Mica)**
+    *   *Valores:* **10pF, 22pF, 47pF, 68pF, 100pF, 120pF, 150pF, 180pF, 220pF, 330pF, 470pF, 500pF, 560pF, 680pF, 820pF, 1000pF**.
+    *   *Tensiones:* **100V, 250V, 500V**.
+    *   *Uso:* Circuitos resonantes RF, Osciladores de alta precisión.
+
+*   **Variable / Trimmer (Condensador Ajustable)**
+    *   *Valores (Rango):* **3-30pF, 5-60pF, 6-70pF, 10-100pF, 15-150pF, 20-250pF**.
+    *   *Tensión:* Hasta **500V** (Plástico) o **2kV-3kV** (Aire).
+    *   *Tipo:* Mica (azul/cuadrado), Aire (placas visibles).
+
+---
+
+### 3. SEMICONDUCTORES: TRANSISTORES
+
+#### 3.1 BJT Propósito General (Small Signal - Encapsulado TO-92)
+*(Potencia típica: 400mW - 600mW, HFE típico: 50-400)*
+*   **2N3904** - NPN Genérico (V_ce=40V, I_c=200mA, Switch/Amp).
+*   **2N3906** - PNP Complementario.
+*   **2N2222 / PN2222** - NPN Switching (V_ce=30V, I_c=600mA).
+*   **BC546 / BC547 / BC548 / BC549** - Serie NPN Europea (V_ce=45V-65V, Bajo ruido).
+*   **BC556 / BC557 / BC558 / BC559** - Serie PNP Europea.
+*   **BC337-16 / BC337-25 / BC337-40** - NPN Alta corriente (I_c=800mA, V_ce=45V, HFE seleccionable).
+*   **BC327-16 / BC327-25 / BC327-40** - PNP Alta corriente complementario.
+*   **S9013 / S9014 / S9015** - Transistores genéricos Asianos (Comunes en productos de consumo).
+*   **KSP42 / KSP92** - Alto Voltaje General (V_ce=300V).
+*   **MPSA42 / MPSA42 / MPSA92** - Alto Voltaje (V_ce=300V, I_c=500mA).
+*   **2SC1815** - NPN General (Yamaha/Roland, V_ce=50V, I_c=150mA).
+*   **2SA1015** - PNP General (V_ce=50V, I_c=150mA).
+*   **2N4401 / 2N4403** - General Purpose NPN/PNP (Mejor ruido que 2N3904).
+*   **PN100 / PN200** - Alternativa de bajo costo al 2N2222/2N2907.
+
+#### 3.2 BJT Audio (Bajo Ruido / Alta Ganancia / Hi-Fi)
+*(Focus: Distorsión baja, ruido bajo, linealidad)*
+*   **2N5088 / 2N5089** - Ultra bajo ruido (V_ce=30V, HFE muy alto: 400-1200).
+*   **BC550C / BC560C** - Audio Hi-Fi (Serie C, HFE > 450, bajo ruido).
+*   **KSC1845** - NPN Bajo ruido (V_ce=120V, I_c=50mA). Estándar en audio profesional japonés.
+*   **KSA992** - PNP Bajo ruido (Complementario KSC1845, V_ce=120V).
+*   **2SC2240 / 2SA970** - Transistores de alta tensión y bajo ruido para etapas de entrada premium.
+*   **2SA1145 / 2SC2705** - Pares de audio de alta calidad.
+*   **BC237 / BC238 / BC239** - Versión mejorada del BC547.
+*   **2SB737 / 2SD1086** - Par de bajo ruido (Sony/Pioneer).
+*   **MPS6571** - Uso en audio vintage.
+
+#### 3.3 BJT Potencia (Salidas de Audio / Drivers)
+*(Encapsulados: TO-126, TO-220, TO-247, TO-3)*
+*   **TIP31A/B/C / TIP32A/B/C** - NPN/PNP Drivers (I_c=3A, P=40W, V_ce: 40/60/100V).
+*   **TIP41C / TIP42C** - NPN/PNP Potencia (I_c=6A, P=65W, V_ce=100V).
+*   **BD139 / BD140** - Mediana potencia (I_c=1.5A, P=12.5W, V_ce=80V, TO-126).
+*   **BD135 / BD136** - Mediana potencia (V_ce=45V).
+*   **BD237 / BD238** - 100V versión.
+*   **MJE15030 / MJE15031** - Drivers de potencia (V_ce=350V, I_c=1.5A).
+*   **MJE15032 / MJE15033** - Drivers de potencia (V_ce=400V, I_c=8A).
+*   **2N3055** - NPN Potencia Industrial (V_ce=60V, I_c=15A, P=115W, TO-3).
+*   **MJ2955** - PNP Complementario (TO-3).
+*   **2N3771 / 2N3772** - NPN Power (V_ce=40V, I_c=30A, TO-3).
+*   **2N3773 / 2N6609** - NPN High Voltage (V_ce=160V, I_c=16A, Salidas de potencia).
+*   **2SD669 / 2SB649** - Salidas de audio discretas (V_ce=180V, I_c=1.5A).
+*   **2SA1943 / 2SC5200** - Pares de alta fidelidad (V_ce=230V, I_c=15A, P=150W, Toshiba).
+*   **2SA1301 / 2SC3280** - Salidas finales (V_ce=160V, I_c=12A, Vintage Pioneer).
+*   **2SA1494 / 2SC3858** - Pares Monster Audio (V_ce=200V, I_c=17A, P=200W).
+*   **MJ21193 / MJ21194** - High Fidelity Power (V_ce=250V, I_c=16A).
+*   **2SA1186 / 2SC2837** - Transistores de alta potencia lineal.
+
+#### 3.4 Transistores Darlington (Alta Ganancia de Corriente)
+*   **TIP120 / TIP121 / TIP122** - NPN Darlington Power (5A, 60/80/100V).
+*   **TIP125 / TIP126 / TIP127** - PNP Darlington Power (Complementarios).
+*   **BD675 / BD677** - Darlington NPN.
+*   **BD676 / BD678** - Darlington PNP.
+*   **MJE800 / MJE805** - Audio Darlingtons.
+*   **BC517 / BC516** - Darlingtons de señal pequeña (TO-92).
+*   **MPSA14 / MPSA13** - Darlington NPN de propósito general.
+
+#### 3.5 FET (JFET - Interruptores Analógicos / Audio / RF)
+*(Polarización: Normal-ON / Depletion Mode)*
+*   **J201** - N-Channel JFET (Efectos, buffers, VCA). I_dss bajo.
+*   **2N3819** - N-Channel JFET General RF/Audio (Muy común).
+*   **2N5457 / 2N5458** - N-Channel (Switching). 2N5458 es mayor voltaje.
+*   **2N5459** - N-Channel High V_gs.
+*   **2N5484 / 2N5485 / 2N5486** - RF Amplifier JFET.
+*   **J112 / J113** - Switching analógico (Low r_on).
+*   **J174 / J175 / J176** - P-Channel JFET (Más raros, usados en mezcladores).
+*   **MPF102 / MPF4416** - RF/General.
+*   **2SK30 / 2SK117 / 2SK170** - Bajo ruido (Electret mics, Phono stages).
+*   **2SJ74 / 2SJ109 / 2SJ113** - P-Channel Low Noise (Audio JFETs complementarios).
+
+#### 3.6 MOSFET (Potencia / Conmutación / Audio)
+*(Encapsulados: TO-220, TO-247, TO-263/D2PAK, SMD)*
+*   **IRF540N** - N-Ch Logic/Standard (V_ds=100V, I_d=33A, R_ds=44mΩ).
+*   **IRF9540N** - P-Ch Complementario (V_ds=100V, I_d=19A).
+*   **IRFZ44N** - N-Ch Logic Level (Se enciende con 5V, V_ds=55V, I_d=49A).
+*   **IRF3205** - N-Ch Power (V_ds=55V, I_d=110A, R_ds muy bajo).
+*   **IRF840** - N-Ch Fast Switching (V_ds=500V, I_d=8A).
+*   **BUZ11** - N-Ch Switch potencia (V_ds=50V, I_d=30A).
+*   **IRF740 / IRF740A** - N-Ch High Voltage (V_ds=400V, I_d=10A).
+*   **IRF640** - N-Ch (V_ds=200V).
+*   **IRFP450 / IRFP460** - TO-247 High Power.
+*   **BS170 / BS107** - N-Ch Small Signal MOSFET (TO-92, 60V).
+*   **2N7000 / 2N7002** - N-Ch SMD/PTH Switching (60V, 200mA).
+*   **BSS138** - N-Ch Logic Level (50V, Low V_gs_th).
+*   **AO3400 / AO3401** - N-Ch / P-Ch SMD MOSFET (30V, 5.8A).
+*   **2SK1058 / 2SJ162** - MOSFET Lateral para Audio (V_ds=160V, I_d=7A, TO-247).
+*   **2SK214 / 2SJ77** - MOSFET Driver de Audio (Hitachi, TO-92L).
+*   **IRF630 / IRF9630** - 200V / 200V N-Ch/P-Ch pair.
+
+---
+
+### 4. SEMICONDUCTORES: CIRCUITOS INTEGRADOS (ICs)
+
+#### 4.1 Amplificadores Operacionales (Op-Amps) & Audio
+*(Formatos: DIP8, SOIC8, SOP8. Alimentación típica: +/- 15V)*
+*   **TL071** - SINGLE JFET Input.
+*   **TL072** - DUAL JFET Input (Estándar Sintetizador).
+*   **TL074** - QUAD JFET Input.
+*   **TL081 / TL082 / TL084** - General JFET (Offset un poco más alto).
+*   **TL062 / TL064** - Low Power JFET (Economía).
+*   **NE5532** - DUAL Low Noise Audio (Hi-Fi estándar, Input clamps).
+*   **NE5534** - SINGLE Low Noise (High precision, compensación externa opcional).
+*   **RC4558 / RC4559** - DUAL General (Muchos pedales Boss).
+*   **RC4560** - DUAL High Performance Audio.
+*   **UA741 / LM741 / MC1741** - SINGLE Vintage Clásico (Low slew rate).
+*   **LM358 / LM158** - DUAL Low Power / Single Supply (Industrial estándar).
+*   **LM1458** - DUAL General.
+*   **LM2904** - DUAL Low Power (Automotive).
+*   **LM833** - DUAL Low Noise Audio (National).
+*   **LM6171 / LM6172** - High Speed / Precision (Video/RF).
+*   **OPA2134** - DUAL SoundPlus Audio (High End, FET Input).
+*   **OPA2604** - DUAL High Fidelity.
+*   **OPA4131 / OPA4134** - QUAD Precision.
+*   **OPA2132 / OPA2134** - FET Input Premium.
+*   **OPA27 / OP27** - Precision / Low Noise.
+*   **OPA37 / OP37** - High Precision.
+*   **OP07** - Ultra-low Offset (Instrumentation).
+*   **LF351 / LF353 / LF356** - DUAL/SINGLE JFET (National).
+*   **LF411 / LF412** - Low Drift / Low Noise JFET.
+*   **NJM4558 / JRC4558** - DUAL Audio (Japanese, JRC4558D es famosa en overdrives).
+*   **NJM2068** - DUAL Audio Hi-Fi (Sintetizadores, bajo ruido).
+*   **NJM4560** - Dual High Speed.
+*   **M5218** - DUAL Audio (Yamaha/Korg vintage).
+*   **MC33171 / MC33172 / MC33174** - Low Offset / Single Supply.
+*   **AD823** - FET Input High Precision.
+*   **AD711 / AD712** - Precision / High Speed.
+*   **AD8610 / AD8620** - JFET High Fidelity Audio.
+*   **CA3140** - BiMOS High Impedance / Single Supply.
+*   **CA3080** - OTA (Operational Transconductance Amp) - **VINTAGE SYNTH CLAVE**.
+*   **LM13600 / LM13700** - DUAL OTA - **FILTROS/VCA CLAVE**.
+*   **BA6110** - OTA (Sintetizadores).
+*   **MAX439 / MAX440** - Video Op-Amps.
+*   **TLV2462** - Low Voltage / Rail-to-Rail.
+*   **MCP6001/2/4** - Low Power / Rail-to-Rail.
+
+#### 4.2 Reguladores de Voltaje (Powersupply)
+*(Formatos: TO-220, TO-92, TO-263, SOT-223)*
+*   **78L05 / 78L09 / 78L12** - Positive 100mA (TO-92).
+*   **78M05 / 78M12** - Positive 500mA (TO-220/Tab).
+*   **7805 / 7806 / 7809 / 7812 / 7815 / 7818 / 7824** - Positive 1A (TO-220).
+*   **79L05 / 79L12** - Negative 100mA.
+*   **7905 / 7912 / 7915 / 7918** - Negative 1A.
+*   **LM317 / LM317L / LM317M / LM317HV** - Adjustable Positive (0.5A, 0.1A, 1.5A, High Voltage).
+*   **LM337 / LM337T** - Adjustable Negative.
+*   **LD1117V33 / AMS1117-3.3 / 1.8 / 5.0** - LDO Low Dropout (1A, SOT-223/TO-220).
+*   **LP2950 / LP2951** - Micropower LDO.
+*   **LM723** - Adjustable Regulator Vintage (Fuentes de laboratorio).
+*   **L200 / LM138 / LM338** - High Current Adjustable (5A).
+*   **TLE2426** - Virtual Ground / Rail Splitter (Genera mitad de tensión).
+*   **MC78L00 / MC79L00** - Motorola serie.
+*   **UA78M / UA79M** - Series 500mA.
+
+#### 4.3 Amplificadores de Potencia de Audio (Power Amps)
+*(Formatos: TO-220, Pentawatt, Multiwatt)*
+*   **LM380 / LM384** - Low Power Audio Amp.
+*   **LM386** - Low Voltage Audio Amp (1W-2W, DIP8).
+*   **LM1875** - 20W Audio Amp (TO-220).
+*   **LM3886** - High Performance 68W (Overture).
+*   **LM4780** - Dual LM3886 (Stereo 120W).
+*   **TDA2003** - 10W Car Radio.
+*   **TDA2004** - 10W x 2 Stereo.
+*   **TDA2005** - Bridge 20W.
+*   **TDA2030** - 12-18W Hi-Fi.
+*   **TDA2040** - 20W Hi-Fi.
+*   **TDA2050** - 32W Hi-Fi.
+*   **TDA7265** - Stereo 2x25W.
+*   **TDA7266** - Stereo 2x7W Bridge (TV/Audio).
+*   **TDA7293 / TDA7294 / TDA7295 / TDA7296** - DMOS High Power (100W, Mute/Standby).
+*   **TDA7498** - Class D 2x100W (High Efficiency).
+*   **TDA7498E** - Class D 2x160W.
+*   **TA7222P / TA7207P** - Power Amp (Yamaha/Korg, Single supply).
+*   **TA8210** - Car Radio Amp.
+*   **LA4440** - 6W Dual (Portable Keyboards).
+*   **STK Series** (STK4044, STK4151, STK4191, STK4048) - Hybrid Thick Film Amps (Home Keyboards).
+*   **PA0033 / PA0034** - Analog Devices Power Amps.
+
+#### 4.4 Lógica Digital (CMOS & TTL) - *Control y Sincronización*
+*(Familias: 4000 series, 7400 series. Tensiones: 3V-15V para CMOS, 5V para TTL)*
+*   **CD4000 Series:**
+    *   **CD4001** - Quad 2-Input NOR Gate.
+    *   **CD4011** - Quad 2-Input NAND Gate.
+    *   **CD4013** - Dual D-Type Flip-Flop.
+    *   **CD4014** - 8-Stage Static Shift Register (Parallel In/Serial Out).
+    *   **CD4015** - Dual 4-Stage Shift Register.
+    *   **CD4016** - Quad Bilateral Switch.
+    *   **CD4017** - Decade Counter / Divider (Secuenciadores clave).
+    *   **CD4020** - 14-Stage Binary Ripple Counter.
+    *   **CD4021** - 8-Stage Static Shift Register (Serial In/Parallel Out).
+    *   **CD4022** - Divide-by-8 Counter.
+    *   **CD4023** - Triple 3-Input NAND Gate.
+    *   **CD4024** - 7-Stage Binary Counter.
+    *   **CD4025** - Triple 3-Input NOR Gate.
+    *   **CD4027** - Dual JK Flip-Flop.
+    *   **CD4028** - BCD-to-Decimal Decoder.
+    *   **CD4029** - Presettable Up/Down Counter.
+    *   **CD4030 / CD4070** - Quad XOR Gate.
+    *   **CD4040** - 12-Stage Ripple Counter.
+    *   **CD4042** - Quad D Latch.
+    *   **CD4046** - Phase-Locked Loop (PLL) - *Clave para clock recovery y frecuencia*.
+    *   **CD4049** - Hex Inverting Buffer (Conversion de nivel).
+    *   **CD4050** - Hex Non-Inverting Buffer.
+    *   **CD4051** - 8-Channel Analog Multiplexer/Demultiplexer.
+    *   **CD4052** - Dual 4-Channel Analog Multiplexer.
+    *   **CD4053** - Triple 2-Channel Analog Multiplexer.
+    *   **CD4060** - 14-Stage Ripple Counter with Oscillator (Muy común en temporizadores).
+    *   **CD4066** - Quad Bilateral Switch.
+    *   **CD4068** - 8-Input NAND Gate.
+    *   **CD4069** - Hex Inverter.
+    *   **CD4071** - Quad 2-Input OR Gate.
+    *   **CD4072** - Dual 4-Input OR Gate.
+    *   **CD4073** - Triple 3-Input AND Gate.
+    *   **CD4075** - Triple 3-Input OR Gate.
+    *   **CD4078** - 8-Input NOR Gate.
+    *   **CD4081** - Quad 2-Input AND Gate.
+    *   **CD4082** - Dual 4-Input AND Gate.
+    *   **CD4085** - Dual 2-wide 2-Input AND-OR-Invert Gate.
+    *   **CD4086** - Expandable 2-wide 2-input AND-OR-Invert Gate.
+    *   **CD4093** - Quad 2-Input NAND Schmitt Trigger.
+    *   **CD4094** - 8-Stage Shift-and-Store Bus Register.
+    *   **CD4098** - Dual Monostable Multivibrator.
+    *   **CD40106** - Hex Schmitt Trigger Inverter.
+    *   **CD40147** - 10-Line-to-4-Line BCD Priority Encoder.
+    *   **CD40160 / 40161 / 40162 / 40163** - Decade/Binary Synchronous Counters.
+    *   **CD40192 / CD40193** - Synchronous Up/Down Counters.
+    *   **CD4510 / CD4516** - Synchronous Up/Down Counters (Binary).
+    *   **CD4511** - BCD-to-7 Segment Latch/Decoder/Driver.
+    *   **CD4512** - 8-Channel Data Selector.
+    *   **CD4514 / CD4515** - 4-Bit Latch / 4-to-16 Line Decoder.
+    *   **CD4518** - Dual BCD Up Counter.
+    *   **CD4520** - Dual Binary Up Counter.
+    *   **CD4521** - 24-Stage Divider.
+    *   **CD4527** - BCD Rate Multiplier.
+    *   **CD4528** - Dual Retriggerable Monostable Multivibrator.
+    *   **CD4532** - 8-Bit Priority Encoder.
+    *   **CD4538** - Dual Precision Monostable.
+    *   **CD4541** - Programmable Timer.
+    *   **CD4543** - BCD-to-7 Segment Latch/Decoder/Driver.
+    *   **CD4553** - 3-Digit BCD Counter.
+    *   **CD4584** - Hex Schmitt Trigger Inverter.
+
+*   **74HC / 74HCT Series (High Speed CMOS - 5V):**
+    *   **74HC00** - Quad NAND.
+    *   **74HC02** - Quad NOR.
+    *   **74HC04** - Hex Inverter.
+    *   **74HC05** - Hex Inverter (Open Drain).
+    *   **74HC08** - Quad AND.
+    *   **74HC10** - Triple 3-Input NAND.
+    *   **74HC11** - Triple 3-Input AND.
+    *   **74HC14** - Hex Schmitt Trigger Inverter.
+    *   **74HC20** - Dual 4-Input NAND.
+    *   **74HC21** - Dual 4-Input AND.
+    *   **74HC27** - Triple 3-Input NOR.
+    *   **74HC30** - 8-Input NAND.
+    *   **74HC32** - Quad OR.
+    *   **74HC42** - BCD-to-Decimal Decoder.
+    *   **74HC73** - Dual JK Flip-Flop (w/ Clear).
+    *   **74HC74** - Dual D Flip-Flop.
+    *   **74HC75** - 4-Bit D Latch.
+    *   **74HC76** - Dual JK Flip-Flop.
+    *   **74HC77** - 4-Bit D Latch.
+    *   **74HC78** - Dual JK Flip-Flop w/ Preset.
+    *   **74HC86** - Quad XOR.
+    *   **74HC125** - Quad Bus Buffer (3-State, Active Low Enable).
+    *   **74HC126** - Quad Bus Buffer (3-State, Active High Enable).
+    *   **74HC132** - Quad 2-Input NAND Schmitt Trigger.
+    *   **74HC137** - 3-to-8 Line Decoder/Demultiplexer w/ Latches.
+    *   **74HC138** - 3-to-8 Line Decoder/Demultiplexer.
+    *   **74HC139** - Dual 2-to-4 Line Decoder/Demultiplexer.
+    *   **74HC147** - 10-to-4 Line Priority Encoder.
+    *   **74HC151** - 8-Channel Data Selector/Mux.
+    *   **74HC153** - Dual 4-Channel Data Selector/Mux.
+    *   **74HC157 / 158** - Quad 2-Input Mux (Non-Inverting/Inverting).
+    *   **74HC161 / 163** - 4-Bit Sync Counter.
+    *   **74HC162** - Decade Counter.
+    *   **74HC164** - 8-Bit Serial-In/Parallel-Out Shift Register.
+    *   **74HC165** - 8-Bit Parallel-In/Serial-Out Shift (Lectura de teclas).
+    *   **74HC166** - 8-Bit Shift Register (Parallel/Serial Load).
+    *   **74HC173** - 4-Bit D Register (3-State).
+    *   **74HC174** - Hex D Flip-Flop.
+    *   **74HC175** - Quad D Flip-Flop.
+    *   **74HC190** - Decade Up/Down Counter.
+    *   **74HC191** - Binary Up/Down Counter.
+    *   **74HC192** - Decade Up/Down Counter w/ Clear.
+    *   **74HC193** - Binary Up/Down Counter w/ Clear.
+    *   **74HC194** - 4-Bit Bidirectional Universal Shift Register.
+    *   **74HC195** - 4-Bit Parallel Access Shift Register.
+    *   **74HC221** - Dual Monostable Multivibrator.
+    *   **74HC237** - 3-to-8 Decoder with Latches.
+    *   **74HC240** - Octal Inverting Buffer/Line Driver (3-State).
+    *   **74HC241** - Octal Buffer/Line Driver (3-State).
+    *   **74HC244** - Octal Buffer/Line Driver (3-State).
+    *   **74HC245** - Octal Bus Transceiver (Bidireccional).
+    *   **74HC251** - 8-Input Data Selector (3-State).
+    *   **74HC257 / 258** - Quad 2-Input Mux (3-State).
+    *   **74HC259** - 8-Bit Addressable Latch.
+    *   **74HC266** - Quad XNOR.
+    *   **74HC273** - Octal D Flip-Flop w/ Clear.
+    *   **74HC279** - Quad SR Latch.
+    *   **74HC280** - 9-Bit Parity Generator/Checker.
+    *   **74HC283** - 4-Bit Binary Full Adder.
+    *   **74HC298** - Quad 2-Input Mux with Storage.
+    *   **74HC365** - Hex Buffer (3-State).
+    *   **74HC367 / 368** - Hex Buffer (Inverting/Non-Inverting).
+    *   **74HC373** - Octal D Latch (Transparent).
+    *   **74HC374** - Octal D Flip-Flop (3-State).
+    *   **74HC377** - Octal D Flip-Flop (Enable).
+    *   **74HC378** - Hex D Flip-Flop (Enable).
+    *   **74HC379** - Quad D Flip-Flop (Enable).
+    *   **74HC390** - Dual Decade Counter.
+    *   **74HC393** - Dual 4-Bit Binary Counter.
+    *   **74HC4040** - 12-Stage Binary Counter.
+    *   **74HC4051 / 74HC4052 / 74HC4053** - Analog Multiplexers (High Speed).
+    *   **74HC4060** - 14-Stage Ripple Counter w/ Osc.
+    *   **74HC4067** - 16-Channel Analog Multiplexer.
+    *   **74HC4075** - Triple 3-Input OR.
+    *   **74HC4094** - 8-Stage Shift Register.
+    *   **74HC4511** - BCD to 7-Segment.
+    *   **74HC4514 / 4515** - Decoder.
+    *   **74HC4520** - Dual Binary Counter.
+    *   **74HC540 / 541** - Octal Buffer/Driver (3-State).
+    *   **74HC595** - 8-Bit Shift Register (Luces, displays).
+    *   **74HC597** - 8-Bit Shift Register (Input).
+    *   **74HC670** - 4x4 Register File (3-State).
+
+#### 4.5 Temporizadores, Reguladores y Drivers Varios
+*   **NE555 / LM555 / SA555** - Timer (LFO, Pulses, Relés). DIP8/SOIC8.
+*   **NE556 / LM556** - Dual Timer (DIP14).
+*   **LM567** - Tone Decoder.
+*   **LM393 / LM2903** - Dual Comparator.
+*   **LM311** - Single Comparator (Salida colector abierto).
+*   **LM339** - Quad Comparator.
+*   **ULN2003** - Darlington Transistor Array (Drivers de LCD/Relés) (DIP16).
+*   **ULN2803** - Octal Darlington Array (DIP18).
+*   **L298 / L293D** - Motor Driver.
+*   **L297** - Stepper Motor Controller.
+*   **L298N** - Dual Full Bridge Driver.
+*   **MC34063** - DC-DC Converter (Step up/down).
+*   **MC33063** - A version of 34063.
+*   **MAX232** - RS232 Driver (Interface).
+*   **MAX485** - RS485 Transceiver.
+*   **IR2101 / IR2102** - High/Low Side Driver (MOSFETs).
+*   **LM317L / LM317T** - Adjustable Regulator (Details).
+*   **UC3842 / UC3843 / UC3844 / UC3845** - Current Mode PWM Controllers (Fuentes switching).
+*   **TL494** - Pulse-Width-Modulation Control Circuit.
+*   **SG3525** - Regulating Pulse Width Modulator.
+
+#### 4.6 Memorias y Almacenamiento (I2C/SPI)
+*(Formato: DIP8, SOIC8)*
+*   **24C01** - 1kbit / 128Bytes EEPROM.
+*   **24C02** - 2kbit / 256Bytes EEPROM (Muy común para presets).
+*   **24C04** - 4kbit / 512Bytes.
+*   **24C08** - 8kbit / 1K Bytes.
+*   **24C16** - 16kbit / 2K Bytes.
+*   **24C32 / 24C64** - 4K/8K EEPROM.
+*   **24C128 / 24C256** - 16K/32K EEPROM.
+*   **24C512** - 64K EEPROM.
+*   **24C1024** - 128K EEPROM.
+*   **AT93C46** - Serial EEPROM (Microwire).
+*   **AT93C56 / AT93C66** - Serial EEPROM.
+*   **M95M01** - 1Mb SPI EEPROM.
+*   **W25Q64 / W25Q128** - 64Mb/128Mb SPI Flash (Usado para firmwares).
+*   **AT45DB161** - DataFlash.
+*   **23K256** - 256Kb SPI SRAM.
+
+#### 4.7 Conversores y Audio Digital (DSP/Codec)
+*   **PCM2706 / PCM2707** - USB Audio Codec.
+*   **PCM2900** - USB Audio.
+*   **CS4272 / CS4270** - Stereo Codec (24-bit, 192kHz).
+*   **CS4344** - Stereo DAC.
+*   **AK4113 / AK4114** - Digital Audio Transceiver (SPDIF).
+*   **AK4531** - Codec (AC'97).
+*   **WM8731** - Stereo Codec Low Power.
+*   **WM8775** - 6-Channel Audio Codec.
+*   **PT2399** - Echo/Delay Processor IC (Efectos analógicos digitales).
+*   **STA013** - MPEG Layer 3 Decoder.
+*   **VS1053** - Ogg Vorbis / MP3 / AAC / WMA / FLAC Codec.
+
+#### 4.8 Optoacopladores (MIDI / Mutings / Pedales)
+*(Formatos: DIP4, DIP6, DIP8, SOP4, SOP8)*
+*   **PC817 / PC817C / PC817X2 / X4** - Transistor Output (General, CTR alto).
+*   **PC814 / PC816** - Versions de PC817.
+*   **PC827** - Dual Optocoupler.
+*   **4N25 / 4N26 / 4N27 / 4N28** - Standard Optocoupler (Base pin available).
+*   **4N29 / 4N30 / 4N32 / 4N33** - Darlington Optocoupler (Alta ganancia).
+*   **4N35** - High Speed Optocoupler.
+*   **4N36 / 4N37** - Variaciones de velocidad.
+*   **6N137** - High Speed Digital Optocoupler (MIDI Input Standard, 10MBd).
+*   **6N138** - High Sensitivity / High CMR Optocoupler (MIDI Input alternative).
+*   **CNY17-1 / CNY17-2 / CNY17-3** - Transistor Output (High transfer ratio).
+*   **CNY74** - Series.
+*   **HCPL3700** - AC/DC Logic Optocoupler.
+*   **MOC3021 / MOC3022 / MOC3023** - Triac Driver Output (Zero Crossing).
+*   **MOC3040 / MOC3041 / MOC3042** - Zero Crossing Triac Driver.
+*   **H11AA1** - AC Input Optocoupler (Detector de paso por cero).
+*   **TLP521-1 / TLP521-2 / TLP521-4** - Transistor couplers (Sharp).
+*   **TLP621** - Similar a 4N25.
+
+
+
+```sql
+-- =====================================================================
+-- TALLER DE REPARACIÓN DE INSTRUMENTOS MUSICALES (SYNTH REPAIR DB)
+-- MOTOR: SQLite
+-- DISEÑO: Relacional Normalizado (Eje: Reparación)
+-- =====================================================================
+
+PRAGMA foreign_keys = ON;
+
+-- =====================================================================
+-- 1. LIMPIEZA DE EXISTENTE (PARA EJECUCIÓN LIMPIA)
+-- =====================================================================
+DROP TABLE IF EXISTS repair_consumption;
+DROP TABLE IF EXISTS repair_tool_usage;
+DROP TABLE IF EXISTS repairs;
+DROP TABLE IF EXISTS devices;
+DROP TABLE IF EXISTS customers;
+
+DROP TABLE IF EXISTS stock;
+DROP TABLE IF EXISTS tools;
+DROP TABLE IF EXISTS tool_locations;
+DROP TABLE IF EXISTS tool_categories;
+DROP TABLE IF EXISTS tool_brands;
+
+DROP TABLE IF EXISTS def_resistors;
+DROP TABLE IF EXISTS def_capacitors;
+DROP TABLE IF EXISTS def_inductors;
+DROP TABLE IF EXISTS def_transformers;
+DROP TABLE IF EXISTS def_discrete_semis;
+DROP TABLE IF EXISTS def_integrated_circuits;
+DROP TABLE IF EXISTS def_potentiometers;
+DROP TABLE IF EXISTS def_switches;
+DROP TABLE IF EXISTS def_connectors;
+DROP TABLE IF EXISTS def_cables;
+DROP TABLE IF EXISTS def_displays;
+DROP TABLE IF EXISTS def_power_modules;
+DROP TABLE IF EXISTS def_mechanics;
+DROP TABLE IF EXISTS def_chassis_hardware;
+DROP TABLE IF EXISTS def_consumables;
+
+-- =====================================================================
+-- 2. TABLAS CENTRALES (EJE: REPARACIÓN)
+-- =====================================================================
+
+-- Clientes
+CREATE TABLE customers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE,
+    phone TEXT,
+    address TEXT,
+    tax_id TEXT,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Dispositivos (Sintetizadores, Pedales, Amps)
+CREATE TABLE devices (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER NOT NULL,
+    brand TEXT NOT NULL,
+    model TEXT NOT NULL,
+    serial_number TEXT,
+    year_manufactured INTEGER,
+    purchase_date DATE,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);
+
+-- Estados de Reparación (Lookup)
+CREATE TABLE repair_status (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code TEXT UNIQUE NOT NULL, -- Ej: 'RECEIVED', 'DIAGNOSIS', 'WAITING_PARTS', 'FIXED', 'DELIVERED'
+    description TEXT NOT NULL
+);
+
+-- Reparaciones (Tabla Central)
+CREATE TABLE repairs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    device_id INTEGER NOT NULL,
+    status_id INTEGER NOT NULL,
+    intake_date DATE NOT NULL,
+    completion_date DATE,
+    -- Detalles del trabajo
+    reported_issue TEXT NOT NULL, -- Lo que dice el cliente
+    diagnosis TEXT,                -- Lo que descubre el técnico
+    work_performed TEXT,           -- Qué se hizo
+    total_cost REAL,               -- Costo total para el cliente
+    -- Auditoría
+    technician_name TEXT,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE,
+    FOREIGN KEY (status_id) REFERENCES repair_status(id)
+);
+
+-- =====================================================================
+-- 3. GESTIÓN DE HERRAMIENTAS (USADAS EN REPARACIONES)
+-- =====================================================================
+
+CREATE TABLE tool_categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL -- Ej: 'Soldadura', 'Medición', 'Mecánica'
+);
+
+CREATE TABLE tool_brands (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE tool_locations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL -- Ej: 'Armario A', 'Carrito 1'
+);
+
+CREATE TABLE tools (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    model TEXT,
+    brand_id INTEGER,
+    category_id INTEGER,
+    location_id INTEGER,
+    serial_number TEXT,
+    calibration_date DATE,
+    next_calibration_date DATE,
+    status TEXT DEFAULT 'ACTIVE', -- ACTIVE, BROKEN, CALIBRATION
+    FOREIGN KEY (brand_id) REFERENCES tool_brands(id),
+    FOREIGN KEY (category_id) REFERENCES tool_categories(id),
+    FOREIGN KEY (location_id) REFERENCES tool_locations(id)
+);
+
+-- Registro de uso de herramientas en reparaciones
+CREATE TABLE repair_tool_usage (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    repair_id INTEGER NOT NULL,
+    tool_id INTEGER NOT NULL,
+    usage_notes TEXT, -- Ej: 'Usado para medir VCC en IC5'
+    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE,
+    FOREIGN KEY (tool_id) REFERENCES tools(id)
+);
+
+-- =====================================================================
+-- 4. DEFINICIÓN DE COMPONENTES (FICHAS TÉCNICAS)
+-- =====================================================================
+
+-- 4.1 Resistencias
+CREATE TABLE def_resistors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    technology TEXT CHECK(technology IN ('CARBON_FILM', 'METAL_FILM', 'METAL_OXIDE', 'WIREWOUND', 'CERMET', 'THICK_FILM', 'SMD')),
+    value_ohms REAL NOT NULL,           -- Ej: 1000.0
+    tolerance_percent REAL,             -- Ej: 1.0, 5.0
+    power_watts REAL,                   -- Ej: 0.25
+    package TEXT,                       -- Ej: '0805', 'AXIAL', 'TO-220'
+    voltage_rating_volts REAL,
+    series TEXT                         -- Ej: 'E24', 'E96'
+);
+
+-- 4.2 Capacitores
+CREATE TABLE def_capacitors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dielectric_type TEXT CHECK(dielectric_type IN ('ELECTROLYTIC_AL', 'ELECTROLYTIC_TANTALUM', 'CERAMIC_MLCC', 'POLYESTER', 'POLYPROPYLENE', 'MICA', 'FILM')),
+    value_farads REAL NOT NULL,         -- Ej: 0.000001 (1uF)
+    voltage_volts REAL NOT NULL,
+    tolerance_percent REAL,
+    temperature_rating TEXT,            -- Ej: '85C', '105C'
+    package TEXT,                       -- Ej: 'RADIAL', 'SMD_1206'
+    polarity INTEGER DEFAULT 0          -- 1 = Polarized, 0 = Non-polar
+);
+
+-- 4.3 Inductores
+CREATE TABLE def_inductors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    value_henry REAL NOT NULL,          -- Ej: 0.00001 (10uH)
+    current_max_amps REAL,
+    resistance_dcr_ohms REAL,
+    core_type TEXT,                     -- Ej: 'FERRITE', 'IRON_POWDER', 'AIR'
+    package TEXT
+);
+
+-- 4.4 Transformadores
+CREATE TABLE def_transformers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT CHECK(type IN ('POWER', 'AUDIO_OUTPUT', 'PULSE', 'FLYBACK')),
+    primary_voltage REAL,
+    secondary_voltage REAL,
+    power_va REAL,
+    frequency_hz REAL,
+    mounting_type TEXT                  -- Ej: 'PCB', 'CHASSIS'
+);
+
+-- 4.5 Semiconductores Discretos
+CREATE TABLE def_discrete_semis (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    part_number TEXT NOT NULL,          -- Ej: '2N3904', '1N4007'
+    device_type TEXT CHECK(device_type IN ('DIODE', 'BJT_NPN', 'BJT_PNP', 'JFET_N', 'JFET_P', 'MOSFET_N', 'MOSFET_P', 'SCR', 'TRIAC', 'ZENER')),
+    package TEXT,                       -- Ej: 'TO-92', 'DO-41', 'SOT-23'
+    voltage_max REAL,
+    current_max REAL,
+    power_max_watts REAL
+);
+
+-- 4.6 Circuitos Integrados
+CREATE TABLE def_integrated_circuits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    part_number TEXT NOT NULL UNIQUE,
+    function_type TEXT,                 -- Ej: 'OP_AMP', 'LOGIC_CMOS', 'MICROCONTROLLER', 'POWER_REG'
+    package TEXT,                       -- Ej: 'DIP8', 'SOIC16', 'QFP'
+    pin_count INTEGER,
+    voltage_supply_min REAL,
+    voltage_supply_max REAL,
+    manufacturer TEXT
+);
+
+-- 4.7 Potenciómetros
+CREATE TABLE def_potentiometers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    resistance_ohms REAL NOT NULL,
+    taper TEXT CHECK(taper IN ('LINEAR', 'LOGARITHMIC', 'ANTI_LOG', 'AUDIO')),
+    shaft_type TEXT,                    -- Ej: 'SPLIT_SHAFT', 'KNURLED', 'PCB_PIN'
+    travel_type TEXT,                   -- Ej: 'ROTARY', 'SLIDER', 'TRIMMER'
+    power_watts REAL,
+    physical_size_mm TEXT
+);
+
+-- 4.8 Interruptores / Switches
+CREATE TABLE def_switches (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT CHECK(type IN ('TOGGLE', 'PUSH_BUTTON', 'DIP', 'SLIDE', 'ROTARY', 'FOOTSWITCH')),
+    poles INTEGER NOT NULL,             -- SP, DP, 3P, 4P
+    throws INTEGER NOT NULL,            -- ST, DT, 3T, 4T
+    rating_current_amps REAL,
+    rating_voltage_volts REAL,
+    mounting TEXT                       -- PCB, PANEL, SMD
+);
+
+-- 4.9 Conectores
+CREATE TABLE def_connectors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    connector_type TEXT,                -- Ej: 'JACK_6.35MM', 'XLR', 'DIN_5PIN', 'HEADER_PIN', 'USB_B'
+    format TEXT CHECK(format IN ('PCB_THROUGH', 'PCB_SMD', 'PANEL_MOUNT', 'CABLE_END')),
+    pin_count INTEGER,
+    gender TEXT CHECK(gender IN ('MALE', 'FEMALE')),
+    plating TEXT                        -- GOLD, NICKEL, TIN
+);
+
+-- 4.10 Cables
+CREATE TABLE def_cables (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cable_type TEXT CHECK(cable_type IN ('SIGNAL_AUDIO', 'POWER mains', 'RIBBON', 'COAXIAL', 'SPEAKER')),
+    gauge_awg REAL,
+    conductor_count INTEGER,
+    shielded INTEGER DEFAULT 0,
+    outer_diameter_mm REAL,
+    insulation_material TEXT
+);
+
+-- 4.11 Displays
+CREATE TABLE def_displays (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    display_type TEXT CHECK(display_type IN ('LCD_SEGMENT', 'LCD_GRAPHIC', 'OLED', 'VFD', 'LED_7SEG')),
+    resolution TEXT,                    -- Ej: '16x2', '128x64'
+    interface TEXT,                     -- Ej: 'I2C', 'SPI', 'PARALLEL'
+    backlight_type TEXT,
+    voltage_volts REAL
+);
+
+-- 4.12 Fuentes / Potencia
+CREATE TABLE def_power_modules (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT CHECK(type IN ('VOLTAGE_REGULATOR', 'DC_CONVERTER', 'RECTIFIER_BRIDGE', 'FUSE')),
+    input_voltage TEXT,
+    output_voltage REAL,
+    output_current REAL,
+    package TEXT,
+    is_adjustable INTEGER DEFAULT 0
+);
+
+-- 4.13 Mecánica (Teclas, Faders, Knobs)
+CREATE TABLE def_mechanics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    part_type TEXT CHECK(part_type IN ('KEY_WHITE', 'KEY_BLACK', 'KEYBED_ASSEMBLY', 'FADER_CAP', 'KNOB', 'PEDAL')),
+    material TEXT,
+    dimensions TEXT,                    -- LxWxH o diametro
+    compatible_models TEXT,             -- Lista de texto de modelos compatibles
+    weight_grams REAL
+);
+
+-- 4.14 Chasis / Ferretería
+CREATE TABLE def_chassis_hardware (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    hardware_type TEXT CHECK(hardware_type IN ('SCREW', 'NUT', 'STANDOFF', 'WASHER', 'BRACKET')),
+    thread_type TEXT,                   -- Ej: 'M3', '4-40', '#6-32'
+    length_mm REAL,
+    head_type TEXT,                     -- Phillips, Flat, Hex, Button
+    material TEXT                      -- Steel, Nylon, Brass
+);
+
+-- 4.15 Consumibles / Químicos
+CREATE TABLE def_consumables (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    chemical_type TEXT CHECK(chemical_type IN ('SOLDER_WIRE', 'FLUX', 'CLEANER_ISOPROPYL', 'CLEANER_DEOXIT', 'GREASE', 'THERMAL_COMPOUND')),
+    brand TEXT,
+    volume_ml REAL,
+    weight_grams REAL,
+    safety_notes TEXT
+);
+
+-- =====================================================================
+-- 5. GESTIÓN DE STOCK (INVENTARIO)
+-- =====================================================================
+-- Diseño polimórfico: Una sola tabla de stock apunta a cualquiera de las tablas 'def_*' 
+-- mediante el nombre de la tabla y el ID del componente.
+
+CREATE TABLE stock (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    
+    -- Referencia polimórfica al componente
+    target_table TEXT NOT NULL,         -- Ej: 'def_resistors', 'def_ic'
+    target_id INTEGER NOT NULL,
+    
+    -- Datos de Inventario
+    quantity_available INTEGER NOT NULL DEFAULT 0,
+    quantity_reserved INTEGER DEFAULT 0,    -- Reservado para reparaciones en curso
+    location TEXT,                     -- Ej: 'Estantería A - Caja 3'
+    bin_location TEXT,                 -- Ej: 'R03' (Fila 03)
+    
+    -- Económico y Logístico
+    unit_cost REAL,
+    supplier_name TEXT,
+    supplier_part_number TEXT,
+    minimum_stock_level INTEGER DEFAULT 5,  -- Alerta de reposición
+    last_restock_date DATE,
+    
+    UNIQUE(target_table, target_id, location) -- No duplicar stock mismo item en misma ubicación
+);
+
+-- =====================================================================
+-- 6. RELACIÓN REPARACIÓN - COMPONENTES (CONSUMO)
+-- =====================================================================
+-- Registra qué componente específico se usó en una reparación.
+-- Se apunta a la DEFINICIÓN del componente, no al lote de stock, para mantener
+-- el historial técnico intacto aunque el stock se mueva o reabastezca.
+
+CREATE TABLE repair_consumption (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    repair_id INTEGER NOT NULL,
+    
+    -- Referencia al componente usado
+    component_table TEXT NOT NULL,
+    component_id INTEGER NOT NULL,
+    
+    quantity_used INTEGER NOT NULL DEFAULT 1,
+    notes TEXT,
+    
+    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE
+);
+
+-- =====================================================================
+-- 7. ÍNDICES PARA RENDIMIENTO
+-- =====================================================================
+CREATE INDEX idx_stock_target ON stock(target_table, target_id);
+CREATE INDEX idx_stock_location ON stock(location);
+CREATE INDEX idx_stock_low ON stock(quantity_available) WHERE quantity_available <= minimum_stock_level;
+CREATE INDEX idx_repairs_device ON repairs(device_id);
+CREATE INDEX idx_repairs_status ON repairs(status_id);
+CREATE INDEX idx_repairs_date ON repairs(intake_date);
+CREATE INDEX idx_repair_consumption_repair ON repair_consumption(repair_id);
+CREATE INDEX idx_repair_tool_usage_repair ON repair_tool_usage(repair_id);
+```
+
+1 necesito generar la base de datos lo más completa posible una sola vez, ese "excel" es lo que yo tengo realmente dentro de mi taller, pero también voy agregando cosas y hay material que no he agregado aun ahí por ejemplo , por lo tanto necesito generar finalmente el algoritmo definitivo que sería el consolidado de todo esto y que decanta en la gran base de datos que la armo una sola vez y luego añado cuadno necesito. 
+, lo de base de datos, ahora entendí la pregunta 1, sí , base de datos. 
+2, hay que separar en tres grandes grupos TALLER DE REPARACIÖN ES 1 herramientas, insumos y máqinas a reparar. luego cada una tiene sus cruces, recuerda que esta misma base de datos y su cruce es para seguimiento de instrumentos desde parte de usuarios, con sus fotos respectivas, que puedan ver foto para cotizar, etc etc etc. 
+3 , quiero que mi base de datos sea profesional como se ocupa , no tengo idea como se ocupa en el mercado, pero quiero que sea como en el mercado y ahí yo aprendo a ocuparlar y la leer como pide el mercado, pero quiero como sea lo más profesional posible 
+4. sí son datos técnicos, no cantidad, son 16k, toda la razón, 
+5. en este orden excel y el resto, por qué excel ? porque es l oque tengo de verdad en el taller, pero solo ingresado hasta cierto punto, he comprado muchas más cosas en el tiempo, nuevas eherramientas etc, por lo tanto  no tengo todo lo que está ahí , pero el resto complementa y voy siempre añadiendo asíque no queda mal que cada uno de los elementos sea creado dentro del gran algoritmo que crea la base de datos. 
+6 le pregunté al chat y me dijo que era mejor tener una sola base , si tengo por ejemplo otro talelr, bueno teno su propia base, y dentro de la misma perosnal de cada uno, hago los cruces necesarios con todo loq ue tengo disponible agregado. 
+
+
+
+MIS PREGUNTAS:
+1. Sobre el OBJETIVO del algoritmo:
+
+¿Quieres que el script extraiga, clasifique y normalice todos los datos de componentes de TODAS las fuentes (BASE_DATOS.txt + Excel) en un formato único?
+¿O solo quieres ordenar el texto del BASE_DATOS.txt?
+
+2. Sobre las CATEGORÍAS a extraer:
+
+¿Las familias que mencionas en BASE_DATOS.txt (resistencias, capacitores, ICs, etc.) son las definitivas?
+¿Incluyo también las partes mecánicas del teclado (teclas, martillos, fieltros) como categoría separada?
+
+3. Sobre el FORMATO DE SALIDA:
+
+¿Quieres que el algoritmo genere archivos JSON organizados por categoría?
+¿O prefieres que genere directamente INSERT statements SQL listos para la base de datos?
+¿O un CSV/Excel estructurado por familia?
+
+4. Sobre los CAMPOS TÉCNICOS:
+
+En el Excel, por ejemplo, tienes "16000" en resistencias. ¿Es 16kΩ? ¿En qué unidad están?
+¿Los capacitores cerámicos están en pF o nF? (veo valores como 40, 300, 683, 474...)
+¿Necesitas que el script infiera las especificaciones faltantes (tolerancia, potencia, voltaje) o las dejo vacías?
+
+5. Sobre DUPLICADOS:
+
+Hay componentes repetidos entre BASE_DATOS.txt y el Excel. ¿El algoritmo debe fusionarlos y eliminar duplicados?
+¿Cuál fuente tiene prioridad si hay conflicto?
+
+6. Sobre las HERRAMIENTAS:
+
+¿Las herramientas del taller (osciloscopios, soldadores, etc.) también deben procesarse con el mismo algoritmo?
+¿O esas ya están bien organizadas en el SQL?
