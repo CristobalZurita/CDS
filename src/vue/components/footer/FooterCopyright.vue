@@ -5,7 +5,7 @@
 
 <script setup>
 import {computed} from "vue"
-import {useStrings} from "@/composables/strings.js"
+import {useStrings} from "/src/composables/strings.js"
 
 const strings = useStrings()
 

@@ -17,8 +17,8 @@
 
 <script setup>
 import {computed} from "vue"
-import {useUtils} from "@/composables/utils.js"
-import CircleIcon from "@/vue/components/widgets/CircleIcon.vue"
+import {useUtils} from "/src/composables/utils.js"
+import CircleIcon from "/src/vue/components/widgets/CircleIcon.vue"
 
 const utils = useUtils()
 

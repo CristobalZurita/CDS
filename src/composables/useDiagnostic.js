@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
-// import brandsData from '@/assets/data/brands.json'
-// import instrumentsData from '@/assets/data/instruments.json'
-// import faultsData from '@/assets/data/faults.json'
+import brandsData from '@/assets/data/brands.json'
+import instrumentsData from '@/assets/data/instruments.json'
+import faultsData from '@/assets/data/faults.json'
 
 export function useDiagnostic() {
   // State

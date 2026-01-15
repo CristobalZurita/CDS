@@ -23,7 +23,7 @@
 
 <script>
 import { useInventoryStore } from '@/stores/inventory'
-// import InventoryCard from '@/components/prototypes/InventoryCard.vue'
+import InventoryCard from '@/components/prototypes/InventoryCard.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 

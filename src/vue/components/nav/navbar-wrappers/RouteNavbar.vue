@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import Navbar from "@/vue/components/nav/navbar/Navbar.vue"
+import Navbar from "/src/vue/components/nav/navbar/Navbar.vue"
 import {computed} from "vue"
 import {useRoute, useRouter} from "vue-router"
 import { useAuthStore } from '@/stores/auth'

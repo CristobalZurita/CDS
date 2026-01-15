@@ -53,11 +53,11 @@
 
 
 <script setup>
-import PageSection from "@/vue/components/layout/PageSection.vue"
-import PageSectionHeader from "@/vue/components/layout/PageSectionHeader.vue"
-import PageSectionContent from '@/vue/components/layout/PageSectionContent.vue'
-import ArticleFeatures from "@/vue/components/articles/ArticleFeatures.vue"
-import ItemFeature from "@/vue/components/articles/items/ItemFeature.vue"
+import PageSection from "/src/vue/components/layout/PageSection.vue"
+import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
+import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
+import ArticleFeatures from "/src/vue/components/articles/ArticleFeatures.vue"
+import ItemFeature from "/src/vue/components/articles/items/ItemFeature.vue"
 
 const props = defineProps({
     id: String

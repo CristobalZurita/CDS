@@ -18,9 +18,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useCalculator } from '@/composables/useCalculator';
-// import { LengthInput } from '@/domain/length/contract';
-// import { convertLength } from '@/domain/length/model';
-// import { createValidationResult } from '@/validation';
+import { LengthInput } from '@/domain/length/contract';
+import { convertLength } from '@/domain/length/model';
+import { createValidationResult } from '@/validation';
 
 const input = reactive<LengthInput>({} as LengthInput);
 

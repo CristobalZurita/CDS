@@ -43,11 +43,11 @@
 </template>
 
 <script setup>
-import PageSection from "@/vue/components/layout/PageSection.vue"
-import PageSectionHeader from "@/vue/components/layout/PageSectionHeader.vue"
-import PageSectionContent from '@/vue/components/layout/PageSectionContent.vue'
-import ArticleCustomContent from "@/vue/components/articles/ArticleCustomContent.vue"
-import ContactForm from "@/vue/components/forms/contact/ContactForm.vue"
+import PageSection from "/src/vue/components/layout/PageSection.vue"
+import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
+import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
+import ArticleCustomContent from "/src/vue/components/articles/ArticleCustomContent.vue"
+import ContactForm from "/src/vue/components/forms/contact/ContactForm.vue"
 
 const props = defineProps({
     id: String

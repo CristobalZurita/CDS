@@ -26,7 +26,7 @@
 
 <script setup>
 import {computed} from "vue"
-import BackgroundPromo from '@/vue/components/layout/BackgroundPromo.vue'
+import BackgroundPromo from "/src/vue/components/layout/BackgroundPromo.vue"
 
 const props = defineProps({
     id: String,
