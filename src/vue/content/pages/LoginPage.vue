@@ -2,8 +2,13 @@
   <div class="login-page">
     <div class="login-container">
       <div class="login-header">
+        <!-- Logo oficial desde /public/images/logo/ -->
+        <img
+          src="/images/logo/NUEVO_cirujano.png"
+          alt="Cirujano de Sintetizadores"
+          class="login-logo"
+        />
         <h1>Iniciar Sesión</h1>
-        <p class="subtitle">Bienvenido a Cirujano de Sintetizadores</p>
       </div>
 
       <LoginForm />
@@ -46,20 +51,21 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
   text-align: center;
   margin-bottom: 2rem;
 
-  h1 {
-    font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
-    font-size: 2rem;
-    font-weight: 800;
-    color: #3e3c38; /* Vintage Black */
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .login-logo {
+    max-width: 280px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 1.5rem;
   }
 
-  .subtitle {
-    font-family: 'Cervo Neue', sans-serif;
-    color: #cc7d43; /* Vintage Orange */
-    font-size: 1.05rem;
+  h1 {
+    font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #3e3c38; /* Vintage Black */
+    margin-bottom: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 }
 
