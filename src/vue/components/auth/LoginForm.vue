@@ -126,13 +126,20 @@ async function handleLogin() {
 </script>
 
 <style scoped lang="scss">
+/* ===========================================
+   LOGINFORM - Manual de Identidad Visual
+   Paleta: Vintage Black #3e3c38, Orange #ec6b00,
+           Vintage Orange #cc7d43, Vintage Beige #d3d0c3,
+           Black #000000, Fluor Green #d9ff4e
+   Tipografía: Cervo Neue, Steelfish
+   =========================================== */
+
 .login-form-container {
   max-width: 400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #f8f9fa;
+  margin: 0 auto;
+  padding: 0;
+  background: transparent; /* Hereda de LoginPage */
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .login-form {
@@ -143,33 +150,47 @@ async function handleLogin() {
   .form-label {
     display: block;
     margin-bottom: 0.5rem;
+    font-family: 'Cervo Neue Semibold', 'Cervo Neue', sans-serif;
     font-weight: 600;
-    color: #333;
+    color: #3e3c38; /* Vintage Black */
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
   }
 
   .form-control {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
+    border: 2px solid #3e3c38; /* Vintage Black */
     border-radius: 4px;
+    font-family: 'Cervo Neue', sans-serif;
     font-size: 1rem;
-    transition: border-color 0.2s;
+    background: #ffffff;
+    color: #3e3c38; /* Vintage Black */
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &::placeholder {
+      color: #cc7d43; /* Vintage Orange */
+      opacity: 0.6;
+    }
 
     &:focus {
       outline: none;
-      border-color: #ff8c00;
-      box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1);
+      border-color: #ec6b00; /* Orange - Paleta Web */
+      box-shadow: 0 0 0 3px rgba(236, 107, 0, 0.2);
     }
 
     &:disabled {
-      background-color: #e9ecef;
+      background-color: #d3d0c3; /* Vintage Beige */
       cursor: not-allowed;
+      opacity: 0.7;
     }
   }
 
   .error-text {
     display: block;
-    color: #dc3545;
+    color: #ec6b00; /* Orange - Paleta Web */
+    font-family: 'Cervo Neue', sans-serif;
     font-size: 0.875rem;
     margin-top: 0.25rem;
   }
@@ -179,26 +200,67 @@ async function handleLogin() {
     margin-top: 1rem;
   }
 
+  /* Botón principal - estilo de marca */
+  .btn-primary {
+    background-color: #ec6b00; /* Orange - Paleta Web */
+    border: 2px solid #ec6b00;
+    color: #000000; /* Black */
+    font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #cc7d43; /* Vintage Orange */
+      border-color: #cc7d43;
+    }
+
+    &:disabled {
+      background-color: #d3d0c3; /* Vintage Beige */
+      border-color: #3e3c38;
+      color: #3e3c38;
+      cursor: not-allowed;
+    }
+  }
+
   .link {
-    color: #ff8c00;
+    color: #ec6b00; /* Orange - Paleta Web */
     text-decoration: none;
+    font-family: 'Cervo Neue Semibold', 'Cervo Neue', sans-serif;
     font-weight: 600;
 
     &:hover {
+      color: #cc7d43; /* Vintage Orange */
       text-decoration: underline;
     }
   }
+}
+
+.text-center {
+  color: #3e3c38; /* Vintage Black */
+  font-family: 'Cervo Neue', sans-serif;
 }
 
 .alert {
   padding: 0.75rem;
   border-radius: 4px;
   margin-bottom: 1rem;
+  font-family: 'Cervo Neue', sans-serif;
 
   &.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background-color: rgba(236, 107, 0, 0.15); /* Orange con transparencia */
+    color: #3e3c38; /* Vintage Black */
+    border: 2px solid #ec6b00; /* Orange */
   }
+}
+
+/* Spinner con colores de marca */
+.spinner-border {
+  border-color: #3e3c38;
+  border-right-color: transparent;
 }
 </style>
