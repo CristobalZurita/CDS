@@ -16,22 +16,30 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
 </script>
 
 <style scoped lang="scss">
+/* ===========================================
+   LOGINPAGE - Manual de Identidad Visual
+   Paleta: Vintage Black #3e3c38, Orange #ec6b00,
+           Vintage Beige #d3d0c3, Black #000000
+   Tipografía: Cervo Neue, Cervo Extrabold
+   =========================================== */
+
 .login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000000; /* Black - Paleta Secundaria Web */
   padding: 2rem;
 }
 
 .login-container {
-  background: white;
+  background: #d3d0c3; /* Vintage Beige - Paleta Primaria */
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   padding: 3rem 2rem;
   max-width: 500px;
   width: 100%;
+  border: 2px solid #3e3c38; /* Vintage Black */
 }
 
 .login-header {
@@ -39,14 +47,18 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
   margin-bottom: 2rem;
 
   h1 {
+    font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
     font-size: 2rem;
-    font-weight: 700;
-    color: #333;
+    font-weight: 800;
+    color: #3e3c38; /* Vintage Black */
     margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .subtitle {
-    color: #666;
+    font-family: 'Cervo Neue', sans-serif;
+    color: #cc7d43; /* Vintage Orange */
     font-size: 1.05rem;
   }
 }
