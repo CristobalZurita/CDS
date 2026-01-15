@@ -21,10 +21,10 @@ const sections = [
     new SectionInfo('about',        AboutSection,           'Nosotros',         'pi pi-box'),
     new SectionInfo('services',     ServicesSection,        'Servicios',        'pi pi-wrench'),
     new SectionInfo('diagnostic',   DiagnosticSection,      'Cotizar',          'pi pi-calculator'),
-    new SectionInfo('featured',     FeaturedProjectSection, 'Disponible',       'pi pi-qrcode'),
+    new SectionInfo('featured',     FeaturedProjectSection, 'Trabajos',         'pi pi-qrcode'),
     new SectionInfo('faq',          FaqSection,             'Preguntas',        'pi pi-question-circle'),
     new SectionInfo('reviews',      ReviewsSection,         'Opiniones',        'fa-regular fa-comment'),
-    new SectionInfo('contact',      ContactSection,         'Contacto',         'fa-regular fa-envelope')
+    new SectionInfo('contact',      ContactSection,         'Contacto',         'fa-regular fa-envelope'),
 ]
 </script>
 
