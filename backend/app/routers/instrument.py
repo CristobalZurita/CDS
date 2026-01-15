@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.app.models.instrument import Instrument
-from backend.app.core.database import get_db
+from app.models.instrument import Instrument
+from app.core.database import get_db
 
 router = APIRouter(prefix="/api/instruments", tags=["Instruments"])
 

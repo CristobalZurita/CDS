@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, JSON, Text, Index
 from datetime import datetime
-from backend.app.core.database import Base
+from app.core.database import Base
 
 
 class AuditLog(Base):

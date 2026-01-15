@@ -4,7 +4,7 @@ from functools import lru_cache
 import os
 import pandas as pd
 
-from backend.app.schemas.inventory import ItemSummary
+from app.schemas.inventory import ItemSummary
 
 router = APIRouter(prefix="/items", tags=["items"])
 

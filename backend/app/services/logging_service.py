@@ -1,8 +1,8 @@
 import logging
 from typing import Optional, Dict, Any
-from backend.app.core.database import SessionLocal
-from backend.app.models.audit import AuditLog
-from backend.app.core.database import engine, Base
+from app.core.database import SessionLocal
+from app.models.audit import AuditLog
+from app.core.database import engine, Base
 from contextlib import contextmanager
 
 logger = logging.getLogger("audit")

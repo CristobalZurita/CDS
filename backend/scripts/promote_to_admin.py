@@ -12,9 +12,9 @@ The script:
 """
 import argparse
 import os
-from backend.app.core.database import SessionLocal
-from backend.app.models.user import User
-from backend.app.services.logging_service import create_audit
+from app.core.database import SessionLocal
+from app.models.user import User
+from app.services.logging_service import create_audit
 
 
 def promote(email: str, assume_yes: bool = False) -> None:

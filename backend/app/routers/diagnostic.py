@@ -8,8 +8,8 @@ import json
 from pathlib import Path
 
 # Avoid importing application schemas directly to keep router import lightweight in tests
-from backend.app.core.config import get_settings, Settings
-from backend.app.services.logging_service import create_audit
+from app.core.config import get_settings, Settings
+from app.services.logging_service import create_audit
 
 router = APIRouter(prefix="/diagnostic", tags=["diagnostic"])
 

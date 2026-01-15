@@ -13,10 +13,10 @@ from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 import logging
 
-from backend.app.core.config import settings
-from backend.app.core.database import init_db, close_db
-from backend.app.api.v1.router import api_router
-from backend.app.core.ratelimit import limiter
+from app.core.config import settings
+from app.core.database import init_db, close_db
+from app.api.v1.router import api_router
+from app.core.ratelimit import limiter
 from slowapi.errors import RateLimitExceeded
 
 
@@ -35,14 +35,14 @@ async def lifespan(app: FastAPI):
     logger.info("🚀 Application startup")
     # Setup structured logging early
     try:
-        from backend.app.core.logging_config import setup_logging
+        from app.core.logging_config import setup_logging
         setup_logging()
     except Exception as e:
         logger.warning(f"Could not configure structured logging: {e}")
     
     # Initialize event system
     try:
-        from backend.app.services.event_handlers import setup_event_handlers
+        from app.services.event_handlers import setup_event_handlers
         setup_event_handlers()
         logger.info("✓ Event system initialized")
     except Exception as e:
@@ -57,7 +57,7 @@ async def lifespan(app: FastAPI):
     # Attempt to import and register any routers that may have failed to import at module load
     try:
         import importlib
-        from backend.app.api.v1 import router as v1router
+        from app.api.v1 import router as v1router
         for mod_name in ("backend.app.routers.diagnostic", "backend.app.routers.payments"):
             try:
                 mod = importlib.import_module(mod_name)
@@ -129,7 +129,7 @@ if settings.environment and settings.environment.lower() in ("production", "prod
 
     # Expose audit service for internal use
     try:
-        from backend.app.services import logging_service  # noqa: F401
+        from app.services import logging_service  # noqa: F401
     except Exception:
         # Import failures are non-fatal; logging service may not be available in trimmed test envs
         pass

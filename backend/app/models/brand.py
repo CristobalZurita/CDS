@@ -4,7 +4,7 @@ Modelo Brand para marcas de instrumentos
 from sqlalchemy import Column, Integer, String, DateTime, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from backend.app.core.database import Base
+from app.core.database import Base
 
 
 class Brand(Base):

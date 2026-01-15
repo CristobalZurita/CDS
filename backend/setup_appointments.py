@@ -162,7 +162,7 @@ def test_google_calendar():
     print_info("Testing Google Calendar connection...")
     
     try:
-        from backend.app.services.google_calendar_service import get_calendar_service
+        from app.services.google_calendar_service import get_calendar_service
         
         service = get_calendar_service()
         

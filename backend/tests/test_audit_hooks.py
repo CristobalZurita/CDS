@@ -1,14 +1,14 @@
 import io
 from fastapi.testclient import TestClient
 import importlib
-import backend.app.main as _main
-import backend.app.core.database as _db_core
+import app.main as _main
+import app.core.database as _db_core
 
 importlib.reload(_main)
 app = _main.app
 
-from backend.app.core.database import SessionLocal
-from backend.app.models.audit import AuditLog
+from app.core.database import SessionLocal
+from app.models.audit import AuditLog
 
 client = TestClient(app)
 
@@ -29,7 +29,7 @@ def test_repair_crud_audit():
     db = SessionLocal()
     user = None
     try:
-        from backend.app.models.user import User
+        from app.models.user import User
         # Reuse existing test user if present to avoid unique constraint issues
         db_user = db.query(User).filter(User.email == "audit@example.com").first()
         if not db_user:
@@ -103,7 +103,7 @@ def test_payment_create_emits_audit():
     # ensure user exists
     db = SessionLocal()
     try:
-        from backend.app.models.user import User
+        from app.models.user import User
         db_user = db.query(User).filter(User.email == "audit@example.com").first()
         if not db_user:
             db_user = User(email="audit@example.com", username="audittest", full_name="Audit Test", hashed_password="hashed", role="client", is_active=True)

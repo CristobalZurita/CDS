@@ -7,8 +7,8 @@ import json
 from datetime import datetime
 import uuid
 
-from backend.app.core.config import settings
-from backend.app.core.dependencies import get_current_admin
+from app.core.config import settings
+from app.core.dependencies import get_current_admin
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
 DB_PATH = os.path.join(REPO_ROOT, 'backend', 'instance', 'cirujano.sqlite')

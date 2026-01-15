@@ -4,7 +4,7 @@ Modelo Product para inventario
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from backend.app.core.database import Base
+from app.core.database import Base
 
 
 class Product(Base):

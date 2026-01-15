@@ -4,8 +4,8 @@ import importlib
 
 from fastapi.testclient import TestClient
 
-import backend.app.main as _main
-from backend.app.core.database import SessionLocal
+import app.main as _main
+from app.core.database import SessionLocal
 
 importlib.reload(_main)
 client = TestClient(_main.app)
@@ -20,7 +20,7 @@ def test_concurrent_duplicate_requests_return_same_payment():
     # Prepare user and repair
     db = SessionLocal()
     try:
-        from backend.app.models.user import User
+        from app.models.user import User
         db_user = db.query(User).filter(User.email == "concurrency@example.com").first()
         if not db_user:
             db_user = User(email="concurrency@example.com", username="concurrency", full_name="Concurrency Test", hashed_password="hashed", role="client", is_active=True)

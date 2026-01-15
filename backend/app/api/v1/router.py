@@ -1,19 +1,19 @@
 from fastapi import APIRouter
 from .endpoints import brands, instruments, auth, inventory, imports
-from backend.app.routers import uploads as uploads_router
+from app.routers import uploads as uploads_router
 
 # Routers adicionales (creados por copilot) - si existen, se incluyen
 try:
-	from backend.app.routers import user as user_router
-	from backend.app.routers import repair as repair_router
-	from backend.app.routers import instrument as instrument_router
-	from backend.app.routers import category as category_router
-	from backend.app.routers import stock_movement as stock_movement_router
-	from backend.app.routers import contact as contact_router
-	from backend.app.routers import diagnostic as diagnostic_router
-	from backend.app.routers import quotation as quotation_router
-	from backend.app.routers import payments as payments_router
-	from backend.app.routers import appointment as appointment_router
+	from app.routers import user as user_router
+	from app.routers import repair as repair_router
+	from app.routers import instrument as instrument_router
+	from app.routers import category as category_router
+	from app.routers import stock_movement as stock_movement_router
+	from app.routers import contact as contact_router
+	from app.routers import diagnostic as diagnostic_router
+	from app.routers import quotation as quotation_router
+	from app.routers import payments as payments_router
+	from app.routers import appointment as appointment_router
 except Exception:
 	# Si los módulos no existen en este entorno, se ignoran
 	user_router = repair_router = instrument_router = category_router = stock_movement_router = contact_router = None

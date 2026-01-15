@@ -2,17 +2,17 @@
 Import all SQLAlchemy models
 """
 
-from backend.app.models.user import User, UserRole
-from backend.app.models.repair import Repair, RepairStatus
-from backend.app.models.diagnostic import Diagnostic
-from backend.app.models.category import Category
-from backend.app.models.inventory import Product
-from backend.app.models.brand import Brand
-from backend.app.models.instrument import Instrument
-from backend.app.models.stock_movement import StockMovement, MovementType
-from backend.app.models.payment import Payment, PaymentStatus
-from backend.app.models.appointment import Appointment
-from backend.app.models.audit import AuditLog
+from app.models.user import User, UserRole
+from app.models.repair import Repair, RepairStatus
+from app.models.diagnostic import Diagnostic
+from app.models.category import Category
+from app.models.inventory import Product
+from app.models.brand import Brand
+from app.models.instrument import Instrument
+from app.models.stock_movement import StockMovement, MovementType
+from app.models.payment import Payment, PaymentStatus
+from app.models.appointment import Appointment
+from app.models.audit import AuditLog
 
 __all__ = [
     "User", "UserRole",
@@ -24,3 +24,6 @@ __all__ = [
     "Instrument",
     "StockMovement", "MovementType",
     "Payment", "PaymentStatus",
+    "Appointment",
+    "AuditLog",
+]

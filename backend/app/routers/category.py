@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.app.models.category import Category
-from backend.app.core.database import get_db
+from app.models.category import Category
+from app.core.database import get_db
 
 router = APIRouter(prefix="/api/categories", tags=["Categories"])
 

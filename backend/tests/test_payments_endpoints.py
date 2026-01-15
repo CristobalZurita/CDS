@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 import importlib
-import backend.app.main as _main
-from backend.app.core.database import SessionLocal
-from backend.app.models.payment import Payment
+import app.main as _main
+from app.core.database import SessionLocal
+from app.models.payment import Payment
 
 importlib.reload(_main)
 client = TestClient(_main.app)
@@ -22,7 +22,7 @@ def test_payment_idempotency():
 
     db = SessionLocal()
     try:
-        from backend.app.models.user import User
+        from app.models.user import User
         db_user = db.query(User).filter(User.email == "audit@example.com").first()
         if not db_user:
             db_user = User(email="audit@example.com", username="audittest", full_name="Audit Test", hashed_password="hashed", role="client", is_active=True)
@@ -61,7 +61,7 @@ def test_get_and_list_payments():
 
     db = SessionLocal()
     try:
-        from backend.app.models.user import User
+        from app.models.user import User
         db_user = db.query(User).filter(User.email == "audit@example.com").first()
         if not db_user:
             db_user = User(email="audit@example.com", username="audittest", full_name="Audit Test", hashed_password="hashed", role="client", is_active=True)
@@ -103,7 +103,7 @@ def test_get_and_list_payments():
     assert got["id"] == pid
 
     # audit checks for list and get
-    from backend.app.models.audit import AuditLog
+    from app.models.audit import AuditLog
     db = SessionLocal()
     try:
         last_list = db.query(AuditLog).filter(AuditLog.event_type == "payment.list").order_by(AuditLog.created_at.desc()).first()
@@ -121,7 +121,7 @@ def test_invalid_payment_amount():
     # ensure user exists
     db = SessionLocal()
     try:
-        from backend.app.models.user import User
+        from app.models.user import User
         db_user = db.query(User).filter(User.email == "audit@example.com").first()
         if not db_user:
             db_user = User(email="audit@example.com", username="audittest", full_name="Audit Test", hashed_password="hashed", role="client", is_active=True)
@@ -150,7 +150,7 @@ def test_invalid_payment_method():
 
     db = SessionLocal()
     try:
-        from backend.app.models.user import User
+        from app.models.user import User
         db_user = db.query(User).filter(User.email == "audit@example.com").first()
         if not db_user:
             db_user = User(email="audit@example.com", username="audittest", full_name="Audit Test", hashed_password="hashed", role="client", is_active=True)
@@ -177,7 +177,7 @@ def test_duplicate_transaction_returns_existing():
 
     db = SessionLocal()
     try:
-        from backend.app.models.user import User
+        from app.models.user import User
         db_user = db.query(User).filter(User.email == "audit@example.com").first()
         if not db_user:
             db_user = User(email="audit@example.com", username="audittest", full_name="Audit Test", hashed_password="hashed", role="client", is_active=True)
@@ -197,7 +197,7 @@ def test_duplicate_transaction_returns_existing():
     # Create payment directly in DB, simulating a pre-existing payment
     db = SessionLocal()
     try:
-        from backend.app.models.payment import Payment, PaymentStatus
+        from app.models.payment import Payment, PaymentStatus
         pay = Payment(user_id=user_id, repair_id=rid, amount=999, payment_method="card", transaction_id=tx, status=PaymentStatus.SUCCESS)
         db.add(pay)
         db.commit()

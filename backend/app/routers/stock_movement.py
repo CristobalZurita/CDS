@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.app.models.stock_movement import StockMovement
-from backend.app.core.database import get_db
+from app.models.stock_movement import StockMovement
+from app.core.database import get_db
 
 router = APIRouter(prefix="/api/stock-movements", tags=["StockMovements"])
 

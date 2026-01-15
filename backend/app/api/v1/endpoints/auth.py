@@ -4,18 +4,18 @@ Endpoints de autenticación: login, register, logout
 from fastapi import APIRouter, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from fastapi.params import Depends
-from backend.app.core.database import get_db
-from backend.app.core.security import (
+from app.core.database import get_db
+from app.core.security import (
     hash_password, verify_password, create_access_token, create_refresh_token
 )
-from backend.app.core.dependencies import get_current_user
-from backend.app.core.ratelimit import limiter
-from backend.app.services.logging_service import create_audit
-from backend.app.models.user import User
-from backend.app.schemas.auth import (
+from app.core.dependencies import get_current_user
+from app.core.ratelimit import limiter
+from app.services.logging_service import create_audit
+from app.models.user import User
+from app.schemas.auth import (
     LoginRequest, RegisterRequest, Token, PasswordResetRequest
 )
-from backend.app.schemas.user import UserResponse
+from app.schemas.user import UserResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -192,7 +192,7 @@ async def refresh_access_token(request_body: dict):
     
     Retorna nuevo access_token y refresh_token
     """
-    from backend.app.core.security import verify_refresh_token
+    from app.core.security import verify_refresh_token
     
     refresh_token = request_body.get("refresh_token")
     if not refresh_token:

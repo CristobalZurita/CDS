@@ -12,8 +12,8 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 import asyncio
-from backend.app.core.database import init_db, SessionLocal
-from backend.app.models.user import User, UserRole
+from app.core.database import init_db, SessionLocal
+from app.models.user import User, UserRole
 from passlib.context import CryptContext
 
 # Simple bcrypt context

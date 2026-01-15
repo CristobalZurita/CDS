@@ -4,7 +4,7 @@ Dependencias de FastAPI: get_current_user, etc.
 from typing import Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from backend.app.core.security import verify_token, JWTError
+from app.core.security import verify_token, JWTError
 
 security = HTTPBearer()
 

@@ -23,7 +23,7 @@ except Exception:
             raise JWTError("python-jose not installed: token decode unavailable in fallback mode")
 
     jwt = _FallbackJWT()
-from backend.app.core.config import settings
+from app.core.config import settings
 
 # Contexto para hashing de contraseñas
 # Support both bcrypt and pbkdf2_sha256 so that environments lacking a

@@ -6,8 +6,8 @@ Database operations for appointments
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 from datetime import datetime
-from backend.app.models.appointment import Appointment
-from backend.app.schemas.appointment import AppointmentCreate, AppointmentUpdate
+from app.models.appointment import Appointment
+from app.schemas.appointment import AppointmentCreate, AppointmentUpdate
 from typing import List, Optional
 
 
