@@ -8,9 +8,9 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from fastapi.testclient import TestClient
 
-from backend.app.models.appointment import Appointment
-from backend.app.schemas.appointment import AppointmentCreate, AppointmentResponse
-from backend.app.crud.appointment import (
+from app.models.appointment import Appointment
+from app.schemas.appointment import AppointmentCreate, AppointmentResponse
+from app.crud.appointment import (
     create_appointment,
     get_appointment,
     get_appointments,

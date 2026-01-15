@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Dict, List
 from pydantic import ValidationError
-from backend.app.core.database import get_db
+from app.core.database import get_db
 from sqlalchemy.orm import Session
-from backend.app.models.payment import Payment, PaymentStatus
-from backend.app.services.logging_service import create_audit
+from app.models.payment import Payment, PaymentStatus
+from app.services.logging_service import create_audit
 from sqlalchemy.exc import IntegrityError
-from backend.app.schemas import PaymentCreate, PaymentRead
+from app.schemas import PaymentCreate, PaymentRead
 
 router = APIRouter(prefix="/payments", tags=["payments"])
 

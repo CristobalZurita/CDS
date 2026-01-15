@@ -4,7 +4,7 @@ Modelo Instrument para instrumentos musicales (sintetizadores, etc.)
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from backend.app.core.database import Base
+from app.core.database import Base
 
 
 class Instrument(Base):

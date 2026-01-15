@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import List
 import json
 from pathlib import Path
-from backend.app.services.event_system import event_bus, Events
+from app.services.event_system import event_bus, Events
 
 router = APIRouter(prefix="/quotations", tags=["quotations"])
 

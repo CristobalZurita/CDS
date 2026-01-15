@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, Depends, status, Request
-from backend.app.utils.uploads import validate_image, save_upload
-from backend.app.core.ratelimit import limiter
-from backend.app.services.logging_service import create_audit
+from app.utils.uploads import validate_image, save_upload
+from app.core.ratelimit import limiter
+from app.services.logging_service import create_audit
 
 router = APIRouter(prefix="/uploads", tags=["uploads"])
 

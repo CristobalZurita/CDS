@@ -5,8 +5,8 @@ Registra los manejadores de eventos para el sistema de notificaciones
 """
 
 import logging
-from backend.app.services.event_system import event_bus, Events
-from backend.app.services.email_service import email_service
+from app.services.event_system import event_bus, Events
+from app.services.email_service import email_service
 
 logger = logging.getLogger(__name__)
 

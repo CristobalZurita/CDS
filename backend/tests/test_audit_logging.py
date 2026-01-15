@@ -1,6 +1,6 @@
-from backend.app.services.logging_service import create_audit
-from backend.app.core.database import SessionLocal
-from backend.app.models.audit import AuditLog
+from app.services.logging_service import create_audit
+from app.core.database import SessionLocal
+from app.models.audit import AuditLog
 
 
 def test_create_audit_record():

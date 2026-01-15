@@ -9,8 +9,8 @@ if ROOT not in sys.path:
 
 from fastapi.testclient import TestClient
 from fastapi import HTTPException, status
-from backend.app.main import app
-from backend.app.core.dependencies import get_current_admin
+from app.main import app
+from app.core.dependencies import get_current_admin
 
 client = TestClient(app)
 

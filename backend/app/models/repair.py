@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, T
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
-from backend.app.core.database import Base
+from app.core.database import Base
 
 
 class RepairStatus(str, enum.Enum):

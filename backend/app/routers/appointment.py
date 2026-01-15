@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 
-from backend.app.core.database import get_db
-from backend.app.crud.appointment import (
+from app.core.database import get_db
+from app.crud.appointment import (
     create_appointment,
     get_appointment,
     get_appointments,
@@ -20,13 +20,13 @@ from backend.app.crud.appointment import (
     get_pending_appointments,
     get_confirmed_appointments
 )
-from backend.app.schemas.appointment import (
+from app.schemas.appointment import (
     AppointmentCreate,
     AppointmentUpdate,
     AppointmentResponse
 )
-from backend.app.services.email_service import send_appointment_confirmation
-from backend.app.services.google_calendar_service import sync_to_google_calendar
+from app.services.email_service import send_appointment_confirmation
+from app.services.google_calendar_service import sync_to_google_calendar
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
 

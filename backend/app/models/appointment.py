@@ -5,7 +5,7 @@ Manages customer appointment requests and scheduling
 
 from sqlalchemy import Column, String, DateTime, Text, Integer, Boolean
 from sqlalchemy.sql import func
-from backend.app.core.database import Base
+from app.core.database import Base
 from datetime import datetime
 
 
