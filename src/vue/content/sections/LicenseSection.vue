@@ -45,11 +45,11 @@
 </template>
 
 <script setup>
-import PageSection from "@/vue/components/layout/PageSection.vue"
-import PageSectionHeader from "@/vue/components/layout/PageSectionHeader.vue"
-import PageSectionContent from '@/vue/components/layout/PageSectionContent.vue'
-import ArticleParagraph from "@/vue/components/articles/ArticleParagraph.vue"
-import Breadcrumbs from "@/vue/components/widgets/Breadcrumbs.vue"
+import PageSection from "/src/vue/components/layout/PageSection.vue"
+import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
+import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
+import ArticleParagraph from "/src/vue/components/articles/ArticleParagraph.vue"
+import Breadcrumbs from "/src/vue/components/widgets/Breadcrumbs.vue"
 
 const props = defineProps({
     id: String

@@ -16,11 +16,11 @@
 </template>
 
 <script setup>
-import PageSection from "@/vue/components/layout/PageSection.vue"
-import PageSectionHeader from "@/vue/components/layout/PageSectionHeader.vue"
-import PageSectionContent from '@/vue/components/layout/PageSectionContent.vue'
-import ArticlePortfolio from "@/vue/components/articles/ArticlePortfolio.vue"
-import {useStrings} from "@/composables/strings.js"
+import PageSection from "/src/vue/components/layout/PageSection.vue"
+import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
+import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
+import ArticlePortfolio from "/src/vue/components/articles/ArticlePortfolio.vue"
+import {useStrings} from "/src/composables/strings.js"
 
 const strings = useStrings()
 

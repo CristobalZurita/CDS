@@ -18,9 +18,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useCalculator } from '@/composables/useCalculator';
-// import { TemperatureInput } from '@/domain/temperature/contract';
-// import { convertTemperature } from '@/domain/temperature/model';
-// import { createValidationResult } from '@/validation';
+import { TemperatureInput } from '@/domain/temperature/contract';
+import { convertTemperature } from '@/domain/temperature/model';
+import { createValidationResult } from '@/validation';
 
 const input = reactive<TemperatureInput>({} as TemperatureInput);
 

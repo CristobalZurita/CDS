@@ -18,9 +18,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useCalculator } from '@/composables/useCalculator';
-// import { NumberSystemInput } from '@/domain/numberSystem/contract';
-// import { convertNumberSystem } from '@/domain/numberSystem/model';
-// import { createValidationResult } from '@/validation';
+import { NumberSystemInput } from '@/domain/numberSystem/contract';
+import { convertNumberSystem } from '@/domain/numberSystem/model';
+import { createValidationResult } from '@/validation';
 
 const input = reactive<NumberSystemInput>({} as NumberSystemInput);
 

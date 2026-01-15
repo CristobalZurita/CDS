@@ -21,7 +21,7 @@
 
 <script setup>
 import {computed, onMounted, ref, watch} from "vue"
-import Spinner from '@/vue/components/widgets/Spinner.vue'
+import Spinner from "/src/vue/components/widgets/Spinner.vue"
 
 const props = defineProps({
     src: String,

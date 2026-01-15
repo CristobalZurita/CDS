@@ -16,8 +16,8 @@
 
 <script setup>
 import {inject, ref, onMounted, onUnmounted} from "vue"
-import ActivitySpinner from '@/vue/components/loaders/ActivitySpinner.vue'
-import Loader from "@/vue/components/loaders/Loader.vue"
+import ActivitySpinner from "/src/vue/components/loaders/ActivitySpinner.vue"
+import Loader from "/src/vue/components/loaders/Loader.vue"
 
 const loaderEnabled = inject("loaderEnabled")
 const LoaderAnimationStatus = inject("LoaderAnimationStatus")

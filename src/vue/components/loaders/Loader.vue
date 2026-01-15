@@ -35,11 +35,11 @@
 
 <script setup>
 import {onMounted, watch, ref} from "vue"
-import {useUtils} from "@/composables/utils.js"
-import {useLayout} from "@/composables/layout.js"
-import {useScheduler} from "@/composables/scheduler.js"
-import ImageView from "@/vue/components/generic/ImageView.vue"
-import ProgressBar from "@/vue/components/widgets/ProgressBar.vue"
+import {useUtils} from "/src/composables/utils.js"
+import {useLayout} from "/src/composables/layout.js"
+import {useScheduler} from "/src/composables/scheduler.js"
+import ImageView from "/src/vue/components/generic/ImageView.vue"
+import ProgressBar from "/src/vue/components/widgets/ProgressBar.vue"
 
 const utils = useUtils()
 const layout = useLayout()

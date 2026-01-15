@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import PageHeader from "@/vue/components/layout/PageHeader.vue"
+import PageHeader from "/src/vue/components/layout/PageHeader.vue"
 
 const props = defineProps({
     id: String

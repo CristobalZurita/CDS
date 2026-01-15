@@ -5,16 +5,16 @@
 </template>
 
 <script setup>
-import PageWrapper from "@/vue/components/layout/PageWrapper.vue"
-import SectionInfo from '@/models/SectionInfo.js"
-import AboutSection from "@/vue/content/sections/AboutSection.vue"
-import ContactSection from "@/vue/content/sections/ContactSection.vue"
-import FaqSection from "@/vue/content/sections/FaqSection.vue"
-import FeaturedProjectSection from "@/vue/content/sections/FeaturedProjectSection.vue"
-import HeroSection from "@/vue/content/sections/HeroSection.vue"
-import ReviewsSection from "@/vue/content/sections/ReviewsSection.vue"
-import ServicesSection from "@/vue/content/sections/ServicesSection.vue"
-import DiagnosticSection from "@/vue/sections/DiagnosticSection.vue"  // ← AGREGAR
+import PageWrapper from "/src/vue/components/layout/PageWrapper.vue"
+import SectionInfo from "/src/models/SectionInfo.js"
+import AboutSection from "/src/vue/content/sections/AboutSection.vue"
+import ContactSection from "/src/vue/content/sections/ContactSection.vue"
+import FaqSection from "/src/vue/content/sections/FaqSection.vue"
+import FeaturedProjectSection from "/src/vue/content/sections/FeaturedProjectSection.vue"
+import HeroSection from "/src/vue/content/sections/HeroSection.vue"
+import ReviewsSection from "/src/vue/content/sections/ReviewsSection.vue"
+import ServicesSection from "/src/vue/content/sections/ServicesSection.vue"
+import DiagnosticSection from "/src/vue/sections/DiagnosticSection.vue"  // ← AGREGAR
 
 const sections = [
     new SectionInfo('hero',         HeroSection,            null,               null),

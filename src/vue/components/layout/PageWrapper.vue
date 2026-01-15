@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import SectionInfo from '@/models/SectionInfo.js"
+import SectionInfo from "/src/models/SectionInfo.js"
 import {inject, onBeforeMount, ref} from "vue"
 
 const currentPageSections = inject("currentPageSections")

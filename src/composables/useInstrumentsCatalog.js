@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
-// import brandsData from '@/assets/data/brands.json'
-// import instrumentsData from '@/assets/data/instruments.json'
+import brandsData from '@/assets/data/brands.json'
+import instrumentsData from '@/assets/data/instruments.json'
 
 /**
  * useInstrumentsCatalog - Central data catalog for brands and instruments
