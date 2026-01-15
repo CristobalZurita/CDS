@@ -11,10 +11,12 @@ import Navbar from "/src/vue/components/nav/navbar/Navbar.vue"
 import {computed, inject, onMounted, onUnmounted, ref, watch} from "vue"
 import {useRoute, useRouter} from "vue-router"
 import {useLayout} from "/src/composables/layout.js"
+import {useAuthStore} from "@/stores/auth"
 
 const route = useRoute()
 const router = useRouter()
 const layout = useLayout()
+const authStore = useAuthStore()
 
 /**
  * @type {{value: SectionInfo[]}}
@@ -36,7 +38,7 @@ const linkList = computed(() => {
     if(!sections || !sections.length)
         return []
 
-    return sections.map(section => {
+    const links = sections.map(section => {
         return {
             path: section.hash,
             label: section.name,
@@ -44,6 +46,18 @@ const linkList = computed(() => {
             isActive: currentSection.value?.id === section.id
         }
     }).filter(section => section.label && section.path)
+
+    // Botón INICIAR SESIÓN alineado a la derecha (último item)
+    if (!authStore.isAuthenticated) {
+        links.push({
+            path: '/login',
+            label: 'Iniciar Sesión',
+            faIcon: 'fa-solid fa-right-to-bracket',
+            isActive: false
+        })
+    }
+
+    return links
 })
 
 onMounted(() => {
