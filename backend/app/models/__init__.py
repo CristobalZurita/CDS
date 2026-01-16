@@ -14,6 +14,15 @@ from app.models.stock_movement import StockMovement
 from app.models.payment import Payment, PaymentStatus
 from app.models.appointment import Appointment
 from app.models.audit import AuditLog
+from app.models.storage_location import StorageLocation
+from app.models.client import Client
+from app.models.device import Device
+from app.models.quote import Quote
+from app.models.tool import Tool
+from app.models.device_lookup import DeviceBrand, DeviceType
+from app.models.repair_component_usage import RepairComponentUsage
+from app.models.repair_photo import RepairPhoto
+from app.models.repair_note import RepairNote
 
 __all__ = [
     "User", "UserRole",
@@ -28,4 +37,14 @@ __all__ = [
     "Payment", "PaymentStatus",
     "Appointment",
     "AuditLog",
+    "StorageLocation",
+    "Client",
+    "Device",
+    "Quote",
+    "Tool",
+    "DeviceBrand",
+    "DeviceType",
+    "RepairComponentUsage",
+    "RepairPhoto",
+    "RepairNote",
 ]

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import Dict, List
 from pydantic import ValidationError
 from app.core.database import get_db
+from app.core.dependencies import get_current_user
 from sqlalchemy.orm import Session
 from app.models.payment import Payment, PaymentStatus
 from app.services.logging_service import create_audit
@@ -12,7 +13,7 @@ router = APIRouter(prefix="/payments", tags=["payments"])
 
 
 @router.post("/", response_model=PaymentRead)
-def create_payment(payload: PaymentCreate, db: Session = Depends(get_db)):
+def create_payment(payload: PaymentCreate, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     # Pydantic validation already ensures basic correctness
     data = payload.dict()
 

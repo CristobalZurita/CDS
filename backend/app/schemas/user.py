@@ -39,3 +39,7 @@ class UserResponse(BaseModel):
 class UserDetailResponse(UserResponse):
     """Detalle completo del usuario"""
     updated_at: datetime
+
+
+# Alias for compatibility with routers
+UserRead = UserResponse
