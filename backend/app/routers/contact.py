@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-router = APIRouter(prefix="/api/contact", tags=["Contact"])
+router = APIRouter(prefix="/contact", tags=["Contact"])
 
 @router.post("/")
 def send_contact(payload: dict):

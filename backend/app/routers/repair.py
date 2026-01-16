@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.repair import Repair
 from typing import Dict
 from app.core.database import get_db
+from app.core.dependencies import get_current_user
 from app.services.logging_service import create_audit
 
 router = APIRouter(prefix="/repairs", tags=["Repairs"])
@@ -12,7 +13,7 @@ def list_repairs(db: Session = Depends(get_db)):
     return db.query(Repair).all()
 
 @router.post("/")
-def create_repair(repair: Dict, db: Session = Depends(get_db)):
+def create_repair(repair: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     # Accept a flexible payload for now to avoid schema package conflicts
     db_repair = Repair(**repair)
     db.add(db_repair)
@@ -28,7 +29,7 @@ def create_repair(repair: Dict, db: Session = Depends(get_db)):
     return db_repair
 
 @router.put("/{repair_id}")
-def update_repair(repair_id: int, repair: Dict, db: Session = Depends(get_db)):
+def update_repair(repair_id: int, repair: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     db_repair = db.query(Repair).get(repair_id)
     if not db_repair:
         raise HTTPException(status_code=404, detail="Repair not found")
@@ -44,7 +45,7 @@ def update_repair(repair_id: int, repair: Dict, db: Session = Depends(get_db)):
     return db_repair
 
 @router.delete("/{repair_id}")
-def delete_repair(repair_id: int, db: Session = Depends(get_db)):
+def delete_repair(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     db_repair = db.query(Repair).get(repair_id)
     if not db_repair:
         raise HTTPException(status_code=404, detail="Repair not found")

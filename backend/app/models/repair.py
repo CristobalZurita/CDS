@@ -12,9 +12,11 @@ class RepairStatus(Base):
     __tablename__ = "repair_statuses"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, unique=True, nullable=False)
+    code = Column(String, unique=True, nullable=False)
+    name = Column(String, nullable=False)
     description = Column(Text, nullable=True)
     color = Column(String, nullable=True)
+    sort_order = Column(Integer, default=0)
 
     repairs = relationship("Repair", back_populates="status_obj")
 
@@ -69,6 +71,10 @@ class Repair(Base):
     status_obj = relationship("RepairStatus", back_populates="repairs")
     technician = relationship("User", back_populates="repairs", foreign_keys=[assigned_to])
     diagnostic = relationship("Diagnostic", back_populates="repair", uselist=False)
+    component_usages = relationship("RepairComponentUsage", back_populates="repair", cascade="all, delete-orphan")
+    photos = relationship("RepairPhoto", back_populates="repair", cascade="all, delete-orphan")
+    notes = relationship("RepairNote", back_populates="repair", cascade="all, delete-orphan")
+    stock_movements = relationship("StockMovement", foreign_keys="StockMovement.repair_id")
 
     @property
     def status(self):

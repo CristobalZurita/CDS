@@ -11,6 +11,7 @@ from pathlib import Path
 # Avoid importing application schemas directly to keep router import lightweight in tests
 from app.core.config import get_settings, Settings
 from app.core.database import get_db
+from app.core.dependencies import get_current_user
 from app.models.diagnostic import Diagnostic
 from app.services.logging_service import create_audit
 
@@ -309,7 +310,8 @@ async def get_diagnostic_by_id(diagnostic_id: int, db: Session = Depends(get_db)
 async def update_diagnostic(
     diagnostic_id: int,
     data: dict,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
 ):
     """
     Update an existing diagnostic
@@ -353,7 +355,7 @@ async def update_diagnostic(
 
 
 @router.delete("/{diagnostic_id}")
-async def delete_diagnostic(diagnostic_id: int, db: Session = Depends(get_db)):
+async def delete_diagnostic(diagnostic_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     """Delete a diagnostic by ID"""
     diagnostic = db.query(Diagnostic).filter(Diagnostic.id == diagnostic_id).first()
 

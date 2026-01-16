@@ -27,7 +27,7 @@ class StockMovement(Base):
 
     # Relaciones
     stock = relationship("Stock", back_populates="movements")
-    repair = relationship("Repair", foreign_keys=[repair_id])
+    repair = relationship("Repair", foreign_keys=[repair_id], overlaps="stock_movements")
     user = relationship("User", foreign_keys=[performed_by])
 
     def __repr__(self):

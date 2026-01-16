@@ -2,15 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.models.instrument import Instrument
 from app.core.database import get_db
+from app.core.dependencies import get_current_user
 
-router = APIRouter(prefix="/api/instruments", tags=["Instruments"])
+router = APIRouter(prefix="/instruments", tags=["Instruments"])
 
 @router.get("/")
 def list_instruments(db: Session = Depends(get_db)):
     return db.query(Instrument).all()
 
 @router.post("/")
-def create_instrument(payload: dict, db: Session = Depends(get_db)):
+def create_instrument(payload: dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     db_inst = Instrument(**payload)
     db.add(db_inst)
     db.commit()
@@ -18,7 +19,7 @@ def create_instrument(payload: dict, db: Session = Depends(get_db)):
     return db_inst
 
 @router.put("/{instrument_id}")
-def update_instrument(instrument_id: int, payload: dict, db: Session = Depends(get_db)):
+def update_instrument(instrument_id: int, payload: dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     db_inst = db.query(Instrument).get(instrument_id)
     if not db_inst:
         raise HTTPException(status_code=404, detail="Instrument not found")
@@ -29,7 +30,7 @@ def update_instrument(instrument_id: int, payload: dict, db: Session = Depends(g
     return db_inst
 
 @router.delete("/{instrument_id}")
-def delete_instrument(instrument_id: int, db: Session = Depends(get_db)):
+def delete_instrument(instrument_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     db_inst = db.query(Instrument).get(instrument_id)
     if not db_inst:
         raise HTTPException(status_code=404, detail="Instrument not found")

@@ -9,6 +9,7 @@ import pandas as pd
 from app.schemas.inventory import ItemSummary, ProductCreate, ProductUpdate, ProductResponse
 from app.models.inventory import Product
 from app.core.database import get_db
+from app.core.dependencies import get_current_user
 
 router = APIRouter(prefix="/items", tags=["items"])
 
@@ -90,7 +91,7 @@ def get_item(item_id: int):
 # ============================================================================
 
 @router.post('', response_model=ProductResponse, status_code=status.HTTP_201_CREATED)
-def create_item(data: ProductCreate, db: Session = Depends(get_db)):
+def create_item(data: ProductCreate, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
 	"""
 	Crear nuevo producto en inventario.
 
@@ -134,7 +135,7 @@ def create_item(data: ProductCreate, db: Session = Depends(get_db)):
 
 
 @router.put('/{item_id}', response_model=ProductResponse)
-def update_item(item_id: int, data: ProductUpdate, db: Session = Depends(get_db)):
+def update_item(item_id: int, data: ProductUpdate, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
 	"""
 	Actualizar producto existente.
 
@@ -177,7 +178,7 @@ def update_item(item_id: int, data: ProductUpdate, db: Session = Depends(get_db)
 
 
 @router.delete('/{item_id}', status_code=status.HTTP_200_OK)
-def delete_item(item_id: int, db: Session = Depends(get_db)):
+def delete_item(item_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
 	"""
 	Eliminar producto del inventario.
 
