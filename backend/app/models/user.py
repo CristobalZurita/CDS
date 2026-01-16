@@ -44,7 +44,7 @@ class User(Base):
 
     # Relaciones
     role_obj = relationship("UserRole", back_populates="users")
-    repairs = relationship("Repair", back_populates="client", foreign_keys="Repair.client_id")
+    repairs = relationship("Repair", back_populates="technician", foreign_keys="Repair.assigned_to")
 
     @property
     def full_name(self):

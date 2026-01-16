@@ -26,7 +26,7 @@ for name in ("repair", "user", "instrument", "category", "stock_movement", "cont
 	var_name = f"{name}_router"
 	if globals().get(var_name) is None:
 		try:
-			mod = importlib.import_module(f"backend.app.routers.{name}")
+			mod = importlib.import_module(f"app.routers.{name}")
 			globals()[var_name] = mod
 		except Exception:
 			globals()[var_name] = None
@@ -34,7 +34,7 @@ for name in ("repair", "user", "instrument", "category", "stock_movement", "cont
 # Ensure payments router is also available on a second import pass
 if globals().get("payments_router") is None:
 	try:
-		mod = importlib.import_module("backend.app.routers.payments")
+		mod = importlib.import_module("app.routers.payments")
 		globals()["payments_router"] = mod
 	except Exception:
 		globals()["payments_router"] = None
@@ -42,7 +42,7 @@ if globals().get("payments_router") is None:
 # Ensure diagnostic router is picked up on the second import pass as well
 if globals().get("diagnostic_router") is None:
 	try:
-		mod = importlib.import_module("backend.app.routers.diagnostic")
+		mod = importlib.import_module("app.routers.diagnostic")
 		globals()["diagnostic_router"] = mod
 	except Exception:
 		globals()["diagnostic_router"] = None
