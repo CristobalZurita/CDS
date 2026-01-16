@@ -11,7 +11,7 @@ export const useRepairsStore = defineStore('repairs', {
     async fetchRepairs() {
       this.loading = true
       try {
-        this.repairs = await useApi().get('/api/repairs')
+        this.repairs = await useApi().get('/repairs')
       } catch (e) {
         this.error = e
       } finally {
@@ -19,13 +19,13 @@ export const useRepairsStore = defineStore('repairs', {
       }
     },
     async createRepair(data) {
-      return await useApi().post('/api/repairs', data)
+      return await useApi().post('/repairs', data)
     },
     async updateRepair(id, data) {
-      return await useApi().put(`/api/repairs/${id}`, data)
+      return await useApi().put(`/repairs/${id}`, data)
     },
     async deleteRepair(id) {
-      return await useApi().delete(`/api/repairs/${id}`)
+      return await useApi().delete(`/repairs/${id}`)
     }
   }
 })
