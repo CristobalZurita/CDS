@@ -1,6 +1,6 @@
 -- =====================================================================
 -- CIRUJANO DE SINTETIZADORES - BASE DE DATOS PROFESIONAL
--- Generado: 2026-01-15 19:42:18
+-- Generado: 2026-01-06 00:45:33
 -- Motor: SQLite
 -- =====================================================================
 
@@ -1016,7 +1016,6 @@ INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, 
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('16F887', 'MCU', 'Microchip', 'PIC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('18F4520', 'MCU', 'Microchip', 'PIC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('18F4550', 'MCU', 'Microchip', 'PIC');
-INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('23L256I', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('24LC04', 'MEMORY', 'Various', 'EEPROM');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('24LC16', 'MEMORY', 'Various', 'EEPROM');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('44LS157', 'GENERAL', 'Unknown', 'MISC');
@@ -1030,7 +1029,6 @@ INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, 
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('74HC138', 'LOGIC_TTL', 'Various', '74_SERIES');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('74HC14', 'LOGIC_TTL', 'Various', '74_SERIES');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('74HC154', 'LOGIC_TTL', 'Various', '74_SERIES');
-INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('74HC166', 'LOGIC_TTL', 'Various', '74_SERIES');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('74HC245', 'LOGIC_TTL', 'Various', '74_SERIES');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('74HC373', 'LOGIC_TTL', 'Various', '74_SERIES');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('74HC4051', 'LOGIC_TTL', 'Various', '74_SERIES');
@@ -1085,7 +1083,6 @@ INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, 
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('FT232RL', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('FW828', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('HJ238', 'GENERAL', 'Unknown', 'MISC');
-INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('HT6116-70', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('HT8950', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('JCR4556', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('JCR4558', 'GENERAL', 'Unknown', 'MISC');
@@ -1119,7 +1116,6 @@ INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, 
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('MAX1044', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('MAX232', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('MB81C4526A', 'GENERAL', 'Unknown', 'MISC');
-INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('MC14556B', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('MC1489', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('MCP4822', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('MCP6004', 'GENERAL', 'Unknown', 'MISC');
@@ -1145,14 +1141,16 @@ INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, 
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('SM76489AN', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('SN74157', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('SN74173', 'GENERAL', 'Unknown', 'MISC');
-INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('SN74LS90N', 'GENERAL', 'Unknown', 'MISC');
+INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('SN7517', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('SN75176', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('SN75240W', 'GENERAL', 'Unknown', 'MISC');
+INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('SN75441', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('SN754410', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('TDA2822M', 'AUDIO_IC', 'Various', 'AUDIO');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('TDA7294', 'AUDIO_IC', 'Various', 'AUDIO');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('TDA9108', 'AUDIO_IC', 'Various', 'AUDIO');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('TEA2025', 'GENERAL', 'Unknown', 'MISC');
+INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('TGA2025', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('THAT1646', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('TL071', 'OP_AMP', 'Various', 'AUDIO');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('TL072', 'OP_AMP', 'Various', 'AUDIO');
@@ -1170,13 +1168,10 @@ INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, 
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('UC3843', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('UL26', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('UMG9NTR (G9)', 'GENERAL', 'Unknown', 'MISC');
-INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('UPC4570HA', 'GENERAL', 'Unknown', 'MISC');
-INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('UPD63200GS', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('USB3343', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('V54C3256164VDI7', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('VA220M', 'GENERAL', 'Unknown', 'MISC');
 INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('WOOA', 'GENERAL', 'Unknown', 'MISC');
-INSERT INTO comp_integrated_circuits (part_number, function_type, manufacturer, family) VALUES ('YDA176', 'GENERAL', 'Unknown', 'MISC');
 
 -- DATOS: TRANSISTORES
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('20N60', 'MOSFET_N', 'TO-220', 'POWER');
@@ -1195,11 +1190,9 @@ INSERT INTO comp_transistors (part_number, device_type, package, application) VA
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('2N5460', 'JFET_P', 'TO-92', 'AUDIO');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('2N5551', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('2N6111G', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('2N7002', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('2SA1037AK (FR)', 'BJT_PNP', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('2SC2060', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('2SC4207-Y', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('2SC5395', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('2SK30A', 'JFET_N', 'TO-92', 'AUDIO');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('742669095252 (K2-2)', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('A1015', 'BJT_PNP', 'TO-92', 'GENERAL');
@@ -1240,7 +1233,7 @@ INSERT INTO comp_transistors (part_number, device_type, package, application) VA
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('C4408', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('C945', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('D313', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('F8NG', 'BJT_NPN', 'TO-92', 'GENERAL');
+INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('EL817', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('IRF1010', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('IRF4227', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('IRF540NS', 'MOSFET_N', 'TO-220', 'POWER');
@@ -1252,16 +1245,13 @@ INSERT INTO comp_transistors (part_number, device_type, package, application) VA
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('J201', 'JFET_N', 'TO-92', 'AUDIO');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('K163', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('K246', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LA4597', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LL2705', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LM2576', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LM2596', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LM2940CT', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LM317', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LM334', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LM337', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LM35', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('LM723', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('MBR20100', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('MIC29302', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('MPF102', 'JFET_N', 'TO-92', 'AUDIO');
@@ -1271,8 +1261,6 @@ INSERT INTO comp_transistors (part_number, device_type, package, application) VA
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('OGBCON', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('P20N06', 'MOSFET_N', 'TO-220', 'POWER');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('P20N60', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('PC900', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('PMV31XN', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('PQ10621H', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('R6775', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('S8050', 'BJT_NPN', 'TO-92', 'GENERAL');
@@ -1285,42 +1273,15 @@ INSERT INTO comp_transistors (part_number, device_type, package, application) VA
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('SRF2060L', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('SS13J532R', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('TF8N80', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('TJ20A10M3', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('TL431A', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('TOP224YN', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('TSF1060M', 'BJT_NPN', 'TO-92', 'GENERAL');
 INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('TSP73801DCQR', 'BJT_NPN', 'TO-92', 'GENERAL');
-INSERT INTO comp_transistors (part_number, device_type, package, application) VALUES ('XC6701B502PRG', 'BJT_NPN', 'TO-92', 'GENERAL');
 
 -- DATOS: DIODOS
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('1M4007', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('1N4148 SMD', 'SIGNAL', 'DO-35');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('1N5353B', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('1N5408', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('1N5822', 'SCHOTTKY', 'DO-41');
 INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('1SS367', 'SIGNAL', 'DO-35');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('BTA42', 'RECTIFIER', 'DO-41');
 INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('BZT52C11 (WG)', 'ZENER', 'DO-35');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('LL4148', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('M1', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('M4', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('M7', 'RECTIFIER', 'DO-41');
 INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('MBR0540W', 'SCHOTTKY', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('RS1M', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('S1M', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('S2M', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('S3M', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('SS14', 'SCHOTTKY', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('SS16', 'SCHOTTKY', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('SS24', 'SCHOTTKY', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('SS34', 'SCHOTTKY', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('SS36', 'SCHOTTKY', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('US1M', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('ZENER 3.6', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('ZENER 5.1', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('ZENER 9.1', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('ZENER BZT52C11', 'RECTIFIER', 'DO-41');
-INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('ZENER BZT52C5V6', 'RECTIFIER', 'DO-41');
 
 -- =====================================================================
 -- USUARIO ADMIN POR DEFECTO (cambiar contraseña en producción)

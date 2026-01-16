@@ -1,0 +1,1346 @@
+[
+  {
+    "value_ohms": 0.33,
+    "display_value": "0.33Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 0.5,
+    "display_value": "0.50Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 0.6,
+    "display_value": "0.60Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1.0,
+    "display_value": "1Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1.2,
+    "display_value": "1.20Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1.3,
+    "display_value": "1.30Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1.5,
+    "display_value": "1.50Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1.8,
+    "display_value": "1.80Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2.0,
+    "display_value": "2Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2.2,
+    "display_value": "2.20Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2.4,
+    "display_value": "2.40Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2.7,
+    "display_value": "2.70Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3.0,
+    "display_value": "3Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3.3,
+    "display_value": "3.30Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3.6,
+    "display_value": "3.60Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3.9,
+    "display_value": "3.90Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 4.3,
+    "display_value": "4.30Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 4.7,
+    "display_value": "4.70Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 5.1,
+    "display_value": "5.10Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 5.6,
+    "display_value": "5.60Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 6.2,
+    "display_value": "6.20Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 6.8,
+    "display_value": "6.80Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 7.5,
+    "display_value": "7.50Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 8.2,
+    "display_value": "8.20Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 9.1,
+    "display_value": "9.10Ω",
+    "tolerance_percent": 5.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 10.0,
+    "display_value": "10Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 11.0,
+    "display_value": "11Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 12.0,
+    "display_value": "12Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 15.0,
+    "display_value": "15Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 18.0,
+    "display_value": "18Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 20.0,
+    "display_value": "20Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 21.0,
+    "display_value": "21Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 22.0,
+    "display_value": "22Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 24.0,
+    "display_value": "24Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 27.0,
+    "display_value": "27Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 30.0,
+    "display_value": "30Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 33.0,
+    "display_value": "33Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 36.0,
+    "display_value": "36Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 39.0,
+    "display_value": "39Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 43.0,
+    "display_value": "43Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 47.0,
+    "display_value": "47Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 51.0,
+    "display_value": "51Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 56.0,
+    "display_value": "56Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 62.0,
+    "display_value": "62Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 68.0,
+    "display_value": "68Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 75.0,
+    "display_value": "75Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 82.0,
+    "display_value": "82Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 91.0,
+    "display_value": "91Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 100.0,
+    "display_value": "100Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 110.0,
+    "display_value": "110Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 120.0,
+    "display_value": "120Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 130.0,
+    "display_value": "130Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 150.0,
+    "display_value": "150Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 160.0,
+    "display_value": "160Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 180.0,
+    "display_value": "180Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 200.0,
+    "display_value": "200Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 220.0,
+    "display_value": "220Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 240.0,
+    "display_value": "240Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 270.0,
+    "display_value": "270Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 300.0,
+    "display_value": "300Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 330.0,
+    "display_value": "330Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 360.0,
+    "display_value": "360Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 390.0,
+    "display_value": "390Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 430.0,
+    "display_value": "430Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 470.0,
+    "display_value": "470Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 510.0,
+    "display_value": "510Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 560.0,
+    "display_value": "560Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 620.0,
+    "display_value": "620Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 680.0,
+    "display_value": "680Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 750.0,
+    "display_value": "750Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 820.0,
+    "display_value": "820Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 825.0,
+    "display_value": "825Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 845.0,
+    "display_value": "845Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 910.0,
+    "display_value": "910Ω",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1000.0,
+    "display_value": "1kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1100.0,
+    "display_value": "1.10kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1200.0,
+    "display_value": "1.20kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1500.0,
+    "display_value": "1.50kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1600.0,
+    "display_value": "1.60kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1800.0,
+    "display_value": "1.80kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2000.0,
+    "display_value": "2kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2200.0,
+    "display_value": "2.20kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2400.0,
+    "display_value": "2.40kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2700.0,
+    "display_value": "2.70kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3000.0,
+    "display_value": "3kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3300.0,
+    "display_value": "3.30kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3600.0,
+    "display_value": "3.60kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3900.0,
+    "display_value": "3.90kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 4300.0,
+    "display_value": "4.30kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 4700.0,
+    "display_value": "4.70kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 4900.0,
+    "display_value": "4.90kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 5100.0,
+    "display_value": "5.10kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 5600.0,
+    "display_value": "5.60kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 6200.0,
+    "display_value": "6.20kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 6800.0,
+    "display_value": "6.80kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 7500.0,
+    "display_value": "7.50kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 7870.0,
+    "display_value": "7.87kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 8200.0,
+    "display_value": "8.20kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 9100.0,
+    "display_value": "9.10kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 10000.0,
+    "display_value": "10kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 11000.0,
+    "display_value": "11kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 12000.0,
+    "display_value": "12kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 13000.0,
+    "display_value": "13kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 15000.0,
+    "display_value": "15kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 16000.0,
+    "display_value": "16kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 16200.0,
+    "display_value": "16.20kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 18000.0,
+    "display_value": "18kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 20000.0,
+    "display_value": "20kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 22000.0,
+    "display_value": "22kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 24000.0,
+    "display_value": "24kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 27000.0,
+    "display_value": "27kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 30000.0,
+    "display_value": "30kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 33000.0,
+    "display_value": "33kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 34600.0,
+    "display_value": "34.60kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 36000.0,
+    "display_value": "36kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 39000.0,
+    "display_value": "39kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 43000.0,
+    "display_value": "43kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 47000.0,
+    "display_value": "47kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 51000.0,
+    "display_value": "51kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 53000.0,
+    "display_value": "53kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 56000.0,
+    "display_value": "56kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 62000.0,
+    "display_value": "62kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 63400.0,
+    "display_value": "63.40kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 68000.0,
+    "display_value": "68kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 68100.0,
+    "display_value": "68.10kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 75000.0,
+    "display_value": "75kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 82000.0,
+    "display_value": "82kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 91000.0,
+    "display_value": "91kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 100000.0,
+    "display_value": "100kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 110000.0,
+    "display_value": "110kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 120000.0,
+    "display_value": "120kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 127000.0,
+    "display_value": "127kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 130000.0,
+    "display_value": "130kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 150000.0,
+    "display_value": "150kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 160000.0,
+    "display_value": "160kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 180000.0,
+    "display_value": "180kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 200000.0,
+    "display_value": "200kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 220000.0,
+    "display_value": "220kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 240000.0,
+    "display_value": "240kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 270000.0,
+    "display_value": "270kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 300000.0,
+    "display_value": "300kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 330000.0,
+    "display_value": "330kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 360000.0,
+    "display_value": "360kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 390000.0,
+    "display_value": "390kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 430000.0,
+    "display_value": "430kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 470000.0,
+    "display_value": "470kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 510000.0,
+    "display_value": "510kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 560000.0,
+    "display_value": "560kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 620000.0,
+    "display_value": "620kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 680000.0,
+    "display_value": "680kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 750000.0,
+    "display_value": "750kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 820000.0,
+    "display_value": "820kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 910000.0,
+    "display_value": "910kΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1000000.0,
+    "display_value": "1MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1200000.0,
+    "display_value": "1.20MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1500000.0,
+    "display_value": "1.50MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 1800000.0,
+    "display_value": "1.80MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2200000.0,
+    "display_value": "2.20MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 2400000.0,
+    "display_value": "2.40MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3000000.0,
+    "display_value": "3MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3300000.0,
+    "display_value": "3.30MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 3900000.0,
+    "display_value": "3.90MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 4700000.0,
+    "display_value": "4.70MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 5100000.0,
+    "display_value": "5.10MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 5600000.0,
+    "display_value": "5.60MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 6800000.0,
+    "display_value": "6.80MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 8200000.0,
+    "display_value": "8.20MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  },
+  {
+    "value_ohms": 10000000.0,
+    "display_value": "10MΩ",
+    "tolerance_percent": 1.0,
+    "power_watts": 0.25,
+    "technology": "METAL_FILM",
+    "package": "TH_AXIAL"
+  }
+]

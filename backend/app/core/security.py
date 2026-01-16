@@ -26,9 +26,13 @@ except Exception:
 from app.core.config import settings
 
 # Contexto para hashing de contraseñas
-# Support both bcrypt and pbkdf2_sha256 so that environments lacking a
-# working bcrypt backend can still create and verify passwords. Bcrypt
-# is preferred, but we fall back to pbkdf2_sha256 on errors.
+# Usar bcrypt directamente para evitar incompatibilidades con passlib
+try:
+    import bcrypt
+    _bcrypt_available = True
+except ImportError:
+    _bcrypt_available = False
+
 pwd_context = CryptContext(schemes=["bcrypt", "pbkdf2_sha256"], deprecated="auto")
 
 # Configuración JWT
@@ -67,7 +71,20 @@ def hash_password(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verifica una contraseña contra su hash"""
-    return pwd_context.verify(plain_password, hashed_password)
+    # Intentar con bcrypt directamente primero (evita bugs de passlib)
+    if _bcrypt_available and hashed_password.startswith("$2"):
+        try:
+            password_bytes = plain_password.encode("utf-8")
+            hash_bytes = hashed_password.encode("utf-8")
+            return bcrypt.checkpw(password_bytes, hash_bytes)
+        except Exception:
+            pass  # Fallback a passlib
+
+    # Fallback a passlib para otros esquemas
+    try:
+        return pwd_context.verify(plain_password, hashed_password)
+    except Exception:
+        return False
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:

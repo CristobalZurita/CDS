@@ -2,7 +2,7 @@
 Import all SQLAlchemy models
 """
 
-from app.models.user import User, UserRole
+from app.models.user import User, UserRole  # UserRole es ahora el modelo de tabla
 from app.models.repair import Repair, RepairStatus
 from app.models.diagnostic import Diagnostic
 from app.models.category import Category
