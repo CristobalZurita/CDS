@@ -25,7 +25,6 @@ class Product(Base):
     
     # Relaciones
     category = relationship("Category", back_populates="products")
-    stock_movements = relationship("StockMovement", back_populates="product")
     
     @property
     def is_low_stock(self):

@@ -1,40 +1,34 @@
 """
 Modelo StockMovement para historial de movimientos de inventario
+Alineado con schema real de cirujano.db
 """
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, Enum
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime
-import enum
 from app.core.database import Base
 
 
-class MovementType(str, enum.Enum):
-    """Tipos de movimientos de inventario"""
-    ENTRY = "entry"           # Entrada de stock
-    WITHDRAWAL = "withdrawal" # Salida de stock
-    ADJUSTMENT = "adjustment" # Ajuste de inventario
-    DAMAGE = "damage"         # Producto dañado
-
-
 class StockMovement(Base):
-    """Registro de movimiento de stock"""
-    
+    """
+    Registro de movimiento de stock.
+    Refleja exactamente la tabla stock_movements de cirujano.db.
+    """
+
     __tablename__ = "stock_movements"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey("products.id"), nullable=False, index=True)
-    
-    # Información del movimiento
-    movement_type = Column(Enum(MovementType), nullable=False)
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    stock_id = Column(Integer, ForeignKey("stock.id"), nullable=False, index=True)
+    movement_type = Column(String, nullable=False)  # DB usa TEXT, no Enum
     quantity = Column(Integer, nullable=False)
-    reason = Column(String(255), nullable=True)  # Motivo del movimiento
+    repair_id = Column(Integer, ForeignKey("repairs.id"), nullable=True)
     notes = Column(Text, nullable=True)
-    
-    # Fecha
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    
+    performed_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
     # Relaciones
-    product = relationship("Product", back_populates="stock_movements")
-    
+    stock = relationship("Stock", back_populates="movements")
+    repair = relationship("Repair", foreign_keys=[repair_id])
+    user = relationship("User", foreign_keys=[performed_by])
+
     def __repr__(self):
         return f"<StockMovement(id={self.id}, type={self.movement_type}, qty={self.quantity})>"
