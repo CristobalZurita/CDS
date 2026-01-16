@@ -68,6 +68,7 @@ class Repair(Base):
     # Relaciones
     status_obj = relationship("RepairStatus", back_populates="repairs")
     technician = relationship("User", back_populates="repairs", foreign_keys=[assigned_to])
+    diagnostic = relationship("Diagnostic", back_populates="repair", uselist=False)
 
     @property
     def status(self):

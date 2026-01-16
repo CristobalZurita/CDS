@@ -33,7 +33,6 @@ class Instrument(Base):
     
     # Relaciones
     brand = relationship("Brand", back_populates="instruments")
-    repairs = relationship("Repair", back_populates="instrument")
     
     def __repr__(self):
         return f"<Instrument(id={self.id}, model={self.model})>"

@@ -3,12 +3,15 @@ API routes for diagnostic and quotation system
 """
 
 from fastapi import APIRouter, HTTPException, Depends
-from typing import List
+from sqlalchemy.orm import Session
+from typing import List, Optional
 import json
 from pathlib import Path
 
 # Avoid importing application schemas directly to keep router import lightweight in tests
 from app.core.config import get_settings, Settings
+from app.core.database import get_db
+from app.models.diagnostic import Diagnostic
 from app.services.logging_service import create_audit
 
 router = APIRouter(prefix="/diagnostic", tags=["diagnostic"])
@@ -236,6 +239,131 @@ async def calculate_diagnostic(diagnostic: dict, settings: Settings = Depends(ge
         "value_factor": value_factor,
         "final_cost": final_cost,
     }
+
+
+@router.get("/")
+async def list_diagnostics(
+    skip: int = 0,
+    limit: int = 100,
+    repair_id: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    List all diagnostics with optional filtering
+
+    - **skip**: Number of records to skip (pagination)
+    - **limit**: Maximum number of records to return
+    - **repair_id**: Filter by repair ID (optional)
+    """
+    query = db.query(Diagnostic)
+
+    if repair_id:
+        query = query.filter(Diagnostic.repair_id == repair_id)
+
+    diagnostics = query.order_by(Diagnostic.created_at.desc()).offset(skip).limit(limit).all()
+
+    return [
+        {
+            "id": d.id,
+            "repair_id": d.repair_id,
+            "image_path": d.image_path,
+            "ai_analysis": d.ai_analysis,
+            "detected_faults": d.detected_faults,
+            "ai_confidence": d.ai_confidence,
+            "quote_total": d.quote_total,
+            "quote_breakdown": d.quote_breakdown,
+            "labor_hours": d.labor_hours,
+            "notes": d.notes,
+            "created_at": d.created_at.isoformat() if d.created_at else None,
+            "updated_at": d.updated_at.isoformat() if d.updated_at else None,
+        }
+        for d in diagnostics
+    ]
+
+
+@router.get("/{diagnostic_id}")
+async def get_diagnostic_by_id(diagnostic_id: int, db: Session = Depends(get_db)):
+    """Get a specific diagnostic by ID"""
+    diagnostic = db.query(Diagnostic).filter(Diagnostic.id == diagnostic_id).first()
+
+    if not diagnostic:
+        raise HTTPException(status_code=404, detail="Diagnostic not found")
+
+    return {
+        "id": diagnostic.id,
+        "repair_id": diagnostic.repair_id,
+        "image_path": diagnostic.image_path,
+        "ai_analysis": diagnostic.ai_analysis,
+        "detected_faults": diagnostic.detected_faults,
+        "ai_confidence": diagnostic.ai_confidence,
+        "quote_total": diagnostic.quote_total,
+        "quote_breakdown": diagnostic.quote_breakdown,
+        "labor_hours": diagnostic.labor_hours,
+        "notes": diagnostic.notes,
+        "created_at": diagnostic.created_at.isoformat() if diagnostic.created_at else None,
+        "updated_at": diagnostic.updated_at.isoformat() if diagnostic.updated_at else None,
+    }
+
+
+@router.put("/{diagnostic_id}")
+async def update_diagnostic(
+    diagnostic_id: int,
+    data: dict,
+    db: Session = Depends(get_db)
+):
+    """
+    Update an existing diagnostic
+
+    Updatable fields:
+    - repair_id, image_path, ai_analysis, detected_faults
+    - ai_confidence, quote_total, quote_breakdown, labor_hours, notes
+    """
+    diagnostic = db.query(Diagnostic).filter(Diagnostic.id == diagnostic_id).first()
+
+    if not diagnostic:
+        raise HTTPException(status_code=404, detail="Diagnostic not found")
+
+    # Update allowed fields
+    allowed_fields = [
+        "repair_id", "image_path", "ai_analysis", "detected_faults",
+        "ai_confidence", "quote_total", "quote_breakdown", "labor_hours", "notes"
+    ]
+
+    for field in allowed_fields:
+        if field in data:
+            setattr(diagnostic, field, data[field])
+
+    db.commit()
+    db.refresh(diagnostic)
+
+    return {
+        "id": diagnostic.id,
+        "repair_id": diagnostic.repair_id,
+        "image_path": diagnostic.image_path,
+        "ai_analysis": diagnostic.ai_analysis,
+        "detected_faults": diagnostic.detected_faults,
+        "ai_confidence": diagnostic.ai_confidence,
+        "quote_total": diagnostic.quote_total,
+        "quote_breakdown": diagnostic.quote_breakdown,
+        "labor_hours": diagnostic.labor_hours,
+        "notes": diagnostic.notes,
+        "created_at": diagnostic.created_at.isoformat() if diagnostic.created_at else None,
+        "updated_at": diagnostic.updated_at.isoformat() if diagnostic.updated_at else None,
+    }
+
+
+@router.delete("/{diagnostic_id}")
+async def delete_diagnostic(diagnostic_id: int, db: Session = Depends(get_db)):
+    """Delete a diagnostic by ID"""
+    diagnostic = db.query(Diagnostic).filter(Diagnostic.id == diagnostic_id).first()
+
+    if not diagnostic:
+        raise HTTPException(status_code=404, detail="Diagnostic not found")
+
+    db.delete(diagnostic)
+    db.commit()
+
+    return {"message": "Diagnostic deleted successfully", "id": diagnostic_id}
 
 
 @router.post("/quotes")

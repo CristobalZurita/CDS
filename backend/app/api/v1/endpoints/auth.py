@@ -97,6 +97,7 @@ async def login(
         # In test or minimal environments the DB may not be initialized; treat as invalid credentials
         # and let rate limiting still apply without raising an internal error.
         user = None
+
     if not user:
         # Audit failed login attempt
         try:
