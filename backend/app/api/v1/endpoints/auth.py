@@ -134,7 +134,7 @@ async def login(
         "sub": str(user.id),
         "username": user.username,
         "email": user.email,
-        "role": user.role.value
+        "role": user.role  # property retorna string directamente
     })
     
     refresh_token = create_refresh_token(data={

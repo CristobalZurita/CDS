@@ -125,7 +125,7 @@ CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE NOT NULL,
     username TEXT UNIQUE,
-    password_hash TEXT NOT NULL,
+    hashed_password TEXT NOT NULL,
     first_name TEXT,
     last_name TEXT,
     phone TEXT,
@@ -1325,9 +1325,10 @@ INSERT INTO comp_diodes (part_number, device_type, package) VALUES ('ZENER BZT52
 -- =====================================================================
 -- USUARIO ADMIN POR DEFECTO (cambiar contraseña en producción)
 -- =====================================================================
-INSERT INTO users (email, username, password_hash, first_name, last_name, role_id, is_active, is_verified)
-VALUES ('admin@cirujano.cl', 'admin', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4.G9HYFQhGQHKJPe', 
-        'Administrador', 'Sistema', 1, 1, 1);
+INSERT INTO users (email, username, hashed_password, full_name, phone, role, is_active)
+VALUES ('admin@cirujanosintetizadores.cl', 'admin', 
+        '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4.G9HYFQhGQHKJPe',
+        'Administrador Sistema', '+56982957538', 'admin', 1);
 
 -- =====================================================================
 -- FIN DEL SCRIPT

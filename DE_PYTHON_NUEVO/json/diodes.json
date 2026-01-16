@@ -1,0 +1,142 @@
+[
+  {
+    "part_number": "1M4007",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "1N4148 SMD",
+    "device_type": "SIGNAL",
+    "package": "DO-35"
+  },
+  {
+    "part_number": "1N5353B",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "1N5408",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "1N5822",
+    "device_type": "SCHOTTKY",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "1SS367",
+    "device_type": "SIGNAL",
+    "package": "DO-35"
+  },
+  {
+    "part_number": "BTA42",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "BZT52C11 (WG)",
+    "device_type": "ZENER",
+    "package": "DO-35"
+  },
+  {
+    "part_number": "LL4148",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "M1",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "M4",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "M7",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "MBR0540W",
+    "device_type": "SCHOTTKY",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "RS1M",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "S1M",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "S2M",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "S3M",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "SS14",
+    "device_type": "SCHOTTKY",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "SS16",
+    "device_type": "SCHOTTKY",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "SS24",
+    "device_type": "SCHOTTKY",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "SS34",
+    "device_type": "SCHOTTKY",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "SS36",
+    "device_type": "SCHOTTKY",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "US1M",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "ZENER 3.6",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "ZENER 5.1",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "ZENER 9.1",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "ZENER BZT52C11",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  },
+  {
+    "part_number": "ZENER BZT52C5V6",
+    "device_type": "RECTIFIER",
+    "package": "DO-41"
+  }
+]

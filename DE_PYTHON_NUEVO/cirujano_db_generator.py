@@ -22,11 +22,11 @@ from typing import Dict, List, Any, Optional
 # ==============================================================================
 
 class Config:
-    EXCEL_PATH = "/mnt/project/Inventario_Cirujanosintetizadores.xlsx"
-    BASE_DATOS_PATH = "/mnt/project/BASE_DATOS.txt"
-    OUTPUT_DIR = "/home/claude/output"
-    JSON_DIR = "/home/claude/output/json"
-    SQL_OUTPUT = "/home/claude/output/cirujano_database.sql"
+    EXCEL_PATH = "//mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DE_PYTHON_NUEVO/Inventario_Cirujanosintetizadores.xlsx"
+    BASE_DATOS_PATH = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/BASE_DATOS.txt"
+    OUTPUT_DIR = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DE_PYTHON_NUEVO/"
+    JSON_DIR = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DE_PYTHON_NUEVO/json"
+    SQL_OUTPUT = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DE_PYTHON_NUEVO/cirujano_database.sql"
 
 
 # ==============================================================================
