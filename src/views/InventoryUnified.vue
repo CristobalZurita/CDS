@@ -1,5 +1,6 @@
 <template>
   <div class="p-6">
+    <AdminToolbar title="Inventario Unificado" subtitle="POC y operación de importaciones" />
     <h1 class="text-2xl font-bold mb-4">Inventario Unificado (POC)</h1>
     <div class="mb-4">
       <input v-model="filter" @keyup.enter="load" placeholder="Filtrar por categoría" class="input" />
@@ -24,12 +25,13 @@
 <script>
 import { useInventoryStore } from '@/stores/inventory'
 import InventoryCard from '@/components/prototypes/InventoryCard.vue'
+import AdminToolbar from '@/vue/components/admin/AdminToolbar.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
   name: 'InventoryUnified',
-  components: { InventoryCard },
+  components: { InventoryCard, AdminToolbar },
   setup() {
     const filter = ref('')
     const store = useInventoryStore()

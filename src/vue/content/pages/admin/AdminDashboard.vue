@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1>Admin - Dashboard</h1>
+		<AdminToolbar title="Admin - Dashboard" subtitle="Panel de control administrativo" />
 		<StatsCards :stats="stats" />
 		<section>
 			<h3>Últimas reparaciones</h3>
@@ -19,6 +19,7 @@ import { api } from '@/services/api'
 import RepairsList from '@/vue/components/admin/RepairsList.vue'
 import UserList from '@/vue/components/admin/UserList.vue'
 import StatsCards from '@/vue/components/admin/StatsCards.vue'
+import AdminToolbar from '@/vue/components/admin/AdminToolbar.vue'
 
 const stats = ref({})
 
@@ -35,5 +36,4 @@ onMounted(loadStats)
 </script>
 
 <style scoped>
-h1 { margin-bottom: 12px; }
 </style>

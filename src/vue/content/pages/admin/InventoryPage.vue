@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<AdminToolbar title="Inventario" subtitle="Gestión de stock y componentes" />
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h1 class="h4">Inventario</h1>
 			<div>
@@ -22,6 +23,7 @@ import { useRoute, useRouter } from 'vue-router'
 import InventoryTable from '@/vue/components/admin/InventoryTable.vue'
 import InventoryForm from '@/vue/components/admin/InventoryForm.vue'
 import { useInventoryStore } from '@/stores/inventory'
+import AdminToolbar from '@/vue/components/admin/AdminToolbar.vue'
 
 const store = useInventoryStore()
 const route = useRoute()

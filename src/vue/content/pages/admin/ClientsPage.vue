@@ -1,7 +1,7 @@
 
 <template>
 	<div class="clients-page">
-		<h1>Clientes (admin)</h1>
+		<AdminToolbar title="Clientes" subtitle="Gestión de clientes y perfil" />
 		<div class="clients-grid">
 			<ClientList :clients="clients" @select="onSelect" />
 			<ClientDetail :client="selected || {}" />
@@ -14,6 +14,7 @@ import { ref, onMounted } from 'vue'
 import { api } from '@/services/api'
 import ClientList from '@/vue/components/admin/ClientList.vue'
 import ClientDetail from '@/vue/components/admin/ClientDetail.vue'
+import AdminToolbar from '@/vue/components/admin/AdminToolbar.vue'
 
 const clients = ref([])
 const selected = ref(null)
