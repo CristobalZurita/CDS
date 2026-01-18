@@ -46,6 +46,9 @@
         <p>¿No tienes cuenta? 
           <router-link to="/register" class="link">Regístrate aquí</router-link>
         </p>
+        <p>
+          <router-link to="/password-reset" class="link">¿Olvidaste tu contraseña?</router-link>
+        </p>
       </div>
     </form>
   </div>

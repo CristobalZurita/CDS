@@ -46,6 +46,22 @@ class User(Base):
     role_obj = relationship("UserRole", back_populates="users")
     repairs = relationship("Repair", back_populates="technician", foreign_keys="Repair.assigned_to")
 
+    def __init__(self, **kwargs):
+        full_name = kwargs.pop("full_name", None)
+        role = kwargs.pop("role", None)
+        if full_name and not kwargs.get("first_name") and not kwargs.get("last_name"):
+            parts = str(full_name).strip().split()
+            if parts:
+                kwargs["first_name"] = parts[0]
+                kwargs["last_name"] = " ".join(parts[1:]) if len(parts) > 1 else None
+        if role and "role_id" not in kwargs:
+            role_map = {"admin": 1, "technician": 2, "client": 3}
+            if isinstance(role, str):
+                kwargs["role_id"] = role_map.get(role.lower(), 3)
+            elif isinstance(role, int):
+                kwargs["role_id"] = role
+        super().__init__(**kwargs)
+
     @property
     def full_name(self):
         """Propiedad para compatibilidad con código existente"""

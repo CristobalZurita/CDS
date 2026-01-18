@@ -193,7 +193,8 @@ def test_duplicate_transaction_returns_existing():
     repair = res.json()
     rid = repair["id"] if isinstance(repair, dict) and "id" in repair else repair[0]["id"]
 
-    tx = "tx_existing_db"
+    import uuid
+    tx = f"tx_existing_db_{uuid.uuid4().hex[:8]}"
     # Create payment directly in DB, simulating a pre-existing payment
     db = SessionLocal()
     try:

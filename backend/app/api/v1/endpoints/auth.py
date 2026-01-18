@@ -4,7 +4,10 @@ Endpoints de autenticación: login, register, logout
 from fastapi import APIRouter, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from fastapi.params import Depends
+from datetime import datetime, timedelta
+import secrets
 from app.core.database import get_db
+from app.core.config import settings
 from app.core.security import (
     hash_password, verify_password, create_access_token, create_refresh_token
 )
@@ -12,12 +15,35 @@ from app.core.dependencies import get_current_user
 from app.core.ratelimit import limiter
 from app.services.logging_service import create_audit
 from app.models.user import User
+from app.models.client import Client
 from app.schemas.auth import (
-    LoginRequest, RegisterRequest, Token, PasswordResetRequest
+    LoginRequest, RegisterRequest, Token, PasswordResetRequest, PasswordResetConfirm, ConfirmEmailRequest
 )
 from app.schemas.user import UserResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+def _split_full_name(full_name: str) -> tuple[str | None, str | None]:
+    parts = (full_name or "").strip().split()
+    if not parts:
+        return None, None
+    if len(parts) == 1:
+        return parts[0], None
+    return parts[0], " ".join(parts[1:])
+
+
+def _maybe_create_client(db: Session, user: User) -> None:
+    client = db.query(Client).filter(Client.user_id == user.id).first()
+    if client:
+        return
+    client = Client(
+        user_id=user.id,
+        name=user.full_name,
+        email=user.email,
+        phone=user.phone
+    )
+    db.add(client)
+    db.commit()
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
@@ -52,17 +78,24 @@ async def register(
         )
     
     # Crear nuevo usuario
+    first_name, last_name = _split_full_name(request.full_name)
+    verification_token = secrets.token_urlsafe(32)
     new_user = User(
         email=request.email,
         username=request.username,
-        full_name=request.full_name,
+        first_name=first_name,
+        last_name=last_name,
         hashed_password=hash_password(request.password),
-        phone=request.phone
+        phone=request.phone,
+        is_active=True,
+        is_verified=0,
+        verification_token=verification_token
     )
     
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    _maybe_create_client(db, new_user)
     # Audit registration
     try:
         create_audit(event_type="auth.register", user_id=new_user.id, ip_address=None, details={"email": new_user.email, "username": new_user.username})
@@ -185,7 +218,7 @@ async def get_current_user_info(
 
 
 @router.post("/refresh")
-async def refresh_access_token(request_body: dict):
+async def refresh_access_token(request_body: dict, db: Session = Depends(get_db)):
     """
     Refrescar access token usando refresh token
     
@@ -205,8 +238,25 @@ async def refresh_access_token(request_body: dict):
     try:
         payload = verify_refresh_token(refresh_token)
         user_id = payload.get("sub")
-        
-        new_access_token = create_access_token(data={"sub": user_id})
+        if not user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Refresh token inválido"
+            )
+
+        user = db.query(User).filter(User.id == int(user_id)).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Usuario no encontrado"
+            )
+
+        new_access_token = create_access_token(data={
+            "sub": str(user.id),
+            "username": user.username,
+            "email": user.email,
+            "role": user.role
+        })
         new_refresh_token = create_refresh_token(data={"sub": user_id})
         
         return {
@@ -219,3 +269,72 @@ async def refresh_access_token(request_body: dict):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Refresh token inválido"
         )
+
+
+@router.post("/forgot-password")
+async def forgot_password(
+    request: PasswordResetRequest,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.email == request.email).first()
+    token = None
+    if user:
+        token = secrets.token_urlsafe(32)
+        user.reset_token = token
+        user.reset_token_expires = datetime.utcnow() + timedelta(hours=1)
+        db.add(user)
+        db.commit()
+        try:
+            create_audit(event_type="auth.password.reset.request", user_id=user.id, details={"email": user.email})
+        except Exception:
+            pass
+
+    response = {"message": "Si el email existe, enviaremos instrucciones para recuperar la contraseña."}
+    if token and settings.environment.lower() not in ("production", "prod"):
+        response["reset_token"] = token
+    return response
+
+
+@router.post("/reset-password")
+async def reset_password(
+    request: PasswordResetConfirm,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.reset_token == request.token).first()
+    if not user or not user.reset_token_expires:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token inválido")
+    if user.reset_token_expires < datetime.utcnow():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token expirado")
+
+    user.hashed_password = hash_password(request.new_password)
+    user.reset_token = None
+    user.reset_token_expires = None
+    db.add(user)
+    db.commit()
+    try:
+        create_audit(event_type="auth.password.reset.complete", user_id=user.id, details={"email": user.email})
+    except Exception:
+        pass
+
+    return {"message": "Contraseña actualizada"}
+
+
+@router.post("/confirm-email")
+async def confirm_email(
+    request: ConfirmEmailRequest,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.verification_token == request.token).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token inválido")
+
+    user.is_verified = 1
+    user.verification_token = None
+    db.add(user)
+    db.commit()
+    try:
+        create_audit(event_type="auth.email.confirmed", user_id=user.id, details={"email": user.email})
+    except Exception:
+        pass
+
+    return {"message": "Email confirmado"}

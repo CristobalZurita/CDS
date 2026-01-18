@@ -13,8 +13,10 @@ import Master from '@/vue/content/Master.vue'
 import HomePage from '@/vue/content/pages/HomePage.vue'
 import LoginPage from '@/vue/content/pages/LoginPage.vue'
 import RegisterPage from '@/vue/content/pages/RegisterPage.vue'
+import PasswordResetPage from '@/vue/content/pages/PasswordResetPage.vue'
 import DashboardPage from '@/vue/content/pages/DashboardPage.vue'
 import RepairsPage from '@/vue/content/pages/RepairsPage.vue'
+import RepairDetailPage from '@/vue/content/pages/RepairDetailPage.vue'
 import ProfilePage from '@/vue/content/pages/ProfilePage.vue'
 import CotizadorIAPage from '@/vue/content/pages/CotizadorIAPage.vue'
 import LicensePage from '@/vue/content/pages/LicensePage.vue'
@@ -91,6 +93,12 @@ const routes = [
     component: RegisterPage,
     meta: { requiresAuth: false, requiresGuest: true }
   },
+  {
+    path: '/password-reset',
+    name: 'password-reset',
+    component: PasswordResetPage,
+    meta: { requiresAuth: false, requiresGuest: true }
+  },
 
   // Client routes (requieren autenticación)
   {
@@ -103,6 +111,12 @@ const routes = [
     path: '/repairs',
     name: 'repairs',
     component: RepairsPage,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/repairs/:id',
+    name: 'repair-detail',
+    component: RepairDetailPage,
     meta: { requiresAuth: true }
   },
   {

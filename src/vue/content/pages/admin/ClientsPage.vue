@@ -2,20 +2,46 @@
 <template>
 	<div class="clients-page">
 		<h1>Clientes (admin)</h1>
-		<p class="muted">Página de administración de clientes — contenido de ejemplo.</p>
-		<!-- Replace with real components or fetch logic as needed -->
+		<div class="clients-grid">
+			<ClientList :clients="clients" @select="onSelect" />
+			<ClientDetail :client="selected || {}" />
+		</div>
 	</div>
 </template>
 
 <script setup>
-// Minimal script for admin clients page; expand with actual logic as needed.
+import { ref, onMounted } from 'vue'
+import { api } from '@/services/api'
+import ClientList from '@/vue/components/admin/ClientList.vue'
+import ClientDetail from '@/vue/components/admin/ClientDetail.vue'
+
+const clients = ref([])
+const selected = ref(null)
+
+async function load() {
+	try {
+		const res = await api.get('/clients')
+		clients.value = res.data
+		selected.value = clients.value[0] || null
+	} catch (e) {
+		clients.value = []
+	}
+}
+
+function onSelect(client) {
+	selected.value = client
+}
+
+onMounted(load)
 </script>
 
 <style scoped>
 .clients-page {
 	padding: 1rem;
 }
-.clients-page .muted {
-	color: #666;
+.clients-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
 }
 </style>

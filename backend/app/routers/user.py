@@ -4,6 +4,16 @@ from app.models.user import User
 from app.schemas.user import UserCreate, UserRead, UserUpdate
 from app.core.database import get_db
 from app.core.dependencies import get_current_admin
+from app.core.security import hash_password
+
+
+def _split_full_name(full_name: str) -> tuple[str | None, str | None]:
+    parts = (full_name or "").strip().split()
+    if not parts:
+        return None, None
+    if len(parts) == 1:
+        return parts[0], None
+    return parts[0], " ".join(parts[1:])
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -13,7 +23,16 @@ def list_users(db: Session = Depends(get_db), admin: dict = Depends(get_current_
 
 @router.post("/", response_model=UserRead)
 def create_user(user: UserCreate, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
-    db_user = User(**user.dict())
+    first_name, last_name = _split_full_name(user.full_name)
+    db_user = User(
+        email=user.email,
+        username=user.username,
+        first_name=first_name,
+        last_name=last_name,
+        hashed_password=hash_password(user.password),
+        phone=user.phone,
+        is_active=True
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -24,7 +43,12 @@ def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db), a
     db_user = db.query(User).get(user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
-    for key, value in user.dict(exclude_unset=True).items():
+    data = user.dict(exclude_unset=True)
+    if "full_name" in data:
+        first_name, last_name = _split_full_name(data.pop("full_name") or "")
+        db_user.first_name = first_name
+        db_user.last_name = last_name
+    for key, value in data.items():
         setattr(db_user, key, value)
     db.commit()
     db.refresh(db_user)

@@ -11,7 +11,7 @@ export const useStockMovementsStore = defineStore('stockMovements', {
     async fetchMovements() {
       this.loading = true
       try {
-        this.movements = await useApi().get('/api/stock-movements')
+        this.movements = await useApi().get('/stock-movements')
       } catch (e) {
         this.error = e
       } finally {
@@ -19,7 +19,7 @@ export const useStockMovementsStore = defineStore('stockMovements', {
       }
     },
     async createMovement(data) {
-      return await useApi().post('/api/stock-movements', data)
+      return await useApi().post('/stock-movements', data)
     }
   }
 })

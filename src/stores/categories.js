@@ -11,7 +11,7 @@ export const useCategoriesStore = defineStore('categories', {
     async fetchCategories() {
       this.loading = true
       try {
-        this.categories = await useApi().get('/api/categories')
+        this.categories = await useApi().get('/categories')
       } catch (e) {
         this.error = e
       } finally {
@@ -19,13 +19,13 @@ export const useCategoriesStore = defineStore('categories', {
       }
     },
     async createCategory(data) {
-      return await useApi().post('/api/categories', data)
+      return await useApi().post('/categories', data)
     },
     async updateCategory(id, data) {
-      return await useApi().put(`/api/categories/${id}`, data)
+      return await useApi().put(`/categories/${id}`, data)
     },
     async deleteCategory(id) {
-      return await useApi().delete(`/api/categories/${id}`)
+      return await useApi().delete(`/categories/${id}`)
     }
   }
 })

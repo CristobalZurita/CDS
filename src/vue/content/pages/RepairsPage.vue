@@ -21,8 +21,8 @@
           <select v-model="selectedStatus" class="filter-select">
             <option value="">Todos</option>
             <option value="completed">Completadas</option>
-            <option value="in-progress">En Proceso</option>
-            <option value="waiting">En Espera</option>
+            <option value="in_progress">En Proceso</option>
+            <option value="waiting_parts">En Espera</option>
             <option value="cancelled">Canceladas</option>
           </select>
         </div>
@@ -92,61 +92,15 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { api } from '@/services/api'
+import { showError } from '@/services/toastService'
 
 const router = useRouter()
 const selectedStatus = ref('')
-
-// Mock data
-const repairs = ref([
-  {
-    id: 'REP-2024-001',
-    instrument: 'Moog Minimoog Model D',
-    fault: 'No genera sonido',
-    status: 'completed',
-    date_in: new Date('2024-11-15'),
-    date_out: new Date('2024-11-28'),
-    cost: 450000,
-    progress: 100
-  },
-  {
-    id: 'REP-2024-002',
-    instrument: 'Roland TR-808',
-    fault: 'Batería defectuosa',
-    status: 'completed',
-    date_in: new Date('2024-12-01'),
-    date_out: new Date('2024-12-08'),
-    cost: 280000,
-    progress: 100
-  },
-  {
-    id: 'REP-2024-003',
-    instrument: 'Korg MS-20',
-    fault: 'Teclado con teclas pegadas',
-    status: 'completed',
-    date_in: new Date('2024-12-10'),
-    date_out: new Date('2024-12-22'),
-    cost: 350000,
-    progress: 100
-  },
-  {
-    id: 'REP-2025-001',
-    instrument: 'Moog Minimoog Model D',
-    fault: 'Filtro no responde',
-    status: 'in-progress',
-    date_in: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-    progress: 65
-  },
-  {
-    id: 'REP-2025-002',
-    instrument: 'Roland TR-909',
-    fault: 'No enciende',
-    status: 'waiting',
-    date_in: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-    progress: 10
-  }
-])
+const repairs = ref([])
+const isLoading = ref(false)
 
 const filteredRepairs = computed(() => {
   if (!selectedStatus.value) return repairs.value
@@ -155,23 +109,30 @@ const filteredRepairs = computed(() => {
 
 const getStatusLabel = (status) => {
   const labels = {
-    'completed': '✓ Completada',
-    'in-progress': '🔧 En Proceso',
-    'waiting': '⌛ En Espera',
-    'cancelled': '✕ Cancelada'
+    pending_quote: '⏳ Pendiente',
+    quoted: '💬 Cotizado',
+    approved: '✅ Aprobado',
+    in_progress: '🔧 En Proceso',
+    waiting_parts: '⌛ En Espera',
+    testing: '🧪 En Pruebas',
+    completed: '✓ Completada',
+    delivered: '📦 Entregado',
+    cancelled: '✕ Cancelada'
   }
   return labels[status] || status
 }
 
 const formatDate = (date) => {
+  if (!date) return '—'
   return new Intl.DateTimeFormat('es-CL', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
-  }).format(date)
+  }).format(new Date(date))
 }
 
 const formatPrice = (price) => {
+  if (!price && price !== 0) return '—'
   return new Intl.NumberFormat('es-CL', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
@@ -181,6 +142,22 @@ const formatPrice = (price) => {
 const viewRepair = (repair) => {
   router.push(`/repairs/${repair.id}`)
 }
+
+const fetchRepairs = async () => {
+  isLoading.value = true
+  try {
+    const { data } = await api.get('/client/repairs')
+    repairs.value = data || []
+  } catch (err) {
+    showError(err.response?.data?.detail || 'Error cargando reparaciones')
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchRepairs()
+})
 </script>
 
 <style scoped>
@@ -339,12 +316,22 @@ const viewRepair = (repair) => {
   color: #22543d;
 }
 
-.repair-status.in-progress {
+.repair-status.in-progress,
+.repair-status.in_progress {
   background: #bee3f8;
   color: #2c5282;
 }
 
-.repair-status.waiting {
+.repair-status.pending_quote,
+.repair-status.quoted,
+.repair-status.approved,
+.repair-status.testing {
+  background: #feebc8;
+  color: #7b341e;
+}
+
+.repair-status.waiting,
+.repair-status.waiting_parts {
   background: #fed7d7;
   color: #742a2a;
 }

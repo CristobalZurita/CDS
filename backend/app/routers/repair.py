@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.models.repair import Repair
+from app.models.repair import Repair, RepairStatus
+from app.models.audit import AuditLog
 from typing import Dict
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
@@ -8,6 +9,11 @@ from app.services.logging_service import create_audit
 from app.services.repair_service import RepairService
 from app.models.repair_note import RepairNote
 from app.models.repair_photo import RepairPhoto
+from app.models.device import Device
+from app.models.device_lookup import DeviceType
+from app.models.client import Client
+from app.models.user import User
+import uuid
 
 router = APIRouter(prefix="/repairs", tags=["repairs"])
 
@@ -19,14 +25,88 @@ def list_repairs(db: Session = Depends(get_db)):
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_repair(repair: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
-    # Accept a flexible payload for now to avoid schema package conflicts
-    db_repair = Repair(**repair)
+    def _ensure_default_device_type():
+        dt = db.query(DeviceType).first()
+        if not dt:
+            dt = DeviceType(code="generic", name="Generic", description="Autocreated")
+            db.add(dt)
+            db.commit()
+            db.refresh(dt)
+        return dt
+
+    def _ensure_default_status():
+        st = db.query(RepairStatus).filter(RepairStatus.id == 1).first()
+        if not st:
+            st = RepairStatus(id=1, code="pending_quote", name="Pendiente Cotizacion", description="Autocreated")
+            db.add(st)
+            db.commit()
+            db.refresh(st)
+        return st
+
+    def _resolve_client(client_id: int | None):
+        if not client_id:
+            return None
+        client = db.query(Client).filter(Client.id == client_id).first()
+        if client:
+            return client
+        user_obj = db.query(User).filter(User.id == client_id).first()
+        if user_obj:
+            client = Client(user_id=user_obj.id, name=user_obj.full_name, email=user_obj.email)
+            db.add(client)
+            db.commit()
+            db.refresh(client)
+            return client
+        return None
+
+    _ensure_default_status()
+    device_id = repair.get("device_id")
+    if not device_id:
+        client = _resolve_client(repair.get("client_id"))
+        if client:
+            dt = _ensure_default_device_type()
+            device = Device(
+                client_id=client.id,
+                device_type_id=dt.id,
+                model=repair.get("model") or repair.get("title") or "Unknown"
+            )
+            db.add(device)
+            db.commit()
+            db.refresh(device)
+            device_id = device.id
+
+    if not device_id:
+        raise HTTPException(status_code=400, detail="device_id or client_id required")
+
+    db_repair = Repair(
+        repair_number=repair.get("repair_number") or f"R-{uuid.uuid4().hex[:8]}",
+        device_id=device_id,
+        quote_id=repair.get("quote_id"),
+        status_id=repair.get("status_id") or 1,
+        assigned_to=repair.get("assigned_to"),
+        problem_reported=repair.get("problem_reported") or repair.get("description") or repair.get("title") or "Sin detalle",
+        diagnosis=repair.get("diagnosis"),
+        work_performed=repair.get("work_performed"),
+        parts_cost=repair.get("parts_cost", 0),
+        labor_cost=repair.get("labor_cost", 0),
+        additional_cost=repair.get("additional_cost", 0),
+        discount=repair.get("discount", 0),
+        total_cost=repair.get("total_cost", 0),
+        payment_status=repair.get("payment_status") or "pending",
+        payment_method=repair.get("payment_method"),
+        paid_amount=repair.get("paid_amount", 0),
+        priority=repair.get("priority", 2),
+    )
     db.add(db_repair)
     db.commit()
     db.refresh(db_repair)
     # Audit: repair created
     try:
-        create_audit(event_type="repair.create", user_id=None, details={"repair_id": db_repair.id}, message="Repair created")
+        create_audit(
+            event_type="repair.create",
+            user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
+            details={"repair_id": db_repair.id},
+            message="Repair created"
+        )
     except Exception:
         # Non-fatal: auditing should not break main flow
         pass
@@ -38,13 +118,26 @@ def update_repair(repair_id: int, repair: Dict, db: Session = Depends(get_db), u
     db_repair = db.query(Repair).get(repair_id)
     if not db_repair:
         raise HTTPException(status_code=404, detail="Repair not found")
+    previous_status_id = db_repair.status_id
     for key, value in repair.items():
         setattr(db_repair, key, value)
     db.commit()
     db.refresh(db_repair)
     # Audit: repair updated
     try:
-        create_audit(event_type="repair.update", user_id=None, details={"repair_id": db_repair.id}, message="Repair updated")
+        create_audit(
+            event_type="repair.update",
+            user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
+            details={"repair_id": db_repair.id},
+            message="Repair updated"
+        )
+        if previous_status_id != db_repair.status_id:
+            create_audit(
+                event_type="repair.status.change",
+                user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
+                details={"repair_id": db_repair.id, "from_status_id": previous_status_id, "to_status_id": db_repair.status_id},
+                message="Repair status changed"
+            )
     except Exception:
         pass
     return db_repair
@@ -59,10 +152,32 @@ def delete_repair(repair_id: int, db: Session = Depends(get_db), user: dict = De
     db.commit()
     # Audit: repair deleted
     try:
-        create_audit(event_type="repair.delete", user_id=None, details={"repair_id": repair_id}, message="Repair deleted")
+        create_audit(
+            event_type="repair.delete",
+            user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
+            details={"repair_id": repair_id},
+            message="Repair deleted"
+        )
     except Exception:
         pass
     return {"ok": True}
+
+
+@router.get("/{repair_id}/audit")
+def get_repair_audit(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+    logs = (
+        db.query(AuditLog)
+        .filter(AuditLog.event_type.like("repair.%"))
+        .order_by(AuditLog.created_at.desc())
+        .limit(200)
+        .all()
+    )
+    filtered = []
+    for log in logs:
+        details = log.details or {}
+        if details.get("repair_id") == repair_id:
+            filtered.append(log)
+    return filtered
 
 
 # ---------------------------------------------------------------------------
@@ -120,6 +235,17 @@ def add_repair_note(repair_id: int, payload: Dict, db: Session = Depends(get_db)
     return note
 
 
+@router.get("/{repair_id}/notes")
+def list_repair_notes(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+    notes = (
+        db.query(RepairNote)
+        .filter(RepairNote.repair_id == repair_id)
+        .order_by(RepairNote.created_at.desc())
+        .all()
+    )
+    return notes
+
+
 @router.post("/{repair_id}/photos", status_code=status.HTTP_201_CREATED)
 def add_repair_photo(repair_id: int, payload: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     """Registrar URL de foto asociada a la reparación. For file uploads use `uploads` router."""
@@ -137,3 +263,14 @@ def add_repair_photo(repair_id: int, payload: Dict, db: Session = Depends(get_db
     db.commit()
     db.refresh(photo)
     return photo
+
+
+@router.get("/{repair_id}/photos")
+def list_repair_photos(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+    photos = (
+        db.query(RepairPhoto)
+        .filter(RepairPhoto.repair_id == repair_id)
+        .order_by(RepairPhoto.sort_order.asc(), RepairPhoto.created_at.desc())
+        .all()
+    )
+    return photos

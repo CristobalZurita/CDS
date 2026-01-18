@@ -25,8 +25,13 @@
 </template>
 <script setup>
 import { useCategories } from '@/composables/useCategories'
+import { onMounted } from 'vue'
 const { categories, fetchCategories, deleteCategory } = useCategories()
 function editCategory(cat) {
   // Implementar edición
 }
+
+onMounted(() => {
+  fetchCategories()
+})
 </script>
