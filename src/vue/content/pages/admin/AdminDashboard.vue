@@ -1,6 +1,5 @@
 <template>
-	<div>
-		<AdminToolbar title="Admin - Dashboard" subtitle="Panel de control administrativo" />
+	<AdminLayout title="Admin - Dashboard" subtitle="Panel de control administrativo">
 		<StatsCards :stats="stats" />
 		<section>
 			<h3>Últimas reparaciones</h3>
@@ -10,7 +9,7 @@
 			<h3>Usuarios</h3>
 			<UserList />
 		</section>
-	</div>
+	</AdminLayout>
 </template>
 
 <script setup>
@@ -19,7 +18,7 @@ import { api } from '@/services/api'
 import RepairsList from '@/vue/components/admin/RepairsList.vue'
 import UserList from '@/vue/components/admin/UserList.vue'
 import StatsCards from '@/vue/components/admin/StatsCards.vue'
-import AdminToolbar from '@/vue/components/admin/AdminToolbar.vue'
+import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 
 const stats = ref({})
 

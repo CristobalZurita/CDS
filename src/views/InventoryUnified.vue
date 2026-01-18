@@ -1,37 +1,38 @@
 <template>
-  <div class="p-6">
-    <AdminToolbar title="Inventario Unificado" subtitle="POC y operación de importaciones" />
-    <h1 class="text-2xl font-bold mb-4">Inventario Unificado (POC)</h1>
-    <div class="mb-4">
-      <input v-model="filter" @keyup.enter="load" placeholder="Filtrar por categoría" class="input" />
-      <button @click="load" class="btn btn-primary ml-2">Buscar</button>
-      <button @click="triggerImport" class="btn btn-secondary ml-4" :disabled="importing">{{ importing ? 'Importando...' : 'Iniciar importación' }}</button>
-    </div>
+  <AdminLayout title="Inventario Unificado" subtitle="POC y operación de importaciones">
+    <div class="p-6">
+      <h1 class="text-2xl font-bold mb-4">Inventario Unificado (POC)</h1>
+      <div class="mb-4">
+        <input v-model="filter" @keyup.enter="load" placeholder="Filtrar por categoría" class="input" />
+        <button @click="load" class="btn btn-primary ml-2">Buscar</button>
+        <button @click="triggerImport" class="btn btn-secondary ml-4" :disabled="importing">{{ importing ? 'Importando...' : 'Iniciar importación' }}</button>
+      </div>
 
-    <div v-if="store.loading">Cargando...</div>
-    <div v-if="lastRunId" class="mt-4">Última importación: <strong>{{ lastRunId }}</strong> <em v-if="runStatus">({{ runStatus }})</em></div>
-    <div v-else class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      <InventoryCard
-        v-for="it in store.items"
-        :key="it.id"
-        :item="it"
-        @request-edit="onRequestEdit"
-        @request-delete="onRequestDelete"
-      />
+      <div v-if="store.loading">Cargando...</div>
+      <div v-if="lastRunId" class="mt-4">Última importación: <strong>{{ lastRunId }}</strong> <em v-if="runStatus">({{ runStatus }})</em></div>
+      <div v-else class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <InventoryCard
+          v-for="it in store.items"
+          :key="it.id"
+          :item="it"
+          @request-edit="onRequestEdit"
+          @request-delete="onRequestDelete"
+        />
+      </div>
     </div>
-  </div>
+  </AdminLayout>
 </template>
 
 <script>
 import { useInventoryStore } from '@/stores/inventory'
 import InventoryCard from '@/components/prototypes/InventoryCard.vue'
-import AdminToolbar from '@/vue/components/admin/AdminToolbar.vue'
+import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
   name: 'InventoryUnified',
-  components: { InventoryCard, AdminToolbar },
+  components: { InventoryCard, AdminLayout },
   setup() {
     const filter = ref('')
     const store = useInventoryStore()

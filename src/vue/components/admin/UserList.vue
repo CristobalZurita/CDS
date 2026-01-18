@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <h2>Usuarios</h2>
-    <button @click="fetchUsers">Actualizar</button>
-    <table>
+  <section class="admin-section">
+    <div class="admin-section-header">
+      <h2 class="admin-section-title">Usuarios</h2>
+      <button class="admin-btn admin-btn-outline" @click="fetchUsers">Actualizar</button>
+    </div>
+    <table class="admin-table">
       <thead>
         <tr>
           <th>Email</th>
@@ -17,13 +19,13 @@
           <td>{{ user.full_name }}</td>
           <td>{{ user.role }}</td>
           <td>
-            <button @click="editUser(user)">Editar</button>
-            <button @click="deleteUser(user.id)">Borrar</button>
+            <button class="admin-btn admin-btn-outline" @click="editUser(user)">Editar</button>
+            <button class="admin-btn admin-btn-primary" @click="deleteUser(user.id)">Borrar</button>
           </td>
         </tr>
       </tbody>
     </table>
-  </div>
+  </section>
 </template>
 <script setup>
 import { useUsers } from '@/composables/useUsers'

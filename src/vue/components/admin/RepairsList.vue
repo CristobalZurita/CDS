@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <h2>Reparaciones</h2>
-    <button @click="fetchRepairs">Actualizar</button>
-    <table>
+  <section class="admin-section">
+    <div class="admin-section-header">
+      <h2 class="admin-section-title">Reparaciones</h2>
+      <button class="admin-btn admin-btn-outline" @click="fetchRepairs">Actualizar</button>
+    </div>
+    <table class="admin-table">
       <thead>
         <tr>
           <th>Título</th>
@@ -17,13 +19,13 @@
           <td>{{ repair.client_id }}</td>
           <td>{{ repair.status }}</td>
           <td>
-            <button @click="editRepair(repair)">Editar</button>
-            <button @click="deleteRepair(repair.id)">Borrar</button>
+            <button class="admin-btn admin-btn-outline" @click="editRepair(repair)">Editar</button>
+            <button class="admin-btn admin-btn-primary" @click="deleteRepair(repair.id)">Borrar</button>
           </td>
         </tr>
       </tbody>
     </table>
-  </div>
+  </section>
 </template>
 <script setup>
 import { useRepairs } from '@/composables/useRepairs'

@@ -8,9 +8,6 @@
             <router-view/>
         </main>
 
-    <!-- Floating Quote Button - Visible in all pages -->
-    <FloatingQuoteButton/>
-
     <!-- Toast Notifications -->
     <ToastNotification ref="toastComponent" />
 
@@ -70,7 +67,6 @@ import Footer from "/src/vue/components/footer/Footer.vue"
 import FooterBlock from "/src/vue/components/footer/FooterBlock.vue"
 import FooterCopyright from "/src/vue/components/footer/FooterCopyright.vue"
 import FooterColumn from "/src/vue/components/footer/FooterColumn.vue"
-import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"
 import ToastNotification from "/src/vue/components/system/ToastNotification.vue"
 import { setToastComponent } from '/src/services/toastService.js'
 

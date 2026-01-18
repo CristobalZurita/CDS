@@ -1,7 +1,7 @@
 <template>
     <div class="navigation">
         <!-- In-page Navigation -->
-        <InPageNavbar v-if="shouldDisplayInPageNavBar"
+        <InPageNavbar v-if="shouldDisplayInPageNavBar && !isAdminRoute"
                       :logo="logo"
                       :label="label"/>
 
@@ -35,6 +35,8 @@ const shouldDisplayInPageNavBar = computed(() => {
 
     return routeInfo.props.default['inPageNavbar']
 })
+
+const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 </script>
 
 <style lang="scss" scoped>

@@ -1,15 +1,14 @@
 <template>
-	<div>
-		<AdminToolbar title="Estadísticas" subtitle="Indicadores y métricas" />
+	<AdminLayout title="Estadísticas" subtitle="Indicadores y métricas">
 		<StatsCards :stats="stats" />
-	</div>
+	</AdminLayout>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { api } from '@/services/api'
 import StatsCards from '@/vue/components/admin/StatsCards.vue'
-import AdminToolbar from '@/vue/components/admin/AdminToolbar.vue'
+import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 
 const stats = ref({})
 
