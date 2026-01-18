@@ -30,6 +30,12 @@
                             <span>Cotiza tu instrumento</span>
                         </a>
                     </Link>
+                    <Link v-if="!isAuthenticated" url="/login">
+                        <a class="btn-hero btn-hero-outline">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            <span>Iniciar sesión</span>
+                        </a>
+                    </Link>
                 </div>
 
                 <!-- Appointment Modal -->
@@ -58,9 +64,12 @@ import {computed, ref} from "vue"
 import Link from "/src/vue/components/generic/Link.vue"
 import XLButton from "/src/vue/components/widgets/XLButton.vue"
 import AppointmentModal from "/src/vue/components/modals/AppointmentModal.vue"
+import { useAuthStore } from '@/stores/auth'
 
 const utils = useUtils()
 const showAppointmentModal = ref(false)
+const authStore = useAuthStore()
+const isAuthenticated = computed(() => authStore.isAuthenticated)
 
 const props = defineProps({
     id: String,
@@ -249,6 +258,17 @@ header.foxy-header {
             &:hover {
                 background-color: #ff7f1f;
                 border-color: #ff7f1f;
+            }
+        }
+
+        &.btn-hero-outline {
+            background-color: transparent;
+            color: $orange-pastel;
+            border-color: $orange-pastel;
+
+            &:hover {
+                background-color: $orange-pastel;
+                color: $vintage-black;
             }
         }
     }
