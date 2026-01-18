@@ -56,9 +56,10 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
+const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -119,7 +120,13 @@ async function handleLogin() {
 
   try {
     await authStore.login(formData.email, formData.password)
-    router.push('/dashboard')
+    const redirect = route.query.redirect
+    if (redirect) {
+      router.push(redirect)
+      return
+    }
+
+    router.push(authStore.isAdmin ? '/admin' : '/dashboard')
   } catch (error) {
     apiError.value = authStore.error || 'Error al iniciar sesión'
   } finally {

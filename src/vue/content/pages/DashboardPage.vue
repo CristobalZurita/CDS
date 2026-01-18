@@ -11,6 +11,9 @@
           <router-link to="/cotizador-ia" class="btn-primary">
             + Nueva Cotización
           </router-link>
+          <button class="btn-logout" type="button" @click="handleLogout">
+            Cerrar sesión
+          </button>
         </div>
       </div>
 
@@ -249,6 +252,10 @@ const viewRepair = (repair) => {
   router.push(`/repairs/${repair.id}`)
 }
 
+const handleLogout = () => {
+  authStore.logout()
+}
+
 const dismissNotification = (id) => {
   notifications.value = notifications.value.filter(n => n.id !== id)
 }
@@ -272,10 +279,12 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "/src/scss/_theming.scss";
+
 .dashboard-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: radial-gradient(circle at 20% 10%, rgba($brand-secondary, 0.25) 0%, rgba($dark, 0.95) 45%, rgba(0, 0, 0, 0.98) 100%);
   padding: 2rem 1rem;
 }
 
@@ -290,21 +299,22 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  background: white;
+  background: $vintage-beige;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(62, 60, 56, 0.2);
 }
 
 .dashboard-header h1 {
   margin: 0 0 0.5rem 0;
-  color: #2d3748;
+  color: $brand-text;
   font-size: 2rem;
 }
 
 .welcome-text {
   margin: 0;
-  color: #718096;
+  color: $text-muted;
 }
 
 .header-actions {
@@ -314,8 +324,8 @@ onMounted(() => {
 
 .btn-primary {
   padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  background: linear-gradient(135deg, $orange-primary, $brand-secondary);
+  color: $vintage-beige;
   border: none;
   border-radius: 8px;
   font-weight: 600;
@@ -325,12 +335,12 @@ onMounted(() => {
   align-items: center;
   gap: 0.5rem;
   transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4);
 }
 
 /* Stats Grid */
@@ -342,13 +352,14 @@ onMounted(() => {
 }
 
 .stat-card {
-  background: white;
+  background: $vintage-beige;
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
   gap: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
   transition: all 0.2s;
+  border: 1px solid rgba(62, 60, 56, 0.18);
 }
 
 .stat-card:hover {
@@ -367,19 +378,19 @@ onMounted(() => {
 }
 
 .stat-icon.pending {
-  background: #fed7d7;
+  background: rgba(204, 125, 67, 0.25);
 }
 
 .stat-icon.active {
-  background: #bee3f8;
+  background: rgba(236, 107, 0, 0.25);
 }
 
 .stat-icon.completed {
-  background: #c6f6d5;
+  background: rgba(3, 134, 0, 0.2);
 }
 
 .stat-icon.total {
-  background: #feebc8;
+  background: rgba(232, 147, 90, 0.25);
 }
 
 .stat-content {
@@ -389,13 +400,13 @@ onMounted(() => {
 .stat-value {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #2d3748;
+  color: $brand-text;
   margin-bottom: 0.25rem;
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: #718096;
+  color: $text-muted;
 }
 
 /* Dashboard Content */
@@ -408,7 +419,7 @@ onMounted(() => {
 
 .column h2 {
   margin: 0 0 1.5rem 0;
-  color: #2d3748;
+  color: $brand-text;
   font-size: 1.3rem;
 }
 
@@ -420,11 +431,11 @@ onMounted(() => {
 }
 
 .repair-card {
-  background: white;
+  background: $vintage-beige;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-left: 4px solid #667eea;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+  border-left: 4px solid $orange-primary;
   transition: all 0.2s;
 }
 
@@ -439,18 +450,18 @@ onMounted(() => {
   align-items: flex-start;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid rgba(62, 60, 56, 0.12);
 }
 
 .repair-info h3 {
   margin: 0 0 0.25rem 0;
-  color: #2d3748;
+  color: $brand-text;
   font-size: 1.1rem;
 }
 
 .repair-id {
   margin: 0;
-  color: #a0aec0;
+  color: $text-muted;
   font-size: 0.85rem;
 }
 
@@ -464,28 +475,28 @@ onMounted(() => {
 
 .repair-status.waiting,
 .repair-status.waiting_parts {
-  background: #fed7d7;
-  color: #742a2a;
+  background: rgba(172, 97, 42, 0.18);
+  color: $brand-text;
 }
 
 .repair-status.in-progress,
 .repair-status.in_progress {
-  background: #bee3f8;
-  color: #2c5282;
+  background: rgba(236, 107, 0, 0.2);
+  color: $brand-text;
 }
 
 .repair-status.pending_quote,
 .repair-status.quoted,
 .repair-status.approved,
 .repair-status.testing {
-  background: #feebc8;
-  color: #7b341e;
+  background: rgba(232, 147, 90, 0.25);
+  color: $brand-text;
 }
 
 .repair-status.completed,
 .repair-status.delivered {
-  background: #c6f6d5;
-  color: #22543d;
+  background: rgba(3, 134, 0, 0.18);
+  color: $brand-text;
 }
 
 .repair-details {
@@ -495,7 +506,7 @@ onMounted(() => {
 
 .repair-details p {
   margin: 0.5rem 0;
-  color: #4a5568;
+  color: $text-muted;
 }
 
 .repair-progress {
@@ -504,7 +515,7 @@ onMounted(() => {
 
 .progress-bar {
   height: 8px;
-  background: #e2e8f0;
+  background: rgba(62, 60, 56, 0.15);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 0.5rem;
@@ -512,13 +523,13 @@ onMounted(() => {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, $orange-pastel, $brand-secondary);
   transition: width 0.3s ease;
 }
 
 .progress-text {
   font-size: 0.85rem;
-  color: #718096;
+  color: $text-muted;
 }
 
 .repair-actions {
@@ -528,7 +539,7 @@ onMounted(() => {
 .btn-link {
   background: none;
   border: none;
-  color: #667eea;
+  color: $orange-primary;
   cursor: pointer;
   text-decoration: none;
   font-weight: 600;
@@ -537,7 +548,7 @@ onMounted(() => {
 }
 
 .btn-link:hover {
-  color: #764ba2;
+  color: $brand-secondary;
 }
 
 /* Quick Actions */
@@ -549,22 +560,23 @@ onMounted(() => {
 }
 
 .action-card {
-  background: white;
+  background: $vintage-beige;
   border-radius: 12px;
   padding: 1.25rem;
   display: flex;
   gap: 1rem;
   text-decoration: none;
-  color: #2d3748;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  color: $brand-text;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
   transition: all 0.2s;
   border-left: 4px solid transparent;
+  border: 1px solid rgba(62, 60, 56, 0.18);
 }
 
 .action-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
   transform: translateX(4px);
-  border-left-color: #667eea;
+  border-left-color: $orange-primary;
 }
 
 .action-icon {
@@ -577,13 +589,13 @@ onMounted(() => {
 
 .action-text h4 {
   margin: 0 0 0.25rem 0;
-  color: #2d3748;
+  color: $brand-text;
   font-size: 0.95rem;
 }
 
 .action-text p {
   margin: 0;
-  color: #718096;
+  color: $text-muted;
   font-size: 0.85rem;
 }
 
@@ -595,38 +607,38 @@ onMounted(() => {
 }
 
 .notification-card {
-  background: white;
+  background: $vintage-beige;
   border-radius: 12px;
   padding: 1rem;
   display: flex;
   gap: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-left: 4px solid #e2e8f0;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+  border-left: 4px solid rgba(62, 60, 56, 0.3);
 }
 
 .notification-card.update {
-  border-left-color: #4299e1;
-  background: #ebf8ff;
+  border-left-color: $orange-pastel;
+  background: rgba(232, 147, 90, 0.12);
 }
 
 .notification-card.info {
-  border-left-color: #3182ce;
-  background: #ebf8ff;
+  border-left-color: $brand-secondary;
+  background: rgba(172, 97, 42, 0.12);
 }
 
 .notification-card.warning {
-  border-left-color: #ed8936;
-  background: #fffaf0;
+  border-left-color: $orange-primary;
+  background: rgba(236, 107, 0, 0.12);
 }
 
 .notification-card.error {
-  border-left-color: #f56565;
-  background: #fff5f5;
+  border-left-color: #b45309;
+  background: rgba(180, 83, 9, 0.12);
 }
 
 .notification-card.success {
-  border-left-color: #48bb78;
-  background: #f0fff4;
+  border-left-color: #166534;
+  background: rgba(22, 101, 52, 0.12);
 }
 
 .notification-icon {
@@ -643,20 +655,20 @@ onMounted(() => {
 
 .notification-message {
   margin: 0 0 0.25rem 0;
-  color: #2d3748;
+  color: $brand-text;
   font-size: 0.95rem;
 }
 
 .notification-time {
   margin: 0;
-  color: #a0aec0;
+  color: $text-muted;
   font-size: 0.8rem;
 }
 
 .notification-close {
   background: none;
   border: none;
-  color: #cbd5e0;
+  color: $text-muted;
   cursor: pointer;
   font-size: 1.2rem;
   padding: 0;
@@ -664,29 +676,30 @@ onMounted(() => {
 }
 
 .notification-close:hover {
-  color: #4a5568;
+  color: $brand-text;
 }
 
 /* Empty State */
 .empty-state {
-  background: white;
+  background: $vintage-beige;
   border-radius: 12px;
   padding: 3rem;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(62, 60, 56, 0.18);
 }
 
 .empty-state p {
   margin: 0 0 1.5rem 0;
-  color: #718096;
+  color: $text-muted;
   font-size: 1rem;
 }
 
 .btn-secondary {
   padding: 0.75rem 1.5rem;
-  background: #edf2f7;
-  color: #4a5568;
-  border: 2px solid #cbd5e0;
+  background: rgba(236, 107, 0, 0.15);
+  color: $brand-text;
+  border: 2px solid rgba(236, 107, 0, 0.6);
   border-radius: 8px;
   cursor: pointer;
   text-decoration: none;
@@ -696,8 +709,24 @@ onMounted(() => {
 }
 
 .btn-secondary:hover {
-  background: #e2e8f0;
-  border-color: #a0aec0;
+  background: rgba(236, 107, 0, 0.3);
+  border-color: rgba(236, 107, 0, 0.75);
+}
+
+.btn-logout {
+  padding: 0.875rem 1.4rem;
+  background: rgba(236, 107, 0, 0.12);
+  color: $brand-text;
+  border: 2px solid rgba(236, 107, 0, 0.55);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background: rgba(236, 107, 0, 0.28);
+  border-color: rgba(236, 107, 0, 0.75);
 }
 
 /* Responsive */
