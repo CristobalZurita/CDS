@@ -35,10 +35,7 @@ const props = defineProps({
 
 const linkList = computed(() => {
     const sections = currentPageSections?.value
-    if(!sections || !sections.length)
-        return []
-
-    const links = sections.map(section => {
+    const links = (!sections || !sections.length) ? [] : sections.map(section => {
         return {
             path: section.hash,
             label: section.name,
@@ -47,15 +44,12 @@ const linkList = computed(() => {
         }
     }).filter(section => section.label && section.path)
 
-    // Botón INICIAR SESIÓN alineado a la derecha (último item)
-    if (!authStore.isAuthenticated) {
-        links.push({
-            path: '/login',
-            label: 'Iniciar Sesión',
-            faIcon: 'fa-solid fa-right-to-bracket',
-            isActive: false
-        })
-    }
+    links.push({
+        path: '/login',
+        label: 'INICIAR SESIÓN',
+        faIcon: 'fa-solid fa-right-to-bracket',
+        isActive: route.path === '/login'
+    })
 
     return links
 })
