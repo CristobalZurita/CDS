@@ -19,6 +19,7 @@ from app.models.client import Client
 from app.models.device import Device
 from app.models.quote import Quote
 from app.models.tool import Tool
+from app.models.tool_lookup import ToolBrand, ToolCategory
 from app.models.device_lookup import DeviceBrand, DeviceType
 from app.models.repair_component_usage import RepairComponentUsage
 from app.models.repair_photo import RepairPhoto
@@ -42,6 +43,8 @@ __all__ = [
     "Device",
     "Quote",
     "Tool",
+    "ToolBrand",
+    "ToolCategory",
     "DeviceBrand",
     "DeviceType",
     "RepairComponentUsage",

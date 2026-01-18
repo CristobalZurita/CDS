@@ -56,6 +56,8 @@ async def init_db():
     Call this on application startup
     """
     try:
+        # Ensure models are imported so SQLAlchemy registers tables
+        from app import models  # noqa: F401
         # Create all tables from models (sync operation)
         Base.metadata.create_all(bind=engine)
         logger.info("✓ Database tables created successfully")

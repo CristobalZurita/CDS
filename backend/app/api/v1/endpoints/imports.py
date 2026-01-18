@@ -16,10 +16,44 @@ DB_PATH = os.path.join(REPO_ROOT, 'backend', 'instance', 'cirujano.sqlite')
 router = APIRouter(prefix="/imports", tags=["imports"])
 
 
+def _ensure_import_db():
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    ddl_path = os.path.join(REPO_ROOT, 'database', 'ddl_cirujano.sql')
+    if os.path.exists(ddl_path):
+        try:
+            cur.executescript(open(ddl_path, 'r', encoding='utf-8').read())
+        except Exception:
+            pass
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS import_runs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id TEXT UNIQUE NOT NULL,
+            source_file TEXT,
+            started_at TEXT,
+            finished_at TEXT,
+            status TEXT,
+            summary TEXT
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS audit_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            actor TEXT,
+            action TEXT,
+            object_type TEXT,
+            object_id TEXT,
+            details TEXT,
+            created_at TEXT
+        )
+    """)
+    conn.commit()
+    return conn
+
+
 def _get_db_conn():
-    if not os.path.exists(DB_PATH):
-        raise FileNotFoundError('Import DB not initialized')
-    return sqlite3.connect(DB_PATH)
+    return _ensure_import_db()
 
 
 def _write_audit(actor: str, action: str, details: Dict):

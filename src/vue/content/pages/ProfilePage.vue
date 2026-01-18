@@ -174,27 +174,31 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { ref, computed, onMounted } from 'vue'
+import { api } from '@/services/api'
 import { showSuccess, showError } from '@/services/toastService'
 
-const authStore = useAuthStore()
 const editMode = ref(false)
+const isLoading = ref(false)
 
-// User data
 const user = ref({
-  email: 'usuario@example.com',
-  fullName: 'Juan García López',
-  phone: '+56 9 8295 7538',
-  address: 'Valparaíso, Chile',
-  joinDate: new Date('2023-06-15')
+  email: '',
+  fullName: '',
+  phone: '',
+  address: '',
+  joinDate: null
 })
 
 const formData = ref({
-  email: user.value.email,
-  fullName: user.value.fullName,
-  phone: user.value.phone,
-  address: user.value.address
+  email: '',
+  fullName: '',
+  phone: '',
+  address: ''
+})
+
+const stats = ref({
+  totalRepairs: 0,
+  totalSpent: 0
 })
 
 // Preferences
@@ -217,26 +221,84 @@ const passwordForm = ref({
 
 // Computed
 const userInitials = computed(() => {
-  const names = user.value.fullName.split(' ')
+  const names = (user.value.fullName || '').split(' ')
   return (names[0]?.[0] || '') + (names[1]?.[0] || '')
 })
 
 const memberSince = computed(() => {
+  if (!user.value.joinDate) return '—'
   return new Intl.DateTimeFormat('es-CL', {
     year: 'numeric',
     month: 'long'
-  }).format(user.value.joinDate)
+  }).format(new Date(user.value.joinDate))
 })
 
-const totalRepairs = computed(() => 5)
-const totalSpent = computed(() => '1.530.000')
+const totalRepairs = computed(() => stats.value.totalRepairs)
+const totalSpent = computed(() => stats.value.totalSpent)
 const avgRepairDays = computed(() => 10)
 
+const syncFormData = () => {
+  formData.value = {
+    email: user.value.email,
+    fullName: user.value.fullName,
+    phone: user.value.phone,
+    address: user.value.address
+  }
+}
+
+const loadProfile = async () => {
+  isLoading.value = true
+  try {
+    const { data } = await api.get('/client/profile')
+    user.value = {
+      email: data.email || '',
+      fullName: data.full_name || '',
+      phone: data.phone || '',
+      address: data.address || '',
+      joinDate: data.member_since
+    }
+    stats.value = {
+      totalRepairs: data.stats?.total_repairs || 0,
+      totalSpent: data.stats?.total_spent || 0
+    }
+    syncFormData()
+  } catch (err) {
+    showError(err.response?.data?.detail || 'Error cargando perfil')
+  } finally {
+    isLoading.value = false
+  }
+}
+
 // Methods
-const saveProfile = () => {
-  user.value = { ...user.value, ...formData.value }
-  editMode.value = false
-  showSuccess('Perfil actualizado exitosamente')
+const saveProfile = async () => {
+  isLoading.value = true
+  try {
+    const payload = {
+      email: formData.value.email,
+      full_name: formData.value.fullName,
+      phone: formData.value.phone,
+      address: formData.value.address
+    }
+    const { data } = await api.put('/client/profile', payload)
+    user.value = {
+      email: data.email || '',
+      fullName: data.full_name || '',
+      phone: data.phone || '',
+      address: data.address || '',
+      joinDate: data.member_since
+    }
+    stats.value = {
+      totalRepairs: data.stats?.total_repairs || 0,
+      totalSpent: data.stats?.total_spent || 0
+    }
+    editMode.value = false
+    syncFormData()
+    showSuccess('Perfil actualizado exitosamente')
+  } catch (err) {
+    showError(err.response?.data?.detail || 'Error guardando perfil')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const savePreferences = () => {
@@ -257,6 +319,10 @@ const deleteAccount = () => {
   showSuccess('Cuenta eliminada (demo)')
   showDeleteAccount.value = false
 }
+
+onMounted(() => {
+  loadProfile()
+})
 </script>
 
 <style scoped>

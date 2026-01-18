@@ -1,0 +1,6 @@
+-- Tabla de fallas. Ajusta el esquema si ya existe un modelo especifico.
+-- Esta semilla solo documenta ejemplos base.
+-- INSERT OR IGNORE INTO faults (id, name, description, base_price, is_precedence, created_at) VALUES
+--   ('POWER', 'No enciende', 'Falla de encendido', 80000, 1, datetime('now')),
+--   ('AUDIO_NO_OUTPUT', 'Sin salida de audio', 'No hay audio', 60000, 0, datetime('now')),
+--   ('KEYBOARD_DEAD_KEY', 'Tecla muerta', 'Teclas sin respuesta', 40000, 0, datetime('now'));

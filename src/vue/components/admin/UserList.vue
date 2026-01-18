@@ -27,8 +27,13 @@
 </template>
 <script setup>
 import { useUsers } from '@/composables/useUsers'
+import { onMounted } from 'vue'
 const { users, fetchUsers, deleteUser } = useUsers()
 function editUser(user) {
   // Implementar navegación o modal de edición
 }
+
+onMounted(() => {
+  fetchUsers()
+})
 </script>

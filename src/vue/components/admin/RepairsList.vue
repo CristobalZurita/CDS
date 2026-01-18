@@ -27,8 +27,13 @@
 </template>
 <script setup>
 import { useRepairs } from '@/composables/useRepairs'
+import { onMounted } from 'vue'
 const { repairs, fetchRepairs, deleteRepair } = useRepairs()
 function editRepair(repair) {
   // Implementar navegación o modal de edición
 }
+
+onMounted(() => {
+  fetchRepairs()
+})
 </script>

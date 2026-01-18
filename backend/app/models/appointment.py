@@ -27,6 +27,13 @@ class Appointment(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
+    def __init__(self, **kwargs):
+        if "estado" not in kwargs or kwargs.get("estado") is None:
+            kwargs["estado"] = "pendiente"
+        if "notificacion_enviada" not in kwargs or kwargs.get("notificacion_enviada") is None:
+            kwargs["notificacion_enviada"] = False
+        super().__init__(**kwargs)
+
     def __repr__(self):
         return f"<Appointment(id={self.id}, nombre={self.nombre}, email={self.email}, fecha={self.fecha})>"
 

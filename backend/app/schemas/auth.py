@@ -46,6 +46,11 @@ class PasswordResetConfirm(BaseModel):
     new_password: str = Field(..., min_length=8)
 
 
+class ConfirmEmailRequest(BaseModel):
+    """Confirmación de email"""
+    token: str
+
+
 class RefreshTokenRequest(BaseModel):
     """Request para refrescar token"""
     refresh_token: str

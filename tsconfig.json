@@ -4,11 +4,24 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowJs": true,
+    "noEmit": true,
     "checkJs": false,
     "skipLibCheck": true,
     "types": [],
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src/**/*", "tests/**/*"],
-  "exclude": ["node_modules", "MODELOS", "backend", "dist"]
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "MODELOS",
+    "backend",
+    "dist",
+    "FRONT",
+    "reports",
+    "scripts",
+    "database",
+    "docs",
+    "uploads",
+    "tests"
+  ]
 }

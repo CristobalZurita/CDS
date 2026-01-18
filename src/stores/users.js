@@ -11,7 +11,7 @@ export const useUsersStore = defineStore('users', {
     async fetchUsers() {
       this.loading = true
       try {
-        this.users = await useApi().get('/api/users')
+        this.users = await useApi().get('/users')
       } catch (e) {
         this.error = e
       } finally {
@@ -19,13 +19,13 @@ export const useUsersStore = defineStore('users', {
       }
     },
     async createUser(data) {
-      return await useApi().post('/api/users', data)
+      return await useApi().post('/users', data)
     },
     async updateUser(id, data) {
-      return await useApi().put(`/api/users/${id}`, data)
+      return await useApi().put(`/users/${id}`, data)
     },
     async deleteUser(id) {
-      return await useApi().delete(`/api/users/${id}`)
+      return await useApi().delete(`/users/${id}`)
     }
   }
 })

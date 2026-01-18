@@ -26,7 +26,10 @@ from app.schemas.appointment import (
     AppointmentResponse
 )
 from app.services.email_service import send_appointment_confirmation
-from app.services.google_calendar_service import sync_to_google_calendar
+try:
+    from app.services.google_calendar_service import sync_to_google_calendar
+except Exception:
+    sync_to_google_calendar = None
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
 
@@ -62,18 +65,19 @@ async def create_appointment_endpoint(
             # Don't fail the appointment creation if email fails
         
         # Sync to Google Calendar
-        try:
-            calendar_id = await sync_to_google_calendar(db_appointment)
-            if calendar_id:
-                db_appointment.google_calendar_id = calendar_id
-                await update_appointment(
-                    db, 
-                    db_appointment.id, 
-                    AppointmentUpdate(google_calendar_id=calendar_id)
-                )
-        except Exception as e:
-            print(f"Error syncing to Google Calendar: {e}")
-            # Don't fail the appointment creation if calendar sync fails
+        if sync_to_google_calendar:
+            try:
+                calendar_id = await sync_to_google_calendar(db_appointment)
+                if calendar_id:
+                    db_appointment.google_calendar_id = calendar_id
+                    await update_appointment(
+                        db,
+                        db_appointment.id,
+                        AppointmentUpdate(google_calendar_id=calendar_id)
+                    )
+            except Exception as e:
+                print(f"Error syncing to Google Calendar: {e}")
+                # Don't fail the appointment creation if calendar sync fails
         
         return db_appointment
     

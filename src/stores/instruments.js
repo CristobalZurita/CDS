@@ -11,7 +11,7 @@ export const useInstrumentsStore = defineStore('instruments', {
     async fetchInstruments() {
       this.loading = true
       try {
-        this.instruments = await useApi().get('/api/instruments')
+        this.instruments = await useApi().get('/instruments')
       } catch (e) {
         this.error = e
       } finally {
@@ -19,13 +19,13 @@ export const useInstrumentsStore = defineStore('instruments', {
       }
     },
     async createInstrument(data) {
-      return await useApi().post('/api/instruments', data)
+      return await useApi().post('/instruments', data)
     },
     async updateInstrument(id, data) {
-      return await useApi().put(`/api/instruments/${id}`, data)
+      return await useApi().put(`/instruments/${id}`, data)
     },
     async deleteInstrument(id) {
-      return await useApi().delete(`/api/instruments/${id}`)
+      return await useApi().delete(`/instruments/${id}`)
     }
   }
 })

@@ -315,5 +315,9 @@ def client(app):
 @pytest.fixture
 def db():
     """Create test database session"""
-    # This would be configured with a test database
-    pass
+    from app.core.database import SessionLocal
+    session = SessionLocal()
+    try:
+        yield session
+    finally:
+        session.close()

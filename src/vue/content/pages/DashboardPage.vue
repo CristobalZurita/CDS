@@ -175,111 +175,74 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { api } from '@/services/api'
+import { showError } from '@/services/toastService'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-// Mock Data
-const activeRepairsList = ref([
-  {
-    id: 'REP-2025-001',
-    instrument: 'Moog Minimoog Model D',
-    fault: 'Filtro no responde',
-    status: 'in-progress',
-    date_in: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-    estimated_completion: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-    progress: 65
-  },
-  {
-    id: 'REP-2025-002',
-    instrument: 'Roland TR-808',
-    fault: 'Controlador MIDI sin respuesta',
-    status: 'waiting',
-    date_in: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-    estimated_completion: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-    progress: 20
-  }
-])
-
-const notifications = ref([
-  {
-    id: 1,
-    type: 'update',
-    message: 'Tu reparación REP-2025-001 ha avanzado a 65%',
-    date: new Date(Date.now() - 2 * 60 * 60 * 1000)
-  },
-  {
-    id: 2,
-    type: 'info',
-    message: 'Recordatorio: Tu cita está programada para mañana a las 14:00',
-    date: new Date(Date.now() - 5 * 60 * 60 * 1000)
-  },
-  {
-    id: 3,
-    type: 'warning',
-    message: 'Tu instrumento está en almacenamiento desde hace 25 días',
-    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)
-  }
-])
+const activeRepairsList = ref([])
+const notifications = ref([])
+const stats = ref({
+  pending_repairs: 0,
+  active_repairs: 0,
+  completed_repairs: 0,
+  total_spent: 0
+})
+const isLoading = ref(false)
 
 // Computed
-const userFirstName = computed(() => {
-  return authStore.user?.first_name || 'Cliente'
-})
-
-const pendingRepairs = computed(() => {
-  return activeRepairsList.value.filter(r => r.status === 'waiting').length
-})
-
-const activeRepairs = computed(() => {
-  return activeRepairsList.value.filter(r => r.status === 'in-progress').length
-})
-
-const completedRepairs = computed(() => 75) // Mock value
-
-const totalSpent = computed(() => {
-  return '2.450.000'
-}) // Mock value
+const userFirstName = computed(() => authStore.user?.full_name?.split(' ')[0] || 'Cliente')
+const pendingRepairs = computed(() => stats.value.pending_repairs)
+const activeRepairs = computed(() => stats.value.active_repairs)
+const completedRepairs = computed(() => stats.value.completed_repairs)
+const totalSpent = computed(() => stats.value.total_spent)
 
 // Methods
 const getStatusLabel = (status) => {
   const labels = {
-    'pending': '⏳ Pendiente',
-    'waiting': '⌛ En Espera',
-    'in-progress': '🔧 En Proceso',
-    'completed': '✓ Completada',
-    'cancelled': '✕ Cancelada'
+    pending_quote: '⏳ Pendiente',
+    quoted: '💬 Cotizado',
+    approved: '✅ Aprobado',
+    in_progress: '🔧 En Proceso',
+    waiting_parts: '⌛ En Espera',
+    testing: '🧪 En Pruebas',
+    completed: '✓ Completada',
+    delivered: '📦 Entregado',
+    cancelled: '✕ Cancelada'
   }
   return labels[status] || status
 }
 
 const getNotificationIcon = (type) => {
   const icons = {
-    'update': '🔄',
-    'info': 'ℹ️',
-    'warning': '⚠️',
-    'error': '❌',
-    'success': '✓'
+    update: '🔄',
+    info: 'ℹ️',
+    warning: '⚠️',
+    error: '❌',
+    success: '✓'
   }
   return icons[type] || '📬'
 }
 
 const formatDate = (date) => {
+  if (!date) return '—'
   return new Intl.DateTimeFormat('es-CL', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
-  }).format(date)
+  }).format(new Date(date))
 }
 
 const formatTime = (date) => {
   const now = new Date()
-  const diff = now - date
+  const base = new Date(date)
+  const diff = now - base
 
   if (diff < 60 * 1000) return 'Hace unos segundos'
   if (diff < 60 * 60 * 1000) return `Hace ${Math.floor(diff / 60 / 1000)} minutos`
   if (diff < 24 * 60 * 60 * 1000) return `Hace ${Math.floor(diff / 60 / 60 / 1000)} horas`
-  return formatDate(date)
+  return formatDate(base)
 }
 
 const viewRepair = (repair) => {
@@ -290,9 +253,22 @@ const dismissNotification = (id) => {
   notifications.value = notifications.value.filter(n => n.id !== id)
 }
 
+const fetchDashboard = async () => {
+  isLoading.value = true
+  try {
+    const { data } = await api.get('/client/dashboard')
+    stats.value = data.stats || stats.value
+    activeRepairsList.value = data.active_repairs || []
+    notifications.value = data.notifications || []
+  } catch (err) {
+    showError(err.response?.data?.detail || 'Error cargando dashboard')
+  } finally {
+    isLoading.value = false
+  }
+}
+
 onMounted(() => {
-  // Aquí iría la lógica para cargar datos reales del backend
-  console.log('Dashboard loaded')
+  fetchDashboard()
 })
 </script>
 
@@ -486,17 +462,28 @@ onMounted(() => {
   white-space: nowrap;
 }
 
-.repair-status.waiting {
+.repair-status.waiting,
+.repair-status.waiting_parts {
   background: #fed7d7;
   color: #742a2a;
 }
 
-.repair-status.in-progress {
+.repair-status.in-progress,
+.repair-status.in_progress {
   background: #bee3f8;
   color: #2c5282;
 }
 
-.repair-status.completed {
+.repair-status.pending_quote,
+.repair-status.quoted,
+.repair-status.approved,
+.repair-status.testing {
+  background: #feebc8;
+  color: #7b341e;
+}
+
+.repair-status.completed,
+.repair-status.delivered {
   background: #c6f6d5;
   color: #22543d;
 }
@@ -746,4 +733,3 @@ onMounted(() => {
   }
 }
 </style>
-

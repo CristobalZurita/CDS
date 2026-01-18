@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .endpoints import brands, instruments, auth, inventory, imports
+from .endpoints import brands, instruments, auth, inventory, imports, stats, ai
 from app.routers import uploads as uploads_router
 
 # Routers adicionales (creados por copilot) - si existen, se incluyen
@@ -14,15 +14,23 @@ try:
 	from app.routers import quotation as quotation_router
 	from app.routers import payments as payments_router
 	from app.routers import appointment as appointment_router
+	from app.routers import client as client_router
+	from app.routers import clients as clients_router
+	from app.routers import device as device_router
+	from app.routers import repair_status as repair_status_router
 except Exception:
 	# Si los módulos no existen en este entorno, se ignoran
 	user_router = repair_router = instrument_router = category_router = stock_movement_router = contact_router = None
 	appointment_router = None
+	client_router = None
+	clients_router = None
+	device_router = None
+	repair_status_router = None
 
 # If any router failed to import previously (e.g., due to transient import errors),
 # attempt a second import pass so that fixes applied at runtime are picked up.
 import importlib
-for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment"):
+for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment", "client"):
 	var_name = f"{name}_router"
 	if globals().get(var_name) is None:
 		try:
@@ -55,6 +63,8 @@ api_router.include_router(auth.router)
 api_router.include_router(uploads_router.router)
 api_router.include_router(inventory.router)
 api_router.include_router(imports.router)
+api_router.include_router(stats.router)
+api_router.include_router(ai.router)
 
 # Incluir routers adicionales si están disponibles
 if user_router:
@@ -77,3 +87,11 @@ if globals().get("payments_router"):
 	api_router.include_router(globals()["payments_router"].router)
 if globals().get("appointment_router"):
 	api_router.include_router(globals()["appointment_router"].router)
+if globals().get("client_router"):
+	api_router.include_router(globals()["client_router"].router)
+if globals().get("clients_router"):
+	api_router.include_router(globals()["clients_router"].router)
+if globals().get("device_router"):
+	api_router.include_router(globals()["device_router"].router)
+if globals().get("repair_status_router"):
+	api_router.include_router(globals()["repair_status_router"].router)
