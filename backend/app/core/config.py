@@ -8,9 +8,24 @@ from typing import Optional
 import os
 from dotenv import load_dotenv
 
-# Load .env file only for non-production environments (tests and production should not rely on .env)
-if os.getenv("ENVIRONMENT", "development").lower() not in ("production", "prod"):
-    load_dotenv()
+
+def _load_dotenv_for_env() -> None:
+    """Load a .env file from backend/.env (preferred) or repo root .env."""
+    if os.getenv("ENVIRONMENT", "development").lower() in ("production", "prod"):
+        return
+
+    backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    repo_root = os.path.abspath(os.path.join(backend_dir, ".."))
+    backend_env = os.path.join(backend_dir, ".env")
+    root_env = os.path.join(repo_root, ".env")
+
+    if os.path.exists(backend_env):
+        load_dotenv(backend_env)
+    elif os.path.exists(root_env):
+        load_dotenv(root_env)
+
+
+_load_dotenv_for_env()
 
 
 class Settings(BaseModel):
@@ -43,8 +58,10 @@ class Settings(BaseModel):
         allowed_origins: list = [
             "http://localhost:3000",
             "http://localhost:5173",
+            "http://localhost:5174",
             "http://127.0.0.1:3000",
             "http://127.0.0.1:5173",
+            "http://127.0.0.1:5174",
         ]
 
     # Email Configuration
