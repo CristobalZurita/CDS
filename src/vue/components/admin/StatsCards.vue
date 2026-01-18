@@ -1,16 +1,16 @@
 <template>
   <div class="stats">
     <div class="card">
-      <p>Usuarios</p>
-      <strong>{{ stats.users || 0 }}</strong>
+      <p class="label">Usuarios</p>
+      <strong class="value">{{ stats.users || 0 }}</strong>
     </div>
     <div class="card">
-      <p>Clientes</p>
-      <strong>{{ stats.clients || 0 }}</strong>
+      <p class="label">Clientes</p>
+      <strong class="value">{{ stats.clients || 0 }}</strong>
     </div>
     <div class="card">
-      <p>Reparaciones</p>
-      <strong>{{ stats.repairs || 0 }}</strong>
+      <p class="label">Reparaciones</p>
+      <strong class="value">{{ stats.repairs || 0 }}</strong>
     </div>
   </div>
 </template>
@@ -21,16 +21,33 @@ defineProps({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "/src/scss/_theming.scss";
+
 .stats {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 1.5rem;
 }
 .card {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
+  background: #fff;
+  border: 1px solid rgba(62, 60, 56, 0.18);
+  border-radius: 14px;
+  padding: 1.35rem;
   text-align: center;
+  box-shadow: 0 8px 18px rgba(62, 60, 56, 0.12);
+}
+
+.label {
+  margin: 0 0 0.5rem;
+  color: $text-muted;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.value {
+  font-size: 1.8rem;
+  color: $brand-text;
 }
 </style>

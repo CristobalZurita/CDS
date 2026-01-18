@@ -8,7 +8,6 @@
         </FeedbacksLayer>
     </StateProviderLayer>
 
-    <!-- Botón flotante global -->
     <FloatingQuoteButton />
 </template>
 

@@ -1,6 +1,5 @@
 <template>
-	<div>
-		<AdminToolbar title="Inventario" subtitle="Gestión de stock y componentes" />
+	<AdminLayout title="Inventario" subtitle="Gestión de stock y componentes">
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h1 class="h4">Inventario</h1>
 			<div>
@@ -14,7 +13,7 @@
 		<div v-if="showForm" class="mt-3">
 			<InventoryForm :item="selected" @save="onSave" @cancel="onCancel" />
 		</div>
-	</div>
+	</AdminLayout>
 </template>
 
 <script setup>
@@ -23,7 +22,7 @@ import { useRoute, useRouter } from 'vue-router'
 import InventoryTable from '@/vue/components/admin/InventoryTable.vue'
 import InventoryForm from '@/vue/components/admin/InventoryForm.vue'
 import { useInventoryStore } from '@/stores/inventory'
-import AdminToolbar from '@/vue/components/admin/AdminToolbar.vue'
+import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 
 const store = useInventoryStore()
 const route = useRoute()

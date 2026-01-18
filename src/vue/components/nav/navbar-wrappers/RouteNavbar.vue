@@ -23,6 +23,14 @@ const props = defineProps({
 const authStore = useAuthStore()
 
 const linkList = computed(() => {
+    if (route.path.startsWith('/admin')) {
+        return [{
+            path: '/',
+            label: 'VOLVER',
+            faIcon: 'fa-solid fa-arrow-left',
+            isActive: false
+        }]
+    }
     const base = router.getRoutes()
         .map(r => ({
             path: r.path,

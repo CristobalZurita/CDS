@@ -1,13 +1,12 @@
 <template>
-	<div>
-		<AdminToolbar title="Categorías" subtitle="Servicios y clasificaciones" />
+	<AdminLayout title="Categorías" subtitle="Servicios y clasificaciones">
 		<CategoryList />
-	</div>
+	</AdminLayout>
 </template>
 
 <script setup>
 import CategoryList from '@/vue/components/admin/CategoryList.vue'
-import AdminToolbar from '@/vue/components/admin/AdminToolbar.vue'
+import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 </script>
 
 <style scoped>
