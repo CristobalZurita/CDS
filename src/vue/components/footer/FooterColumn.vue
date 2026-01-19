@@ -27,15 +27,28 @@
         <!-- Inline Links -->
         <div v-if="props.links.length > 0 && !props.displayLinksAsButtons"
              class="foxy-footer-col-item mt-2 mt-lg-1">
-            <InlineLinkList :items="props.links"/>
+            <ul class="footer-inline-links">
+                <li v-for="(link, index) in props.links" :key="index" class="footer-inline-link-item">
+                    <a v-if="link.href && !link.href.startsWith('/')"
+                       :href="link.href"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="footer-inline-link">
+                        {{ link.label }}
+                    </a>
+                    <router-link v-else
+                                 :to="link.href"
+                                 class="footer-inline-link">
+                        {{ link.label }}
+                    </router-link>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <script setup>
 import SocialLinks from "/src/vue/components/widgets/SocialLinks.vue"
-import InlineLinkList from "/src/vue/components/widgets/InlineLinkList.vue"
-
 const props = defineProps(({
     title: String,
     faIcon: String,
@@ -98,5 +111,39 @@ div.foxy-footer-col-description {
     flex-direction: column;
     align-items: center;
     justify-content: start;
+}
+
+ul.footer-inline-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.9rem;
+    white-space: nowrap;
+}
+
+li.footer-inline-link-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+li.footer-inline-link-item:not(:last-child)::after {
+    content: "·";
+    color: #eaeaea;
+    margin-left: 0.6rem;
+}
+
+.footer-inline-link {
+    text-decoration: none;
+    color: #eaeaea;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.footer-inline-link:hover {
+    color: lighten($primary, 15%);
 }
 </style>

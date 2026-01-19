@@ -340,7 +340,7 @@ const confirmAppointment = () => {
   const [hours, minutes] = selectedTime.value.split(':')
   appointmentDate.setHours(parseInt(hours), parseInt(minutes), 0, 0)
 
-  api.post('/appointments', {
+  api.post('/appointments/', {
     nombre: authStore.user?.full_name || 'Cliente',
     email: authStore.user?.email || '',
     telefono: authStore.user?.phone || '+56900000000',

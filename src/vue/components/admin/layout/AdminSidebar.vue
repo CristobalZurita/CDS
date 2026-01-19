@@ -33,6 +33,7 @@ const items = [
   { to: '/admin/inventory/unified', label: 'Inventario Unificado', icon: 'fa-solid fa-layer-group' },
   { to: '/admin/categories', label: 'Categorías', icon: 'fa-solid fa-tags' },
   { to: '/admin/stats', label: 'Estadísticas', icon: 'fa-solid fa-chart-line' },
+  { to: '/admin/appointments', label: 'Citas', icon: 'fa-solid fa-calendar-check' },
   { to: '/admin/contact', label: 'Mensajes', icon: 'fa-solid fa-envelope' },
   { to: '/admin/newsletter', label: 'Newsletter', icon: 'fa-solid fa-paper-plane' }
 ]

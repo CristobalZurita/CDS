@@ -35,6 +35,8 @@ import StatsPage from '@/vue/content/pages/admin/StatsPage.vue'
 import CategoriesPage from '@/vue/content/pages/admin/CategoriesPage.vue'
 import ContactMessagesPage from '@/vue/content/pages/admin/ContactMessagesPage.vue'
 import NewsletterSubscriptionsPage from '@/vue/content/pages/admin/NewsletterSubscriptionsPage.vue'
+import AppointmentsPage from '@/vue/content/pages/admin/AppointmentsPage.vue'
+import RepairDetailAdminPage from '@/vue/content/pages/admin/RepairDetailAdminPage.vue'
 
 const routes = [
   // Public routes
@@ -160,6 +162,11 @@ const routes = [
         component: RepairsAdminPage
       },
       {
+        path: 'repairs/:id',
+        name: 'admin-repair-detail',
+        component: RepairDetailAdminPage
+      },
+      {
         path: 'stats',
         name: 'admin-stats',
         component: StatsPage
@@ -178,6 +185,11 @@ const routes = [
         path: 'newsletter',
         name: 'admin-newsletter',
         component: NewsletterSubscriptionsPage
+      },
+      {
+        path: 'appointments',
+        name: 'admin-appointments',
+        component: AppointmentsPage
       }
     ]
   },

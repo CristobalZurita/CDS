@@ -1,13 +1,27 @@
 <template>
     <!-- Inline Link List -->
-    <ul class="inline-link-list">
+    <ul
+        class="inline-link-list"
+        :style="{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '0.45rem 0.75rem'
+        }"
+    >
         <!-- List Header (for small screens) -->
         <li class="inline-link-list-item inline-link-list-header">
             ━ <i class="fa fa-circle-nodes"/> ━
         </li>
 
         <!-- List Items -->
-        <li v-for="link in parsedLinks" class="inline-link-list-item">
+        <li
+            v-for="link in parsedLinks"
+            class="inline-link-list-item"
+            :style="{ display: 'inline-flex', alignItems: 'center', width: 'auto' }"
+        >
             <a v-if="link.isRouterLink"
                :href="link.href"
                target="_blank"
@@ -63,10 +77,17 @@ ul.inline-link-list {
     padding: 0;
     margin: 0;
     color: $light-5;
+    display: flex;
+flex-wrap: wrap;
+justify-content: center;
+align-items: center;
+
 }
 
 li.inline-link-list-item {
-    display: inline-block;
+display: inline-flex;
+align-items: center;
+
     padding-bottom: 0.1rem;
     padding-left: 0.3rem;
     padding-right: 0.3rem;

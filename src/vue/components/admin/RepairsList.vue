@@ -29,10 +29,13 @@
 </template>
 <script setup>
 import { useRepairs } from '@/composables/useRepairs'
+import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 const { repairs, fetchRepairs, deleteRepair } = useRepairs()
+const router = useRouter()
+
 function editRepair(repair) {
-  // Implementar navegación o modal de edición
+  router.push(`/admin/repairs/${repair.id}`)
 }
 
 onMounted(() => {
