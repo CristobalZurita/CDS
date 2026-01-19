@@ -1,7 +1,7 @@
 <template>
     <!-- Heading Section -->
     <PageHeader :id="props.id"
-                title="*<strong>MANTENCIÓN</strong>* *<strong>RESTAURACIÓN</strong>* *<strong>REPARACIÓN</strong>*"
+                title="*<strong>RESTAURACIÓN</strong>* <span class='hero-title-sep'>&bull;</span> *<strong>MANTENCIÓN</strong>* <span class='hero-title-sep'>&bull;</span> *<strong>REPARACIÓN</strong>*"
                 subtitle=""
                 logo-url="/images/logo/NUEVO_cirujano.png"
                 :show-button="false"

@@ -44,6 +44,15 @@ const linkList = computed(() => {
         }
     }).filter(section => section.label && section.path)
 
+    if (route.path !== '/calculadoras') {
+        links.push({
+            path: '/calculadoras',
+            label: 'CALCULADORAS',
+            faIcon: 'fa-solid fa-calculator',
+            isActive: false
+        })
+    }
+
     links.push({
         path: '/login',
         label: 'INICIAR SESIÓN',
