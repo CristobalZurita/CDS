@@ -24,6 +24,7 @@ import PolicyPage from '@/vue/content/pages/PolicyPage.vue'
 import TermsPage from '@/vue/content/pages/TermsPage.vue'
 import PrivacyPage from '@/vue/content/pages/PrivacyPage.vue'
 import SchedulePage from '@/vue/content/pages/SchedulePage.vue'
+import CalculatorsPage from '@/vue/content/pages/CalculatorsPage.vue'
 
 // Admin Pages
 import AdminDashboard from '@/vue/content/pages/admin/AdminDashboard.vue'
@@ -79,6 +80,12 @@ const routes = [
         path: 'cotizador-ia',
         name: 'cotizador-ia',
         component: CotizadorIAPage,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'calculadoras',
+        name: 'calculadoras',
+        component: CalculatorsPage,
         meta: { requiresAuth: false }
       }
     ]

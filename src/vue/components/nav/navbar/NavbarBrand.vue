@@ -48,15 +48,18 @@ div.foxy-navbar-brand {
 
     display: inline-flex;
     align-items: center;
+    white-space: nowrap;
     text-transform: uppercase;
     font-family: $headings-font-family;
     font-weight: $headings-font-weight;
     color: $text-normal-contrast;
     margin-top: 5px;
+    margin-left: -12rem;
     transition: font-size 0.3s ease-in-out;
     padding: 5px 0 5px;
 
     @include media-breakpoint-down(lg) {
+        margin-left: 0;
         padding-top: 8px;
         transition: none;
     }

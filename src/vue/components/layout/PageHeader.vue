@@ -192,6 +192,12 @@ header.foxy-header {
         margin: 0;
     }
 
+    :deep(.hero-title-sep) {
+        color: $primary;
+        margin: 0 0.6rem;
+        font-size: 0.7em;
+    }
+
     h4.subheading {
         font-family: 'Cervo Neue', $font-family-base;
         color: $light-5;

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 export const routes = [
   { path: '/', component: () => import('@/views/HomeView.vue') },
+  { path: '/calculadoras', component: () => import('@/vue/content/pages/CalculatorsPage.vue') },
   { path: '/calc/555', component: () => import('@/modules/timer555/Timer555View.vue') },
   { path: '/calc/resistor-color', component: () => import('@/modules/resistorColor/ResistorColorView.vue') },
   { path: '/calc/smd-capacitor', component: () => import('@/modules/smdCapacitor/SmdCapacitorView.vue') },
