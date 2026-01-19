@@ -6,6 +6,7 @@ from app.core.database import get_db
 from app.core.dependencies import get_current_admin
 from app.models.contact_message import ContactMessage
 from app.schemas.contact import ContactCreate, ContactMessageOut
+from app.services.event_system import event_bus, Events
 
 router = APIRouter(prefix="/contact", tags=["Contact"])
 
@@ -28,6 +29,19 @@ def send_contact(
     db.add(message)
     db.commit()
     db.refresh(message)
+
+    # Emitir evento para notificaciones
+    try:
+        event_bus.emit(Events.CONTACT_MESSAGE_RECEIVED, {
+            'message_id': message.id,
+            'name': message.name,
+            'email': message.email,
+            'subject': message.subject,
+            'message': message.message
+        })
+    except Exception:
+        pass  # Notificación no debe romper el flujo principal
+
     return {"ok": True, "message_id": message.id}
 
 

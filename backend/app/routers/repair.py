@@ -118,28 +118,41 @@ def update_repair(repair_id: int, repair: Dict, db: Session = Depends(get_db), u
     db_repair = db.query(Repair).get(repair_id)
     if not db_repair:
         raise HTTPException(status_code=404, detail="Repair not found")
-    previous_status_id = db_repair.status_id
-    for key, value in repair.items():
-        setattr(db_repair, key, value)
-    db.commit()
-    db.refresh(db_repair)
-    # Audit: repair updated
-    try:
-        create_audit(
-            event_type="repair.update",
-            user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
-            details={"repair_id": db_repair.id},
-            message="Repair updated"
+
+    user_id = int(user.get("user_id")) if user and user.get("user_id") else None
+    svc = RepairService(db)
+
+    # Si hay cambio de status_id, usar el service con validación de state machine
+    new_status_id = repair.get("status_id")
+    if new_status_id is not None and new_status_id != db_repair.status_id:
+        # Delegar al service que valida transición y emite eventos
+        db_repair = svc.update_status(
+            repair_id=repair_id,
+            new_status_id=new_status_id,
+            user_id=user_id,
+            notes=repair.get("status_notes")  # Notas opcionales del cambio de estado
         )
-        if previous_status_id != db_repair.status_id:
+        # Remover status_id del dict para no procesarlo de nuevo
+        repair = {k: v for k, v in repair.items() if k not in ("status_id", "status_notes")}
+
+    # Actualizar resto de campos (sin status_id)
+    if repair:
+        for key, value in repair.items():
+            setattr(db_repair, key, value)
+        db.commit()
+        db.refresh(db_repair)
+
+        # Audit: repair updated (campos no-status)
+        try:
             create_audit(
-                event_type="repair.status.change",
-                user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
-                details={"repair_id": db_repair.id, "from_status_id": previous_status_id, "to_status_id": db_repair.status_id},
-                message="Repair status changed"
+                event_type="repair.update",
+                user_id=user_id,
+                details={"repair_id": db_repair.id, "fields": list(repair.keys())},
+                message="Repair updated"
             )
-    except Exception:
-        pass
+        except Exception:
+            pass
+
     return db_repair
 
 

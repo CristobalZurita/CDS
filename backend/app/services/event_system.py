@@ -83,3 +83,6 @@ class Events:
     APPOINTMENT_CREATED = 'appointment.created'
     APPOINTMENT_CANCELLED = 'appointment.cancelled'
     APPOINTMENT_REMINDER = 'appointment.reminder'
+
+    # Contact events
+    CONTACT_MESSAGE_RECEIVED = 'contact.message_received'
