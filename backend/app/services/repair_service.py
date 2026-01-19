@@ -14,6 +14,14 @@ from app.models.repair_photo import RepairPhoto
 from app.models.repair_note import RepairNote
 from app.models.stock import Stock
 from app.models.stock_movement import StockMovement
+from app.services.repair_state_machine import (
+    validate_transition,
+    get_state_name,
+    get_state_progress,
+    RepairStateID,
+)
+from app.services.event_system import event_bus, Events
+from app.services.logging_service import create_audit
 
 
 class RepairService:
@@ -274,3 +282,144 @@ class RepairService:
             "is_closed": self.is_repair_closed(repair),
             "component_count": len(repair.component_usages)
         }
+
+    def update_status(
+        self,
+        repair_id: int,
+        new_status_id: int,
+        user_id: Optional[int] = None,
+        notes: Optional[str] = None
+    ) -> Repair:
+        """
+        Actualiza el estado de una reparación con validación de transición.
+        TRANSACCIÓN ATÓMICA:
+        1. Valida transición de estado (state machine)
+        2. Actualiza timestamps según el nuevo estado
+        3. Crea audit log
+        4. Emite evento para notificaciones
+
+        Args:
+            repair_id: ID de la reparación
+            new_status_id: ID del nuevo estado
+            user_id: ID del usuario que realiza el cambio
+            notes: Notas opcionales sobre el cambio
+
+        Returns:
+            Repair actualizado
+
+        Raises:
+            HTTPException: Si la transición no es válida
+        """
+        repair = self.get_repair(repair_id)
+        current_status_id = repair.status_id
+
+        # Si es el mismo estado, no hacer nada
+        if current_status_id == new_status_id:
+            return repair
+
+        # Validar transición (lanza HTTPException si es inválida)
+        validate_transition(current_status_id, new_status_id)
+
+        # Actualizar timestamps según el nuevo estado
+        now = datetime.utcnow()
+
+        if new_status_id == RepairStateID.APPROVED:
+            repair.approval_date = now
+        elif new_status_id == RepairStateID.IN_PROGRESS:
+            if not repair.start_date:  # Solo si es primera vez
+                repair.start_date = now
+        elif new_status_id == RepairStateID.COMPLETED:
+            repair.completion_date = now
+        elif new_status_id == RepairStateID.DELIVERED:
+            repair.delivery_date = now
+
+        # Actualizar estado
+        previous_status_id = repair.status_id
+        repair.status_id = new_status_id
+        repair.updated_at = now
+
+        try:
+            self.db.commit()
+            self.db.refresh(repair)
+
+            # Crear audit log
+            try:
+                create_audit(
+                    event_type="repair.status.change",
+                    user_id=user_id,
+                    details={
+                        "repair_id": repair.id,
+                        "repair_number": repair.repair_number,
+                        "from_status_id": previous_status_id,
+                        "to_status_id": new_status_id,
+                        "from_status": get_state_name(previous_status_id),
+                        "to_status": get_state_name(new_status_id),
+                        "notes": notes
+                    },
+                    message=f"Estado cambiado: {get_state_name(previous_status_id)} → {get_state_name(new_status_id)}"
+                )
+            except Exception:
+                pass  # Auditoría no debe romper el flujo principal
+
+            # Emitir evento para notificaciones
+            self._emit_status_change_event(repair, new_status_id, notes)
+
+            return repair
+
+        except IntegrityError as e:
+            self.db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Error de integridad: {str(e)}"
+            )
+
+    def _emit_status_change_event(
+        self,
+        repair: Repair,
+        new_status_id: int,
+        notes: Optional[str] = None
+    ) -> None:
+        """
+        Emite eventos según el cambio de estado para activar notificaciones.
+        """
+        try:
+            # Obtener datos del cliente a través del dispositivo
+            client_email = None
+            client_name = None
+            instrument_name = None
+
+            if hasattr(repair, 'device') and repair.device:
+                device = repair.device
+                if hasattr(device, 'client') and device.client:
+                    client = device.client
+                    client_email = client.email
+                    client_name = client.name
+                if hasattr(device, 'model'):
+                    instrument_name = device.model
+
+            # Solo emitir si tenemos email del cliente
+            if client_email:
+                # Evento genérico de cambio de estado
+                event_bus.emit(Events.REPAIR_STATUS_CHANGED, {
+                    'customer_email': client_email,
+                    'customer_name': client_name or 'Cliente',
+                    'repair_id': repair.repair_number,
+                    'status': get_state_name(new_status_id),
+                    'progress': get_state_progress(new_status_id),
+                    'notes': notes
+                })
+
+                # Evento específico de completado (listo para recoger)
+                if new_status_id == RepairStateID.COMPLETED:
+                    event_bus.emit(Events.REPAIR_COMPLETED, {
+                        'customer_email': client_email,
+                        'customer_name': client_name or 'Cliente',
+                        'repair_id': repair.repair_number,
+                        'instrument': instrument_name or 'Dispositivo',
+                        'total_cost': repair.total_cost or 0
+                    })
+
+        except Exception as e:
+            # Log error pero no romper el flujo principal
+            import logging
+            logging.getLogger(__name__).error(f"Error emitiendo evento: {str(e)}")

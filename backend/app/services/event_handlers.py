@@ -28,7 +28,10 @@ def setup_event_handlers():
     # Appointment events
     event_bus.subscribe(Events.APPOINTMENT_CREATED, handle_appointment_created)
     event_bus.subscribe(Events.APPOINTMENT_REMINDER, handle_appointment_reminder)
-    
+
+    # Contact events
+    event_bus.subscribe(Events.CONTACT_MESSAGE_RECEIVED, handle_contact_message_received)
+
     logger.info("✓ Event handlers registered")
 
 
@@ -177,7 +180,7 @@ def handle_appointment_created(data):
 def handle_appointment_reminder(data):
     """
     Maneja evento de recordatorio de cita (24 horas antes)
-    
+
     Esperado: {
         'customer_email': str,
         'customer_name': str,
@@ -195,3 +198,35 @@ def handle_appointment_reminder(data):
         logger.info(f"Appointment reminder email sent to {data.get('customer_email')}")
     except Exception as e:
         logger.error(f"Error handling appointment reminder event: {str(e)}")
+
+
+# ============================================================================
+# CONTACT HANDLERS
+# ============================================================================
+
+def handle_contact_message_received(data):
+    """
+    Maneja evento cuando se recibe un mensaje de contacto.
+    Notifica al equipo administrativo sobre el nuevo mensaje.
+
+    Esperado: {
+        'message_id': int,
+        'name': str,
+        'email': str,
+        'subject': str,
+        'message': str
+    }
+    """
+    try:
+        # Log del mensaje recibido (el email al admin se puede implementar si es necesario)
+        logger.info(
+            f"Contact message received - ID: {data.get('message_id')}, "
+            f"From: {data.get('name')} <{data.get('email')}>, "
+            f"Subject: {data.get('subject')}"
+        )
+
+        # Aquí se podría agregar notificación por email al admin si se configura
+        # email_service.send_admin_notification(...)
+
+    except Exception as e:
+        logger.error(f"Error handling contact message event: {str(e)}")
