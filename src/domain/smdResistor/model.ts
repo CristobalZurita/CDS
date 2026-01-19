@@ -42,3 +42,6 @@ export function decodeSmdResistor(input: SmdResistorInput): SmdResistorOutput {
   }
   return { resistance_ohm: NaN }
 }
+
+// Alias para compatibilidad con el componente
+export const calculateSmdResistor = decodeSmdResistor

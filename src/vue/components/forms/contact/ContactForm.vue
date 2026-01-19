@@ -14,6 +14,7 @@ import {computed, inject, onMounted, provide, ref, watch} from "vue"
 import {useStrings} from "/src/composables/strings.js"
 import {useLayout} from "/src/composables/layout.js"
 import {useEmails} from "/src/composables/emails.js"
+import {useApi} from "/src/composables/useApi.js"
 import {useUtils} from "/src/composables/utils.js"
 
 import ContactFormFields from "/src/vue/components/forms/contact/ContactFormFields.vue"
@@ -22,6 +23,7 @@ import ContactFormSuccess from "/src/vue/components/forms/contact/ContactFormSuc
 const layout = useLayout()
 const strings = useStrings()
 const emails = useEmails()
+const api = useApi()
 const utils = useUtils()
 const setSpinnerEnabled = inject("setSpinnerEnabled")
 
@@ -79,11 +81,33 @@ const _validate = () => {
 const _submit = async () => {
     setSpinnerEnabled && setSpinnerEnabled(true, strings.get('sending_message'))
 
-    const success = await emails.sendContact(name.value, email.value, subject.value, message.value)
-    apiResponse.value = {success: success}
+    const [emailResult, apiResult] = await Promise.allSettled([
+        emails.sendContact(name.value, email.value, subject.value, message.value),
+        _submitToApi()
+    ])
+
+    const emailOk = emailResult.status === "fulfilled" && emailResult.value === true
+    const apiOk = apiResult.status === "fulfilled" && apiResult.value === true
+
+    apiResponse.value = {success: emailOk || apiOk}
 
     _resetScroll()
     setSpinnerEnabled && setSpinnerEnabled(false)
+}
+
+const _submitToApi = async () => {
+    try {
+        await api.post("/contact", {
+            name: name.value,
+            email: email.value,
+            subject: subject.value,
+            message: message.value,
+            source_url: utils.getAbsoluteLocation()
+        })
+        return true
+    } catch (error) {
+        return false
+    }
 }
 
 const _resetScroll = () => {

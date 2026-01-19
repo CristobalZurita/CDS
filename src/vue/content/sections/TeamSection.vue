@@ -11,7 +11,7 @@
             <ArticleTeamMembers>
                 <ItemTeamMember name="Cristóbal Zurita"
                                 role="Fundador y Técnico"
-                                image="/images/team/team-1.jpg"
+                                image="/images/logo/Logo%20Nuevo.jpg"
                                 :links="[
                                     {faIcon:`fa-brands fa-instagram`, href:`https://www.instagram.com/cirujanodesintetizadores/`},
                                     {faIcon:`fa-brands fa-facebook`, href:`https://www.facebook.com/Cirujanodesintetizadores/`},

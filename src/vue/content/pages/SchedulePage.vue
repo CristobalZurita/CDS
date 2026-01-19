@@ -228,8 +228,11 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useQuotationStore } from '@/stores/quotation'
+import { useAuthStore } from '@/stores/auth'
+import { api } from '@/services/api'
 
 const quotationStore = useQuotationStore()
+const authStore = useAuthStore()
 
 // State
 const step = ref(1)
@@ -324,12 +327,31 @@ const confirmAppointment = () => {
   appointmentNumber.value = 'CIT-' + Date.now().toString().slice(-8)
   step.value = 4
 
-  // Aquí iría la lógica para guardar en BD
+  // Log original mantenido
   console.log('Cita confirmada:', {
     number: appointmentNumber.value,
     date: selectedDate.value,
     time: selectedTime.value,
     instrument: quotationStore.selectedInstrument
+  })
+
+  // Persistir en backend (en segundo plano, no bloquea UI)
+  const appointmentDate = new Date(selectedDate.value)
+  const [hours, minutes] = selectedTime.value.split(':')
+  appointmentDate.setHours(parseInt(hours), parseInt(minutes), 0, 0)
+
+  api.post('/appointments', {
+    nombre: authStore.user?.full_name || 'Cliente',
+    email: authStore.user?.email || '',
+    telefono: authStore.user?.phone || '+56900000000',
+    fecha: appointmentDate.toISOString(),
+    mensaje: quotationStore.selectedInstrument?.name
+      ? `Instrumento: ${quotationStore.selectedInstrument.name}`
+      : 'Cita de diagnóstico'
+  }).then(response => {
+    console.log('Cita guardada en backend:', response.data)
+  }).catch(error => {
+    console.warn('Error guardando cita en backend:', error)
   })
 }
 

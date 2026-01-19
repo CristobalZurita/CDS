@@ -1,6 +1,6 @@
 <template>
     <!-- Navigation -->
-    <Navigation logo="images/logo/logo_square_002.png"
+    <Navigation :logo="brandLogo"
                 label="*Cirujano* de Sintetizadores"/>
 
         <!-- Content Display -->
@@ -22,8 +22,8 @@
                               `Trabajamos con diagnóstico detallado, repuestos de calidad y un enfoque orientado a conservar y realzar el carácter sonoro original de cada instrumento.`
                           ]"
                           :links="[
-                              {label: `Política de privacidad`, href: `/privacy-policy`, faIcon: null},
-                              {label: `Términos y condiciones`, href: `/license`, faIcon: null},
+                              {label: `Política de privacidad`, href: `/privacidad`, faIcon: null},
+                              {label: `Términos y condiciones`, href: `/terminos`, faIcon: null},
                               {label: `Repositorio del proyecto`, href: `https://github.com/CristobalZurita/cirujano-front`, faIcon: null},
                           ]"
                           :displayLinksAsButtons="false"/>
@@ -71,6 +71,7 @@ import ToastNotification from "/src/vue/components/system/ToastNotification.vue"
 import { setToastComponent } from '/src/services/toastService.js'
 
 const toastComponent = ref(null)
+const brandLogo = `${import.meta.env.BASE_URL}images/logo/logo_square_002.png`
 
 onMounted(() => {
   // Initialize toast service with component reference

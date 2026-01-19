@@ -33,6 +33,8 @@ import ClientsPage from '@/vue/content/pages/admin/ClientsPage.vue'
 import RepairsAdminPage from '@/vue/content/pages/admin/RepairsAdminPage.vue'
 import StatsPage from '@/vue/content/pages/admin/StatsPage.vue'
 import CategoriesPage from '@/vue/content/pages/admin/CategoriesPage.vue'
+import ContactMessagesPage from '@/vue/content/pages/admin/ContactMessagesPage.vue'
+import NewsletterSubscriptionsPage from '@/vue/content/pages/admin/NewsletterSubscriptionsPage.vue'
 
 const routes = [
   // Public routes
@@ -166,8 +168,74 @@ const routes = [
         path: 'categories',
         name: 'admin-categories',
         component: CategoriesPage
+      },
+      {
+        path: 'contact',
+        name: 'admin-contact',
+        component: ContactMessagesPage
+      },
+      {
+        path: 'newsletter',
+        name: 'admin-newsletter',
+        component: NewsletterSubscriptionsPage
       }
     ]
+  },
+
+  // Calculadoras electrónicas (rutas públicas con lazy loading)
+  {
+    path: '/calc/555',
+    name: 'calc-555',
+    component: () => import('@/modules/timer555/Timer555View.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/calc/resistor-color',
+    name: 'calc-resistor-color',
+    component: () => import('@/modules/resistorColor/ResistorColorView.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/calc/smd-capacitor',
+    name: 'calc-smd-capacitor',
+    component: () => import('@/modules/smdCapacitor/SmdCapacitorView.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/calc/smd-resistor',
+    name: 'calc-smd-resistor',
+    component: () => import('@/modules/smdResistor/SmdResistorView.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/calc/ohms-law',
+    name: 'calc-ohms-law',
+    component: () => import('@/modules/ohmsLaw/OhmsLawView.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/calc/temperature',
+    name: 'calc-temperature',
+    component: () => import('@/modules/temperature/TemperatureView.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/calc/number-system',
+    name: 'calc-number-system',
+    component: () => import('@/modules/numberSystem/NumberSystemView.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/calc/length',
+    name: 'calc-length',
+    component: () => import('@/modules/length/LengthView.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/calc/awg',
+    name: 'calc-awg',
+    component: () => import('@/modules/awg/AwgView.vue'),
+    meta: { requiresAuth: false }
   },
 
   // 404 - Ruta no encontrada
