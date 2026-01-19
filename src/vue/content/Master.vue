@@ -21,11 +21,7 @@
                               `Cirujano de Sintetizadores es un taller especializado en reparación, restauración y modificación de sintetizadores, teclados y equipos de audio profesionales.`,
                               `Trabajamos con diagnóstico detallado, repuestos de calidad y un enfoque orientado a conservar y realzar el carácter sonoro original de cada instrumento.`
                           ]"
-                          :links="[
-                              {label: `Política de privacidad`, href: `/privacidad`, faIcon: null},
-                              {label: `Términos y condiciones`, href: `/terminos`, faIcon: null},
-                              {label: `Repositorio del proyecto`, href: `https://github.com/CristobalZurita/cirujano-front`, faIcon: null},
-                          ]"
+                          :links="[]"
                           :displayLinksAsButtons="false"/>
 
             <FooterColumn title="Redes y presencia"
@@ -49,6 +45,19 @@
                               {label: `contacto@cirujanodesintetizadores.com`, href: `mailto:contacto@cirujanodesintetizadores.com`, faIcon: 'fa-regular fa-envelope'},
                           ]"
                           :displayLinksAsButtons="false"/>
+        </FooterBlock>
+
+        <FooterBlock :darken="false"
+                     :row="false">
+            <div class="footer-legal-row">
+                <router-link to="/privacidad">Política de privacidad</router-link>
+                <span class="footer-legal-sep">·</span>
+                <router-link to="/terminos">Términos y condiciones</router-link>
+                <span class="footer-legal-sep">·</span>
+                <a href="https://github.com/CristobalZurita/cirujano-front" target="_blank" rel="noopener noreferrer">
+                  Repositorio del proyecto
+                </a>
+            </div>
         </FooterBlock>
 
         <FooterBlock :darken="true"
@@ -86,5 +95,29 @@ onMounted(() => {
 
 .site-body {
   padding-top: var(--navbar-height, 120px);
+}
+
+.footer-legal-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: nowrap;
+  text-align: center;
+}
+
+.footer-legal-row a {
+  color: #eaeaea;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.footer-legal-row a:hover {
+  color: lighten($primary, 15%);
+}
+
+.footer-legal-sep {
+  color: #eaeaea;
 }
 </style>
