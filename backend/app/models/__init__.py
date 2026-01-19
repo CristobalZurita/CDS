@@ -24,6 +24,8 @@ from app.models.device_lookup import DeviceBrand, DeviceType
 from app.models.repair_component_usage import RepairComponentUsage
 from app.models.repair_photo import RepairPhoto
 from app.models.repair_note import RepairNote
+from app.models.contact_message import ContactMessage
+from app.models.newsletter_subscription import NewsletterSubscription
 
 __all__ = [
     "User", "UserRole",
@@ -50,4 +52,6 @@ __all__ = [
     "RepairComponentUsage",
     "RepairPhoto",
     "RepairNote",
+    "ContactMessage",
+    "NewsletterSubscription",
 ]

@@ -23,3 +23,6 @@ export function decodeSmdCapacitor(input: SmdCapacitorInput): SmdCapacitorOutput
     value_uf
   }
 }
+
+// Alias para compatibilidad con el componente
+export const calculateSmdCapacitor = decodeSmdCapacitor

@@ -32,16 +32,15 @@ const categories = [
     {id: 'synths', label: 'Sintetizadores'},
     {id: 'drums', label: 'Drum Machines'},
     {id: 'keys', label: 'Teclados'},
-    {id: 'fx', label: 'Efectos'},
 ]
 
 const projects = [
     {
         id: 1,
         title: 'Reparación Korg minilogue',
-        category: 'keyboard',
+        category: 'synths',
         description: 'Restauración completa de síntesis y circuitería analógica',
-        image: '/images/portfolio/korg-minilogue.jpg',
+        image: '/images/instrumentos/KORG_MINILOGUE.png',
         status: 'completed',
         date: '2025-11-15'
     },
@@ -50,25 +49,25 @@ const projects = [
         title: 'Mantenimiento Roland TR-808',
         category: 'drums',
         description: 'Revisión de circuitos osciladores y ajuste de síntesis',
-        image: '/images/portfolio/roland-tr808.jpg',
+        image: '/images/instrumentos/AKAI_MPC_2000.jpg',
         status: 'completed',
         date: '2025-10-20'
     },
     {
         id: 3,
         title: 'Restauración Yamaha DX7',
-        category: 'keyboard',
+        category: 'keys',
         description: 'Reparación de teclado y restauración de circuitos analógicos',
-        image: '/images/portfolio/yamaha-dx7.jpg',
+        image: '/images/instrumentos/YAMAHA_DX7_MK1.jpg',
         status: 'completed',
         date: '2025-09-08'
     },
     {
         id: 4,
         title: 'Diagnóstico Moog Subsequent 37',
-        category: 'keyboard',
+        category: 'synths',
         description: 'Análisis técnico y reparación de módulos de síntesis',
-        image: '/images/portfolio/moog-sub37.jpg',
+        image: '/images/instrumentos/ROLAND_D50.jpg',
         status: 'in-progress',
         date: '2025-12-01'
     }

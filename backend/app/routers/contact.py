@@ -1,11 +1,52 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Request
+from sqlalchemy.orm import Session
+from typing import List
+
+from app.core.database import get_db
+from app.core.dependencies import get_current_admin
+from app.models.contact_message import ContactMessage
+from app.schemas.contact import ContactCreate, ContactMessageOut
 
 router = APIRouter(prefix="/contact", tags=["Contact"])
 
-@router.post("/")
-def send_contact(payload: dict):
-    # Aquí podrías validar y enviar email o guardar en DB
-    # Por ahora solo retornamos OK
-    if not payload.get('email') or not payload.get('message'):
-        raise HTTPException(status_code=400, detail="Missing email or message")
-    return {"ok": True, "received": payload}
+@router.post("/", status_code=201)
+def send_contact(
+    payload: ContactCreate,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    message = ContactMessage(
+        name=payload.name,
+        email=payload.email,
+        subject=payload.subject,
+        message=payload.message,
+        source_url=payload.source_url,
+        ip_address=request.client.host if request.client else None,
+        user_agent=request.headers.get("user-agent"),
+        status="new",
+    )
+    db.add(message)
+    db.commit()
+    db.refresh(message)
+    return {"ok": True, "message_id": message.id}
+
+
+@router.get("/messages", response_model=List[ContactMessageOut])
+def list_messages(
+    db: Session = Depends(get_db),
+    admin: dict = Depends(get_current_admin),
+):
+    messages = db.query(ContactMessage).order_by(ContactMessage.created_at.desc()).all()
+    return messages
+
+
+@router.get("/messages/{message_id}", response_model=ContactMessageOut)
+def get_message(
+    message_id: int,
+    db: Session = Depends(get_db),
+    admin: dict = Depends(get_current_admin),
+):
+    message = db.query(ContactMessage).filter(ContactMessage.id == message_id).first()
+    if not message:
+        raise HTTPException(status_code=404, detail="Message not found")
+    return message

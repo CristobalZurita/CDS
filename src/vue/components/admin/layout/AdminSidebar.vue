@@ -1,7 +1,7 @@
 <template>
   <aside class="admin-sidebar">
     <div class="brand">
-      <img src="/images/logo/Logo Nuevo.jpg" alt="Cirujano de Sintetizadores" />
+      <img :src="brandLogo" alt="Cirujano de Sintetizadores" />
       <span>Admin</span>
     </div>
 
@@ -32,8 +32,12 @@ const items = [
   { to: '/admin/inventory', label: 'Inventario', icon: 'fa-solid fa-boxes-stacked' },
   { to: '/admin/inventory/unified', label: 'Inventario Unificado', icon: 'fa-solid fa-layer-group' },
   { to: '/admin/categories', label: 'Categorías', icon: 'fa-solid fa-tags' },
-  { to: '/admin/stats', label: 'Estadísticas', icon: 'fa-solid fa-chart-line' }
+  { to: '/admin/stats', label: 'Estadísticas', icon: 'fa-solid fa-chart-line' },
+  { to: '/admin/contact', label: 'Mensajes', icon: 'fa-solid fa-envelope' },
+  { to: '/admin/newsletter', label: 'Newsletter', icon: 'fa-solid fa-paper-plane' }
 ]
+
+const brandLogo = `${import.meta.env.BASE_URL}images/logo/Logo%20Nuevo.jpg`
 
 const isActive = (item) => {
   if (item.to === '/admin') return route.path === '/admin'
