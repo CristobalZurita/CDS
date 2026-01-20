@@ -46,6 +46,13 @@ class User(Base):
     role_obj = relationship("UserRole", back_populates="users")
     repairs = relationship("Repair", back_populates="technician", foreign_keys="Repair.assigned_to")
 
+    # Relación con nuevo sistema de roles granulares (ADITIVO - no reemplaza role_obj)
+    assigned_roles = relationship(
+        "Role",
+        secondary="user_role_assignments",
+        back_populates="users"
+    )
+
     def __init__(self, **kwargs):
         full_name = kwargs.pop("full_name", None)
         role = kwargs.pop("role", None)

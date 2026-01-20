@@ -75,6 +75,8 @@ class Repair(Base):
     photos = relationship("RepairPhoto", back_populates="repair", cascade="all, delete-orphan")
     notes = relationship("RepairNote", back_populates="repair", cascade="all, delete-orphan")
     stock_movements = relationship("StockMovement", foreign_keys="StockMovement.repair_id")
+    invoices = relationship("Invoice", back_populates="repair")  # ADITIVO
+    warranty = relationship("Warranty", back_populates="repair", uselist=False)  # ADITIVO
 
     @property
     def status(self):

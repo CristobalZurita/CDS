@@ -229,6 +229,20 @@ def list_component_usages(repair_id: int, db: Session = Depends(get_db), user: d
     return svc.get_component_usages(repair_id)
 
 
+@router.delete("/{repair_id}/components/{usage_id}", status_code=status.HTTP_200_OK)
+def remove_component_usage(repair_id: int, usage_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+    """Eliminar uso de componente y devolver stock al inventario"""
+    svc = RepairService(db)
+    try:
+        user_id = int(user.get("user_id")) if user and user.get("user_id") else None
+        result = svc.remove_component_usage(usage_id=usage_id, user_id=user_id)
+        return {"ok": True, "message": "Component removed and stock restored", "restored_quantity": result.get("restored_quantity", 0)}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/{repair_id}/notes", status_code=status.HTTP_201_CREATED)
 def add_repair_note(repair_id: int, payload: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
     """Agregar nota técnica o interna a una reparación"""

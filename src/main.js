@@ -21,3 +21,23 @@ authStore.checkAuth()
 
 // Mount app
 app.mount("#app")
+
+// Allow mouse wheel to increment/decrement number inputs when hovered.
+document.addEventListener(
+  "wheel",
+  (event) => {
+    const target = event.target
+    if (!(target instanceof HTMLInputElement)) return
+    if (target.type !== "number") return
+    if (document.activeElement !== target) {
+      target.focus()
+    }
+    if (event.deltaY < 0) {
+      target.stepUp()
+    } else {
+      target.stepDown()
+    }
+    event.preventDefault()
+  },
+  { passive: false }
+)

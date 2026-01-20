@@ -12,6 +12,10 @@
       </div>
 
       <LoginForm />
+
+      <div class="login-back">
+        <router-link to="/" class="login-back-link">VOLVER AL INICIO</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +71,24 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
+}
+
+.login-back {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.login-back-link {
+  font-family: 'Cervo Neue', 'Cervo Extrabold', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ec6b00; /* Orange */
+  text-decoration: none;
+}
+
+.login-back-link:hover {
+  color: #c95800;
 }
 
 @media (max-width: 768px) {
