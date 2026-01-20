@@ -45,55 +45,56 @@ const props = defineProps({
 
 const calculatorItems = [
     {
-        label: 'Timer 555',
+        label: 'La Máquina del tiempo NE555',
         description: 'Calcula tiempos y configuraciones basicas del 555.',
         path: '/calc/555',
         icon: 'fa-solid fa-stopwatch'
     },
     {
-        label: 'Codigo de Colores',
-        description: 'Identifica el valor de resistencias por bandas.',
-        path: '/calc/resistor-color',
-        icon: 'fa-solid fa-palette'
-    },
-    {
-        label: 'Resistor SMD',
-        description: 'Decodifica valores SMD rapidamente.',
+        label: 'Calcula oscilación CD40106',
+        description: 'Frecuencia del Schmitt trigger con R y C.',
         path: '/calc/smd-resistor',
         icon: 'fa-solid fa-wave-square'
     },
     {
-        label: 'Capacitor SMD',
+        label: 'Codigo de Resistencias',
+        description: 'Identifica el valor de resistencias por bandas.',
+        path: '/calc/resistor-color',
+        icon: 'fa-solid fa-palette'
+    },
+ 
+    {
+        label: 'Código Capacitores ',
         description: 'Convierte codigos SMD a capacitancia.',
         path: '/calc/smd-capacitor',
         icon: 'fa-solid fa-bolt'
     },
     {
-        label: 'Ley de Ohm',
+        label: 'Calcula la Ley de Ohm',
         description: 'Calcula voltaje, corriente y resistencia.',
         path: '/calc/ohms-law',
         icon: 'fa-solid fa-plug'
     },
     {
-        label: 'Temperatura',
+        label: 'Convierte Temperatura',
         description: 'Convierte Celsius, Fahrenheit y Kelvin.',
         path: '/calc/temperature',
         icon: 'fa-solid fa-temperature-high'
     },
     {
-        label: 'Sistemas Numericos',
+        label: 'Binario, Hexadecimal y Decimal',
         description: 'Convierte entre binario, decimal y hex.',
         path: '/calc/number-system',
         icon: 'fa-solid fa-hashtag'
     },
     {
-        label: 'Longitud',
+        label: 'Equivalencia de Longitud',
         description: 'Convierte unidades de medida.',
         path: '/calc/length',
         icon: 'fa-solid fa-ruler'
     },
     {
-        label: 'AWG',
+        label: 'Calcular Grosor Cable AWG',
         description: 'Calcula conversiones de calibres AWG.',
         path: '/calc/awg',
         icon: 'fa-solid fa-ruler-combined'

@@ -30,10 +30,29 @@ class Client(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # === CAMPOS ADICIONALES (ADITIVOS) ===
+    # Segmentación de cliente
+    customer_segment = Column(String(20), default="regular")  # vip, regular, new, inactive
+    lifetime_value = Column(Float, default=0.0)  # Valor total histórico
+
+    # Información fiscal (para B2B)
+    tax_id = Column(String(50), nullable=True)  # RUT en Chile
+    company_name = Column(String(255), nullable=True)
+    billing_address = Column(Text, nullable=True)
+
+    # Preferencias
+    language_preference = Column(String(10), default="es")
+    service_preference = Column(String(20), default="whatsapp")  # email, whatsapp, phone, sms
+
+    # Notas internas (solo para staff)
+    internal_notes = Column(Text, nullable=True)
+
     # Relaciones
     user = relationship("User", foreign_keys=[user_id])
     devices = relationship("Device", back_populates="client")
     quotes = relationship("Quote", back_populates="client")
+    invoices = relationship("Invoice", back_populates="client")  # ADITIVO
+    warranties = relationship("Warranty", back_populates="client")  # ADITIVO
 
     def __repr__(self):
         return f"<Client(id={self.id}, name={self.name})>"

@@ -8,21 +8,64 @@
 		</div>
 
 		<div v-else-if="repair" class="repair-detail-admin">
+			<!-- Sección Superior: Estado y Costos -->
+			<div class="row mb-4">
+				<div class="col-lg-8">
+					<!-- Estado de la Reparación -->
+					<RepairStatusChanger
+						:repair-id="repairId"
+						:current-status-id="repair.status_id"
+						@status-changed="onStatusChanged"
+					/>
+				</div>
+				<div class="col-lg-4 mt-3 mt-lg-0">
+					<!-- Resumen de Costos -->
+					<RepairCostSummary
+						:repair-id="repairId"
+						:repair="repair"
+						:materials-cost="totalMaterialsCost"
+						:components-count="componentsCount"
+						:is-read-only="isTerminalStatus"
+						@updated="loadRepair"
+					/>
+				</div>
+			</div>
+
 			<!-- Información General -->
 			<div class="detail-card mb-4">
 				<h5 class="card-title"><i class="fa-solid fa-info-circle me-2"></i>Información General</h5>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<p><strong>Número:</strong> {{ repair.repair_number }}</p>
-						<p><strong>Estado:</strong> {{ repair.status?.name || repair.status_id }}</p>
-						<p><strong>Prioridad:</strong> {{ getPriorityLabel(repair.priority) }}</p>
+						<p><strong>Prioridad:</strong>
+							<span class="badge" :class="getPriorityBadge(repair.priority)">
+								{{ getPriorityLabel(repair.priority) }}
+							</span>
+						</p>
+						<p><strong>Cliente:</strong> {{ repair.client?.name || '—' }}</p>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
+						<p><strong>Marca:</strong> {{ repair.instrument?.brand?.name || '—' }}</p>
+						<p><strong>Modelo:</strong> {{ repair.instrument?.model || '—' }}</p>
+						<p><strong>Serial:</strong> {{ repair.serial_number || '—' }}</p>
+					</div>
+					<div class="col-md-4">
 						<p><strong>Problema:</strong> {{ repair.problem_reported || '—' }}</p>
 						<p><strong>Diagnóstico:</strong> {{ repair.diagnosis || '—' }}</p>
 						<p><strong>Trabajo:</strong> {{ repair.work_performed || '—' }}</p>
 					</div>
 				</div>
+			</div>
+
+			<!-- Materiales Utilizados -->
+			<div class="mb-4">
+				<RepairComponentsManager
+					ref="componentsManagerRef"
+					:repair-id="repairId"
+					:is-read-only="isTerminalStatus"
+					@update:total-cost="onMaterialsCostUpdate"
+					@components-changed="onComponentsChanged"
+				/>
 			</div>
 
 			<!-- Fotos -->
@@ -134,10 +177,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { api } from '@/services/api'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
+import RepairStatusChanger from '@/vue/components/admin/repair/RepairStatusChanger.vue'
+import RepairComponentsManager from '@/vue/components/admin/repair/RepairComponentsManager.vue'
+import RepairCostSummary from '@/vue/components/admin/repair/RepairCostSummary.vue'
 
 const route = useRoute()
 const repairId = route.params.id
@@ -146,6 +192,17 @@ const repair = ref(null)
 const photos = ref([])
 const notes = ref([])
 const loading = ref(true)
+
+// Components manager ref
+const componentsManagerRef = ref(null)
+const totalMaterialsCost = ref(0)
+const componentsCount = ref(0)
+
+// Estado terminal (no permite más cambios)
+const isTerminalStatus = computed(() => {
+	const statusId = repair.value?.status_id
+	return statusId === 8 || statusId === 9 // Entregado o Cancelado
+})
 
 // Photo upload state
 const showPhotoUpload = ref(false)
@@ -264,6 +321,28 @@ const getPhotoUrl = (path) => {
 const getPriorityLabel = (p) => {
 	const labels = { 1: 'Urgente', 2: 'Normal', 3: 'Baja' }
 	return labels[p] || 'Normal'
+}
+
+const getPriorityBadge = (p) => {
+	const badges = { 1: 'bg-danger', 2: 'bg-primary', 3: 'bg-secondary' }
+	return badges[p] || 'bg-primary'
+}
+
+// Handlers para nuevos componentes
+const onStatusChanged = async ({ newStatusId, repair: updatedRepair }) => {
+	if (updatedRepair) {
+		repair.value = updatedRepair
+	} else {
+		await loadRepair()
+	}
+}
+
+const onMaterialsCostUpdate = (cost) => {
+	totalMaterialsCost.value = cost
+}
+
+const onComponentsChanged = (components) => {
+	componentsCount.value = components?.length || 0
 }
 
 const getNoteTypeBadge = (type) => {
