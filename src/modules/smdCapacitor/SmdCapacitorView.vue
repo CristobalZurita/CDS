@@ -16,6 +16,10 @@
           </div>
 
           <div class="panel-form">
+            <div class="cap-visual-inline">
+              <img src="/images/calculadoras/CAP_E.svg" alt="Capacitor electrolítico" />
+              <p>Electrolítico (Cap E)</p>
+            </div>
             <div class="form-grid form-grid-wide">
               <div class="form-field">
                 <label>Picofarad</label>
@@ -88,6 +92,10 @@
           </div>
 
           <form class="panel-form" @submit.prevent="onDecode">
+            <div class="cap-visual-inline">
+              <img src="/images/calculadoras/CAP_C.png" alt="Capacitor cerámico" />
+              <p>Cerámico (Cap C)</p>
+            </div>
             <div class="form-grid">
               <div class="form-field">
                 <label>Código (3 dígitos)</label>
@@ -150,17 +158,6 @@
               El código se interpreta en pF: dos dígitos + cantidad de ceros.
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="cap-visuals">
-        <div class="cap-visual-card">
-          <img src="/images/calculadoras/CAP_E.svg" alt="Capacitor electrolítico" />
-          <p>Electrolítico</p>
-        </div>
-        <div class="cap-visual-card">
-          <img src="/images/calculadoras/CAP_C.jpg" alt="Capacitor cerámico" />
-          <p>Cerámico</p>
         </div>
       </div>
 
@@ -381,8 +378,8 @@ function resetCode() {
 #smd-capacitor-calculator {
   .cap-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    gap: 1.6rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
 
     @include media-breakpoint-down(lg) {
       grid-template-columns: 1fr;
@@ -553,36 +550,28 @@ function resetCode() {
     margin-top: 2.5rem;
   }
 
-  .cap-visuals {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.6rem;
-    margin-top: 2.6rem;
-
-    @include media-breakpoint-down(md) {
-      grid-template-columns: 1fr;
-    }
+  .cap-visuals,
+  .cap-visual-card,
+  .cap-visual-half,
+  .cap-visual-divider {
+    display: none;
   }
 
-  .cap-visual-card {
-    background: rgba($light-1, 0.8);
-    border: 1px solid rgba($dark, 0.1);
-    border-radius: 22px;
-    padding: 1.6rem;
+  .cap-visual-inline {
     display: grid;
     place-items: center;
-    gap: 0.8rem;
-    box-shadow: 0 20px 40px rgba($dark, 0.08);
+    gap: 0.4rem;
+    margin-bottom: 1.1rem;
   }
 
-  .cap-visual-card img {
-    max-width: 320px;
+  .cap-visual-inline img {
+    max-width: 160px;
     width: 100%;
     height: auto;
     display: block;
   }
 
-  .cap-visual-card p {
+  .cap-visual-inline p {
     margin: 0;
     font-family: 'Cervo Neue', $headings-font-family;
     font-weight: 700;
