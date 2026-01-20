@@ -376,10 +376,16 @@ function resetCode() {
 @import "/src/scss/_theming.scss";
 
 #smd-capacitor-calculator {
+  :deep(.container-xxl) {
+    max-width: 2000px;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
+
   .cap-layout {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2rem;
+    gap: 2.6rem;
 
     @include media-breakpoint-down(lg) {
       grid-template-columns: 1fr;
@@ -398,7 +404,7 @@ function resetCode() {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 10rem;
     margin-bottom: 1.5rem;
   }
 
