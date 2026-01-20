@@ -3,6 +3,7 @@ Router de Analytics y Reportes
 ==============================
 Endpoints para KPIs, estadísticas y reportes del dashboard.
 ADITIVO: Nuevo router, no modifica existentes.
+Usa permisos granulares (require_permission).
 """
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import StreamingResponse
@@ -13,7 +14,11 @@ import csv
 import io
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user, get_current_admin
+from app.core.dependencies import (
+    get_current_user,
+    get_current_admin,
+    require_permission
+)
 from app.services.reporting_service import ReportingService
 
 router = APIRouter(prefix="/analytics", tags=["Analytics"])
@@ -26,7 +31,7 @@ router = APIRouter(prefix="/analytics", tags=["Analytics"])
 @router.get("/dashboard")
 def get_dashboard_stats(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Estadísticas principales del dashboard.
@@ -44,7 +49,7 @@ def get_dashboard_stats(
 @router.get("/alerts")
 def get_system_alerts(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """Obtener solo las alertas del sistema"""
     svc = ReportingService(db)
@@ -66,7 +71,7 @@ def get_repairs_report(
     status_id: Optional[int] = None,
     technician_id: Optional[int] = None,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Reporte detallado de reparaciones.
@@ -95,7 +100,7 @@ def get_repairs_timeline(
     days: int = Query(30, ge=1, le=365),
     group_by: str = Query("day", regex="^(day|week|month)$"),
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Timeline de reparaciones para gráficos.
@@ -113,10 +118,10 @@ def export_repairs_csv(
     from_date: Optional[str] = None,
     to_date: Optional[str] = None,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("reports", "export"))
 ):
     """
-    Exportar reparaciones a CSV (solo admin).
+    Exportar reparaciones a CSV (requiere permiso reports:export).
     """
     svc = ReportingService(db)
 
@@ -152,7 +157,7 @@ def get_revenue_report(
     from_date: Optional[str] = None,
     to_date: Optional[str] = None,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Reporte de ingresos y rentabilidad (solo admin).
@@ -173,7 +178,7 @@ def get_revenue_report(
 def get_revenue_timeline(
     months: int = Query(12, ge=1, le=24),
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Timeline de ingresos por mes (solo admin).
@@ -192,7 +197,7 @@ def get_revenue_timeline(
 @router.get("/clients")
 def get_clients_report(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Reporte de clientes.
@@ -214,7 +219,7 @@ def get_clients_report(
 @router.get("/inventory")
 def get_inventory_report(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Reporte de inventario.
@@ -240,7 +245,7 @@ def get_technician_performance(
     from_date: Optional[str] = None,
     to_date: Optional[str] = None,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Reporte de productividad de técnicos (solo admin).
@@ -269,7 +274,7 @@ def get_technician_performance(
 @router.get("/warranties")
 def get_warranty_report(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Reporte de garantías.
@@ -292,7 +297,7 @@ def get_warranty_report(
 @router.get("/kpis/summary")
 def get_kpis_summary(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("reports", "read"))
 ):
     """
     Resumen de KPIs principales (solo admin).

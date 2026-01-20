@@ -3,13 +3,18 @@ Router de Garantías
 ===================
 Endpoints para gestión de garantías y reclamos.
 ADITIVO: Nuevo router, no modifica existentes.
+Usa permisos granulares (require_permission).
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional, Dict, Any
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user, get_current_admin
+from app.core.dependencies import (
+    get_current_user,
+    get_current_admin,
+    require_permission
+)
 from app.services.warranty_service import WarrantyService
 from app.models.warranty import WarrantyType, WarrantyStatus, ClaimStatus
 
@@ -24,7 +29,7 @@ router = APIRouter(prefix="/warranties", tags=["Warranties"])
 def create_warranty(
     payload: Dict[str, Any],
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "create"))
 ):
     """
     Crear garantía para una reparación.
@@ -62,7 +67,7 @@ def create_warranty(
 def auto_create_warranty(
     repair_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "create"))
 ):
     """Crear garantía automáticamente para reparación completada"""
     svc = WarrantyService(db)
@@ -79,7 +84,7 @@ def list_warranties(
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "read"))
 ):
     """
     Listar garantías con filtros.
@@ -104,7 +109,7 @@ def list_warranties(
 def get_expiring_soon(
     days: int = Query(7, ge=1, le=90),
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "read"))
 ):
     """Obtener garantías que expiran pronto"""
     svc = WarrantyService(db)
@@ -115,7 +120,7 @@ def get_expiring_soon(
 def get_warranty_by_repair(
     repair_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "read"))
 ):
     """Obtener garantía de una reparación"""
     svc = WarrantyService(db)
@@ -130,7 +135,7 @@ def check_warranty_coverage(
     repair_id: int,
     problem_description: Optional[str] = None,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "read"))
 ):
     """
     Verificar cobertura de garantía.
@@ -146,7 +151,7 @@ def check_warranty_coverage(
 def get_warranty(
     warranty_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "read"))
 ):
     """Obtener detalle de garantía"""
     svc = WarrantyService(db)
@@ -158,9 +163,9 @@ def void_warranty(
     warranty_id: int,
     payload: Dict[str, Any],
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("warranties", "void"))
 ):
-    """Anular garantía (solo admin)"""
+    """Anular garantía (requiere permiso warranties:void)"""
     svc = WarrantyService(db)
     user_id = int(user.get("user_id")) if user and user.get("user_id") else None
 
@@ -181,7 +186,7 @@ def submit_claim(
     warranty_id: int,
     payload: Dict[str, Any],
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "create"))
 ):
     """
     Presentar reclamo de garantía.
@@ -213,7 +218,7 @@ def list_all_claims(
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "read"))
 ):
     """Listar todos los reclamos"""
     svc = WarrantyService(db)
@@ -224,7 +229,7 @@ def list_all_claims(
 def list_warranty_claims(
     warranty_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "read"))
 ):
     """Listar reclamos de una garantía"""
     svc = WarrantyService(db)
@@ -235,7 +240,7 @@ def list_warranty_claims(
 def get_claim(
     claim_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "read"))
 ):
     """Obtener detalle de reclamo"""
     svc = WarrantyService(db)
@@ -247,10 +252,10 @@ def evaluate_claim(
     claim_id: int,
     payload: Dict[str, Any],
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("warranties", "evaluate_claim"))
 ):
     """
-    Evaluar reclamo de garantía (solo admin).
+    Evaluar reclamo de garantía (requiere permiso warranties:evaluate_claim).
 
     Body:
     - is_covered: ¿Está cubierto? (requerido)
@@ -281,7 +286,7 @@ def process_claim(
     claim_id: int,
     payload: Dict[str, Any],
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "evaluate_claim"))
 ):
     """
     Procesar reclamo aprobado (iniciar reparación).
@@ -307,7 +312,7 @@ def process_claim(
 def complete_claim(
     claim_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("warranties", "evaluate_claim"))
 ):
     """Completar reclamo (reparación finalizada)"""
     svc = WarrantyService(db)
@@ -322,7 +327,7 @@ def complete_claim(
 @router.post("/maintenance/update-expired")
 def update_expired_warranties(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("warranties", "void"))
 ):
     """Actualizar garantías expiradas (job de mantenimiento)"""
     svc = WarrantyService(db)

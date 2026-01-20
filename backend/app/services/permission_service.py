@@ -92,6 +92,24 @@ class PermissionService:
                 # Warranties
                 "warranties:read", "warranties:create", "warranties:update", "warranties:void",
                 "warranties:evaluate_claim",
+                # Diagnostics
+                "diagnostics:read", "diagnostics:create", "diagnostics:update", "diagnostics:delete",
+                # Payments
+                "payments:read", "payments:create",
+                # Repair Statuses
+                "repair_statuses:read", "repair_statuses:create", "repair_statuses:update", "repair_statuses:delete",
+                # Stock Movements
+                "stock_movements:read", "stock_movements:create",
+                # Instruments
+                "instruments:read", "instruments:create", "instruments:update", "instruments:delete",
+                # Newsletter
+                "newsletter:read",
+                # Categories
+                "categories:read", "categories:create", "categories:update", "categories:delete",
+                # Devices
+                "devices:read", "devices:create", "devices:update", "devices:delete",
+                # Contact Messages
+                "contact_messages:read",
             }
         elif role_id == 2:  # Technician
             return {

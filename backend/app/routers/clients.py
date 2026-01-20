@@ -1,9 +1,15 @@
+"""
+Router de Clientes (Admin)
+==========================
+Endpoints para gestión de clientes desde admin.
+Usa permisos granulares (require_permission).
+"""
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List, Dict
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_admin
+from app.core.dependencies import get_current_admin, require_permission
 from app.models.client import Client
 from app.models.device import Device
 
@@ -11,7 +17,10 @@ router = APIRouter(prefix="/clients", tags=["clients"])
 
 
 @router.get("/", response_model=List[Dict])
-def list_clients(db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def list_clients(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("clients", "read"))
+):
     clients = db.query(Client).all()
     payload = []
     for client in clients:
@@ -28,7 +37,7 @@ def list_clients(db: Session = Depends(get_db), admin: dict = Depends(get_curren
 
 
 @router.get("/{client_id}", response_model=Dict)
-def get_client(client_id: int, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def get_client(client_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("clients", "read"))):
     client = db.query(Client).filter(Client.id == client_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
@@ -45,7 +54,11 @@ def get_client(client_id: int, db: Session = Depends(get_db), admin: dict = Depe
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_client(payload: Dict, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def create_client(
+    payload: Dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("clients", "create"))
+):
     if not payload.get("name"):
         raise HTTPException(status_code=400, detail="Missing name")
     client = Client(
@@ -63,7 +76,12 @@ def create_client(payload: Dict, db: Session = Depends(get_db), admin: dict = De
 
 
 @router.put("/{client_id}")
-def update_client(client_id: int, payload: Dict, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def update_client(
+    client_id: int,
+    payload: Dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("clients", "update"))
+):
     client = db.query(Client).filter(Client.id == client_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
@@ -76,7 +94,11 @@ def update_client(client_id: int, payload: Dict, db: Session = Depends(get_db), 
 
 
 @router.delete("/{client_id}")
-def delete_client(client_id: int, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def delete_client(
+    client_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("clients", "delete"))
+):
     client = db.query(Client).filter(Client.id == client_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
@@ -86,6 +108,6 @@ def delete_client(client_id: int, db: Session = Depends(get_db), admin: dict = D
 
 
 @router.get("/{client_id}/devices", response_model=List[Dict])
-def list_client_devices(client_id: int, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def list_client_devices(client_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("clients", "read"))):
     devices = db.query(Device).filter(Device.client_id == client_id).all()
     return [{"id": d.id, "model": d.model, "serial_number": d.serial_number} for d in devices]

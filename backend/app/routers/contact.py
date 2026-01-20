@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_admin
+from app.core.dependencies import get_current_admin, require_permission
 from app.models.contact_message import ContactMessage
 from app.schemas.contact import ContactCreate, ContactMessageOut
 from app.services.event_system import event_bus, Events
@@ -48,7 +48,7 @@ def send_contact(
 @router.get("/messages", response_model=List[ContactMessageOut])
 def list_messages(
     db: Session = Depends(get_db),
-    admin: dict = Depends(get_current_admin),
+    user: dict = Depends(require_permission("contact_messages", "read")),
 ):
     messages = db.query(ContactMessage).order_by(ContactMessage.created_at.desc()).all()
     return messages
@@ -58,7 +58,7 @@ def list_messages(
 def get_message(
     message_id: int,
     db: Session = Depends(get_db),
-    admin: dict = Depends(get_current_admin),
+    user: dict = Depends(require_permission("contact_messages", "read")),
 ):
     message = db.query(ContactMessage).filter(ContactMessage.id == message_id).first()
     if not message:

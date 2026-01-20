@@ -1,10 +1,16 @@
+"""
+Router de Reparaciones
+======================
+Endpoints para gestión de reparaciones.
+Usa permisos granulares (require_permission).
+"""
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.models.repair import Repair, RepairStatus
 from app.models.audit import AuditLog
 from typing import Dict
 from app.core.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_permission
 from app.services.logging_service import create_audit
 from app.services.repair_service import RepairService
 from app.models.repair_note import RepairNote
@@ -19,12 +25,19 @@ router = APIRouter(prefix="/repairs", tags=["repairs"])
 
 
 @router.get("/")
-def list_repairs(db: Session = Depends(get_db)):
+def list_repairs(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read"))
+):
     return db.query(Repair).all()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_repair(repair: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def create_repair(
+    repair: Dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "create"))
+):
     def _ensure_default_device_type():
         dt = db.query(DeviceType).first()
         if not dt:
@@ -114,7 +127,12 @@ def create_repair(repair: Dict, db: Session = Depends(get_db), user: dict = Depe
 
 
 @router.put("/{repair_id}")
-def update_repair(repair_id: int, repair: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def update_repair(
+    repair_id: int,
+    repair: Dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "update"))
+):
     db_repair = db.query(Repair).get(repair_id)
     if not db_repair:
         raise HTTPException(status_code=404, detail="Repair not found")
@@ -157,7 +175,11 @@ def update_repair(repair_id: int, repair: Dict, db: Session = Depends(get_db), u
 
 
 @router.delete("/{repair_id}")
-def delete_repair(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def delete_repair(
+    repair_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "delete"))
+):
     db_repair = db.query(Repair).get(repair_id)
     if not db_repair:
         raise HTTPException(status_code=404, detail="Repair not found")
@@ -177,7 +199,7 @@ def delete_repair(repair_id: int, db: Session = Depends(get_db), user: dict = De
 
 
 @router.get("/{repair_id}/audit")
-def get_repair_audit(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def get_repair_audit(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     logs = (
         db.query(AuditLog)
         .filter(AuditLog.event_type.like("repair.%"))
@@ -199,7 +221,7 @@ def get_repair_audit(repair_id: int, db: Session = Depends(get_db), user: dict =
 
 
 @router.post("/{repair_id}/components", status_code=status.HTTP_201_CREATED)
-def add_component_usage(repair_id: int, payload: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def add_component_usage(repair_id: int, payload: Dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "update"))):
     """Registrar uso de un componente en una reparación y descontar stock"""
     required = ("component_table", "component_id", "quantity")
     for k in required:
@@ -224,13 +246,13 @@ def add_component_usage(repair_id: int, payload: Dict, db: Session = Depends(get
 
 
 @router.get("/{repair_id}/components")
-def list_component_usages(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def list_component_usages(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     svc = RepairService(db)
     return svc.get_component_usages(repair_id)
 
 
 @router.delete("/{repair_id}/components/{usage_id}", status_code=status.HTTP_200_OK)
-def remove_component_usage(repair_id: int, usage_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def remove_component_usage(repair_id: int, usage_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "update"))):
     """Eliminar uso de componente y devolver stock al inventario"""
     svc = RepairService(db)
     try:
@@ -244,7 +266,7 @@ def remove_component_usage(repair_id: int, usage_id: int, db: Session = Depends(
 
 
 @router.post("/{repair_id}/notes", status_code=status.HTTP_201_CREATED)
-def add_repair_note(repair_id: int, payload: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def add_repair_note(repair_id: int, payload: Dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "update"))):
     """Agregar nota técnica o interna a una reparación"""
     note_text = payload.get("note")
     if not note_text:
@@ -263,7 +285,7 @@ def add_repair_note(repair_id: int, payload: Dict, db: Session = Depends(get_db)
 
 
 @router.get("/{repair_id}/notes")
-def list_repair_notes(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def list_repair_notes(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     notes = (
         db.query(RepairNote)
         .filter(RepairNote.repair_id == repair_id)
@@ -274,7 +296,7 @@ def list_repair_notes(repair_id: int, db: Session = Depends(get_db), user: dict 
 
 
 @router.post("/{repair_id}/photos", status_code=status.HTTP_201_CREATED)
-def add_repair_photo(repair_id: int, payload: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def add_repair_photo(repair_id: int, payload: Dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "update"))):
     """Registrar URL de foto asociada a la reparación. For file uploads use `uploads` router."""
     photo_url = payload.get("photo_url")
     if not photo_url:
@@ -293,7 +315,7 @@ def add_repair_photo(repair_id: int, payload: Dict, db: Session = Depends(get_db
 
 
 @router.get("/{repair_id}/photos")
-def list_repair_photos(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def list_repair_photos(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     photos = (
         db.query(RepairPhoto)
         .filter(RepairPhoto.repair_id == repair_id)

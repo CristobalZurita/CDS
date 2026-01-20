@@ -3,6 +3,7 @@ Router de Facturas
 ==================
 Endpoints para gestión de facturas.
 ADITIVO: Nuevo router, no modifica existentes.
+Usa permisos granulares (require_permission).
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
@@ -10,7 +11,11 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user, get_current_admin
+from app.core.dependencies import (
+    get_current_user,
+    get_current_admin,
+    require_permission
+)
 from app.services.invoice_service import InvoiceService
 from app.models.invoice import Invoice, InvoiceItem, InvoiceStatus, InvoiceType
 
@@ -25,7 +30,7 @@ router = APIRouter(prefix="/invoices", tags=["Invoices"])
 def create_invoice(
     payload: Dict[str, Any],
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "create"))
 ):
     """
     Crear nueva factura.
@@ -63,7 +68,7 @@ def create_invoice_from_repair(
     include_labor: bool = True,
     include_parts: bool = True,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "create"))
 ):
     """Crear factura automáticamente desde una reparación"""
     svc = InvoiceService(db)
@@ -88,7 +93,7 @@ def list_invoices(
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "read"))
 ):
     """
     Listar facturas con filtros.
@@ -124,7 +129,7 @@ def get_invoices_summary(
     from_date: Optional[str] = None,
     to_date: Optional[str] = None,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("invoices", "read"))
 ):
     """Obtener resumen de facturación (solo admin)"""
     svc = InvoiceService(db)
@@ -138,7 +143,7 @@ def get_invoices_summary(
 @router.get("/overdue")
 def get_overdue_invoices(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "read"))
 ):
     """Obtener facturas vencidas"""
     svc = InvoiceService(db)
@@ -149,7 +154,7 @@ def get_overdue_invoices(
 def get_invoice(
     invoice_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "read"))
 ):
     """Obtener detalle de factura"""
     svc = InvoiceService(db)
@@ -160,7 +165,7 @@ def get_invoice(
 def get_invoice_by_number(
     invoice_number: str,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "read"))
 ):
     """Obtener factura por número"""
     svc = InvoiceService(db)
@@ -179,7 +184,7 @@ def add_invoice_item(
     invoice_id: int,
     payload: Dict[str, Any],
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "update"))
 ):
     """
     Agregar item a factura.
@@ -212,7 +217,7 @@ def remove_invoice_item(
     invoice_id: int,
     item_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "update"))
 ):
     """Eliminar item de factura"""
     svc = InvoiceService(db)
@@ -228,7 +233,7 @@ def remove_invoice_item(
 def send_invoice(
     invoice_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "update"))
 ):
     """Marcar factura como enviada"""
     svc = InvoiceService(db)
@@ -242,7 +247,7 @@ def send_invoice(
 def mark_invoice_viewed(
     invoice_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("invoices", "update"))
 ):
     """Marcar factura como vista por cliente"""
     svc = InvoiceService(db)
@@ -255,9 +260,9 @@ def void_invoice(
     invoice_id: int,
     payload: Dict[str, Any],
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("invoices", "void"))
 ):
-    """Anular factura (solo admin)"""
+    """Anular factura (requiere permiso invoices:void)"""
     svc = InvoiceService(db)
     user_id = int(user.get("user_id")) if user and user.get("user_id") else None
 
@@ -279,7 +284,7 @@ def record_payment(
     invoice_id: int,
     payload: Dict[str, Any],
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("payments", "create"))
 ):
     """
     Registrar pago para factura.
@@ -313,7 +318,7 @@ def record_payment(
 @router.post("/maintenance/mark-overdue")
 def mark_overdue_invoices(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_admin)
+    user: dict = Depends(require_permission("invoices", "update"))
 ):
     """Marcar facturas vencidas (job de mantenimiento)"""
     svc = InvoiceService(db)

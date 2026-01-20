@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Dict
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_admin
+from app.core.dependencies import get_current_admin, require_permission
 from app.models.device import Device
 from app.models.device_lookup import DeviceType, DeviceBrand
 from app.models.client import Client
@@ -22,13 +22,13 @@ def _ensure_default_type(db: Session) -> DeviceType:
 
 
 @router.get("/", response_model=List[Dict])
-def list_devices(db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def list_devices(db: Session = Depends(get_db), user: dict = Depends(require_permission("devices", "read"))):
     devices = db.query(Device).all()
     return [{"id": d.id, "client_id": d.client_id, "model": d.model, "serial_number": d.serial_number} for d in devices]
 
 
 @router.get("/{device_id}", response_model=Dict)
-def get_device(device_id: int, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def get_device(device_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("devices", "read"))):
     device = db.query(Device).filter(Device.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
@@ -44,7 +44,7 @@ def get_device(device_id: int, db: Session = Depends(get_db), admin: dict = Depe
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_device(payload: Dict, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def create_device(payload: Dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("devices", "create"))):
     client_id = payload.get("client_id")
     if not client_id:
         raise HTTPException(status_code=400, detail="client_id required")
@@ -73,7 +73,7 @@ def create_device(payload: Dict, db: Session = Depends(get_db), admin: dict = De
 
 
 @router.put("/{device_id}")
-def update_device(device_id: int, payload: Dict, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def update_device(device_id: int, payload: Dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("devices", "update"))):
     device = db.query(Device).filter(Device.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
@@ -86,7 +86,7 @@ def update_device(device_id: int, payload: Dict, db: Session = Depends(get_db), 
 
 
 @router.delete("/{device_id}")
-def delete_device(device_id: int, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
+def delete_device(device_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("devices", "delete"))):
     device = db.query(Device).filter(Device.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
