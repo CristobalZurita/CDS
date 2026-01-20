@@ -1,14 +1,20 @@
+"""
+Alembic Environment Configuration
+=================================
+Configuración para migraciones de base de datos.
+"""
 from logging.config import fileConfig
-import sys
-from pathlib import Path
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
 
-# Add parent directory to path so we can import app modules
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import os
+import sys
+
+# Añadir el directorio padre al path para importar app
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -19,14 +25,10 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Import Base and all models for autogenerate support
+# add your model's MetaData object here
+# for 'autogenerate' support
 from app.core.database import Base
-from app.models import (
-    User, UserRole, Instrument, Category, Product, Brand,
-    Repair, Payment, Diagnostic, AuditLog, Quote, Client, Device,
-    Stock, StockMovement, StorageLocation, Tool, Appointment,
-    DeviceBrand, DeviceType
-)
+from app.models import *  # Import all models
 
 target_metadata = Base.metadata
 
@@ -34,6 +36,11 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+
+def get_url():
+    """Get database URL from environment or config"""
+    return os.getenv("DATABASE_URL", config.get_main_option("sqlalchemy.url"))
 
 
 def run_migrations_offline() -> None:
@@ -48,13 +55,14 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = get_url()
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        render_as_batch=True,  # Required for SQLite ALTER TABLE support
+        compare_type=True,
+        compare_server_default=True,
     )
 
     with context.begin_transaction():
@@ -68,8 +76,11 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+    configuration = config.get_section(config.config_ini_section)
+    configuration["sqlalchemy.url"] = get_url()
+
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
@@ -78,7 +89,8 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-            render_as_batch=True,  # Required for SQLite ALTER TABLE support
+            compare_type=True,
+            compare_server_default=True,
         )
 
         with context.begin_transaction():

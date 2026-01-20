@@ -21,6 +21,9 @@ try:
 	from app.routers import newsletter as newsletter_router
 	from app.routers import tools as tools_router
 	from app.routers import inventory as inventory_products_router
+	from app.routers import invoice as invoice_router
+	from app.routers import warranty as warranty_router
+	from app.routers import analytics as analytics_router
 except Exception:
 	# Si los módulos no existen en este entorno, se ignoran
 	user_router = repair_router = instrument_router = category_router = stock_movement_router = contact_router = None
@@ -32,6 +35,9 @@ except Exception:
 	newsletter_router = None
 	tools_router = None
 	inventory_products_router = None
+	invoice_router = None
+	warranty_router = None
+	analytics_router = None
 
 # If any router failed to import previously (e.g., due to transient import errors),
 # attempt a second import pass so that fixes applied at runtime are picked up.
@@ -107,3 +113,9 @@ if globals().get("tools_router"):
 	api_router.include_router(globals()["tools_router"].router)
 if globals().get("inventory_products_router"):
 	api_router.include_router(globals()["inventory_products_router"].router)
+if globals().get("invoice_router"):
+	api_router.include_router(globals()["invoice_router"].router)
+if globals().get("warranty_router"):
+	api_router.include_router(globals()["warranty_router"].router)
+if globals().get("analytics_router"):
+	api_router.include_router(globals()["analytics_router"].router)
