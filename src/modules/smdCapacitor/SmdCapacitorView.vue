@@ -2,7 +2,7 @@
   <PageSection variant="default" id="smd-capacitor-calculator">
     <PageSectionHeader
       title="*Conversión* de Capacitancia"
-      subtitle="pF, nF, µF y F + códigos SMD"
+      subtitle="Cerámicos y poliester: lectura por código"
     />
 
     <PageSectionContent>
@@ -83,31 +83,41 @@
           <div class="panel-header">
             <div class="panel-title">
               <i class="fa-solid fa-hashtag"></i>
-              Código SMD
+              Código cerámico / poliester
             </div>
           </div>
 
-          <form class="panel-form" @submit.prevent="onCalculate">
+          <form class="panel-form" @submit.prevent="onDecode">
             <div class="form-grid">
               <div class="form-field">
-                <label>Código</label>
-                <input v-model.trim="smdInput.code" type="text" placeholder="Ej: 104, 472" />
+                <label>Código (3 dígitos)</label>
+                <input v-model.trim="code.value" type="text" placeholder="Ej: 104, 472" />
               </div>
               <div class="form-field">
-                <label>Tipo</label>
-                <select v-model="smdInput.type">
-                  <option value="EIA3">EIA-3</option>
-                  <option value="EIA4">EIA-4</option>
-                  <option value="EIA198">EIA-198</option>
+                <label>Tolerancia</label>
+                <select v-model="code.tolerance">
+                  <option value="">--</option>
+                  <option v-for="t in toleranceOptions" :key="t.code" :value="t.code">
+                    {{ t.code }} ({{ t.label }})
+                  </option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Tensión (código)</label>
+                <select v-model="code.voltage">
+                  <option value="">--</option>
+                  <option v-for="v in voltageOptions" :key="v.code" :value="v.code">
+                    {{ v.code }} ({{ v.voltage }}V)
+                  </option>
                 </select>
               </div>
             </div>
 
             <div class="form-actions">
               <button type="submit" class="btn-primary-action">
-                Calcular
+                Decodificar
               </button>
-              <button type="button" class="btn-secondary-action" @click="resetSmd">
+              <button type="button" class="btn-secondary-action" @click="resetCode">
                 Limpiar
               </button>
             </div>
@@ -117,21 +127,40 @@
             <div class="output-values">
               <div class="value-row">
                 <span>pF</span>
-                <strong>{{ smdValuePf }}</strong>
+                <strong>{{ codeValuePf }}</strong>
               </div>
               <div class="value-row">
                 <span>nF</span>
-                <strong>{{ smdValueNf }}</strong>
+                <strong>{{ codeValueNf }}</strong>
               </div>
               <div class="value-row">
                 <span>µF</span>
-                <strong>{{ smdValueUf }}</strong>
+                <strong>{{ codeValueUf }}</strong>
+              </div>
+              <div class="value-row">
+                <span>Tolerancia</span>
+                <strong>{{ codeToleranceLabel }}</strong>
+              </div>
+              <div class="value-row">
+                <span>Tensión</span>
+                <strong>{{ codeVoltageLabel }}</strong>
               </div>
             </div>
             <div class="output-hint">
-              Si no hay multiplicador, el valor corresponde a pF.
+              El código se interpreta en pF: dos dígitos + cantidad de ceros.
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="cap-visuals">
+        <div class="cap-visual-card">
+          <img src="/images/calculadoras/CAP_E.svg" alt="Capacitor electrolítico" />
+          <p>Electrolítico</p>
+        </div>
+        <div class="cap-visual-card">
+          <img src="/images/calculadoras/CAP_C.jpg" alt="Capacitor cerámico" />
+          <p>Cerámico</p>
         </div>
       </div>
 
@@ -214,10 +243,6 @@ import Footer from '/src/vue/components/footer/Footer.vue'
 import FooterBlock from '/src/vue/components/footer/FooterBlock.vue'
 import FooterColumn from '/src/vue/components/footer/FooterColumn.vue'
 import FooterCopyright from '/src/vue/components/footer/FooterCopyright.vue'
-import { useCalculator } from '@/composables/useCalculator'
-import { SmdCapacitorInput, SmdCapacitorOutput } from '@/domain/smdCapacitor/contract'
-import { calculateSmdCapacitor } from '@/domain/smdCapacitor/model'
-import { createValidationResult } from '@/validation'
 
 const conversion = reactive({
   pf: null as number | null,
@@ -262,43 +287,91 @@ const resetConversion = () => {
   conversion.f = null
 }
 
-const smdInput = reactive<SmdCapacitorInput>({
-  code: '',
-  type: 'EIA3'
+const toleranceOptions = [
+  { code: 'B', label: '±0.10 pF' },
+  { code: 'C', label: '±0.25 pF' },
+  { code: 'D', label: '±0.5 pF' },
+  { code: 'E', label: '±0.5%' },
+  { code: 'F', label: '±1%' },
+  { code: 'G', label: '±2%' },
+  { code: 'H', label: '±3%' },
+  { code: 'J', label: '±5%' },
+  { code: 'K', label: '±10%' },
+  { code: 'M', label: '±20%' },
+  { code: 'N', label: '±30%' },
+  { code: 'P', label: '+100% -0%' },
+  { code: 'Z', label: '+80% -20%' }
+]
+
+const voltageOptions = [
+  { code: '0G', voltage: 4 },
+  { code: '0L', voltage: 5.5 },
+  { code: '0J', voltage: 6.3 },
+  { code: '1A', voltage: 10 },
+  { code: '1C', voltage: 16 },
+  { code: '1E', voltage: 25 },
+  { code: '1H', voltage: 50 },
+  { code: '1J', voltage: 63 },
+  { code: '1K', voltage: 80 },
+  { code: '2A', voltage: 100 },
+  { code: '2Q', voltage: 110 },
+  { code: '2B', voltage: 125 },
+  { code: '2C', voltage: 160 },
+  { code: '2Z', voltage: 180 },
+  { code: '2D', voltage: 200 },
+  { code: '2P', voltage: 220 },
+  { code: '2E', voltage: 250 },
+  { code: '2F', voltage: 315 },
+  { code: '2V', voltage: 350 },
+  { code: '2G', voltage: 400 },
+  { code: '2W', voltage: 450 },
+  { code: '2H', voltage: 500 },
+  { code: '2J', voltage: 630 },
+  { code: '3A', voltage: 1000 }
+]
+
+const code = reactive({
+  value: '',
+  tolerance: '',
+  voltage: ''
 })
 
-const { result, calculate } = useCalculator(
-  () => createValidationResult(),
-  calculateSmdCapacitor
+const decodedPf = computed(() => {
+  const text = code.value.trim()
+  if (!/^\d{3}$/.test(text)) return NaN
+  const sig = Number(text.slice(0, 2))
+  const mult = Math.pow(10, Number(text[2]))
+  return sig * mult
+})
+
+const codeValuePf = computed(() => (Number.isFinite(decodedPf.value) ? `${decodedPf.value} pF` : '---'))
+const codeValueNf = computed(() =>
+  Number.isFinite(decodedPf.value) ? `${(decodedPf.value / 1_000).toFixed(3)} nF` : '---'
+)
+const codeValueUf = computed(() =>
+  Number.isFinite(decodedPf.value) ? `${(decodedPf.value / 1_000_000).toFixed(6)} µF` : '---'
 )
 
-const smdResultValue = computed(() =>
-  result.value?.state === 'OK' ? (result.value.value as SmdCapacitorOutput) : null
-)
-
-const smdValuePf = computed(() => {
-  if (!smdResultValue.value || !Number.isFinite(smdResultValue.value.value_pf)) return '---'
-  return `${smdResultValue.value.value_pf.toFixed(2)} pF`
+const codeToleranceLabel = computed(() => {
+  if (!code.tolerance) return '---'
+  const entry = toleranceOptions.find((t) => t.code === code.tolerance)
+  return entry ? entry.label : '---'
 })
 
-const smdValueNf = computed(() => {
-  if (!smdResultValue.value || !Number.isFinite(smdResultValue.value.value_nf)) return '---'
-  return `${smdResultValue.value.value_nf.toFixed(4)} nF`
+const codeVoltageLabel = computed(() => {
+  if (!code.voltage) return '---'
+  const entry = voltageOptions.find((v) => v.code === code.voltage)
+  return entry ? `${entry.voltage} V` : '---'
 })
 
-const smdValueUf = computed(() => {
-  if (!smdResultValue.value || !Number.isFinite(smdResultValue.value.value_uf)) return '---'
-  return `${smdResultValue.value.value_uf.toFixed(6)} µF`
-})
-
-function onCalculate() {
-  calculate(smdInput)
+function onDecode() {
+  return true
 }
 
-function resetSmd() {
-  smdInput.code = ''
-  smdInput.type = 'EIA3'
-  result.value = null
+function resetCode() {
+  code.value = ''
+  code.tolerance = ''
+  code.voltage = ''
 }
 </script>
 
@@ -478,6 +551,44 @@ function resetSmd() {
     display: flex;
     justify-content: center;
     margin-top: 2.5rem;
+  }
+
+  .cap-visuals {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.6rem;
+    margin-top: 2.6rem;
+
+    @include media-breakpoint-down(md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .cap-visual-card {
+    background: rgba($light-1, 0.8);
+    border: 1px solid rgba($dark, 0.1);
+    border-radius: 22px;
+    padding: 1.6rem;
+    display: grid;
+    place-items: center;
+    gap: 0.8rem;
+    box-shadow: 0 20px 40px rgba($dark, 0.08);
+  }
+
+  .cap-visual-card img {
+    max-width: 320px;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .cap-visual-card p {
+    margin: 0;
+    font-family: 'Cervo Neue', $headings-font-family;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: $dark;
   }
 
   .cap-back-link {
