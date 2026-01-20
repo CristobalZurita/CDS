@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.models.category import Category
 from app.core.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_permission
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
@@ -11,7 +11,7 @@ def list_categories(db: Session = Depends(get_db)):
     return db.query(Category).all()
 
 @router.post("/")
-def create_category(payload: dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def create_category(payload: dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("categories", "create"))):
     db_cat = Category(**payload)
     db.add(db_cat)
     db.commit()
@@ -19,7 +19,7 @@ def create_category(payload: dict, db: Session = Depends(get_db), user: dict = D
     return db_cat
 
 @router.put("/{category_id}")
-def update_category(category_id: int, payload: dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def update_category(category_id: int, payload: dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("categories", "update"))):
     db_cat = db.query(Category).get(category_id)
     if not db_cat:
         raise HTTPException(status_code=404, detail="Category not found")
@@ -30,7 +30,7 @@ def update_category(category_id: int, payload: dict, db: Session = Depends(get_d
     return db_cat
 
 @router.delete("/{category_id}")
-def delete_category(category_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def delete_category(category_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("categories", "delete"))):
     db_cat = db.query(Category).get(category_id)
     if not db_cat:
         raise HTTPException(status_code=404, detail="Category not found")

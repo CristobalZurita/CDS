@@ -1,7 +1,7 @@
 """Add Permission, Invoice, and Warranty models
 
 Revision ID: 001_aditivo
-Revises: None
+Revises: 78b5056b2086
 Create Date: 2026-01-20
 
 ADITIVO: Solo agrega tablas nuevas, no modifica existentes.
@@ -15,7 +15,7 @@ from datetime import datetime
 
 # revision identifiers, used by Alembic.
 revision: str = '001_aditivo'
-down_revision: Union[str, None] = None
+down_revision: Union[str, None] = '78b5056b2086'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

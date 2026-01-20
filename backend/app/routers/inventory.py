@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_permission
 from app.models.inventory import Product
 from app.models.stock import Stock
 from app.models.category import Category
@@ -22,7 +22,7 @@ def list_inventory(
     category_id: Optional[int] = None,
     low_stock_only: bool = False,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("inventory", "read"))
 ):
     """
     Lista productos con información de stock.
@@ -91,7 +91,7 @@ def list_inventory(
 def get_inventory_item(
     product_id: int,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("inventory", "read"))
 ):
     """Obtiene detalle de un producto específico con su stock"""
     product = db.query(Product).filter(Product.id == product_id).first()
@@ -126,7 +126,7 @@ def get_inventory_item(
 @router.get("/low-stock/alerts")
 def get_low_stock_alerts(
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: dict = Depends(require_permission("inventory", "read"))
 ):
     """Obtiene lista de productos con stock bajo para alertas"""
     products = db.query(Product).all()

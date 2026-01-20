@@ -166,6 +166,56 @@ DEFAULT_PERMISSIONS = [
     # Settings
     ("settings", "read", "Ver configuración"),
     ("settings", "update", "Actualizar configuración"),
+
+    # Diagnostics
+    ("diagnostics", "read", "Ver diagnósticos"),
+    ("diagnostics", "create", "Crear diagnósticos"),
+    ("diagnostics", "update", "Actualizar diagnósticos"),
+    ("diagnostics", "delete", "Eliminar diagnósticos"),
+
+    # Payments
+    ("payments", "read", "Ver pagos"),
+    ("payments", "create", "Registrar pagos"),
+
+    # Repair Statuses
+    ("repair_statuses", "read", "Ver estados de reparación"),
+    ("repair_statuses", "create", "Crear estados de reparación"),
+    ("repair_statuses", "update", "Actualizar estados de reparación"),
+    ("repair_statuses", "delete", "Eliminar estados de reparación"),
+
+    # Stock Movements
+    ("stock_movements", "read", "Ver movimientos de stock"),
+    ("stock_movements", "create", "Registrar movimientos de stock"),
+
+    # Instruments
+    ("instruments", "read", "Ver instrumentos"),
+    ("instruments", "create", "Crear instrumentos"),
+    ("instruments", "update", "Actualizar instrumentos"),
+    ("instruments", "delete", "Eliminar instrumentos"),
+
+    # Newsletter
+    ("newsletter", "read", "Ver suscripciones al newsletter"),
+
+    # Categories
+    ("categories", "read", "Ver categorías"),
+    ("categories", "create", "Crear categorías"),
+    ("categories", "update", "Actualizar categorías"),
+    ("categories", "delete", "Eliminar categorías"),
+
+    # Devices
+    ("devices", "read", "Ver dispositivos"),
+    ("devices", "create", "Crear dispositivos"),
+    ("devices", "update", "Actualizar dispositivos"),
+    ("devices", "delete", "Eliminar dispositivos"),
+
+    # Contact Messages
+    ("contact_messages", "read", "Ver mensajes de contacto"),
+
+    # Warranties
+    ("warranties", "read", "Ver garantías"),
+    ("warranties", "create", "Crear garantías"),
+    ("warranties", "void", "Anular garantías"),
+    ("warranties", "evaluate_claim", "Evaluar reclamos de garantía"),
 ]
 
 # Roles predefinidos con sus permisos

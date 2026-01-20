@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_admin
+from app.core.dependencies import get_current_admin, require_permission
 from app.models.newsletter_subscription import NewsletterSubscription
 from app.schemas.newsletter import NewsletterSubscribe, NewsletterSubscriptionOut
 
@@ -37,6 +37,6 @@ def subscribe(payload: NewsletterSubscribe, request: Request, db: Session = Depe
 @router.get("/subscriptions", response_model=List[NewsletterSubscriptionOut])
 def list_subscriptions(
     db: Session = Depends(get_db),
-    admin: dict = Depends(get_current_admin),
+    user: dict = Depends(require_permission("newsletter", "read")),
 ):
     return db.query(NewsletterSubscription).order_by(NewsletterSubscription.created_at.desc()).all()

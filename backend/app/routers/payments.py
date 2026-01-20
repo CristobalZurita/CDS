@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import Dict, List
 from pydantic import ValidationError
 from app.core.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_permission
 from sqlalchemy.orm import Session
 from app.models.payment import Payment, PaymentStatus
 from app.services.logging_service import create_audit
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/payments", tags=["payments"])
 
 
 @router.post("/", response_model=PaymentRead)
-def create_payment(payload: PaymentCreate, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def create_payment(payload: PaymentCreate, db: Session = Depends(get_db), user: dict = Depends(require_permission("payments", "create"))):
     # Pydantic validation already ensures basic correctness
     data = payload.dict()
 
@@ -71,7 +71,7 @@ def create_payment(payload: PaymentCreate, db: Session = Depends(get_db), user: 
 
 
 @router.get("/", response_model=List[PaymentRead])
-def list_payments(repair_id: int = None, user_id: int = None, db: Session = Depends(get_db)):
+def list_payments(repair_id: int = None, user_id: int = None, db: Session = Depends(get_db), user: dict = Depends(require_permission("payments", "read"))):
     q = db.query(Payment)
     if repair_id:
         q = q.filter(Payment.repair_id == repair_id)
@@ -86,7 +86,7 @@ def list_payments(repair_id: int = None, user_id: int = None, db: Session = Depe
 
 
 @router.get("/{payment_id}", response_model=PaymentRead)
-def get_payment(payment_id: int, db: Session = Depends(get_db)):
+def get_payment(payment_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("payments", "read"))):
     payment = db.query(Payment).filter(Payment.id == payment_id).one_or_none()
     if not payment:
         raise HTTPException(status_code=404, detail="Payment not found")

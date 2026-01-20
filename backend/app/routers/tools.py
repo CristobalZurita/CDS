@@ -1,6 +1,7 @@
 """
 Router Tools - CRUD para herramientas del taller
 FASE 1: Implementación aditiva, modelo Tool ya existe
+Usa permisos granulares (require_permission).
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -9,7 +10,7 @@ from datetime import date, datetime
 from pydantic import BaseModel
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_admin
+from app.core.dependencies import get_current_admin, require_permission
 from app.models.tool import Tool
 
 
@@ -92,9 +93,9 @@ def list_tools(
     status: Optional[str] = None,
     requires_calibration: Optional[bool] = None,
     db: Session = Depends(get_db),
-    admin: dict = Depends(get_current_admin),
+    user: dict = Depends(require_permission("tools", "read")),
 ):
-    """Listar todas las herramientas (Admin only)"""
+    """Listar todas las herramientas"""
     query = db.query(Tool).filter(Tool.is_active == 1)
 
     if status:
@@ -110,7 +111,7 @@ def list_tools(
 def get_tool(
     tool_id: int,
     db: Session = Depends(get_db),
-    admin: dict = Depends(get_current_admin),
+    user: dict = Depends(require_permission("tools", "read")),
 ):
     """Obtener una herramienta por ID (Admin only)"""
     tool = db.query(Tool).filter(Tool.id == tool_id).first()
@@ -126,9 +127,9 @@ def get_tool(
 def create_tool(
     tool: ToolCreate,
     db: Session = Depends(get_db),
-    admin: dict = Depends(get_current_admin),
+    user: dict = Depends(require_permission("tools", "create")),
 ):
-    """Crear una nueva herramienta (Admin only)"""
+    """Crear una nueva herramienta"""
     # Verificar código único si se proporciona
     if tool.code:
         existing = db.query(Tool).filter(Tool.code == tool.code).first()
@@ -150,9 +151,9 @@ def update_tool(
     tool_id: int,
     tool: ToolUpdate,
     db: Session = Depends(get_db),
-    admin: dict = Depends(get_current_admin),
+    user: dict = Depends(require_permission("tools", "update")),
 ):
-    """Actualizar una herramienta (Admin only)"""
+    """Actualizar una herramienta"""
     db_tool = db.query(Tool).filter(Tool.id == tool_id).first()
     if not db_tool:
         raise HTTPException(
@@ -186,7 +187,7 @@ def update_tool(
 def delete_tool(
     tool_id: int,
     db: Session = Depends(get_db),
-    admin: dict = Depends(get_current_admin),
+    user: dict = Depends(require_permission("tools", "update")),
 ):
     """Eliminar una herramienta (soft delete) (Admin only)"""
     db_tool = db.query(Tool).filter(Tool.id == tool_id).first()
@@ -208,9 +209,9 @@ def calibrate_tool(
     tool_id: int,
     calibration: CalibrationRecord,
     db: Session = Depends(get_db),
-    admin: dict = Depends(get_current_admin),
+    user: dict = Depends(require_permission("tools", "calibrate")),
 ):
-    """Registrar calibración de herramienta (Admin only)"""
+    """Registrar calibración de herramienta"""
     db_tool = db.query(Tool).filter(Tool.id == tool_id).first()
     if not db_tool:
         raise HTTPException(

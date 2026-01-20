@@ -9,6 +9,7 @@ from typing import List
 from datetime import datetime
 
 from app.core.database import get_db
+from app.core.dependencies import require_permission
 from app.crud.appointment import (
     create_appointment,
     get_appointment,
@@ -88,7 +89,8 @@ async def create_appointment_endpoint(
 @router.get("/{appointment_id}", response_model=AppointmentResponse)
 async def get_appointment_endpoint(
     appointment_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("appointments", "read"))
 ):
     """Get appointment by ID"""
     db_appointment = await get_appointment(db, appointment_id)
@@ -102,7 +104,8 @@ async def list_appointments(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     estado: str = Query(None),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("appointments", "read"))
 ):
     """
     List appointments with optional filtering.
@@ -118,7 +121,8 @@ async def list_appointments(
 @router.get("/email/{email}", response_model=List[AppointmentResponse])
 async def get_appointments_by_email_endpoint(
     email: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("appointments", "read"))
 ):
     """Get all appointments for a specific email"""
     appointments = await get_appointments_by_email(db, email)
@@ -129,7 +133,8 @@ async def get_appointments_by_email_endpoint(
 async def update_appointment_endpoint(
     appointment_id: int,
     appointment_update: AppointmentUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("appointments", "update"))
 ):
     """Update an appointment"""
     db_appointment = await update_appointment(db, appointment_id, appointment_update)
@@ -141,7 +146,8 @@ async def update_appointment_endpoint(
 @router.delete("/{appointment_id}", status_code=204)
 async def delete_appointment_endpoint(
     appointment_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("appointments", "delete"))
 ):
     """Delete an appointment"""
     success = await delete_appointment(db, appointment_id)
@@ -152,7 +158,8 @@ async def delete_appointment_endpoint(
 
 @router.get("/status/pending", response_model=List[AppointmentResponse])
 async def get_pending_appointments_endpoint(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("appointments", "read"))
 ):
     """Get all pending appointments"""
     appointments = await get_pending_appointments(db)
@@ -161,7 +168,8 @@ async def get_pending_appointments_endpoint(
 
 @router.get("/status/confirmed", response_model=List[AppointmentResponse])
 async def get_confirmed_appointments_endpoint(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("appointments", "read"))
 ):
     """Get all confirmed appointments"""
     appointments = await get_confirmed_appointments(db)

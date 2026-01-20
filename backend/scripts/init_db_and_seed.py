@@ -88,6 +88,28 @@ async def main():
             print(f"   Email: admin@example.com")
             print(f"   Password: admin12")
         
+        # === SEED PERMISOS Y ROLES (ADITIVO) ===
+        print("\n🔐 Inicializando permisos y roles...")
+        try:
+            from app.services.permission_service import PermissionService
+            perm_svc = PermissionService(db)
+            perm_svc.init_default_permissions()
+            perm_svc.init_default_roles()
+
+            permissions = perm_svc.list_permissions()
+            roles = perm_svc.list_roles()
+            print(f"   ✅ {len(permissions)} permisos, {len(roles)} roles creados")
+
+            # Asignar rol super_admin al usuario admin si existe
+            if existing_admin or 'admin_user' in dir():
+                admin = existing_admin or admin_user
+                super_admin_role = perm_svc.get_role_by_name("super_admin")
+                if super_admin_role:
+                    perm_svc.assign_role_to_user(admin.id, super_admin_role.id)
+                    print(f"   ✅ Rol super_admin asignado a admin (ID: {admin.id})")
+        except Exception as perm_error:
+            print(f"   ⚠️  Permisos no inicializados: {perm_error}")
+
         print("\n✅ Base de datos lista para usar")
         print("\n📝 Para testear login:")
         print("   curl -X POST http://127.0.0.1:8000/api/v1/auth/login \\")
@@ -97,7 +119,7 @@ async def main():
         print("   curl -X POST http://127.0.0.1:8000/api/v1/auth/login \\")
         print("     -H 'Content-Type: application/json' \\")
         print("     -d '{\"email\":\"admin@example.com\",\"password\":\"admin12\"}'")
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
         import traceback

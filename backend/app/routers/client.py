@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Dict, List
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_permission
 from app.models.user import User
 from app.models.client import Client
 from app.models.device import Device
@@ -101,7 +101,7 @@ def _timeline_from_repair(repair: Repair) -> List[Dict]:
 
 
 @router.get("/dashboard")
-def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
     if not user_obj:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -170,7 +170,7 @@ def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(get_curren
 
 
 @router.get("/repairs")
-def list_client_repairs(db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def list_client_repairs(db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
     if not user_obj:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -203,7 +203,7 @@ def list_client_repairs(db: Session = Depends(get_db), user: dict = Depends(get_
 
 
 @router.get("/repairs/{repair_id}/timeline")
-def get_repair_timeline(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def get_repair_timeline(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
     if not user_obj:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -227,7 +227,7 @@ def get_repair_timeline(repair_id: int, db: Session = Depends(get_db), user: dic
 
 
 @router.get("/repairs/{repair_id}/details")
-def get_repair_details(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def get_repair_details(repair_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
     if not user_obj:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -290,7 +290,7 @@ def get_repair_details(repair_id: int, db: Session = Depends(get_db), user: dict
 
 
 @router.get("/profile")
-def get_profile(db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def get_profile(db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
     if not user_obj:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -310,7 +310,7 @@ def get_profile(db: Session = Depends(get_db), user: dict = Depends(get_current_
 
 
 @router.put("/profile")
-def update_profile(payload: Dict, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
+def update_profile(payload: Dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("repairs", "read"))):
     user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
     if not user_obj:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")

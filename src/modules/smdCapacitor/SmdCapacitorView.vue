@@ -404,7 +404,7 @@ function resetCode() {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 10rem;
+    gap: 1rem;
     margin-bottom: 1.5rem;
   }
 
