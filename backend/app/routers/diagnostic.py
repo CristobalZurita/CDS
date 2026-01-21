@@ -13,7 +13,10 @@ from app.core.config import get_settings, Settings
 from app.core.database import get_db
 from app.core.dependencies import get_current_user, require_permission
 from app.models.diagnostic import Diagnostic
+from app.models.quote import Quote
+from app.models.client import Client
 from app.services.logging_service import create_audit
+from datetime import datetime, timedelta
 
 router = APIRouter(prefix="/diagnostic", tags=["diagnostic"])
 
@@ -368,20 +371,148 @@ async def delete_diagnostic(diagnostic_id: int, db: Session = Depends(get_db), u
     return {"message": "Diagnostic deleted successfully", "id": diagnostic_id}
 
 
-@router.post("/quotes")
-async def create_quote(quote: dict):
-    """
-    Create a new quote from diagnostic data
+def _generate_quote_number(db: Session) -> str:
+    """Generate unique quote number"""
+    year = datetime.utcnow().strftime("%Y")
+    last_quote = db.query(Quote).filter(
+        Quote.quote_number.like(f"COT-{year}-%")
+    ).order_by(Quote.id.desc()).first()
 
-    TODO: Implement database storage and email sending
+    if last_quote:
+        try:
+            last_num = int(last_quote.quote_number.split("-")[-1])
+            next_num = last_num + 1
+        except (ValueError, IndexError):
+            next_num = 1
+    else:
+        next_num = 1
+
+    return f"COT-{year}-{next_num:04d}"
+
+
+@router.post("/quotes")
+async def create_quote(
+    quote_data: dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("diagnostics", "create"))
+):
     """
-    # TODO: Save to database
-    # TODO: Send confirmation email
-    raise HTTPException(status_code=501, detail="Quote creation not yet implemented")
+    Create a new quote from diagnostic data.
+
+    Body:
+    - client_name: Nombre del cliente (requerido)
+    - client_email: Email del cliente (requerido)
+    - client_phone: Teléfono (opcional)
+    - problem_description: Descripción del problema (requerido)
+    - estimated_total: Total estimado (requerido)
+    - estimated_parts_cost: Costo de partes (opcional)
+    - estimated_labor_cost: Costo de mano de obra (opcional)
+    - diagnosis: Diagnóstico (opcional)
+    """
+    # Validar campos requeridos
+    required_fields = ["client_name", "client_email", "problem_description", "estimated_total"]
+    for field in required_fields:
+        if field not in quote_data or not quote_data[field]:
+            raise HTTPException(status_code=400, detail=f"Campo requerido: {field}")
+
+    # Buscar o crear cliente
+    client = db.query(Client).filter(Client.email == quote_data["client_email"]).first()
+    if not client:
+        client = Client(
+            name=quote_data["client_name"],
+            email=quote_data["client_email"],
+            phone=quote_data.get("client_phone")
+        )
+        db.add(client)
+        db.commit()
+        db.refresh(client)
+
+    # Crear cotización
+    quote_number = _generate_quote_number(db)
+    user_id = int(user.get("user_id")) if user and user.get("user_id") else None
+
+    new_quote = Quote(
+        quote_number=quote_number,
+        client_id=client.id,
+        problem_description=quote_data["problem_description"],
+        diagnosis=quote_data.get("diagnosis"),
+        estimated_parts_cost=quote_data.get("estimated_parts_cost", 0),
+        estimated_labor_cost=quote_data.get("estimated_labor_cost", 0),
+        estimated_total=quote_data["estimated_total"],
+        status="pending",
+        valid_until=datetime.utcnow().date() + timedelta(days=30),
+        created_by=user_id
+    )
+
+    db.add(new_quote)
+    db.commit()
+    db.refresh(new_quote)
+
+    # Audit
+    try:
+        create_audit(
+            event_type="quote.created",
+            user_id=user_id,
+            details={
+                "quote_id": new_quote.id,
+                "quote_number": quote_number,
+                "client_id": client.id,
+                "estimated_total": new_quote.estimated_total
+            },
+            message=f"Quote {quote_number} created"
+        )
+    except Exception:
+        pass
+
+    return {
+        "id": new_quote.id,
+        "quote_number": new_quote.quote_number,
+        "client_id": new_quote.client_id,
+        "client_name": client.name,
+        "client_email": client.email,
+        "problem_description": new_quote.problem_description,
+        "diagnosis": new_quote.diagnosis,
+        "estimated_parts_cost": new_quote.estimated_parts_cost,
+        "estimated_labor_cost": new_quote.estimated_labor_cost,
+        "estimated_total": new_quote.estimated_total,
+        "status": new_quote.status,
+        "valid_until": new_quote.valid_until.isoformat() if new_quote.valid_until else None,
+        "created_at": new_quote.created_at.isoformat() if new_quote.created_at else None
+    }
 
 
 @router.get("/quotes/{quote_id}")
-async def get_quote(quote_id: int):
+async def get_quote(
+    quote_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("diagnostics", "read"))
+):
     """Get a specific quote by ID"""
-    # TODO: Fetch from database
-    raise HTTPException(status_code=501, detail="Quote retrieval not yet implemented")
+    quote = db.query(Quote).filter(Quote.id == quote_id).first()
+
+    if not quote:
+        raise HTTPException(status_code=404, detail="Quote not found")
+
+    client = db.query(Client).filter(Client.id == quote.client_id).first()
+
+    return {
+        "id": quote.id,
+        "quote_number": quote.quote_number,
+        "client_id": quote.client_id,
+        "client_name": client.name if client else None,
+        "client_email": client.email if client else None,
+        "device_id": quote.device_id,
+        "problem_description": quote.problem_description,
+        "photos_received": quote.photos_received,
+        "diagnosis": quote.diagnosis,
+        "estimated_hours": quote.estimated_hours,
+        "estimated_parts_cost": quote.estimated_parts_cost,
+        "estimated_labor_cost": quote.estimated_labor_cost,
+        "estimated_total": quote.estimated_total,
+        "status": quote.status,
+        "valid_until": quote.valid_until.isoformat() if quote.valid_until else None,
+        "client_response": quote.client_response,
+        "responded_at": quote.responded_at.isoformat() if quote.responded_at else None,
+        "created_at": quote.created_at.isoformat() if quote.created_at else None,
+        "updated_at": quote.updated_at.isoformat() if quote.updated_at else None
+    }
