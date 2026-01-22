@@ -109,7 +109,7 @@ watch(
 		if (!it) {
 			// fetch item detail from API
 			try {
-				const res = await api.get(`/items/${val}`)
+				const res = await api.get(`/inventory/${val}`)
 				if (res?.data) it = res.data
 			} catch (e) {
 				console.error('Failed to fetch item detail', e)

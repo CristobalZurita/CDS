@@ -8,6 +8,7 @@ import os
 import json
 from datetime import datetime
 import pandas as pd
+import re
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 EXCEL = os.path.join(REPO_ROOT, 'Inventario_Cirujanosintetizadores.xlsx')
@@ -36,15 +37,80 @@ def normalize_row(idx, row):
         source_row = int(row.get('N°')) if row.get('N°') not in (None, '') and not pd.isna(row.get('N°')) else idx
     except Exception:
         source_row = idx
+    sku = build_sku(name, category)
     normalized = {
         'source_row': source_row,
-        'sku': str(row.get('N°') or idx),
+        'sku': sku,
         'name': name or f'row-{idx}',
         'category': category or 'unknown',
         'raw': {c: (None if pd.isna(row[c]) else str(row[c]).strip()) for c in row.index},
         'normalized_at': datetime.utcnow().isoformat() + 'Z'
     }
     return normalized
+
+
+def build_sku(name, category):
+    if not name:
+        return None
+    cat = (category or '').strip().lower()
+    code = normalize_code(name)
+    prefix = {
+        "resistencias": "RES",
+        "capacitores ceramicos": "CAP-C",
+        "capacitores electrolíticos": "CAP-E",
+        "capacitores electroliticos": "CAP-E",
+        "transistores": "Q",
+        "ic's": "IC",
+        "diodos": "DIO",
+        "diodo led": "LED",
+        "otros": "OTH",
+        "herramientas taller": "TOOL",
+        "insumos taller": "INS"
+    }.get(cat, "OTH")
+    if not code:
+        code = slugify(name)
+    return f"{prefix}-{code}"
+
+
+def normalize_code(value):
+    if value is None:
+        return None
+    raw = str(value).strip().upper()
+    if not raw:
+        return None
+    raw = raw.replace("Ω", "").replace("OHM", "").replace("OHMS", "").replace(" ", "")
+    raw = raw.replace(",", ".")
+
+    # Keep common part numbers intact
+    if re.match(r"^[A-Z]{1,4}[0-9A-Z]+$", raw):
+        return raw
+
+    # Capacitor numeric codes (104/105/106...)
+    digits = re.sub(r"[^0-9]", "", raw)
+    if digits:
+        return digits
+
+    # Try to parse resistance values
+    try:
+        num = float(raw)
+        if num >= 1_000_000:
+            return f"{int(num/1_000_000)}M"
+        if num >= 1000:
+            k = num / 1000
+            if k.is_integer():
+                return f"{int(k)}K"
+            k_str = f"{k:.1f}".rstrip("0").rstrip(".")
+            return k_str.replace(".", "K")
+        if num >= 10:
+            return f"{int(num)}R"
+        r_str = f"{num:.1f}".rstrip("0").rstrip(".")
+        return r_str.replace(".", "R")
+    except Exception:
+        return slugify(raw)
+
+
+def slugify(text):
+    return re.sub(r"[^A-Z0-9\\-]+", "", str(text).upper().replace(" ", "-"))
 
 
 def main():

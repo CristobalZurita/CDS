@@ -25,13 +25,13 @@
                         <span>Agenda tu hora</span>
                     </button>
                     <Link url="/cotizador-ia">
-                        <a class="btn-hero btn-hero-primary">
+                        <a class="btn-hero btn-hero-primary" @click="handleQuoteClick">
                             <i class="fa-solid fa-file-circle-check"></i>
                             <span>Cotiza tu instrumento</span>
                         </a>
                     </Link>
                     <Link v-if="!isAuthenticated" url="/login">
-                        <a class="btn-hero btn-hero-outline">
+                        <a class="btn-hero btn-hero-outline" @click="handleLoginClick">
                             <i class="fa-solid fa-right-to-bracket"></i>
                             <span>Iniciar sesión</span>
                         </a>
@@ -65,6 +65,9 @@ import Link from "/src/vue/components/generic/Link.vue"
 import XLButton from "/src/vue/components/widgets/XLButton.vue"
 import AppointmentModal from "/src/vue/components/modals/AppointmentModal.vue"
 import { useAuthStore } from '@/stores/auth'
+import { api } from '@/services/api'
+import { track } from '@/analytics'
+import { AnalyticsEvents } from '@/analytics/events'
 
 const utils = useUtils()
 const showAppointmentModal = ref(false)
@@ -93,22 +96,25 @@ const parsedSubtitle = computed(() => {
 
 const openAppointmentModal = () => {
     showAppointmentModal.value = true
+    track(AnalyticsEvents.HERO_CTA_APPOINTMENT, null, { page: window.location.pathname })
+}
+
+const handleQuoteClick = () => {
+    track(AnalyticsEvents.HERO_CTA_QUOTE, null, { page: window.location.pathname })
+}
+
+const handleLoginClick = () => {
+    track(AnalyticsEvents.HERO_CTA_LOGIN, null, { page: window.location.pathname })
 }
 
 const handleAppointmentSubmit = async (formData) => {
     // Enviar a backend
     try {
-        const response = await fetch('/api/v1/appointments/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        })
-        
-        if (response.ok) {
-            console.log('Cita agendada exitosamente')
-        }
+        await api.post('/appointments/', formData)
+        track(AnalyticsEvents.APPOINTMENT_SUBMIT_SUCCESS, { source: 'hero' }, { page: window.location.pathname })
     } catch (error) {
         console.error('Error al agendar cita:', error)
+        track(AnalyticsEvents.APPOINTMENT_SUBMIT_ERROR, { source: 'hero' }, { page: window.location.pathname })
     }
 }
 </script>
@@ -181,7 +187,7 @@ header.foxy-header {
         text-align: center;
         font-family: 'Cervo Neue', 'Steelfish', sans-serif;
         font-weight: 800;
-        font-size: clamp(60px, 7vw, 10px);
+        font-size: clamp(32px, 6vw, 80px);
            transform: scale(2);            /* agranda visualmente */
     transform-origin: center top;
         padding: 1.5rem 0 1.95rem;
@@ -276,6 +282,21 @@ header.foxy-header {
                 background-color: $orange-pastel;
                 color: $vintage-black;
             }
+        }
+    }
+
+    @include media-breakpoint-down(md) {
+        h1.heading {
+            transform: none;
+            font-size: clamp(28px, 8vw, 46px);
+            line-height: 1.1;
+        }
+
+        .btn-hero {
+            width: 100%;
+            justify-content: center;
+            padding: 0.9rem 1.4rem;
+            font-size: 1rem;
         }
     }
 }

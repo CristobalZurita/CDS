@@ -1,7 +1,9 @@
 <template>
     <!-- Site Section -->
-    <section class="foxy-section"
+    <section ref="sectionRef"
+             class="foxy-section"
              :id="id"
+             :data-zone="id"
              :class="classList">
 
         <BackgroundPromo v-if="props.variant === 'promo'"
@@ -25,7 +27,9 @@
 </template>
 
 <script setup>
-import {computed} from "vue"
+import {computed, onBeforeUnmount, onMounted, ref} from "vue"
+import { track } from "@/analytics"
+import { AnalyticsEvents } from "@/analytics/events"
 import BackgroundPromo from "/src/vue/components/layout/BackgroundPromo.vue"
 
 const props = defineProps({
@@ -40,12 +44,47 @@ const classList = computed(() => {
         `foxy-section-${props.variant}` :
         ``
 })
+
+const sectionRef = ref(null)
+let observer = null
+
+onMounted(() => {
+    if (!sectionRef.value) return
+    observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible')
+                track(AnalyticsEvents.SECTION_FOCUS, null, {
+                    page: window.location.pathname,
+                    section: props.id || 'unknown'
+                })
+            }
+        })
+    }, { threshold: 0.35 })
+    observer.observe(sectionRef.value)
+})
+
+onBeforeUnmount(() => {
+    if (observer && sectionRef.value) {
+        observer.unobserve(sectionRef.value)
+    }
+    observer = null
+})
 </script>
 
 <style lang="scss">
 @import "/src/scss/_theming.scss";
 
 section.foxy-section {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+
+    &.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
     @include generate-dynamic-styles-with-hash((
         xxxl: (padding: 5rem 0em 5.5rem),  // Increased for large screens
         xxl:  (padding: 4rem 0rem 4.5rem),  // Increased for consistency

@@ -35,6 +35,8 @@
 
 <script setup>
 import { computed, ref } from "vue"
+import { track } from "@/analytics"
+import { AnalyticsEvents } from "@/analytics/events"
 import PageSection from "/src/vue/components/layout/PageSection.vue"
 import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
 import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
@@ -69,10 +71,12 @@ const onSubmit = async (event) => {
         })
         status.value = "success"
         statusMessage.value = "Gracias por suscribirte. Te avisaremos de nuevas novedades."
+        track(AnalyticsEvents.NEWSLETTER_SUBMIT_SUCCESS, { source: 'newsletter_section' }, { page: utils.getAbsoluteLocation() })
         email.value = ""
     } catch (error) {
         status.value = "error"
         statusMessage.value = "No pudimos registrar tu suscripción. Intenta nuevamente."
+        track(AnalyticsEvents.NEWSLETTER_SUBMIT_ERROR, { source: 'newsletter_section' }, { page: utils.getAbsoluteLocation() })
     }
 }
 </script>
