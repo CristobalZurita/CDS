@@ -1,176 +1,123 @@
-# 🌐 TRADUCCIÓN COMPLETA AL ESPAÑOL - CIRUJANO DE SINTETIZADORES
+# Cirujano de Sintetizadores
+
+Plataforma integral para gestión de reparaciones de instrumentos, con portal público, panel de clientes y panel administrativo. Incluye cotización online, agendamiento, seguimiento de reparaciones e inventario del taller.
 
 ---
 
-## 🗂️ ARCHIVOS INCLUIDOS Y DÓNDE VAN
-
-| Archivo | Destino | Descripción |
-|---------|---------|-------------|
-| `strings.js` | `./src/composables/strings.js` | **CRÍTICO** - Todos los textos del sistema |
-| `ContactSection.vue` | `./src/vue/content/sections/ContactSection.vue` | Sección de contacto |
-| `PolicySection.vue` | `./src/vue/content/sections/PolicySection.vue` | Política de privacidad |
-| `LicenseSection.vue` | `./src/vue/content/sections/LicenseSection.vue` | Términos y condiciones |
-| `PortfolioSection.vue` | `./src/vue/content/sections/PortfolioSection.vue` | Portafolio (opcional) |
-| `TeamSection.vue` | `./src/vue/content/sections/TeamSection.vue` | Equipo (opcional) |
+## Estado actual (resumen)
+- Backend FastAPI + SQLite operativo con permisos granulares.
+- Frontend Vue operativo (portal público, panel cliente y admin).
+- CRUD básico funcional para clientes, instrumentos y reparaciones.
+- Inventario con CRUD básico, falta integración por reparación.
 
 ---
 
-## 📝 TRADUCCIONES EN strings.js
+## Módulos principales
 
-| Inglés (ANTES) | Español (AHORA) |
-|----------------|-----------------|
-| `"About"` | `"Nosotros"` |
-| `"All"` | `"Todas"` |
-| `"Thank you for getting in touch!"` | `"¡Gracias por contactarnos!"` |
-| `"Your message has been received..."` | `"Tu mensaje ha sido recibido..."` |
-| `"E-mail"` | `"Correo electrónico"` |
-| `"Please fill all the fields."` | `"Por favor completa todos los campos."` |
-| `"Please enter a valid e-mail address."` | `"Por favor ingresa un correo electrónico válido."` |
-| `"There was an error sending the message."` | `"Hubo un error al enviar el mensaje."` |
-| `"Loading..."` | `"Cargando..."` |
-| `"Message"` | `"Mensaje"` |
-| `"Name"` | `"Nombre"` |
-| `"Send Message"` | `"Enviar mensaje"` |
-| `"Sending Message..."` | `"Enviando mensaje..."` |
-| `"Subject"` | `"Asunto"` |
-| `"Tags:"` | `"Etiquetas:"` |
-| `"Where To Find"` | `"Dónde encontrarnos"` |
+### Portal público
+- Información del taller, servicios y trabajos.
+- Contacto con formulario (mensajes llegan a admin).
+- Cotizador online con flujo de diagnóstico.
+- Calculadoras electrónicas para estudiantes.
 
----
+### Panel cliente
+- Dashboard con estado de reparaciones.
+- Historial de reparaciones + detalle.
+- Perfil y datos personales.
+- Agendamiento de citas.
 
-## 📄 TRADUCCIONES EN ContactSection.vue
-
-| Inglés (ANTES) | Español (AHORA) |
-|----------------|-----------------|
-| `"*Contact* Us"` | `"*Contáctanos*"` |
-| `"Don't hesitate to reach us out!"` | `"¡No dudes en escribirnos!"` |
+### Panel admin
+- Clientes (listado + detalle + ingreso completo).
+- Reparaciones (listado + creación + detalle avanzado).
+- Inventario (listado + creación + edición).
+- Categorías, citas, contacto y newsletter.
 
 ---
 
-## 📄 TRADUCCIONES EN PolicySection.vue
-
-| Inglés (ANTES) | Español (AHORA) |
-|----------------|-----------------|
-| `"*Privacy* Policy"` | `"Política de *Privacidad*"` |
-| `"Understanding our practices"` | `"Cómo manejamos tu información"` |
-| `"Collected Information"` | `"Información recopilada"` |
-| `"Cookies"` | `"Cookies"` |
-| `"Security"` | `"Seguridad"` |
-| `"Links"` | `"Enlaces"` |
-| Todo el contenido interno | Traducido completamente |
+## Flujo operativo recomendado (admin)
+1) Crear cliente + instrumento + reparación en **Ingreso completo**.
+2) Actualizar estado y registrar avances en la reparación.
+3) Adjuntar fotos y notas técnicas.
+4) Registrar consumo de inventario (pendiente de integración).
+5) Cerrar reparación y emitir documento/boleta (pendiente).
 
 ---
 
-## 📄 TRADUCCIONES EN LicenseSection.vue
-
-| Inglés (ANTES) | Español (AHORA) |
-|----------------|-----------------|
-| `"Usage *License*"` | `"*Términos* y Condiciones"` |
-| `"Terms and Attributions"` | `"Licencia de uso y atribuciones"` |
-| `"Usage"` | `"Uso del sitio"` |
-| `"MIT License"` | `"Servicios"` |
-| `"Disclaimer Note"` | `"Responsabilidad"` |
-| Todo el contenido | Adaptado a Cirujano de Sintetizadores |
+## Tecnologías
+- **Frontend:** Vue 3 + Vite
+- **Backend:** FastAPI + SQLAlchemy
+- **DB:** SQLite (local), preparado para Postgres
 
 ---
 
-## 📄 TRADUCCIONES EN PortfolioSection.vue (opcional)
-
-| Inglés (ANTES) | Español (AHORA) |
-|----------------|-----------------|
-| `"Get to know our amazing projects!"` | `"Conoce algunos de nuestros trabajos"` |
-| Categorías en inglés | Categorías en español |
+## Requisitos
+- Node.js (para frontend)
+- Python 3.x (para backend)
 
 ---
 
-## 📄 TRADUCCIONES EN TeamSection.vue (opcional)
+## Configuración
 
-| Inglés (ANTES) | Español (AHORA) |
-|----------------|-----------------|
-| `"Our *Team*"` | `"Nuestro *Equipo*"` |
-| `"Meet the main characters..."` | `"Conoce a las personas detrás del taller"` |
-
----
-
-## ⚠️ ARCHIVOS QUE YA ESTABAN EN ESPAÑOL
-
-Estos archivos del VOLCADO05 ya están correctamente en español y NO necesitan cambios:
-
-- ✅ `AboutSection.vue` - "Sobre el taller"
-- ✅ `ServicesSection.vue` - "Nuestros Servicios"
-- ✅ `HistorySection.vue` - "Nuestra Historia"
-- ✅ `FeaturedProjectSection.vue` - "Último trabajo"
-- ✅ `FaqSection.vue` - "Preguntas Frecuentes"
-- ✅ `ReviewsSection.vue` - "Opiniones de Clientes"
-- ✅ `HeroSection.vue` - "MANTENCIÓN • RESTAURACIÓN • REPARACIÓN"
-- ✅ `Master.vue` - Footer en español
-
----
-
-## 🚀 INSTRUCCIONES DE INSTALACIÓN
-
-1. Reemplaza `./src/composables/strings.js` con el archivo `strings.js`
-2. Reemplaza `./src/vue/content/sections/ContactSection.vue`
-3. Reemplaza `./src/vue/content/sections/PolicySection.vue`
-4. Reemplaza `./src/vue/content/sections/LicenseSection.vue`
-5. (Opcional) Reemplaza `PortfolioSection.vue` y `TeamSection.vue`
-6. Ejecuta `npm run dev` y verifica
-
----
-
-## 🧭 EJECUCIÓN LOCAL (BACKEND + FRONTEND)
-
-Para navegar y probar la app completa en tu máquina:
-
-1. Inicia el backend (usa SQLite por defecto):
-
-```bash
-# desde la raíz del proyecto
-uvicorn backend.app.main:app --reload --port 8000
+### Frontend (.env)
+```
+VITE_API_URL=http://localhost:8000/api/v1
 ```
 
-2. Inicia el frontend (Vite):
+### Backend
+- Base de datos local: `backend/cirujano.db`
 
-```bash
+---
+
+## Ejecutar en local
+
+### Backend
+```
+cd backend
+uvicorn app.main:app --reload
+```
+
+### Frontend
+```
 npm install
 npm run dev
 ```
 
-3. Abre la URL del frontend (por defecto http://localhost:5173) y asegúrate de que la API esté configurada en `http://localhost:8000/api/v1`.
-
-Notas operativas:
-
-- Para correr pruebas: `python -m pytest backend`
-- Para una ejecución tipo producción con Postgres:
-	- Exporta `DATABASE_URL` apuntando al Postgres y ejecuta `alembic upgrade head` antes de arrancar.
-	- Si existen transacciones duplicadas en `payments.transaction_id`, ejecuta primero `python scripts/dedupe_payments_transaction_ids.py --dry-run` y luego `--apply`.
+Frontend: `http://localhost:5173`
+Backend: `http://localhost:8000`
 
 ---
 
-## 🔒 Seguridad local rápida
+## Migraciones y permisos
 
-- **No pipes**: **no** hagas `curl ... | sh` ni `curl ... | bash`. Inspecciona las respuestas antes de ejecutar.
-- Para parsear JSON sin `jq` usa Python seguro:
-
-```bash
-# obtener respuesta y verla de forma legible
-curl -sS http://127.0.0.1:8000/api/v1/auth/login -d '{"email":"...","password":"..."}' -H 'Content-Type: application/json' | python -m json.tool
+### Migraciones
+```
+cd backend
+alembic upgrade head
 ```
 
-- Corremos `tools/scan_unsafe.sh` para detectar patrones peligrosos (eval, new Function, innerHTML) antes de commits.
+### Seed de permisos/roles
+```
+cd backend
+source .venv/bin/activate
+PYTHONPATH=. python scripts/seed_permissions.py
+```
 
 ---
 
-## ✅ RESULTADO FINAL
-
-Después de aplicar estos cambios, **TODA la página estará en español**:
-- Formulario de contacto
-- Mensajes de error y éxito
-- Página de política de privacidad
-- Página de términos y condiciones
-- Textos del sistema (cargando, enviando, etc.)
+## Estado de integraciones pendientes
+- Inventario asociado a reparaciones (consumo y descuento automático).
+- Documentos automáticos (recepción/entrega) con email.
+- Contabilidad/pagos y facturación.
+- Sistema de tickets para consultas.
+- Dashboard admin con KPIs reales (usar `/analytics`).
 
 ---
 
-**Fecha:** 2 de enero de 2026
-**Versión:** 3.0 - Traducción completa al español
+## Auditorías
+- Auditoría actual: `AUDITORIA_CDS_2026-01-21.md`
+- Auditoría MODELOS: `AUDITORIA_MODELOS_2026-01-21.md`
+
+---
+
+## Licencia
+Uso interno del proyecto. Ajustar si se publica.

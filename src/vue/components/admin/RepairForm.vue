@@ -6,34 +6,57 @@
     </div>
     <div>
       <label>Cliente</label>
-      <input v-model="form.client_id" required />
-    </div>
-    <div>
-      <label>Estado</label>
-      <select v-model="form.status">
-        <option value="pending">Pendiente</option>
-        <option value="in_progress">En Proceso</option>
-        <option value="waiting_parts">Esperando Repuestos</option>
-        <option value="completed">Completada</option>
-        <option value="ready_pickup">Lista para Retiro</option>
-        <option value="delivered">Entregada</option>
-        <option value="cancelled">Cancelada</option>
+      <select v-model.number="form.client_id" required>
+        <option :value="null">Selecciona cliente</option>
+        <option v-for="client in clients" :key="client.id" :value="client.id">
+          {{ client.name }} ({{ client.email }})
+        </option>
       </select>
     </div>
     <div>
-      <label>Descripción</label>
-      <textarea v-model="form.description"></textarea>
+      <label>Modelo/Instrumento</label>
+      <input v-model="form.model" placeholder="Ej: Korg MS-20" required />
+    </div>
+    <div>
+      <label>Problema reportado</label>
+      <textarea v-model="form.problem_reported" required></textarea>
     </div>
     <button type="submit">Guardar</button>
   </form>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { api } from '@/services/api'
 import { useRepairs } from '@/composables/useRepairs'
 const { createRepair, updateRepair } = useRepairs()
-const form = ref({ title: '', client_id: '', status: 'pending', description: '' })
-function onSubmit() {
-  // Si es edición, usar updateRepair, si es nuevo, usar createRepair
-  createRepair(form.value)
+const emit = defineEmits(['saved'])
+const clients = ref([])
+const form = ref({
+  title: '',
+  client_id: null,
+  model: '',
+  problem_reported: ''
+})
+
+const loadClients = async () => {
+  try {
+    const res = await api.get('/clients/')
+    clients.value = res.data || []
+  } catch (e) {
+    clients.value = []
+  }
 }
+
+async function onSubmit() {
+  try {
+    // Si es edición, usar updateRepair, si es nuevo, usar createRepair
+    await createRepair(form.value)
+    emit('saved')
+  } catch (e) {
+    console.error('Error guardando reparación:', e)
+    alert('Error guardando reparación')
+  }
+}
+
+onMounted(loadClients)
 </script>

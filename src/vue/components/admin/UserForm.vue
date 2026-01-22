@@ -31,9 +31,17 @@
 import { ref } from 'vue'
 import { useUsers } from '@/composables/useUsers'
 const { createUser, updateUser } = useUsers()
+const emit = defineEmits(['saved'])
 const form = ref({ email: '', full_name: '', username: '', role: 'client', password: '' })
-function onSubmit() {
+async function onSubmit() {
   // Si es edición, usar updateUser, si es nuevo, usar createUser
-  createUser(form.value)
+  try {
+    await createUser(form.value)
+    emit('saved')
+    form.value = { email: '', full_name: '', username: '', role: 'client', password: '' }
+  } catch (e) {
+    console.error('Error creando usuario:', e)
+    alert('Error creando usuario')
+  }
 }
 </script>

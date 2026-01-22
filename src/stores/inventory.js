@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { api } from '@/services/api'
 
 export const useInventoryStore = defineStore('inventory', {
   state: () => ({
@@ -8,32 +9,25 @@ export const useInventoryStore = defineStore('inventory', {
     limit: 20
   }),
   actions: {
-    async fetchItems(page = 1, limit = 20, category = null) {
+    async fetchItems(page = 1, limit = 20, search = null, categoryId = null) {
       this.loading = true
       this.page = page
       this.limit = limit
       const q = new URLSearchParams({ limit: String(limit), page: String(page) })
-      if (category) q.set('category', category)
-      const res = await fetch(`/api/v1/items?${q.toString()}`)
-      if (!res.ok) {
+      if (search) q.set('search', search)
+      if (categoryId) q.set('category_id', String(categoryId))
+      try {
+        const res = await api.get(`/inventory?${q.toString()}`)
+        this.items = res.data || []
+      } catch (e) {
         this.items = []
-        this.loading = false
-        return
       }
-      this.items = await res.json()
       this.loading = false
     }
       ,
     async deleteItem(itemId) {
-      const token = localStorage.getItem('access_token')
-      const headers = token ? { Authorization: `Bearer ${token}` } : {}
       try {
-        const res = await fetch(`/api/v1/items/${itemId}`, { method: 'DELETE', headers })
-        if (!res.ok) {
-          const text = await res.text()
-          console.error('Failed to delete item', res.status, text)
-          return false
-        }
+        await api.delete(`/inventory/${itemId}`)
         // refresh list
         await this.fetchItems(this.page, this.limit)
         return true
@@ -43,35 +37,21 @@ export const useInventoryStore = defineStore('inventory', {
       }
     },
     async updateItem(itemId, payload) {
-      const token = localStorage.getItem('access_token')
-      const headers = Object.assign({ 'Content-Type': 'application/json' }, token ? { Authorization: `Bearer ${token}` } : {})
       // Normalize payload: backend expects `stock` (some MODELOS use `quantity`)
       const body = Object.assign({}, payload)
       if (body.quantity !== undefined && body.stock === undefined) body.stock = body.quantity
       delete body.quantity
-      const res = await fetch(`/api/v1/items/${itemId}`, { method: 'PUT', headers, body: JSON.stringify(body) })
-      if (!res.ok) {
-        const text = await res.text()
-        throw new Error(`Update failed: ${res.status} ${text}`)
-      }
-      const updated = await res.json()
+      const updatedRes = await api.put(`/inventory/${itemId}`, body)
       await this.fetchItems(this.page, this.limit)
-      return updated
+      return updatedRes.data
     },
     async createItem(payload) {
-      const token = localStorage.getItem('access_token')
-      const headers = Object.assign({ 'Content-Type': 'application/json' }, token ? { Authorization: `Bearer ${token}` } : {})
       const body = Object.assign({}, payload)
       if (body.quantity !== undefined && body.stock === undefined) body.stock = body.quantity
       delete body.quantity
-      const res = await fetch(`/api/v1/items`, { method: 'POST', headers, body: JSON.stringify(body) })
-      if (!res.ok) {
-        const text = await res.text()
-        throw new Error(`Create failed: ${res.status} ${text}`)
-      }
-      const created = await res.json()
+      const createdRes = await api.post('/inventory', body)
       await this.fetchItems(this.page, this.limit)
-      return created
+      return createdRes.data
     }
   }
 })

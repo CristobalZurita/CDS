@@ -8,7 +8,18 @@
       </div>
       <div class="mb-2">
         <label class="form-label">Categoría</label>
-        <input v-model="form.category" class="form-control" />
+        <select v-if="categories.length" v-model="form.category_id" class="form-select">
+          <option :value="null">Sin categoría</option>
+          <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+            {{ cat.name }}
+          </option>
+        </select>
+        <input
+          v-else
+          v-model="form.category_label"
+          class="form-control"
+          placeholder="Categoría (requiere catálogo)"
+        />
       </div>
       <div class="mb-2 row">
         <div class="col">
@@ -44,8 +55,8 @@
 </template>
 
 <script setup>
-import { reactive, toRefs, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { reactive, computed, onMounted } from 'vue'
+import { useCategoriesStore } from '@/stores/categories'
 
 const props = defineProps({
   item: {
@@ -57,10 +68,13 @@ const props = defineProps({
 const emits = defineEmits(['save', 'cancel'])
 
 const isNew = computed(() => !props.item)
+const categoriesStore = useCategoriesStore()
+const categories = computed(() => categoriesStore.categories || [])
 
 const form = reactive({
   name: props.item?.name || '',
-  category: props.item?.category || '',
+  category_id: props.item?.category_id ?? null,
+  category_label: props.item?.category || '',
   sku: props.item?.sku || '',
   stock: props.item?.stock ?? 0,
   stock_unit: props.item?.stock_unit || '',
@@ -69,9 +83,22 @@ const form = reactive({
 })
 
 function onSubmit() {
-  // emit a shallow copy
-  emits('save', { ...form, id: props.item?.id })
+  const payload = { ...form, id: props.item?.id }
+  if (!payload.category_id && payload.category_label && categories.value.length) {
+    const match = categories.value.find(
+      (c) => c.name?.toLowerCase() === payload.category_label.toLowerCase()
+    )
+    if (match) payload.category_id = match.id
+  }
+  delete payload.category_label
+  emits('save', payload)
 }
+
+onMounted(() => {
+  if (!categoriesStore.categories?.length) {
+    categoriesStore.fetchCategories()
+  }
+})
 </script>
 
 <style scoped>

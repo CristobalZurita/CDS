@@ -19,6 +19,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { api } from '@/services/api'
 import InventoryTable from '@/vue/components/admin/InventoryTable.vue'
 import InventoryForm from '@/vue/components/admin/InventoryForm.vue'
 import { useInventoryStore } from '@/stores/inventory'
@@ -108,8 +109,8 @@ watch(
 		if (!it) {
 			// fetch item detail from API
 			try {
-				const res = await fetch(`/api/v1/items/${val}`)
-				if (res.ok) it = await res.json()
+				const res = await api.get(`/items/${val}`)
+				if (res?.data) it = res.data
 			} catch (e) {
 				console.error('Failed to fetch item detail', e)
 			}

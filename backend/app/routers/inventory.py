@@ -87,6 +87,94 @@ def list_inventory(
     return result
 
 
+@router.post("/", status_code=status.HTTP_201_CREATED)
+def create_inventory_item(
+    payload: dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("inventory", "create"))
+):
+    """Crear producto en inventario."""
+    required = ("name", "sku", "category_id", "price")
+    for field in required:
+        if not payload.get(field):
+            raise HTTPException(status_code=400, detail=f"Missing field: {field}")
+
+    product = Product(
+        name=payload["name"],
+        sku=payload["sku"],
+        category_id=int(payload["category_id"]),
+        description=payload.get("description"),
+        price=int(payload.get("price") or 0),
+        quantity=int(payload.get("stock") or payload.get("quantity") or 0),
+        min_quantity=int(payload.get("min_quantity") or 5),
+    )
+    db.add(product)
+    db.commit()
+    db.refresh(product)
+    return {
+        "id": product.id,
+        "name": product.name,
+        "sku": product.sku,
+        "category_id": product.category_id,
+        "stock": product.quantity,
+        "price": product.price,
+    }
+
+
+@router.put("/{product_id}")
+def update_inventory_item(
+    product_id: int,
+    payload: dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("inventory", "update"))
+):
+    """Actualizar producto en inventario."""
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+
+    if "name" in payload:
+        product.name = payload["name"]
+    if "sku" in payload:
+        product.sku = payload["sku"]
+    if "description" in payload:
+        product.description = payload["description"]
+    if "category_id" in payload and payload["category_id"] is not None:
+        product.category_id = int(payload["category_id"])
+    if "price" in payload and payload["price"] is not None:
+        product.price = int(payload["price"])
+    if "stock" in payload or "quantity" in payload:
+        product.quantity = int(payload.get("stock") or payload.get("quantity") or 0)
+    if "min_quantity" in payload and payload["min_quantity"] is not None:
+        product.min_quantity = int(payload["min_quantity"])
+
+    db.commit()
+    db.refresh(product)
+    return {
+        "id": product.id,
+        "name": product.name,
+        "sku": product.sku,
+        "category_id": product.category_id,
+        "stock": product.quantity,
+        "price": product.price,
+    }
+
+
+@router.delete("/{product_id}")
+def delete_inventory_item(
+    product_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("inventory", "delete"))
+):
+    """Eliminar producto de inventario."""
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    db.delete(product)
+    db.commit()
+    return {"ok": True}
+
+
 @router.get("/{product_id}")
 def get_inventory_item(
     product_id: int,

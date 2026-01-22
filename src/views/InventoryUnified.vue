@@ -29,6 +29,7 @@ import InventoryCard from '@/components/prototypes/InventoryCard.vue'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { api } from '@/services/api'
 
 export default {
   name: 'InventoryUnified',
@@ -40,7 +41,7 @@ export default {
     const lastRunId = ref(null)
     const runStatus = ref(null)
     const router = useRouter()
-    const load = () => store.fetchItems(1, 20, filter.value || null)
+    const load = () => store.fetchItems(1, 20, filter.value || null, null)
 
     async function onRequestDelete(item) {
       const ok = confirm(`Eliminar item "${item.name || item.id}"?`)
@@ -63,17 +64,17 @@ export default {
       importing.value = true
       runStatus.value = null
       try {
-        const token = localStorage.getItem('access_token')
-        const headers = token ? { Authorization: `Bearer ${token}` } : {}
-        const res = await fetch('/api/v1/imports/run', { method: 'POST', headers })
-        if (!res.ok) {
-          const text = await res.text()
-          alert('Error iniciando importación: ' + res.status + ' ' + text)
-          return
-        }
-        const data = await res.json()
+        const res = await api.post('/imports/run')
+        const data = res.data || {}
         lastRunId.value = data.run_id || null
         runStatus.value = data.status || 'started'
+      } catch (e) {
+        const detail = e?.response?.data?.detail || e?.message || e
+        if (String(detail).includes('Not Found')) {
+          alert('Importación no disponible en este entorno.')
+        } else {
+          alert('Error iniciando importación: ' + detail)
+        }
       } finally {
         importing.value = false
       }
