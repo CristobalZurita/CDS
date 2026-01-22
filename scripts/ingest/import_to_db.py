@@ -12,7 +12,7 @@ from datetime import datetime
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 NORMALIZED = os.path.join(REPO_ROOT, 'reports', 'normalized_items.json')
-DB_PATH = os.path.join(REPO_ROOT, 'backend', 'instance', 'cirujano.sqlite')
+DB_PATH = os.path.join(REPO_ROOT, 'backend', 'cirujano.db')
 
 
 def ensure_db(path=DB_PATH):
@@ -29,9 +29,6 @@ def run_import(user_id: str | None = None, run_id: str | None = None):
 
     conn = ensure_db()
     cur = conn.cursor()
-
-    # create tables if not exist (simple DDL that mirrors database/ddl_cirujano.sql)
-    cur.executescript(open(os.path.join(REPO_ROOT, 'database', 'ddl_cirujano.sql'), 'r', encoding='utf-8').read())
 
     provided_run_id = run_id is not None
     if not provided_run_id:
@@ -75,14 +72,20 @@ def run_import(user_id: str | None = None, run_id: str | None = None):
             cur.execute('INSERT INTO categories (name) VALUES (?)', (category,))
             cat_id = cur.lastrowid
 
-        # upsert item by sku
-        cur.execute('SELECT id FROM items WHERE sku = ?', (sku,))
+        # upsert product by sku
+        cur.execute('SELECT id FROM products WHERE sku = ?', (sku,))
         r = cur.fetchone()
         if r:
-            cur.execute('UPDATE items SET name = ?, category_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', (name, cat_id, r[0]))
+            cur.execute(
+                'UPDATE products SET name = ?, category_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+                (name, cat_id, r[0])
+            )
             updated += 1
         else:
-            cur.execute('INSERT INTO items (sku, name, category_id, stock) VALUES (?, ?, ?, ?)', (sku, name, cat_id, 0))
+            cur.execute(
+                'INSERT INTO products (sku, name, category_id, price, quantity, min_quantity, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)',
+                (sku, name, cat_id, 0, 0, 5)
+            )
             inserted += 1
 
     finished = datetime.utcnow().isoformat() + 'Z'

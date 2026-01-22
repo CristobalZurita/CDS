@@ -51,8 +51,16 @@
 		</div>
 
 		<div class="clients-page">
+			<div class="clients-toolbar mb-3">
+				<input
+					v-model="searchQuery"
+					type="search"
+					class="form-control"
+					placeholder="Buscar por nombre, email, código o teléfono..."
+				/>
+			</div>
 			<div class="clients-grid">
-				<ClientList :clients="clients" @select="onSelect" />
+				<ClientList :clients="filteredClients" @select="onSelect" />
 				<ClientDetail :client="selected || {}" />
 			</div>
 		</div>
@@ -60,7 +68,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { api } from '@/services/api'
 import ClientList from '@/vue/components/admin/ClientList.vue'
 import ClientDetail from '@/vue/components/admin/ClientDetail.vue'
@@ -72,6 +81,8 @@ const selected = ref(null)
 const showForm = ref(false)
 const showIntake = ref(false)
 const saving = ref(false)
+const searchQuery = ref('')
+const route = useRoute()
 const newClient = ref({
 	name: '',
 	email: '',
@@ -80,11 +91,30 @@ const newClient = ref({
 	notes: ''
 })
 
+const filteredClients = computed(() => {
+	const q = searchQuery.value.trim().toLowerCase()
+	if (!q) return clients.value
+	return clients.value.filter((client) => {
+		const haystack = [
+			client.name,
+			client.email,
+			client.phone,
+			client.client_code
+		].filter(Boolean).join(' ').toLowerCase()
+		return haystack.includes(q)
+	})
+})
+
 async function load() {
 	try {
 		const res = await api.get('/clients')
 		clients.value = res.data
-		selected.value = clients.value[0] || null
+		if (route.query.client_id) {
+			const found = clients.value.find(c => String(c.id) === String(route.query.client_id))
+			selected.value = found || clients.value[0] || null
+		} else {
+			selected.value = clients.value[0] || null
+		}
 	} catch (e) {
 		clients.value = []
 	}
@@ -137,5 +167,8 @@ onMounted(load)
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 1rem;
+}
+.clients-toolbar {
+	max-width: 420px;
 }
 </style>

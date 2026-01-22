@@ -36,7 +36,7 @@
 				<h5 class="card-title"><i class="fa-solid fa-info-circle me-2"></i>Información General</h5>
 				<div class="row">
 					<div class="col-md-4">
-						<p><strong>Número:</strong> {{ repair.repair_number }}</p>
+						<p><strong>Número:</strong> {{ repair.repair_code || repair.repair_number }}</p>
 						<p><strong>Prioridad:</strong>
 							<span class="badge" :class="getPriorityBadge(repair.priority)">
 								{{ getPriorityLabel(repair.priority) }}
@@ -45,9 +45,8 @@
 						<p><strong>Cliente:</strong> {{ repair.client?.name || '—' }}</p>
 					</div>
 					<div class="col-md-4">
-						<p><strong>Marca:</strong> {{ repair.instrument?.brand?.name || '—' }}</p>
-						<p><strong>Modelo:</strong> {{ repair.instrument?.model || '—' }}</p>
-						<p><strong>Serial:</strong> {{ repair.serial_number || '—' }}</p>
+						<p><strong>Modelo:</strong> {{ repair.device?.model || '—' }}</p>
+						<p><strong>Serial:</strong> {{ repair.device?.serial_number || '—' }}</p>
 					</div>
 					<div class="col-md-4">
 						<p><strong>Problema:</strong> {{ repair.problem_reported || '—' }}</p>

@@ -27,7 +27,7 @@ import { ref } from 'vue'
 import { useApi } from '@/composables/useApi'
 const movements = ref([])
 async function fetchMovements() {
-  movements.value = await useApi().get('/api/stock-movements')
+  movements.value = await useApi().get('/stock-movements')
 }
 fetchMovements()
 </script>

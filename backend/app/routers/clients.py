@@ -12,8 +12,12 @@ from app.core.database import get_db
 from app.core.dependencies import get_current_admin, require_permission
 from app.models.client import Client
 from app.models.device import Device
+from app.models.repair import Repair
 
 router = APIRouter(prefix="/clients", tags=["clients"])
+
+def _client_code(client_id: int) -> str:
+    return f"CDS-{client_id:03d}"
 
 
 @router.get("/", response_model=List[Dict])
@@ -26,6 +30,7 @@ def list_clients(
     for client in clients:
         payload.append({
             "id": client.id,
+            "client_code": _client_code(client.id),
             "name": client.name,
             "email": client.email,
             "phone": client.phone,
@@ -43,6 +48,7 @@ def get_client(client_id: int, db: Session = Depends(get_db), user: dict = Depen
         raise HTTPException(status_code=404, detail="Client not found")
     return {
         "id": client.id,
+        "client_code": _client_code(client.id),
         "name": client.name,
         "email": client.email,
         "phone": client.phone,
@@ -72,7 +78,7 @@ def create_client(
     db.add(client)
     db.commit()
     db.refresh(client)
-    return {"id": client.id, "name": client.name}
+    return {"id": client.id, "name": client.name, "client_code": _client_code(client.id)}
 
 
 @router.put("/{client_id}")
@@ -111,3 +117,24 @@ def delete_client(
 def list_client_devices(client_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("clients", "read"))):
     devices = db.query(Device).filter(Device.client_id == client_id).all()
     return [{"id": d.id, "model": d.model, "serial_number": d.serial_number} for d in devices]
+
+
+@router.get("/{client_id}/repairs", response_model=List[Dict])
+def list_client_repairs(client_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("clients", "read"))):
+    repairs = (
+        db.query(Repair)
+        .join(Device, Device.id == Repair.device_id)
+        .filter(Device.client_id == client_id)
+        .all()
+    )
+    payload = []
+    for repair in repairs:
+        payload.append({
+            "id": repair.id,
+            "repair_number": repair.repair_number,
+            "status_id": repair.status_id,
+            "problem_reported": repair.problem_reported,
+            "created_at": repair.created_at.isoformat() if repair.created_at else None,
+            "device_id": repair.device_id
+        })
+    return payload

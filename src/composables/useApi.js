@@ -11,7 +11,7 @@
 import axios from 'axios'
 import { useAuth } from './useAuth'
 
-const API_URL = 'http://localhost:8000/api/v1'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
 // Instancia de axios
 const api = axios.create({

@@ -94,7 +94,7 @@ const isActive = (item) => {
   text-decoration: none;
   color: $brand-text;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.05rem;
   transition: all 0.2s;
   border: 1px solid transparent;
 }

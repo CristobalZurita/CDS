@@ -11,6 +11,8 @@
 
 <script setup>
 import {computed, inject, onMounted, provide, ref, watch} from "vue"
+import {track} from "@/analytics"
+import {AnalyticsEvents} from "@/analytics/events"
 import {useStrings} from "/src/composables/strings.js"
 import {useLayout} from "/src/composables/layout.js"
 import {useEmails} from "/src/composables/emails.js"
@@ -61,6 +63,7 @@ const _onFormSubmit = async (e) => {
 
     _validate()
     if(validationError.value) {
+        track(AnalyticsEvents.CONTACT_VALIDATION_ERROR, {field: validationError.value}, {page: utils.getAbsoluteLocation()})
         _resetScroll()
         return
     }
@@ -90,6 +93,11 @@ const _submit = async () => {
     const apiOk = apiResult.status === "fulfilled" && apiResult.value === true
 
     apiResponse.value = {success: emailOk || apiOk}
+    if(apiResponse.value.success) {
+        track(AnalyticsEvents.CONTACT_SUBMIT_SUCCESS, {source: 'contact_form'}, {page: utils.getAbsoluteLocation()})
+    } else {
+        track(AnalyticsEvents.CONTACT_SUBMIT_ERROR, {source: 'contact_form'}, {page: utils.getAbsoluteLocation()})
+    }
 
     _resetScroll()
     setSpinnerEnabled && setSpinnerEnabled(false)

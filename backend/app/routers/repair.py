@@ -23,13 +23,44 @@ import uuid
 
 router = APIRouter(prefix="/repairs", tags=["repairs"])
 
+def _client_code(client_id: int) -> str:
+    return f"CDS-{client_id:03d}"
+
+def _repair_code(client_id: int, repair_id: int, suffix: int | None = None) -> str:
+    base = f"{_client_code(client_id)}-OT-{repair_id:03d}"
+    if suffix is not None:
+        return f"{base}-{suffix:02d}"
+    return base
+
 
 @router.get("/")
 def list_repairs(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("repairs", "read"))
 ):
-    return db.query(Repair).all()
+    repairs = db.query(Repair).all()
+    payload = []
+    for repair in repairs:
+        device = db.query(Device).filter(Device.id == repair.device_id).first()
+        client = db.query(Client).filter(Client.id == device.client_id).first() if device else None
+        repair_code = repair.repair_number
+        if client and (not repair.repair_number or repair.repair_number.startswith("R-")):
+            repair_code = _repair_code(client.id, repair.id)
+        payload.append({
+            "id": repair.id,
+            "repair_number": repair.repair_number,
+            "repair_code": repair_code,
+            "client_id": client.id if client else None,
+            "client_code": _client_code(client.id) if client else None,
+            "client_name": client.name if client else None,
+            "device_id": device.id if device else None,
+            "device_model": device.model if device else None,
+            "status": repair.status,
+            "status_id": repair.status_id,
+            "problem_reported": repair.problem_reported,
+            "created_at": repair.created_at.isoformat() if repair.created_at else None
+        })
+    return payload
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
@@ -112,6 +143,38 @@ def create_repair(
     db.add(db_repair)
     db.commit()
     db.refresh(db_repair)
+
+    # Generar código OT correlativo (aditivo) si no se entregó un repair_number explícito
+    if not repair.get("repair_number"):
+        device = db.query(Device).filter(Device.id == db_repair.device_id).first()
+        client_id = device.client_id if device else None
+        if client_id:
+            parent_id = repair.get("ot_parent_id") or repair.get("ot_base_repair_id")
+            suffix = repair.get("ot_suffix")
+            if parent_id:
+                base_id = int(parent_id)
+                base_code = _repair_code(client_id, base_id)
+                parent = db.query(Repair).filter(Repair.id == base_id).first()
+                if parent and parent.repair_number == base_code:
+                    parent.repair_number = _repair_code(client_id, base_id, 1)
+                    db.commit()
+                    db.refresh(parent)
+                if suffix is None:
+                    like_pattern = f"{base_code}-%"
+                    existing = db.query(Repair).filter(Repair.repair_number.like(like_pattern)).all()
+                    suffixes = []
+                    for r in existing:
+                        try:
+                            suffixes.append(int(r.repair_number.split("-")[-1]))
+                        except Exception:
+                            continue
+                    suffix = (max(suffixes) + 1) if suffixes else 1
+                db_repair.repair_number = _repair_code(client_id, base_id, int(suffix))
+            else:
+                db_repair.repair_number = _repair_code(client_id, db_repair.id, int(suffix)) if suffix is not None else _repair_code(client_id, db_repair.id)
+            db.commit()
+            db.refresh(db_repair)
+
     # Audit: repair created
     try:
         create_audit(
@@ -124,6 +187,51 @@ def create_repair(
         # Non-fatal: auditing should not break main flow
         pass
     return db_repair
+
+
+@router.get("/{repair_id}")
+def get_repair(
+    repair_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read"))
+):
+    repair = db.query(Repair).filter(Repair.id == repair_id).first()
+    if not repair:
+        raise HTTPException(status_code=404, detail="Repair not found")
+    device = db.query(Device).filter(Device.id == repair.device_id).first()
+    client = db.query(Client).filter(Client.id == device.client_id).first() if device else None
+    repair_code = repair.repair_number
+    if client and (not repair.repair_number or repair.repair_number.startswith("R-")):
+        repair_code = _repair_code(client.id, repair.id)
+    return {
+        "id": repair.id,
+        "repair_number": repair.repair_number,
+        "repair_code": repair_code,
+        "client": {
+            "id": client.id,
+            "name": client.name,
+            "client_code": _client_code(client.id)
+        } if client else None,
+        "device": {
+            "id": device.id,
+            "model": device.model,
+            "serial_number": device.serial_number
+        } if device else None,
+        "status_id": repair.status_id,
+        "status": repair.status,
+        "priority": repair.priority,
+        "problem_reported": repair.problem_reported,
+        "diagnosis": repair.diagnosis,
+        "work_performed": repair.work_performed,
+        "parts_cost": repair.parts_cost,
+        "labor_cost": repair.labor_cost,
+        "additional_cost": repair.additional_cost,
+        "discount": repair.discount,
+        "total_cost": repair.total_cost,
+        "paid_amount": repair.paid_amount,
+        "payment_status": repair.payment_status,
+        "payment_method": repair.payment_method
+    }
 
 
 @router.put("/{repair_id}")

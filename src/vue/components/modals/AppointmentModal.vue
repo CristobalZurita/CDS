@@ -118,6 +118,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { api } from '@/services/api'
 
 const emit = defineEmits(['close', 'submit'])
 
@@ -226,25 +227,16 @@ const submitForm = async () => {
         }
         
         // Enviar al backend
-        const response = await fetch('/api/v1/appointments/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(appointmentData)
-        })
+        await api.post('/appointments/', appointmentData)
+        showSuccess.value = true
+        emit('submit', appointmentData)
         
-        if (response.ok) {
-            showSuccess.value = true
-            emit('submit', appointmentData)
-            
-            // Limpiar formulario
-            formData.nombre = ''
-            formData.email = ''
-            formData.telefono = ''
-            formData.fecha = ''
-            formData.mensaje = ''
-        } else {
-            alert('Error al agendar la cita. Intenta nuevamente.')
-        }
+        // Limpiar formulario
+        formData.nombre = ''
+        formData.email = ''
+        formData.telefono = ''
+        formData.fecha = ''
+        formData.mensaje = ''
     } catch (error) {
         console.error('Error:', error)
         alert('Error de conexión. Intenta nuevamente.')

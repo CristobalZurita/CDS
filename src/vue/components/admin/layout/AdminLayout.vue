@@ -28,6 +28,8 @@ defineProps({
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
   background: linear-gradient(180deg, lighten($vintage-beige, 4%) 0%, $vintage-beige 70%, lighten($vintage-beige, 2%) 100%);
+  font-size: 1.05rem;
+  line-height: 1.6;
 }
 
 .admin-main {
@@ -37,8 +39,8 @@ defineProps({
 }
 
 .admin-content {
-  padding: 2.25rem 2.5rem 3rem;
-  font-size: 1rem;
+  padding: 2.5rem 2.75rem 3.25rem;
+  font-size: 1.05rem;
 }
 
 .admin-content :deep(.admin-section) {
@@ -76,9 +78,9 @@ defineProps({
 
 .admin-content :deep(.admin-table th),
 .admin-content :deep(.admin-table td) {
-  padding: 0.85rem 0.9rem;
+  padding: 1rem 1rem;
   text-align: left;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: $brand-text;
 }
 

@@ -446,6 +446,8 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
 .diagnostic-wizard {
   padding: 3rem 2rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
 
   .step-container {
     max-width: 800px;
@@ -454,7 +456,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   }
 
   .step-title {
-    font-size: $text-4;
+    font-size: 1.6rem;
     font-weight: 700;
     color: $dark;
     margin-bottom: 2rem;
@@ -503,7 +505,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
       padding: 0.75rem;
       border: 2px solid #ddd;
       border-radius: 6px;
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
   }
 
@@ -515,7 +517,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
       padding: 0.75rem;
       border: 2px solid #ddd;
       border-radius: 6px;
-      font-size: 0.95rem;
+      font-size: 1rem;
       margin-bottom: 1rem;
     }
 
