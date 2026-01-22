@@ -56,6 +56,33 @@
 				</div>
 			</div>
 
+			<!-- Firmas -->
+			<div class="detail-card mb-4">
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<h5 class="card-title mb-0"><i class="fa-solid fa-signature me-2"></i>Firmas</h5>
+					<div class="d-flex gap-2">
+						<button class="btn btn-sm btn-outline-primary" @click="requestSignature('ingreso')">
+							Solicitar firma ingreso
+						</button>
+						<button class="btn btn-sm btn-outline-primary" @click="requestSignature('retiro')">
+							Solicitar firma retiro
+						</button>
+					</div>
+				</div>
+				<div v-if="signatureLink" class="alert alert-info">
+					<strong>Link firma:</strong>
+					<input class="form-control mt-2" :value="signatureLink" readonly />
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<p><strong>Firma ingreso:</strong> {{ repair.signature_ingreso_path ? 'OK' : 'Pendiente' }}</p>
+					</div>
+					<div class="col-md-6">
+						<p><strong>Firma retiro:</strong> {{ repair.signature_retiro_path ? 'OK' : 'Pendiente' }}</p>
+					</div>
+				</div>
+			</div>
+
 			<!-- Materiales Utilizados -->
 			<div class="mb-4">
 				<RepairComponentsManager
@@ -215,6 +242,7 @@ const showNoteForm = ref(false)
 const newNote = ref('')
 const newNoteType = ref('internal')
 const savingNote = ref(false)
+const signatureLink = ref('')
 
 const loadRepair = async () => {
 	loading.value = true
@@ -240,6 +268,23 @@ const loadRepair = async () => {
 		console.error('Error cargando reparación:', error)
 	} finally {
 		loading.value = false
+	}
+}
+
+const requestSignature = async (type) => {
+	signatureLink.value = ''
+	try {
+		const res = await api.post('/signatures/requests', {
+			repair_id: Number(repairId),
+			request_type: type,
+			expires_minutes: 30
+		})
+		const token = res.data?.token || res.token
+		if (token) {
+			signatureLink.value = `${window.location.origin}/signature/${token}`
+		}
+	} catch (error) {
+		console.error('Error solicitando firma:', error)
 	}
 }
 

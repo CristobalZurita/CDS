@@ -16,6 +16,9 @@ def send_contact(
     request: Request,
     db: Session = Depends(get_db),
 ):
+    from app.services.turnstile_service import verify_turnstile
+    if not payload.turnstile_token or not verify_turnstile(payload.turnstile_token, request.client.host if request.client else None):
+        raise HTTPException(status_code=400, detail="Captcha inválido")
     message = ContactMessage(
         name=payload.name,
         email=payload.email,

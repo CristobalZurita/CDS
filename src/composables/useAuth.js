@@ -42,7 +42,8 @@ export function useAuth() {
         username: data.username,
         full_name: data.full_name,
         password: data.password,
-        phone: data.phone || null
+        phone: data.phone || null,
+        turnstile_token: data.turnstile_token || null
       })
 
       user.value = response.data
@@ -60,14 +61,15 @@ export function useAuth() {
    * @param {string} email - Email del usuario
    * @param {string} password - Contraseña
    */
-  async function login(email, password) {
+  async function login(email, password, turnstileToken = null) {
     isLoading.value = true
     error.value = null
 
     try {
       const response = await axios.post(`${API_URL}/auth/login`, {
         email,
-        password
+        password,
+        turnstile_token: turnstileToken
       })
 
       const { access_token, refresh_token } = response.data

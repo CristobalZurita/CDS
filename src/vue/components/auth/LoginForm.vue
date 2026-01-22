@@ -17,17 +17,24 @@
 
       <div class="form-group">
         <label for="password" class="form-label">Contraseña</label>
-        <input
-          id="password"
-          v-model="formData.password"
-          type="password"
-          class="form-control"
-          placeholder="••••••••"
-          required
-          :disabled="isLoading"
-        />
+        <div class="password-field">
+          <input
+            id="password"
+            v-model="formData.password"
+            :type="showPassword ? 'text' : 'password'"
+            class="form-control"
+            placeholder="••••••••"
+            required
+            :disabled="isLoading"
+          />
+          <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
         <span v-if="errors.password" class="error-text">{{ errors.password }}</span>
       </div>
+
+      <TurnstileWidget @verify="onVerify" />
 
       <div v-if="apiError" class="alert alert-danger">
         {{ apiError }}
@@ -58,6 +65,7 @@
 import { ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import TurnstileWidget from '@/vue/components/widgets/TurnstileWidget.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -75,6 +83,8 @@ const errors = reactive({
 
 const isLoading = ref(false)
 const apiError = ref('')
+const turnstileToken = ref('')
+const showPassword = ref(false)
 
 /**
  * Validar formulario
@@ -115,11 +125,15 @@ async function handleLogin() {
   if (!validateForm()) {
     return
   }
+  if (!turnstileToken.value) {
+    apiError.value = 'Captcha requerido'
+    return
+  }
 
   isLoading.value = true
 
   try {
-    await authStore.login(formData.email, formData.password)
+    await authStore.login(formData.email, formData.password, turnstileToken.value)
     const redirect = route.query.redirect
     if (redirect) {
       router.push(redirect)
@@ -132,6 +146,10 @@ async function handleLogin() {
   } finally {
     isLoading.value = false
   }
+}
+
+function onVerify(token) {
+  turnstileToken.value = token
 }
 </script>
 
@@ -195,6 +213,21 @@ async function handleLogin() {
       cursor: not-allowed;
       opacity: 0.7;
     }
+  }
+
+  .password-field {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .toggle-password {
+    border: 2px solid #3e3c38;
+    background: #f8f7f2;
+    color: #3e3c38;
+    padding: 0 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
   }
 
   .error-text {

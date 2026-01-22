@@ -4,6 +4,8 @@
                            :error-message="errorMessage"
                            @input="_onInput"/>
 
+        <TurnstileWidget v-if="shouldDisplayFormFields" @verify="onVerify" />
+
         <ContactFormSuccess v-else
                             :email="email"/>
     </form>
@@ -21,6 +23,7 @@ import {useUtils} from "/src/composables/utils.js"
 
 import ContactFormFields from "/src/vue/components/forms/contact/ContactFormFields.vue"
 import ContactFormSuccess from "/src/vue/components/forms/contact/ContactFormSuccess.vue"
+import TurnstileWidget from "@/vue/components/widgets/TurnstileWidget.vue"
 
 const layout = useLayout()
 const strings = useStrings()
@@ -35,6 +38,7 @@ const subject = ref("")
 const message = ref("")
 const apiResponse = ref(null)
 const validationError = ref(null)
+const turnstileToken = ref("")
 
 const shouldDisplayFormFields = computed(() => {
     return !apiResponse.value || !apiResponse.value.success
@@ -64,6 +68,11 @@ const _onFormSubmit = async (e) => {
     _validate()
     if(validationError.value) {
         track(AnalyticsEvents.CONTACT_VALIDATION_ERROR, {field: validationError.value}, {page: utils.getAbsoluteLocation()})
+        _resetScroll()
+        return
+    }
+    if(!turnstileToken.value) {
+        validationError.value = "error_fill_all_fields"
         _resetScroll()
         return
     }
@@ -110,12 +119,17 @@ const _submitToApi = async () => {
             email: email.value,
             subject: subject.value,
             message: message.value,
-            source_url: utils.getAbsoluteLocation()
+            source_url: utils.getAbsoluteLocation(),
+            turnstile_token: turnstileToken.value
         })
         return true
     } catch (error) {
         return false
     }
+}
+
+const onVerify = (token) => {
+    turnstileToken.value = token
 }
 
 const _resetScroll = () => {

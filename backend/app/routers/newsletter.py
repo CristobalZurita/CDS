@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -12,6 +12,9 @@ router = APIRouter(prefix="/newsletter", tags=["Newsletter"])
 
 @router.post("/subscribe", status_code=201)
 def subscribe(payload: NewsletterSubscribe, request: Request, db: Session = Depends(get_db)):
+    from app.services.turnstile_service import verify_turnstile
+    if not payload.turnstile_token or not verify_turnstile(payload.turnstile_token, request.client.host if request.client else None):
+        raise HTTPException(status_code=400, detail="Captcha inválido")
     existing = db.query(NewsletterSubscription).filter(NewsletterSubscription.email == payload.email).first()
     if existing:
         existing.is_active = True

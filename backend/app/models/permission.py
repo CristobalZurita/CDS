@@ -211,6 +211,28 @@ DEFAULT_PERMISSIONS = [
     # Contact Messages
     ("contact_messages", "read", "Ver mensajes de contacto"),
 
+    # Tickets
+    ("tickets", "read", "Ver tickets"),
+    ("tickets", "create", "Crear tickets"),
+    ("tickets", "update", "Actualizar tickets"),
+    ("tickets", "delete", "Eliminar tickets"),
+
+    # Purchase Requests (carrito interno)
+    ("purchase_requests", "read", "Ver solicitudes de compra"),
+    ("purchase_requests", "create", "Crear solicitudes de compra"),
+    ("purchase_requests", "update", "Actualizar solicitudes de compra"),
+    ("purchase_requests", "delete", "Eliminar solicitudes de compra"),
+
+    # Manuals
+    ("manuals", "read", "Ver manuales"),
+    ("manuals", "create", "Crear manuales"),
+    ("manuals", "update", "Actualizar manuales"),
+    ("manuals", "delete", "Eliminar manuales"),
+
+    # Signatures
+    ("signatures", "read", "Ver firmas"),
+    ("signatures", "create", "Crear solicitudes de firma"),
+
     # Warranties
     ("warranties", "read", "Ver garantías"),
     ("warranties", "create", "Crear garantías"),

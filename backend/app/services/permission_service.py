@@ -110,6 +110,14 @@ class PermissionService:
                 "devices:read", "devices:create", "devices:update", "devices:delete",
                 # Contact Messages
                 "contact_messages:read",
+                # Tickets
+                "tickets:read", "tickets:create", "tickets:update", "tickets:delete",
+                # Purchase Requests
+                "purchase_requests:read", "purchase_requests:create", "purchase_requests:update", "purchase_requests:delete",
+                # Manuals
+                "manuals:read", "manuals:create", "manuals:update", "manuals:delete",
+                # Signatures
+                "signatures:read", "signatures:create",
             }
         elif role_id == 2:  # Technician
             return {

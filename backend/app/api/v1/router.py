@@ -25,6 +25,10 @@ try:
 	from app.routers import warranty as warranty_router
 	from app.routers import analytics as analytics_router
 	from app.routers import search as search_router
+	from app.routers import signature as signature_router
+	from app.routers import tickets as tickets_router
+	from app.routers import purchase_requests as purchase_requests_router
+	from app.routers import manuals as manuals_router
 except Exception:
 	# Si los módulos no existen en este entorno, se ignoran
 	user_router = repair_router = instrument_router = category_router = stock_movement_router = contact_router = None
@@ -41,11 +45,15 @@ except Exception:
 	analytics_router = None
 	search_router = None
 	search_router = None
+	signature_router = None
+	tickets_router = None
+	purchase_requests_router = None
+	manuals_router = None
 
 # If any router failed to import previously (e.g., due to transient import errors),
 # attempt a second import pass so that fixes applied at runtime are picked up.
 import importlib
-for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment", "client", "newsletter", "tools"):
+for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment", "client", "newsletter", "tools", "signature", "tickets", "purchase_requests", "manuals"):
 	var_name = f"{name}_router"
 	if globals().get(var_name) is None:
 		try:
@@ -126,3 +134,11 @@ if globals().get("search_router"):
 	api_router.include_router(globals()["search_router"].router)
 if globals().get("search_router"):
 	api_router.include_router(globals()["search_router"].router)
+if globals().get("signature_router"):
+	api_router.include_router(globals()["signature_router"].router)
+if globals().get("tickets_router"):
+	api_router.include_router(globals()["tickets_router"].router)
+if globals().get("purchase_requests_router"):
+	api_router.include_router(globals()["purchase_requests_router"].router)
+if globals().get("manuals_router"):
+	api_router.include_router(globals()["manuals_router"].router)

@@ -16,6 +16,7 @@ class AppointmentCreate(BaseModel):
     telefono: str = Field(..., min_length=10, max_length=20)
     fecha: datetime
     mensaje: Optional[str] = Field(None, max_length=1000)
+    turnstile_token: Optional[str] = None
 
     @validator('nombre')
     def validate_nombre(cls, v):

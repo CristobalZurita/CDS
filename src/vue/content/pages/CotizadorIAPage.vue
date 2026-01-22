@@ -31,6 +31,9 @@
         @accept="onDisclaimerAccepted"
         @cancel="step = 2"
       />
+      <div class="captcha-wrap">
+        <TurnstileWidget @verify="onVerify" />
+      </div>
     </div>
 
     <!-- Step 4: Quotation Result -->
@@ -56,6 +59,7 @@ import { useRouter } from 'vue-router'
 import { useQuotation } from '@/composables/useQuotation'
 import { useDiagnostic } from '@/composables/useDiagnostic'
 import { useQuotationStore } from '@/stores/quotation'
+import TurnstileWidget from '@/vue/components/widgets/TurnstileWidget.vue'
 
 // Components
 import InstrumentSelector from '@/vue/components/quotation/InstrumentSelector.vue'
@@ -71,6 +75,7 @@ const { quotation, loading, estimate, reset } = useQuotation()
 const step = ref(1)
 const selectedInstrument = ref(null)
 const selectedFaults = ref([])
+const turnstileToken = ref('')
 
 /**
  * Step 1: User selects instrument (brand + model)
@@ -93,9 +98,12 @@ const onDiagnosticComplete = (faults) => {
  * Step 3: User accepts disclaimer
  */
 const onDisclaimerAccepted = async () => {
+  if (!turnstileToken.value) {
+    return
+  }
   step.value = 4
   try {
-    await estimate(selectedInstrument.value.id, selectedFaults.value)
+    await estimate(selectedInstrument.value.id, selectedFaults.value, turnstileToken.value)
   } catch (err) {
     // Error will be shown in QuotationResult component
     console.error('Error generating quotation:', err)
@@ -118,6 +126,10 @@ const resetAll = () => {
 const goToSchedule = () => {
   router.push('/agendar')
 }
+
+const onVerify = (token) => {
+  turnstileToken.value = token
+}
 </script>
 
 <style scoped>
@@ -135,6 +147,12 @@ const goToSchedule = () => {
   padding: 2rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   animation: slideUp 0.4s ease-out;
+}
+
+.captcha-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 @keyframes slideUp {

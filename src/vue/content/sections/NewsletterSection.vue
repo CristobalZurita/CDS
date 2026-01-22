@@ -23,6 +23,8 @@
                     />
                 </div>
 
+                <TurnstileWidget @verify="onVerify" />
+
                 <p v-if="statusMessage"
                    class="newsletter-status"
                    :class="statusClass">
@@ -41,6 +43,7 @@ import PageSection from "/src/vue/components/layout/PageSection.vue"
 import PageSectionHeader from "/src/vue/components/layout/PageSectionHeader.vue"
 import PageSectionContent from "/src/vue/components/layout/PageSectionContent.vue"
 import XLButton from "/src/vue/components/widgets/XLButton.vue"
+import TurnstileWidget from "@/vue/components/widgets/TurnstileWidget.vue"
 import { useApi } from "/src/composables/useApi.js"
 import { useUtils } from "/src/composables/utils.js"
 
@@ -54,6 +57,7 @@ const utils = useUtils()
 const email = ref("")
 const status = ref("idle")
 const statusMessage = ref("")
+const turnstileToken = ref("")
 
 const statusClass = computed(() => {
     return status.value === "success" ? "is-success" : "is-error"
@@ -63,11 +67,17 @@ const onSubmit = async (event) => {
     event.preventDefault()
     status.value = "idle"
     statusMessage.value = ""
+    if (!turnstileToken.value) {
+        status.value = "error"
+        statusMessage.value = "Completa el captcha antes de continuar."
+        return
+    }
 
     try {
         await api.post("/newsletter/subscribe", {
             email: email.value,
-            source_url: utils.getAbsoluteLocation()
+            source_url: utils.getAbsoluteLocation(),
+            turnstile_token: turnstileToken.value
         })
         status.value = "success"
         statusMessage.value = "Gracias por suscribirte. Te avisaremos de nuevas novedades."
@@ -78,6 +88,10 @@ const onSubmit = async (event) => {
         statusMessage.value = "No pudimos registrar tu suscripción. Intenta nuevamente."
         track(AnalyticsEvents.NEWSLETTER_SUBMIT_ERROR, { source: 'newsletter_section' }, { page: utils.getAbsoluteLocation() })
     }
+}
+
+const onVerify = (token) => {
+    turnstileToken.value = token
 }
 </script>
 

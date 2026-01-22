@@ -26,6 +26,10 @@ from app.models.repair_photo import RepairPhoto
 from app.models.repair_note import RepairNote
 from app.models.contact_message import ContactMessage
 from app.models.newsletter_subscription import NewsletterSubscription
+from app.models.signature_request import SignatureRequest
+from app.models.ticket import Ticket, TicketMessage
+from app.models.purchase_request import PurchaseRequest, PurchaseRequestItem
+from app.models.manual_document import ManualDocument
 
 # === MODELOS ADICIONALES (ADITIVOS) ===
 from app.models.permission import Permission, Role, role_permissions, user_role_assignments
@@ -59,6 +63,12 @@ __all__ = [
     "RepairNote",
     "ContactMessage",
     "NewsletterSubscription",
+    "SignatureRequest",
+    "Ticket",
+    "TicketMessage",
+    "PurchaseRequest",
+    "PurchaseRequestItem",
+    "ManualDocument",
     # Modelos adicionales (ADITIVOS)
     "Permission", "Role",
     "Invoice", "InvoiceItem", "InvoiceSequence", "InvoiceStatus", "InvoiceType",

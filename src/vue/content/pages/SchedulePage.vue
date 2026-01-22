@@ -170,13 +170,15 @@
             </label>
           </div>
 
+          <TurnstileWidget @verify="onVerify" />
+
           <div class="step-actions">
             <button class="btn-secondary" @click="step = 2">
               ← Atrás
             </button>
             <button
               class="btn-primary"
-              :disabled="!agreeConditions"
+              :disabled="!agreeConditions || !turnstileToken"
               @click="confirmAppointment"
             >
               Confirmar Cita
@@ -230,6 +232,7 @@ import { ref, computed } from 'vue'
 import { useQuotationStore } from '@/stores/quotation'
 import { useAuthStore } from '@/stores/auth'
 import { api } from '@/services/api'
+import TurnstileWidget from '@/vue/components/widgets/TurnstileWidget.vue'
 
 const quotationStore = useQuotationStore()
 const authStore = useAuthStore()
@@ -240,6 +243,7 @@ const selectedDate = ref(null)
 const selectedTime = ref(null)
 const agreeConditions = ref(false)
 const appointmentNumber = ref('')
+const turnstileToken = ref('')
 
 // Calendar
 const currentMonth = ref(new Date().getMonth())
@@ -323,6 +327,9 @@ const formatDate = (date) => {
 }
 
 const confirmAppointment = () => {
+  if (!turnstileToken.value) {
+    return
+  }
   // Generar número de cita
   appointmentNumber.value = 'CIT-' + Date.now().toString().slice(-8)
   step.value = 4
@@ -347,12 +354,17 @@ const confirmAppointment = () => {
     fecha: appointmentDate.toISOString(),
     mensaje: quotationStore.selectedInstrument?.name
       ? `Instrumento: ${quotationStore.selectedInstrument.name}`
-      : 'Cita de diagnóstico'
+      : 'Cita de diagnóstico',
+    turnstile_token: turnstileToken.value
   }).then(response => {
     console.log('Cita guardada en backend:', response.data)
   }).catch(error => {
     console.warn('Error guardando cita en backend:', error)
   })
+}
+
+const onVerify = (token) => {
+  turnstileToken.value = token
 }
 
 // Emit

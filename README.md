@@ -1,63 +1,33 @@
-# Cirujano de Sintetizadores
-
-Plataforma integral para gestión de reparaciones de instrumentos, con portal público, panel de clientes y panel administrativo. Incluye cotización online, agendamiento, seguimiento de reparaciones e inventario del taller.
-
----
-
-## Estado actual (resumen)
-- Backend FastAPI + SQLite operativo con permisos granulares.
-- Frontend Vue operativo (portal público, panel cliente y admin).
-- CRUD básico funcional para clientes, instrumentos y reparaciones.
-- Inventario con CRUD básico, falta integración por reparación.
+# Cirujano de Sintetizadores (CDS)
+Plataforma integral para gestion de reparaciones de instrumentos, inventario de taller y comunicacion cliente-tecnico.
+Incluye portal publico, panel cliente y panel administrador con magos de ingreso.
 
 ---
 
-## Módulos principales
-
-### Portal público
-- Información del taller, servicios y trabajos.
-- Contacto con formulario (mensajes llegan a admin).
-- Cotizador online con flujo de diagnóstico.
-- Calculadoras electrónicas para estudiantes.
-
-### Panel cliente
-- Dashboard con estado de reparaciones.
-- Historial de reparaciones + detalle.
-- Perfil y datos personales.
-- Agendamiento de citas.
-
-### Panel admin
-- Clientes (listado + detalle + ingreso completo).
-- Reparaciones (listado + creación + detalle avanzado).
-- Inventario (listado + creación + edición).
-- Categorías, citas, contacto y newsletter.
+## Modulos principales
+- Portal publico: servicios, trabajos, cotizador, contacto.
+- Panel cliente: estado de reparaciones, historial, perfil.
+- Panel admin: clientes, instrumentos, OT, inventario, categorias, citas, mensajes.
+- Magos (admin): ingreso completo, inventario, materiales, tickets, compras, manuales, firmas.
 
 ---
 
 ## Flujo operativo recomendado (admin)
-1) Crear cliente + instrumento + reparación en **Ingreso completo**.
-2) Actualizar estado y registrar avances en la reparación.
-3) Adjuntar fotos y notas técnicas.
-4) Registrar consumo de inventario (pendiente de integración).
-5) Cerrar reparación y emitir documento/boleta (pendiente).
+1) Crear cliente + instrumento + OT con el mago de ingreso.
+2) Registrar diagnostico, materiales usados y avances.
+3) Solicitar firma de ingreso y retiro (link publico).
+4) Cerrar OT y emitir documento final (pendiente de PDF).
 
 ---
 
-## Tecnologías
-- **Frontend:** Vue 3 + Vite
-- **Backend:** FastAPI + SQLAlchemy
-- **DB:** SQLite (local), preparado para Postgres
+## Tecnologias
+- Frontend: Vue 3 + Vite
+- Backend: FastAPI + SQLAlchemy
+- DB: SQLite (local), preparado para Postgres
 
 ---
 
-## Requisitos
-- Node.js (para frontend)
-- Python 3.x (para backend)
-
----
-
-## Configuración
-
+## Configuracion
 ### Frontend (.env)
 ```
 VITE_API_URL=http://localhost:8000/api/v1
@@ -69,7 +39,6 @@ VITE_API_URL=http://localhost:8000/api/v1
 ---
 
 ## Ejecutar en local
-
 ### Backend
 ```
 cd backend
@@ -88,7 +57,6 @@ Backend: `http://localhost:8000`
 ---
 
 ## Migraciones y permisos
-
 ### Migraciones
 ```
 cd backend
@@ -104,18 +72,28 @@ PYTHONPATH=. python scripts/seed_permissions.py
 
 ---
 
-## Estado de integraciones pendientes
-- Inventario asociado a reparaciones (consumo y descuento automático).
-- Documentos automáticos (recepción/entrega) con email.
-- Contabilidad/pagos y facturación.
-- Sistema de tickets para consultas.
-- Dashboard admin con KPIs reales (usar `/analytics`).
+## Importacion de inventario (Excel)
+1) Normalizar Excel -> JSON:
+```
+python scripts/ingest/normalize_excel.py
+```
+2) Importar a DB (tabla products):
+```
+python scripts/ingest/import_to_db.py
+```
 
 ---
 
-## Auditorías
-- Auditoría actual: `AUDITORIA_CDS_2026-01-21.md`
-- Auditoría MODELOS: `AUDITORIA_MODELOS_2026-01-21.md`
+## Firma digital
+- UI publica: `/signature/:token`
+- Admin genera token desde mago o ficha de OT.
+- Firma se guarda en `uploads/signatures/`.
+
+---
+
+## Auditoria y estado
+- Auditoria actual: `AUDITORIA_CDS_2026-01-22.md`
+- Todo-list operativo: `CDS_TODO_LIST_2026-01-22.md`
 
 ---
 

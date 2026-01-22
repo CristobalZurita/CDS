@@ -10,6 +10,7 @@ from datetime import datetime
 class NewsletterSubscribe(BaseModel):
     email: EmailStr
     source_url: Optional[str] = None
+    turnstile_token: Optional[str] = None
 
 
 class NewsletterSubscriptionOut(BaseModel):

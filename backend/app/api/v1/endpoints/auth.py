@@ -49,6 +49,7 @@ def _maybe_create_client(db: Session, user: User) -> None:
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(
     request: RegisterRequest,
+    http_request: Request,
     db: Session = Depends(get_db)
 ):
     """
@@ -61,6 +62,11 @@ async def register(
     - **phone**: Teléfono (opcional)
     """
     
+    # Turnstile verification (public endpoint)
+    from app.services.turnstile_service import verify_turnstile
+    if not request.turnstile_token or not verify_turnstile(request.turnstile_token, http_request.client.host if http_request.client else None):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Captcha inválido")
+
     # Verificar si el email ya existe
     existing_email = db.query(User).filter(User.email == request.email).first()
     if existing_email:
@@ -123,6 +129,11 @@ async def login(
     - **refresh_token**: Token para obtener nuevo access_token
     """
     
+    # Turnstile verification (public endpoint)
+    from app.services.turnstile_service import verify_turnstile
+    if not payload.turnstile_token or not verify_turnstile(payload.turnstile_token, request.client.host if request.client else None):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Captcha inválido")
+
     # Buscar usuario por email (gracefully handle DB issues during tests)
     try:
         user = db.query(User).filter(User.email == payload.email).first()
