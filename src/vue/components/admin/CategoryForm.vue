@@ -15,8 +15,16 @@
 import { ref } from 'vue'
 import { useCategories } from '@/composables/useCategories'
 const { createCategory } = useCategories()
+const emit = defineEmits(['saved'])
 const form = ref({ name: '', description: '' })
-function onSubmit() {
-  createCategory(form.value)
+async function onSubmit() {
+  try {
+    await createCategory(form.value)
+    emit('saved')
+    form.value = { name: '', description: '' }
+  } catch (e) {
+    console.error('Error creando categoría:', e)
+    alert('Error creando categoría')
+  }
 }
 </script>

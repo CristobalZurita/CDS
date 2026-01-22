@@ -41,10 +41,10 @@ def upgrade() -> None:
     # === APPOINTMENTS TABLE - New columns ===
     with op.batch_alter_table('appointments') as batch_op:
         # Foreign keys
-        batch_op.add_column(sa.Column('client_id', sa.Integer(), sa.ForeignKey('clients.id'), nullable=True))
-        batch_op.add_column(sa.Column('device_id', sa.Integer(), sa.ForeignKey('devices.id'), nullable=True))
-        batch_op.add_column(sa.Column('repair_id', sa.Integer(), sa.ForeignKey('repairs.id'), nullable=True))
-        batch_op.add_column(sa.Column('technician_id', sa.Integer(), sa.ForeignKey('users.id'), nullable=True))
+        batch_op.add_column(sa.Column('client_id', sa.Integer(), sa.ForeignKey('clients.id', name='fk_appointments_client_id'), nullable=True))
+        batch_op.add_column(sa.Column('device_id', sa.Integer(), sa.ForeignKey('devices.id', name='fk_appointments_device_id'), nullable=True))
+        batch_op.add_column(sa.Column('repair_id', sa.Integer(), sa.ForeignKey('repairs.id', name='fk_appointments_repair_id'), nullable=True))
+        batch_op.add_column(sa.Column('technician_id', sa.Integer(), sa.ForeignKey('users.id', name='fk_appointments_technician_id'), nullable=True))
         
         # Tipo y duración
         batch_op.add_column(sa.Column('appointment_type', sa.String(30), default='reception', nullable=True))
@@ -70,14 +70,14 @@ def upgrade() -> None:
     # === PAYMENTS TABLE - New columns ===
     with op.batch_alter_table('payments') as batch_op:
         # Invoice relation
-        batch_op.add_column(sa.Column('invoice_id', sa.Integer(), sa.ForeignKey('invoices.id'), nullable=True))
+        batch_op.add_column(sa.Column('invoice_id', sa.Integer(), sa.ForeignKey('invoices.id', name='fk_payments_invoice_id'), nullable=True))
         
         # Fechas
         batch_op.add_column(sa.Column('payment_date', sa.DateTime(), nullable=True))
         batch_op.add_column(sa.Column('payment_due_date', sa.DateTime(), nullable=True))
         
         # Reembolsos
-        batch_op.add_column(sa.Column('refund_of_id', sa.Integer(), sa.ForeignKey('payments.id'), nullable=True))
+        batch_op.add_column(sa.Column('refund_of_id', sa.Integer(), sa.ForeignKey('payments.id', name='fk_payments_refund_of_id'), nullable=True))
         
         # Procesador de pagos
         batch_op.add_column(sa.Column('payment_processor', sa.String(50), nullable=True))

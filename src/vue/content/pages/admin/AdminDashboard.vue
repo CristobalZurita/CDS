@@ -6,8 +6,16 @@
 			<RepairsList />
 		</section>
 		<section>
-			<h3>Usuarios</h3>
-			<UserList />
+			<div class="d-flex justify-content-between align-items-center mb-2">
+				<h3 class="mb-0">Usuarios</h3>
+				<button class="btn btn-sm btn-success" @click="showUserForm = !showUserForm">
+					{{ showUserForm ? 'Cancelar' : 'Nuevo Usuario' }}
+				</button>
+			</div>
+			<div v-if="showUserForm" class="card p-3 mb-3">
+				<UserForm @saved="onUserSaved" />
+			</div>
+			<UserList :key="userRefreshKey" />
 		</section>
 	</AdminLayout>
 </template>
@@ -19,8 +27,11 @@ import RepairsList from '@/vue/components/admin/RepairsList.vue'
 import UserList from '@/vue/components/admin/UserList.vue'
 import StatsCards from '@/vue/components/admin/StatsCards.vue'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
+import UserForm from '@/vue/components/admin/UserForm.vue'
 
 const stats = ref({})
+const showUserForm = ref(false)
+const userRefreshKey = ref(0)
 
 async function loadStats() {
 	try {
@@ -32,6 +43,11 @@ async function loadStats() {
 }
 
 onMounted(loadStats)
+
+function onUserSaved() {
+	showUserForm.value = false
+	userRefreshKey.value += 1
+}
 </script>
 
 <style scoped>
