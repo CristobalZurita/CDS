@@ -58,6 +58,10 @@ class Repair(Base):
     payment_method = Column(String, nullable=True)
     paid_amount = Column(Float, default=0)
 
+    # Firmas (ingreso/retiro)
+    signature_ingreso_path = Column(Text, nullable=True)
+    signature_retiro_path = Column(Text, nullable=True)
+
     # Garantía
     warranty_days = Column(Integer, default=90)
     warranty_until = Column(Date, nullable=True)
@@ -77,6 +81,7 @@ class Repair(Base):
     stock_movements = relationship("StockMovement", foreign_keys="StockMovement.repair_id")
     invoices = relationship("Invoice", back_populates="repair")  # ADITIVO
     warranty = relationship("Warranty", back_populates="repair", uselist=False)  # ADITIVO
+    signature_requests = relationship("SignatureRequest", back_populates="repair", cascade="all, delete-orphan")
 
     @property
     def status(self):

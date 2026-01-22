@@ -230,7 +230,9 @@ def get_repair(
         "total_cost": repair.total_cost,
         "paid_amount": repair.paid_amount,
         "payment_status": repair.payment_status,
-        "payment_method": repair.payment_method
+        "payment_method": repair.payment_method,
+        "signature_ingreso_path": repair.signature_ingreso_path,
+        "signature_retiro_path": repair.signature_retiro_path
     }
 
 

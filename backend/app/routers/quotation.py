@@ -37,6 +37,7 @@ TIER_CONFIG = {
 class QuotationRequest(BaseModel):
     instrument_id: str
     faults: List[str]
+    turnstile_token: str | None = None
 
 
 class FaultBreakdown(BaseModel):
@@ -67,6 +68,9 @@ class QuotationResponse(BaseModel):
 
 @router.post("/estimate", response_model=QuotationResponse)
 async def estimate_quotation(request: QuotationRequest):
+    from app.services.turnstile_service import verify_turnstile
+    if not request.turnstile_token or not verify_turnstile(request.turnstile_token):
+        raise HTTPException(status_code=400, detail="Captcha inválido")
     instrument = INSTRUMENTS.get(request.instrument_id)
     if not instrument:
         raise HTTPException(status_code=404, detail="Instrumento no encontrado")

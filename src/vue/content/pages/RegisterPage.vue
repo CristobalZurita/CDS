@@ -26,8 +26,15 @@
 
 				<div class="form-group">
 					<label>Contraseña</label>
-					<input v-model="form.password" type="password" required minlength="8" />
+					<div class="password-field">
+						<input v-model="form.password" :type="showPassword ? 'text' : 'password'" required minlength="8" />
+						<button type="button" class="toggle-password" @click="showPassword = !showPassword">
+							{{ showPassword ? 'Ocultar' : 'Mostrar' }}
+						</button>
+					</div>
 				</div>
+
+				<TurnstileWidget @verify="onVerify" />
 
 				<div v-if="apiError" class="alert alert-danger">{{ apiError }}</div>
 
@@ -43,18 +50,24 @@
 import { reactive, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import TurnstileWidget from '@/vue/components/widgets/TurnstileWidget.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
 
-const form = reactive({ email: '', username: '', full_name: '', password: '', phone: '' })
+const form = reactive({ email: '', username: '', full_name: '', password: '', phone: '', turnstile_token: '' })
 const loading = ref(false)
 const apiError = ref('')
+const showPassword = ref(false)
 
 async function handleRegister() {
 	apiError.value = ''
 	loading.value = true
 	try {
+		if (!form.turnstile_token) {
+			apiError.value = 'Captcha requerido'
+			return
+		}
 		await auth.register(form)
 		// after registration, redirect to login or dashboard
 		router.push('/login')
@@ -64,6 +77,10 @@ async function handleRegister() {
 		loading.value = false
 	}
 }
+
+function onVerify(token) {
+	form.turnstile_token = token
+}
 </script>
 
 <style scoped>
@@ -71,6 +88,8 @@ async function handleRegister() {
 .register-container { width: 100%; max-width: 560px; background: #fff; padding: 2rem; border-radius: 8px }
 .form-group { margin-bottom: 1rem }
 .form-group input { width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px }
+.password-field { display: flex; gap: 0.5rem; align-items: center; }
+.toggle-password { border: 1px solid #ddd; background: #f3f4f6; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
 .muted { color:#666; margin-top:1rem }
 .alert { margin: 1rem 0 }
 </style>

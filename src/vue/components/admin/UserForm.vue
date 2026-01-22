@@ -22,7 +22,12 @@
     </div>
     <div>
       <label>Contraseña</label>
-      <input v-model="form.password" required type="password" />
+      <div class="password-field">
+        <input v-model="form.password" required :type="showPassword ? 'text' : 'password'" />
+        <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+          {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+        </button>
+      </div>
     </div>
     <button type="submit">Guardar</button>
   </form>
@@ -33,6 +38,7 @@ import { useUsers } from '@/composables/useUsers'
 const { createUser, updateUser } = useUsers()
 const emit = defineEmits(['saved'])
 const form = ref({ email: '', full_name: '', username: '', role: 'client', password: '' })
+const showPassword = ref(false)
 async function onSubmit() {
   // Si es edición, usar updateUser, si es nuevo, usar createUser
   try {
@@ -45,3 +51,17 @@ async function onSubmit() {
   }
 }
 </script>
+<style scoped>
+.password-field {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.toggle-password {
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+</style>

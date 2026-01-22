@@ -36,11 +36,21 @@
       </div>
       <div class="form-group">
         <label>Nueva contraseña</label>
-        <input v-model="newPassword" type="password" required minlength="8" :disabled="isLoading" />
+        <div class="password-field">
+          <input v-model="newPassword" :type="showPassword ? 'text' : 'password'" required minlength="8" :disabled="isLoading" />
+          <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
       </div>
       <div class="form-group">
         <label>Confirmar contraseña</label>
-        <input v-model="confirmPassword" type="password" required minlength="8" :disabled="isLoading" />
+        <div class="password-field">
+          <input v-model="confirmPassword" :type="showPassword ? 'text' : 'password'" required minlength="8" :disabled="isLoading" />
+          <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
       </div>
       <button type="submit" class="btn-primary" :disabled="isLoading">
         {{ isLoading ? 'Actualizando...' : 'Actualizar contraseña' }}
@@ -62,6 +72,7 @@ const token = ref('')
 const newPassword = ref('')
 const confirmPassword = ref('')
 const isLoading = ref(false)
+const showPassword = ref(false)
 
 const requestReset = async () => {
   isLoading.value = true
@@ -118,6 +129,20 @@ onMounted(() => {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+}
+
+.password-field {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.toggle-password {
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
 }
 
 .toggle-btn {

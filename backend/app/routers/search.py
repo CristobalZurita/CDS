@@ -11,6 +11,9 @@ from app.models.client import Client
 from app.models.device import Device
 from app.models.repair import Repair
 from app.models.inventory import Product
+from app.models.ticket import Ticket
+from app.models.manual_document import ManualDocument
+from app.models.purchase_request import PurchaseRequest
 
 router = APIRouter(prefix="/search", tags=["search"])
 
@@ -78,6 +81,42 @@ def search_all(
             "label": product.name,
             "subtitle": product.sku,
             "product_id": product.id
+        })
+
+    tickets = db.query(Ticket).filter(
+        (Ticket.subject.ilike(q))
+    ).limit(limit).all()
+    for ticket in tickets:
+        results.append({
+            "type": "ticket",
+            "id": ticket.id,
+            "label": ticket.subject,
+            "subtitle": ticket.status,
+            "ticket_id": ticket.id
+        })
+
+    manuals = db.query(ManualDocument).filter(
+        (ManualDocument.title.ilike(q))
+    ).limit(limit).all()
+    for manual in manuals:
+        results.append({
+            "type": "manual",
+            "id": manual.id,
+            "label": manual.title,
+            "subtitle": manual.source,
+            "manual_id": manual.id
+        })
+
+    purchase_requests = db.query(PurchaseRequest).filter(
+        (PurchaseRequest.notes.ilike(q))
+    ).limit(limit).all()
+    for req in purchase_requests:
+        results.append({
+            "type": "purchase_request",
+            "id": req.id,
+            "label": f"PR-{req.id}",
+            "subtitle": req.status,
+            "purchase_request_id": req.id
         })
 
     return results[:limit]

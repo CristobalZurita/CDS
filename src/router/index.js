@@ -38,6 +38,11 @@ import ContactMessagesPage from '@/vue/content/pages/admin/ContactMessagesPage.v
 import NewsletterSubscriptionsPage from '@/vue/content/pages/admin/NewsletterSubscriptionsPage.vue'
 import AppointmentsPage from '@/vue/content/pages/admin/AppointmentsPage.vue'
 import RepairDetailAdminPage from '@/vue/content/pages/admin/RepairDetailAdminPage.vue'
+import WizardsPage from '@/vue/content/pages/admin/WizardsPage.vue'
+import TicketsPage from '@/vue/content/pages/admin/TicketsPage.vue'
+import PurchaseRequestsPage from '@/vue/content/pages/admin/PurchaseRequestsPage.vue'
+import ManualsPage from '@/vue/content/pages/admin/ManualsPage.vue'
+import SignaturePage from '@/vue/content/pages/SignaturePage.vue'
 
 const routes = [
   // Public routes
@@ -197,8 +202,34 @@ const routes = [
         path: 'appointments',
         name: 'admin-appointments',
         component: AppointmentsPage
+      },
+      {
+        path: 'wizards',
+        name: 'admin-wizards',
+        component: WizardsPage
+      },
+      {
+        path: 'tickets',
+        name: 'admin-tickets',
+        component: TicketsPage
+      },
+      {
+        path: 'purchase-requests',
+        name: 'admin-purchase-requests',
+        component: PurchaseRequestsPage
+      },
+      {
+        path: 'manuals',
+        name: 'admin-manuals',
+        component: ManualsPage
       }
     ]
+  },
+  {
+    path: '/signature/:token',
+    name: 'signature',
+    component: SignaturePage,
+    meta: { requiresAuth: false }
   },
 
   // Calculadoras electrónicas (rutas públicas con lazy loading)

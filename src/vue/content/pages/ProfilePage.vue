@@ -140,15 +140,30 @@
         <h3>Cambiar Contraseña</h3>
         <div class="form-group">
           <label>Contraseña actual</label>
-          <input v-model="passwordForm.current" type="password" class="form-input" />
+          <div class="password-field">
+            <input v-model="passwordForm.current" :type="showPassword ? 'text' : 'password'" class="form-input" />
+            <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+              {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
         </div>
         <div class="form-group">
           <label>Nueva contraseña</label>
-          <input v-model="passwordForm.new" type="password" class="form-input" />
+          <div class="password-field">
+            <input v-model="passwordForm.new" :type="showPassword ? 'text' : 'password'" class="form-input" />
+            <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+              {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
         </div>
         <div class="form-group">
           <label>Confirmar contraseña</label>
-          <input v-model="passwordForm.confirm" type="password" class="form-input" />
+          <div class="password-field">
+            <input v-model="passwordForm.confirm" :type="showPassword ? 'text' : 'password'" class="form-input" />
+            <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+              {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
         </div>
         <div class="modal-actions">
           <button @click="showChangePassword = false" class="btn-secondary">Cancelar</button>
@@ -218,6 +233,7 @@ const passwordForm = ref({
   new: '',
   confirm: ''
 })
+const showPassword = ref(false)
 
 // Computed
 const userInitials = computed(() => {
@@ -401,6 +417,20 @@ onMounted(() => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
+}
+
+.password-field {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.toggle-password {
+  border: 1px solid #cbd5e0;
+  background: #f7fafc;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
 }
 
 .column {

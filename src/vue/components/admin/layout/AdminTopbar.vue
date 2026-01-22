@@ -87,6 +87,18 @@ const goToResult = (item) => {
     router.push(`/admin/clients?client_id=${item.client_id || item.id}`)
     return
   }
+  if (item.type === 'ticket') {
+    router.push('/admin/tickets')
+    return
+  }
+  if (item.type === 'manual') {
+    router.push('/admin/manuals')
+    return
+  }
+  if (item.type === 'purchase_request') {
+    router.push('/admin/purchase-requests')
+    return
+  }
   router.push('/admin')
 }
 

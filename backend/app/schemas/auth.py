@@ -24,6 +24,7 @@ class LoginRequest(BaseModel):
     """Request de login"""
     email: EmailStr
     password: str = Field(..., min_length=6)
+    turnstile_token: Optional[str] = None
 
 
 class RegisterRequest(BaseModel):
@@ -33,6 +34,7 @@ class RegisterRequest(BaseModel):
     full_name: str = Field(..., min_length=3)
     password: str = Field(..., min_length=8)
     phone: Optional[str] = None
+    turnstile_token: Optional[str] = None
 
 
 class PasswordResetRequest(BaseModel):

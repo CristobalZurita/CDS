@@ -13,6 +13,7 @@ class ContactCreate(BaseModel):
     subject: str = Field(..., min_length=2, max_length=255)
     message: str = Field(..., min_length=2, max_length=2048)
     source_url: Optional[str] = None
+    turnstile_token: Optional[str] = None
 
 
 class ContactMessageOut(BaseModel):

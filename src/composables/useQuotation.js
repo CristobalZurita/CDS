@@ -28,7 +28,7 @@ export function useQuotation() {
    * @returns {Promise<Object>} - Cotización generada
    * @throws {Error} - Si hay error en la solicitud
    */
-  const estimate = async (instrumentId, faults) => {
+  const estimate = async (instrumentId, faults, turnstileToken = null) => {
     if (!instrumentId) {
       error.value = 'Debe seleccionar un instrumento'
       throw new Error('Instrumento no seleccionado')
@@ -46,7 +46,8 @@ export function useQuotation() {
     try {
       const response = await api.post('/quotations/estimate', {
         instrument_id: instrumentId,
-        faults: faults
+        faults: faults,
+        turnstile_token: turnstileToken
       })
       
       quotation.value = response.data

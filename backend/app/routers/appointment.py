@@ -3,7 +3,7 @@ Router for Appointment endpoints
 Handles appointment booking and management
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
@@ -38,6 +38,7 @@ router = APIRouter(prefix="/appointments", tags=["appointments"])
 @router.post("/", response_model=AppointmentResponse, status_code=201)
 async def create_appointment_endpoint(
     appointment: AppointmentCreate,
+    request: Request,
     db: Session = Depends(get_db)
 ):
     """
@@ -50,6 +51,11 @@ async def create_appointment_endpoint(
     - **mensaje**: Optional message or special requests
     """
     try:
+        # Turnstile verification (public endpoint)
+        from app.services.turnstile_service import verify_turnstile
+        if not appointment.turnstile_token or not verify_turnstile(appointment.turnstile_token, request.client.host if request.client else None):
+            raise HTTPException(status_code=400, detail="Captcha inválido")
+
         # Create appointment in database
         db_appointment = await create_appointment(db, appointment)
         
