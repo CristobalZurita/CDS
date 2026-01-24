@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 from typing import List
 import json
 from pathlib import Path
 from app.services.event_system import event_bus, Events
+from app.core.ratelimit import limiter
 
 router = APIRouter(prefix="/quotations", tags=["quotations"])
 
@@ -67,7 +68,8 @@ class QuotationResponse(BaseModel):
 
 
 @router.post("/estimate", response_model=QuotationResponse)
-async def estimate_quotation(request: QuotationRequest):
+@limiter.limit("10/minute")
+async def estimate_quotation(request: QuotationRequest, req: Request):
     from app.services.turnstile_service import verify_turnstile
     if not request.turnstile_token or not verify_turnstile(request.turnstile_token):
         raise HTTPException(status_code=400, detail="Captcha inválido")

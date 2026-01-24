@@ -36,6 +36,18 @@
 
       <TurnstileWidget @verify="onVerify" />
 
+      <div v-if="requires2fa" class="form-group">
+        <label for="twoFactor" class="form-label">Código de verificación</label>
+        <input
+          id="twoFactor"
+          v-model="twoFactorCode"
+          type="text"
+          class="form-control"
+          placeholder="123456"
+          :disabled="isLoading"
+        />
+      </div>
+
       <div v-if="apiError" class="alert alert-danger">
         {{ apiError }}
       </div>
@@ -46,7 +58,7 @@
         :disabled="isLoading"
       >
         <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-        {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+        {{ isLoading ? 'Procesando...' : (requires2fa ? 'Verificar código' : 'Iniciar Sesión') }}
       </button>
 
       <div class="text-center mt-3">
@@ -85,6 +97,9 @@ const isLoading = ref(false)
 const apiError = ref('')
 const turnstileToken = ref('')
 const showPassword = ref(false)
+const requires2fa = ref(false)
+const challengeId = ref(null)
+const twoFactorCode = ref('')
 
 /**
  * Validar formulario
@@ -133,7 +148,16 @@ async function handleLogin() {
   isLoading.value = true
 
   try {
-    await authStore.login(formData.email, formData.password, turnstileToken.value)
+    if (!requires2fa.value) {
+      const res = await authStore.login(formData.email, formData.password, turnstileToken.value)
+      if (res?.requires_2fa) {
+        requires2fa.value = true
+        challengeId.value = res.challenge_id
+        return
+      }
+    } else {
+      await authStore.verifyTwoFactor(challengeId.value, twoFactorCode.value)
+    }
     const redirect = route.query.redirect
     if (redirect) {
       router.push(redirect)

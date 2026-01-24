@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import secrets
 from app.core.database import get_db
 from app.core.config import settings
+from app.core.config import settings
 from app.core.security import (
     hash_password, verify_password, create_access_token, create_refresh_token
 )
@@ -19,6 +20,9 @@ from app.models.client import Client
 from app.schemas.auth import (
     LoginRequest, RegisterRequest, Token, PasswordResetRequest, PasswordResetConfirm, ConfirmEmailRequest
 )
+from app.schemas.two_factor import TwoFactorVerifyRequest
+from app.models.two_factor_code import TwoFactorCode
+from app.services.email_service import EmailService
 from app.schemas.user import UserResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -111,7 +115,7 @@ async def register(
     return new_user
 
 
-@router.post("/login", response_model=Token)
+@router.post("/login")
 @limiter.limit("5/minute")  # limit login attempts to mitigate brute-force
 async def login(
     request: Request,
@@ -129,10 +133,11 @@ async def login(
     - **refresh_token**: Token para obtener nuevo access_token
     """
     
-    # Turnstile verification (public endpoint)
-    from app.services.turnstile_service import verify_turnstile
-    if not payload.turnstile_token or not verify_turnstile(payload.turnstile_token, request.client.host if request.client else None):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Captcha inválido")
+    # Turnstile verification (skip in non-production/dev when explicitly disabled)
+    if not (settings.environment and settings.environment.lower() in ("development", "dev")):
+        from app.services.turnstile_service import verify_turnstile
+        if not payload.turnstile_token or not verify_turnstile(payload.turnstile_token, request.client.host if request.client else None):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Captcha inválido")
 
     # Buscar usuario por email (gracefully handle DB issues during tests)
     try:
@@ -174,6 +179,28 @@ async def login(
             detail="Usuario inactivo"
         )
     
+    # 2FA flow (email-based)
+    if getattr(user, "two_factor_enabled", 0):
+        code = f"{secrets.randbelow(999999):06d}"
+        challenge = TwoFactorCode(
+            user_id=user.id,
+            code=code,
+            status="active",
+            expires_at=datetime.utcnow() + timedelta(minutes=10),
+        )
+        db.add(challenge)
+        db.commit()
+
+        try:
+            EmailService().send_two_factor_code(user.email, code)
+        except Exception:
+            pass
+
+        return {
+            "requires_2fa": True,
+            "challenge_id": challenge.id
+        }
+
     # Crear tokens
     access_token = create_access_token(data={
         "sub": str(user.id),
@@ -192,6 +219,53 @@ async def login(
     except Exception:
         pass
     
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+
+@router.post("/verify-2fa", response_model=Token)
+async def verify_two_factor(
+    payload: TwoFactorVerifyRequest,
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    challenge = db.query(TwoFactorCode).filter(TwoFactorCode.id == payload.challenge_id).first()
+    if not challenge:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Código no encontrado")
+    if challenge.status != "active":
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Código inválido")
+    if challenge.expires_at and challenge.expires_at < datetime.utcnow():
+        challenge.status = "expired"
+        db.commit()
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Código expirado")
+    if challenge.code != payload.code:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Código incorrecto")
+
+    challenge.status = "used"
+    db.commit()
+
+    user = db.query(User).filter(User.id == challenge.user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    access_token = create_access_token(data={
+        "sub": str(user.id),
+        "username": user.username,
+        "email": user.email,
+        "role": user.role
+    })
+    refresh_token = create_refresh_token(data={
+        "sub": str(user.id)
+    })
+    try:
+        ip = getattr(request.client, "host", None)
+        create_audit(event_type="auth.login.success", user_id=user.id, ip_address=ip, details={"username": user.username, "two_factor": True})
+    except Exception:
+        pass
+
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,

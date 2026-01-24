@@ -7,6 +7,7 @@ and comprehensive diagnostic/quotation system.
 """
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi.responses import JSONResponse
@@ -92,19 +93,25 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs",
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
+    redirect_slashes=False
 )
 
 # Configure CORS with settings
+allowed_origins = list(settings.allowed_origins or [])
+if settings.environment and settings.environment.lower() in ("development", "dev"):
+    for origin in ("http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174"):
+        if origin not in allowed_origins:
+            allowed_origins.append(origin)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-logger.info(f"CORS configured for origins: {settings.allowed_origins}")
+logger.info(f"CORS configured for origins: {allowed_origins}")
 
 # Enforce HTTPS and add basic security headers when running in production
 if settings.environment and settings.environment.lower() in ("production", "prod"):
@@ -136,6 +143,9 @@ if settings.environment and settings.environment.lower() in ("production", "prod
 
 # Include API v1 routes
 app.include_router(api_router)
+
+# Serve uploaded files
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 
 # Middleware: block unexpected HTML/XML payloads for API endpoints to reduce attack surface

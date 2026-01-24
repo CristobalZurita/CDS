@@ -17,6 +17,7 @@ from app.models.inventory import Product
 router = APIRouter(prefix="/stats", tags=["stats"])
 
 
+@router.get("")
 @router.get("/")
 def get_stats(
     extended: bool = Query(False, description="Incluir estadísticas extendidas"),

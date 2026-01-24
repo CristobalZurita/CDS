@@ -7,6 +7,9 @@
     @prev="onPrev"
   >
     <template #default>
+      <div v-if="errorMessage" class="alert alert-danger mb-3">
+        {{ errorMessage }}
+      </div>
       <div v-if="stepIndex === 0" class="wizard-step-body">
         <h4>Cliente</h4>
         <div class="row g-2">
@@ -125,6 +128,7 @@ const steps = [
 
 const stepIndex = ref(0)
 const saving = ref(false)
+const errorMessage = ref('')
 
 const client = ref({ name: '', email: '', phone: '', address: '', notes: '' })
 const device = ref({ brand_other: '', model: '', serial_number: '', description: '', condition_notes: '' })
@@ -168,6 +172,7 @@ const submit = async () => {
     return
   }
   saving.value = true
+  errorMessage.value = ''
   try {
     const clientRes = await api.post('/clients', client.value)
     const clientId = clientRes.data?.id
@@ -208,7 +213,7 @@ const submit = async () => {
     resetForm()
   } catch (e) {
     console.error(e)
-    alert('Error en ingreso completo')
+    errorMessage.value = e?.response?.data?.detail || e?.message || 'Error en ingreso completo'
   } finally {
     saving.value = false
   }

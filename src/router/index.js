@@ -43,6 +43,7 @@ import TicketsPage from '@/vue/content/pages/admin/TicketsPage.vue'
 import PurchaseRequestsPage from '@/vue/content/pages/admin/PurchaseRequestsPage.vue'
 import ManualsPage from '@/vue/content/pages/admin/ManualsPage.vue'
 import SignaturePage from '@/vue/content/pages/SignaturePage.vue'
+import PhotoUploadPage from '@/vue/content/pages/PhotoUploadPage.vue'
 
 const routes = [
   // Public routes
@@ -229,6 +230,12 @@ const routes = [
     path: '/signature/:token',
     name: 'signature',
     component: SignaturePage,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/photo-upload/:token',
+    name: 'photo-upload',
+    component: PhotoUploadPage,
     meta: { requiresAuth: false }
   },
 

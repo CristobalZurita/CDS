@@ -9,6 +9,7 @@ from typing import List
 from datetime import datetime
 
 from app.core.database import get_db
+from app.core.ratelimit import limiter
 from app.core.dependencies import require_permission
 from app.crud.appointment import (
     create_appointment,
@@ -36,6 +37,7 @@ router = APIRouter(prefix="/appointments", tags=["appointments"])
 
 
 @router.post("/", response_model=AppointmentResponse, status_code=201)
+@limiter.limit("5/minute")
 async def create_appointment_endpoint(
     appointment: AppointmentCreate,
     request: Request,

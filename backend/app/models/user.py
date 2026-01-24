@@ -41,6 +41,8 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     last_login = Column(DateTime, nullable=True)
+    two_factor_enabled = Column(Integer, default=1)
+    two_factor_method = Column(String, default="email")
 
     # Relaciones
     role_obj = relationship("UserRole", back_populates="users")

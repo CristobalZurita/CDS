@@ -78,6 +78,7 @@ class EmailService:
         """
         
         return self._send_email(email, subject, html_content)
+
     
     def send_repair_created_email(self, email: str, customer_name: str, repair_id: str,
                                   instrument: str, fault_description: str, estimated_completion: str):
@@ -211,6 +212,20 @@ class EmailService:
         </html>
         """
         
+        return self._send_email(email, subject, html_content)
+
+    def send_two_factor_code(self, email: str, code: str):
+        subject = "Código de verificación CDS"
+        html_content = f"""
+        <html>
+            <body style="font-family: Arial, sans-serif; color: #333;">
+                <h2>Tu código de verificación</h2>
+                <p>Usa este código para completar el inicio de sesión:</p>
+                <h1 style="letter-spacing: 4px;">{code}</h1>
+                <p>Este código expira en 10 minutos.</p>
+            </body>
+        </html>
+        """
         return self._send_email(email, subject, html_content)
     
     def send_ready_for_pickup_email(self, email: str, customer_name: str, repair_id: str,

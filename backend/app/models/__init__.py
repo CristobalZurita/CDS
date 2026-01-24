@@ -30,6 +30,8 @@ from app.models.signature_request import SignatureRequest
 from app.models.ticket import Ticket, TicketMessage
 from app.models.purchase_request import PurchaseRequest, PurchaseRequestItem
 from app.models.manual_document import ManualDocument
+from app.models.two_factor_code import TwoFactorCode
+from app.models.photo_upload_request import PhotoUploadRequest
 
 # === MODELOS ADICIONALES (ADITIVOS) ===
 from app.models.permission import Permission, Role, role_permissions, user_role_assignments
@@ -69,6 +71,8 @@ __all__ = [
     "PurchaseRequest",
     "PurchaseRequestItem",
     "ManualDocument",
+    "TwoFactorCode",
+    "PhotoUploadRequest",
     # Modelos adicionales (ADITIVOS)
     "Permission", "Role",
     "Invoice", "InvoiceItem", "InvoiceSequence", "InvoiceStatus", "InvoiceType",

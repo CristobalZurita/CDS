@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.core.database import get_db
+from app.core.ratelimit import limiter
 from app.core.dependencies import get_current_admin, require_permission
 from app.models.newsletter_subscription import NewsletterSubscription
 from app.schemas.newsletter import NewsletterSubscribe, NewsletterSubscriptionOut
@@ -11,6 +12,7 @@ router = APIRouter(prefix="/newsletter", tags=["Newsletter"])
 
 
 @router.post("/subscribe", status_code=201)
+@limiter.limit("5/minute")
 def subscribe(payload: NewsletterSubscribe, request: Request, db: Session = Depends(get_db)):
     from app.services.turnstile_service import verify_turnstile
     if not payload.turnstile_token or not verify_turnstile(payload.turnstile_token, request.client.host if request.client else None):

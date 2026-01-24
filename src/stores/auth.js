@@ -32,6 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
   const checkAuth = authComposable.checkAuth
   const fetchUserInfo = authComposable.fetchUserInfo
   const refreshAccessToken = authComposable.refreshAccessToken
+  const verifyTwoFactor = authComposable.verifyTwoFactor
 
   return {
     // State
@@ -51,6 +52,7 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     checkAuth,
     fetchUserInfo,
-    refreshAccessToken
+    refreshAccessToken,
+    verifyTwoFactor
   }
 })
