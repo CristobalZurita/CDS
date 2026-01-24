@@ -32,14 +32,12 @@ const items = [
   { to: '/admin/inventory', label: 'Inventario', icon: 'fa-solid fa-boxes-stacked' },
   { to: '/admin/inventory/unified', label: 'Inventario Unificado', icon: 'fa-solid fa-layer-group' },
   { to: '/admin/categories', label: 'Categorías', icon: 'fa-solid fa-tags' },
-  { to: '/admin/stats', label: 'Estadísticas', icon: 'fa-solid fa-chart-line' },
   { to: '/admin/appointments', label: 'Citas', icon: 'fa-solid fa-calendar-check' },
   { to: '/admin/contact', label: 'Mensajes', icon: 'fa-solid fa-envelope' },
   { to: '/admin/newsletter', label: 'Newsletter', icon: 'fa-solid fa-paper-plane' },
   { to: '/admin/tickets', label: 'Tickets', icon: 'fa-solid fa-ticket' },
   { to: '/admin/purchase-requests', label: 'Compras', icon: 'fa-solid fa-cart-shopping' },
-  { to: '/admin/manuals', label: 'Manuales', icon: 'fa-solid fa-book' },
-  { to: '/admin/wizards', label: 'Magos', icon: 'fa-solid fa-wand-magic-sparkles' }
+  { to: '/admin/archive', label: 'Archivo', icon: 'fa-solid fa-box-archive' }
 ]
 
 const brandLogo = `${import.meta.env.BASE_URL}images/logo/Logo%20Nuevo.jpg`

@@ -92,7 +92,7 @@ const goToResult = (item) => {
     return
   }
   if (item.type === 'manual') {
-    router.push('/admin/manuals')
+    router.push('/admin/archive')
     return
   }
   if (item.type === 'purchase_request') {

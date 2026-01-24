@@ -3,12 +3,16 @@
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h1 class="h4">Inventario</h1>
 			<div>
+				<button class="btn btn-sm btn-outline-primary me-2" @click="activeView = 'sheet'">Planilla simple</button>
+				<button class="btn btn-sm btn-outline-secondary me-2" @click="activeView = 'manage'">Administrar items</button>
 				<button class="btn btn-sm btn-success me-2" @click="onNew">Nuevo item</button>
 				<button class="btn btn-sm btn-outline-secondary" @click="reload">Refrescar</button>
 			</div>
 		</div>
 
-		<InventoryTable :items="items" @edit="onEdit" @delete="onDelete" />
+		<InventoryStockSheet v-if="activeView === 'sheet'" :items="items" @save="onQuickSave" />
+
+		<InventoryTable v-else :items="items" @edit="onEdit" @delete="onDelete" />
 
 		<div v-if="showForm" class="mt-3">
 			<InventoryForm :item="selected" @save="onSave" @cancel="onCancel" />
@@ -22,6 +26,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/services/api'
 import InventoryTable from '@/vue/components/admin/InventoryTable.vue'
 import InventoryForm from '@/vue/components/admin/InventoryForm.vue'
+import InventoryStockSheet from '@/vue/components/admin/InventoryStockSheet.vue'
 import { useInventoryStore } from '@/stores/inventory'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 
@@ -30,16 +35,46 @@ const route = useRoute()
 const router = useRouter()
 
 const items = ref([])
+const warnedSkus = new Set()
 const showForm = ref(false)
 const selected = ref(null)
+const activeView = ref('sheet')
 
 async function load() {
 	await store.fetchItems(1, 50)
 	items.value = store.items
+	checkLowStockAlerts()
 }
 
 function reload() {
 	load()
+}
+
+function checkLowStockAlerts() {
+	if (!items.value?.length) return
+	const alerts = []
+	for (const item of items.value) {
+		const stock = Number(item.stock ?? 0)
+		const minStock = Number(item.min_stock ?? 0)
+		if (minStock <= 0) continue
+		if (warnedSkus.has(item.sku)) continue
+		if (stock <= Math.ceil(minStock * 0.25)) {
+			alerts.push({ level: '5%', item })
+		} else if (stock <= Math.ceil(minStock * 0.5)) {
+			alerts.push({ level: '10%', item })
+		} else if (stock <= minStock) {
+			alerts.push({ level: '20%', item })
+		}
+	}
+	if (!alerts.length) return
+	const top = alerts[0]
+	const lines = alerts.slice(0, 5).map(a => `${a.item.sku} (${a.item.name}) - ${a.level}`)
+	alert(
+		`Alerta de stock bajo (aprox.):\\n${lines.join('\\n')}\\n\\nReponer cuando sea posible.`
+	)
+	for (const a of alerts) {
+		warnedSkus.add(a.item.sku)
+	}
 }
 
 function onNew() {
@@ -82,6 +117,21 @@ async function onSave(payload) {
 	} catch (e) {
 		console.error(e)
 		alert('Error guardando item: ' + (e.message || e))
+	}
+}
+
+async function onQuickSave(payload) {
+	if (!payload?.id) return
+	try {
+		await store.updateItem(payload.id, {
+			stock: payload.stock ?? 0,
+			min_quantity: payload.min_stock ?? 0,
+			price: payload.price ?? 0
+		})
+		await load()
+	} catch (e) {
+		console.error(e)
+		alert('No se pudo guardar el stock.')
 	}
 }
 

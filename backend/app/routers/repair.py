@@ -19,6 +19,7 @@ from app.models.device import Device
 from app.models.device_lookup import DeviceType
 from app.models.client import Client
 from app.models.user import User
+from datetime import datetime, timedelta
 import uuid
 
 router = APIRouter(prefix="/repairs", tags=["repairs"])
@@ -33,37 +34,67 @@ def _repair_code(client_id: int, repair_id: int, suffix: int | None = None) -> s
     return base
 
 
+def _auto_archive_repairs(db: Session) -> None:
+    cutoff = datetime.utcnow() - timedelta(days=90)
+    to_archive = (
+        db.query(Repair)
+        .filter(Repair.delivery_date.isnot(None))
+        .filter(Repair.archived_at.is_(None))
+        .filter(Repair.delivery_date <= cutoff)
+        .all()
+    )
+    if not to_archive:
+        return
+    for r in to_archive:
+        r.archived_at = datetime.utcnow()
+    db.commit()
+
+
+def _repair_payload(repair: Repair, db: Session) -> Dict:
+    device = db.query(Device).filter(Device.id == repair.device_id).first()
+    client = db.query(Client).filter(Client.id == device.client_id).first() if device else None
+    repair_code = repair.repair_number
+    if client and (not repair.repair_number or repair.repair_number.startswith("R-")):
+        repair_code = _repair_code(client.id, repair.id)
+    return {
+        "id": repair.id,
+        "repair_number": repair.repair_number,
+        "repair_code": repair_code,
+        "client_id": client.id if client else None,
+        "client_code": _client_code(client.id) if client else None,
+        "client_name": client.name if client else None,
+        "device_id": device.id if device else None,
+        "device_model": device.model if device else None,
+        "status": repair.status,
+        "status_id": repair.status_id,
+        "problem_reported": repair.problem_reported,
+        "created_at": repair.created_at.isoformat() if repair.created_at else None,
+        "archived_at": repair.archived_at.isoformat() if repair.archived_at else None
+    }
+
+
 @router.get("")
 @router.get("/")
 def list_repairs(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("repairs", "read"))
 ):
-    repairs = db.query(Repair).all()
-    payload = []
-    for repair in repairs:
-        device = db.query(Device).filter(Device.id == repair.device_id).first()
-        client = db.query(Client).filter(Client.id == device.client_id).first() if device else None
-        repair_code = repair.repair_number
-        if client and (not repair.repair_number or repair.repair_number.startswith("R-")):
-            repair_code = _repair_code(client.id, repair.id)
-        payload.append({
-            "id": repair.id,
-            "repair_number": repair.repair_number,
-            "repair_code": repair_code,
-            "client_id": client.id if client else None,
-            "client_code": _client_code(client.id) if client else None,
-            "client_name": client.name if client else None,
-            "device_id": device.id if device else None,
-            "device_model": device.model if device else None,
-            "status": repair.status,
-            "status_id": repair.status_id,
-            "problem_reported": repair.problem_reported,
-            "created_at": repair.created_at.isoformat() if repair.created_at else None
-        })
-    return payload
+    _auto_archive_repairs(db)
+    repairs = db.query(Repair).filter(Repair.archived_at.is_(None)).all()
+    return [_repair_payload(repair, db) for repair in repairs]
 
 
+@router.get("/archived")
+def list_archived_repairs(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read"))
+):
+    _auto_archive_repairs(db)
+    repairs = db.query(Repair).filter(Repair.archived_at.isnot(None)).all()
+    return [_repair_payload(repair, db) for repair in repairs]
+
+
+@router.post("", status_code=status.HTTP_201_CREATED)
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_repair(
     repair: Dict,
@@ -233,8 +264,24 @@ def get_repair(
         "payment_status": repair.payment_status,
         "payment_method": repair.payment_method,
         "signature_ingreso_path": repair.signature_ingreso_path,
-        "signature_retiro_path": repair.signature_retiro_path
+        "signature_retiro_path": repair.signature_retiro_path,
+        "archived_at": repair.archived_at.isoformat() if repair.archived_at else None
     }
+
+
+@router.post("/{repair_id}/archive")
+def archive_repair(
+    repair_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "update"))
+):
+    repair = db.query(Repair).filter(Repair.id == repair_id).first()
+    if not repair:
+        raise HTTPException(status_code=404, detail="Repair not found")
+    repair.archived_at = datetime.utcnow()
+    repair.archived_by = int(user.get("user_id")) if user and user.get("user_id") else None
+    db.commit()
+    return {"ok": True, "archived_at": repair.archived_at}
 
 
 @router.put("/{repair_id}")
