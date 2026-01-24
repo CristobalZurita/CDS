@@ -1,6 +1,7 @@
 <template>
 	<div class="register-page">
 		<div class="register-container">
+			<router-link to="/" class="back-link">Volver al inicio</router-link>
 			<h1>Crear cuenta</h1>
 
 			<form @submit.prevent="handleRegister" class="register-form">
@@ -92,4 +93,5 @@ function onVerify(token) {
 .toggle-password { border: 1px solid #ddd; background: #f3f4f6; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
 .muted { color:#666; margin-top:1rem }
 .alert { margin: 1rem 0 }
+.back-link { display:inline-block; margin-bottom: 1rem; color:#3e3c38; text-decoration:none; font-weight:600; }
 </style>

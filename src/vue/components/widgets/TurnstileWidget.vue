@@ -30,11 +30,19 @@ const loadScript = () => {
 }
 
 const renderWidget = () => {
-  if (!siteKey || !containerRef.value || !window.turnstile) return
+  if (!siteKey || !containerRef.value || !window.turnstile) {
+    if (!siteKey) {
+      console.warn('[turnstile] Missing VITE_TURNSTILE_SITE_KEY')
+    }
+    return
+  }
   widgetId = window.turnstile.render(containerRef.value, {
     sitekey: siteKey,
     callback: (token) => emit('verify', token),
-    'error-callback': () => emit('verify', ''),
+    'error-callback': () => {
+      console.warn('[turnstile] Error callback fired')
+      emit('verify', '')
+    },
     'expired-callback': () => emit('verify', '')
   })
 }

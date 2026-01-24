@@ -49,8 +49,8 @@ class Settings(BaseModel):
     access_token_expire_minutes: int = 30
 
     # CORS Configuration
-    # ALLOWED_ORIGINS can be provided as a comma-separated env var
-    _allowed_origins_env: Optional[str] = os.getenv("ALLOWED_ORIGINS")
+    # ALLOWED_ORIGINS or CORS_ORIGINS can be provided as a comma-separated env var
+    _allowed_origins_env: Optional[str] = os.getenv("ALLOWED_ORIGINS") or os.getenv("CORS_ORIGINS")
     if _allowed_origins_env:
         allowed_origins: list = [o.strip() for o in _allowed_origins_env.split(",") if o.strip()]
     else:

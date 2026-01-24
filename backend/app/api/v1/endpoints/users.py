@@ -10,6 +10,7 @@ from app.crud.user import create_user, list_users, get_user, update_user, delete
 router = APIRouter(prefix="/users", tags=["users"])
 
 
+@router.get("", response_model=List[UserRead])
 @router.get("/", response_model=List[UserRead])
 def list_users_endpoint(db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
     return list_users(db)

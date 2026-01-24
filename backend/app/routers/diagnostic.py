@@ -2,7 +2,7 @@
 API routes for diagnostic and quotation system
 """
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import json
@@ -11,6 +11,7 @@ from pathlib import Path
 # Avoid importing application schemas directly to keep router import lightweight in tests
 from app.core.config import get_settings, Settings
 from app.core.database import get_db
+from app.core.ratelimit import limiter
 from app.core.dependencies import get_current_user, require_permission
 from app.models.diagnostic import Diagnostic
 from app.models.quote import Quote
@@ -158,7 +159,12 @@ async def get_applicable_faults(instrument_id: str):
 
 
 @router.post("/calculate")
-async def calculate_diagnostic(diagnostic: dict, settings: Settings = Depends(get_settings)):
+@limiter.limit("10/minute")
+async def calculate_diagnostic(
+    diagnostic: dict,
+    request: Request,
+    settings: Settings = Depends(get_settings)
+):
     """
     Calculate diagnostic quote based on instrument and faults
 

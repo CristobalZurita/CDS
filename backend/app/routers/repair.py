@@ -33,6 +33,7 @@ def _repair_code(client_id: int, repair_id: int, suffix: int | None = None) -> s
     return base
 
 
+@router.get("")
 @router.get("/")
 def list_repairs(
     db: Session = Depends(get_db),

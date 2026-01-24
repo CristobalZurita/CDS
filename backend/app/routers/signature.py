@@ -8,6 +8,7 @@ import os
 import secrets
 
 from app.core.database import get_db
+from app.core.ratelimit import limiter
 from app.core.dependencies import require_permission
 from app.models.signature_request import SignatureRequest
 from app.models.repair import Repair
@@ -89,6 +90,7 @@ def get_signature_request_by_token(
 
 
 @router.post("/submit")
+@limiter.limit("10/minute")
 def submit_signature(
     payload: SignatureSubmit,
     request: Request,

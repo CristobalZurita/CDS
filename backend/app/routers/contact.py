@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.core.database import get_db
+from app.core.ratelimit import limiter
 from app.core.dependencies import get_current_admin, require_permission
 from app.models.contact_message import ContactMessage
 from app.schemas.contact import ContactCreate, ContactMessageOut
@@ -11,6 +12,7 @@ from app.services.event_system import event_bus, Events
 router = APIRouter(prefix="/contact", tags=["Contact"])
 
 @router.post("/", status_code=201)
+@limiter.limit("5/minute")
 def send_contact(
     payload: ContactCreate,
     request: Request,

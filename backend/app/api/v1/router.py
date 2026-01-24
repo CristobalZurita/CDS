@@ -29,6 +29,7 @@ try:
 	from app.routers import tickets as tickets_router
 	from app.routers import purchase_requests as purchase_requests_router
 	from app.routers import manuals as manuals_router
+	from app.routers import photo_requests as photo_requests_router
 except Exception:
 	# Si los módulos no existen en este entorno, se ignoran
 	user_router = repair_router = instrument_router = category_router = stock_movement_router = contact_router = None
@@ -49,11 +50,12 @@ except Exception:
 	tickets_router = None
 	purchase_requests_router = None
 	manuals_router = None
+	photo_requests_router = None
 
 # If any router failed to import previously (e.g., due to transient import errors),
 # attempt a second import pass so that fixes applied at runtime are picked up.
 import importlib
-for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment", "client", "newsletter", "tools", "signature", "tickets", "purchase_requests", "manuals"):
+for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment", "client", "newsletter", "tools", "signature", "tickets", "purchase_requests", "manuals", "photo_requests"):
 	var_name = f"{name}_router"
 	if globals().get(var_name) is None:
 		try:
@@ -142,3 +144,5 @@ if globals().get("purchase_requests_router"):
 	api_router.include_router(globals()["purchase_requests_router"].router)
 if globals().get("manuals_router"):
 	api_router.include_router(globals()["manuals_router"].router)
+if globals().get("photo_requests_router"):
+	api_router.include_router(globals()["photo_requests_router"].router)

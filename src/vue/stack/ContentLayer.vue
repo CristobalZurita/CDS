@@ -35,8 +35,9 @@ const shouldSlot = computed(() => {
  * Here, you can integrate Google Analytics, Mixpanel, or your own custom analytics implementation.
  */
 onMounted(() => {
-    // replace the implementation below with your own analytics service...
-    fetch("https://admin.ryanbalieiro.com/api/analytics/mock", {
+    const analyticsUrl = import.meta.env.VITE_ANALYTICS_URL
+    if (!analyticsUrl) return
+    fetch(analyticsUrl, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -45,7 +46,7 @@ onMounted(() => {
                 template_id: "foxy-agency"
             }
         })
-    })
+    }).catch(() => {})
 })
 
 watch(() => loaderAnimationStatus.value, () => {

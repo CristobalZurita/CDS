@@ -20,6 +20,7 @@ def _client_code(client_id: int) -> str:
     return f"CDS-{client_id:03d}"
 
 
+@router.get("", response_model=List[Dict])
 @router.get("/", response_model=List[Dict])
 def list_clients(
     db: Session = Depends(get_db),

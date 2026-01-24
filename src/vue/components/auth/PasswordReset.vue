@@ -56,6 +56,8 @@
         {{ isLoading ? 'Actualizando...' : 'Actualizar contraseña' }}
       </button>
     </form>
+
+    <router-link class="back-link" to="/login">Volver al inicio de sesión</router-link>
   </div>
 </template>
 
@@ -191,5 +193,16 @@ onMounted(() => {
 .btn-primary:disabled {
   background: #d3d0c3;
   cursor: not-allowed;
+}
+
+.back-link {
+  color: #4b5563;
+  font-size: 0.9rem;
+  text-decoration: none;
+  text-align: center;
+}
+
+.back-link:hover {
+  color: #1f2937;
 }
 </style>

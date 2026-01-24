@@ -83,6 +83,20 @@
 				</div>
 			</div>
 
+			<!-- Fotos desde cliente -->
+			<div class="detail-card mb-4">
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<h5 class="card-title mb-0"><i class="fa-solid fa-image me-2"></i>Fotos cliente</h5>
+					<button class="btn btn-sm btn-outline-primary" @click="requestPhotoUpload">
+						Solicitar foto
+					</button>
+				</div>
+				<div v-if="photoUploadLink" class="alert alert-info">
+					<strong>Link foto:</strong>
+					<input class="form-control mt-2" :value="photoUploadLink" readonly />
+				</div>
+			</div>
+
 			<!-- Materiales Utilizados -->
 			<div class="mb-4">
 				<RepairComponentsManager
@@ -243,6 +257,7 @@ const newNote = ref('')
 const newNoteType = ref('internal')
 const savingNote = ref(false)
 const signatureLink = ref('')
+const photoUploadLink = ref('')
 
 const loadRepair = async () => {
 	loading.value = true
@@ -285,6 +300,21 @@ const requestSignature = async (type) => {
 		}
 	} catch (error) {
 		console.error('Error solicitando firma:', error)
+	}
+}
+
+const requestPhotoUpload = async () => {
+	photoUploadLink.value = ''
+	try {
+		const res = await api.post('/photo-requests/', null, {
+			params: { repair_id: Number(repairId), photo_type: 'client', expires_minutes: 60 }
+		})
+		const token = res.data?.token || res.token
+		if (token) {
+			photoUploadLink.value = `${window.location.origin}/photo-upload/${token}`
+		}
+	} catch (error) {
+		console.error('Error solicitando foto:', error)
 	}
 }
 

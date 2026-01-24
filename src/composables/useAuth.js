@@ -8,7 +8,7 @@
  * - Almacenamiento de tokens
  */
 
-import { ref, computed } from 'vue'
+import { ref, computed, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 
@@ -26,7 +26,7 @@ const isAuthenticated = computed(() => !!token.value && !!user.value)
 const isAdmin = computed(() => user.value?.role === 'admin')
 
 export function useAuth() {
-  const router = useRouter()
+  const router = getCurrentInstance() ? useRouter() : null
 
   /**
    * Registrar nuevo usuario
@@ -72,6 +72,10 @@ export function useAuth() {
         turnstile_token: turnstileToken
       })
 
+      if (response.data?.requires_2fa) {
+        return { requires_2fa: true, challenge_id: response.data.challenge_id }
+      }
+
       const { access_token, refresh_token } = response.data
 
       // Guardar tokens
@@ -86,6 +90,29 @@ export function useAuth() {
       return user.value
     } catch (err) {
       error.value = err.response?.data?.detail || 'Email o contraseña incorrectos'
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function verifyTwoFactor(challengeId, code) {
+    isLoading.value = true
+    error.value = null
+    try {
+      const response = await axios.post(`${API_URL}/auth/verify-2fa`, {
+        challenge_id: challengeId,
+        code
+      })
+      const { access_token, refresh_token } = response.data
+      token.value = access_token
+      refreshToken.value = refresh_token
+      localStorage.setItem('access_token', access_token)
+      localStorage.setItem('refresh_token', refresh_token)
+      await fetchUserInfo()
+      return user.value
+    } catch (err) {
+      error.value = err.response?.data?.detail || 'Código inválido'
       throw err
     } finally {
       isLoading.value = false
@@ -151,7 +178,9 @@ export function useAuth() {
     refreshToken.value = null
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
-    router.push('/login')
+    if (router) {
+      router.push('/login')
+    }
   }
 
   /**
@@ -185,6 +214,7 @@ export function useAuth() {
     logout,
     checkAuth,
     fetchUserInfo,
-    refreshAccessToken
+    refreshAccessToken,
+    verifyTwoFactor
   }
 }
