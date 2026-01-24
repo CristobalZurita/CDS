@@ -32,16 +32,14 @@ import InventoryPage from '@/vue/content/pages/admin/InventoryPage.vue'
 import InventoryUnified from '@/views/InventoryUnified.vue'
 import ClientsPage from '@/vue/content/pages/admin/ClientsPage.vue'
 import RepairsAdminPage from '@/vue/content/pages/admin/RepairsAdminPage.vue'
-import StatsPage from '@/vue/content/pages/admin/StatsPage.vue'
 import CategoriesPage from '@/vue/content/pages/admin/CategoriesPage.vue'
 import ContactMessagesPage from '@/vue/content/pages/admin/ContactMessagesPage.vue'
 import NewsletterSubscriptionsPage from '@/vue/content/pages/admin/NewsletterSubscriptionsPage.vue'
 import AppointmentsPage from '@/vue/content/pages/admin/AppointmentsPage.vue'
 import RepairDetailAdminPage from '@/vue/content/pages/admin/RepairDetailAdminPage.vue'
-import WizardsPage from '@/vue/content/pages/admin/WizardsPage.vue'
 import TicketsPage from '@/vue/content/pages/admin/TicketsPage.vue'
 import PurchaseRequestsPage from '@/vue/content/pages/admin/PurchaseRequestsPage.vue'
-import ManualsPage from '@/vue/content/pages/admin/ManualsPage.vue'
+import ArchivePage from '@/vue/content/pages/admin/ArchivePage.vue'
 import SignaturePage from '@/vue/content/pages/SignaturePage.vue'
 import PhotoUploadPage from '@/vue/content/pages/PhotoUploadPage.vue'
 
@@ -180,11 +178,6 @@ const routes = [
         component: RepairDetailAdminPage
       },
       {
-        path: 'stats',
-        name: 'admin-stats',
-        component: StatsPage
-      },
-      {
         path: 'categories',
         name: 'admin-categories',
         component: CategoriesPage
@@ -205,11 +198,6 @@ const routes = [
         component: AppointmentsPage
       },
       {
-        path: 'wizards',
-        name: 'admin-wizards',
-        component: WizardsPage
-      },
-      {
         path: 'tickets',
         name: 'admin-tickets',
         component: TicketsPage
@@ -220,9 +208,13 @@ const routes = [
         component: PurchaseRequestsPage
       },
       {
+        path: 'archive',
+        name: 'admin-archive',
+        component: ArchivePage
+      },
+      {
         path: 'manuals',
-        name: 'admin-manuals',
-        component: ManualsPage
+        redirect: '/admin/archive'
       }
     ]
   },

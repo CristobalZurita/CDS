@@ -7,6 +7,7 @@ Usa permisos granulares (require_permission).
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List, Dict
+from datetime import datetime, timedelta
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_admin, require_permission
@@ -18,6 +19,21 @@ router = APIRouter(prefix="/clients", tags=["clients"])
 
 def _client_code(client_id: int) -> str:
     return f"CDS-{client_id:03d}"
+
+def _auto_archive_repairs(db: Session) -> None:
+    cutoff = datetime.utcnow() - timedelta(days=90)
+    to_archive = (
+        db.query(Repair)
+        .filter(Repair.delivery_date.isnot(None))
+        .filter(Repair.archived_at.is_(None))
+        .filter(Repair.delivery_date <= cutoff)
+        .all()
+    )
+    if not to_archive:
+        return
+    for repair in to_archive:
+        repair.archived_at = datetime.utcnow()
+    db.commit()
 
 
 @router.get("", response_model=List[Dict])
@@ -60,6 +76,7 @@ def get_client(client_id: int, db: Session = Depends(get_db), user: dict = Depen
     }
 
 
+@router.post("", status_code=status.HTTP_201_CREATED)
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_client(
     payload: Dict,
@@ -122,10 +139,12 @@ def list_client_devices(client_id: int, db: Session = Depends(get_db), user: dic
 
 @router.get("/{client_id}/repairs", response_model=List[Dict])
 def list_client_repairs(client_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("clients", "read"))):
+    _auto_archive_repairs(db)
     repairs = (
         db.query(Repair)
         .join(Device, Device.id == Repair.device_id)
         .filter(Device.client_id == client_id)
+        .filter(Repair.archived_at.is_(None))
         .all()
     )
     payload = []
@@ -139,3 +158,10 @@ def list_client_repairs(client_id: int, db: Session = Depends(get_db), user: dic
             "device_id": repair.device_id
         })
     return payload
+
+
+@router.get("/next-code", response_model=Dict)
+def get_next_client_code(db: Session = Depends(get_db), user: dict = Depends(require_permission("clients", "read"))):
+    last = db.query(Client).order_by(Client.id.desc()).first()
+    next_id = (last.id + 1) if last else 1
+    return {"next_client_id": next_id, "client_code": _client_code(next_id)}

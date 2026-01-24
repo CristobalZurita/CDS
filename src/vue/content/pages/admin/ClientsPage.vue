@@ -5,14 +5,14 @@
 			<h1 class="h4">Clientes</h1>
 			<div>
 				<button class="btn btn-sm btn-primary me-2" @click="showIntake = !showIntake">
-					{{ showIntake ? 'Cerrar ingreso' : 'Ingreso completo (mago)' }}
+					{{ showIntake ? 'Cerrar ingreso' : 'Ingreso completo' }}
 				</button>
 				<button class="btn btn-sm btn-outline-secondary" @click="load">Actualizar</button>
 			</div>
 		</div>
 
 		<div v-if="showIntake" class="mb-3">
-			<WizardClientIntake @completed="onIntakeCompleted" />
+			<UnifiedIntakeForm @completed="onIntakeCompleted" />
 		</div>
 
 		<div class="clients-page">
@@ -38,12 +38,12 @@ import { useRoute } from 'vue-router'
 import { api } from '@/services/api'
 import ClientList from '@/vue/components/admin/ClientList.vue'
 import ClientDetail from '@/vue/components/admin/ClientDetail.vue'
-import WizardClientIntake from '@/vue/components/admin/wizard/WizardClientIntake.vue'
+import UnifiedIntakeForm from '@/vue/components/admin/UnifiedIntakeForm.vue'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 
 const clients = ref([])
 const selected = ref(null)
-const showIntake = ref(false)
+const showIntake = ref(true)
 const searchQuery = ref('')
 const route = useRoute()
 

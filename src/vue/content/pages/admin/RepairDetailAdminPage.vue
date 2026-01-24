@@ -202,6 +202,14 @@
 
 			<!-- Acciones -->
 			<div class="d-flex gap-2">
+				<button
+					class="btn btn-outline-warning"
+					:disabled="isArchived"
+					@click="archiveRepair"
+				>
+					<i class="fa-solid fa-box-archive me-1"></i>
+					{{ isArchived ? 'Archivado' : 'Archivar OT' }}
+				</button>
 				<router-link to="/admin/repairs" class="btn btn-outline-secondary">
 					<i class="fa-solid fa-arrow-left me-1"></i> Volver
 				</router-link>
@@ -243,6 +251,7 @@ const isTerminalStatus = computed(() => {
 	const statusId = repair.value?.status_id
 	return statusId === 8 || statusId === 9 // Entregado o Cancelado
 })
+const isArchived = computed(() => Boolean(repair.value?.archived_at))
 
 // Photo upload state
 const showPhotoUpload = ref(false)
@@ -258,6 +267,18 @@ const newNoteType = ref('internal')
 const savingNote = ref(false)
 const signatureLink = ref('')
 const photoUploadLink = ref('')
+
+const archiveRepair = async () => {
+	if (isArchived.value) return
+	const ok = window.confirm('¿Archivar esta OT? Quedará en Archivo.')
+	if (!ok) return
+	try {
+		const res = await api.post(`/repairs/${repairId}/archive`)
+		repair.value = { ...repair.value, archived_at: res.data?.archived_at || new Date().toISOString() }
+	} catch (e) {
+		window.alert('No se pudo archivar la OT.')
+	}
+}
 
 const loadRepair = async () => {
 	loading.value = true
