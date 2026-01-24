@@ -10,9 +10,14 @@ Proporciona funciones para enviar emails automáticos:
 """
 
 import os
+import smtplib
+import ssl
 from typing import List, Dict, Any
 from datetime import datetime
 import logging
+from email.message import EmailMessage
+
+from app.core.config import settings
 
 try:
     from sendgrid import SendGridAPIClient
@@ -33,11 +38,22 @@ class EmailService:
     """
     
     def __init__(self):
-        self.enabled = SENDGRID_AVAILABLE and bool(SENDGRID_API_KEY)
-        if self.enabled:
+        self.smtp_server = settings.smtp_server
+        self.smtp_port = settings.smtp_port
+        self.smtp_user = settings.smtp_user
+        self.smtp_password = settings.smtp_password
+        self.from_email = settings.from_email or SENDGRID_FROM_EMAIL or self.smtp_user
+        self.smtp_use_tls = settings.smtp_use_tls
+        self.smtp_use_ssl = settings.smtp_use_ssl
+
+        self.sendgrid_enabled = SENDGRID_AVAILABLE and bool(SENDGRID_API_KEY)
+        self.smtp_enabled = bool(self.smtp_server and self.smtp_port and self.smtp_user and self.smtp_password)
+
+        self.enabled = self.sendgrid_enabled or self.smtp_enabled
+        if self.sendgrid_enabled:
             self.client = SendGridAPIClient(SENDGRID_API_KEY)
-        else:
-            logger.warning('SendGrid email service not available. Emails will be logged instead.')
+        if not self.enabled:
+            logger.warning('Email service not configured. Emails will be logged instead.')
     
     def send_quotation_saved_email(self, email: str, customer_name: str, quotation_id: str, 
                                    instrument: str, min_price: float, max_price: float):
@@ -277,7 +293,7 @@ class EmailService:
     
     def _send_email(self, to_email: str, subject: str, html_content: str) -> bool:
         """
-        Envía un email usando SendGrid
+        Envía un email usando SMTP o SendGrid
         
         Returns:
             True si se envió exitosamente, False si hubo error
@@ -285,22 +301,58 @@ class EmailService:
         if not self.enabled:
             logger.info(f"Email (demo mode): To={to_email}, Subject={subject}")
             return True
+
+        if self.smtp_enabled:
+            return self._send_smtp_email(to_email, subject, html_content)
         
+        if self.sendgrid_enabled:
+            try:
+                message = Mail(
+                    from_email=SENDGRID_FROM_EMAIL,
+                    to_emails=to_email,
+                    subject=subject,
+                    html_content=html_content
+                )
+                
+                response = self.client.send(message)
+                logger.info(f"Email sent to {to_email}: {response.status_code}")
+                return True
+            except Exception as e:
+                logger.error(f"Error sending email to {to_email}: {str(e)}")
+                return False
+
+        logger.warning("Email service not configured correctly.")
+        return False
+
+    def _send_smtp_email(self, to_email: str, subject: str, html_content: str) -> bool:
+        msg = EmailMessage()
+        msg["Subject"] = subject
+        msg["From"] = self.from_email
+        msg["To"] = to_email
+        msg.set_content("Este mensaje requiere HTML.")
+        msg.add_alternative(html_content, subtype="html")
+
         try:
-            message = Mail(
-                from_email=SENDGRID_FROM_EMAIL,
-                to_emails=to_email,
-                subject=subject,
-                html_content=html_content
-            )
-            
-            response = self.client.send(message)
-            logger.info(f"Email sent to {to_email}: {response.status_code}")
+            if self.smtp_use_ssl:
+                context = ssl.create_default_context()
+                with smtplib.SMTP_SSL(self.smtp_server, self.smtp_port, context=context) as server:
+                    server.login(self.smtp_user, self.smtp_password)
+                    server.send_message(msg)
+            else:
+                with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+                    if self.smtp_use_tls:
+                        context = ssl.create_default_context()
+                        server.starttls(context=context)
+                    server.login(self.smtp_user, self.smtp_password)
+                    server.send_message(msg)
+            logger.info(f"SMTP email sent to {to_email}")
             return True
-            
         except Exception as e:
-            logger.error(f"Error sending email to {to_email}: {str(e)}")
+            logger.error(f"SMTP error sending email to {to_email}: {str(e)}")
             return False
+
+    def send_email(self, to_email: str, subject: str, html_content: str) -> bool:
+        return self._send_email(to_email, subject, html_content)
 
 
 async def send_appointment_confirmation(
@@ -352,8 +404,7 @@ async def send_appointment_confirmation(
     return service.send_email(
         to_email=email,
         subject="Confirmación de cita - Cirujano de Sintetizadores",
-        html_content=html_content,
-        from_email=SENDGRID_FROM_EMAIL
+        html_content=html_content
     )
 
 

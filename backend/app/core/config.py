@@ -65,11 +65,13 @@ class Settings(BaseModel):
         ]
 
     # Email Configuration
-    smtp_server: Optional[str] = None
-    smtp_port: Optional[int] = None
-    smtp_user: Optional[str] = None
-    smtp_password: Optional[str] = None
-    from_email: Optional[str] = None
+    smtp_server: Optional[str] = os.getenv("SMTP_HOST") or os.getenv("SMTP_SERVER")
+    smtp_port: Optional[int] = int(os.getenv("SMTP_PORT")) if os.getenv("SMTP_PORT") else None
+    smtp_user: Optional[str] = os.getenv("SMTP_USER")
+    smtp_password: Optional[str] = os.getenv("SMTP_PASSWORD")
+    from_email: Optional[str] = os.getenv("FROM_EMAIL") or os.getenv("SMTP_FROM_EMAIL")
+    smtp_use_tls: bool = os.getenv("SMTP_USE_TLS", "false").lower() == "true"
+    smtp_use_ssl: bool = os.getenv("SMTP_USE_SSL", "true").lower() == "true"
 
     # Pricing Configuration
     diagnostic_fee: int = 0  # Free diagnostic
