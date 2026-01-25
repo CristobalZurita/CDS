@@ -16,7 +16,7 @@
         No hay suscripciones registradas.
       </div>
 
-      <table v-else class="admin-table">
+      <table v-else class="admin-table admin-table--stack">
         <thead>
           <tr>
             <th>Email</th>
@@ -27,10 +27,10 @@
         </thead>
         <tbody>
           <tr v-for="subscription in subscriptions" :key="subscription.id">
-            <td>{{ subscription.email }}</td>
-            <td>{{ subscription.is_active ? 'Activa' : 'Inactiva' }}</td>
-            <td>{{ subscription.source_url || '-' }}</td>
-            <td>{{ formatDate(subscription.created_at) }}</td>
+            <td data-label="Email">{{ subscription.email }}</td>
+            <td data-label="Estado">{{ subscription.is_active ? 'Activa' : 'Inactiva' }}</td>
+            <td data-label="Origen">{{ subscription.source_url || '-' }}</td>
+            <td data-label="Fecha">{{ formatDate(subscription.created_at) }}</td>
           </tr>
         </tbody>
       </table>
@@ -90,5 +90,46 @@ onMounted(fetchSubscriptions)
   padding: 1rem 0;
   font-weight: 600;
   color: $brand-text;
+}
+
+@include media-breakpoint-down(md) {
+  .admin-table--stack,
+  .admin-table--stack thead,
+  .admin-table--stack tbody,
+  .admin-table--stack tr,
+  .admin-table--stack th,
+  .admin-table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table--stack thead {
+    display: none;
+  }
+
+  .admin-table--stack tr {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(62, 60, 56, 0.12);
+  }
+
+  .admin-table--stack td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+  }
+
+  .admin-table--stack td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.8rem;
+  }
 }
 </style>

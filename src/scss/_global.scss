@@ -1,0 +1,48 @@
+body {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.container,
+.container-fluid,
+.container-xxl {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+.card,
+.admin-content :deep(.admin-section) {
+    padding: 1.5rem;
+}
+
+.btn,
+.admin-content :deep(.admin-btn) {
+    min-height: 44px;
+    font-size: 1rem;
+}
+
+.form-control,
+.form-select,
+.form-check-input,
+input,
+select,
+textarea {
+    min-height: 44px;
+    font-size: 1rem;
+}
+
+@include media-breakpoint-down(md) {
+    body {
+        font-size: 1rem;
+    }
+
+    .card,
+    .admin-content :deep(.admin-section) {
+        padding: 1.25rem;
+    }
+
+    .btn,
+    .admin-content :deep(.admin-btn) {
+        min-height: 48px;
+    }
+}

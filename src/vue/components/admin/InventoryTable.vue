@@ -1,6 +1,6 @@
 <template>
 	<div class="inventory-table">
-		<table v-if="items && items.length" class="table">
+		<table v-if="items && items.length" class="table table--stack">
 			<thead>
 				<tr>
 					<th>Id</th>
@@ -12,11 +12,11 @@
 			</thead>
 			<tbody>
 				<tr v-for="item in items" :key="item.id">
-					<td>{{ item.id }}</td>
-					<td>{{ item.name || item.nombre || '-' }}</td>
-					<td>{{ item.category || '-' }}</td>
-					<td>{{ item.quantity ?? item.cantidad ?? 0 }}</td>
-					<td>
+					<td data-label="Id">{{ item.id }}</td>
+					<td data-label="Nombre">{{ item.name || item.nombre || '-' }}</td>
+					<td data-label="Categoría">{{ item.category || '-' }}</td>
+					<td data-label="Cantidad">{{ item.quantity ?? item.cantidad ?? 0 }}</td>
+					<td data-label="Acciones">
 						<button class="btn btn-sm btn-outline-primary me-2" @click="$emit('edit', item)">Editar</button>
 						<button class="btn btn-sm btn-outline-danger" @click="$emit('delete', item)">Eliminar</button>
 					</td>
@@ -39,7 +39,9 @@ const props = defineProps({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "/src/scss/_theming.scss";
+
 .inventory-table .table {
 	width: 100%;
 	border-collapse: collapse;
@@ -53,5 +55,46 @@ const props = defineProps({
 .inventory-table .empty {
 	color: #6b7280;
 	padding: 12px 0;
+}
+
+@include media-breakpoint-down(md) {
+	.inventory-table .table,
+	.inventory-table .table thead,
+	.inventory-table .table tbody,
+	.inventory-table .table tr,
+	.inventory-table .table th,
+	.inventory-table .table td {
+		display: block;
+		width: 100%;
+	}
+
+	.inventory-table .table thead {
+		display: none;
+	}
+
+	.inventory-table .table tr {
+		padding: 1rem;
+		margin-bottom: 0.75rem;
+		background: #fff;
+		border-radius: 12px;
+		box-shadow: 0 8px 16px rgba(62, 60, 56, 0.12);
+	}
+
+	.inventory-table .table td {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0.35rem 0;
+		font-size: 1rem;
+	}
+
+	.inventory-table .table td::before {
+		content: attr(data-label);
+		font-weight: 600;
+		color: $text-muted;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		font-size: 0.8rem;
+	}
 }
 </style>
