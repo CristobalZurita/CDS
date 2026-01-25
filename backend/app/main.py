@@ -15,6 +15,7 @@ from contextlib import asynccontextmanager
 import logging
 
 from app.core.config import settings
+from app.core.security import verify_crypto_dependencies
 from app.core.database import init_db, close_db
 from app.api.v1.router import api_router
 from app.core.ratelimit import limiter
@@ -34,6 +35,8 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     # Startup logic
     logger.info("🚀 Application startup")
+    # Verify cryptographic dependencies early (fail-fast)
+    verify_crypto_dependencies()
     # Setup structured logging early
     try:
         from app.core.logging_config import setup_logging
@@ -92,8 +95,9 @@ app = FastAPI(
     description="Sistema integral de gestión para taller de reparación de sintetizadores",
     version="1.0.0",
     lifespan=lifespan,
-    docs_url="/docs",
-    openapi_url="/openapi.json",
+    docs_url="/docs" if settings.enable_api_docs else None,
+    redoc_url="/redoc" if settings.enable_api_docs else None,
+    openapi_url="/openapi.json" if settings.enable_api_docs else None,
     redirect_slashes=False
 )
 
@@ -144,8 +148,9 @@ if settings.environment and settings.environment.lower() in ("production", "prod
 # Include API v1 routes
 app.include_router(api_router)
 
-# Serve uploaded files
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+# Serve uploaded files only in non-production or when explicitly enabled
+if (settings.environment.lower() in ("development", "dev", "testing", "test")) or settings.enable_public_uploads:
+    app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 
 # Middleware: block unexpected HTML/XML payloads for API endpoints to reduce attack surface

@@ -3,6 +3,7 @@ from fastapi import UploadFile, HTTPException, status
 from PIL import Image, UnidentifiedImageError
 from pathlib import Path
 from io import BytesIO
+from pathlib import Path
 
 # Default max size 5MB
 MAX_IMAGE_SIZE = int(os.getenv("IMAGE_MAX_SIZE", str(5 * 1024 * 1024)))
@@ -65,3 +66,15 @@ async def save_upload(file: UploadFile, dest_dir: str = "uploads/images") -> str
                 break
             f.write(chunk)
     return str(dest)
+
+
+def resolve_upload_path(path_value: str, uploads_root: str = "uploads") -> Path:
+    """Resolve and validate an uploads path to prevent path traversal."""
+    candidate = Path(path_value)
+    if not candidate.is_absolute():
+        candidate = Path(uploads_root) / candidate
+    resolved = candidate.resolve()
+    root = Path(uploads_root).resolve()
+    if root not in resolved.parents and resolved != root:
+        raise ValueError("Invalid uploads path")
+    return resolved

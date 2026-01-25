@@ -151,7 +151,7 @@
 				<!-- Photos Grid -->
 				<div v-if="photos.length > 0" class="photos-grid">
 					<div v-for="photo in photos" :key="photo.id" class="photo-item">
-						<img :src="getPhotoUrl(photo.photo_url)" :alt="photo.caption || 'Foto'" />
+						<img :src="getPhotoUrl(photo.photo_download_url || photo.photo_url)" :alt="photo.caption || 'Foto'" />
 						<div class="photo-info">
 							<span class="badge bg-secondary">{{ photo.photo_type }}</span>
 							<small v-if="photo.caption">{{ photo.caption }}</small>

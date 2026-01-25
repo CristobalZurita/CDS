@@ -30,7 +30,7 @@
       <h3>Fotos</h3>
       <div class="photos">
         <figure v-for="photo in detail.photos" :key="photo.id">
-          <img :src="photo.photo_url" :alt="photo.caption || 'foto'" />
+          <img :src="resolvePhotoUrl(photo)" :alt="photo.caption || 'foto'" />
           <figcaption>{{ photo.caption || 'Foto del proceso' }}</figcaption>
         </figure>
       </div>
@@ -64,6 +64,15 @@ const formatDate = (value) => {
 
 const formatPrice = (price) => {
   return new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 }).format(price)
+}
+
+const resolvePhotoUrl = (photo) => {
+  if (!photo) return ''
+  const path = photo.photo_download_url || photo.photo_url || ''
+  if (!path) return ''
+  if (path.startsWith('http')) return path
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+  return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`
 }
 
 async function load() {

@@ -375,7 +375,7 @@ async def forgot_password(
             pass
 
     response = {"message": "Si el email existe, enviaremos instrucciones para recuperar la contraseña."}
-    if token and settings.environment.lower() not in ("production", "prod"):
+    if token and settings.allow_token_in_response and settings.environment.lower() in ("development", "dev", "testing", "test"):
         response["reset_token"] = token
     return response
 

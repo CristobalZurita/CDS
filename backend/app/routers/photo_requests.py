@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Request
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Request, Response
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 import os
@@ -28,6 +28,10 @@ async def create_photo_request(
     if not repair:
         raise HTTPException(status_code=404, detail="Repair not found")
     token = secrets.token_urlsafe(32)
+    if expires_minutes < 1:
+        expires_minutes = 1
+    if expires_minutes > 10:
+        expires_minutes = 10
     req = PhotoUploadRequest(
         repair_id=repair_id,
         token=token,
@@ -43,10 +47,19 @@ async def create_photo_request(
 
 
 @router.get("/token/{token}")
-def get_photo_request(token: str, db: Session = Depends(get_db)):
+@limiter.limit("30/minute")
+def get_photo_request(token: str, response: Response, db: Session = Depends(get_db)):
     req = db.query(PhotoUploadRequest).filter(PhotoUploadRequest.token == token).first()
     if not req:
         raise HTTPException(status_code=404, detail="Token inválido")
+    if req.expires_at and req.expires_at < datetime.utcnow():
+        req.status = "expired"
+        db.commit()
+        raise HTTPException(status_code=400, detail="Token expirado")
+    if req.status != "pending":
+        raise HTTPException(status_code=400, detail="Solicitud no válida")
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
     return {"id": req.id, "repair_id": req.repair_id, "status": req.status, "photo_type": req.photo_type}
 
 
@@ -82,5 +95,7 @@ async def submit_photo(
     )
     db.add(photo)
     req.status = "uploaded"
+    # Rotate token after use to prevent replay
+    req.token = secrets.token_urlsafe(32)
     db.commit()
     return {"ok": True, "photo_id": photo.id}

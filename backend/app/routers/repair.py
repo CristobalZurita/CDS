@@ -304,11 +304,12 @@ def notify_client(
 
     photos = db.query(RepairPhoto).filter(RepairPhoto.repair_id == repair.id).all()
     photo_items = []
-    for p in photos[:5]:
-        url = p.photo_url or ""
-        if url and url.startswith("/"):
-            url = f"{settings.public_base_url}{url}"
-        photo_items.append(f'<img src="{url}" alt="Foto" style="width:140px;height:auto;margin:6px;border-radius:8px;border:1px solid #ddd;" />')
+    if settings.enable_public_uploads:
+        for p in photos[:5]:
+            url = p.photo_url or ""
+            if url and url.startswith("/"):
+                url = f"{settings.public_base_url}{url}"
+            photo_items.append(f'<img src="{url}" alt="Foto" style="width:140px;height:auto;margin:6px;border-radius:8px;border:1px solid #ddd;" />')
 
     summary_html = f"""
     <h2>Resumen de tu OT {repair.repair_number}</h2>
@@ -549,4 +550,17 @@ def list_repair_photos(repair_id: int, db: Session = Depends(get_db), user: dict
         .order_by(RepairPhoto.sort_order.asc(), RepairPhoto.created_at.desc())
         .all()
     )
-    return photos
+    if settings.enable_public_uploads:
+        return photos
+    return [
+        {
+            "id": p.id,
+            "photo_url": None,
+            "photo_download_url": f"/api/v1/files/repair-photos/{p.id}",
+            "photo_type": p.photo_type,
+            "caption": p.caption,
+            "created_at": p.created_at,
+            "sort_order": p.sort_order,
+        }
+        for p in photos
+    ]

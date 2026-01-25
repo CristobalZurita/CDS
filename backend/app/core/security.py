@@ -5,24 +5,12 @@ from datetime import datetime, timedelta
 from typing import Optional
 from passlib.context import CryptContext
 
-# Import jose (python-jose) if available; otherwise provide a minimal fallback
 try:
     from jose import JWTError, jwt  # type: ignore
-except Exception:
-    # Minimal fallback for environments where `python-jose` isn't installed (tests, minimal CI)
-    class JWTError(Exception):
-        pass
-
-    class _FallbackJWT:
-        def encode(self, payload, key, algorithm=None):
-            # Return a deterministic placeholder token for non-production use
-            return "__fallback_token__"
-
-        def decode(self, token, key, algorithms=None):
-            # In fallback mode decoding isn't supported; raise JWTError for clarity
-            raise JWTError("python-jose not installed: token decode unavailable in fallback mode")
-
-    jwt = _FallbackJWT()
+except Exception as exc:
+    raise RuntimeError(
+        "python-jose is required for JWT operations. Install 'python-jose' to run the API."
+    ) from exc
 from app.core.config import settings
 
 # Contexto para hashing de contraseñas
@@ -145,3 +133,9 @@ def verify_refresh_token(token: str) -> dict:
         return payload
     except JWTError:
         raise JWTError("Refresh token inválido o expirado")
+
+
+def verify_crypto_dependencies() -> None:
+    """Fail fast if crypto dependencies are missing or misconfigured."""
+    if jwt is None:
+        raise RuntimeError("JWT provider unavailable (python-jose missing)")
