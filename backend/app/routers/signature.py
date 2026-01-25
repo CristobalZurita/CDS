@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy.orm import Session
 from starlette.responses import StreamingResponse
 from datetime import datetime, timedelta
@@ -51,7 +51,12 @@ def create_signature_request(
         raise HTTPException(status_code=404, detail="Repair not found")
 
     token = secrets.token_urlsafe(32)
-    expires_at = datetime.utcnow() + timedelta(minutes=payload.expires_minutes or 15)
+    expires_minutes = payload.expires_minutes or 15
+    if expires_minutes < 1:
+        expires_minutes = 1
+    if expires_minutes > 5:
+        expires_minutes = 5
+    expires_at = datetime.utcnow() + timedelta(minutes=expires_minutes)
     sig = SignatureRequest(
         repair_id=payload.repair_id,
         request_type=payload.request_type,
@@ -79,13 +84,23 @@ def get_signature_request(
 
 
 @router.get("/requests/token/{token}", response_model=SignatureRequestOut)
+@limiter.limit("30/minute")
 def get_signature_request_by_token(
     token: str,
+    response: Response,
     db: Session = Depends(get_db),
 ):
     sig = db.query(SignatureRequest).filter(SignatureRequest.token == token).first()
     if not sig:
         raise HTTPException(status_code=404, detail="Signature request not found")
+    if sig.expires_at and sig.expires_at < datetime.utcnow():
+        sig.status = "expired"
+        db.commit()
+        raise HTTPException(status_code=410, detail="Signature request expired")
+    if sig.status != "pending":
+        raise HTTPException(status_code=409, detail="Signature request is not pending")
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
     return sig
 
 
@@ -94,6 +109,7 @@ def get_signature_request_by_token(
 def submit_signature(
     payload: SignatureSubmit,
     request: Request,
+    response: Response,
     db: Session = Depends(get_db),
 ):
     sig = db.query(SignatureRequest).filter(SignatureRequest.token == payload.token).first()
@@ -119,14 +135,19 @@ def submit_signature(
     else:
         repair.signature_retiro_path = path
 
+    old_token = sig.token
     sig.status = "signed"
     sig.signed_at = datetime.utcnow()
     sig.signed_ip = request.client.host if request.client else None
     sig.signed_user_agent = request.headers.get("user-agent")
+    # Rotate token after use to prevent replay
+    sig.token = secrets.token_urlsafe(32)
 
     db.commit()
 
-    _broadcast(sig.token, "signature_received")
+    _broadcast(old_token, "signature_received")
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
     return {"ok": True, "path": path}
 
 
@@ -146,7 +167,16 @@ def cancel_signature_request(
 
 
 @router.get("/stream/{token}")
-async def stream_signature_events(token: str):
+async def stream_signature_events(token: str, response: Response, db: Session = Depends(get_db)):
+    sig = db.query(SignatureRequest).filter(SignatureRequest.token == token).first()
+    if not sig:
+        raise HTTPException(status_code=404, detail="Signature request not found")
+    if sig.expires_at and sig.expires_at < datetime.utcnow():
+        sig.status = "expired"
+        db.commit()
+        raise HTTPException(status_code=410, detail="Signature request expired")
+    if sig.status != "pending":
+        raise HTTPException(status_code=409, detail="Signature request is not pending")
     queue: asyncio.Queue = asyncio.Queue()
     _channels.setdefault(token, []).append(queue)
 
@@ -158,4 +188,6 @@ async def stream_signature_events(token: str):
         finally:
             _channels[token].remove(queue)
 
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
     return StreamingResponse(event_generator(), media_type="text/event-stream")

@@ -12,6 +12,7 @@ from app.models.device_lookup import DeviceBrand
 from app.models.repair import Repair, RepairStatus
 from app.models.repair_note import RepairNote
 from app.models.repair_photo import RepairPhoto
+from app.core.config import settings
 
 router = APIRouter(prefix="/client", tags=["client"])
 
@@ -270,7 +271,8 @@ def get_repair_details(repair_id: int, db: Session = Depends(get_db), user: dict
         "photos": [
             {
                 "id": p.id,
-                "photo_url": p.photo_url,
+                "photo_url": p.photo_url if settings.enable_public_uploads else None,
+                "photo_download_url": f"/api/v1/files/repair-photos/{p.id}" if not settings.enable_public_uploads else None,
                 "photo_type": p.photo_type,
                 "caption": p.caption,
                 "created_at": p.created_at,

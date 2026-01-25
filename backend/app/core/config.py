@@ -47,6 +47,9 @@ class Settings(BaseModel):
     jwt_refresh_secret: Optional[str] = os.getenv("JWT_REFRESH_SECRET")
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
+    allow_token_in_response: bool = os.getenv("ALLOW_TOKEN_IN_RESPONSE", "false").lower() == "true"
+    enable_api_docs: bool = os.getenv("ENABLE_API_DOCS", "false").lower() == "true"
+    enable_public_uploads: bool = os.getenv("ENABLE_PUBLIC_UPLOADS", "false").lower() == "true"
 
     # CORS Configuration
     # ALLOWED_ORIGINS or CORS_ORIGINS can be provided as a comma-separated env var
@@ -111,8 +114,14 @@ if settings.environment and settings.environment.lower() in ("production", "prod
         missing.append("SECRET_KEY")
     if not settings.jwt_secret:
         missing.append("JWT_SECRET")
+    if not settings.jwt_refresh_secret:
+        missing.append("JWT_REFRESH_SECRET")
     if missing:
         raise ValueError(f"Missing required environment variables for production: {', '.join(missing)}")
+    if settings.jwt_refresh_secret == settings.jwt_secret:
+        raise ValueError("JWT_REFRESH_SECRET must be different from JWT_SECRET in production")
+    if len(settings.jwt_refresh_secret) < 64 or len(settings.jwt_secret) < 64:
+        raise ValueError("JWT secrets must be at least 64 characters in production")
 
 
 def get_settings() -> Settings:
