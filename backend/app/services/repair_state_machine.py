@@ -3,15 +3,16 @@ Repair State Machine - Validación de transiciones de estado para reparaciones
 FASE 2: Implementación aditiva
 
 Estados y transiciones válidas según el modelo de negocio:
-    pending_quote(1) → quoted(2), cancelled(9)
-    quoted(2) → approved(3), cancelled(9)
-    approved(3) → in_progress(4), cancelled(9)
-    in_progress(4) → waiting_parts(5), testing(6), cancelled(9)
-    waiting_parts(5) → in_progress(4)
-    testing(6) → in_progress(4), completed(7)
-    completed(7) → delivered(8)
-    delivered(8) → (terminal)
-    cancelled(9) → (terminal)
+    ingreso(1) → diagnostico(2), rechazado(10)
+    diagnostico(2) → presupuesto(3), rechazado(10)
+    presupuesto(3) → aprobado(4), rechazado(10)
+    aprobado(4) → en_trabajo(5), rechazado(10)
+    en_trabajo(5) → listo(6), rechazado(10)
+    listo(6) → entregado(7), rechazado(10)
+    entregado(7) → noventena(8)
+    noventena(8) → archivado(9)
+    archivado(9) → (terminal)
+    rechazado(10) → archivado(9)
 """
 from typing import Dict, Set, Optional
 from fastapi import HTTPException, status
@@ -21,58 +22,62 @@ from fastapi import HTTPException, status
 # Estado IDs según tabla repair_statuses
 # =============================================================================
 class RepairStateID:
-    PENDING_QUOTE = 1
-    QUOTED = 2
-    APPROVED = 3
-    IN_PROGRESS = 4
-    WAITING_PARTS = 5
-    TESTING = 6
-    COMPLETED = 7
-    DELIVERED = 8
-    CANCELLED = 9
+    INGRESO = 1
+    DIAGNOSTICO = 2
+    PRESUPUESTO = 3
+    APROBADO = 4
+    EN_TRABAJO = 5
+    LISTO = 6
+    ENTREGADO = 7
+    NOVENTENA = 8
+    ARCHIVADO = 9
+    RECHAZADO = 10
 
 
 # =============================================================================
 # Mapa de transiciones válidas: estado_actual -> {estados_permitidos}
 # =============================================================================
 VALID_TRANSITIONS: Dict[int, Set[int]] = {
-    RepairStateID.PENDING_QUOTE: {RepairStateID.QUOTED, RepairStateID.CANCELLED},
-    RepairStateID.QUOTED: {RepairStateID.APPROVED, RepairStateID.CANCELLED},
-    RepairStateID.APPROVED: {RepairStateID.IN_PROGRESS, RepairStateID.CANCELLED},
-    RepairStateID.IN_PROGRESS: {RepairStateID.WAITING_PARTS, RepairStateID.TESTING, RepairStateID.CANCELLED},
-    RepairStateID.WAITING_PARTS: {RepairStateID.IN_PROGRESS},
-    RepairStateID.TESTING: {RepairStateID.IN_PROGRESS, RepairStateID.COMPLETED},
-    RepairStateID.COMPLETED: {RepairStateID.DELIVERED},
-    RepairStateID.DELIVERED: set(),  # Terminal
-    RepairStateID.CANCELLED: set(),  # Terminal
+    RepairStateID.INGRESO: {RepairStateID.DIAGNOSTICO, RepairStateID.RECHAZADO},
+    RepairStateID.DIAGNOSTICO: {RepairStateID.PRESUPUESTO, RepairStateID.RECHAZADO},
+    RepairStateID.PRESUPUESTO: {RepairStateID.APROBADO, RepairStateID.RECHAZADO},
+    RepairStateID.APROBADO: {RepairStateID.EN_TRABAJO, RepairStateID.RECHAZADO},
+    RepairStateID.EN_TRABAJO: {RepairStateID.LISTO, RepairStateID.RECHAZADO},
+    RepairStateID.LISTO: {RepairStateID.ENTREGADO, RepairStateID.RECHAZADO},
+    RepairStateID.ENTREGADO: {RepairStateID.NOVENTENA},
+    RepairStateID.NOVENTENA: {RepairStateID.ARCHIVADO},
+    RepairStateID.ARCHIVADO: set(),  # Terminal
+    RepairStateID.RECHAZADO: {RepairStateID.ARCHIVADO},
 }
 
 
 # Nombres legibles para mensajes de error
 STATE_NAMES: Dict[int, str] = {
-    RepairStateID.PENDING_QUOTE: "Pendiente Cotización",
-    RepairStateID.QUOTED: "Cotizado",
-    RepairStateID.APPROVED: "Aprobado",
-    RepairStateID.IN_PROGRESS: "En Progreso",
-    RepairStateID.WAITING_PARTS: "Esperando Repuestos",
-    RepairStateID.TESTING: "En Pruebas",
-    RepairStateID.COMPLETED: "Completado",
-    RepairStateID.DELIVERED: "Entregado",
-    RepairStateID.CANCELLED: "Cancelado",
+    RepairStateID.INGRESO: "Ingreso",
+    RepairStateID.DIAGNOSTICO: "Diagnóstico",
+    RepairStateID.PRESUPUESTO: "Presupuesto",
+    RepairStateID.APROBADO: "Aprobado",
+    RepairStateID.EN_TRABAJO: "En trabajo",
+    RepairStateID.LISTO: "Listo",
+    RepairStateID.ENTREGADO: "Entregado",
+    RepairStateID.NOVENTENA: "Noventena",
+    RepairStateID.ARCHIVADO: "Archivado",
+    RepairStateID.RECHAZADO: "Rechazado",
 }
 
 
 # Porcentaje de progreso por estado (para notificaciones)
 STATE_PROGRESS: Dict[int, int] = {
-    RepairStateID.PENDING_QUOTE: 0,
-    RepairStateID.QUOTED: 10,
-    RepairStateID.APPROVED: 20,
-    RepairStateID.IN_PROGRESS: 40,
-    RepairStateID.WAITING_PARTS: 50,
-    RepairStateID.TESTING: 70,
-    RepairStateID.COMPLETED: 90,
-    RepairStateID.DELIVERED: 100,
-    RepairStateID.CANCELLED: 0,
+    RepairStateID.INGRESO: 0,
+    RepairStateID.DIAGNOSTICO: 15,
+    RepairStateID.PRESUPUESTO: 30,
+    RepairStateID.APROBADO: 40,
+    RepairStateID.EN_TRABAJO: 60,
+    RepairStateID.LISTO: 80,
+    RepairStateID.ENTREGADO: 90,
+    RepairStateID.NOVENTENA: 95,
+    RepairStateID.ARCHIVADO: 100,
+    RepairStateID.RECHAZADO: 0,
 }
 
 
@@ -113,7 +118,7 @@ def validate_transition(current_state_id: int, new_state_id: int) -> None:
         return
 
     # Verificar si el estado actual es terminal
-    if current_state_id in (RepairStateID.DELIVERED, RepairStateID.CANCELLED):
+    if current_state_id in (RepairStateID.ARCHIVADO,):
         current_name = STATE_NAMES.get(current_state_id, str(current_state_id))
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -146,7 +151,7 @@ def get_state_progress(state_id: int) -> int:
 
 def is_terminal_state(state_id: int) -> bool:
     """Verifica si un estado es terminal (no permite más transiciones)"""
-    return state_id in (RepairStateID.DELIVERED, RepairStateID.CANCELLED)
+    return state_id in (RepairStateID.ARCHIVADO,)
 
 
 def get_allowed_transitions(current_state_id: int) -> Set[int]:

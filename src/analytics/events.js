@@ -1,4 +1,9 @@
 export const AnalyticsEvents = {
+  PAGE_VIEW: 'page_view',
+  DASHBOARD_VIEW: 'dashboard_view',
+  ADMIN_DASHBOARD_VIEW: 'admin_dashboard_view',
+  OT_DETAIL_VIEW: 'ot_detail_view',
+  SEARCH_USED: 'search_used',
   HERO_CTA_APPOINTMENT: 'hero_cta_appointment_click',
   HERO_CTA_QUOTE: 'hero_cta_quote_click',
   HERO_CTA_LOGIN: 'hero_cta_login_click',

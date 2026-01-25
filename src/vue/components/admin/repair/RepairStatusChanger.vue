@@ -20,7 +20,7 @@
 					v-for="transition in allowedTransitions"
 					:key="transition.id"
 					class="transition-btn"
-					:class="{ 'btn-danger': transition.id === 9 }"
+					:class="{ 'btn-danger': transition.id === 10 }"
 					:disabled="changing"
 					@click="confirmTransition(transition)"
 				>
@@ -72,15 +72,16 @@ const emit = defineEmits(['statusChanged'])
 
 // Estado de la máquina de estados (mismo que backend)
 const STATE_CONFIG = {
-	1: { name: 'Pendiente Cotización', color: '#6c757d', progress: 0, icon: 'fa-solid fa-clock', transitions: [2, 9] },
-	2: { name: 'Cotizado', color: '#17a2b8', progress: 10, icon: 'fa-solid fa-file-invoice-dollar', transitions: [3, 9] },
-	3: { name: 'Aprobado', color: '#28a745', progress: 20, icon: 'fa-solid fa-thumbs-up', transitions: [4, 9] },
-	4: { name: 'En Progreso', color: '#fd7e14', progress: 40, icon: 'fa-solid fa-wrench', transitions: [5, 6, 9] },
-	5: { name: 'Esperando Repuestos', color: '#ffc107', progress: 50, icon: 'fa-solid fa-box', transitions: [4] },
-	6: { name: 'En Pruebas', color: '#6f42c1', progress: 70, icon: 'fa-solid fa-vial', transitions: [4, 7] },
-	7: { name: 'Completado', color: '#20c997', progress: 90, icon: 'fa-solid fa-check-circle', transitions: [8] },
-	8: { name: 'Entregado', color: '#198754', progress: 100, icon: 'fa-solid fa-hand-holding', transitions: [] },
-	9: { name: 'Cancelado', color: '#dc3545', progress: 0, icon: 'fa-solid fa-times-circle', transitions: [] }
+	1: { name: 'Ingreso', color: '#6c757d', progress: 0, icon: 'fa-solid fa-door-open', transitions: [2, 10] },
+	2: { name: 'Diagnóstico', color: '#17a2b8', progress: 15, icon: 'fa-solid fa-stethoscope', transitions: [3, 10] },
+	3: { name: 'Presupuesto', color: '#fd7e14', progress: 30, icon: 'fa-solid fa-file-invoice-dollar', transitions: [4, 10] },
+	4: { name: 'Aprobado', color: '#28a745', progress: 40, icon: 'fa-solid fa-thumbs-up', transitions: [5, 10] },
+	5: { name: 'En trabajo', color: '#ff8c42', progress: 60, icon: 'fa-solid fa-wrench', transitions: [6, 10] },
+	6: { name: 'Listo', color: '#20c997', progress: 80, icon: 'fa-solid fa-check-circle', transitions: [7, 10] },
+	7: { name: 'Entregado', color: '#198754', progress: 90, icon: 'fa-solid fa-hand-holding', transitions: [8] },
+	8: { name: 'Noventena', color: '#4d77ff', progress: 95, icon: 'fa-solid fa-hourglass-half', transitions: [9] },
+	9: { name: 'Archivado', color: '#6f42c1', progress: 100, icon: 'fa-solid fa-box-archive', transitions: [] },
+	10: { name: 'Rechazado', color: '#dc3545', progress: 0, icon: 'fa-solid fa-ban', transitions: [9] }
 }
 
 // State
@@ -94,7 +95,7 @@ const currentConfig = computed(() => STATE_CONFIG[props.currentStatusId] || STAT
 const currentStatusName = computed(() => currentConfig.value.name)
 const currentStatusColor = computed(() => currentConfig.value.color)
 const progressPercent = computed(() => currentConfig.value.progress)
-const isTerminal = computed(() => props.currentStatusId === 8 || props.currentStatusId === 9)
+const isTerminal = computed(() => props.currentStatusId === 9)
 
 const allowedTransitions = computed(() => {
 	const transitions = currentConfig.value.transitions || []

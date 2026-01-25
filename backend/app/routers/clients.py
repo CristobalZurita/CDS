@@ -33,6 +33,7 @@ def _auto_archive_repairs(db: Session) -> None:
         return
     for repair in to_archive:
         repair.archived_at = datetime.utcnow()
+        repair.status_id = 9
     db.commit()
 
 

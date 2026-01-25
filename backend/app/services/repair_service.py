@@ -5,7 +5,7 @@ Maneja: ComponentUsage → Stock → StockMovement → Costos
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional, List
 
 from app.models.repair import Repair, RepairStatus
@@ -43,8 +43,8 @@ class RepairService:
     def is_repair_closed(self, repair: Repair) -> bool:
         """Verifica si la reparación está cerrada (delivered)"""
         if repair.status_obj:
-            return repair.status_obj.code in ('delivered', 'cancelled')
-        return repair.status_id in (4, 5)  # delivered=4, cancelled=5
+            return repair.status_obj.code in ('archivado', 'rechazado')
+        return repair.status_id in (RepairStateID.ARCHIVADO, RepairStateID.RECHAZADO)
 
     def add_component_usage(
         self,
@@ -85,7 +85,7 @@ class RepairService:
             )
 
         # Verificar disponibilidad
-        available = stock.quantity - (stock.quantity_reserved or 0)
+        available = stock.available_quantity
         if available < quantity:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -323,15 +323,28 @@ class RepairService:
         # Actualizar timestamps según el nuevo estado
         now = datetime.utcnow()
 
-        if new_status_id == RepairStateID.APPROVED:
+        note_to_add = None
+        if new_status_id == RepairStateID.APROBADO:
             repair.approval_date = now
-        elif new_status_id == RepairStateID.IN_PROGRESS:
+        elif new_status_id == RepairStateID.EN_TRABAJO:
             if not repair.start_date:  # Solo si es primera vez
                 repair.start_date = now
-        elif new_status_id == RepairStateID.COMPLETED:
+        elif new_status_id == RepairStateID.LISTO:
             repair.completion_date = now
-        elif new_status_id == RepairStateID.DELIVERED:
+        elif new_status_id == RepairStateID.ENTREGADO:
             repair.delivery_date = now
+            # Al entregar, pasa a noventena automáticamente
+            new_status_id = RepairStateID.NOVENTENA
+            repair.warranty_until = (now + timedelta(days=repair.warranty_days or 90)).date()
+        elif new_status_id == RepairStateID.NOVENTENA:
+            repair.warranty_until = (now + timedelta(days=repair.warranty_days or 90)).date()
+        elif new_status_id == RepairStateID.RECHAZADO:
+            repair.archived_at = now
+            repair.archived_by = user_id
+            note_to_add = "RECHAZADO"
+        elif new_status_id == RepairStateID.ARCHIVADO:
+            repair.archived_at = now
+            repair.archived_by = user_id
 
         # Actualizar estado
         previous_status_id = repair.status_id
@@ -339,6 +352,13 @@ class RepairService:
         repair.updated_at = now
 
         try:
+            if note_to_add:
+                self.db.add(RepairNote(
+                    repair_id=repair.id,
+                    user_id=user_id or 1,
+                    note=note_to_add if not notes else f"{note_to_add}: {notes}",
+                    note_type="internal"
+                ))
             self.db.commit()
             self.db.refresh(repair)
 
@@ -410,7 +430,7 @@ class RepairService:
                 })
 
                 # Evento específico de completado (listo para recoger)
-                if new_status_id == RepairStateID.COMPLETED:
+                if new_status_id == RepairStateID.LISTO:
                     event_bus.emit(Events.REPAIR_COMPLETED, {
                         'customer_email': client_email,
                         'customer_name': client_name or 'Cliente',

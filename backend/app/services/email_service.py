@@ -142,11 +142,16 @@ class EmailService:
         Envía email cuando el status de una reparación cambia
         """
         status_labels = {
-            'pending': '⏳ Pendiente',
-            'waiting': '⌛ En Espera',
-            'in-progress': '🔧 En Proceso',
-            'completed': '✓ Completada',
-            'cancelled': '✕ Cancelada'
+            'Ingreso': '📥 Ingreso',
+            'Diagnóstico': '🧭 Diagnóstico',
+            'Presupuesto': '💬 Presupuesto',
+            'Aprobado': '✅ Aprobado',
+            'En trabajo': '🔧 En trabajo',
+            'Listo': '🟢 Listo',
+            'Entregado': '📦 Entregado',
+            'Noventena': '🕒 Noventena',
+            'Archivado': '📁 Archivado',
+            'Rechazado': '⛔ Rechazado'
         }
         
         subject = f"Actualización: Tu reparación {repair_id} - {status_labels.get(status, status)}"

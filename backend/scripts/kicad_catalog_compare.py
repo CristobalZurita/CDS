@@ -44,16 +44,10 @@ def extract_kicad_symbols(kicad_dir: Path) -> set[str]:
     return symbols
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--excel", required=True, help="Ruta al Excel maestro")
-    parser.add_argument("--kicad", required=True, help="Ruta a /usr/share/kicad/symbols")
-    parser.add_argument("--out-dir", default="reports", help="Directorio de salida")
-    args = parser.parse_args()
-
-    excel_path = Path(args.excel).expanduser()
-    kicad_dir = Path(args.kicad).expanduser()
-    out_dir = Path(args.out_dir).expanduser()
+def main_from_args(excel_path: str, kicad_path: str, out_dir: str = "reports") -> int:
+    excel_path = Path(excel_path).expanduser()
+    kicad_dir = Path(kicad_path).expanduser()
+    out_dir = Path(out_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
 
     if not excel_path.exists():
@@ -99,4 +93,9 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--excel", required=True, help="Ruta al Excel maestro")
+    parser.add_argument("--kicad", required=True, help="Ruta a /usr/share/kicad/symbols")
+    parser.add_argument("--out-dir", default="reports", help="Directorio de salida")
+    args = parser.parse_args()
+    raise SystemExit(main_from_args(excel_path=args.excel, kicad_path=args.kicad, out_dir=args.out_dir))

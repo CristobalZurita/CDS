@@ -12,12 +12,16 @@ from enum import Enum
 # Enums
 class RepairStatus(str, Enum):
     """Estados posibles de una reparación"""
-    INGRESADO = "INGRESADO"
-    EN_DIAGNOSTICO = "EN_DIAGNOSTICO"
-    ESPERANDO_REPUESTO = "ESPERANDO_REPUESTO"
-    EN_REPARACION = "EN_REPARACION"
-    FINALIZADO = "FINALIZADO"
+    INGRESO = "INGRESO"
+    DIAGNOSTICO = "DIAGNOSTICO"
+    PRESUPUESTO = "PRESUPUESTO"
+    APROBADO = "APROBADO"
+    EN_TRABAJO = "EN_TRABAJO"
+    LISTO = "LISTO"
     ENTREGADO = "ENTREGADO"
+    NOVENTENA = "NOVENTENA"
+    ARCHIVADO = "ARCHIVADO"
+    RECHAZADO = "RECHAZADO"
 
 
 class InstrumentTier(str, Enum):

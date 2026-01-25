@@ -30,19 +30,12 @@ def normalize_cell(value) -> str | None:
     return text
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--excel", required=True, help="Ruta al Excel maestro")
-    parser.add_argument("--apply", action="store_true", help="Aplicar cambios en BD")
-    parser.add_argument("--dry-run", action="store_true", help="Solo mostrar conteo (default)")
-    args = parser.parse_args()
-
-    excel_path = Path(args.excel).expanduser()
+def main_from_args(excel_path: str, apply: bool = False) -> int:
+    excel_path = Path(excel_path).expanduser()
     if not excel_path.exists():
         print(f"Excel no encontrado: {excel_path}")
         return 1
-
-    dry_run = args.dry_run or not args.apply
+    dry_run = not apply
     df = pd.read_excel(excel_path)
     if df.empty:
         print("Excel vacío.")
@@ -52,11 +45,15 @@ def main() -> int:
     created_categories = 0
     created_products = 0
     skipped_products = 0
+    seen_skus: set[str] = set()
 
+    skip_columns = {"N°", "Nº", "NO", "NO.", "#"}
     try:
         for col_name in df.columns:
             category_name = str(col_name).strip()
             if not category_name:
+                continue
+            if category_name.upper() in skip_columns:
                 continue
 
             category = db.query(Category).filter(Category.name == category_name).first()
@@ -74,6 +71,10 @@ def main() -> int:
                     continue
 
                 sku = f"{slugify(category_name)}-{slugify(item_name)}"
+                if sku in seen_skus:
+                    skipped_products += 1
+                    continue
+                seen_skus.add(sku)
                 existing = db.query(Product).filter(Product.sku == sku).first()
                 if existing:
                     skipped_products += 1
@@ -105,4 +106,10 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--excel", required=True, help="Ruta al Excel maestro")
+    parser.add_argument("--apply", action="store_true", help="Aplicar cambios en BD")
+    parser.add_argument("--dry-run", action="store_true", help="Solo mostrar conteo (default)")
+    args = parser.parse_args()
+    apply = args.apply and not args.dry_run
+    raise SystemExit(main_from_args(excel_path=args.excel, apply=apply))

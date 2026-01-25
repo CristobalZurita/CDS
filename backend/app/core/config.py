@@ -73,6 +73,13 @@ class Settings(BaseModel):
     smtp_use_tls: bool = os.getenv("SMTP_USE_TLS", "false").lower() == "true"
     smtp_use_ssl: bool = os.getenv("SMTP_USE_SSL", "true").lower() == "true"
 
+    public_base_url: str = os.getenv("PUBLIC_BASE_URL", "http://localhost:8000")
+    whatsapp_token: Optional[str] = os.getenv("WHATSAPP_TOKEN")
+    whatsapp_phone_id: Optional[str] = os.getenv("WHATSAPP_PHONE_ID")
+    whatsapp_api_url: str = os.getenv("WHATSAPP_API_URL", "https://graph.facebook.com/v17.0")
+    whatsapp_template_name: Optional[str] = os.getenv("WHATSAPP_TEMPLATE_NAME")
+    whatsapp_template_lang: str = os.getenv("WHATSAPP_TEMPLATE_LANG", "en_US")
+
     # Pricing Configuration
     diagnostic_fee: int = 0  # Free diagnostic
     service_multipliers: dict = {

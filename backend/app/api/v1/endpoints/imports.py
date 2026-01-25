@@ -7,7 +7,6 @@ import json
 from datetime import datetime
 import uuid
 
-from app.core.config import settings
 from app.core.dependencies import get_current_admin
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
@@ -71,17 +70,23 @@ def _write_audit(actor: str, action: str, details: Dict):
 
 
 def _run_import_sync(user_id: str | None = None, run_id: str | None = None):
-    # Import by invoking the scripts used in ETAPA 4
+    """
+    Ejecuta importación aditiva:
+    1) Excel → inventario (productos base)
+    2) KiCad → comparación referencial
+    """
     try:
-        from scripts.ingest import normalize_excel, import_to_db
-        normalize_excel.main()
-        # Run import and propagate user_id/run_id so scripts can log and reuse provided run_id
-        import_to_db.run_import(user_id=user_id if user_id else None, run_id=run_id if run_id else None)
-        # best-effort: write finished audit (import_to_db will also emit its own logs)
-        _write_audit(actor=(user_id or 'system'), action='import.finished', details={'note': 'import completed'})
+        from scripts import import_inventory_excel, kicad_catalog_compare
+
+        excel_path = os.getenv("INVENTORY_EXCEL_PATH") or os.path.join(REPO_ROOT, "Inventario_Cirujanosintetizadores.xlsx")
+        kicad_path = os.getenv("KICAD_SYMBOLS_PATH") or "/usr/share/kicad/symbols"
+
+        import_inventory_excel.main_from_args(excel_path=excel_path, apply=True)
+        kicad_catalog_compare.main_from_args(excel_path=excel_path, kicad_path=kicad_path)
+
+        _write_audit(actor=(user_id or 'system'), action='import.finished', details={'note': 'import completed', 'run_id': run_id})
     except Exception as e:
-        # Best-effort: record failure and re-raise
-        _write_audit(actor=(user_id or 'system'), action='import.failed', details={'error': str(e)})
+        _write_audit(actor=(user_id or 'system'), action='import.failed', details={'error': str(e), 'run_id': run_id})
         raise
 
 

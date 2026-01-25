@@ -3,6 +3,24 @@
     <AdminSidebar />
     <div class="admin-main">
       <AdminTopbar :title="title" :subtitle="subtitle" />
+      <div v-if="context" class="admin-context">
+        <div class="context-item">
+          <span class="label">Cliente</span>
+          <span class="value">{{ context.clientName || 'SIN_DATO' }}</span>
+        </div>
+        <div class="context-item">
+          <span class="label">Código</span>
+          <span class="value">{{ context.clientCode || 'SIN_DATO' }}</span>
+        </div>
+        <div class="context-item">
+          <span class="label">Instrumento</span>
+          <span class="value">{{ context.instrument || 'SIN_DATO' }}</span>
+        </div>
+        <div v-if="context.otCode" class="context-item">
+          <span class="label">OT</span>
+          <span class="value">{{ context.otCode }}</span>
+        </div>
+      </div>
       <div class="admin-content">
         <slot />
       </div>
@@ -16,7 +34,8 @@ import AdminTopbar from '@/vue/components/admin/layout/AdminTopbar.vue'
 
 defineProps({
   title: { type: String, default: '' },
-  subtitle: { type: String, default: '' }
+  subtitle: { type: String, default: '' },
+  context: { type: Object, default: null }
 })
 </script>
 
@@ -36,6 +55,37 @@ defineProps({
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+.admin-context {
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  padding: 1rem 2.5rem;
+  background: #f6f2ea;
+  border-bottom: 1px solid rgba(62, 60, 56, 0.2);
+}
+
+.context-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.95rem;
+}
+
+.context-item .label {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72rem;
+  color: $text-muted;
+}
+
+.context-item .value {
+  font-weight: 700;
+  color: $brand-text;
 }
 
 .admin-content {

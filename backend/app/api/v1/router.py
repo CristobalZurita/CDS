@@ -55,7 +55,7 @@ except Exception:
 # If any router failed to import previously (e.g., due to transient import errors),
 # attempt a second import pass so that fixes applied at runtime are picked up.
 import importlib
-for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment", "client", "newsletter", "tools", "signature", "tickets", "purchase_requests", "manuals", "photo_requests"):
+for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment", "client", "newsletter", "tools", "signature", "tickets", "purchase_requests", "manuals", "photo_requests", "inventory", "repair_status"):
 	var_name = f"{name}_router"
 	if globals().get(var_name) is None:
 		try:

@@ -57,11 +57,12 @@ def list_inventory(
         ).first()
 
         stock_qty = stock.quantity if stock else product.quantity
+        available_qty = stock.available_quantity if stock else product.quantity
 
         # Filtrar por stock bajo si se solicita
         if low_stock_only:
             min_stock = stock.minimum_stock if stock else product.min_quantity
-            if stock_qty > min_stock:
+            if available_qty > min_stock:
                 continue
 
         # Obtener nombre de categoría
@@ -75,10 +76,17 @@ def list_inventory(
             "category": category.name if category else None,
             "category_id": product.category_id,
             "stock": stock_qty,
+            "available_stock": available_qty,
             "stock_unit": "u",  # Unidades por defecto
             "price": product.price,
             "min_stock": stock.minimum_stock if stock else product.min_quantity,
-            "is_low_stock": stock_qty <= (stock.minimum_stock if stock else product.min_quantity),
+            "is_low_stock": available_qty <= (stock.minimum_stock if stock else product.min_quantity),
+            "quantity_reserved": stock.quantity_reserved if stock else 0,
+            "quantity_in_transit": stock.quantity_in_transit if stock else 0,
+            "quantity_damaged": stock.quantity_damaged if stock else 0,
+            "quantity_in_work": stock.quantity_in_work if stock else 0,
+            "quantity_under_review": stock.quantity_under_review if stock else 0,
+            "quantity_internal_use": stock.quantity_internal_use if stock else 0,
             "location": stock.bin_code if stock else None,
             "supplier": stock.supplier if stock else None,
             "unit_cost": stock.unit_cost if stock else product.price
@@ -111,6 +119,20 @@ def create_inventory_item(
     db.add(product)
     db.commit()
     db.refresh(product)
+    # Crear stock extendido si no existe
+    stock = db.query(Stock).filter(
+        Stock.component_table == "products",
+        Stock.component_id == product.id
+    ).first()
+    if not stock:
+        stock = Stock(
+            component_table="products",
+            component_id=product.id,
+            quantity=product.quantity,
+            minimum_stock=product.min_quantity
+        )
+        db.add(stock)
+        db.commit()
     return {
         "id": product.id,
         "name": product.name,
@@ -147,6 +169,42 @@ def update_inventory_item(
         product.quantity = int(payload.get("stock") or payload.get("quantity") or 0)
     if "min_quantity" in payload and payload["min_quantity"] is not None:
         product.min_quantity = int(payload["min_quantity"])
+
+    stock = db.query(Stock).filter(
+        Stock.component_table == "products",
+        Stock.component_id == product.id
+    ).first()
+    if not stock:
+        stock = Stock(
+            component_table="products",
+            component_id=product.id,
+            quantity=product.quantity,
+            minimum_stock=product.min_quantity
+        )
+        db.add(stock)
+
+    if "stock" in payload or "quantity" in payload:
+        stock.quantity = int(payload.get("stock") or payload.get("quantity") or 0)
+    if "min_quantity" in payload and payload["min_quantity"] is not None:
+        stock.minimum_stock = int(payload["min_quantity"])
+    if "quantity_reserved" in payload:
+        stock.quantity_reserved = int(payload.get("quantity_reserved") or 0)
+    if "quantity_in_transit" in payload:
+        stock.quantity_in_transit = int(payload.get("quantity_in_transit") or 0)
+    if "quantity_damaged" in payload:
+        stock.quantity_damaged = int(payload.get("quantity_damaged") or 0)
+    if "quantity_in_work" in payload:
+        stock.quantity_in_work = int(payload.get("quantity_in_work") or 0)
+    if "quantity_under_review" in payload:
+        stock.quantity_under_review = int(payload.get("quantity_under_review") or 0)
+    if "quantity_internal_use" in payload:
+        stock.quantity_internal_use = int(payload.get("quantity_internal_use") or 0)
+    if "supplier" in payload:
+        stock.supplier = payload.get("supplier")
+    if "bin_code" in payload:
+        stock.bin_code = payload.get("bin_code")
+    if "unit_cost" in payload:
+        stock.unit_cost = payload.get("unit_cost")
 
     db.commit()
     db.refresh(product)
@@ -201,10 +259,17 @@ def get_inventory_item(
         "category": category.name if category else None,
         "category_id": product.category_id,
         "stock": stock.quantity if stock else product.quantity,
+        "available_stock": stock.available_quantity if stock else product.quantity,
         "stock_unit": "u",
         "price": product.price,
         "min_stock": stock.minimum_stock if stock else product.min_quantity,
-        "is_low_stock": (stock.quantity if stock else product.quantity) <= (stock.minimum_stock if stock else product.min_quantity),
+        "is_low_stock": (stock.available_quantity if stock else product.quantity) <= (stock.minimum_stock if stock else product.min_quantity),
+        "quantity_reserved": stock.quantity_reserved if stock else 0,
+        "quantity_in_transit": stock.quantity_in_transit if stock else 0,
+        "quantity_damaged": stock.quantity_damaged if stock else 0,
+        "quantity_in_work": stock.quantity_in_work if stock else 0,
+        "quantity_under_review": stock.quantity_under_review if stock else 0,
+        "quantity_internal_use": stock.quantity_internal_use if stock else 0,
         "location": stock.bin_code if stock else None,
         "supplier": stock.supplier if stock else None,
         "unit_cost": stock.unit_cost if stock else product.price

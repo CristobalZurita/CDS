@@ -4,6 +4,10 @@
       <div>
         <h2 class="sheet-title">Orden de Trabajo</h2>
         <div class="sheet-subtitle">Ingreso único de Cliente + Instrumento + OT</div>
+        <div class="sheet-context">
+          <span><strong>Cliente:</strong> {{ client.name || 'SIN_DATO' }}</span>
+          <span><strong>Instrumento:</strong> {{ instruments[0]?.model || 'SIN_DATO' }}</span>
+        </div>
       </div>
       <div class="code-block">
         <div class="code-label">Código Cliente</div>
@@ -308,6 +312,48 @@ const onFileSelected = (e, idx) => {
   instruments.value[idx].photo_file = e.target.files?.[0] || null
 }
 
+const applyDefaults = () => {
+  let applied = false
+
+  const ensureText = (obj, key) => {
+    if (!obj[key]) {
+      obj[key] = 'SIN_DATO'
+      applied = true
+    }
+  }
+  const ensureNumber = (obj, key) => {
+    if (obj[key] === '' || obj[key] === null || obj[key] === undefined) {
+      obj[key] = 0
+      applied = true
+    }
+  }
+
+  const clientTextFields = [
+    'name', 'email', 'phone', 'address', 'city', 'region', 'country',
+    'notes', 'internal_notes', 'tax_id', 'company_name', 'billing_address',
+    'customer_segment', 'language_preference'
+  ]
+  clientTextFields.forEach((field) => ensureText(client.value, field))
+
+  instruments.value.forEach((inst) => {
+    const instTextFields = [
+      'brand_other', 'model', 'serial_number', 'description', 'condition_notes',
+      'accessories', 'problem_reported', 'diagnosis', 'work_performed',
+      'payment_method', 'photo_caption'
+    ]
+    instTextFields.forEach((field) => ensureText(inst, field))
+    const instNumberFields = ['year_manufactured', 'priority', 'paid_amount', 'warranty_days']
+    instNumberFields.forEach((field) => ensureNumber(inst, field))
+    inst.materials.forEach((mat) => {
+      ensureText(mat, 'sku')
+      ensureText(mat, 'notes')
+      ensureNumber(mat, 'quantity')
+    })
+  })
+
+  return applied
+}
+
 const reloadCodes = async () => {
   await fetchNextClientCode()
   if (existingClientId.value) {
@@ -390,6 +436,7 @@ const validate = () => {
 
 const submit = async () => {
   errorMessage.value = ''
+  const defaultsApplied = applyDefaults()
   if (!validate()) {
     errorMessage.value = 'Completa todos los campos obligatorios.'
     return
@@ -483,6 +530,9 @@ const submit = async () => {
 
     emit('completed', { client_id: clientId })
     resetForm()
+    if (defaultsApplied) {
+      alert('Se completaron campos vacíos con SIN_DATO / 0.')
+    }
   } catch (e) {
     errorMessage.value = e?.response?.data?.detail || e?.message || 'Error en ingreso'
   } finally {
@@ -518,6 +568,25 @@ onMounted(async () => {
   await Promise.all([fetchNextClientCode(), fetchClients()])
 })
 </script>
+
+<style scoped>
+.sheet-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #f6f2ea;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(62, 60, 56, 0.2);
+}
+
+.sheet-context {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.95rem;
+  color: #5a5652;
+  margin-top: 0.35rem;
+}
+</style>
 
 <style scoped>
 .intake-sheet {

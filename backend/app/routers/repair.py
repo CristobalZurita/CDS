@@ -21,6 +21,9 @@ from app.models.client import Client
 from app.models.user import User
 from datetime import datetime, timedelta
 import uuid
+from app.core.config import settings
+from app.services.email_service import EmailService
+from app.services.whatsapp_service import WhatsAppService
 
 router = APIRouter(prefix="/repairs", tags=["repairs"])
 
@@ -47,6 +50,7 @@ def _auto_archive_repairs(db: Session) -> None:
         return
     for r in to_archive:
         r.archived_at = datetime.utcnow()
+        r.status_id = 9
     db.commit()
 
 
@@ -113,7 +117,7 @@ def create_repair(
     def _ensure_default_status():
         st = db.query(RepairStatus).filter(RepairStatus.id == 1).first()
         if not st:
-            st = RepairStatus(id=1, code="pending_quote", name="Pendiente Cotizacion", description="Autocreated")
+            st = RepairStatus(id=1, code="ingreso", name="Ingreso", description="Autocreated")
             db.add(st)
             db.commit()
             db.refresh(st)
@@ -282,6 +286,71 @@ def archive_repair(
     repair.archived_by = int(user.get("user_id")) if user and user.get("user_id") else None
     db.commit()
     return {"ok": True, "archived_at": repair.archived_at}
+
+
+@router.post("/{repair_id}/notify")
+def notify_client(
+    repair_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "update"))
+):
+    repair = db.query(Repair).filter(Repair.id == repair_id).first()
+    if not repair:
+        raise HTTPException(status_code=404, detail="Repair not found")
+    device = db.query(Device).filter(Device.id == repair.device_id).first()
+    client = db.query(Client).filter(Client.id == device.client_id).first() if device else None
+    if not client or not client.email:
+        raise HTTPException(status_code=400, detail="Cliente sin email")
+
+    photos = db.query(RepairPhoto).filter(RepairPhoto.repair_id == repair.id).all()
+    photo_items = []
+    for p in photos[:5]:
+        url = p.photo_url or ""
+        if url and url.startswith("/"):
+            url = f"{settings.public_base_url}{url}"
+        photo_items.append(f'<img src="{url}" alt="Foto" style="width:140px;height:auto;margin:6px;border-radius:8px;border:1px solid #ddd;" />')
+
+    summary_html = f"""
+    <h2>Resumen de tu OT {repair.repair_number}</h2>
+    <p><strong>Cliente:</strong> {client.name}</p>
+    <p><strong>Instrumento:</strong> {device.model if device else 'SIN_DATO'}</p>
+    <p><strong>Problema:</strong> {repair.problem_reported or 'SIN_DATO'}</p>
+    <p><strong>Diagnóstico:</strong> {repair.diagnosis or 'SIN_DATO'}</p>
+    <p><strong>Trabajo:</strong> {repair.work_performed or 'SIN_DATO'}</p>
+    <p><strong>Total:</strong> ${repair.total_cost or 0:,.0f} CLP</p>
+    <div>{''.join(photo_items) if photo_items else ''}</div>
+    <p>Revisa el detalle completo en tu panel.</p>
+    """
+
+    EmailService().send_email(
+        to_email=client.email,
+        subject=f"Resumen de OT {repair.repair_number}",
+        html_content=summary_html
+    )
+
+    if client.phone:
+        WhatsAppService().send_text(
+            to_phone=client.phone,
+            message=f"Resumen OT {repair.repair_number}: {repair.problem_reported or 'SIN_DATO'}. Revisa el detalle en tu panel."
+        )
+
+    return {"ok": True}
+
+
+@router.post("/{repair_id}/reactivate")
+def reactivate_repair(
+    repair_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "update"))
+):
+    repair = db.query(Repair).filter(Repair.id == repair_id).first()
+    if not repair:
+        raise HTTPException(status_code=404, detail="Repair not found")
+    repair.archived_at = None
+    repair.archived_by = None
+    repair.status_id = 1
+    db.commit()
+    return {"ok": True, "status_id": repair.status_id}
 
 
 @router.put("/{repair_id}")
