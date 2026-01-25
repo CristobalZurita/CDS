@@ -1,6 +1,7 @@
 @import "variables";
 @import "brand"; // variables and palette from MANUAL_CIRUJANO
 @import "mixins";
+@import "reset";
 
 // importing bootstrap
 @import "/node_modules/bootstrap/scss/bootstrap";
@@ -17,3 +18,5 @@
 
 @import "layout";
 @import "typography";
+@import "global";
+@import "admin";

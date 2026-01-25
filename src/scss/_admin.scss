@@ -1,0 +1,31 @@
+.admin-shell {
+    font-size: 1.05rem;
+}
+
+.admin-content {
+    padding: 2.5rem 2.75rem 3.25rem;
+}
+
+.admin-content :deep(.admin-section) {
+    padding: 1.5rem;
+}
+
+@include media-breakpoint-down(lg) {
+    .admin-content {
+        padding: 1.5rem 1.75rem 2.25rem;
+    }
+
+    .admin-content :deep(.admin-section) {
+        padding: 1.25rem;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .admin-content {
+        padding: 1.25rem 1.25rem 2rem;
+    }
+
+    .admin-content :deep(.admin-section-title) {
+        font-size: 1.25rem;
+    }
+}
