@@ -29,6 +29,7 @@
             <td>{{ item.status || '—' }}</td>
             <td>{{ formatDate(item.archived_at) }}</td>
             <td class="text-end">
+              <button class="btn btn-sm btn-outline-secondary me-2" @click="reactivate(item)">Reactivar</button>
               <button class="btn btn-sm btn-outline-primary" @click="goToRepair(item)">Ver</button>
             </td>
           </tr>
@@ -72,6 +73,13 @@ const filtered = computed(() => {
 
 const goToRepair = (item) => {
   router.push(`/admin/repairs/${item.id}`)
+}
+
+const reactivate = async (item) => {
+  const ok = window.confirm('¿Reactivar esta OT? Volverá a Ingreso.')
+  if (!ok) return
+  await api.post(`/repairs/${item.id}/reactivate`).catch(() => null)
+  load()
 }
 
 const formatDate = (val) => {

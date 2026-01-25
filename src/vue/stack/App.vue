@@ -18,14 +18,13 @@ import ContentLayer from "/src/vue/stack/ContentLayer.vue"
 import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"
 import {useEmails} from "/src/composables/emails.js"
 import {onMounted} from "vue"
-import { initAnalytics, setAnalyticsContext, track } from '@/analytics'
+import { setAnalyticsContext, track } from '@/analytics'
 import { AnalyticsEvents } from '@/analytics/events'
 
 const emails = useEmails()
 
 onMounted(() => {
     emails.init()
-    initAnalytics()
     setAnalyticsContext({ page: window.location.pathname })
 
     const firedDepths = new Set()

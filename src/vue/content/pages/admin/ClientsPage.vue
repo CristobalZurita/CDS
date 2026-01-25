@@ -1,6 +1,6 @@
 
 <template>
-	<AdminLayout title="Clientes" subtitle="Gestión de clientes y perfil">
+	<AdminLayout title="Clientes" subtitle="Gestión de clientes y perfil" :context="contextHeader">
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h1 class="h4">Clientes</h1>
 			<div>
@@ -46,6 +46,14 @@ const selected = ref(null)
 const showIntake = ref(true)
 const searchQuery = ref('')
 const route = useRoute()
+const contextHeader = computed(() => {
+	if (!selected.value) return null
+	return {
+		clientName: selected.value.name,
+		clientCode: selected.value.client_code,
+		instrument: '—'
+	}
+})
 
 const filteredClients = computed(() => {
 	const q = searchQuery.value.trim().toLowerCase()

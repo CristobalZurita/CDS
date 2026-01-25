@@ -12,7 +12,16 @@
                Allows fonts from Google Fonts and API calls to local backend during development.
                Review/adjust before deploying to production (do NOT allow 'unsafe-inline' in prod).
            -->
-     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://maps.googleapis.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com; connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 https://maps.googleapis.com https://challenges.cloudflare.com; frame-src 'self' https://www.google.com https://www.google.com/maps https://www.google.com/maps/embed https://maps.google.com https://challenges.cloudflare.com;">
+     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://maps.googleapis.com https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com https://www.google-analytics.com; connect-src 'self' http://127.0.0.1:8000 http://localhost:8000 https://maps.googleapis.com https://challenges.cloudflare.com https://www.google-analytics.com https://www.googletagmanager.com; frame-src 'self' https://www.google.com https://www.google.com/maps https://www.google.com/maps/embed https://maps.google.com https://challenges.cloudflare.com;">
+
+        <!-- Google Tag Manager -->
+        <script>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-52Q99XH2');</script>
+        <!-- End Google Tag Manager -->
 
         <!-- Tipografías según Manual de Identidad - Alternativas Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,6 +29,10 @@
         <link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&display=swap" rel="stylesheet">
     </head>
     <body style="background-color:#3e3c38">
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-52Q99XH2"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
         <div id="app"></div>
         <script type="module" src="/src/main.js"></script>
     </body>

@@ -1,5 +1,9 @@
 <template>
-	<AdminLayout title="Detalle de Reparación" :subtitle="repair?.repair_number || ''">
+	<AdminLayout
+		title="Detalle de Reparación"
+		:subtitle="repair?.repair_number || ''"
+		:context="contextHeader"
+	>
 		<!-- Loading -->
 		<div v-if="loading" class="text-center py-5">
 			<div class="spinner-border text-primary" role="status">
@@ -202,6 +206,9 @@
 
 			<!-- Acciones -->
 			<div class="d-flex gap-2">
+				<button class="btn btn-outline-primary" @click="notifyClient">
+					<i class="fa-solid fa-paper-plane me-1"></i> Enviar al cliente
+				</button>
 				<button
 					class="btn btn-outline-warning"
 					:disabled="isArchived"
@@ -249,9 +256,18 @@ const componentsCount = ref(0)
 // Estado terminal (no permite más cambios)
 const isTerminalStatus = computed(() => {
 	const statusId = repair.value?.status_id
-	return statusId === 8 || statusId === 9 // Entregado o Cancelado
+	return statusId === 9 // Archivado
 })
 const isArchived = computed(() => Boolean(repair.value?.archived_at))
+const contextHeader = computed(() => {
+	if (!repair.value) return null
+	return {
+		clientName: repair.value.client?.name,
+		clientCode: repair.value.client?.client_code,
+		instrument: repair.value.device?.model,
+		otCode: repair.value.repair_code || repair.value.repair_number
+	}
+})
 
 // Photo upload state
 const showPhotoUpload = ref(false)
@@ -277,6 +293,15 @@ const archiveRepair = async () => {
 		repair.value = { ...repair.value, archived_at: res.data?.archived_at || new Date().toISOString() }
 	} catch (e) {
 		window.alert('No se pudo archivar la OT.')
+	}
+}
+
+const notifyClient = async () => {
+	try {
+		await api.post(`/repairs/${repairId}/notify`)
+		window.alert('Enviado al cliente.')
+	} catch (e) {
+		window.alert(e?.response?.data?.detail || 'No se pudo enviar.')
 	}
 }
 
