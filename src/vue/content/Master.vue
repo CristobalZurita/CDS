@@ -31,6 +31,7 @@
                           :links="[
                               {label: `Instagram`, href: `https://www.instagram.com/cirujanodesintetizadores/`, faIcon: `fa-brands fa-instagram`},
                               {label: `Facebook`, href: `https://www.facebook.com/Cirujanodesintetizadores/`, faIcon: `fa-brands fa-facebook`},
+                              {label: `WhatsApp`, href: `https://wa.me/56982957538`, faIcon: `fa-brands fa-whatsapp`},
                           ]"
                           :displayLinksAsButtons="true"/>
 
@@ -101,9 +102,10 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.9rem;
-  flex-wrap: nowrap;
+  gap: 1.5rem;
+  flex-wrap: wrap;
   text-align: center;
+  font-size: 1.05rem;
 }
 
 .footer-legal-row a {

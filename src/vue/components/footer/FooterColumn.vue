@@ -12,7 +12,7 @@
         <div v-if="props.description.length > 0"
              class="foxy-footer-col-item">
             <div class="foxy-footer-col-description">
-                <p v-for="descriptionItem in props.description" class="text-2 m-0" v-html="descriptionItem"/>
+                <p v-for="descriptionItem in props.description" class="m-0" v-html="descriptionItem"/>
             </div>
         </div>
 
@@ -21,7 +21,7 @@
              class="foxy-footer-col-item mt-3">
             <SocialLinks :items="props.links"
                          variant="dark"
-                         size="3"/>
+                         size="4"/>
         </div>
 
         <!-- Inline Links -->
@@ -63,7 +63,8 @@ const props = defineProps(({
 
 p, span {
     color: #eaeaea; /* increase contrast for footer text */
-    font-size: 1.02rem;
+    font-size: 1.25rem;
+    line-height: 1.7;
 }
 
 div.foxy-footer-col {
@@ -83,12 +84,18 @@ div.foxy-footer-col {
             padding-bottom: 0;
         }
     }
+
+    @include media-breakpoint-up(lg) {
+        text-align: left;
+    }
 }
 
 h5.foxy-footer-col-title {
     i, span {
         color: $light-1;
         text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.08em;
     }
 }
 
@@ -103,7 +110,14 @@ div.foxy-footer-col-item {
     ));
 
     margin: 0 auto;
-    max-width: 380px;
+    max-width: 520px;
+
+    @include media-breakpoint-up(lg) {
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin: 0;
+        max-width: 620px;
+    }
 }
 
 div.foxy-footer-col-description {
@@ -111,6 +125,10 @@ div.foxy-footer-col-description {
     flex-direction: column;
     align-items: center;
     justify-content: start;
+
+    @include media-breakpoint-up(lg) {
+        align-items: flex-start;
+    }
 }
 
 ul.footer-inline-links {
@@ -118,11 +136,11 @@ ul.footer-inline-links {
     padding: 0;
     margin: 0;
     display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: flex-start;
     align-items: center;
-    gap: 0.9rem;
-    white-space: nowrap;
+    gap: 1.1rem;
+    white-space: normal;
 }
 
 li.footer-inline-link-item {
@@ -139,7 +157,7 @@ li.footer-inline-link-item:not(:last-child)::after {
 .footer-inline-link {
     text-decoration: none;
     color: #eaeaea;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
 }
 
