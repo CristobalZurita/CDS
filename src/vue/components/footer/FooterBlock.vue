@@ -31,7 +31,7 @@ const className = computed(() => {
 div.foxy-footer-block {
     min-height: 40px;
     background-color: $footer-bg-color;
-    padding: 1rem 0;
+    padding: 2.25rem 0;
     text-align: center;
     &-darken {
         background-color: $footer-bg-highlight-color;
@@ -39,6 +39,13 @@ div.foxy-footer-block {
 }
 
 div.foxy-footer-row {
-    padding: 1rem 0;
+    padding: 1.5rem 0;
+    row-gap: 2rem;
+    align-items: flex-start;
+
+    @include media-breakpoint-up(lg) {
+        padding: 2.5rem 0 3rem;
+        text-align: left;
+    }
 }
 </style>
