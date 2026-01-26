@@ -1,0 +1,237 @@
+// ============================================
+// TIPOGRAFÍA GLOBAL - Cirujano de Sintetizadores
+// ============================================
+// ESCALA UNIFICADA:
+// - 9 tamaños de texto ($text-2xs a $text-2xl)
+// - 6 headings ($h6 a $h1 + $display)
+// - 5 line-heights ($lh-none a $lh-loose)
+// - 5 letter-spacings ($ls-tighter a $ls-widest)
+// ============================================
+
+// ---------------------------------------------
+// HTML ROOT - Base del sistema
+// ---------------------------------------------
+html {
+    font-size: $font-size-root;  // 16px
+    scroll-padding-top: $navbar-height;
+    -webkit-text-size-adjust: 100%;
+}
+
+// ---------------------------------------------
+// BODY - Estilos base de texto
+// ---------------------------------------------
+body {
+    font-family: $font-family-base;
+    font-size: $text-base;           // 1rem = 16px
+    line-height: $lh-relaxed;        // 1.6
+    color: $text-color;
+    letter-spacing: $ls-normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// ---------------------------------------------
+// HEADINGS - Títulos globales
+// ---------------------------------------------
+h1, .h1 {
+    font-family: $font-family-heading;
+    font-size: $h1-size;             // clamp(2.5rem, 3vw + 1rem, 3.5rem)
+    font-weight: $fw-extrabold;      // 800
+    line-height: $lh-tight;          // 1.2
+    letter-spacing: $ls-wide;        // 0.02em
+    color: $headings-color;
+    margin-top: 0;
+    margin-bottom: $spacer-lg;
+}
+
+h2, .h2 {
+    font-family: $font-family-heading;
+    font-size: $h2-size;             // clamp(2rem, 2.5vw + 1rem, 2.75rem)
+    font-weight: $fw-bold;           // 700
+    line-height: $lh-tight;
+    letter-spacing: $ls-wide;
+    color: $headings-color;
+    margin-top: 0;
+    margin-bottom: $spacer-lg;
+}
+
+h3, .h3 {
+    font-family: $font-family-heading;
+    font-size: $h3-size;             // clamp(1.75rem, 2vw + 1rem, 2.25rem)
+    font-weight: $fw-bold;
+    line-height: $lh-snug;           // 1.4
+    color: $headings-color;
+    margin-top: 0;
+    margin-bottom: $spacer-md;
+}
+
+h4, .h4 {
+    font-family: $font-family-heading;
+    font-size: $h4-size;             // 1.5rem = 24px
+    font-weight: $fw-bold;
+    line-height: $lh-snug;
+    color: $headings-color;
+    margin-top: 0;
+    margin-bottom: $spacer-md;
+}
+
+h5, .h5 {
+    font-family: $font-family-heading;
+    font-size: $h5-size;             // 1.25rem = 20px
+    font-weight: $fw-semibold;       // 600
+    line-height: $lh-snug;
+    color: $headings-color;
+    margin-top: 0;
+    margin-bottom: $spacer-sm;
+}
+
+h6, .h6 {
+    font-family: $font-family-heading;
+    font-size: $h6-size;             // 1.125rem = 18px
+    font-weight: $fw-semibold;
+    line-height: $lh-snug;
+    color: $headings-color;
+    margin-top: 0;
+    margin-bottom: $spacer-sm;
+}
+
+// ---------------------------------------------
+// PÁRRAFOS Y TEXTO CORRIDO
+// ---------------------------------------------
+p {
+    font-size: $paragraph-size;      // clamp(1rem, 0.5vw + 0.9rem, 1.125rem)
+    line-height: $lh-relaxed;        // 1.6
+    color: $text-color;
+    margin-top: 0;
+    margin-bottom: $paragraph-margin-bottom;
+}
+
+// ---------------------------------------------
+// LISTAS
+// ---------------------------------------------
+ul, ol {
+    margin-top: 0;
+    margin-bottom: $spacer-md;
+    padding-left: $spacer-lg;
+
+    li {
+        font-size: $paragraph-size;
+        line-height: $lh-relaxed;
+        color: $text-color;
+        margin-bottom: $spacer-xs;
+    }
+}
+
+// ---------------------------------------------
+// ENLACES
+// ---------------------------------------------
+a {
+    color: lighten($color-primary, 10%);
+    text-decoration: none;
+    transition: $transition-fast;
+
+    &:hover {
+        color: lighten($color-primary, 15%);
+    }
+
+    &:focus {
+        outline: 2px solid rgba($color-primary, 0.5);
+        outline-offset: 2px;
+    }
+}
+
+// ---------------------------------------------
+// TEXTO ENFATIZADO
+// ---------------------------------------------
+strong, b {
+    font-weight: 700;
+}
+
+em, i {
+    font-style: italic;
+}
+
+small {
+    font-size: $font-size-sm;
+}
+
+// ---------------------------------------------
+// CLASES UTILITARIAS DE TEXTO
+// ---------------------------------------------
+
+// Tamaños
+.text-xs { font-size: 0.75rem !important; }
+.text-sm { font-size: $font-size-sm !important; }
+.text-base { font-size: $font-size-base !important; }
+.text-lg { font-size: $font-size-lg !important; }
+.text-xl { font-size: $font-size-xl !important; }
+
+// Colores
+.text-primary { color: $color-primary !important; }
+.text-muted { color: $text-color-muted !important; }
+.text-light { color: $text-color-light !important; }
+.text-dark { color: $color-dark !important; }
+.text-white { color: $color-white !important; }
+
+// Para cada shade de gris
+@for $i from 1 through 7 {
+    .text-light-#{$i} {
+        color: nth($light-shades-palette, $i) !important;
+    }
+}
+
+// Pesos
+.font-light { font-weight: 300 !important; }
+.font-normal { font-weight: 400 !important; }
+.font-medium { font-weight: 500 !important; }
+.font-semibold { font-weight: 600 !important; }
+.font-bold { font-weight: 700 !important; }
+
+// Line heights
+.leading-none { line-height: 1 !important; }
+.leading-tight { line-height: $line-height-tight !important; }
+.leading-normal { line-height: $line-height-base !important; }
+.leading-relaxed { line-height: $line-height-relaxed !important; }
+
+// Alineación
+.text-left { text-align: left !important; }
+.text-center { text-align: center !important; }
+.text-right { text-align: right !important; }
+
+// Transform
+.uppercase { text-transform: uppercase !important; }
+.lowercase { text-transform: lowercase !important; }
+.capitalize { text-transform: capitalize !important; }
+
+// Contenedor legible
+.readable {
+    max-width: $content-max-width;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+// Lead text
+.lead {
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: $line-height-relaxed;
+}
+
+.lead-2 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: $line-height-relaxed;
+}
+
+// ---------------------------------------------
+// SELECTION
+// ---------------------------------------------
+::selection {
+    color: $color-dark;
+    background: lighten($color-primary, 30%);
+}
+
+::-moz-selection {
+    color: $color-dark;
+    background: $color-primary;
+}

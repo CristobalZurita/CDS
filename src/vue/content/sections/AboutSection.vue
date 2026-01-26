@@ -194,7 +194,7 @@ const scrollTimeline = (direction) => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@import "@/scss/_core.scss";
 
 // ============================================
 // SECCIÓN ARRIBA: 2 COLUMNAS (Texto + Galería)
@@ -203,9 +203,9 @@ const scrollTimeline = (direction) => {
 .about-top-section {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 520px;
-  gap: 2.5rem;
+  gap: $spacer-xl;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: $spacer-lg;
 }
 
 
@@ -226,15 +226,14 @@ const scrollTimeline = (direction) => {
 
 .about-identity {
     h3 {
-        margin-bottom: 1rem;
-        font-size: 2rem;
-        font-weight: 600;
+        @include h3-style;
+        margin-bottom: $spacer-md;
     }
 
     p {
-        margin-bottom: 0.8rem;
-        line-height: 1.55;
-        font-size: 1.3rem;
+        font-size: $text-lg;           // 18px (era 1.3rem = 20.8px)
+        line-height: $lh-relaxed;      // 1.6 (era 1.55)
+        margin-bottom: $spacer-sm;
 
         &:last-child {
             margin-bottom: 0;
@@ -245,10 +244,10 @@ const scrollTimeline = (direction) => {
 
 
 .gallery-title {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: $h4-size;               // 24px (era 1.5rem)
+    font-weight: $fw-semibold;
     margin: 0;
-    color: $text-normal;
+    color: $text-color;
 }
 
 .gallery-preview {
@@ -265,17 +264,17 @@ const scrollTimeline = (direction) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: $border-radius-md;
     overflow: hidden;
     background: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow-md;
 }
 
 .gallery-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: $transition-base;
 }
 
 // ============================================
@@ -285,7 +284,7 @@ const scrollTimeline = (direction) => {
 .about-divider {
     height: 3px;
     background: linear-gradient(to right, transparent, $light-2, transparent);
-    margin: 1rem 0 2rem 0;
+    margin: $spacer-md 0 $spacer-xl 0;
 }
 
 // ============================================
@@ -293,14 +292,13 @@ const scrollTimeline = (direction) => {
 // ============================================
 
 .about-bottom-section {
-    margin-top: 1rem;
-    
+    margin-top: $spacer-md;
 }
 
 .history-title {
-    font-size: 2.3rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+    font-size: $h2-size;
+    font-weight: $fw-semibold;
+    margin-bottom: $spacer-md;
     text-align: center;
     color: $text-normal;
 }
@@ -312,8 +310,8 @@ const scrollTimeline = (direction) => {
 .horizontal-timeline-wrapper {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    margin-bottom: 1.5rem;
+    gap: $spacer-sm;
+    margin-bottom: $spacer-lg;
     position: relative;
 }
 
@@ -328,7 +326,7 @@ const scrollTimeline = (direction) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: $transition-base;
     color: $text-normal;
 
     &:hover {
@@ -338,17 +336,17 @@ const scrollTimeline = (direction) => {
     }
 
     i {
-        font-size: 0.9rem;
+        font-size: $text-sm;
     }
 }
 
 .horizontal-timeline {
     flex: 1;
     display: flex;
-    gap: 1.2rem;
+    gap: $spacer-md;
     overflow-x: auto;
     scroll-behavior: smooth;
-    padding: 0.8rem 0;
+    padding: $spacer-sm 0;
 
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -362,7 +360,7 @@ const scrollTimeline = (direction) => {
     flex-shrink: 0;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-base;
     min-width: 110px;
 
     &:hover {
@@ -395,26 +393,26 @@ const scrollTimeline = (direction) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 0.4rem;
+    margin: 0 auto $spacer-xs;
     background: white;
-    transition: all 0.3s ease;
+    transition: $transition-base;
 }
 
 .event-year {
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-size: $text-2xs;
+    font-weight: $fw-semibold;
     color: $text-muted;
     text-align: center;
-    line-height: 1.1;
-    transition: color 0.3s ease;
+    line-height: $lh-tight;
+    transition: $transition-base;
 }
 
 .timeline-event-label {
-    font-size: 0.8rem;
+    font-size: $text-xs;
     color: $text-muted;
-    font-weight: 500;
-    line-height: 1.2;
-    transition: all 0.3s ease;
+    font-weight: $fw-medium;
+    line-height: $lh-tight;
+    transition: $transition-base;
     word-break: break-word;
 }
 
@@ -424,12 +422,12 @@ const scrollTimeline = (direction) => {
 
 .event-info{
   background: rgba($light-2, 0.3);
-  border-radius: 6px;
-  padding: 0.85rem;
-  margin-top: 1.5rem;
+  border-radius: $border-radius-md;
+  padding: $spacer-sm;
+  margin-top: $spacer-lg;
 
-  font-size: 2.05rem;
-  line-height: 1.6;
+  font-size: $h3-size;
+  line-height: $lh-relaxed;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -441,15 +439,15 @@ const scrollTimeline = (direction) => {
 
 
     h4 {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 0.8rem;
+        font-size: $h6-size;
+        font-weight: $fw-semibold;
+        margin-bottom: $spacer-sm;
         color: $text-normal;
     }
 
     p {
-        font-size: .95rem;
-        line-height: 1.6;
+        font-size: $text-base;
+        line-height: $lh-relaxed;
         color: $text-muted;
         margin: 0;
     }
@@ -462,8 +460,8 @@ const scrollTimeline = (direction) => {
 @include media-breakpoint-down(lg) {
     .about-top-section {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
-        margin-bottom: 1.5rem;
+        gap: $spacer-lg;
+        margin-bottom: $spacer-lg;
     }
 
     .gallery-preview {
@@ -472,18 +470,18 @@ const scrollTimeline = (direction) => {
 
     .about-identity {
         h3 {
-            font-size: 1.2rem;
+            font-size: $text-xl;
         }
 
         p {
-            font-size: 0.9rem;
+            font-size: $text-sm;
         }
     }
 }
 
 @include media-breakpoint-down(md) {
     .about-top-section {
-        gap: 1rem;
+        gap: $spacer-md;
     }
 
     .timeline-nav {
@@ -492,7 +490,7 @@ const scrollTimeline = (direction) => {
     }
 
     .horizontal-timeline {
-        gap: 1rem;
+        gap: $spacer-md;
     }
 
     .timeline-event {
@@ -505,15 +503,15 @@ const scrollTimeline = (direction) => {
     }
 
     .event-info {
-        padding: 1.2rem;
+        padding: $spacer-md;
 
         h4 {
-            font-size: 1rem;
-            margin-bottom: 0.6rem;
+            font-size: $text-base;
+            margin-bottom: $spacer-xs;
         }
 
         p {
-            font-size: 0.9rem;
+            font-size: $text-sm;
         }
     }
 
@@ -522,32 +520,32 @@ const scrollTimeline = (direction) => {
     }
 
     .history-title {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
+        font-size: $h6-size;
+        margin-bottom: $spacer-md;
     }
 }
 
 @include media-breakpoint-down(sm) {
     .about-top-section {
-        gap: 0.8rem;
-        margin-bottom: 1rem;
+        gap: $spacer-sm;
+        margin-bottom: $spacer-md;
     }
 
     .about-identity {
         h3 {
-            font-size: 1.1rem;
-            margin-bottom: 0.8rem;
+            font-size: $h6-size;
+            margin-bottom: $spacer-sm;
         }
 
         p {
-            font-size: 0.85rem;
-            margin-bottom: 0.6rem;
-            line-height: 1.5;
+            font-size: $text-xs;
+            margin-bottom: $spacer-xs;
+            line-height: $lh-normal;
         }
     }
 
     .gallery-title {
-        font-size: 1rem;
+        font-size: $text-base;
     }
 
     .gallery-preview {
@@ -555,21 +553,21 @@ const scrollTimeline = (direction) => {
     }
 
     .about-divider {
-        margin: 1rem 0 1.5rem 0;
+        margin: $spacer-md 0 $spacer-lg 0;
     }
 
     .about-bottom-section {
-        margin-top: 1rem;
+        margin-top: $spacer-md;
     }
 
     .history-title {
-        font-size: 1rem;
-        margin-bottom: 0.8rem;
+        font-size: $text-base;
+        margin-bottom: $spacer-sm;
     }
 
     .horizontal-timeline-wrapper {
-        gap: 0.6rem;
-        margin-bottom: 1rem;
+        gap: $spacer-xs;
+        margin-bottom: $spacer-md;
     }
 
     .timeline-nav {
@@ -577,13 +575,13 @@ const scrollTimeline = (direction) => {
         height: 32px;
 
         i {
-            font-size: 0.8rem;
+            font-size: $text-xs;
         }
     }
 
     .horizontal-timeline {
-        gap: 0.8rem;
-        padding: 0.5rem 0;
+        gap: $spacer-sm;
+        padding: $spacer-xs 0;
     }
 
     .timeline-event {
@@ -593,31 +591,31 @@ const scrollTimeline = (direction) => {
     .timeline-event-marker {
         width: 42px;
         height: 42px;
-        margin-bottom: 0.3rem;
+        margin-bottom: $spacer-xs;
     }
 
     .event-year {
-        font-size: 0.65rem;
-        line-height: 1;
+        font-size: $text-2xs;
+        line-height: $lh-none;
     }
 
     .timeline-event-label {
-        font-size: 0.7rem;
-        line-height: 1.1;
+        font-size: $text-2xs;
+        line-height: $lh-tight;
     }
 
     .event-info {
-        padding: 1rem;
-        margin-top: 1rem;
+        padding: $spacer-md;
+        margin-top: $spacer-md;
 
         h4 {
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
+            font-size: $text-base;
+            margin-bottom: $spacer-xs;
         }
 
         p {
-            font-size: 0.8rem;
-            line-height: 1.5;
+            font-size: $text-xs;
+            line-height: $lh-normal;
         }
     }
 }

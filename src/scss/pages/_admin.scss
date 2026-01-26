@@ -1,0 +1,264 @@
+// ============================================
+// ADMIN PANEL - Cirujano de Sintetizadores
+// Estilos globales para el dashboard admin
+// ============================================
+
+// ---------------------------------------------
+// SHELL ADMIN
+// ---------------------------------------------
+.admin-shell {
+    font-size: 1.05rem;
+    min-height: 100vh;
+    background-color: $light-2;
+}
+
+// ---------------------------------------------
+// CONTENIDO ADMIN
+// ---------------------------------------------
+.admin-content {
+    padding: $spacer-xl $spacer-xl $spacer-xxl;
+
+    @include media-breakpoint-down(lg) {
+        padding: $spacer-lg $spacer-lg $spacer-xl;
+    }
+
+    @include media-breakpoint-down(sm) {
+        padding: $spacer-md $spacer-md $spacer-lg;
+    }
+}
+
+// ---------------------------------------------
+// SECCIONES ADMIN (Cards internas)
+// ---------------------------------------------
+.admin-content :deep(.admin-section),
+.admin-section {
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    padding: $spacer-lg;
+    margin-bottom: $spacer-lg;
+    box-shadow: $shadow-sm;
+
+    @include media-breakpoint-down(md) {
+        padding: $spacer-md;
+    }
+}
+
+// ---------------------------------------------
+// TÍTULOS ADMIN
+// ---------------------------------------------
+.admin-content :deep(.admin-section-title),
+.admin-section-title {
+    font-family: $font-family-heading;
+    font-size: $h4-size;
+    font-weight: 700;
+    color: $text-color;
+    margin-bottom: $spacer-md;
+    padding-bottom: $spacer-sm;
+    border-bottom: 2px solid $light-3;
+
+    @include media-breakpoint-down(sm) {
+        font-size: 1.25rem;
+    }
+}
+
+// ---------------------------------------------
+// BOTONES ADMIN
+// ---------------------------------------------
+.admin-content :deep(.admin-btn),
+.admin-btn {
+    min-height: 44px;
+    font-size: $font-size-base;
+    padding: $spacer-sm $spacer-md;
+    border-radius: $border-radius-md;
+    transition: $transition-fast;
+
+    @include media-breakpoint-down(md) {
+        min-height: 48px;
+    }
+}
+
+// ---------------------------------------------
+// TABLAS ADMIN
+// ---------------------------------------------
+.admin-content :deep(table),
+.admin-table {
+    width: 100%;
+    font-size: $font-size-base;
+
+    th {
+        font-weight: 600;
+        color: $text-color;
+        background: $light-2;
+        padding: $spacer-sm $spacer-md;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    td {
+        padding: $spacer-sm $spacer-md;
+        color: $text-color;
+        border-bottom: 1px solid $light-3;
+        vertical-align: middle;
+    }
+
+    tr:hover td {
+        background-color: $light-1;
+    }
+}
+
+// ---------------------------------------------
+// FORMULARIOS ADMIN
+// ---------------------------------------------
+.admin-content :deep(.form-control),
+.admin-content :deep(.form-select),
+.admin-content :deep(input),
+.admin-content :deep(select),
+.admin-content :deep(textarea) {
+    min-height: 44px;
+    font-size: $font-size-base;
+    padding: $spacer-sm $spacer-md;
+    border: 1px solid $light-4;
+    border-radius: $border-radius-md;
+    transition: $transition-fast;
+
+    &:focus {
+        outline: none;
+        border-color: $color-primary;
+        box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    }
+}
+
+.admin-content :deep(label),
+.admin-label {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-color;
+    margin-bottom: $spacer-xs;
+    display: block;
+}
+
+// ---------------------------------------------
+// CARDS ADMIN
+// ---------------------------------------------
+.admin-card {
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    padding: $spacer-lg;
+    box-shadow: $shadow-sm;
+    transition: $transition-base;
+
+    &:hover {
+        box-shadow: $shadow-md;
+    }
+}
+
+// ---------------------------------------------
+// STATS CARDS
+// ---------------------------------------------
+.admin-stat-card {
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    padding: $spacer-lg;
+    text-align: center;
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: $color-primary;
+        line-height: 1;
+        margin-bottom: $spacer-sm;
+    }
+
+    .stat-label {
+        font-size: $font-size-sm;
+        color: $text-color-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+}
+
+// ---------------------------------------------
+// BADGES Y ESTADOS
+// ---------------------------------------------
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: $spacer-xs $spacer-sm;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: $border-radius-pill;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+
+    &--success {
+        background: rgba($color-success, 0.15);
+        color: darken($color-success, 10%);
+    }
+
+    &--warning {
+        background: rgba($color-warning, 0.15);
+        color: darken($color-warning, 20%);
+    }
+
+    &--danger {
+        background: rgba($color-danger, 0.15);
+        color: $color-danger;
+    }
+
+    &--info {
+        background: rgba($color-info, 0.15);
+        color: darken($color-info, 20%);
+    }
+
+    &--primary {
+        background: rgba($color-primary, 0.15);
+        color: $color-primary-dark;
+    }
+}
+
+// ---------------------------------------------
+// WIZARD CARDS
+// ---------------------------------------------
+.wizard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: $spacer-lg;
+}
+
+.wizard-card {
+    background: $color-white;
+    border: 1px solid $light-3;
+    border-radius: $border-radius-lg;
+    padding: $spacer-lg;
+    transition: $transition-base;
+
+    &:hover {
+        border-color: $color-primary;
+        box-shadow: $shadow-md;
+    }
+
+    h3 {
+        font-size: $h5-size;
+        margin-bottom: $spacer-sm;
+    }
+
+    p {
+        font-size: $font-size-sm;
+        color: $text-color-muted;
+        margin-bottom: $spacer-md;
+    }
+}
+
+// ---------------------------------------------
+// RESPONSIVE ADMIN
+// ---------------------------------------------
+@include media-breakpoint-down(md) {
+    .admin-content :deep(.admin-section-title),
+    .admin-section-title {
+        font-size: 1.25rem;
+    }
+
+    .admin-stat-card .stat-value {
+        font-size: 2rem;
+    }
+}
