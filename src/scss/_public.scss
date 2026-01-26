@@ -1,132 +1,110 @@
-.public-shell {
-    font-size: 1rem;
-    line-height: 1.6;
-    --public-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.public-shell p,
-.public-shell li,
-.public-shell span {
-    font-family: var(--public-font);
-    font-size: clamp(0.98rem, 0.4vw + 0.9rem, 1.12rem);
-    line-height: 1.65;
-}
-
-.public-shell h1,
-.public-shell h2,
-.public-shell h3,
-.public-shell h4,
-.public-shell h5 {
-    font-family: var(--public-font);
-    letter-spacing: 0.01em;
-}
-
-.public-shell header.foxy-header h1.heading {
+header.foxy-header h1.heading {
     transform: none;
-    font-family: var(--public-font);
     line-height: 1.1;
     font-size: clamp(2rem, 4.5vw, 3.5rem);
     letter-spacing: 0.04em;
     padding: 1rem 0 1.25rem;
 }
 
-.public-shell header.foxy-header h4.subheading {
-    font-family: var(--public-font);
+header.foxy-header h4.subheading {
     font-size: clamp(1rem, 2.2vw, 1.4rem);
     line-height: 1.5;
     padding: 0.6rem 0 1rem;
 }
 
-.public-shell header.foxy-header .btn-hero {
+header.foxy-header .btn-hero {
     min-height: 48px;
     font-size: 1rem;
     padding: 0.9rem 1.6rem;
 }
 
-.public-shell .foxy-section {
+.foxy-section {
     padding: 5.5rem 0 6rem;
 }
 
-.public-shell .foxy-section .section-content {
-    max-width: min(1440px, 94vw);
+.foxy-section .section-content {
+    max-width: min(1600px, 96vw);
     width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
 
-.public-shell .foxy-section-header-title {
-    font-family: var(--public-font);
+.foxy-section p,
+.foxy-section li,
+.foxy-section span {
+    font-size: clamp(1.05rem, 0.6vw + 0.9rem, 1.25rem);
+}
+
+.foxy-section-header-title {
     font-size: clamp(2rem, 4vw, 3.2rem);
     font-weight: 800;
     letter-spacing: 0.02em;
     text-transform: uppercase;
 }
 
-.public-shell .foxy-section-header-subtitle {
-    font-family: var(--public-font);
+.foxy-section-header-subtitle {
     font-size: clamp(1rem, 1.6vw, 1.2rem);
     font-weight: 500;
     letter-spacing: 0.01em;
 }
 
-.public-shell .about-top-section h3,
-.public-shell .history-title,
-.public-shell .gallery-title {
-    font-family: var(--public-font);
-    font-size: clamp(1.35rem, 2.2vw, 1.9rem);
+.about-top-section h3,
+.history-title,
+.gallery-title {
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
     font-weight: 700;
     letter-spacing: 0.01em;
 }
 
-.public-shell .foxy-footer .container-xxl {
+.foxy-footer .container-xxl {
     max-width: min(1560px, 96vw);
     width: 100%;
 }
 
-.public-shell .foxy-footer .foxy-footer-row {
+.foxy-footer .foxy-footer-row {
     align-items: flex-start;
     text-align: left;
     row-gap: 2.5rem;
 }
 
-.public-shell .foxy-footer .foxy-footer-col-title span,
-.public-shell .foxy-footer .foxy-footer-col-title i {
+.foxy-footer .foxy-footer-col-title span,
+.foxy-footer .foxy-footer-col-title i {
     font-size: clamp(1.05rem, 1.1vw, 1.35rem);
     letter-spacing: 0.08em;
 }
 
-.public-shell .foxy-footer .foxy-footer-col-description p {
+.foxy-footer .foxy-footer-col-description p {
     font-size: clamp(1.05rem, 0.9vw + 0.9rem, 1.35rem);
     line-height: 1.6;
 }
 
-.public-shell .foxy-footer .footer-inline-link {
+.foxy-footer .footer-inline-link {
     font-size: clamp(1.05rem, 0.9vw + 0.9rem, 1.35rem);
 }
 
-.public-shell .foxy-footer .footer-inline-links {
+.foxy-footer .footer-inline-links {
     justify-content: flex-start;
     gap: 1.1rem;
 }
 
 @include media-breakpoint-down(md) {
-    .public-shell header.foxy-header h1.heading {
+    header.foxy-header h1.heading {
         font-size: clamp(1.8rem, 8vw, 2.8rem);
     }
 
-    .public-shell header.foxy-header h4.subheading {
+    header.foxy-header h4.subheading {
         font-size: 1rem;
     }
 
-    .public-shell .foxy-section {
+    .foxy-section {
         padding: 3rem 0 3.5rem;
     }
 
-    .public-shell .foxy-section .section-content {
+    .foxy-section .section-content {
         max-width: 92vw;
     }
 
-    .public-shell .foxy-footer .foxy-footer-row {
+    .foxy-footer .foxy-footer-row {
         text-align: center;
     }
 }

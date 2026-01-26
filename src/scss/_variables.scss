@@ -30,7 +30,7 @@ $footer-bg-color: $dark;
 $footer-bg-highlight-color: darken($dark, 1%);
 
 /** Dimensions **/
-$navbar-height: 71px;
+$navbar-height: 86px;
 
 /** Texts **/
 $headings-color: $dark;
@@ -58,11 +58,11 @@ $light-shades-palette: (
 );
 
 /** Typography - Base Text Sizes (Optimized for readability) **/
-$text-1: 1.05rem;   // Small text - increased from 1.0rem
-$text-2: 1.1rem;    // Captions - increased from 1.05rem
-$text-3: 1.15rem;   // Body text - increased from 1.1rem
-$text-4: 1.2rem;    // Normal paragraph - increased from 1.15rem
-$text-5: 1.3rem;    // Lead text - increased from 1.2rem
+$text-1: 1rem;
+$text-2: 1.05rem;
+$text-3: 1.1rem;
+$text-4: 1.2rem;
+$text-5: 1.3rem;
 
 /** Typography - Texts Breakpoints (MOBILE-FIRST: larger base on small screens) **/
 $texts-breakpoint-multipliers: (
