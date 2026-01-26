@@ -442,12 +442,12 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/variables';
+@import '@/scss/_core.scss';
 
 .diagnostic-wizard {
-  padding: 3rem 2rem;
-  font-size: 1.05rem;
-  line-height: 1.65;
+  padding: $spacer-xxl $spacer-xl;
+  font-size: $text-base;
+  line-height: $lh-relaxed;
 
   .step-container {
     max-width: 800px;
@@ -456,27 +456,27 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   }
 
   .step-title {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: $h3-size;
+    font-weight: $fw-bold;
     color: $dark;
-    margin-bottom: 2rem;
+    margin-bottom: $spacer-xl;
     text-align: center;
   }
 
   .back-button {
-    margin-bottom: 2rem;
+    margin-bottom: $spacer-xl;
 
     .btn-text {
       background: none;
       border: none;
       color: $primary;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: $text-base;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: color 0.3s ease;
+      gap: $spacer-xs;
+      transition: $transition-base;
 
       &:hover {
         color: darken($primary, 15%);
@@ -488,51 +488,51 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   .brand-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: $spacer-md;
+    margin-bottom: $spacer-xl;
 
-    @media (max-width: 768px) {
+    @include media-breakpoint-down(md) {
       grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 0.75rem;
+      gap: $spacer-sm;
     }
   }
 
   .brand-select {
-    margin-bottom: 1.5rem;
+    margin-bottom: $spacer-lg;
 
     select {
       width: 100%;
-      padding: 0.75rem;
-      border: 2px solid #ddd;
-      border-radius: 6px;
-      font-size: 1rem;
+      padding: $spacer-sm;
+      border: 2px solid $light-3;
+      border-radius: $border-radius-md;
+      font-size: $text-base;
     }
   }
 
   .model-select {
-    margin-bottom: 1.5rem;
+    margin-bottom: $spacer-lg;
 
     select {
       width: 100%;
-      padding: 0.75rem;
-      border: 2px solid #ddd;
-      border-radius: 6px;
-      font-size: 1rem;
-      margin-bottom: 1rem;
+      padding: $spacer-sm;
+      border: 2px solid $light-3;
+      border-radius: $border-radius-md;
+      font-size: $text-base;
+      margin-bottom: $spacer-md;
     }
 
     .model-preview {
       display: flex;
-      gap: 1rem;
+      gap: $spacer-md;
       align-items: center;
 
       img {
         width: 180px;
         height: auto;
-        border-radius: 8px;
-        border: 1px solid #eee;
+        border-radius: $border-radius-md;
+        border: 1px solid $light-2;
         object-fit: contain;
-        background: #fafafa;
+        background: $light-1;
       }
 
       .model-preview-info {
@@ -542,34 +542,34 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   }
 
   .brand-card {
-    padding: 1.5rem 1rem;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    padding: $spacer-lg $spacer-md;
+    border: 2px solid $light-3;
+    border-radius: $border-radius-md;
     background: white;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-base;
     text-align: center;
 
     &:hover {
       border-color: $primary;
-      box-shadow: 0 4px 12px rgba($primary, 0.2);
+      box-shadow: $shadow-md;
     }
 
     &.active {
       border-color: $primary;
       background: rgba($primary, 0.05);
-      box-shadow: 0 4px 16px rgba($primary, 0.3);
+      box-shadow: $shadow-lg;
     }
 
     .brand-tier {
-      font-size: 0.7rem;
+      font-size: $text-2xs;
       text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
+      font-weight: $fw-bold;
+      letter-spacing: $ls-wider;
+      padding: $spacer-xs $spacer-sm;
+      border-radius: $border-radius-sm;
       display: inline-block;
-      margin-bottom: 0.5rem;
+      margin-bottom: $spacer-xs;
 
       &[data-tier='legendary'] {
         background: #ffd700;
@@ -603,15 +603,15 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
     }
 
     .brand-name {
-      font-size: 0.9rem;
-      font-weight: 700;
+      font-size: $text-sm;
+      font-weight: $fw-bold;
       color: $dark;
-      margin: 0.5rem 0;
+      margin: $spacer-xs 0;
     }
 
     .brand-year {
-      font-size: 0.75rem;
-      color: #999;
+      font-size: $text-2xs;
+      color: $text-color-muted;
     }
   }
 
@@ -619,25 +619,25 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   .model-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: $spacer-md;
+    margin-bottom: $spacer-xl;
   }
 
   .model-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    padding: $spacer-lg;
+    border: 2px solid $light-3;
+    border-radius: $border-radius-md;
     background: white;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-base;
     text-align: left;
 
     &:hover {
       border-color: $primary;
-      box-shadow: 0 4px 12px rgba($primary, 0.2);
+      box-shadow: $shadow-md;
     }
 
     &.active {
@@ -649,21 +649,21 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
       flex: 1;
 
       h4 {
-        margin: 0 0 0.25rem 0;
+        margin: 0 0 $spacer-xs 0;
         color: $dark;
-        font-size: 1.1rem;
+        font-size: $h6-size;
       }
 
       .model-type {
-        margin: 0 0 0.5rem 0;
-        font-size: 0.85rem;
-        color: #999;
+        margin: 0 0 $spacer-xs 0;
+        font-size: $text-xs;
+        color: $text-color-muted;
       }
 
       .model-description {
         margin: 0;
-        font-size: 0.9rem;
-        color: #666;
+        font-size: $text-sm;
+        color: $light-6;
       }
     }
 
@@ -671,17 +671,17 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 0.25rem;
-      margin-left: 1rem;
+      gap: $spacer-xs;
+      margin-left: $spacer-md;
 
       .label {
-        font-size: 0.75rem;
-        color: #999;
+        font-size: $text-2xs;
+        color: $text-color-muted;
       }
 
       .price {
-        font-size: 1.1rem;
-        font-weight: 700;
+        font-size: $h6-size;
+        font-weight: $fw-bold;
         color: $primary;
       }
     }
@@ -689,23 +689,23 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
   // Faults Container
   .faults-container {
-    margin-bottom: 2rem;
+    margin-bottom: $spacer-xl;
   }
 
   .warning-box {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+    gap: $spacer-md;
+    padding: $spacer-md;
     background: #fff3cd;
-    border: 2px solid #ffc107;
-    border-radius: 6px;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
+    border: 2px solid $color-warning;
+    border-radius: $border-radius-md;
+    margin-bottom: $spacer-lg;
+    font-size: $text-base;
     color: #856404;
 
     i {
-      font-size: 1.3rem;
+      font-size: $text-xl;
       flex-shrink: 0;
     }
   }
@@ -713,12 +713,12 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   .fault-item {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
+    gap: $spacer-md;
+    padding: $spacer-md;
+    border: 1px solid $light-3;
+    border-radius: $border-radius-md;
+    margin-bottom: $spacer-md;
+    transition: $transition-base;
 
     &:hover:not(.disabled) {
       border-color: $primary;
@@ -731,14 +731,14 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
     }
 
     &.critical {
-      border-color: #ffc107;
-      background: rgba(#ffc107, 0.05);
+      border-color: $color-warning;
+      background: rgba($color-warning, 0.05);
     }
 
     .fault-checkbox {
       display: flex;
       align-items: center;
-      margin-top: 0.25rem;
+      margin-top: $spacer-xs;
       cursor: pointer;
       position: relative;
 
@@ -758,12 +758,12 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
       .checkmark {
         width: 20px;
         height: 20px;
-        border: 2px solid #ddd;
-        border-radius: 4px;
+        border: 2px solid $light-3;
+        border-radius: $border-radius-sm;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
+        transition: $transition-base;
 
         &::after {
           content: '';
@@ -783,30 +783,30 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
       .fault-header {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.5rem;
+        gap: $spacer-xs;
+        margin-bottom: $spacer-xs;
 
         i {
           color: $primary;
-          font-size: 1.1rem;
+          font-size: $h6-size;
         }
 
         strong {
           color: $dark;
-          font-size: 0.95rem;
+          font-size: $text-base;
         }
       }
 
       .fault-description {
-        margin: 0 0 0.5rem 0;
-        font-size: 0.9rem;
-        color: #666;
+        margin: 0 0 $spacer-xs 0;
+        font-size: $text-sm;
+        color: $light-6;
       }
 
       .fault-price {
         display: inline-block;
-        font-size: 0.85rem;
-        font-weight: 600;
+        font-size: $text-xs;
+        font-weight: $fw-semibold;
         color: $primary;
       }
     }
@@ -814,27 +814,27 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
   // Client Form
   .client-form {
-    margin-bottom: 2rem;
+    margin-bottom: $spacer-xl;
   }
 
   .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: $spacer-lg;
 
     label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
+      margin-bottom: $spacer-xs;
+      font-weight: $fw-semibold;
       color: $dark;
-      font-size: 0.95rem;
+      font-size: $text-base;
     }
 
     input {
       width: 100%;
-      padding: 0.75rem;
-      border: 2px solid #ddd;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      transition: border-color 0.3s ease;
+      padding: $spacer-sm;
+      border: 2px solid $light-3;
+      border-radius: $border-radius-md;
+      font-size: $text-base;
+      transition: $transition-base;
 
       &:focus {
         outline: none;
@@ -843,19 +843,19 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
       }
 
       &::placeholder {
-        color: #999;
+        color: $text-color-muted;
       }
 
       &:invalid:not(:placeholder-shown) {
-        border-color: #dc3545;
+        border-color: $color-danger;
       }
     }
 
     .error-text {
       display: block;
-      margin-top: 0.25rem;
-      color: #dc3545;
-      font-size: 0.85rem;
+      margin-top: $spacer-xs;
+      color: $color-danger;
+      font-size: $text-xs;
       font-style: italic;
     }
   }
@@ -864,39 +864,39 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   .quote-result {
     .quote-summary {
       background: white;
-      border: 2px solid #ddd;
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
+      border: 2px solid $light-3;
+      border-radius: $border-radius-lg;
+      padding: $spacer-xl;
+      margin-bottom: $spacer-xl;
     }
 
     .equipment-info {
-      margin-bottom: 2rem;
-      padding-bottom: 2rem;
-      border-bottom: 2px solid #eee;
+      margin-bottom: $spacer-xl;
+      padding-bottom: $spacer-xl;
+      border-bottom: 2px solid $light-2;
 
       h4 {
-        margin: 0 0 0.5rem 0;
-        font-size: 1.3rem;
+        margin: 0 0 $spacer-xs 0;
+        font-size: $h4-size;
         color: $dark;
       }
 
       .equipment-value {
         margin: 0;
-        font-size: 0.9rem;
-        color: #666;
+        font-size: $text-sm;
+        color: $light-6;
       }
     }
 
     .faults-summary {
-      margin-bottom: 2rem;
-      padding-bottom: 2rem;
-      border-bottom: 2px solid #eee;
+      margin-bottom: $spacer-xl;
+      padding-bottom: $spacer-xl;
+      border-bottom: 2px solid $light-2;
 
       h5 {
-        margin: 0 0 1rem 0;
+        margin: 0 0 $spacer-md 0;
         color: $dark;
-        font-size: 0.95rem;
+        font-size: $text-base;
       }
 
       ul {
@@ -905,14 +905,14 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
         margin: 0;
 
         li {
-          padding: 0.5rem 0;
-          color: #666;
-          font-size: 0.9rem;
+          padding: $spacer-xs 0;
+          color: $light-6;
+          font-size: $text-sm;
           display: flex;
           justify-content: space-between;
 
           .fault-base-price {
-            font-weight: 600;
+            font-weight: $fw-semibold;
             color: $primary;
           }
         }
@@ -920,65 +920,65 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
     }
 
     .pricing-breakdown {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
+      margin-bottom: $spacer-xl;
+      padding: $spacer-lg;
       background: rgba($primary, 0.05);
-      border-radius: 8px;
+      border-radius: $border-radius-md;
 
       .price-row {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 0.75rem;
-        font-size: 0.95rem;
-        color: #666;
+        margin-bottom: $spacer-sm;
+        font-size: $text-base;
+        color: $light-6;
 
         &.total {
-          margin-top: 1rem;
-          padding-top: 1rem;
+          margin-top: $spacer-md;
+          padding-top: $spacer-md;
           border-top: 2px solid rgba($primary, 0.2);
-          font-weight: 700;
+          font-weight: $fw-bold;
           color: $dark;
-          font-size: 1.1rem;
+          font-size: $h6-size;
 
           .total-price {
             color: $primary;
-            font-size: 1.3rem;
+            font-size: $h4-size;
           }
         }
       }
     }
 
     .quote-error {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
+      margin-bottom: $spacer-xl;
+      padding: $spacer-lg;
       background: #fff3cd;
-      border: 2px solid #ffc107;
-      border-radius: 8px;
+      border: 2px solid $color-warning;
+      border-radius: $border-radius-md;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: $spacer-md;
 
       i {
-        font-size: 1.5rem;
+        font-size: $text-2xl;
         color: #ff9800;
       }
 
       p {
         margin: 0;
-        color: #333;
-        font-size: 0.95rem;
+        color: $dark;
+        font-size: $text-base;
       }
     }
 
     .client-info-display {
-      margin-bottom: 2rem;
-      padding: 1rem;
-      background: #f5f5f5;
-      border-radius: 6px;
+      margin-bottom: $spacer-xl;
+      padding: $spacer-md;
+      background: $light-1;
+      border-radius: $border-radius-md;
 
       p {
-        margin: 0.5rem 0;
-        font-size: 0.9rem;
+        margin: $spacer-xs 0;
+        font-size: $text-sm;
 
         strong {
           color: $dark;
@@ -988,10 +988,10 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
     .action-buttons {
       display: flex;
-      gap: 1rem;
+      gap: $spacer-md;
       flex-wrap: wrap;
 
-      @media (max-width: 600px) {
+      @include media-breakpoint-down(sm) {
         flex-direction: column;
       }
     }
@@ -999,19 +999,19 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
   // Buttons
   .btn {
-    padding: 0.75rem 1.5rem;
+    padding: $spacer-sm $spacer-lg;
     border: none;
-    border-radius: 6px;
-    font-weight: 600;
+    border-radius: $border-radius-md;
+    font-weight: $fw-semibold;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: $transition-base;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: $spacer-xs;
     text-transform: uppercase;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
+    font-size: $text-sm;
+    letter-spacing: $ls-wider;
 
     &:disabled {
       opacity: 0.5;
@@ -1025,7 +1025,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
       &:hover:not(:disabled) {
         background: darken($primary, 10%);
-        box-shadow: 0 4px 12px rgba($primary, 0.3);
+        box-shadow: $shadow-md;
       }
     }
 
@@ -1062,20 +1062,20 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   }
 
   .current-selection {
-    padding: 1rem;
+    padding: $spacer-md;
     background: rgba($primary, 0.05);
     border-left: 4px solid $primary;
-    border-radius: 4px;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
+    border-radius: $border-radius-sm;
+    margin-bottom: $spacer-lg;
+    font-size: $text-base;
     color: $dark;
   }
 
   .empty-state {
-    padding: 2rem;
+    padding: $spacer-xl;
     text-align: center;
-    color: #999;
-    font-size: 1rem;
+    color: $text-color-muted;
+    font-size: $text-base;
   }
 }
 

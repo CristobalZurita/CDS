@@ -1,0 +1,67 @@
+// ============================================
+// MAIN.SCSS - Entry Point Principal
+// Cirujano de Sintetizadores
+// ============================================
+// Este archivo es ADITIVO - importa la estructura nueva
+// Y también mantiene compatibilidad con los archivos existentes
+// ============================================
+
+// =============================================
+// 1. VARIABLES (primero las nuevas unificadas)
+// =============================================
+@import "abstracts/variables";
+
+// =============================================
+// 2. VARIABLES LEGACY + FUENTES (compatibilidad)
+// =============================================
+@import "variables";  // _variables.scss existente
+@import "brand";      // Fuentes + algunas variables
+
+// =============================================
+// 3. BOOTSTRAP
+// =============================================
+@import "/node_modules/bootstrap/scss/bootstrap";
+
+// =============================================
+// 4. ICONOS
+// =============================================
+@import "/node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "/node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+@import "/node_modules/@fortawesome/fontawesome-free/scss/regular.scss";
+@import "/node_modules/@fortawesome/fontawesome-free/scss/brands.scss";
+@import "primeicons/primeicons.css";
+
+// =============================================
+// 5. MIXINS (después de Bootstrap para usar sus mixins)
+// =============================================
+@import "mixins";             // _mixins.scss existente (tiene los que usa _layout)
+@import "abstracts/mixins";   // Mixins nuevos
+
+// =============================================
+// 6. RESET
+// =============================================
+@import "reset";
+
+// =============================================
+// 7. LAYOUT (legacy primero, luego nuevos)
+// =============================================
+@import "layout";             // _layout.scss existente
+@import "layout/sections";    // Nuevos estilos de secciones
+
+// =============================================
+// 8. TIPOGRAFÍA
+// =============================================
+@import "typography";         // _typography.scss existente
+@import "base/typography";    // Tipografía nueva (prioridad)
+
+// =============================================
+// 9. ESTILOS GLOBALES Y PÁGINAS
+// =============================================
+@import "global";
+@import "admin";              // _admin.scss existente
+@import "public";
+@import "pages/admin";        // Admin nuevo (prioridad)
+
+// =============================================
+// FIN - El sistema está listo
+// =============================================

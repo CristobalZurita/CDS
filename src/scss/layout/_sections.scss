@@ -1,0 +1,135 @@
+// ============================================
+// SECCIONES PÚBLICAS - Cirujano de Sintetizadores
+// Estilos para las secciones del landing
+// ============================================
+
+// ---------------------------------------------
+// SECCIÓN BASE
+// ---------------------------------------------
+.foxy-section {
+    padding: $section-padding-y 0;
+    position: relative;
+
+    @include media-breakpoint-down(md) {
+        padding: $section-padding-y-mobile 0;
+    }
+}
+
+// ---------------------------------------------
+// CONTENIDO DE SECCIÓN
+// ---------------------------------------------
+.foxy-section .section-content,
+.section-content {
+    max-width: min(1600px, 96vw);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 $spacer-lg;
+
+    @include media-breakpoint-down(md) {
+        max-width: 92vw;
+        padding: 0 $spacer-md;
+    }
+
+    // Tipografía dentro de secciones
+    p, li, span:not(.badge):not(.btn):not([class*="icon"]) {
+        font-size: $paragraph-size;
+        line-height: $paragraph-line-height;
+        color: $text-color;
+    }
+}
+
+// ---------------------------------------------
+// HEADER DE SECCIÓN
+// ---------------------------------------------
+.foxy-section-header {
+    text-align: center;
+    margin-bottom: $spacer-xxl;
+
+    @include media-breakpoint-down(md) {
+        margin-bottom: $spacer-xl;
+    }
+}
+
+.foxy-section-header-title {
+    font-family: $font-family-heading;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: $letter-spacing-heading;
+    text-transform: uppercase;
+    color: $headings-color;
+    margin-bottom: $spacer-md;
+}
+
+.foxy-section-header-subtitle {
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    font-weight: 500;
+    letter-spacing: $letter-spacing-wide;
+    color: $text-color-muted;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+// ---------------------------------------------
+// VARIANTES DE SECCIÓN
+// ---------------------------------------------
+
+// Sección con fondo claro
+.foxy-section--light {
+    background-color: $bg-light;
+
+    .foxy-section-header-title {
+        color: $color-dark;
+    }
+}
+
+// Sección con fondo oscuro
+.foxy-section--dark {
+    background-color: $color-dark;
+
+    .foxy-section-header-title,
+    .foxy-section-header-subtitle,
+    p, li, span {
+        color: $color-white;
+    }
+
+    a {
+        color: $color-primary-light;
+
+        &:hover {
+            color: $color-primary;
+        }
+    }
+}
+
+// ---------------------------------------------
+// ABOUT SECTION ESPECÍFICO
+// ---------------------------------------------
+.about-top-section h3,
+.history-title,
+.gallery-title {
+    font-family: $font-family-heading;
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: $letter-spacing-wide;
+    color: $headings-color;
+    margin-bottom: $spacer-lg;
+}
+
+// ---------------------------------------------
+// CONTENEDOR XXL OVERRIDE
+// ---------------------------------------------
+.container-xxl {
+    @include dynamic-styles-hash((
+        xxxl: (padding: 0),
+        xxl: (padding: 0 4rem),
+        xl: (padding: 0 2rem),
+        lg: (padding: 0 2rem),
+        md: (padding: 0 2.25rem),
+        sm: (padding: 0 1.75rem),
+    ));
+
+    @media (max-width: 380px) {
+        padding: 0 1.35rem;
+    }
+}

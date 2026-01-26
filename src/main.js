@@ -1,4 +1,6 @@
-import "./scss/style.scss"
+// SASS Architecture - main.scss es el nuevo entry point
+// Si hay problemas, cambiar a: import "./scss/style.scss"
+import "./scss/main.scss"
 import "@fortawesome/fontawesome-free/css/all.css"
 import { createApp } from "vue"
 import { createPinia } from "pinia"

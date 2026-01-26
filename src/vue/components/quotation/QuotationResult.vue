@@ -165,7 +165,9 @@ const formatDateTime = (isoString) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .quotation-result {
   width: 100%;
   max-width: 900px;
@@ -175,21 +177,21 @@ const formatDateTime = (isoString) => {
   flex-direction: column;
 }
 
-/* Loading State */
+// Loading State
 .loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  gap: 2rem;
+  gap: $spacer-xl;
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid #e2e8f0;
-  border-top-color: #2f855a;
+  border: 4px solid $light-2;
+  border-top-color: $color-success;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -201,29 +203,29 @@ const formatDateTime = (isoString) => {
 }
 
 .loading-state p {
-  font-size: 1.1rem;
-  color: #4a5568;
-  font-weight: 500;
+  font-size: $h6-size;
+  color: $light-7;
+  font-weight: $fw-medium;
 }
 
-/* Error State */
+// Error State
 .error-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  gap: 1.5rem;
-  padding: 2rem;
+  gap: $spacer-lg;
+  padding: $spacer-xl;
   background: #fff5f5;
-  border: 2px solid #c53030;
-  border-radius: 12px;
+  border: 2px solid $color-danger;
+  border-radius: $border-radius-lg;
 }
 
 .error-state h3 {
-  color: #c53030;
+  color: $color-danger;
   margin: 0;
-  font-size: 1.25rem;
+  font-size: $h5-size;
 }
 
 .error-state p {
@@ -232,96 +234,96 @@ const formatDateTime = (isoString) => {
   max-width: 400px;
 }
 
-/* Result Container */
+// Result Container
 .result-container {
   background: white;
-  border-radius: 12px;
+  border-radius: $border-radius-lg;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: $shadow-lg;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* Header */
+// Header
 .result-header {
-  padding: 2rem;
+  padding: $spacer-xl;
   color: white;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .success-gradient {
-  background: linear-gradient(135deg, #2f855a, #276749);
+  background: linear-gradient(135deg, $color-success, darken($color-success, 10%));
 }
 
 .header-content h2 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.75rem;
+  margin: 0 0 $spacer-xs 0;
+  font-size: $h3-size;
 }
 
 .instrument-name {
-  font-size: 1.25rem;
-  margin: 0.5rem 0;
+  font-size: $h5-size;
+  margin: $spacer-xs 0;
   opacity: 0.95;
 }
 
 .tier-badge {
   display: inline-block;
   background: rgba(255, 255, 255, 0.2);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-top: 0.5rem;
+  padding: $spacer-xs $spacer-md;
+  border-radius: $border-radius-pill;
+  font-size: $text-sm;
+  font-weight: $fw-medium;
+  margin-top: $spacer-xs;
 }
 
-/* Content */
+// Content
 .result-content {
-  padding: 2rem;
+  padding: $spacer-xl;
   flex: 1;
   overflow-y: auto;
 }
 
-/* Price Section */
+// Price Section
 .price-section {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: $spacer-xl;
+  padding-bottom: $spacer-xl;
+  border-bottom: 1px solid $light-2;
 }
 
 .price-section h3 {
-  margin: 0 0 1.5rem 0;
-  color: #2d3748;
-  font-size: 1.1rem;
+  margin: 0 0 $spacer-lg 0;
+  color: $dark;
+  font-size: $h6-size;
 }
 
 .price-range {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: $spacer-md;
+  margin-bottom: $spacer-md;
 }
 
 .price-box {
-  padding: 1.5rem;
-  border-radius: 8px;
+  padding: $spacer-lg;
+  border-radius: $border-radius-md;
   text-align: center;
 }
 
 .price-box .label {
   display: block;
-  font-size: 0.85rem;
-  color: #718096;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+  font-size: $text-xs;
+  color: $light-6;
+  font-weight: $fw-medium;
+  margin-bottom: $spacer-xs;
   text-transform: uppercase;
 }
 
 .price-box .amount {
   display: block;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #2d3748;
+  font-size: $h3-size;
+  font-weight: $fw-bold;
+  color: $dark;
 }
 
 .min-price {
@@ -335,8 +337,8 @@ const formatDateTime = (isoString) => {
 }
 
 .price-note {
-  color: #718096;
-  font-size: 0.9rem;
+  color: $light-6;
+  font-size: $text-sm;
   text-align: center;
   margin: 0;
 }
