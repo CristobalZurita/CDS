@@ -1,7 +1,9 @@
 <template>
-    <PageWrapper id="foxy-home-page"
-                 :no-padding="true"
-                 :sections="sections"/>
+    <div class="public-shell">
+        <PageWrapper id="foxy-home-page"
+                     :no-padding="true"
+                     :sections="sections"/>
+    </div>
 </template>
 
 <script setup>
