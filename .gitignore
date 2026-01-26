@@ -31,6 +31,10 @@ backend/.env.local
 
 # Python
 __pycache__/
+*.pyc
+.venv/
+backend/.venv/
+venv/
 *.py[cod]
 *$py.class
 *.so
@@ -72,4 +76,3 @@ env/
 # OS
 .DS_Store
 Thumbs.db
-
