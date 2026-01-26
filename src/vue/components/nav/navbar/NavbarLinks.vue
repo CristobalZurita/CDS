@@ -95,15 +95,15 @@ ul.foxy-navbar-links.collapsed {
 button.foxy-nav-link {
     background-color: transparent;
     border: 0;
-    padding: 0 0 0 1.5rem;
+    padding: 0 0 0 1.2rem;
     white-space: nowrap;
 
-    font-family: 'Cervo Neue', $font-family-base;
+    font-family: inherit;
     color: $light-3;
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.03em;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
 
     @include media-breakpoint-down(xl) {
         padding: 0 0 0 0.9rem;
@@ -115,7 +115,7 @@ button.foxy-nav-link {
         text-align: left;
         margin-left: 12px;
         margin-bottom: 8px;
-        font-size: 0.85rem;
+        font-size: 1rem;
 
         transition: 0.2s ease-in margin-left, 0.2s ease-in opacity;
     }
@@ -155,6 +155,10 @@ button.foxy-nav-link:hover, button.foxy-nav-link.active {
 }
 
 div.foxy-navbar-links-wrapper {
-    margin-left: 18rem;
+    margin-left: 2rem;
+
+    @include media-breakpoint-down(lg) {
+        margin-left: 0;
+    }
 }
 </style>

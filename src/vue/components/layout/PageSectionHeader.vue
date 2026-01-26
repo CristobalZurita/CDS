@@ -42,29 +42,26 @@ div.foxy-section-header {
     
 }
 :deep(.foxy-section-header-title span) {
-  font-size: 3rem;
+  font-size: inherit;
 }
 
 h1 {
     text-transform: uppercase;
     color: inherit;
-    font-family: 'Cervo Neue', $headings-font-family;
+    font-family: inherit;
     font-weight: 800;
     letter-spacing: 0.02em;
-        font-size: 3.5rem;
-        
+    font-size: inherit;
 }
 
 
 
 h5 {
-    font-family: 'Cervo Neue', $font-family-base;
+    font-family: inherit;
     color: $text-muted;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.02em;
-    
-
     margin-top: 1rem;   // SUBE el texto
-    
+    font-size: inherit;
 }
 </style>

@@ -185,14 +185,12 @@ header.foxy-header {
         color:$orange-pastel;
         text-transform: uppercase;
         text-align: center;
-        font-family: 'Cervo Neue', 'Steelfish', sans-serif;
+        font-family: inherit;
         font-weight: 800;
-        font-size: clamp(32px, 6vw, 80px);
-           transform: scale(2);            /* agranda visualmente */
-    transform-origin: center top;
-        padding: 1.5rem 0 1.95rem;
-        letter-spacing: 0.08em;
-        line-height: 0.5;
+        font-size: clamp(2.4rem, 5.2vw, 4.4rem);
+        padding: 1.25rem 0 1.5rem;
+        letter-spacing: 0.04em;
+        line-height: 1.1;
         position: relative;
         z-index: 5;
         margin: 0;
@@ -201,16 +199,18 @@ header.foxy-header {
     :deep(.hero-title-sep) {
         color: $primary;
         margin: 0 0.6rem;
-        font-size: 0.7em;
+        font-size: 0.32em;
+        vertical-align: middle;
+        display: inline-block;
     }
 
     h4.subheading {
-        font-family: 'Cervo Neue', $font-family-base;
+        font-family: inherit;
         color: $light-5;
-        font-weight: 400;
-        font-size: clamp(16px, calc(var(--logo-proportion)/14), 100px);
-        padding: calc(var(--logo-proportion)/20) 0;
-        line-height: 24px;
+        font-weight: 500;
+        font-size: clamp(1rem, 1.2vw, 1.4rem);
+        padding: 0.8rem 0 1.1rem;
+        line-height: 1.5;
         text-align: center;
     }
 
@@ -233,15 +233,15 @@ header.foxy-header {
         display: inline-flex;
         align-items: center;
         gap: 0.75rem;
-        padding: 1.25rem 2.8rem;
+        padding: 1rem 2.4rem;
         border-radius: 4rem;
         border: 2px solid $orange-pastel;
         background-color: $orange-pastel;
         color: white;
-        font-family: 'Cervo Neue', $headings-font-family;
+        font-family: inherit;
         font-weight: 600;
         text-transform: uppercase;
-        font-size: 1.25rem;
+        font-size: 1.05rem;
         cursor: pointer;
         transition: all 0.3s ease;
         text-decoration: none;
