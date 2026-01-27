@@ -39,16 +39,16 @@ defineProps({
 })
 </script>
 
-<style scoped lang="scss">
-@import "/src/scss/_theming.scss";
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
 
 .admin-shell {
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
   background: linear-gradient(180deg, lighten($vintage-beige, 4%) 0%, $vintage-beige 70%, lighten($vintage-beige, 2%) 100%);
-  font-size: 1.05rem;
-  line-height: 1.6;
+  font-size: $text-md;
+  line-height: $lh-relaxed;
 }
 
 .admin-main {
@@ -63,42 +63,42 @@ defineProps({
   z-index: 9;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  padding: 1rem 2.5rem;
-  background: #f6f2ea;
-  border-bottom: 1px solid rgba(62, 60, 56, 0.2);
+  gap: $spacer-md;
+  padding: $spacer-md 2.5rem;
+  background: $vintage-beige;
+  border-bottom: 1px solid rgba($color-dark, 0.2);
 }
 
 .context-item {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  font-size: 0.95rem;
+  font-size: $text-base;
 }
 
 .context-item .label {
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-size: 0.72rem;
+  letter-spacing: $ls-wide;
+  font-size: $text-2xs;
   color: $text-muted;
 }
 
 .context-item .value {
-  font-weight: 700;
-  color: $brand-text;
+  font-weight: $fw-bold;
+  color: $color-dark;
 }
 
 .admin-content {
   padding: 2.5rem 2.75rem 3.25rem;
-  font-size: 1.05rem;
+  font-size: $text-md;
 }
 
 .admin-content :deep(.admin-section) {
   background: $vintage-beige;
-  border-radius: 14px;
-  border: 1px solid rgba(62, 60, 56, 0.18);
-  padding: 1.5rem;
-  box-shadow: 0 12px 26px rgba(62, 60, 56, 0.15);
+  border-radius: $border-radius-lg;
+  border: 1px solid rgba($color-dark, 0.18);
+  padding: $spacer-lg;
+  box-shadow: 0 12px 26px rgba($color-dark, 0.15);
   margin-bottom: 1.75rem;
 }
 
@@ -106,40 +106,40 @@ defineProps({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: $spacer-md;
+  margin-bottom: $spacer-md;
 }
 
 .admin-content :deep(.admin-section-title) {
   margin: 0;
-  font-size: 1.4rem;
-  color: $brand-text;
-  font-family: $headings-font-family;
+  font-size: $h4-size;
+  color: $color-dark;
+  font-family: $font-family-heading;
 }
 
 .admin-content :deep(.admin-table) {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 12px;
+  background: $color-white;
+  border-radius: $border-radius-lg;
   overflow: hidden;
-  box-shadow: 0 10px 20px rgba(62, 60, 56, 0.12);
+  box-shadow: 0 10px 20px rgba($color-dark, 0.12);
 }
 
 .admin-content :deep(.admin-table th),
 .admin-content :deep(.admin-table td) {
-  padding: 1rem 1rem;
+  padding: $spacer-md $spacer-md;
   text-align: left;
-  font-size: 1rem;
-  color: $brand-text;
+  font-size: $text-base;
+  color: $color-dark;
 }
 
 .admin-content :deep(.admin-table thead) {
-  background: rgba(236, 107, 0, 0.12);
+  background: rgba($color-primary, 0.12);
 }
 
 .admin-content :deep(.admin-table tbody tr + tr) {
-  border-top: 1px solid rgba(62, 60, 56, 0.12);
+  border-top: 1px solid rgba($color-dark, 0.12);
 }
 
 .admin-content :deep(.admin-btn) {
@@ -147,32 +147,32 @@ defineProps({
   align-items: center;
   gap: 0.4rem;
   padding: 0.55rem 0.9rem;
-  border-radius: 8px;
+  border-radius: $border-radius-md;
   border: 2px solid transparent;
-  font-weight: 600;
+  font-weight: $fw-semibold;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: $transition-fast;
 }
 
 .admin-content :deep(.admin-btn-primary) {
-  background: rgba(236, 107, 0, 0.18);
-  border-color: rgba(236, 107, 0, 0.6);
-  color: $brand-text;
+  background: rgba($color-primary, 0.18);
+  border-color: rgba($color-primary, 0.6);
+  color: $color-dark;
 }
 
 .admin-content :deep(.admin-btn-primary:hover) {
-  background: rgba(236, 107, 0, 0.32);
-  border-color: rgba(236, 107, 0, 0.8);
+  background: rgba($color-primary, 0.32);
+  border-color: rgba($color-primary, 0.8);
 }
 
 .admin-content :deep(.admin-btn-outline) {
   background: transparent;
-  border-color: rgba(62, 60, 56, 0.3);
-  color: $brand-text;
+  border-color: rgba($color-dark, 0.3);
+  color: $color-dark;
 }
 
 .admin-content :deep(.admin-btn-outline:hover) {
-  background: rgba(62, 60, 56, 0.08);
+  background: rgba($color-dark, 0.08);
 }
 
 @include media-breakpoint-down(lg) {

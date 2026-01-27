@@ -142,7 +142,7 @@
           </div>
 
           <!-- Notifications -->
-          <h2 style="margin-top: 2rem">Notificaciones</h2>
+          <h2 class="notifications-title">Notificaciones</h2>
 
           <div v-if="notifications.length > 0" class="notifications-list">
             <div
@@ -280,16 +280,16 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@import '@/scss/_core.scss';
 
 .dashboard-page {
   min-height: 100vh;
-  background: radial-gradient(circle at 20% 10%, rgba($brand-secondary, 0.25) 0%, rgba($dark, 0.95) 45%, rgba(0, 0, 0, 0.98) 100%);
-  padding: 2rem 1rem;
+  background: radial-gradient(circle at 20% 10%, rgba($color-secondary, 0.25) 0%, rgba($color-dark, 0.95) 45%, rgba(0, 0, 0, 0.98) 100%);
+  padding: $spacer-xl $spacer-md;
 }
 
 .dashboard-container {
-  max-width: 1400px;
+  max-width: $container-max-width;
   margin: 0 auto;
 }
 
@@ -298,99 +298,99 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  background: $vintage-beige;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(62, 60, 56, 0.2);
+  margin-bottom: $spacer-xl;
+  background: $color-light;
+  padding: $spacer-xl;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-xl;
+  border: 1px solid rgba($color-dark, 0.2);
 }
 
 .dashboard-header h1 {
-  margin: 0 0 0.5rem 0;
-  color: $brand-text;
-  font-size: 2rem;
+  margin: 0 0 $spacer-sm 0;
+  color: $text-color;
+  font-size: $h2-size;
 }
 
 .welcome-text {
   margin: 0;
-  color: $text-muted;
+  color: $text-color-muted;
 }
 
 .header-actions {
   display: flex;
-  gap: 1rem;
+  gap: $spacer-md;
 }
 
 .btn-primary {
-  padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, $orange-primary, $brand-secondary);
-  color: $vintage-beige;
+  padding: $spacer-sm $spacer-lg;
+  background: linear-gradient(135deg, $color-primary, $color-secondary);
+  color: $color-light;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: $border-radius-md;
+  font-weight: $fw-semibold;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+  gap: $spacer-sm;
+  transition: $transition-fast;
+  box-shadow: $shadow-lg;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4);
+  box-shadow: $shadow-xl;
 }
 
 /* Stats Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: $spacer-lg;
+  margin-bottom: $spacer-xl;
 }
 
 .stat-card {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 1.5rem;
+  background: $color-light;
+  border-radius: $border-radius-lg;
+  padding: $spacer-lg;
   display: flex;
-  gap: 1rem;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s;
-  border: 1px solid rgba(62, 60, 56, 0.18);
+  gap: $spacer-md;
+  box-shadow: $shadow-lg;
+  transition: $transition-fast;
+  border: 1px solid rgba($color-dark, 0.18);
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: $shadow-md;
 }
 
 .stat-icon {
-  font-size: 2.5rem;
+  font-size: $text-2xl;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 60px;
   height: 60px;
-  border-radius: 10px;
+  border-radius: $border-radius-md;
 }
 
 .stat-icon.pending {
-  background: rgba(204, 125, 67, 0.25);
+  background: rgba($color-accent, 0.25);
 }
 
 .stat-icon.active {
-  background: rgba(236, 107, 0, 0.25);
+  background: rgba($color-primary, 0.25);
 }
 
 .stat-icon.completed {
-  background: rgba(3, 134, 0, 0.2);
+  background: rgba($color-success, 0.2);
 }
 
 .stat-icon.total {
-  background: rgba(232, 147, 90, 0.25);
+  background: rgba($color-primary-light, 0.25);
 }
 
 .stat-content {
@@ -398,49 +398,53 @@ onMounted(() => {
 }
 
 .stat-value {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: $brand-text;
-  margin-bottom: 0.25rem;
+  font-size: $h3-size;
+  font-weight: $fw-bold;
+  color: $text-color;
+  margin-bottom: $spacer-xs;
 }
 
 .stat-label {
-  font-size: 0.9rem;
-  color: $text-muted;
+  font-size: $text-sm;
+  color: $text-color-muted;
 }
 
 /* Dashboard Content */
 .dashboard-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  gap: $spacer-xl;
+  margin-bottom: $spacer-xl;
 }
 
 .column h2 {
-  margin: 0 0 1.5rem 0;
-  color: $brand-text;
-  font-size: 1.3rem;
+  margin: 0 0 $spacer-lg 0;
+  color: $text-color;
+  font-size: $h4-size;
+}
+
+.notifications-title {
+  margin-top: $spacer-xl;
 }
 
 /* Repairs List */
 .repairs-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: $spacer-lg;
 }
 
 .repair-card {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  border-left: 4px solid $orange-primary;
-  transition: all 0.2s;
+  background: $color-light;
+  border-radius: $border-radius-lg;
+  padding: $spacer-lg;
+  box-shadow: $shadow-lg;
+  border-left: 4px solid $color-primary;
+  transition: $transition-fast;
 }
 
 .repair-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: $shadow-md;
   transform: translateX(4px);
 }
 
@@ -448,88 +452,88 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(62, 60, 56, 0.12);
+  margin-bottom: $spacer-md;
+  padding-bottom: $spacer-md;
+  border-bottom: 1px solid rgba($color-dark, 0.12);
 }
 
 .repair-info h3 {
-  margin: 0 0 0.25rem 0;
-  color: $brand-text;
-  font-size: 1.1rem;
+  margin: 0 0 $spacer-xs 0;
+  color: $text-color;
+  font-size: $text-lg;
 }
 
 .repair-id {
   margin: 0;
-  color: $text-muted;
-  font-size: 0.85rem;
+  color: $text-color-muted;
+  font-size: $text-sm;
 }
 
 .repair-status {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-pill;
+  font-size: $text-sm;
+  font-weight: $fw-semibold;
   white-space: nowrap;
 }
 
 .repair-status.waiting,
 .repair-status.waiting_parts {
-  background: rgba(172, 97, 42, 0.18);
-  color: $brand-text;
+  background: rgba($color-secondary, 0.18);
+  color: $text-color;
 }
 
 .repair-status.in-progress,
 .repair-status.in_progress {
-  background: rgba(236, 107, 0, 0.2);
-  color: $brand-text;
+  background: rgba($color-primary, 0.2);
+  color: $text-color;
 }
 
 .repair-status.pending_quote,
 .repair-status.quoted,
 .repair-status.approved,
 .repair-status.testing {
-  background: rgba(232, 147, 90, 0.25);
-  color: $brand-text;
+  background: rgba($color-primary-light, 0.25);
+  color: $text-color;
 }
 
 .repair-status.completed,
 .repair-status.delivered {
-  background: rgba(3, 134, 0, 0.18);
-  color: $brand-text;
+  background: rgba($color-success, 0.18);
+  color: $text-color;
 }
 
 .repair-details {
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
+  margin-bottom: $spacer-md;
+  font-size: $text-base;
 }
 
 .repair-details p {
-  margin: 0.5rem 0;
-  color: $text-muted;
+  margin: $spacer-sm 0;
+  color: $text-color-muted;
 }
 
 .repair-progress {
-  margin-bottom: 1rem;
+  margin-bottom: $spacer-md;
 }
 
 .progress-bar {
   height: 8px;
-  background: rgba(62, 60, 56, 0.15);
-  border-radius: 4px;
+  background: rgba($color-dark, 0.15);
+  border-radius: $border-radius-sm;
   overflow: hidden;
-  margin-bottom: 0.5rem;
+  margin-bottom: $spacer-sm;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, $orange-pastel, $brand-secondary);
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, $color-primary-light, $color-secondary);
+  transition: $transition-base;
 }
 
 .progress-text {
-  font-size: 0.85rem;
-  color: $text-muted;
+  font-size: $text-sm;
+  color: $text-color-muted;
 }
 
 .repair-actions {
@@ -539,48 +543,48 @@ onMounted(() => {
 .btn-link {
   background: none;
   border: none;
-  color: $orange-primary;
+  color: $color-primary;
   cursor: pointer;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: $fw-semibold;
   padding: 0;
-  transition: all 0.2s;
+  transition: $transition-fast;
 }
 
 .btn-link:hover {
-  color: $brand-secondary;
+  color: $color-secondary;
 }
 
 /* Quick Actions */
 .quick-actions {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: $spacer-md;
+  margin-bottom: $spacer-xl;
 }
 
 .action-card {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 1.25rem;
+  background: $color-light;
+  border-radius: $border-radius-lg;
+  padding: $spacer-md;
   display: flex;
-  gap: 1rem;
+  gap: $spacer-md;
   text-decoration: none;
-  color: $brand-text;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s;
+  color: $text-color;
+  box-shadow: $shadow-lg;
+  transition: $transition-fast;
   border-left: 4px solid transparent;
-  border: 1px solid rgba(62, 60, 56, 0.18);
+  border: 1px solid rgba($color-dark, 0.18);
 }
 
 .action-card:hover {
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
+  box-shadow: $shadow-xl;
   transform: translateX(4px);
-  border-left-color: $orange-primary;
+  border-left-color: $color-primary;
 }
 
 .action-icon {
-  font-size: 2rem;
+  font-size: $h2-size;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -588,61 +592,61 @@ onMounted(() => {
 }
 
 .action-text h4 {
-  margin: 0 0 0.25rem 0;
-  color: $brand-text;
-  font-size: 0.95rem;
+  margin: 0 0 $spacer-xs 0;
+  color: $text-color;
+  font-size: $text-base;
 }
 
 .action-text p {
   margin: 0;
-  color: $text-muted;
-  font-size: 0.85rem;
+  color: $text-color-muted;
+  font-size: $text-sm;
 }
 
 /* Notifications */
 .notifications-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: $spacer-md;
 }
 
 .notification-card {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 1rem;
+  background: $color-light;
+  border-radius: $border-radius-lg;
+  padding: $spacer-md;
   display: flex;
-  gap: 1rem;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  border-left: 4px solid rgba(62, 60, 56, 0.3);
+  gap: $spacer-md;
+  box-shadow: $shadow-lg;
+  border-left: 4px solid rgba($color-dark, 0.3);
 }
 
 .notification-card.update {
-  border-left-color: $orange-pastel;
-  background: rgba(232, 147, 90, 0.12);
+  border-left-color: $color-primary-light;
+  background: rgba($color-primary-light, 0.12);
 }
 
 .notification-card.info {
-  border-left-color: $brand-secondary;
-  background: rgba(172, 97, 42, 0.12);
+  border-left-color: $color-secondary;
+  background: rgba($color-secondary, 0.12);
 }
 
 .notification-card.warning {
-  border-left-color: $orange-primary;
-  background: rgba(236, 107, 0, 0.12);
+  border-left-color: $color-primary;
+  background: rgba($color-primary, 0.12);
 }
 
 .notification-card.error {
-  border-left-color: #b45309;
-  background: rgba(180, 83, 9, 0.12);
+  border-left-color: $color-danger;
+  background: rgba($color-danger, 0.12);
 }
 
 .notification-card.success {
-  border-left-color: #166534;
-  background: rgba(22, 101, 52, 0.12);
+  border-left-color: $color-success;
+  background: rgba($color-success, 0.12);
 }
 
 .notification-icon {
-  font-size: 1.5rem;
+  font-size: $text-2xl;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -654,83 +658,83 @@ onMounted(() => {
 }
 
 .notification-message {
-  margin: 0 0 0.25rem 0;
-  color: $brand-text;
-  font-size: 0.95rem;
+  margin: 0 0 $spacer-xs 0;
+  color: $text-color;
+  font-size: $text-base;
 }
 
 .notification-time {
   margin: 0;
-  color: $text-muted;
-  font-size: 0.8rem;
+  color: $text-color-muted;
+  font-size: $text-xs;
 }
 
 .notification-close {
   background: none;
   border: none;
-  color: $text-muted;
+  color: $text-color-muted;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: $text-xl;
   padding: 0;
-  transition: color 0.2s;
+  transition: $transition-fast;
 }
 
 .notification-close:hover {
-  color: $brand-text;
+  color: $text-color;
 }
 
 /* Empty State */
 .empty-state {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 3rem;
+  background: $color-light;
+  border-radius: $border-radius-lg;
+  padding: $spacer-xxl;
   text-align: center;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(62, 60, 56, 0.18);
+  box-shadow: $shadow-lg;
+  border: 1px solid rgba($color-dark, 0.18);
 }
 
 .empty-state p {
-  margin: 0 0 1.5rem 0;
-  color: $text-muted;
-  font-size: 1rem;
+  margin: 0 0 $spacer-lg 0;
+  color: $text-color-muted;
+  font-size: $text-base;
 }
 
 .btn-secondary {
-  padding: 0.75rem 1.5rem;
-  background: rgba(236, 107, 0, 0.15);
-  color: $brand-text;
-  border: 2px solid rgba(236, 107, 0, 0.6);
-  border-radius: 8px;
+  padding: $spacer-sm $spacer-lg;
+  background: rgba($color-primary, 0.15);
+  color: $text-color;
+  border: 2px solid rgba($color-primary, 0.6);
+  border-radius: $border-radius-md;
   cursor: pointer;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: $fw-semibold;
   display: inline-block;
-  transition: all 0.2s;
+  transition: $transition-fast;
 }
 
 .btn-secondary:hover {
-  background: rgba(236, 107, 0, 0.3);
-  border-color: rgba(236, 107, 0, 0.75);
+  background: rgba($color-primary, 0.3);
+  border-color: rgba($color-primary, 0.75);
 }
 
 .btn-logout {
-  padding: 0.875rem 1.4rem;
-  background: rgba(236, 107, 0, 0.12);
-  color: $brand-text;
-  border: 2px solid rgba(236, 107, 0, 0.55);
-  border-radius: 8px;
-  font-weight: 600;
+  padding: $spacer-sm $spacer-md;
+  background: rgba($color-primary, 0.12);
+  color: $text-color;
+  border: 2px solid rgba($color-primary, 0.55);
+  border-radius: $border-radius-md;
+  font-weight: $fw-semibold;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: $transition-fast;
 }
 
 .btn-logout:hover {
-  background: rgba(236, 107, 0, 0.28);
-  border-color: rgba(236, 107, 0, 0.75);
+  background: rgba($color-primary, 0.28);
+  border-color: rgba($color-primary, 0.75);
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@include media-breakpoint-down(lg) {
   .dashboard-content {
     grid-template-columns: 1fr;
   }
@@ -740,15 +744,15 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 768px) {
+@include media-breakpoint-down(md) {
   .dashboard-page {
-    padding: 1rem;
+    padding: $spacer-md;
   }
 
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: $spacer-lg;
   }
 
   .stats-grid {
@@ -758,7 +762,7 @@ onMounted(() => {
   .repair-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: $spacer-sm;
   }
 }
 </style>

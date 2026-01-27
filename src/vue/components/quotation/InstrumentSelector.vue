@@ -184,231 +184,248 @@ const proceed = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
+// Variables locales del componente (colores específicos no en sistema)
+$color-green-primary: #2f855a;
+$color-green-dark: #276749;
+$color-green-darker: #22543d;
+$color-green-text: #166534;
+$color-green-light-bg: #f0fdf4;
+$color-green-border: #86efac;
+$color-border-light: #e2e8f0;
+$color-border-hover: #cbd5e0;
+$color-text-dark: #2d3748;
+$color-text-medium: #718096;
+$color-text-light: #a0aec0;
+$color-text-gray: #4a5568;
+$color-bg-light: #f7fafc;
+
 .instrument-selector {
-  padding: 1rem;
+  padding: $spacer-md;
 }
 
 .selection-section {
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #e2e8f0;
-}
+  margin-bottom: $spacer-xxl;
+  padding-bottom: $spacer-xl;
+  border-bottom: 2px solid $color-border-light;
 
-.selection-section h3 {
-  margin: 0 0 1.5rem 0;
-  color: #2d3748;
-  font-size: 1.25rem;
-  font-weight: 600;
+  h3 {
+    margin: 0 0 $spacer-lg 0;
+    color: $color-text-dark;
+    font-size: $text-xl;
+    font-weight: $fw-semibold;
+  }
 }
 
 .search-box {
-  margin-bottom: 2rem;
+  margin-bottom: $spacer-xl;
 }
 
 .search-input {
   width: 100%;
-  padding: 0.875rem 1rem;
-  font-size: 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  transition: all 0.2s;
+  padding: $text-sm $spacer-md;
+  font-size: $text-base;
+  border: 2px solid $color-border-light;
+  border-radius: $border-radius-md;
+  transition: $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-green-primary;
+    box-shadow: 0 0 0 3px rgba($color-green-primary, 0.1);
+  }
 }
 
-.search-input:focus {
-  outline: none;
-  border-color: #2f855a;
-  box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.1);
-}
-
-/* Brands Grid */
+// Brands Grid
 .brands-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
+  gap: $spacer-md;
 }
 
 .brand-card {
-  padding: 1.5rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  background: white;
+  padding: $spacer-lg;
+  border: 2px solid $color-border-light;
+  border-radius: $border-radius-lg;
+  background: $color-white;
   cursor: pointer;
   text-align: center;
-  transition: all 0.2s;
+  transition: $transition-fast;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
+  gap: $spacer-sm;
 
-.brand-card:hover {
-  border-color: #cbd5e0;
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-}
+  &:hover {
+    border-color: $color-border-hover;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba($color-black, 0.08);
+  }
 
-.brand-card.active {
-  border-color: #2f855a;
-  background: #f0fdf4;
-  box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.1);
+  &.active {
+    border-color: $color-green-primary;
+    background: $color-green-light-bg;
+    box-shadow: 0 0 0 3px rgba($color-green-primary, 0.1);
+  }
 }
 
 .brand-name {
-  font-weight: 600;
-  color: #2d3748;
-  font-size: 1.1rem;
+  font-weight: $fw-semibold;
+  color: $color-text-dark;
+  font-size: $text-lg;
 }
 
 .brand-tier {
-  font-size: 0.85rem;
-  color: #718096;
+  font-size: $text-sm;
+  color: $color-text-medium;
 }
 
 .brand-year {
-  font-size: 0.8rem;
-  color: #a0aec0;
+  font-size: $text-xs;
+  color: $color-text-light;
 }
 
-/* Instruments Grid */
+// Instruments Grid
 .instruments-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  gap: $spacer-md;
 }
 
 .instrument-card {
-  padding: 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  background: white;
+  padding: $spacer-md;
+  border: 2px solid $color-border-light;
+  border-radius: $border-radius-lg;
+  background: $color-white;
   cursor: pointer;
   text-align: center;
-  transition: all 0.2s;
+  transition: $transition-fast;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
+  gap: $spacer-md;
 
-.instrument-card:hover {
-  border-color: #cbd5e0;
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-}
+  &:hover {
+    border-color: $color-border-hover;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba($color-black, 0.08);
+  }
 
-.instrument-card.active {
-  border-color: #2f855a;
-  background: #f0fdf4;
-  box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.1);
+  &.active {
+    border-color: $color-green-primary;
+    background: $color-green-light-bg;
+    box-shadow: 0 0 0 3px rgba($color-green-primary, 0.1);
+  }
 }
 
 .instrument-image {
   width: 100%;
   height: 150px;
-  background: #f7fafc;
-  border-radius: 8px;
+  background: $color-bg-light;
+  border-radius: $border-radius-md;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
 
-.instrument-image img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
 }
 
 .no-image {
   font-size: 3rem;
-  color: #cbd5e0;
+  color: $color-border-hover;
 }
 
 .instrument-info {
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: $spacer-sm;
 }
 
 .instrument-model {
-  font-weight: 600;
-  color: #2d3748;
+  font-weight: $fw-semibold;
+  color: $color-text-dark;
 }
 
 .instrument-year {
-  font-size: 0.85rem;
-  color: #718096;
+  font-size: $text-sm;
+  color: $color-text-medium;
 }
 
 .instrument-value {
-  font-size: 0.9rem;
-  color: #2f855a;
-  font-weight: 500;
+  font-size: $text-sm;
+  color: $color-green-primary;
+  font-weight: $fw-medium;
 }
 
-/* Confirmation Section */
+// Confirmation Section
 .confirmation-section {
-  margin-top: 2rem;
-  padding: 2rem;
-  background: #f0fdf4;
-  border: 2px solid #86efac;
-  border-radius: 12px;
-}
+  margin-top: $spacer-xl;
+  padding: $spacer-xl;
+  background: $color-green-light-bg;
+  border: 2px solid $color-green-border;
+  border-radius: $border-radius-lg;
 
-.confirmation-section h3 {
-  margin: 0 0 1.5rem 0;
-  color: #166534;
+  h3 {
+    margin: 0 0 $spacer-lg 0;
+    color: $color-green-text;
+  }
 }
 
 .summary-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+  background: $color-white;
+  padding: $spacer-lg;
+  border-radius: $border-radius-md;
+  margin-bottom: $spacer-lg;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #f0fdf4;
-}
+  border-bottom: 1px solid $color-green-light-bg;
 
-.summary-row:last-child {
-  border-bottom: none;
-}
+  &:last-child {
+    border-bottom: none;
+  }
 
-.summary-row .label {
-  font-weight: 600;
-  color: #2d3748;
-}
+  .label {
+    font-weight: $fw-semibold;
+    color: $color-text-dark;
+  }
 
-.summary-row .value {
-  color: #4a5568;
-  text-align: right;
+  .value {
+    color: $color-text-gray;
+    text-align: right;
+  }
 }
 
 .btn-proceed {
   width: 100%;
-  padding: 1rem;
-  background: linear-gradient(135deg, #2f855a, #276749);
-  color: white;
+  padding: $spacer-md;
+  background: linear-gradient(135deg, $color-green-primary, $color-green-dark);
+  color: $color-white;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: $border-radius-md;
+  font-size: $text-base;
+  font-weight: $fw-semibold;
   cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(47, 133, 90, 0.3);
+  transition: $transition-fast;
+  box-shadow: 0 4px 12px rgba($color-green-primary, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, $color-green-dark, $color-green-darker);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba($color-green-primary, 0.4);
+  }
 }
 
-.btn-proceed:hover {
-  background: linear-gradient(135deg, #276749, #22543d);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(47, 133, 90, 0.4);
-}
-
-@media (max-width: 768px) {
+@include media-breakpoint-down(md) {
   .brands-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
@@ -418,7 +435,7 @@ const proceed = () => {
   }
 
   .confirmation-section {
-    padding: 1.5rem;
+    padding: $spacer-lg;
   }
 }
 </style>

@@ -85,7 +85,9 @@ defineEmits(['accept', 'cancel'])
 const accepted = ref(false)
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 /* Overlay */
 .disclaimer-overlay {
   position: fixed;
@@ -94,18 +96,18 @@ const accepted = ref(false)
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 1rem;
+  z-index: $z-index-dropdown;
+  padding: $spacer-md;
   overflow-y: auto;
 }
 
 /* Modal */
 .disclaimer-modal {
-  background: white;
-  border-radius: 12px;
+  background: $color-white;
+  border-radius: $border-radius-lg;
   max-width: 700px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: $shadow-xl;
   display: flex;
   flex-direction: column;
   max-height: 90vh;
@@ -116,117 +118,117 @@ const accepted = ref(false)
 .disclaimer-header {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  padding: 2rem;
+  gap: $spacer-md;
+  padding: $spacer-xl;
   border-bottom: 2px solid #fee;
   position: sticky;
   top: 0;
-  background: white;
+  background: $color-white;
   z-index: 1;
 }
 
 .warning-icon {
   font-size: 2.5rem;
   flex-shrink: 0;
-  line-height: 1;
+  line-height: $lh-none;
 }
 
 .disclaimer-header h2 {
   margin: 0;
-  color: #c53030;
-  font-size: 1.25rem;
+  color: $color-danger;
+  font-size: $text-xl;
   flex: 1;
 }
 
 .close-btn {
   background: none;
   border: none;
-  font-size: 2rem;
+  font-size: $spacer-xl;
   cursor: pointer;
-  color: #999;
+  color: $light-6;
   padding: 0;
-  width: 2rem;
-  height: 2rem;
+  width: $spacer-xl;
+  height: $spacer-xl;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  border-radius: $border-radius-sm;
+  transition: $transition-fast;
 }
 
 .close-btn:hover {
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: $light-1;
+  color: $color-dark;
 }
 
 /* Content */
 .disclaimer-content {
-  padding: 2rem;
+  padding: $spacer-xl;
   flex: 1;
   overflow-y: auto;
 }
 
 .highlight {
   background: linear-gradient(135deg, #fff5f5, #ffe8e8);
-  border-left: 4px solid #c53030;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  border-radius: 4px;
-  font-size: 1.05rem;
-  line-height: 1.6;
+  border-left: 4px solid $color-danger;
+  padding: $spacer-md;
+  margin-bottom: $spacer-lg;
+  border-radius: $border-radius-sm;
+  font-size: $text-md;
+  line-height: $lh-relaxed;
 }
 
 .highlight strong {
-  color: #c53030;
-  font-weight: 700;
+  color: $color-danger;
+  font-weight: $fw-bold;
 }
 
 .disclaimer-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 2rem 0;
+  margin: 0 0 $spacer-xl 0;
 }
 
 .disclaimer-list > li {
   margin-bottom: 1.25rem;
   padding-left: 1.75rem;
   position: relative;
-  line-height: 1.6;
-  color: #333;
+  line-height: $lh-relaxed;
+  color: $color-dark;
 }
 
 .disclaimer-list > li:before {
   content: '✓';
   position: absolute;
   left: 0;
-  color: #2f855a;
-  font-weight: bold;
-  font-size: 1.25rem;
+  color: $color-success;
+  font-weight: $fw-bold;
+  font-size: $text-xl;
 }
 
 .sub-list {
   list-style: none;
-  padding: 0.5rem 0 0 1rem;
-  margin: 0.5rem 0 0 0;
+  padding: $spacer-sm 0 0 $spacer-md;
+  margin: $spacer-sm 0 0 0;
 }
 
 .sub-list li {
-  margin: 0.5rem 0;
-  font-size: 0.95rem;
-  color: #555;
+  margin: $spacer-sm 0;
+  font-size: $text-sm;
+  color: $text-color-muted;
 }
 
 .sub-list li strong {
-  color: #2d3748;
+  color: $color-dark;
 }
 
 /* Acceptance */
 .acceptance-section {
-  margin-top: 2rem;
-  padding: 1rem;
-  background: #f7fafc;
-  border-radius: 8px;
-  border: 1px solid #cbd5e0;
+  margin-top: $spacer-xl;
+  padding: $spacer-md;
+  background: $light-1;
+  border-radius: $border-radius-md;
+  border: 1px solid $light-4;
 }
 
 .checkbox-label {
@@ -241,23 +243,23 @@ const accepted = ref(false)
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #2f855a;
+  accent-color: $color-success;
   flex-shrink: 0;
 }
 
 .checkbox-text {
-  color: #2d3748;
-  font-weight: 500;
+  color: $color-dark;
+  font-weight: $fw-medium;
 }
 
 /* Actions */
 .disclaimer-actions {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 2rem;
-  border-top: 1px solid #e2e8f0;
-  background: #f9fafb;
+  gap: $spacer-md;
+  padding: $spacer-xl;
+  border-top: 1px solid $light-3;
+  background: $light-1;
   position: sticky;
   bottom: 0;
 }
@@ -265,36 +267,36 @@ const accepted = ref(false)
 .btn-cancel,
 .btn-accept {
   padding: 0.875rem 1.75rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: $border-radius-md;
+  font-size: $text-base;
+  font-weight: $fw-semibold;
   cursor: pointer;
   border: none;
-  transition: all 0.2s;
+  transition: $transition-fast;
   flex: 1;
 }
 
 .btn-cancel {
-  background: white;
-  border: 2px solid #cbd5e0;
-  color: #4a5568;
+  background: $color-white;
+  border: 2px solid $light-4;
+  color: $text-color-muted;
 }
 
 .btn-cancel:hover {
-  background: #edf2f7;
-  border-color: #a0aec0;
+  background: $light-2;
+  border-color: $light-5;
 }
 
 .btn-accept {
-  background: linear-gradient(135deg, #2f855a, #276749);
-  color: white;
-  box-shadow: 0 4px 12px rgba(47, 133, 90, 0.3);
+  background: linear-gradient(135deg, $color-success, darken($color-success, 10%));
+  color: $color-white;
+  box-shadow: 0 4px 12px rgba($color-success, 0.3);
 }
 
 .btn-accept:hover:not(:disabled) {
-  background: linear-gradient(135deg, #276749, #22543d);
+  background: linear-gradient(135deg, darken($color-success, 10%), darken($color-success, 15%));
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(47, 133, 90, 0.4);
+  box-shadow: 0 6px 16px rgba($color-success, 0.4);
 }
 
 .btn-accept:active:not(:disabled) {
@@ -303,7 +305,7 @@ const accepted = ref(false)
 
 .btn-accept--disabled,
 .btn-accept:disabled {
-  background: #cbd5e0;
+  background: $light-4;
   cursor: not-allowed;
   box-shadow: none;
   opacity: 0.6;
@@ -312,7 +314,7 @@ const accepted = ref(false)
 /* Animations */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: $transition-base;
 }
 
 .fade-enter-from,
@@ -321,31 +323,31 @@ const accepted = ref(false)
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@include media-breakpoint-down(sm) {
   .disclaimer-overlay {
-    padding: 0.5rem;
+    padding: $spacer-sm;
   }
 
   .disclaimer-modal {
-    border-radius: 8px;
+    border-radius: $border-radius-md;
     max-height: 95vh;
   }
 
   .disclaimer-header {
-    padding: 1.5rem;
+    padding: $spacer-lg;
     gap: 0.75rem;
   }
 
   .disclaimer-header h2 {
-    font-size: 1.1rem;
+    font-size: $text-lg;
   }
 
   .warning-icon {
-    font-size: 2rem;
+    font-size: $spacer-xl;
   }
 
   .disclaimer-content {
-    padding: 1.5rem;
+    padding: $spacer-lg;
   }
 
   .highlight {
@@ -354,13 +356,13 @@ const accepted = ref(false)
 
   .disclaimer-actions {
     flex-direction: column;
-    padding: 1.5rem;
+    padding: $spacer-lg;
   }
 
   .btn-cancel,
   .btn-accept {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.95rem;
+    padding: 0.75rem $spacer-lg;
+    font-size: $text-sm;
   }
 }
 </style>

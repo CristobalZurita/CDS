@@ -120,17 +120,17 @@ const handleAppointmentSubmit = async (formData) => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@import '@/scss/_core.scss';
 
 header.foxy-header {
     /* expanded hero height to match reference - black box extends lower for buttons */
-   --height: clamp(600px, 90vh, 1100px);
+    --height: clamp(600px, 90vh, 1100px);
     --content-margin-top: 64px;
-    --max-logo-proportion:45vw;
-    --max-logo-height:60vh; /* allow much taller hero on large viewports */
-    @include media-breakpoint-down(xl) {--max-logo-height: 45vh;}
-    @include media-breakpoint-down(lg) {--max-logo-height: 38vh; }
-    @include media-breakpoint-down(md) {--content-margin-top: 65px;}
+    --max-logo-proportion: 45vw;
+    --max-logo-height: 60vh; /* allow much taller hero on large viewports */
+    @include media-breakpoint-down(xl) { --max-logo-height: 45vh; }
+    @include media-breakpoint-down(lg) { --max-logo-height: 38vh; }
+    @include media-breakpoint-down(md) { --content-margin-top: 65px; }
 
     --content-height: calc(var(--height) - var(--content-margin-top));
     --logo-proportion: clamp(190px, 45vw, min(37.5vh, 35vw, 350px));
@@ -144,12 +144,12 @@ header.foxy-header {
         justify-content: center;
 
         /* allow the hero container to span wide viewports without being overly constrained */
-        max-width: 1400px;
+        max-width: $container-max-width;
         width: 100%;
         height: var(--height);
-        padding-left: 1rem;
-        padding-right: 1rem;
-        padding-bottom: 2rem;
+        padding-left: $spacer-md;
+        padding-right: $spacer-md;
+        padding-bottom: $spacer-xl;
     }
 
     article.foxy-hero-header {
@@ -158,7 +158,7 @@ header.foxy-header {
         justify-content: center;
         flex-direction: column;
         padding-top: calc(var(--content-margin-top));
-          
+
         position: relative;
         z-index: 3;
     }
@@ -182,14 +182,14 @@ header.foxy-header {
     }
 
     h1.heading {
-        color:$orange-pastel;
+        color: $orange-pastel;
         text-transform: uppercase;
         text-align: center;
         font-family: inherit;
-        font-weight: 800;
+        font-weight: $fw-extrabold;
         font-size: clamp(2.4rem, 5.2vw, 4.4rem);
-        padding: 1.25rem 0 1.5rem;
-        letter-spacing: 0.04em;
+        padding: 1.25rem 0 $spacer-lg;
+        letter-spacing: $ls-wide;
         line-height: 1.1;
         position: relative;
         z-index: 5;
@@ -207,10 +207,10 @@ header.foxy-header {
     h4.subheading {
         font-family: inherit;
         color: $light-5;
-        font-weight: 500;
-        font-size: clamp(1rem, 1.2vw, 1.4rem);
+        font-weight: $fw-medium;
+        font-size: clamp($text-base, 1.2vw, 1.4rem);
         padding: 0.8rem 0 1.1rem;
-        line-height: 1.5;
+        line-height: $lh-normal;
         text-align: center;
     }
 
@@ -232,20 +232,20 @@ header.foxy-header {
     .btn-hero {
         display: inline-flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 1rem 2.4rem;
-        border-radius: 4rem;
+        gap: $spacer-sm + $spacer-xs;
+        padding: $spacer-md 2.4rem;
+        border-radius: $border-radius-pill;
         border: 2px solid $orange-pastel;
         background-color: $orange-pastel;
-        color: white;
+        color: $color-white;
         font-family: inherit;
-        font-weight: 600;
+        font-weight: $fw-semibold;
         text-transform: uppercase;
         font-size: 1.05rem;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: $transition-base;
         text-decoration: none;
-        letter-spacing: 0.05em;
+        letter-spacing: $ls-wider;
 
         i {
             font-size: 1.3rem;
@@ -254,7 +254,7 @@ header.foxy-header {
         &:hover {
             background-color: #ff7f1f;
             border-color: #ff7f1f;
-            color: white;
+            color: $color-white;
             transform: scale(1.08);
         }
 
@@ -264,7 +264,7 @@ header.foxy-header {
 
         &.btn-hero-primary {
             background-color: $orange-pastel;
-            color: white;
+            color: $color-white;
             border-color: $orange-pastel;
 
             &:hover {
@@ -296,7 +296,7 @@ header.foxy-header {
             width: 100%;
             justify-content: center;
             padding: 0.9rem 1.4rem;
-            font-size: 1rem;
+            font-size: $text-base;
         }
     }
 }

@@ -160,11 +160,13 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .repairs-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem 1rem;
+  background: linear-gradient(135deg, $light-1 0%, $light-4 100%);
+  padding: $spacer-xl $spacer-md;
 }
 
 .repairs-container {
@@ -177,108 +179,108 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: $spacer-xl;
+  background: $color-white;
+  padding: $spacer-xl;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
 }
 
 .repairs-header h1 {
-  margin: 0 0 0.5rem 0;
-  color: #2d3748;
-  font-size: 2rem;
+  margin: 0 0 $spacer-sm 0;
+  color: $color-dark;
+  font-size: $h2-size;
 }
 
 .subtitle {
   margin: 0;
-  color: #718096;
+  color: $light-6;
 }
 
 .header-actions {
   display: flex;
-  gap: 1rem;
+  gap: $spacer-md;
 }
 
 .btn-primary {
-  padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  padding: $text-sm $spacer-lg;
+  background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+  color: $color-white;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: $border-radius-md;
+  font-weight: $fw-semibold;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  gap: $spacer-sm;
+  transition: $transition-fast;
+  box-shadow: $shadow-md;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: $shadow-lg;
 }
 
 /* Filters */
 .filters {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: $color-white;
+  padding: $spacer-lg;
+  border-radius: $border-radius-lg;
+  margin-bottom: $spacer-xl;
+  box-shadow: $shadow-md;
   display: flex;
-  gap: 2rem;
+  gap: $spacer-xl;
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: $spacer-sm;
 }
 
 .filter-group label {
-  font-weight: 600;
-  color: #4a5568;
-  font-size: 0.9rem;
+  font-weight: $fw-semibold;
+  color: $light-7;
+  font-size: $text-sm;
 }
 
 .filter-select {
-  padding: 0.75rem;
-  border: 1px solid #cbd5e0;
+  padding: $spacer-sm + $spacer-xs;
+  border: 1px solid $light-4;
   border-radius: 6px;
-  background: white;
-  color: #4a5568;
-  font-weight: 500;
+  background: $color-white;
+  color: $light-7;
+  font-weight: $fw-medium;
   cursor: pointer;
   min-width: 200px;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: $color-primary;
+  box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
 }
 
 /* Repairs List */
 .repairs-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: $spacer-lg;
 }
 
 .repair-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-left: 4px solid #667eea;
-  transition: all 0.2s;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  padding: $spacer-lg;
+  box-shadow: $shadow-md;
+  border-left: 4px solid $color-primary;
+  transition: $transition-fast;
 }
 
 .repair-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: $shadow-lg;
   transform: translateX(4px);
 }
 
@@ -286,28 +288,28 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: $spacer-lg;
+  padding-bottom: $spacer-md;
+  border-bottom: 1px solid $light-3;
 }
 
 .repair-info h3 {
-  margin: 0 0 0.25rem 0;
-  color: #2d3748;
-  font-size: 1.1rem;
+  margin: 0 0 $spacer-xs 0;
+  color: $color-dark;
+  font-size: $text-lg;
 }
 
 .repair-ticket {
   margin: 0;
-  color: #a0aec0;
-  font-size: 0.85rem;
+  color: $light-5;
+  font-size: $text-sm;
 }
 
 .repair-status {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-pill;
+  font-size: $text-sm;
+  font-weight: $fw-semibold;
   white-space: nowrap;
 }
 
@@ -343,52 +345,52 @@ onMounted(() => {
 
 /* Repair Details */
 .repair-details {
-  margin-bottom: 1rem;
+  margin-bottom: $spacer-md;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  gap: $spacer-md;
 }
 
 .detail-row {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: $spacer-xs;
 }
 
 .detail-label {
-  font-size: 0.85rem;
-  color: #718096;
-  font-weight: 600;
+  font-size: $text-sm;
+  color: $light-6;
+  font-weight: $fw-semibold;
   text-transform: uppercase;
 }
 
 .detail-value {
-  color: #2d3748;
-  font-size: 0.95rem;
+  color: $color-dark;
+  font-size: $text-base;
 }
 
 /* Progress */
 .repair-progress {
-  margin-bottom: 1rem;
+  margin-bottom: $spacer-md;
 }
 
 .progress-bar {
   height: 8px;
-  background: #e2e8f0;
-  border-radius: 4px;
+  background: $light-3;
+  border-radius: $border-radius-sm;
   overflow: hidden;
-  margin-bottom: 0.5rem;
+  margin-bottom: $spacer-sm;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, $color-primary, $color-primary-dark);
+  transition: $transition-base;
 }
 
 .progress-text {
-  font-size: 0.85rem;
-  color: #718096;
+  font-size: $text-sm;
+  color: $light-6;
 }
 
 /* Actions */
@@ -399,48 +401,48 @@ onMounted(() => {
 .btn-view {
   background: none;
   border: none;
-  color: #667eea;
+  color: $color-primary;
   cursor: pointer;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: $fw-semibold;
   padding: 0;
-  transition: all 0.2s;
+  transition: $transition-fast;
 }
 
 .btn-view:hover {
-  color: #764ba2;
+  color: $color-primary-dark;
 }
 
 /* Empty State */
 .empty-state {
-  background: white;
-  border-radius: 12px;
-  padding: 4rem 2rem;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  padding: ($spacer-xl * 2) $spacer-xl;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: $shadow-md;
 }
 
 .empty-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: $h1-size;
+  margin-bottom: $spacer-md;
 }
 
 .empty-state p {
-  margin: 0 0 1.5rem 0;
-  color: #718096;
-  font-size: 1.1rem;
+  margin: 0 0 $spacer-lg 0;
+  color: $light-6;
+  font-size: $text-lg;
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@include media-breakpoint-down(md) {
   .repairs-page {
-    padding: 1rem;
+    padding: $spacer-md;
   }
 
   .repairs-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: $spacer-lg;
   }
 
   .filters {
@@ -453,7 +455,7 @@ onMounted(() => {
 
   .repair-card-header {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: $spacer-sm;
   }
 
   .repair-status {

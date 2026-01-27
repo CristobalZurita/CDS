@@ -371,54 +371,56 @@ const onVerify = (token) => {
 const emit = defineEmits(['cancel'])
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .schedule-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem 1rem;
+  padding: $spacer-xl $spacer-md;
 }
 
 .schedule-container {
   max-width: 900px;
   margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  padding: 3rem 2rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  background: $color-white;
+  border-radius: $border-radius-xl;
+  padding: $spacer-xxl $spacer-xl;
+  box-shadow: $shadow-xl;
 }
 
 .schedule-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: $spacer-xl;
 }
 
 .schedule-header h1 {
-  margin: 0 0 0.5rem 0;
-  color: #2d3748;
-  font-size: 2rem;
+  margin: 0 0 $spacer-sm 0;
+  color: $text-color;
+  font-size: $h2-size;
 }
 
 .schedule-header p {
   margin: 0;
-  color: #718096;
-  font-size: 1.1rem;
+  color: $text-color-muted;
+  font-size: $text-lg;
 }
 
 /* Progress Bar */
 .progress-bar {
   display: flex;
   justify-content: space-around;
-  margin-bottom: 2rem;
-  gap: 1rem;
+  margin-bottom: $spacer-xl;
+  gap: $spacer-md;
 }
 
 .progress-step {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: $spacer-sm;
   opacity: 0.5;
-  transition: opacity 0.2s;
+  transition: $transition-fast;
 }
 
 .progress-step.active {
@@ -431,27 +433,27 @@ const emit = defineEmits(['cancel'])
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background: #edf2f7;
-  color: #4a5568;
-  font-weight: 600;
-  font-size: 1.1rem;
+  border-radius: $border-radius-pill;
+  background: $light-2;
+  color: $light-7;
+  font-weight: $fw-semibold;
+  font-size: $text-lg;
 }
 
 .progress-step.active .step-number {
   background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  color: $color-white;
 }
 
 .step-label {
-  font-size: 0.9rem;
-  color: #718096;
-  font-weight: 500;
+  font-size: $text-sm;
+  color: $light-6;
+  font-weight: $fw-medium;
 }
 
 .progress-step.active .step-label {
-  color: #2d3748;
-  font-weight: 600;
+  color: $text-color;
+  font-weight: $fw-semibold;
 }
 
 /* Schedule Content */
@@ -475,73 +477,73 @@ const emit = defineEmits(['cancel'])
 }
 
 .schedule-step h2 {
-  margin: 0 0 0.5rem 0;
-  color: #2d3748;
-  font-size: 1.5rem;
+  margin: 0 0 $spacer-sm 0;
+  color: $text-color;
+  font-size: $h4-size;
 }
 
 .step-description {
-  margin: 0 0 2rem 0;
-  color: #718096;
-  font-size: 1rem;
+  margin: 0 0 $spacer-xl 0;
+  color: $light-6;
+  font-size: $text-base;
 }
 
 /* Calendar */
 .calendar-container {
-  background: #f7fafc;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  background: $light-1;
+  border-radius: $border-radius-lg;
+  padding: $spacer-lg;
+  margin-bottom: $spacer-xl;
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: $spacer-lg;
 }
 
 .calendar-header h3 {
   margin: 0;
-  color: #2d3748;
-  font-size: 1.2rem;
+  color: $text-color;
+  font-size: $text-xl;
 }
 
 .calendar-nav {
-  background: white;
-  border: 1px solid #cbd5e0;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  background: $color-white;
+  border: 1px solid $light-4;
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-sm;
   cursor: pointer;
-  font-weight: 600;
-  color: #4a5568;
-  transition: all 0.2s;
+  font-weight: $fw-semibold;
+  color: $light-7;
+  transition: $transition-fast;
 }
 
 .calendar-nav:hover {
-  background: #edf2f7;
-  border-color: #a0aec0;
+  background: $light-2;
+  border-color: $light-5;
 }
 
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: $spacer-sm;
+  margin-bottom: $spacer-md;
 }
 
 .weekday {
   text-align: center;
-  font-weight: 600;
-  color: #718096;
-  font-size: 0.9rem;
-  padding: 0.5rem;
+  font-weight: $fw-semibold;
+  color: $light-6;
+  font-size: $text-sm;
+  padding: $spacer-sm;
 }
 
 .calendar-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
+  gap: $spacer-sm;
 }
 
 .calendar-day {
@@ -549,13 +551,13 @@ const emit = defineEmits(['cancel'])
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
+  border: 2px solid $light-3;
+  border-radius: $border-radius-md;
   cursor: pointer;
-  font-weight: 500;
-  color: #4a5568;
-  background: white;
-  transition: all 0.2s;
+  font-weight: $fw-medium;
+  color: $light-7;
+  background: $color-white;
+  transition: $transition-fast;
 }
 
 .calendar-day:not(.empty):not(.disabled):hover {
@@ -570,48 +572,48 @@ const emit = defineEmits(['cancel'])
 }
 
 .calendar-day.disabled {
-  background: #edf2f7;
-  color: #cbd5e0;
+  background: $light-2;
+  color: $light-4;
   cursor: not-allowed;
 }
 
 .calendar-day.selected {
   background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  color: $color-white;
   border-color: #667eea;
 }
 
 /* Time Slots */
 .timeslots-container {
-  margin-bottom: 2rem;
+  margin-bottom: $spacer-xl;
 }
 
 .timeslot-group {
-  margin-bottom: 2rem;
+  margin-bottom: $spacer-xl;
 }
 
 .timeslot-group h3 {
-  margin: 0 0 1rem 0;
-  color: #4a5568;
-  font-size: 1rem;
-  font-weight: 600;
+  margin: 0 0 $spacer-md 0;
+  color: $light-7;
+  font-size: $text-base;
+  font-weight: $fw-semibold;
 }
 
 .timeslots {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 1rem;
+  gap: $spacer-md;
 }
 
 .timeslot {
-  padding: 0.75rem;
-  border: 2px solid #cbd5e0;
-  border-radius: 8px;
-  background: white;
-  color: #4a5568;
-  font-weight: 600;
+  padding: $spacer-sm + $spacer-xs;
+  border: 2px solid $light-4;
+  border-radius: $border-radius-md;
+  background: $color-white;
+  color: $light-7;
+  font-weight: $fw-semibold;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: $transition-fast;
 }
 
 .timeslot:hover {
@@ -621,16 +623,16 @@ const emit = defineEmits(['cancel'])
 
 .timeslot.selected {
   background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  color: $color-white;
   border-color: #667eea;
 }
 
 /* Confirmation Card */
 .confirmation-card {
-  background: #f7fafc;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
+  background: $light-1;
+  border-radius: $border-radius-lg;
+  padding: $spacer-xl;
+  margin-bottom: $spacer-xl;
   border-left: 4px solid #667eea;
 }
 
@@ -638,8 +640,8 @@ const emit = defineEmits(['cancel'])
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid #e2e8f0;
+  padding: $spacer-md 0;
+  border-bottom: 1px solid $light-3;
 }
 
 .confirmation-section:last-of-type {
@@ -647,43 +649,43 @@ const emit = defineEmits(['cancel'])
 }
 
 .confirmation-section .label {
-  font-weight: 600;
-  color: #4a5568;
+  font-weight: $fw-semibold;
+  color: $light-7;
 }
 
 .confirmation-section .value {
-  color: #2d3748;
-  font-size: 1rem;
+  color: $text-color;
+  font-size: $text-base;
 }
 
 .confirmation-section .value.monospace {
   font-family: 'Courier New', monospace;
-  background: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  background: $color-white;
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-sm;
+  font-size: $text-sm;
 }
 
 .confirmation-info {
   background: #eff6ff;
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1.5rem 0;
+  border-radius: $border-radius-md;
+  padding: $spacer-md;
+  margin: $spacer-lg 0;
   border-left: 4px solid #3b82f6;
 }
 
 .confirmation-info p {
-  margin: 0.5rem 0;
+  margin: $spacer-sm 0;
   color: #1e40af;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: $text-sm;
+  line-height: $lh-normal;
 }
 
 .checkbox-container {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+  gap: $spacer-sm + $spacer-xs;
+  margin-top: $spacer-lg;
   cursor: pointer;
 }
 
@@ -694,8 +696,8 @@ const emit = defineEmits(['cancel'])
 }
 
 .checkbox-container span {
-  color: #4a5568;
-  font-size: 0.95rem;
+  color: $light-7;
+  font-size: $text-sm;
 }
 
 /* Success Step */
@@ -706,14 +708,14 @@ const emit = defineEmits(['cancel'])
 .success-icon {
   width: 80px;
   height: 80px;
-  margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, #48bb78, #38a169);
-  border-radius: 50%;
+  margin: 0 auto $spacer-lg;
+  background: linear-gradient(135deg, $color-success, darken($color-success, 5%));
+  border-radius: $border-radius-pill;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
-  color: white;
+  font-size: $spacer-xxl;
+  color: $color-white;
   animation: scaleIn 0.5s ease;
 }
 
@@ -727,42 +729,42 @@ const emit = defineEmits(['cancel'])
 }
 
 .success-message {
-  color: #718096;
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+  color: $light-6;
+  font-size: $text-lg;
+  margin-bottom: $spacer-xl;
 }
 
 .small-text {
-  font-size: 0.9rem;
-  color: #718096;
-  margin-top: 1rem;
+  font-size: $text-sm;
+  color: $light-6;
+  margin-top: $spacer-md;
 }
 
 /* Actions */
 .step-actions {
   display: flex;
-  gap: 1rem;
+  gap: $spacer-md;
   justify-content: flex-end;
 }
 
 .btn-primary,
 .btn-secondary {
-  padding: 0.875rem 1.75rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: $spacer-sm + $spacer-xs $spacer-lg + $spacer-xs;
+  border-radius: $border-radius-md;
+  font-size: $text-base;
+  font-weight: $fw-semibold;
   border: none;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s;
+  gap: $spacer-sm;
+  transition: $transition-fast;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  color: $color-white;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
@@ -777,25 +779,25 @@ const emit = defineEmits(['cancel'])
 }
 
 .btn-secondary {
-  background: #edf2f7;
-  color: #4a5568;
-  border: 2px solid #cbd5e0;
+  background: $light-2;
+  color: $light-7;
+  border: 2px solid $light-4;
 }
 
 .btn-secondary:hover {
-  background: #e2e8f0;
-  border-color: #a0aec0;
+  background: $light-3;
+  border-color: $light-5;
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@include media-breakpoint-down(md) {
   .schedule-container {
-    padding: 1.5rem;
+    padding: $spacer-lg;
   }
 
   .progress-bar {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: $spacer-sm;
   }
 
   .step-actions {
@@ -811,7 +813,7 @@ const emit = defineEmits(['cancel'])
   .confirmation-section {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: $spacer-sm;
   }
 }
 </style>

@@ -270,8 +270,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import '/src/scss/_variables.scss';
-@import '/src/scss/_theming.scss';
+@import '@/scss/_core.scss';
 
 .appointment-modal-overlay {
     position: fixed;
@@ -279,12 +278,12 @@ onUnmounted(() => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba($color-black, 0.6);
     display: flex;
     align-items: center;
     justify-content: center; /* modal centrado (formato apaisado) */
-    z-index: 1000;
-    padding: 1rem;
+    z-index: $z-index-modal;
+    padding: $spacer-md;
     animation: fadeIn 0.3s ease-in-out;
 
     @keyframes fadeIn {
@@ -298,9 +297,9 @@ onUnmounted(() => {
 }
 
 .appointment-modal {
-    background: white;
-    border-radius: 12px; /* modal centrado con bordes redondeados uniformes */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    background: $color-white;
+    border-radius: $border-radius-lg; /* modal centrado con bordes redondeados uniformes */
+    box-shadow: $shadow-xl;
     width: 100%;
     max-width: 900px; /* formato apaisado */
     overflow-y: auto;
@@ -324,23 +323,23 @@ onUnmounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem;
+    padding: $spacer-xl;
     border-bottom: 2px solid $light-2;
     background: linear-gradient(135deg, $primary 0%, rgba($primary, 0.8) 100%);
-    color: white;
+    color: $color-white;
 
     h2 {
         margin: 0;
-        font-size: 1.5rem;
-        font-family: 'Cervo Neue', serif;
-        font-weight: 600;
+        font-size: $text-2xl;
+        font-family: $font-family-base;
+        font-weight: $fw-semibold;
     }
 
     .close-btn {
         background: none;
         border: none;
-        color: white;
-        font-size: 1.5rem;
+        color: $color-white;
+        font-size: $text-2xl;
         cursor: pointer;
         padding: 0;
         width: 40px;
@@ -349,41 +348,41 @@ onUnmounted(() => {
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        transition: background 0.2s;
+        transition: $transition-fast;
 
         &:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba($color-white, 0.2);
         }
     }
 }
 
 .appointment-form {
-    padding: 2rem;
+    padding: $spacer-xl;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.25rem 1.5rem;
+    gap: 1.25rem $spacer-lg;
     align-items: start;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: $spacer-sm;
 
     label {
-        font-weight: 600;
+        font-weight: $fw-semibold;
         color: $text-normal;
-        font-size: 0.95rem;
-        font-family: 'Steelfish', sans-serif;
+        font-size: $text-base;
+        font-family: $font-family-heading;
     }
 
     .form-control {
         padding: 0.75rem;
         border: 2px solid $light-2;
-        border-radius: 8px;
+        border-radius: $border-radius-md;
         font-family: inherit;
-        font-size: 1rem;
-        transition: border-color 0.2s, box-shadow 0.2s;
+        font-size: $text-base;
+        transition: $transition-fast;
 
         &:focus {
             outline: none;
@@ -392,10 +391,10 @@ onUnmounted(() => {
         }
 
         &.is-invalid {
-            border-color: #dc3545;
+            border-color: $color-danger;
 
             &:focus {
-                box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+                box-shadow: 0 0 0 3px rgba($color-danger, 0.1);
             }
         }
 
@@ -410,9 +409,9 @@ onUnmounted(() => {
     }
 
     .error-message {
-        color: #dc3545;
-        font-size: 0.85rem;
-        font-weight: 500;
+        color: $color-danger;
+        font-size: $text-sm;
+        font-weight: $fw-medium;
     }
 }
 
@@ -421,16 +420,16 @@ onUnmounted(() => {
 .form-actions .btn-submit { min-width: 220px }
 
 .btn-submit {
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem $spacer-lg;
     background: $primary;
-    color: white;
+    color: $color-white;
     border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
+    border-radius: $border-radius-md;
+    font-weight: $fw-semibold;
+    font-size: $text-base;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    font-family: 'Steelfish', sans-serif;
+    transition: $transition-fast;
+    font-family: $font-family-heading;
 
     &:hover:not(:disabled) {
         background: darken($primary, 10%);
@@ -447,12 +446,12 @@ onUnmounted(() => {
     }
 
     i {
-        margin-right: 0.5rem;
+        margin-right: $spacer-sm;
     }
 }
 
 .success-message {
-    padding: 2rem;
+    padding: $spacer-xl;
     text-align: center;
 }
 
@@ -460,37 +459,37 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: $spacer-md;
 
     i {
         font-size: 3rem;
-        color: #28a745;
+        color: $color-success;
     }
 
     h3 {
         margin: 0;
         color: $text-normal;
-        font-family: 'Cervo Neue', serif;
-        font-size: 1.5rem;
+        font-family: $font-family-base;
+        font-size: $text-2xl;
     }
 
     p {
         margin: 0;
         color: $text-muted;
-        font-size: 0.95rem;
+        font-size: $text-base;
     }
 
     .btn-close-success {
-        margin-top: 1rem;
-        padding: 0.75rem 2rem;
+        margin-top: $spacer-md;
+        padding: 0.75rem $spacer-xl;
         background: $primary;
-        color: white;
+        color: $color-white;
         border: none;
-        border-radius: 8px;
-        font-weight: 600;
+        border-radius: $border-radius-md;
+        font-weight: $fw-semibold;
         cursor: pointer;
-        transition: background 0.2s;
-        font-family: 'Steelfish', sans-serif;
+        transition: $transition-fast;
+        font-family: $font-family-heading;
 
         &:hover {
             background: darken($primary, 10%);
@@ -499,29 +498,29 @@ onUnmounted(() => {
 }
 
 // Responsive
-@media (max-width: 576px) {
+@include media-breakpoint-down(sm) {
     .appointment-modal-overlay {
         justify-content: center; /* en móviles volvemos al centro */
     }
 
     .appointment-modal {
         max-width: 95vw;
-        border-radius: 8px;
+        border-radius: $border-radius-md;
         height: auto;
         max-height: 90vh;
     }
 
     .modal-header {
-        padding: 1.5rem;
+        padding: $spacer-lg;
 
         h2 {
-            font-size: 1.25rem;
+            font-size: $text-xl;
         }
     }
 
     .appointment-form {
-        padding: 1.5rem;
-        gap: 1rem;
+        padding: $spacer-lg;
+        gap: $spacer-md;
         display: flex;
         flex-direction: column;
     }
@@ -530,7 +529,7 @@ onUnmounted(() => {
         gap: 0.35rem;
 
         label {
-            font-size: 0.9rem;
+            font-size: $text-sm;
         }
     }
 }
