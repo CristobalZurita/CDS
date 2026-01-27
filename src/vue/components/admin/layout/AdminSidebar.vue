@@ -48,56 +48,56 @@ const isActive = (item) => {
 }
 </script>
 
-<style scoped lang="scss">
-@import "/src/scss/_theming.scss";
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
 
 .admin-sidebar {
   background: lighten($vintage-beige, 4%);
-  color: $brand-text;
-  padding: 1.5rem 1.25rem;
-  border-right: 1px solid rgba(62, 60, 56, 0.18);
+  color: $color-dark;
+  padding: $spacer-lg $spacer-md;
+  border-right: 1px solid rgba($color-dark, 0.18);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: $spacer-lg;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-family: $headings-font-family;
+  gap: $spacer-sm;
+  font-family: $font-family-heading;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: $brand-text;
-  font-size: 1.05rem;
+  letter-spacing: $ls-wide;
+  color: $color-dark;
+  font-size: $text-md;
 }
 
 .brand img {
   width: 50px;
   height: 50px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid rgba(236, 107, 0, 0.6);
+  border-radius: $border-radius-md;
+  border: 2px solid rgba($color-primary, 0.6);
   background: $vintage-beige;
 }
 
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: $spacer-xs;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.9rem 1rem;
-  border-radius: 10px;
+  gap: $spacer-sm;
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-lg;
   text-decoration: none;
-  color: $brand-text;
-  font-weight: 600;
-  font-size: 1.05rem;
-  transition: all 0.2s;
+  color: $color-dark;
+  font-weight: $fw-semibold;
+  font-size: $text-md;
+  transition: $transition-fast;
   border: 1px solid transparent;
 }
 
@@ -108,15 +108,15 @@ const isActive = (item) => {
 }
 
 .menu-item:hover {
-  background: rgba(236, 107, 0, 0.12);
-  border-color: rgba(236, 107, 0, 0.4);
-  color: $brand-text;
+  background: rgba($color-primary, 0.12);
+  border-color: rgba($color-primary, 0.4);
+  color: $color-dark;
 }
 
 .menu-item.active {
-  background: rgba(236, 107, 0, 0.22);
-  border-color: rgba(236, 107, 0, 0.6);
-  color: $brand-text;
+  background: rgba($color-primary, 0.22);
+  border-color: rgba($color-primary, 0.6);
+  color: $color-dark;
 }
 
 @include media-breakpoint-down(lg) {
@@ -131,7 +131,7 @@ const isActive = (item) => {
   .menu {
     flex-direction: row;
     flex-wrap: nowrap;
-    gap: 0.5rem;
+    gap: $spacer-sm;
   }
 
   .menu-item {

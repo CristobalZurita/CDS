@@ -592,14 +592,14 @@ watch([resultValue, () => form.mode], () => {
 })
 </script>
 
-<style scoped lang="scss">
-@import "/src/scss/_theming.scss";
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
 
 #timer-555-calculator {
   .timer555-layout {
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    gap: 1.6rem;
+    gap: $spacer-lg;
 
     @include media-breakpoint-down(lg) {
       grid-template-columns: 1fr;
@@ -608,62 +608,63 @@ watch([resultValue, () => form.mode], () => {
 
   .timer555-panel {
     background: rgba($light-1, 0.8);
-    border: 1px solid rgba($dark, 0.1);
-    border-radius: 22px;
-    padding: 1.8rem;
-    box-shadow: 0 20px 40px rgba($dark, 0.08);
+    border: 1px solid rgba($color-dark, 0.1);
+    border-radius: $border-radius-xl;
+    padding: $spacer-lg;
+    box-shadow: $shadow-xl;
   }
 
   .panel-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: $spacer-md;
+    margin-bottom: $spacer-lg;
   }
 
   .panel-title {
-    font-family: 'Cervo Neue', $headings-font-family;
-    font-weight: 800;
+    font-family: $font-family-base;
+    font-weight: $fw-extrabold;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: $dark;
+    letter-spacing: $ls-wide;
+    color: $color-dark;
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: $spacer-sm;
   }
 
   .panel-tabs {
     display: flex;
-    gap: 0.5rem;
-    background: rgba($dark, 0.05);
-    padding: 0.35rem;
-    border-radius: 999px;
+    gap: $spacer-sm;
+    background: rgba($color-dark, 0.05);
+    padding: $spacer-xs;
+    border-radius: $border-radius-pill;
   }
 
   .panel-tab {
     border: none;
     background: transparent;
-    padding: 0.35rem 0.95rem;
-    border-radius: 999px;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-weight: 600;
+    padding: $spacer-xs $spacer-md;
+    border-radius: $border-radius-pill;
+    font-family: $font-family-base;
+    font-weight: $fw-semibold;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-size: 0.75rem;
-    color: $dark;
+    letter-spacing: $ls-wide;
+    font-size: $text-2xs;
+    color: $color-dark;
     cursor: pointer;
+    transition: $transition-fast;
   }
 
   .panel-tab.active {
-    background: $primary;
+    background: $color-primary;
     color: $light-1;
   }
 
   .form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+    gap: $spacer-md;
 
     @include media-breakpoint-down(sm) {
       grid-template-columns: 1fr;
@@ -673,32 +674,33 @@ watch([resultValue, () => form.mode], () => {
   .form-field {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    color: $dark;
+    gap: $spacer-xs;
+    font-family: $font-family-base;
+    color: $color-dark;
   }
 
   .form-field label {
-    font-size: 0.85rem;
+    font-size: $text-sm;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
+    letter-spacing: $ls-wider;
+    font-weight: $fw-semibold;
   }
 
   .form-field input {
-    border: 1px solid rgba($dark, 0.2);
-    border-radius: 12px;
-    padding: 0.65rem 0.75rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.95rem;
+    border: 1px solid rgba($color-dark, 0.2);
+    border-radius: $border-radius-lg;
+    padding: $spacer-sm;
+    font-family: $font-family-base;
+    font-size: $text-base;
     background: $light-1;
-    color: $dark;
+    color: $color-dark;
+    transition: $transition-fast;
   }
 
   .unit-input {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 0.5rem;
+    gap: $spacer-sm;
     align-items: center;
   }
 
@@ -707,47 +709,49 @@ watch([resultValue, () => form.mode], () => {
   }
 
   .unit-select {
-    border: 1px solid rgba($dark, 0.2);
-    border-radius: 12px;
-    padding: 0.65rem 0.75rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.9rem;
+    border: 1px solid rgba($color-dark, 0.2);
+    border-radius: $border-radius-lg;
+    padding: $spacer-sm;
+    font-family: $font-family-base;
+    font-size: $text-sm;
     background: $light-1;
-    color: $dark;
+    color: $color-dark;
     min-width: 74px;
+    transition: $transition-fast;
   }
 
   .form-actions {
     display: flex;
-    gap: 0.8rem;
-    margin-top: 1.5rem;
+    gap: $spacer-sm;
+    margin-top: $spacer-lg;
   }
 
   .btn-primary-action,
   .btn-secondary-action {
     border: none;
-    border-radius: 999px;
-    padding: 0.65rem 1.6rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-weight: 700;
+    border-radius: $border-radius-pill;
+    padding: $spacer-sm $spacer-lg;
+    font-family: $font-family-base;
+    font-weight: $fw-bold;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: $ls-wider;
     cursor: pointer;
+    transition: $transition-fast;
   }
 
   .btn-primary-action {
-    background: $primary;
+    background: $color-primary;
     color: $light-1;
   }
 
   .btn-secondary-action {
     background: transparent;
-    border: 1px solid rgba($dark, 0.3);
-    color: $dark;
+    border: 1px solid rgba($color-dark, 0.3);
+    color: $color-dark;
   }
 
   .pinout-card {
-    margin-top: 6rem;
+    margin-top: $spacer-xxl * 2;
     background: transparent;
     border: 0;
     padding: 0;
@@ -770,20 +774,20 @@ watch([resultValue, () => form.mode], () => {
   .output-body {
     display: flex;
     flex-direction: column;
-    gap: 1.4rem;
+    gap: $spacer-lg;
     align-items: center;
     text-align: center;
   }
 
   .circuit-card {
     width: 100%;
-    border-radius: 18px;
-    border: 1px solid rgba($dark, 0.12);
-    padding: 1rem 1.2rem;
+    border-radius: $border-radius-xl;
+    border: 1px solid rgba($color-dark, 0.12);
+    padding: $spacer-md $spacer-lg;
     background: linear-gradient(135deg, rgba($light-2, 0.7), rgba($light-1, 0.2));
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: $spacer-sm;
     align-items: center;
   }
 
@@ -794,10 +798,10 @@ watch([resultValue, () => form.mode], () => {
   }
 
   .circuit-label {
-    font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.85rem;
+    font-family: $font-family-base;
+    font-size: $text-sm;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: $ls-widest;
     color: $text-muted;
   }
 
@@ -805,26 +809,26 @@ watch([resultValue, () => form.mode], () => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    color: $dark;
+    gap: $spacer-sm;
+    font-family: $font-family-base;
+    color: $color-dark;
   }
 
   .value-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.45rem 0.75rem;
-    border-radius: 12px;
-    background: rgba($dark, 0.04);
+    padding: $spacer-xs $spacer-sm;
+    border-radius: $border-radius-lg;
+    background: rgba($color-dark, 0.04);
   }
 
   .value-row strong {
-    font-weight: 800;
+    font-weight: $fw-extrabold;
   }
 
   .output-hint {
-    font-size: 0.85rem;
+    font-size: $text-sm;
     color: $text-muted;
     max-width: 260px;
   }
@@ -832,15 +836,16 @@ watch([resultValue, () => form.mode], () => {
   .timer555-back {
     display: flex;
     justify-content: center;
-    margin-top: 2.5rem;
+    margin-top: $spacer-xl;
   }
 
   .timer555-back-link {
-    font-family: 'Cervo Neue', $headings-font-family;
-    font-weight: 700;
+    font-family: $font-family-heading;
+    font-weight: $fw-bold;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: $primary;
+    letter-spacing: $ls-wider;
+    color: $color-primary;
+    transition: $transition-fast;
   }
 }
 </style>

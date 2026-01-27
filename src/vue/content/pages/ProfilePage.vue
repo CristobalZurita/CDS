@@ -116,14 +116,14 @@
               🛡️ Configurar 2FA
             </button>
 
-            <p style="font-size: 0.85rem; color: #718096; margin-top: 1rem;">
+            <p class="last-activity">
               Última actividad: hace 2 horas
             </p>
           </div>
 
           <div class="card danger">
             <h2>Zona de Peligro</h2>
-            <p style="color: #742a2a; margin-bottom: 1rem;">
+            <p class="danger-warning">
               Estas acciones no se pueden deshacer
             </p>
             <button @click="showDeleteAccount = true" class="btn-danger">
@@ -341,11 +341,13 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .profile-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem 1rem;
+  background: linear-gradient(135deg, $light-1 0%, $light-3 100%);
+  padding: $spacer-xl $spacer-md;
 }
 
 .profile-container {
@@ -358,17 +360,17 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: $color-white;
+  padding: $spacer-xl;
+  border-radius: $border-radius-lg;
+  margin-bottom: $spacer-xl;
+  box-shadow: $shadow-md;
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: $spacer-xl;
 }
 
 .avatar {
@@ -376,126 +378,137 @@ onMounted(() => {
   height: 80px;
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  color: $color-white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: $text-2xl;
+  font-weight: $fw-bold;
 }
 
 .profile-header h1 {
-  margin: 0 0 0.25rem 0;
-  color: #2d3748;
-  font-size: 1.8rem;
+  margin: 0 0 $spacer-xs 0;
+  color: $text-color;
+  font-size: $text-2xl;
 }
 
 .subtitle {
   margin: 0;
-  color: #718096;
-  font-size: 0.95rem;
+  color: $light-6;
+  font-size: $text-base;
 }
 
 .btn-edit {
-  padding: 0.75rem 1.5rem;
-  background: #edf2f7;
-  border: 2px solid #cbd5e0;
-  border-radius: 8px;
+  padding: $spacer-sm $spacer-lg;
+  background: $light-2;
+  border: 2px solid $light-4;
+  border-radius: $border-radius-md;
   cursor: pointer;
-  font-weight: 600;
-  color: #4a5568;
-  transition: all 0.2s;
+  font-weight: $fw-semibold;
+  color: $text-color-muted;
+  transition: $transition-fast;
 }
 
 .btn-edit:hover {
-  background: #e2e8f0;
-  border-color: #a0aec0;
+  background: $light-3;
+  border-color: $light-5;
 }
 
 /* Content */
 .profile-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: $spacer-xl;
 }
 
 .password-field {
   display: flex;
-  gap: 0.5rem;
+  gap: $spacer-sm;
   align-items: center;
 }
 
 .toggle-password {
-  border: 1px solid #cbd5e0;
-  background: #f7fafc;
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
+  border: 1px solid $light-4;
+  background: $light-1;
+  padding: $spacer-xs $spacer-sm;
+  border-radius: $border-radius-sm;
+  font-size: $text-sm;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: $spacer-xl;
 }
 
 .card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  padding: $spacer-xl;
+  box-shadow: $shadow-md;
 }
 
 .card h2 {
-  margin: 0 0 1.5rem 0;
-  color: #2d3748;
-  font-size: 1.2rem;
+  margin: 0 0 $spacer-lg 0;
+  color: $text-color;
+  font-size: $text-xl;
 }
 
 .card.danger {
-  border-left: 4px solid #f56565;
+  border-left: 4px solid $color-danger;
+}
+
+.last-activity {
+  font-size: $text-sm;
+  color: $light-6;
+  margin-top: $spacer-md;
+}
+
+.danger-warning {
+  color: #742a2a;
+  margin-bottom: $spacer-md;
 }
 
 /* Form */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: $spacer-lg;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #4a5568;
-  font-size: 0.9rem;
+  margin-bottom: $spacer-sm;
+  font-weight: $fw-semibold;
+  color: $text-color-muted;
+  font-size: $text-sm;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: $spacer-sm;
+  border: 1px solid $light-4;
+  border-radius: $border-radius-md;
+  font-size: $text-base;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: $color-primary;
+  box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
 }
 
 .form-group .value {
   margin: 0;
-  color: #2d3748;
-  font-size: 1rem;
+  color: $text-color;
+  font-size: $text-base;
 }
 
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: $spacer-sm;
+  margin-bottom: $spacer-md;
   cursor: pointer;
-  color: #4a5568;
+  color: $text-color-muted;
 }
 
 .checkbox-label input {
@@ -506,25 +519,25 @@ onMounted(() => {
 
 /* Stats */
 .stats-card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  padding: $spacer-xl;
+  box-shadow: $shadow-md;
 }
 
 .stats-card h3 {
-  margin: 0 0 1.5rem 0;
-  color: #2d3748;
-  font-size: 1.2rem;
+  margin: 0 0 $spacer-lg 0;
+  color: $text-color;
+  font-size: $text-xl;
 }
 
 .stat {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  gap: $spacer-sm;
+  margin-bottom: $spacer-lg;
+  padding-bottom: $spacer-lg;
+  border-bottom: 1px solid $light-3;
 }
 
 .stat:last-child {
@@ -532,14 +545,14 @@ onMounted(() => {
 }
 
 .stat-value {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #667eea;
+  font-size: $text-2xl;
+  font-weight: $fw-bold;
+  color: $color-primary;
 }
 
 .stat-label {
-  font-size: 0.85rem;
-  color: #718096;
+  font-size: $text-sm;
+  color: $light-6;
 }
 
 /* Buttons */
@@ -548,33 +561,33 @@ onMounted(() => {
 .btn-primary,
 .btn-danger {
   width: 100%;
-  padding: 0.75rem;
+  padding: $spacer-sm;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: $border-radius-md;
+  font-weight: $fw-semibold;
   cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 0.75rem;
+  transition: $transition-fast;
+  margin-bottom: $spacer-sm;
 }
 
 .btn-save {
   background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  color: $color-white;
 }
 
 .btn-save:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: $shadow-md;
 }
 
 .btn-secondary {
-  background: #edf2f7;
-  color: #4a5568;
-  border: 2px solid #cbd5e0;
+  background: $light-2;
+  color: $text-color-muted;
+  border: 2px solid $light-4;
 }
 
 .btn-secondary:hover {
-  background: #e2e8f0;
+  background: $light-3;
 }
 
 .btn-danger {
@@ -585,11 +598,11 @@ onMounted(() => {
 
 .btn-danger:hover {
   background: #fc8181;
-  color: white;
+  color: $color-white;
 }
 
 .mt {
-  margin-top: 1rem;
+  margin-top: $spacer-md;
 }
 
 /* Modal */
@@ -599,37 +612,37 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba($color-black, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: $z-index-modal;
 }
 
 .modal {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  padding: $spacer-xl;
   max-width: 500px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: $shadow-xl;
 }
 
 .modal h3 {
-  margin: 0 0 1.5rem 0;
-  color: #2d3748;
-  font-size: 1.3rem;
+  margin: 0 0 $spacer-lg 0;
+  color: $text-color;
+  font-size: $text-xl;
 }
 
 .modal p {
-  color: #718096;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
+  color: $light-6;
+  line-height: $lh-relaxed;
+  margin-bottom: $spacer-lg;
 }
 
 .modal-actions {
   display: flex;
-  gap: 1rem;
+  gap: $spacer-md;
 }
 
 .modal-actions button {
@@ -637,26 +650,24 @@ onMounted(() => {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@include media-breakpoint-down(md) {
   .profile-content {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 768px) {
   .profile-page {
-    padding: 1rem;
+    padding: $spacer-md;
   }
 
   .profile-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: $spacer-lg;
   }
 
   .header-content {
     flex-direction: column;
-    gap: 1rem;
+    gap: $spacer-md;
   }
 
   .btn-edit {

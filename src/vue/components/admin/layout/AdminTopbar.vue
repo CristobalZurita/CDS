@@ -107,21 +107,22 @@ const handleLogout = () => {
 }
 </script>
 
-<style scoped lang="scss">
-@import "/src/scss/_theming.scss";
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
 
 .admin-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: $spacer-lg;
   background: lighten($vintage-beige, 5%);
-  border-radius: 12px;
-  padding: 1.6rem 2rem;
-  margin: 1.75rem 2.5rem 0;
-  border: 1px solid rgba(62, 60, 56, 0.2);
-  box-shadow: 0 8px 18px rgba(62, 60, 56, 0.18);
+  border-radius: $border-radius-lg;
+  padding: $spacer-lg $spacer-xl;
+  margin: $spacer-lg $spacer-xxl 0;
+  border: 1px solid rgba($color-dark, 0.2);
+  box-shadow: 0 8px 18px rgba($color-dark, 0.18);
 }
+
 .title-block {
   position: relative;
   flex: 1;
@@ -129,47 +130,47 @@ const handleLogout = () => {
 
 .title {
   margin: 0;
-  color: $brand-text;
-  font-size: 1.8rem;
+  color: $color-dark;
+  font-size: $h3-size;
 }
 
 .subtitle {
-  margin: 0.35rem 0 0;
+  margin: $spacer-xs 0 0;
   color: $text-muted;
-  font-size: 1rem;
+  font-size: $text-base;
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: $spacer-md;
 }
 
 .global-search {
-  margin-top: 0.9rem;
+  margin-top: $spacer-md;
   max-width: 480px;
   position: relative;
 }
 
 .search-input {
   width: 100%;
-  padding: 0.7rem 0.9rem;
-  border-radius: 10px;
-  border: 1px solid rgba(62, 60, 56, 0.25);
-  font-size: 0.98rem;
-  background: #fff;
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-md;
+  border: 1px solid rgba($color-dark, 0.25);
+  font-size: $text-base;
+  background: $color-white;
 }
 
 .search-results {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + #{$spacer-sm});
   left: 0;
   right: 0;
-  background: #fff;
-  border: 1px solid rgba(62, 60, 56, 0.2);
-  border-radius: 10px;
-  box-shadow: 0 10px 24px rgba(62, 60, 56, 0.2);
-  z-index: 20;
+  background: $color-white;
+  border: 1px solid rgba($color-dark, 0.2);
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-lg;
+  z-index: $z-index-dropdown;
   max-height: 320px;
   overflow-y: auto;
 }
@@ -179,54 +180,56 @@ const handleLogout = () => {
   text-align: left;
   background: transparent;
   border: none;
-  padding: 0.75rem 0.9rem;
+  padding: $spacer-sm $spacer-md;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: $spacer-xs;
   cursor: pointer;
+  transition: $transition-fast;
 }
 
 .search-item:hover {
-  background: rgba(236, 107, 0, 0.12);
+  background: rgba($color-primary, 0.12);
 }
 
 .search-label {
-  font-weight: 600;
-  color: $brand-text;
+  font-weight: $fw-semibold;
+  color: $color-dark;
 }
 
 .search-subtitle {
-  font-size: 0.85rem;
+  font-size: $text-sm;
   color: $text-muted;
 }
 
 .search-empty {
-  padding: 0.85rem 0.9rem;
+  padding: $spacer-sm $spacer-md;
   color: $text-muted;
 }
 
 .btn-link {
-  color: $brand-text;
+  color: $color-dark;
   text-decoration: none;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(62, 60, 56, 0.35);
+  font-weight: $fw-semibold;
+  border-bottom: 1px solid rgba($color-dark, 0.35);
   padding-bottom: 2px;
+  transition: $transition-fast;
 }
 
 .btn-logout {
-  padding: 0.65rem 1.2rem;
-  background: rgba(236, 107, 0, 0.15);
-  color: $brand-text;
-  border: 2px solid rgba(236, 107, 0, 0.6);
-  border-radius: 8px;
-  font-weight: 600;
+  padding: $spacer-sm $spacer-md;
+  background: rgba($color-primary, 0.15);
+  color: $color-dark;
+  border: 2px solid rgba($color-primary, 0.6);
+  border-radius: $border-radius-md;
+  font-weight: $fw-semibold;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: $transition-fast;
 }
 
 .btn-logout:hover {
-  background: rgba(236, 107, 0, 0.3);
-  border-color: rgba(236, 107, 0, 0.75);
+  background: rgba($color-primary, 0.3);
+  border-color: rgba($color-primary, 0.75);
 }
 
 @include media-breakpoint-down(md) {
