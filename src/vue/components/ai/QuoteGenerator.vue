@@ -61,8 +61,23 @@ function generate() {
 }
 </script>
 
-<style scoped>
-.quote-generator { padding: 1rem; }
-.controls { display:flex; gap: 0.75rem; align-items:center; }
-.result { margin-top: 1rem; padding: 0.75rem; border-radius:6px; background: rgba(0,0,0,0.03) }
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
+.quote-generator {
+  padding: $spacer-md;
+}
+
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.result {
+  margin-top: $spacer-md;
+  padding: 0.75rem;
+  border-radius: $border-radius-sm;
+  background: rgba($color-black, 0.03);
+}
 </style>

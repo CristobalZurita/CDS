@@ -108,11 +108,11 @@ onMounted(fetchSubscriptions)
   }
 
   .admin-table--stack tr {
-    padding: 1rem;
+    padding: $spacer-md;
     margin-bottom: 0.75rem;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(62, 60, 56, 0.12);
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 8px 16px rgba($color-dark, 0.12);
   }
 
   .admin-table--stack td {

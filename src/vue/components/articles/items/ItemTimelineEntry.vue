@@ -64,7 +64,7 @@ const date = computed(() => {
     if(!props.dateEnd)
         return props.dateStart
 
-    return `${props.dateStart} <i class="fa-solid fa-arrow-right-long mx-1" style="font-size: 12px"></i> ${props.dateEnd}`
+    return `${props.dateStart} <i class="fa-solid fa-arrow-right-long mx-1 timeline-arrow-icon"></i> ${props.dateEnd}`
 })
 </script>
 
@@ -131,5 +131,9 @@ div.foxy-timeline-panel {
         float: var(--inverted-float);
         text-align: var(--inverted-align);
     }
+}
+
+.timeline-arrow-icon {
+    font-size: 12px;
 }
 </style>

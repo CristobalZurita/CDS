@@ -314,33 +314,33 @@ onMounted(() => {
 }
 
 .repair-status.completed {
-  background: #c6f6d5;
-  color: #22543d;
+  background: $color-green-200-legacy;
+  color: $color-green-darker-legacy;
 }
 
 .repair-status.in-progress,
 .repair-status.in_progress {
-  background: #bee3f8;
-  color: #2c5282;
+  background: $color-blue-150-legacy;
+  color: $color-blue-800-legacy;
 }
 
 .repair-status.pending_quote,
 .repair-status.quoted,
 .repair-status.approved,
 .repair-status.testing {
-  background: #feebc8;
-  color: #7b341e;
+  background: $color-orange-100-legacy;
+  color: $color-amber-800-legacy;
 }
 
 .repair-status.waiting,
 .repair-status.waiting_parts {
-  background: #fed7d7;
-  color: #742a2a;
+  background: $color-red-200-legacy;
+  color: $color-red-900-legacy;
 }
 
 .repair-status.cancelled {
-  background: #fed7d7;
-  color: #742a2a;
+  background: $color-red-200-legacy;
+  color: $color-red-900-legacy;
 }
 
 /* Repair Details */

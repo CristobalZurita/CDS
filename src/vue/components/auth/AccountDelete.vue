@@ -9,17 +9,19 @@
 defineEmits(['confirm'])
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .account-delete {
   padding: 1rem;
-  border: 1px solid #fecaca;
+  border: 1px solid $color-red-150-legacy;
   border-radius: 12px;
-  background: #fff1f2;
+  background: $color-red-25-legacy;
 }
 .danger {
   margin-top: 0.5rem;
-  background: #dc2626;
-  color: #fff;
+  background: $color-red-600-legacy;
+  color: $color-white;
   border: none;
   border-radius: 8px;
   padding: 0.5rem 0.9rem;

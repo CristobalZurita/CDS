@@ -58,9 +58,9 @@ onMounted(() => {
   .admin-table--stack tr {
     padding: 1rem;
     margin-bottom: 0.75rem;
-    background: #fff;
+    background: $color-white;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(62, 60, 56, 0.12);
+    box-shadow: 0 8px 16px rgba($color-dark, 0.12);
   }
 
   .admin-table--stack td {

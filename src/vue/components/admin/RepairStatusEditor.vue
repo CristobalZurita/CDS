@@ -18,14 +18,17 @@ defineProps({
 defineEmits(['update:modelValue'])
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .status-editor {
   display: grid;
   gap: 0.35rem;
 }
+
 select {
   padding: 0.4rem 0.6rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border-radius: $border-radius-md;
+  border: 1px solid $color-gray-200-legacy;
 }
 </style>

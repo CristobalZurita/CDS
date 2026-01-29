@@ -494,7 +494,7 @@ onMounted(() => {
 	background: $vintage-beige;
 	border-radius: 12px;
 	padding: 1.25rem;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2px 8px rgba($color-black, 0.08);
 }
 
 .card-title {
@@ -512,8 +512,8 @@ onMounted(() => {
 .photo-item {
 	border-radius: 8px;
 	overflow: hidden;
-	background: white;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+	background: $color-white;
+	box-shadow: 0 1px 4px rgba($color-black, 0.1);
 
 	img {
 		width: 100%;
@@ -536,7 +536,7 @@ onMounted(() => {
 }
 
 .note-item {
-	background: white;
+	background: $color-white;
 	border-radius: 8px;
 	padding: 0.75rem 1rem;
 	border-left: 3px solid $orange-pastel;
@@ -555,6 +555,6 @@ onMounted(() => {
 }
 
 .upload-form, .note-form {
-	background: rgba(255, 255, 255, 0.5);
+	background: rgba($color-white, 0.5);
 }
 </style>

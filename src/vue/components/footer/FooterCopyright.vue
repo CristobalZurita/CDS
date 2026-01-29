@@ -29,7 +29,7 @@ const formattedCopyright = computed(() => {
 @import "/src/scss/_theming.scss";
 
 p {
-    color: #e6e6e6; /* slightly off-white for better contrast */
+    color: $color-gray-230-legacy; /* slightly off-white for better contrast */
     padding: 0;
     margin: 0;
     font-size: 0.98rem;

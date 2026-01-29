@@ -2,14 +2,6 @@
     <!-- Inline Link List -->
     <ul
         class="inline-link-list"
-        :style="{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '0.45rem 0.75rem'
-        }"
     >
         <!-- List Header (for small screens) -->
         <li class="inline-link-list-item inline-link-list-header">
@@ -20,7 +12,6 @@
         <li
             v-for="link in parsedLinks"
             class="inline-link-list-item"
-            :style="{ display: 'inline-flex', alignItems: 'center', width: 'auto' }"
         >
             <a v-if="link.isRouterLink"
                :href="link.href"
@@ -78,15 +69,17 @@ ul.inline-link-list {
     margin: 0;
     color: $light-5;
     display: flex;
-flex-wrap: wrap;
-justify-content: center;
-align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.45rem 0.75rem;
 
 }
 
 li.inline-link-list-item {
-display: inline-flex;
-align-items: center;
+    display: inline-flex;
+    align-items: center;
+    width: auto;
 
     padding-bottom: 0.1rem;
     padding-left: 0.3rem;

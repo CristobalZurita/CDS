@@ -217,7 +217,7 @@ const formatDateTime = (isoString) => {
   min-height: 400px;
   gap: $spacer-lg;
   padding: $spacer-xl;
-  background: #fff5f5;
+  background: $color-red-50-legacy;
   border: 2px solid $color-danger;
   border-radius: $border-radius-lg;
 }
@@ -229,7 +229,7 @@ const formatDateTime = (isoString) => {
 }
 
 .error-state p {
-  color: #742a2a;
+  color: $color-red-900-legacy;
   text-align: center;
   max-width: 400px;
 }
@@ -249,7 +249,7 @@ const formatDateTime = (isoString) => {
 .result-header {
   padding: $spacer-xl;
   color: white;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba($color-black, 0.1);
 }
 
 .success-gradient {
@@ -269,7 +269,7 @@ const formatDateTime = (isoString) => {
 
 .tier-badge {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba($color-white, 0.2);
   padding: $spacer-xs $spacer-md;
   border-radius: $border-radius-pill;
   font-size: $text-sm;
@@ -327,13 +327,13 @@ const formatDateTime = (isoString) => {
 }
 
 .min-price {
-  background: #f0fdf4;
-  border: 2px solid #86efac;
+  background: $color-green-light-bg-legacy;
+  border: 2px solid $color-green-border-legacy;
 }
 
 .max-price {
-  background: #fef3c7;
-  border: 2px solid #fcd34d;
+  background: $color-amber-100-legacy;
+  border: 2px solid $color-amber-300-legacy;
 }
 
 .price-note {
@@ -418,7 +418,7 @@ const formatDateTime = (isoString) => {
   display: flex;
   gap: $spacer-md;
   padding: $spacer-lg;
-  background: #fff5f5;
+  background: $color-red-50-legacy;
   border-left: 4px solid $color-danger;
   border-radius: $border-radius-md;
   margin-bottom: $spacer-xl;
@@ -437,15 +437,15 @@ const formatDateTime = (isoString) => {
 
 .warning-box p {
   margin: $spacer-xs 0;
-  color: #742a2a;
+  color: $color-red-900-legacy;
   font-size: $text-base;
   line-height: $lh-normal;
 }
 
 // Disclaimer Box
 .disclaimer-box {
-  background: #f0fdf4;
-  border: 2px solid #86efac;
+  background: $color-green-light-bg-legacy;
+  border: 2px solid $color-green-border-legacy;
   border-radius: $border-radius-md;
   padding: $spacer-lg;
   margin-bottom: $spacer-xl;
@@ -453,7 +453,7 @@ const formatDateTime = (isoString) => {
 
 .disclaimer-box p {
   margin: 0;
-  color: #166534;
+  color: $color-green-text-legacy;
   font-size: $text-base;
   line-height: $lh-relaxed;
   white-space: pre-wrap;

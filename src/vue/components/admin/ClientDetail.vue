@@ -279,28 +279,30 @@ watch(() => props.client?.id, () => {
 </script>
 
 <style scoped lang="scss">
+@import "/src/scss/_theming.scss";
+
 .client-detail {
-  border: 1px solid #e5e7eb;
+  border: 1px solid $legacy-gray-200;
   border-radius: 12px;
   padding: 1rem;
-  background: #fff;
+  background: $white;
 }
 .client-code {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #ec6b00;
+  color: $brand-primary;
 }
 
 .info-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #4b5563;
+  color: $legacy-gray-600;
   margin-bottom: 0.25rem;
 
   i {
     width: 18px;
-    color: #9ca3af;
+    color: $legacy-gray-400;
   }
 }
 
@@ -311,20 +313,20 @@ watch(() => props.client?.id, () => {
 }
 
 .stat-badge {
-  background: #f3f4f6;
+  background: $legacy-gray-100;
   padding: 0.35rem 0.75rem;
   border-radius: 20px;
   font-size: 0.85rem;
-  color: #374151;
+  color: $legacy-gray-700;
 
   i {
-    color: #ec6b00;
+    color: $brand-primary;
     margin-right: 0.35rem;
   }
 }
 
 .devices-section {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid $legacy-gray-200;
   padding-top: 1rem;
 }
 
@@ -339,9 +341,9 @@ watch(() => props.client?.id, () => {
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid $legacy-gray-200;
   border-radius: 8px;
-  background: #fafafa;
+  background: $legacy-gray-50;
 }
 
 .device-icon {
@@ -350,8 +352,8 @@ watch(() => props.client?.id, () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ec6b00;
-  color: white;
+  background: $brand-primary;
+  color: $white;
   border-radius: 8px;
 }
 
@@ -359,7 +361,7 @@ watch(() => props.client?.id, () => {
   flex: 1;
 
   strong {
-    color: #1f2937;
+    color: $legacy-gray-800;
     font-size: 0.95rem;
   }
 }
@@ -369,12 +371,12 @@ watch(() => props.client?.id, () => {
 }
 
 .add-device-form {
-  background: #f9fafb;
+  background: $legacy-gray-25;
 }
 .repair-intake-card {
-  border: 1px solid #e5e7eb;
+  border: 1px solid $legacy-gray-200;
   border-radius: 10px;
   padding: 1rem;
-  background: #fffaf3;
+  background: $legacy-cream;
 }
 </style>

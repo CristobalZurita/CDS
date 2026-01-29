@@ -25,10 +25,12 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
 </script>
 
 <style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 /* ===========================================
    LOGINPAGE - Manual de Identidad Visual
-   Paleta: Vintage Black #3e3c38, Orange #ec6b00,
-           Vintage Beige #d3d0c3, Black #000000
+   Paleta: Vintage Black ($color-dark), Orange ($color-primary),
+           Vintage Beige ($color-light), Black ($color-black)
    Tipografía: Cervo Neue, Cervo Extrabold
    =========================================== */
 
@@ -37,18 +39,18 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000000; /* Black - Paleta Secundaria Web */
+  background: $color-black; /* Black - Paleta Secundaria Web */
   padding: 2rem;
 }
 
 .login-container {
-  background: #d3d0c3; /* Vintage Beige - Paleta Primaria */
+  background: $color-light; /* Vintage Beige - Paleta Primaria */
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 40px rgba($color-black, 0.4);
   padding: 3rem 2rem;
   max-width: 500px;
   width: 100%;
-  border: 2px solid #3e3c38; /* Vintage Black */
+  border: 2px solid $color-dark; /* Vintage Black */
 }
 
 .login-header {
@@ -66,7 +68,7 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
     font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
     font-size: 1.5rem;
     font-weight: 800;
-    color: #3e3c38; /* Vintage Black */
+    color: $color-dark; /* Vintage Black */
     margin-bottom: 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -83,12 +85,12 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #ec6b00; /* Orange */
+  color: $color-primary; /* Orange */
   text-decoration: none;
 }
 
 .login-back-link:hover {
-  color: #c95800;
+  color: $color-orange-700-legacy;
 }
 
 @media (max-width: 768px) {

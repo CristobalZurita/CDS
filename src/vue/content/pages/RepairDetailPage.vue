@@ -84,7 +84,9 @@ async function load() {
 onMounted(load)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .repair-detail {
   max-width: 900px;
   margin: 0 auto;
@@ -96,19 +98,19 @@ onMounted(load)
   align-items: center;
 }
 .muted {
-  color: #6b7280;
+  color: $color-gray-500-legacy;
 }
 .status {
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
-  background: #eef2ff;
+  background: $color-indigo-50-legacy;
 }
 .card {
   margin-top: 1rem;
   padding: 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid $color-gray-200-legacy;
   border-radius: 12px;
-  background: #fff;
+  background: $color-white;
 }
 .photos {
   display: grid;

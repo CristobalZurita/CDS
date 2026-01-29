@@ -15,7 +15,9 @@ const props = defineProps({
 const statusClass = computed(() => `status-${props.status || 'unknown'}`)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -23,23 +25,23 @@ const statusClass = computed(() => `status-${props.status || 'unknown'}`)
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
   font-size: 0.75rem;
-  background: #f3f4f6;
-  color: #111827;
+  background: $color-gray-100-legacy;
+  color: $color-gray-900-legacy;
 }
 .status-pending {
-  background: #fef3c7;
-  color: #92400e;
+  background: $color-amber-100-legacy;
+  color: $color-amber-700-legacy;
 }
 .status-in_progress {
-  background: #dbeafe;
-  color: #1e40af;
+  background: $color-blue-200-legacy;
+  color: $color-blue-700-legacy;
 }
 .status-completed {
-  background: #d1fae5;
-  color: #065f46;
+  background: $color-green-100-legacy;
+  color: $color-green-800-legacy;
 }
 .status-cancelled {
-  background: #fee2e2;
-  color: #991b1b;
+  background: $color-red-100-legacy;
+  color: $color-red-800-legacy;
 }
 </style>

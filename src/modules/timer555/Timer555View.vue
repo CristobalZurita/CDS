@@ -381,6 +381,32 @@ function reset() {
 
 const clampMs = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
 
+const getCanvasPalette = () => {
+  if (typeof window === 'undefined') {
+    return {
+      panelFill: 'transparent',
+      stroke: 'transparent',
+      chipFill: 'transparent',
+      chipText: 'transparent',
+      ledOn: 'transparent',
+      ledOff: 'transparent',
+      ledGlow: 'transparent'
+    }
+  }
+  const root = document.getElementById('timer-555-calculator')
+  const styles = root ? getComputedStyle(root) : null
+  const read = (name: string) => (styles?.getPropertyValue(name).trim() || 'transparent')
+  return {
+    panelFill: read('--timer555-panel-fill'),
+    stroke: read('--timer555-stroke'),
+    chipFill: read('--timer555-chip-fill'),
+    chipText: read('--timer555-chip-text'),
+    ledOn: read('--timer555-led-on'),
+    ledOff: read('--timer555-led-off'),
+    ledGlow: read('--timer555-led-glow')
+  }
+}
+
 const getBlinkDurations = () => {
   if (!resultValue.value) {
     return { onMs: 500, offMs: 500 }
@@ -405,11 +431,12 @@ const drawCircuit = () => {
   if (!canvas) return
   const ctx = canvas.getContext('2d')
   if (!ctx) return
+  const palette = getCanvasPalette()
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  ctx.fillStyle = 'rgba(250, 247, 240, 0.9)'
-  ctx.strokeStyle = '#2f2b28'
+  ctx.fillStyle = palette.panelFill
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   roundRect(ctx, 8, 8, canvas.width - 16, canvas.height - 16, 18)
   ctx.fill()
@@ -417,7 +444,7 @@ const drawCircuit = () => {
 
   const topY = 40
   const bottomY = 220
-  ctx.strokeStyle = '#2f2b28'
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   ctx.moveTo(40, topY)
@@ -427,7 +454,7 @@ const drawCircuit = () => {
   ctx.stroke()
 
   ctx.font = '14px "Cervo Neue", sans-serif'
-  ctx.fillStyle = '#2f2b28'
+  ctx.fillStyle = palette.stroke
   ctx.fillText('Vcc', 48, topY - 12)
   ctx.fillText('Gnd', 48, bottomY + 10)
 
@@ -464,7 +491,7 @@ const drawCircuit = () => {
 
   drawResistor(ctx, 300, 120, 40, true)
   ctx.fillText('RL', 286, 140)
-  drawLed(ctx, 320, 190, ledOn)
+  drawLed(ctx, 320, 190, ledOn, palette)
   ctx.beginPath()
   ctx.moveTo(250, 135)
   ctx.lineTo(300, 135)
@@ -487,13 +514,13 @@ const roundRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
 }
 
 const drawChip = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) => {
-  ctx.fillStyle = '#1b1b1b'
-  ctx.strokeStyle = '#2f2b28'
+  ctx.fillStyle = palette.chipFill
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   roundRect(ctx, x, y, w, h, 8)
   ctx.fill()
   ctx.stroke()
-  ctx.fillStyle = '#f4efe6'
+  ctx.fillStyle = palette.chipText
   ctx.font = 'bold 16px "Cervo Neue", sans-serif'
   ctx.fillText('555', x + 24, y + 50)
 }
@@ -501,7 +528,7 @@ const drawChip = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number
 const drawResistor = (ctx: CanvasRenderingContext2D, x: number, y: number, length: number, vertical: boolean) => {
   const steps = 6
   const amplitude = 6
-  ctx.strokeStyle = '#2f2b28'
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   if (vertical) {
@@ -521,7 +548,7 @@ const drawResistor = (ctx: CanvasRenderingContext2D, x: number, y: number, lengt
 }
 
 const drawCap = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-  ctx.strokeStyle = '#2f2b28'
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   ctx.moveTo(x - 10, y)
@@ -532,7 +559,7 @@ const drawCap = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
 }
 
 const drawSwitch = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-  ctx.strokeStyle = '#2f2b28'
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   ctx.moveTo(x, y)
@@ -542,16 +569,16 @@ const drawSwitch = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
   ctx.stroke()
 }
 
-const drawLed = (ctx: CanvasRenderingContext2D, x: number, y: number, on: boolean) => {
-  ctx.fillStyle = on ? '#ff3b30' : '#3b1d1b'
-  ctx.strokeStyle = '#2f2b28'
+const drawLed = (ctx: CanvasRenderingContext2D, x: number, y: number, on: boolean, palette: ReturnType<typeof getCanvasPalette>) => {
+  ctx.fillStyle = on ? palette.ledOn : palette.ledOff
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   ctx.arc(x, y, 8, 0, Math.PI * 2)
   ctx.fill()
   ctx.stroke()
   if (on) {
-    ctx.strokeStyle = 'rgba(255, 59, 48, 0.45)'
+    ctx.strokeStyle = palette.ledGlow
     ctx.lineWidth = 4
     ctx.beginPath()
     ctx.arc(x, y, 14, 0, Math.PI * 2)
@@ -596,6 +623,13 @@ watch([resultValue, () => form.mode], () => {
 @import '@/scss/_core.scss';
 
 #timer-555-calculator {
+  --timer555-panel-fill: #{$color-panel-fill-legacy};
+  --timer555-stroke: #{$color-ink-dark-legacy};
+  --timer555-chip-fill: #{$color-chip-dark-legacy};
+  --timer555-chip-text: #{$color-chip-light-legacy};
+  --timer555-led-on: #{$color-led-on-legacy};
+  --timer555-led-off: #{$color-led-off-legacy};
+  --timer555-led-glow: #{$color-led-glow-legacy};
   .timer555-layout {
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);

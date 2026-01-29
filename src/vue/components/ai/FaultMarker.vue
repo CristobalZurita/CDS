@@ -9,14 +9,16 @@ defineProps({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .marker {
   display: inline-flex;
   align-items: center;
   padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  background: #e0f2fe;
-  color: #0369a1;
-  font-size: 0.75rem;
+  border-radius: $border-radius-pill;
+  background: $color-sky-100-legacy;
+  color: $color-sky-700-legacy;
+  font-size: $text-2xs;
 }
 </style>

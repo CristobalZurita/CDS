@@ -131,19 +131,23 @@ const handlePrev = () => {
 onMounted(loadInstruments)
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .wizard-section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: $spacer-md;
 }
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  gap: $spacer-md;
 }
+
 .summary-grid {
   display: grid;
-  gap: 0.5rem;
+  gap: $spacer-sm;
 }
 </style>

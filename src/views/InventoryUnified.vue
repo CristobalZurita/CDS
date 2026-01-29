@@ -85,7 +85,9 @@ export default {
 }
 </script>
 
-<style scoped>
-.input { padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px }
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
+.input { padding: 0.5rem; border: 1px solid $color-gray-180-legacy; border-radius: 4px }
 .btn { padding: 0.5rem 0.75rem }
 </style>

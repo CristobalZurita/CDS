@@ -219,36 +219,38 @@ const goToPrivacy = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "/src/scss/_theming.scss";
+
 .terms-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, $legacy-slate-50 0%, $legacy-slate-200 100%);
   padding: 2rem 1rem;
 }
 
 .terms-container {
   max-width: 900px;
   margin: 0 auto;
-  background: white;
+  background: $white;
   border-radius: 12px;
   padding: 3rem 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba($black, 0.1);
 }
 
 .terms-header {
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid $legacy-bluegray-200;
 }
 
 .terms-header h1 {
   margin: 0 0 0.5rem 0;
-  color: #2d3748;
+  color: $legacy-slate-700;
 }
 
 .last-updated {
   margin: 0;
-  color: #718096;
+  color: $legacy-slate-500;
   font-size: 0.9rem;
 }
 
@@ -259,7 +261,7 @@ const goToPrivacy = () => {
 .terms-section {
   margin-bottom: 2.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid $legacy-bluegray-200;
 }
 
 .terms-section.last-section {
@@ -268,19 +270,19 @@ const goToPrivacy = () => {
 
 .terms-section h2 {
   margin: 0 0 1rem 0;
-  color: #2d3748;
+  color: $legacy-slate-700;
   font-size: 1.3rem;
 }
 
 .terms-section h3 {
   margin: 1.5rem 0 0.75rem 0;
-  color: #4a5568;
+  color: $legacy-slate-600;
   font-size: 1.05rem;
 }
 
 .terms-section p {
   margin: 0 0 1rem 0;
-  color: #4a5568;
+  color: $legacy-slate-600;
   line-height: 1.7;
 }
 
@@ -291,15 +293,15 @@ const goToPrivacy = () => {
 
 .terms-section li {
   margin-bottom: 0.75rem;
-  color: #4a5568;
+  color: $legacy-slate-600;
   line-height: 1.6;
 }
 
 /* Acceptance */
 .acceptance-box {
   padding: 1.5rem;
-  background: #f7fafc;
-  border: 1px solid #cbd5e0;
+  background: $legacy-bg-light;
+  border: 1px solid $legacy-bluegray-300;
   border-radius: 8px;
   margin-bottom: 2rem;
 }
@@ -316,7 +318,7 @@ const goToPrivacy = () => {
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #2f855a;
+  accent-color: $legacy-green-primary;
 }
 
 /* Actions */
@@ -342,26 +344,26 @@ const goToPrivacy = () => {
 }
 
 .btn-back {
-  background: white;
-  color: #4a5568;
-  border: 2px solid #cbd5e0;
+  background: $white;
+  color: $legacy-slate-600;
+  border: 2px solid $legacy-bluegray-300;
 }
 
 .btn-back:hover {
-  background: #edf2f7;
-  border-color: #a0aec0;
+  background: $legacy-slate-100;
+  border-color: $legacy-bluegray-400;
 }
 
 .btn-next {
-  background: linear-gradient(135deg, #2f855a, #276749);
-  color: white;
-  box-shadow: 0 4px 12px rgba(47, 133, 90, 0.3);
+  background: linear-gradient(135deg, $legacy-green-primary, $legacy-green-dark);
+  color: $white;
+  box-shadow: 0 4px 12px rgba($legacy-green-primary, 0.3);
 }
 
 .btn-next:hover:not(:disabled) {
-  background: linear-gradient(135deg, #276749, #22543d);
+  background: linear-gradient(135deg, $legacy-green-dark, $legacy-green-darker);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(47, 133, 90, 0.4);
+  box-shadow: 0 6px 16px rgba($legacy-green-primary, 0.4);
 }
 
 .btn-next:disabled {

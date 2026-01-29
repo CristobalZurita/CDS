@@ -63,34 +63,40 @@ const submitPhoto = async () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .photo-upload-page {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: #f3f4f6;
-  padding: 1.5rem;
+  background: $color-gray-100-legacy;
+  padding: $spacer-lg;
 }
+
 .card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 2rem;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  padding: $spacer-xl;
   max-width: 560px;
   width: 100%;
-  border: 1px solid #e5e7eb;
+  border: 1px solid $color-gray-200-legacy;
 }
+
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin: 1rem 0;
+  gap: $spacer-sm;
+  margin: $spacer-md 0;
 }
+
 .actions {
   display: flex;
-  gap: 1rem;
+  gap: $spacer-md;
 }
+
 .status {
-  margin-top: 1rem;
-  color: #059669;
+  margin-top: $spacer-md;
+  color: $color-success;
 }
 </style>

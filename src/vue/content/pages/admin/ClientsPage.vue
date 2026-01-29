@@ -100,7 +100,9 @@ function onIntakeCompleted(payload) {
 onMounted(load)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .clients-page {
 	padding: 1rem;
 }

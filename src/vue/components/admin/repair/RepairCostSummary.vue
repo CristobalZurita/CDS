@@ -267,7 +267,7 @@ watch(() => props.repair, (repair) => {
 	background: $vintage-beige;
 	border-radius: 12px;
 	padding: 1.25rem;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2px 8px rgba($black, 0.08);
 }
 
 .section-header {
@@ -291,12 +291,12 @@ watch(() => props.repair, (repair) => {
 	align-items: center;
 	gap: 0.75rem;
 	padding: 0.75rem;
-	background: white;
+	background: $white;
 	border-radius: 8px;
 	transition: all 0.2s ease;
 
 	&:hover {
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 2px 8px rgba($black, 0.1);
 	}
 }
 
@@ -312,38 +312,38 @@ watch(() => props.repair, (repair) => {
 	font-size: 1.1em;
 
 	&.materials {
-		background: rgba(#17a2b8, 0.1);
-		color: #17a2b8;
+		background: rgba($status-info-legacy, 0.1);
+		color: $status-info-legacy;
 	}
 
 	&.other {
-		background: rgba(#6c757d, 0.1);
-		color: #6c757d;
+		background: rgba($status-secondary-legacy, 0.1);
+		color: $status-secondary-legacy;
 	}
 
 	&.total {
 		background: $brand-primary;
-		color: white;
+		color: $white;
 	}
 
 	&.quoted {
-		background: rgba(#20c997, 0.1);
-		color: #20c997;
+		background: rgba($status-teal-legacy, 0.1);
+		color: $status-teal-legacy;
 	}
 
 	&.positive {
-		background: rgba(#28a745, 0.1);
-		color: #28a745;
+		background: rgba($status-success-legacy, 0.1);
+		color: $status-success-legacy;
 	}
 
 	&.negative {
-		background: rgba(#dc3545, 0.1);
-		color: #dc3545;
+		background: rgba($status-danger-legacy, 0.1);
+		color: $status-danger-legacy;
 	}
 
 	&.neutral {
-		background: rgba(#6c757d, 0.1);
-		color: #6c757d;
+		background: rgba($status-secondary-legacy, 0.1);
+		color: $status-secondary-legacy;
 	}
 }
 
@@ -355,7 +355,7 @@ watch(() => props.repair, (repair) => {
 
 .cost-label {
 	font-size: 0.85em;
-	color: #666;
+	color: $text-muted;
 }
 
 .cost-value {
@@ -369,18 +369,18 @@ watch(() => props.repair, (repair) => {
 	}
 
 	&.positive {
-		color: #28a745;
+		color: $status-success-legacy;
 	}
 
 	&.negative {
-		color: #dc3545;
+		color: $status-danger-legacy;
 	}
 }
 
 .cost-note {
 	font-size: 0.8em;
-	color: #666;
-	background: #f0f0f0;
+	color: $text-muted;
+	background: $light-2;
 	padding: 0.25rem 0.5rem;
 	border-radius: 4px;
 }
@@ -396,7 +396,7 @@ watch(() => props.repair, (repair) => {
 
 .cost-divider {
 	height: 1px;
-	background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+	background: linear-gradient(90deg, transparent, rgba($black, 0.1), transparent);
 	margin: 0.5rem 0;
 }
 
@@ -406,20 +406,20 @@ watch(() => props.repair, (repair) => {
 }
 
 .quoted-row {
-	background: rgba(#20c997, 0.05);
+	background: rgba($status-teal-legacy, 0.05);
 }
 
 .margin-row {
-	background: rgba(#f8f9fa, 0.8);
+	background: rgba($light-1, 0.8);
 }
 
 .margin-warning {
 	margin-top: 1rem;
 	padding: 0.75rem;
-	background: rgba(#dc3545, 0.1);
-	border: 1px solid rgba(#dc3545, 0.3);
+	background: rgba($status-danger-legacy, 0.1);
+	border: 1px solid rgba($status-danger-legacy, 0.3);
 	border-radius: 8px;
-	color: #dc3545;
+	color: $status-danger-legacy;
 	font-weight: 500;
 	text-align: center;
 }
@@ -430,7 +430,7 @@ watch(() => props.repair, (repair) => {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: rgba(0, 0, 0, 0.5);
+	background: rgba($black, 0.5);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -438,12 +438,12 @@ watch(() => props.repair, (repair) => {
 }
 
 .modal-content {
-	background: white;
+	background: $white;
 	padding: 1.5rem;
 	border-radius: 12px;
 	max-width: 400px;
 	width: 90%;
-	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 10px 40px rgba($black, 0.2);
 
 	h5 {
 		margin-bottom: 1rem;

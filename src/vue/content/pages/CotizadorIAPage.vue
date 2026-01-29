@@ -132,27 +132,29 @@ const onVerify = (token) => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .cotizador-ia-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem 1rem;
+  background: linear-gradient(135deg, $color-slate-50-legacy 0%, $color-slate-200-legacy 100%);
+  padding: $spacer-xl $spacer-md;
 }
 
 .step-container {
   max-width: 1000px;
   margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background: $color-white;
+  border-radius: $border-radius-xl;
+  padding: $spacer-xl;
+  box-shadow: 0 8px 32px rgba($color-black, 0.1);
   animation: slideUp 0.4s ease-out;
 }
 
 .captcha-wrap {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: $spacer-md;
 }
 
 @keyframes slideUp {
@@ -167,34 +169,34 @@ const onVerify = (token) => {
 }
 
 .step-header {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: $spacer-xl;
+  padding-bottom: $spacer-xl;
+  border-bottom: 2px solid $color-border-light-legacy;
 }
 
 .step-header h1 {
-  margin: 0 0 0.5rem 0;
-  color: #2d3748;
-  font-size: 2rem;
+  margin: 0 0 $spacer-sm 0;
+  color: $color-text-dark-legacy;
+  font-size: $h2-size;
 }
 
 .step-header p {
   margin: 0;
-  color: #718096;
-  font-size: 1rem;
+  color: $color-text-medium-legacy;
+  font-size: $text-base;
 }
 
 @media (max-width: 768px) {
   .cotizador-ia-page {
-    padding: 1rem;
+    padding: $spacer-md;
   }
 
   .step-container {
-    padding: 1.5rem;
+    padding: $spacer-lg;
   }
 
   .step-header h1 {
-    font-size: 1.5rem;
+    font-size: $h4-size;
   }
 }
 </style>

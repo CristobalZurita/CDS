@@ -84,14 +84,16 @@ function onVerify(token) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .register-page { padding: 2rem; display:flex; justify-content:center }
-.register-container { width: 100%; max-width: 560px; background: #fff; padding: 2rem; border-radius: 8px }
+.register-container { width: 100%; max-width: 560px; background: $color-white; padding: 2rem; border-radius: 8px }
 .form-group { margin-bottom: 1rem }
-.form-group input { width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px }
+.form-group input { width: 100%; padding: 0.6rem; border: 1px solid $color-gray-180-legacy; border-radius: 4px }
 .password-field { display: flex; gap: 0.5rem; align-items: center; }
-.toggle-password { border: 1px solid #ddd; background: #f3f4f6; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
-.muted { color:#666; margin-top:1rem }
+.toggle-password { border: 1px solid $color-gray-180-legacy; background: $color-gray-100-legacy; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
+.muted { color:$color-gray-666-legacy; margin-top:1rem }
 .alert { margin: 1rem 0 }
-.back-link { display:inline-block; margin-bottom: 1rem; color:#3e3c38; text-decoration:none; font-weight:600; }
+.back-link { display:inline-block; margin-bottom: 1rem; color:$color-dark; text-decoration:none; font-weight:600; }
 </style>

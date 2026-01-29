@@ -280,7 +280,7 @@ defineExpose({ loadComponents, totalMaterials })
 	background: $vintage-beige;
 	border-radius: 12px;
 	padding: 1.25rem;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2px 8px rgba($color-black, 0.08);
 }
 
 .section-header {
@@ -297,7 +297,7 @@ defineExpose({ loadComponents, totalMaterials })
 }
 
 .add-form {
-	background: rgba(255, 255, 255, 0.7);
+	background: rgba($color-white, 0.7);
 	border-radius: 8px;
 	padding: 1rem;
 	margin-bottom: 1rem;
@@ -307,13 +307,13 @@ defineExpose({ loadComponents, totalMaterials })
 .search-results {
 	position: absolute;
 	z-index: 100;
-	background: white;
-	border: 1px solid #ddd;
+	background: $color-white;
+	border: 1px solid $color-gray-180-legacy;
 	border-radius: 8px;
 	max-height: 200px;
 	overflow-y: auto;
 	width: calc(100% - 1rem);
-	box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+	box-shadow: 0 4px 12px rgba($color-black, 0.15);
 }
 
 .search-item {
@@ -322,7 +322,7 @@ defineExpose({ loadComponents, totalMaterials })
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid $color-gray-190-legacy;
 
 	&:hover {
 		background: lighten($brand-primary, 45%);
@@ -338,7 +338,7 @@ defineExpose({ loadComponents, totalMaterials })
 	}
 
 	.item-stock {
-		color: #666;
+		color: $color-gray-666-legacy;
 		font-size: 0.85em;
 		margin: 0 0.5rem;
 	}
@@ -364,18 +364,18 @@ defineExpose({ loadComponents, totalMaterials })
 .components-table {
 	width: 100%;
 	border-collapse: collapse;
-	background: white;
+	background: $color-white;
 	border-radius: 8px;
 	overflow: hidden;
 
 	th, td {
 		padding: 0.75rem;
-		border-bottom: 1px solid #eee;
+		border-bottom: 1px solid $color-gray-190-legacy;
 	}
 
 	th {
 		background: $brand-text;
-		color: white;
+		color: $color-white;
 		font-weight: 600;
 		font-size: 0.85em;
 		text-transform: uppercase;
@@ -407,7 +407,7 @@ defineExpose({ loadComponents, totalMaterials })
 .empty-state {
 	text-align: center;
 	padding: 2rem;
-	background: white;
+	background: $color-white;
 	border-radius: 8px;
 }
 </style>

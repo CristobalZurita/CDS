@@ -62,7 +62,7 @@ const props = defineProps(({
 @import "/src/scss/_theming.scss";
 
 p, span {
-    color: #eaeaea; /* increase contrast for footer text */
+    color: $color-gray-240-legacy; /* increase contrast for footer text */
     font-size: 1.25rem;
     line-height: 1.7;
 }
@@ -150,13 +150,13 @@ li.footer-inline-link-item {
 
 li.footer-inline-link-item:not(:last-child)::after {
     content: "·";
-    color: #eaeaea;
+    color: $color-gray-240-legacy;
     margin-left: 0.6rem;
 }
 
 .footer-inline-link {
     text-decoration: none;
-    color: #eaeaea;
+    color: $color-gray-240-legacy;
     font-weight: 700;
     white-space: nowrap;
 }

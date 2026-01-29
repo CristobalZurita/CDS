@@ -72,16 +72,16 @@ const emit = defineEmits(['statusChanged'])
 
 // Estado de la máquina de estados (mismo que backend)
 const STATE_CONFIG = {
-	1: { name: 'Ingreso', color: '#6c757d', progress: 0, icon: 'fa-solid fa-door-open', transitions: [2, 10] },
-	2: { name: 'Diagnóstico', color: '#17a2b8', progress: 15, icon: 'fa-solid fa-stethoscope', transitions: [3, 10] },
-	3: { name: 'Presupuesto', color: '#fd7e14', progress: 30, icon: 'fa-solid fa-file-invoice-dollar', transitions: [4, 10] },
-	4: { name: 'Aprobado', color: '#28a745', progress: 40, icon: 'fa-solid fa-thumbs-up', transitions: [5, 10] },
-	5: { name: 'En trabajo', color: '#ff8c42', progress: 60, icon: 'fa-solid fa-wrench', transitions: [6, 10] },
-	6: { name: 'Listo', color: '#20c997', progress: 80, icon: 'fa-solid fa-check-circle', transitions: [7, 10] },
-	7: { name: 'Entregado', color: '#198754', progress: 90, icon: 'fa-solid fa-hand-holding', transitions: [8] },
-	8: { name: 'Noventena', color: '#4d77ff', progress: 95, icon: 'fa-solid fa-hourglass-half', transitions: [9] },
-	9: { name: 'Archivado', color: '#6f42c1', progress: 100, icon: 'fa-solid fa-box-archive', transitions: [] },
-	10: { name: 'Rechazado', color: '#dc3545', progress: 0, icon: 'fa-solid fa-ban', transitions: [9] }
+	1: { name: 'Ingreso', color: 'var(--status-color-1)', progress: 0, icon: 'fa-solid fa-door-open', transitions: [2, 10] },
+	2: { name: 'Diagnóstico', color: 'var(--status-color-2)', progress: 15, icon: 'fa-solid fa-stethoscope', transitions: [3, 10] },
+	3: { name: 'Presupuesto', color: 'var(--status-color-3)', progress: 30, icon: 'fa-solid fa-file-invoice-dollar', transitions: [4, 10] },
+	4: { name: 'Aprobado', color: 'var(--status-color-4)', progress: 40, icon: 'fa-solid fa-thumbs-up', transitions: [5, 10] },
+	5: { name: 'En trabajo', color: 'var(--status-color-5)', progress: 60, icon: 'fa-solid fa-wrench', transitions: [6, 10] },
+	6: { name: 'Listo', color: 'var(--status-color-6)', progress: 80, icon: 'fa-solid fa-check-circle', transitions: [7, 10] },
+	7: { name: 'Entregado', color: 'var(--status-color-7)', progress: 90, icon: 'fa-solid fa-hand-holding', transitions: [8] },
+	8: { name: 'Noventena', color: 'var(--status-color-8)', progress: 95, icon: 'fa-solid fa-hourglass-half', transitions: [9] },
+	9: { name: 'Archivado', color: 'var(--status-color-9)', progress: 100, icon: 'fa-solid fa-box-archive', transitions: [] },
+	10: { name: 'Rechazado', color: 'var(--status-color-10)', progress: 0, icon: 'fa-solid fa-ban', transitions: [9] }
 }
 
 // State
@@ -141,13 +141,23 @@ const executeTransition = async () => {
 </script>
 
 <style scoped lang="scss">
-@import "/src/scss/_theming.scss";
+@import "@/scss/_core.scss";
 
 .status-changer {
 	background: $vintage-beige;
 	border-radius: 12px;
 	padding: 1.25rem;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2px 8px rgba($color-black, 0.08);
+	--status-color-1: #{$color-secondary-legacy};
+	--status-color-2: #{$color-info-legacy};
+	--status-color-3: #{$color-orange-500-legacy};
+	--status-color-4: #{$color-success-legacy};
+	--status-color-5: #{$color-orange-400-legacy};
+	--status-color-6: #{$color-teal-legacy};
+	--status-color-7: #{$color-green-700-legacy};
+	--status-color-8: #{$color-blue-600-legacy};
+	--status-color-9: #{$color-purple-600-legacy};
+	--status-color-10: #{$color-danger};
 }
 
 .current-status {
@@ -160,7 +170,7 @@ const executeTransition = async () => {
 
 .status-label {
 	font-weight: 500;
-	color: $brand-text;
+	color: $text-color;
 }
 
 .status-badge {
@@ -181,26 +191,26 @@ const executeTransition = async () => {
 	.progress-bar {
 		flex: 1;
 		height: 8px;
-		background: #e0e0e0;
+		background: $color-gray-220-legacy;
 		border-radius: 4px;
 		overflow: hidden;
 	}
 
 	.progress-fill {
 		height: 100%;
-		background: linear-gradient(90deg, $brand-primary, lighten($brand-primary, 10%));
+		background: linear-gradient(90deg, $color-primary, lighten($color-primary, 10%));
 		transition: width 0.3s ease;
 	}
 
 	.progress-text {
 		font-weight: 600;
-		color: $brand-primary;
+		color: $color-primary;
 		min-width: 40px;
 	}
 }
 
 .status-actions {
-	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	border-top: 1px solid rgba($color-black, 0.1);
 	padding-top: 1rem;
 }
 
@@ -212,26 +222,26 @@ const executeTransition = async () => {
 
 .transition-btn {
 	padding: 0.5rem 1rem;
-	border: 2px solid $brand-primary;
-	background: white;
-	color: $brand-primary;
+	border: 2px solid $color-primary;
+	background: $color-white;
+	color: $color-primary;
 	border-radius: 8px;
 	font-weight: 500;
 	cursor: pointer;
 	transition: all 0.2s ease;
 
 	&:hover {
-		background: $brand-primary;
-		color: white;
+		background: $color-primary;
+		color: $color-white;
 	}
 
 	&.btn-danger {
-		border-color: #dc3545;
-		color: #dc3545;
+		border-color: $color-danger;
+		color: $color-danger;
 
 		&:hover {
-			background: #dc3545;
-			color: white;
+			background: $color-danger;
+			color: $color-white;
 		}
 	}
 
@@ -243,9 +253,9 @@ const executeTransition = async () => {
 
 .terminal-notice {
 	padding: 1rem;
-	background: rgba(0, 0, 0, 0.05);
+	background: rgba($color-black, 0.05);
 	border-radius: 8px;
-	color: #666;
+	color: $color-gray-666-legacy;
 	text-align: center;
 }
 
@@ -255,7 +265,7 @@ const executeTransition = async () => {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: rgba(0, 0, 0, 0.5);
+	background: rgba($color-black, 0.5);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -263,16 +273,16 @@ const executeTransition = async () => {
 }
 
 .confirm-modal {
-	background: white;
+	background: $color-white;
 	padding: 1.5rem;
 	border-radius: 12px;
 	max-width: 400px;
 	width: 90%;
-	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 10px 40px rgba($color-black, 0.2);
 
 	h5 {
 		margin-bottom: 1rem;
-		color: $brand-text;
+		color: $text-color;
 	}
 }
 </style>

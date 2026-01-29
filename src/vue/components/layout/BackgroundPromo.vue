@@ -29,8 +29,8 @@ div.foxy-promo-background-overlay-default {
     height: 100%;
     width: 100%;
 
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(30, 30, 30, 0.73)), color-stop(70%, rgba(30, 30, 30, 0.86)), color-stop(80%, rgba(30, 30, 30, 0.99)), to(rgba(30, 30, 30, 1)));
-    background-image: linear-gradient(180deg, rgba(30, 30, 30, 0.73) 0%, rgba(30, 30, 30, 0.86) 30%, rgba(30, 30, 30, 0.99) 60%, rgba(30, 30, 30, 1) 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba($color-gray-30-legacy, 0.73)), color-stop(70%, rgba($color-gray-30-legacy, 0.86)), color-stop(80%, rgba($color-gray-30-legacy, 0.99)), to(rgba($color-gray-30-legacy, 1)));
+    background-image: linear-gradient(180deg, rgba($color-gray-30-legacy, 0.73) 0%, rgba($color-gray-30-legacy, 0.86) 30%, rgba($color-gray-30-legacy, 0.99) 60%, rgba($color-gray-30-legacy, 1) 100%);
 }
 
 div.foxy-promo-background-overlay-faded {
@@ -38,7 +38,7 @@ div.foxy-promo-background-overlay-faded {
     height: 100%;
     width: 100%;
 
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(30, 30, 30, 0.83)), color-stop(70%, rgba(30, 30, 30, 0.93)), color-stop(80%, rgba(30, 30, 30, 1)), to(rgba(30, 30, 30, 1)));
-    background-image: linear-gradient(180deg, rgba(30, 30, 30, 0.83) 0%, rgba(30, 30, 30, 0.93) 30%, rgba(30, 30, 30, 0.99) 60%, rgba(30, 30, 30, 1) 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba($color-gray-30-legacy, 0.83)), color-stop(70%, rgba($color-gray-30-legacy, 0.93)), color-stop(80%, rgba($color-gray-30-legacy, 1)), to(rgba($color-gray-30-legacy, 1)));
+    background-image: linear-gradient(180deg, rgba($color-gray-30-legacy, 0.83) 0%, rgba($color-gray-30-legacy, 0.93) 30%, rgba($color-gray-30-legacy, 0.99) 60%, rgba($color-gray-30-legacy, 1) 100%);
 }
 </style>

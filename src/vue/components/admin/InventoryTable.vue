@@ -48,12 +48,12 @@ const props = defineProps({
 }
 .inventory-table th,
 .inventory-table td {
-	border: 1px solid #e5e7eb;
+	border: 1px solid $color-gray-200-legacy;
 	padding: 8px 12px;
 	text-align: left;
 }
 .inventory-table .empty {
-	color: #6b7280;
+	color: $color-gray-500-legacy;
 	padding: 12px 0;
 }
 
@@ -75,9 +75,9 @@ const props = defineProps({
 	.inventory-table .table tr {
 		padding: 1rem;
 		margin-bottom: 0.75rem;
-		background: #fff;
+		background: $color-white;
 		border-radius: 12px;
-		box-shadow: 0 8px 16px rgba(62, 60, 56, 0.12);
+		box-shadow: 0 8px 16px rgba($color-dark, 0.12);
 	}
 
 	.inventory-table .table td {

@@ -61,17 +61,19 @@ const onCompleted = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .wizard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
+  gap: $spacer-lg;
 }
 
 .wizard-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1.5rem;
+  background: $color-white;
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: $border-radius-lg;
+  padding: $spacer-lg;
 }
 </style>

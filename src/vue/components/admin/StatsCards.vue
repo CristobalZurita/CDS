@@ -31,12 +31,12 @@ defineProps({
   margin-bottom: 1.5rem;
 }
 .card {
-  background: #fff;
-  border: 1px solid rgba(62, 60, 56, 0.18);
+  background: $color-white;
+  border: 1px solid rgba($color-dark, 0.18);
   border-radius: 14px;
   padding: 1.35rem;
   text-align: center;
-  box-shadow: 0 8px 18px rgba(62, 60, 56, 0.12);
+  box-shadow: 0 8px 18px rgba($color-dark, 0.12);
 }
 
 .label {

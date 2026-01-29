@@ -19,7 +19,9 @@ const onSelect = (event) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .uploader {
   display: grid;
   gap: 0.75rem;

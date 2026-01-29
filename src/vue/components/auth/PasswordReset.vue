@@ -120,7 +120,9 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .password-reset {
   display: flex;
   flex-direction: column;
@@ -140,25 +142,25 @@ onMounted(() => {
 }
 
 .toggle-password {
-  border: 1px solid #d1d5db;
-  background: #f3f4f6;
+  border: 1px solid $color-gray-300-legacy;
+  background: $color-gray-100-legacy;
   padding: 0.35rem 0.6rem;
   border-radius: 4px;
   font-size: 0.85rem;
 }
 
 .toggle-btn {
-  background: #f1f1f1;
-  border: 1px solid #ccc;
+  background: $color-gray-150-legacy;
+  border: 1px solid $color-gray-180-legacy;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
   cursor: pointer;
 }
 
 .toggle-btn.active {
-  background: #ec6b00;
-  color: #000;
-  border-color: #ec6b00;
+  background: $color-primary;
+  color: $color-black;
+  border-color: $color-primary;
 }
 
 .form {
@@ -176,13 +178,13 @@ onMounted(() => {
 .form-group input {
   width: 100%;
   padding: 0.6rem;
-  border: 1px solid #ddd;
+  border: 1px solid $color-gray-180-legacy;
   border-radius: 4px;
 }
 
 .btn-primary {
-  background: #ec6b00;
-  color: #000;
+  background: $color-primary;
+  color: $color-black;
   border: none;
   padding: 0.7rem 1rem;
   border-radius: 6px;
@@ -191,18 +193,18 @@ onMounted(() => {
 }
 
 .btn-primary:disabled {
-  background: #d3d0c3;
+  background: $color-light;
   cursor: not-allowed;
 }
 
 .back-link {
-  color: #4b5563;
+  color: $color-gray-600-legacy;
   font-size: 0.9rem;
   text-decoration: none;
   text-align: center;
 }
 
 .back-link:hover {
-  color: #1f2937;
+  color: $color-gray-800-legacy;
 }
 </style>

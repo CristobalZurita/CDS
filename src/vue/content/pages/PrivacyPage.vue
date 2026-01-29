@@ -202,36 +202,38 @@
 // No additional logic needed for this page
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "/src/scss/_theming.scss";
+
 .privacy-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, $legacy-slate-50 0%, $legacy-slate-200 100%);
   padding: 2rem 1rem;
 }
 
 .privacy-container {
   max-width: 900px;
   margin: 0 auto;
-  background: white;
+  background: $white;
   border-radius: 12px;
   padding: 3rem 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba($black, 0.1);
 }
 
 .privacy-header {
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid $legacy-bluegray-200;
 }
 
 .privacy-header h1 {
   margin: 0 0 0.5rem 0;
-  color: #2d3748;
+  color: $legacy-slate-700;
 }
 
 .last-updated {
   margin: 0;
-  color: #718096;
+  color: $legacy-slate-500;
   font-size: 0.9rem;
 }
 
@@ -242,7 +244,7 @@
 .privacy-section {
   margin-bottom: 2.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid $legacy-bluegray-200;
 }
 
 .privacy-section.last-section {
@@ -251,19 +253,19 @@
 
 .privacy-section h2 {
   margin: 0 0 1rem 0;
-  color: #2d3748;
+  color: $legacy-slate-700;
   font-size: 1.3rem;
 }
 
 .privacy-section h3 {
   margin: 1.5rem 0 0.75rem 0;
-  color: #4a5568;
+  color: $legacy-slate-600;
   font-size: 1.05rem;
 }
 
 .privacy-section p {
   margin: 0 0 1rem 0;
-  color: #4a5568;
+  color: $legacy-slate-600;
   line-height: 1.7;
 }
 
@@ -274,7 +276,7 @@
 
 .privacy-section li {
   margin-bottom: 0.75rem;
-  color: #4a5568;
+  color: $legacy-slate-600;
   line-height: 1.6;
 }
 
@@ -301,26 +303,26 @@
 }
 
 .btn-back {
-  background: #edf2f7;
-  color: #4a5568;
-  border: 2px solid #cbd5e0;
+  background: $legacy-slate-100;
+  color: $legacy-slate-600;
+  border: 2px solid $legacy-bluegray-300;
 }
 
 .btn-back:hover {
-  background: #e2e8f0;
-  border-color: #a0aec0;
+  background: $legacy-bluegray-200;
+  border-color: $legacy-bluegray-400;
 }
 
 .btn-next {
-  background: linear-gradient(135deg, #2f855a, #276749);
-  color: white;
-  box-shadow: 0 4px 12px rgba(47, 133, 90, 0.3);
+  background: linear-gradient(135deg, $legacy-green-primary, $legacy-green-dark);
+  color: $white;
+  box-shadow: 0 4px 12px rgba($legacy-green-primary, 0.3);
 }
 
 .btn-next:hover {
-  background: linear-gradient(135deg, #276749, #22543d);
+  background: linear-gradient(135deg, $legacy-green-dark, $legacy-green-darker);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(47, 133, 90, 0.4);
+  box-shadow: 0 6px 16px rgba($legacy-green-primary, 0.4);
 }
 
 @media (max-width: 768px) {

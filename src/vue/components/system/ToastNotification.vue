@@ -64,7 +64,9 @@ defineExpose({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .toast-container {
   position: fixed;
   top: 20px;
@@ -82,8 +84,8 @@ defineExpose({
   justify-content: space-between;
   padding: 1rem 1.25rem;
   border-radius: 8px;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: $color-white;
+  box-shadow: 0 4px 12px rgba($color-black, 0.15);
   pointer-events: auto;
   animation: slideIn 0.3s ease-out;
   max-width: 400px;
@@ -118,27 +120,27 @@ defineExpose({
 
 /* Toast Types */
 .toast-success {
-  background: #c6f6d5;
-  border-left: 4px solid #48bb78;
-  color: #22543d;
+  background: $color-green-200-legacy;
+  border-left: 4px solid $color-green-400-legacy;
+  color: $color-green-darker-legacy;
 }
 
 .toast-error {
-  background: #fed7d7;
-  border-left: 4px solid #f56565;
-  color: #742a2a;
+  background: $color-red-200-legacy;
+  border-left: 4px solid $color-red-400-legacy;
+  color: $color-red-900-legacy;
 }
 
 .toast-warning {
-  background: #feebc8;
-  border-left: 4px solid #ed8936;
-  color: #7c2d12;
+  background: $color-orange-100-legacy;
+  border-left: 4px solid $color-orange-400-legacy;
+  color: $color-orange-900-legacy;
 }
 
 .toast-info {
-  background: #bee3f8;
-  border-left: 4px solid #4299e1;
-  color: #2c5282;
+  background: $color-blue-150-legacy;
+  border-left: 4px solid $color-blue-400-legacy;
+  color: $color-blue-800-legacy;
 }
 
 .toast-content {

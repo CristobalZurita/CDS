@@ -109,9 +109,9 @@ onMounted(() => {
 }
 
 .footer-legal-row a {
-  color: #eaeaea;
+  color: $color-gray-240-legacy;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: $fw-semibold;
   white-space: nowrap;
 }
 
@@ -120,6 +120,6 @@ onMounted(() => {
 }
 
 .footer-legal-sep {
-  color: #eaeaea;
+  color: $color-gray-240-legacy;
 }
 </style>

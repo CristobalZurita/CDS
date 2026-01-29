@@ -284,7 +284,7 @@ onMounted(() => {
 
 .dashboard-page {
   min-height: 100vh;
-  background: radial-gradient(circle at 20% 10%, rgba($color-secondary, 0.25) 0%, rgba($color-dark, 0.95) 45%, rgba(0, 0, 0, 0.98) 100%);
+  background: radial-gradient(circle at 20% 10%, rgba($color-secondary, 0.25) 0%, rgba($color-dark, 0.95) 45%, rgba($color-black, 0.98) 100%);
   padding: $spacer-xl $spacer-md;
 }
 

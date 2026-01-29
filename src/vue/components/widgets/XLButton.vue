@@ -47,7 +47,7 @@ button.btn-xl {
 // Variante Orange (Principal CTA)
 .btn-orange {
     background-color: $primary !important;
-    color: white !important;
+    color: $color-white !important;
     border-color: $primary;
 
     &:hover {
@@ -64,7 +64,7 @@ button.btn-xl {
 // Variante Orange Pastel (Principal CTA - Suave)
 .btn-orange-pastel {
     background-color: $orange-pastel !important;
-    color: white !important;
+    color: $color-white !important;
     border-color: $orange-pastel;
 
     &:hover {

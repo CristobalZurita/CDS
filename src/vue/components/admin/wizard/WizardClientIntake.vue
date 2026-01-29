@@ -220,8 +220,10 @@ const submit = async () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .wizard-step-body h4 {
-  margin-bottom: 1rem;
+  margin-bottom: $spacer-md;
 }
 </style>

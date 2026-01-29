@@ -252,8 +252,8 @@ header.foxy-header {
         }
 
         &:hover {
-            background-color: #ff7f1f;
-            border-color: #ff7f1f;
+            background-color: $color-orange-450-legacy;
+            border-color: $color-orange-450-legacy;
             color: $color-white;
             transform: scale(1.08);
         }
@@ -268,8 +268,8 @@ header.foxy-header {
             border-color: $orange-pastel;
 
             &:hover {
-                background-color: #ff7f1f;
-                border-color: #ff7f1f;
+                background-color: $color-orange-450-legacy;
+                border-color: $color-orange-450-legacy;
             }
         }
 
