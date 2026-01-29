@@ -376,7 +376,7 @@ const emit = defineEmits(['cancel'])
 
 .schedule-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $color-indigo-legacy 0%, $color-purple-legacy 100%);
   padding: $spacer-xl $spacer-md;
 }
 
@@ -441,7 +441,7 @@ const emit = defineEmits(['cancel'])
 }
 
 .progress-step.active .step-number {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, $color-indigo-legacy, $color-purple-legacy);
   color: $color-white;
 }
 
@@ -561,8 +561,8 @@ const emit = defineEmits(['cancel'])
 }
 
 .calendar-day:not(.empty):not(.disabled):hover {
-  border-color: #667eea;
-  background: #f0f4ff;
+  border-color: $color-indigo-legacy;
+  background: $color-blue-100-legacy;
 }
 
 .calendar-day.empty {
@@ -578,9 +578,9 @@ const emit = defineEmits(['cancel'])
 }
 
 .calendar-day.selected {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, $color-indigo-legacy, $color-purple-legacy);
   color: $color-white;
-  border-color: #667eea;
+  border-color: $color-indigo-legacy;
 }
 
 /* Time Slots */
@@ -617,14 +617,14 @@ const emit = defineEmits(['cancel'])
 }
 
 .timeslot:hover {
-  border-color: #667eea;
-  background: #f0f4ff;
+  border-color: $color-indigo-legacy;
+  background: $color-blue-100-legacy;
 }
 
 .timeslot.selected {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, $color-indigo-legacy, $color-purple-legacy);
   color: $color-white;
-  border-color: #667eea;
+  border-color: $color-indigo-legacy;
 }
 
 /* Confirmation Card */
@@ -633,7 +633,7 @@ const emit = defineEmits(['cancel'])
   border-radius: $border-radius-lg;
   padding: $spacer-xl;
   margin-bottom: $spacer-xl;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid $color-indigo-legacy;
 }
 
 .confirmation-section {
@@ -667,16 +667,16 @@ const emit = defineEmits(['cancel'])
 }
 
 .confirmation-info {
-  background: #eff6ff;
+  background: $color-blue-50-legacy;
   border-radius: $border-radius-md;
   padding: $spacer-md;
   margin: $spacer-lg 0;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid $color-blue-500-legacy;
 }
 
 .confirmation-info p {
   margin: $spacer-sm 0;
-  color: #1e40af;
+  color: $color-blue-900-legacy;
   font-size: $text-sm;
   line-height: $lh-normal;
 }
@@ -763,14 +763,14 @@ const emit = defineEmits(['cancel'])
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, $color-indigo-legacy, $color-purple-legacy);
   color: $color-white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba($color-indigo-legacy, 0.4);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+  box-shadow: 0 6px 16px rgba($color-indigo-legacy, 0.6);
 }
 
 .btn-primary:disabled {

@@ -28,14 +28,18 @@ const formatDate = (value) => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .table {
   width: 100%;
   border-collapse: collapse;
 }
-th, td {
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0.5rem;
+
+th,
+td {
+  border-bottom: 1px solid $color-gray-200-legacy;
+  padding: $spacer-sm;
   text-align: left;
 }
 </style>

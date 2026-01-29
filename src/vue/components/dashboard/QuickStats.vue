@@ -21,26 +21,31 @@ defineProps({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1rem;
+  gap: $spacer-md;
 }
+
 .stat {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: $border-radius-lg;
   padding: 0.75rem;
   text-align: center;
 }
+
 .label {
   margin: 0;
-  color: #6b7280;
-  font-size: 0.8rem;
+  color: $color-gray-500-legacy;
+  font-size: $text-2xs;
 }
+
 .value {
   margin: 0.3rem 0 0;
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-size: $text-xl;
+  font-weight: $fw-bold;
 }
 </style>

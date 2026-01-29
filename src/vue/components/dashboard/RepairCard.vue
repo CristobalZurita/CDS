@@ -32,42 +32,50 @@ const formatDate = (value) => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .repair-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
-  background: #fff;
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: $border-radius-lg;
+  padding: $spacer-md;
+  background: $color-white;
 }
+
 .card-header {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: $spacer-md;
   align-items: center;
 }
+
 .card-title {
   margin: 0;
 }
+
 .card-sub {
   margin: 0.2rem 0 0;
-  color: #6b7280;
-  font-size: 0.85rem;
+  color: $color-gray-500-legacy;
+  font-size: $text-sm;
 }
+
 .card-desc {
-  margin: 0.8rem 0 1rem;
-  color: #374151;
+  margin: 0.8rem 0 $spacer-md;
+  color: $color-gray-700-legacy;
 }
+
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
-  color: #6b7280;
+  font-size: $text-sm;
+  color: $color-gray-500-legacy;
 }
+
 .link {
   background: transparent;
   border: none;
-  color: #2563eb;
+  color: $color-link-blue-legacy;
   cursor: pointer;
 }
 </style>

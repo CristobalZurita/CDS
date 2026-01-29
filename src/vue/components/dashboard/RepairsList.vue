@@ -20,12 +20,15 @@ defineProps({
 defineEmits(['open'])
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .repairs-list {
   display: grid;
-  gap: 1rem;
+  gap: $spacer-md;
 }
+
 .empty {
-  color: #6b7280;
+  color: $color-gray-500-legacy;
 }
 </style>

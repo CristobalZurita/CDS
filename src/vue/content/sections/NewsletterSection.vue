@@ -114,7 +114,7 @@ const onVerify = (token) => {
 .newsletter-input {
     flex: 1 1 320px;
     border-radius: 999px;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba($color-black, 0.12);
     padding: 0.95rem 1.4rem;
     font-size: 1rem;
     color: $text-normal;

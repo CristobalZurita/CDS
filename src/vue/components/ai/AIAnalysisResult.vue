@@ -15,15 +15,18 @@ const props = defineProps({
 const formatted = computed(() => JSON.stringify(props.result, null, 2))
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .analysis {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
-  background: #f9fafb;
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: $border-radius-lg;
+  padding: $spacer-md;
+  background: $color-gray-25-legacy;
 }
+
 pre {
-  margin: 0.5rem 0 0;
+  margin: $spacer-sm 0 0;
   white-space: pre-wrap;
   word-break: break-word;
 }

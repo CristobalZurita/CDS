@@ -53,7 +53,9 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .turnstile-widget {
   display: flex;
   justify-content: center;

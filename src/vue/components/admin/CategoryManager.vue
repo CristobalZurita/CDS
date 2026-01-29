@@ -16,7 +16,9 @@ defineProps({
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .category-manager ul {
   list-style: none;
   padding: 0;
@@ -25,13 +27,13 @@ defineProps({
   gap: 0.5rem;
 }
 .category-manager li {
-  border: 1px solid #e5e7eb;
+  border: 1px solid $color-gray-200-legacy;
   border-radius: 10px;
   padding: 0.75rem;
 }
 .category-manager span {
   display: block;
-  color: #6b7280;
+  color: $color-gray-500-legacy;
   font-size: 0.85rem;
 }
 </style>

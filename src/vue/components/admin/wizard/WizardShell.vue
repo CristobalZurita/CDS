@@ -45,6 +45,8 @@ const prev = () => emit('prev')
 </script>
 
 <style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .wizard-shell {
   display: flex;
   flex-direction: column;
@@ -70,28 +72,28 @@ const prev = () => emit('prev')
   gap: 0.6rem;
   padding: 0.6rem 0.8rem;
   border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
+  border: 1px solid $color-gray-200-legacy;
+  background: $color-white;
   font-weight: 600;
-  color: #6b7280;
+  color: $color-gray-500-legacy;
 }
 
 .wizard-step.active {
-  border-color: #ec6b00;
-  color: #1f2937;
-  background: #fff6eb;
+  border-color: $color-primary;
+  color: $color-gray-800-legacy;
+  background: $color-orange-50-legacy;
 }
 
 .wizard-step.done {
-  color: #1f2937;
+  color: $color-gray-800-legacy;
 }
 
 .wizard-step-index {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: #ec6b00;
-  color: #fff;
+  background: $color-primary;
+  color: $color-white;
   font-size: 0.85rem;
   display: grid;
   place-items: center;
@@ -103,9 +105,9 @@ const prev = () => emit('prev')
 }
 
 .wizard-body {
-  background: #fff;
+  background: $color-white;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid $color-gray-200-legacy;
   padding: 1.5rem;
 }
 </style>

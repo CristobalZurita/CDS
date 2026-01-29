@@ -92,7 +92,7 @@ const accepted = ref(false)
 .disclaimer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba($color-black, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,7 +120,7 @@ const accepted = ref(false)
   align-items: flex-start;
   gap: $spacer-md;
   padding: $spacer-xl;
-  border-bottom: 2px solid #fee;
+  border-bottom: 2px solid $color-red-150-legacy;
   position: sticky;
   top: 0;
   background: $color-white;
@@ -169,7 +169,7 @@ const accepted = ref(false)
 }
 
 .highlight {
-  background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+  background: linear-gradient(135deg, $color-red-50-legacy, $color-red-100-legacy);
   border-left: 4px solid $color-danger;
   padding: $spacer-md;
   margin-bottom: $spacer-lg;

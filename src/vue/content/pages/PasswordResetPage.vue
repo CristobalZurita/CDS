@@ -21,24 +21,26 @@
 import PasswordReset from '@/vue/components/auth/PasswordReset.vue'
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .password-reset-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000;
+  background: $color-black;
   padding: 2rem;
 }
 
 .reset-container {
-  background: #d3d0c3;
+  background: $color-light;
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 40px rgba($color-black, 0.4);
   padding: 3rem 2rem;
   max-width: 520px;
   width: 100%;
-  border: 2px solid #3e3c38;
+  border: 2px solid $color-dark;
 }
 
 .reset-header {
@@ -56,7 +58,7 @@ import PasswordReset from '@/vue/components/auth/PasswordReset.vue'
   font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
   font-size: 1.4rem;
   font-weight: 800;
-  color: #3e3c38;
+  color: $color-dark;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -64,11 +66,11 @@ import PasswordReset from '@/vue/components/auth/PasswordReset.vue'
 .muted {
   margin-top: 1.5rem;
   text-align: center;
-  color: #3e3c38;
+  color: $color-dark;
 }
 
 .muted a {
-  color: #ec6b00;
+  color: $color-primary;
   font-weight: 600;
   text-decoration: none;
 }

@@ -103,18 +103,20 @@ const saveRow = (row) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .stock-sheet {
 	display: grid;
 	gap: 1rem;
 }
 
 .sheet-help {
-	background: #fff3e6;
-	border: 1px solid rgba(236, 107, 0, 0.35);
+	background: $color-orange-25-legacy;
+	border: 1px solid rgba($color-primary, 0.35);
 	border-radius: 12px;
 	padding: 1rem 1.2rem;
-	color: #3e3c38;
+	color: $color-dark;
 }
 
 .sheet-controls {

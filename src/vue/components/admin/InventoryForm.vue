@@ -101,6 +101,8 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-.card { background: #fff }
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
+.card { background: $color-white }
 </style>

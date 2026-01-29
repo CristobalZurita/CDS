@@ -32,13 +32,13 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: $spacer-lg;
   background: $vintage-beige;
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  border: 1px solid rgba(62, 60, 56, 0.2);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  margin-bottom: 1.5rem;
+  border-radius: $border-radius-lg;
+  padding: 1.25rem $spacer-lg;
+  border: 1px solid rgba($color-dark, 0.2);
+  box-shadow: 0 10px 22px rgba($color-black, 0.2);
+  margin-bottom: $spacer-lg;
 }
 
 .title {
@@ -54,17 +54,17 @@ const handleLogout = () => {
 
 .btn-logout {
   padding: 0.65rem 1.2rem;
-  background: rgba(236, 107, 0, 0.18);
+  background: rgba($color-primary, 0.18);
   color: $brand-text;
-  border: 2px solid rgba(236, 107, 0, 0.6);
-  border-radius: 8px;
-  font-weight: 600;
+  border: 2px solid rgba($color-primary, 0.6);
+  border-radius: $border-radius-md;
+  font-weight: $fw-semibold;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: $transition-fast;
 }
 
 .btn-logout:hover {
-  background: rgba(236, 107, 0, 0.3);
-  border-color: rgba(236, 107, 0, 0.75);
+  background: rgba($color-primary, 0.3);
+  border-color: rgba($color-primary, 0.75);
 }
 </style>

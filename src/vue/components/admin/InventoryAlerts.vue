@@ -20,12 +20,14 @@ const props = defineProps({
 const lowStock = computed(() => props.items.filter((item) => item.is_low_stock || item.quantity <= item.min_quantity))
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .alerts {
-  border: 1px solid #fee2e2;
+  border: 1px solid $color-red-100-legacy;
   border-radius: 12px;
   padding: 1rem;
-  background: #fff1f2;
+  background: $color-red-25-legacy;
 }
 ul {
   padding-left: 1.2rem;

@@ -105,7 +105,7 @@
                   v-for="(color, index) in previewBands"
                   :key="`${color}-${index}`"
                   class="band"
-                  :style="{ background: colorMap[color]?.bg || '#d9d2c3' }"
+                  :style="{ background: colorMap[color]?.bg || 'var(--resistor-default-band)' }"
                 ></span>
               </div>
             </div>
@@ -282,19 +282,26 @@ type ColorOption = {
   fg: string
 }
 
+const getBandColor = (name: string) => {
+  if (typeof window === 'undefined') return 'transparent'
+  const root = document.getElementById('resistor-color-calculator')
+  const styles = root ? getComputedStyle(root) : null
+  return styles?.getPropertyValue(name).trim() || 'transparent'
+}
+
 const colorMap: Record<string, { bg: string; fg: string }> = {
-  black: { bg: '#111111', fg: '#f6f3ec' },
-  brown: { bg: '#6d4c41', fg: '#f6f3ec' },
-  red: { bg: '#c62828', fg: '#f6f3ec' },
-  orange: { bg: '#ef6c00', fg: '#1a1a1a' },
-  yellow: { bg: '#f9a825', fg: '#1a1a1a' },
-  green: { bg: '#2e7d32', fg: '#f6f3ec' },
-  blue: { bg: '#1565c0', fg: '#f6f3ec' },
-  violet: { bg: '#6a1b9a', fg: '#f6f3ec' },
-  gray: { bg: '#757575', fg: '#f6f3ec' },
-  white: { bg: '#f6f3ec', fg: '#1a1a1a' },
-  gold: { bg: '#d4af37', fg: '#1a1a1a' },
-  silver: { bg: '#bdbdbd', fg: '#1a1a1a' }
+  black: { bg: getBandColor('--resistor-black-bg'), fg: getBandColor('--resistor-black-fg') },
+  brown: { bg: getBandColor('--resistor-brown-bg'), fg: getBandColor('--resistor-brown-fg') },
+  red: { bg: getBandColor('--resistor-red-bg'), fg: getBandColor('--resistor-red-fg') },
+  orange: { bg: getBandColor('--resistor-orange-bg'), fg: getBandColor('--resistor-orange-fg') },
+  yellow: { bg: getBandColor('--resistor-yellow-bg'), fg: getBandColor('--resistor-yellow-fg') },
+  green: { bg: getBandColor('--resistor-green-bg'), fg: getBandColor('--resistor-green-fg') },
+  blue: { bg: getBandColor('--resistor-blue-bg'), fg: getBandColor('--resistor-blue-fg') },
+  violet: { bg: getBandColor('--resistor-violet-bg'), fg: getBandColor('--resistor-violet-fg') },
+  gray: { bg: getBandColor('--resistor-gray-bg'), fg: getBandColor('--resistor-gray-fg') },
+  white: { bg: getBandColor('--resistor-white-bg'), fg: getBandColor('--resistor-white-fg') },
+  gold: { bg: getBandColor('--resistor-gold-bg'), fg: getBandColor('--resistor-gold-fg') },
+  silver: { bg: getBandColor('--resistor-silver-bg'), fg: getBandColor('--resistor-silver-fg') }
 }
 
 const digitColors: ColorOption[] = [
@@ -459,6 +466,31 @@ function formatOhms(value: number) {
 @import "/src/scss/_theming.scss";
 
 #resistor-color-calculator {
+  --resistor-default-band: #{$color-sand-300-legacy};
+  --resistor-black-bg: #{$color-resistor-black-legacy};
+  --resistor-black-fg: #{$color-resistor-white-legacy};
+  --resistor-brown-bg: #{$color-resistor-brown-legacy};
+  --resistor-brown-fg: #{$color-resistor-white-legacy};
+  --resistor-red-bg: #{$color-resistor-red-legacy};
+  --resistor-red-fg: #{$color-resistor-white-legacy};
+  --resistor-orange-bg: #{$color-resistor-orange-legacy};
+  --resistor-orange-fg: #{$color-resistor-darktext-legacy};
+  --resistor-yellow-bg: #{$color-resistor-yellow-legacy};
+  --resistor-yellow-fg: #{$color-resistor-darktext-legacy};
+  --resistor-green-bg: #{$color-resistor-green-legacy};
+  --resistor-green-fg: #{$color-resistor-white-legacy};
+  --resistor-blue-bg: #{$color-resistor-blue-legacy};
+  --resistor-blue-fg: #{$color-resistor-white-legacy};
+  --resistor-violet-bg: #{$color-resistor-violet-legacy};
+  --resistor-violet-fg: #{$color-resistor-white-legacy};
+  --resistor-gray-bg: #{$color-resistor-gray-legacy};
+  --resistor-gray-fg: #{$color-resistor-white-legacy};
+  --resistor-white-bg: #{$color-resistor-white-legacy};
+  --resistor-white-fg: #{$color-resistor-darktext-legacy};
+  --resistor-gold-bg: #{$color-resistor-gold-legacy};
+  --resistor-gold-fg: #{$color-resistor-darktext-legacy};
+  --resistor-silver-bg: #{$color-resistor-silver-legacy};
+  --resistor-silver-fg: #{$color-resistor-darktext-legacy};
   .resistor-layout {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
@@ -611,9 +643,9 @@ function formatOhms(value: number) {
     position: relative;
     width: min(100%, 320px);
     height: 70px;
-    background: #e6dfd1;
+    background: $color-sand-200-legacy;
     border-radius: 40px;
-    box-shadow: inset 0 0 0 6px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 0 0 6px rgba($color-black, 0.05);
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -624,7 +656,7 @@ function formatOhms(value: number) {
     width: 12px;
     height: 60%;
     border-radius: 6px;
-    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 0 0 2px rgba($color-black, 0.1);
   }
 
   .output-value {

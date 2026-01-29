@@ -545,7 +545,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
     padding: $spacer-lg $spacer-md;
     border: 2px solid $light-3;
     border-radius: $border-radius-md;
-    background: white;
+    background: $white;
     cursor: pointer;
     transition: $transition-base;
     text-align: center;
@@ -572,33 +572,33 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
       margin-bottom: $spacer-xs;
 
       &[data-tier='legendary'] {
-        background: #ffd700;
-        color: #333;
+        background: $color-gold-legacy;
+        color: $color-gray-333-legacy;
       }
 
       &[data-tier='professional'] {
-        background: #c0c0c0;
-        color: #333;
+        background: $color-silver-legacy;
+        color: $color-gray-333-legacy;
       }
 
       &[data-tier='standard'] {
-        background: #cd7f32;
-        color: white;
+        background: $color-bronze-legacy;
+        color: $white;
       }
 
       &[data-tier='specialized'] {
         background: $primary;
-        color: white;
+        color: $white;
       }
 
       &[data-tier='boutique'] {
         background: $dark;
-        color: white;
+        color: $white;
       }
 
       &[data-tier='historic'] {
-        background: #666;
-        color: white;
+        background: $color-gray-666-legacy;
+        color: $white;
       }
     }
 
@@ -630,7 +630,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
     padding: $spacer-lg;
     border: 2px solid $light-3;
     border-radius: $border-radius-md;
-    background: white;
+    background: $white;
     cursor: pointer;
     transition: $transition-base;
     text-align: left;
@@ -697,12 +697,12 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
     align-items: center;
     gap: $spacer-md;
     padding: $spacer-md;
-    background: #fff3cd;
+    background: $color-warning-bg-legacy;
     border: 2px solid $color-warning;
     border-radius: $border-radius-md;
     margin-bottom: $spacer-lg;
     font-size: $text-base;
-    color: #856404;
+    color: $color-warning-text-legacy;
 
     i {
       font-size: $text-xl;
@@ -770,7 +770,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
           display: none;
           width: 4px;
           height: 8px;
-          border: solid white;
+          border: solid $white;
           border-width: 0 2px 2px 0;
           transform: rotate(45deg);
         }
@@ -863,7 +863,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   // Quote Result
   .quote-result {
     .quote-summary {
-      background: white;
+      background: $white;
       border: 2px solid $light-3;
       border-radius: $border-radius-lg;
       padding: $spacer-xl;
@@ -951,7 +951,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
     .quote-error {
       margin-bottom: $spacer-xl;
       padding: $spacer-lg;
-      background: #fff3cd;
+      background: $color-warning-bg-legacy;
       border: 2px solid $color-warning;
       border-radius: $border-radius-md;
       display: flex;
@@ -960,7 +960,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
       i {
         font-size: $text-2xl;
-        color: #ff9800;
+        color: $color-warning-accent-legacy;
       }
 
       p {
@@ -1020,7 +1020,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
     &.btn-next {
       background: $primary;
-      color: white;
+      color: $white;
       width: 100%;
 
       &:hover:not(:disabled) {
@@ -1031,7 +1031,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
     &.btn-primary {
       background: $primary;
-      color: white;
+      color: $white;
       flex: 1;
 
       &:hover {
@@ -1041,7 +1041,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 
     &.btn-secondary {
       background: $dark;
-      color: white;
+      color: $white;
       flex: 1;
 
       &:hover {
@@ -1050,7 +1050,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
     }
 
     &.btn-outline {
-      background: white;
+      background: $white;
       color: $primary;
       border: 2px solid $primary;
       flex: 1;

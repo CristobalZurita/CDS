@@ -28,7 +28,9 @@ const toggle = (code) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .fault-detector {
   display: grid;
   gap: 0.5rem;

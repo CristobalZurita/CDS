@@ -377,7 +377,7 @@ onMounted(() => {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, $color-indigo-legacy, $color-purple-legacy);
   color: $color-white;
   display: flex;
   align-items: center;
@@ -465,7 +465,7 @@ onMounted(() => {
 }
 
 .danger-warning {
-  color: #742a2a;
+  color: $color-red-900-legacy;
   margin-bottom: $spacer-md;
 }
 
@@ -571,7 +571,7 @@ onMounted(() => {
 }
 
 .btn-save {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, $color-indigo-legacy, $color-purple-legacy);
   color: $color-white;
 }
 
@@ -591,13 +591,13 @@ onMounted(() => {
 }
 
 .btn-danger {
-  background: #fed7d7;
-  color: #742a2a;
-  border: 2px solid #fc8181;
+  background: $color-red-200-legacy;
+  color: $color-red-900-legacy;
+  border: 2px solid $color-red-500-legacy;
 }
 
 .btn-danger:hover {
-  background: #fc8181;
+  background: $color-red-500-legacy;
   color: $color-white;
 }
 

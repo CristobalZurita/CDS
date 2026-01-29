@@ -238,24 +238,24 @@ onMounted(() => {
 	border-radius: 12px;
 	padding: 1.25rem;
 	border-left: 4px solid $text-muted;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2px 8px rgba($color-black, 0.08);
 	transition: all 0.2s;
 
 	&.status-pendiente {
-		border-left-color: #ffc107;
+		border-left-color: $color-warning;
 	}
 
 	&.status-confirmado {
-		border-left-color: #198754;
+		border-left-color: $color-green-700-legacy;
 	}
 
 	&.status-cancelado {
-		border-left-color: #6c757d;
+		border-left-color: $color-secondary-legacy;
 		opacity: 0.7;
 	}
 
 	&:hover {
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+		box-shadow: 0 4px 12px rgba($color-black, 0.12);
 	}
 }
 
@@ -285,7 +285,7 @@ onMounted(() => {
 .appointment-actions {
 	margin-top: 1rem;
 	padding-top: 1rem;
-	border-top: 1px solid rgba(0, 0, 0, 0.08);
+	border-top: 1px solid rgba($color-black, 0.08);
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.5rem;

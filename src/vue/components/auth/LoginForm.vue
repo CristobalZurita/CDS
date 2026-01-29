@@ -178,11 +178,13 @@ function onVerify(token) {
 </script>
 
 <style scoped lang="scss">
+@import "/src/scss/_theming.scss";
+
 /* ===========================================
    LOGINFORM - Manual de Identidad Visual
-   Paleta: Vintage Black #3e3c38, Orange #ec6b00,
-           Vintage Orange #cc7d43, Vintage Beige #d3d0c3,
-           Black #000000, Fluor Green #d9ff4e
+   Paleta: Vintage Black ($color-dark), Orange ($color-primary),
+           Vintage Orange ($vintage-orange), Vintage Beige ($color-light),
+           Black ($color-black), Fluor Green ($fluor-green)
    Tipografía: Cervo Neue, Steelfish
    =========================================== */
 
@@ -204,7 +206,7 @@ function onVerify(token) {
     margin-bottom: 0.5rem;
     font-family: 'Cervo Neue Semibold', 'Cervo Neue', sans-serif;
     font-weight: 600;
-    color: #3e3c38; /* Vintage Black */
+    color: $brand-text; /* Vintage Black */
     text-transform: uppercase;
     font-size: 0.85rem;
     letter-spacing: 0.05em;
@@ -213,27 +215,27 @@ function onVerify(token) {
   .form-control {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid #3e3c38; /* Vintage Black */
+    border: 2px solid $brand-text; /* Vintage Black */
     border-radius: 4px;
     font-family: 'Cervo Neue', sans-serif;
     font-size: 1rem;
-    background: #ffffff;
-    color: #3e3c38; /* Vintage Black */
+    background: $white;
+    color: $brand-text; /* Vintage Black */
     transition: border-color 0.2s, box-shadow 0.2s;
 
     &::placeholder {
-      color: #cc7d43; /* Vintage Orange */
+      color: $vintage-orange; /* Vintage Orange */
       opacity: 0.6;
     }
 
     &:focus {
       outline: none;
-      border-color: #ec6b00; /* Orange - Paleta Web */
-      box-shadow: 0 0 0 3px rgba(236, 107, 0, 0.2);
+      border-color: $brand-primary; /* Orange - Paleta Web */
+      box-shadow: 0 0 0 3px rgba($brand-primary, 0.2);
     }
 
     &:disabled {
-      background-color: #d3d0c3; /* Vintage Beige */
+      background-color: $vintage-beige; /* Vintage Beige */
       cursor: not-allowed;
       opacity: 0.7;
     }
@@ -245,9 +247,9 @@ function onVerify(token) {
   }
 
   .toggle-password {
-    border: 2px solid #3e3c38;
-    background: #f8f7f2;
-    color: #3e3c38;
+    border: 2px solid $brand-text;
+    background: $brand-paper;
+    color: $brand-text;
     padding: 0 0.8rem;
     border-radius: 4px;
     font-size: 0.85rem;
@@ -256,7 +258,7 @@ function onVerify(token) {
 
   .error-text {
     display: block;
-    color: #ec6b00; /* Orange - Paleta Web */
+    color: $brand-primary; /* Orange - Paleta Web */
     font-family: 'Cervo Neue', sans-serif;
     font-size: 0.875rem;
     margin-top: 0.25rem;
@@ -269,9 +271,9 @@ function onVerify(token) {
 
   /* Botón principal - estilo de marca */
   .btn-primary {
-    background-color: #ec6b00; /* Orange - Paleta Web */
-    border: 2px solid #ec6b00;
-    color: #000000; /* Black */
+    background-color: $brand-primary; /* Orange - Paleta Web */
+    border: 2px solid $brand-primary;
+    color: $black; /* Black */
     font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -282,33 +284,33 @@ function onVerify(token) {
     transition: all 0.2s;
 
     &:hover {
-      background-color: #cc7d43; /* Vintage Orange */
-      border-color: #cc7d43;
+      background-color: $vintage-orange; /* Vintage Orange */
+      border-color: $vintage-orange;
     }
 
     &:disabled {
-      background-color: #d3d0c3; /* Vintage Beige */
-      border-color: #3e3c38;
-      color: #3e3c38;
+      background-color: $vintage-beige; /* Vintage Beige */
+      border-color: $brand-text;
+      color: $brand-text;
       cursor: not-allowed;
     }
   }
 
   .link {
-    color: #ec6b00; /* Orange - Paleta Web */
+    color: $brand-primary; /* Orange - Paleta Web */
     text-decoration: none;
     font-family: 'Cervo Neue Semibold', 'Cervo Neue', sans-serif;
     font-weight: 600;
 
     &:hover {
-      color: #cc7d43; /* Vintage Orange */
+      color: $vintage-orange; /* Vintage Orange */
       text-decoration: underline;
     }
   }
 }
 
 .text-center {
-  color: #3e3c38; /* Vintage Black */
+  color: $brand-text; /* Vintage Black */
   font-family: 'Cervo Neue', sans-serif;
 }
 
@@ -319,15 +321,15 @@ function onVerify(token) {
   font-family: 'Cervo Neue', sans-serif;
 
   &.alert-danger {
-    background-color: rgba(236, 107, 0, 0.15); /* Orange con transparencia */
-    color: #3e3c38; /* Vintage Black */
-    border: 2px solid #ec6b00; /* Orange */
+    background-color: rgba($brand-primary, 0.15); /* Orange con transparencia */
+    color: $brand-text; /* Vintage Black */
+    border: 2px solid $brand-primary; /* Orange */
   }
 }
 
 /* Spinner con colores de marca */
 .spinner-border {
-  border-color: #3e3c38;
+  border-color: $brand-text;
   border-right-color: transparent;
 }
 </style>

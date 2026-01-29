@@ -76,10 +76,12 @@ function onVerify(token) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .register-form { width: 100%; }
 .form-group { margin-bottom: 1rem; }
-.form-group input { width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; }
+.form-group input { width: 100%; padding: 0.6rem; border: 1px solid $color-gray-180-legacy; border-radius: 4px; }
 .password-field { display: flex; gap: 0.5rem; align-items: center; }
-.toggle-password { border: 1px solid #ddd; background: #f3f4f6; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
+.toggle-password { border: 1px solid $color-gray-180-legacy; background: $color-gray-100-legacy; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
 </style>

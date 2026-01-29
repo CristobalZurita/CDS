@@ -569,31 +569,31 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .sheet-header {
   position: sticky;
   top: 0;
   z-index: 5;
-  background: #f6f2ea;
+  background: $color-sand-100-legacy;
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(62, 60, 56, 0.2);
+  border-bottom: 1px solid rgba($color-dark, 0.2);
 }
 
 .sheet-context {
   display: flex;
   gap: 1.5rem;
   font-size: 0.95rem;
-  color: #5a5652;
+  color: $text-color-muted;
   margin-top: 0.35rem;
 }
-</style>
 
-<style scoped>
 .intake-sheet {
-  background: #fff;
+  background: $color-white;
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid $color-gray-200-legacy;
 }
 .sheet-header {
   display: flex;
@@ -608,11 +608,11 @@ onMounted(async () => {
   margin: 0;
 }
 .sheet-subtitle {
-  color: #6b7280;
+  color: $color-gray-500-legacy;
 }
 .code-block {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: $color-slate-25-legacy;
+  border: 1px solid $color-border-light-legacy;
   padding: 0.75rem 1rem;
   border-radius: 8px;
   text-align: right;
@@ -620,14 +620,14 @@ onMounted(async () => {
 }
 .code-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: $color-gray-500-legacy;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 .code-value {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #c2410c;
+  color: $color-orange-800-legacy;
 }
 .sheet-actions {
   display: flex;
@@ -638,14 +638,14 @@ onMounted(async () => {
 .sheet-section {
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid $color-gray-200-legacy;
 }
 .instrument-card {
-  border: 1px solid #e5e7eb;
+  border: 1px solid $color-gray-200-legacy;
   border-radius: 10px;
   padding: 1rem;
   margin-top: 1rem;
-  background: #fcfcfc;
+  background: $color-white-ice-legacy;
 }
 .instrument-header {
   display: flex;
@@ -655,12 +655,12 @@ onMounted(async () => {
 }
 .code-small {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: $color-gray-500-legacy;
 }
 .materials-section {
   margin-top: 1rem;
   padding-top: 0.5rem;
-  border-top: 1px dashed #e5e7eb;
+  border-top: 1px dashed $color-gray-200-legacy;
 }
 .sheet-footer {
   display: flex;

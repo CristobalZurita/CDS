@@ -47,19 +47,19 @@ onUnmounted(() => {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #ff8c00;
-  color: white;
+  background-color: $color-primary;
+  color: $color-white;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4);
+  font-size: $text-xl;
+  transition: $transition-base;
+  box-shadow: 0 4px 12px rgba($color-primary, 0.4);
 
   &:hover {
-    background-color: #ff6600;
+    background-color: $color-primary-dark;
     transform: translateY(-4px);
   }
 
@@ -73,7 +73,7 @@ onUnmounted(() => {
     left: auto !important;
     width: 45px;
     height: 45px;
-    font-size: 1.1rem;
+    font-size: $text-lg;
   }
 }
 </style>

@@ -187,20 +187,7 @@ const proceed = () => {
 <style lang="scss" scoped>
 @import '@/scss/_core.scss';
 
-// Variables locales del componente (colores específicos no en sistema)
-$color-green-primary: #2f855a;
-$color-green-dark: #276749;
-$color-green-darker: #22543d;
-$color-green-text: #166534;
-$color-green-light-bg: #f0fdf4;
-$color-green-border: #86efac;
-$color-border-light: #e2e8f0;
-$color-border-hover: #cbd5e0;
-$color-text-dark: #2d3748;
-$color-text-medium: #718096;
-$color-text-light: #a0aec0;
-$color-text-gray: #4a5568;
-$color-bg-light: #f7fafc;
+// Colores legacy centralizados en abstracts/_variables.scss
 
 .instrument-selector {
   padding: $spacer-md;
@@ -209,11 +196,11 @@ $color-bg-light: #f7fafc;
 .selection-section {
   margin-bottom: $spacer-xxl;
   padding-bottom: $spacer-xl;
-  border-bottom: 2px solid $color-border-light;
+  border-bottom: 2px solid $color-border-light-legacy;
 
   h3 {
     margin: 0 0 $spacer-lg 0;
-    color: $color-text-dark;
+    color: $color-text-dark-legacy;
     font-size: $text-xl;
     font-weight: $fw-semibold;
   }
@@ -227,14 +214,14 @@ $color-bg-light: #f7fafc;
   width: 100%;
   padding: $text-sm $spacer-md;
   font-size: $text-base;
-  border: 2px solid $color-border-light;
+  border: 2px solid $color-border-light-legacy;
   border-radius: $border-radius-md;
   transition: $transition-fast;
 
   &:focus {
     outline: none;
-    border-color: $color-green-primary;
-    box-shadow: 0 0 0 3px rgba($color-green-primary, 0.1);
+    border-color: $color-green-primary-legacy;
+    box-shadow: 0 0 0 3px rgba($color-green-primary-legacy, 0.1);
   }
 }
 
@@ -247,7 +234,7 @@ $color-bg-light: #f7fafc;
 
 .brand-card {
   padding: $spacer-lg;
-  border: 2px solid $color-border-light;
+  border: 2px solid $color-border-light-legacy;
   border-radius: $border-radius-lg;
   background: $color-white;
   cursor: pointer;
@@ -258,32 +245,32 @@ $color-bg-light: #f7fafc;
   gap: $spacer-sm;
 
   &:hover {
-    border-color: $color-border-hover;
+    border-color: $color-border-hover-legacy;
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba($color-black, 0.08);
   }
 
   &.active {
-    border-color: $color-green-primary;
-    background: $color-green-light-bg;
-    box-shadow: 0 0 0 3px rgba($color-green-primary, 0.1);
+    border-color: $color-green-primary-legacy;
+    background: $color-green-light-bg-legacy;
+    box-shadow: 0 0 0 3px rgba($color-green-primary-legacy, 0.1);
   }
 }
 
 .brand-name {
   font-weight: $fw-semibold;
-  color: $color-text-dark;
+  color: $color-text-dark-legacy;
   font-size: $text-lg;
 }
 
 .brand-tier {
   font-size: $text-sm;
-  color: $color-text-medium;
+  color: $color-text-medium-legacy;
 }
 
 .brand-year {
   font-size: $text-xs;
-  color: $color-text-light;
+  color: $color-text-light-legacy;
 }
 
 // Instruments Grid
@@ -295,7 +282,7 @@ $color-bg-light: #f7fafc;
 
 .instrument-card {
   padding: $spacer-md;
-  border: 2px solid $color-border-light;
+  border: 2px solid $color-border-light-legacy;
   border-radius: $border-radius-lg;
   background: $color-white;
   cursor: pointer;
@@ -306,22 +293,22 @@ $color-bg-light: #f7fafc;
   gap: $spacer-md;
 
   &:hover {
-    border-color: $color-border-hover;
+    border-color: $color-border-hover-legacy;
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba($color-black, 0.08);
   }
 
   &.active {
-    border-color: $color-green-primary;
-    background: $color-green-light-bg;
-    box-shadow: 0 0 0 3px rgba($color-green-primary, 0.1);
+    border-color: $color-green-primary-legacy;
+    background: $color-green-light-bg-legacy;
+    box-shadow: 0 0 0 3px rgba($color-green-primary-legacy, 0.1);
   }
 }
 
 .instrument-image {
   width: 100%;
   height: 150px;
-  background: $color-bg-light;
+  background: $color-bg-light-legacy;
   border-radius: $border-radius-md;
   display: flex;
   align-items: center;
@@ -337,7 +324,7 @@ $color-bg-light: #f7fafc;
 
 .no-image {
   font-size: 3rem;
-  color: $color-border-hover;
+  color: $color-border-hover-legacy;
 }
 
 .instrument-info {
@@ -349,17 +336,17 @@ $color-bg-light: #f7fafc;
 
 .instrument-model {
   font-weight: $fw-semibold;
-  color: $color-text-dark;
+  color: $color-text-dark-legacy;
 }
 
 .instrument-year {
   font-size: $text-sm;
-  color: $color-text-medium;
+  color: $color-text-medium-legacy;
 }
 
 .instrument-value {
   font-size: $text-sm;
-  color: $color-green-primary;
+  color: $color-green-primary-legacy;
   font-weight: $fw-medium;
 }
 
@@ -367,13 +354,13 @@ $color-bg-light: #f7fafc;
 .confirmation-section {
   margin-top: $spacer-xl;
   padding: $spacer-xl;
-  background: $color-green-light-bg;
-  border: 2px solid $color-green-border;
+  background: $color-green-light-bg-legacy;
+  border: 2px solid $color-green-border-legacy;
   border-radius: $border-radius-lg;
 
   h3 {
     margin: 0 0 $spacer-lg 0;
-    color: $color-green-text;
+    color: $color-green-text-legacy;
   }
 }
 
@@ -388,7 +375,7 @@ $color-bg-light: #f7fafc;
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid $color-green-light-bg;
+  border-bottom: 1px solid $color-green-light-bg-legacy;
 
   &:last-child {
     border-bottom: none;
@@ -396,11 +383,11 @@ $color-bg-light: #f7fafc;
 
   .label {
     font-weight: $fw-semibold;
-    color: $color-text-dark;
+    color: $color-text-dark-legacy;
   }
 
   .value {
-    color: $color-text-gray;
+    color: $color-text-gray-legacy;
     text-align: right;
   }
 }
@@ -408,7 +395,7 @@ $color-bg-light: #f7fafc;
 .btn-proceed {
   width: 100%;
   padding: $spacer-md;
-  background: linear-gradient(135deg, $color-green-primary, $color-green-dark);
+  background: linear-gradient(135deg, $color-green-primary-legacy, $color-green-dark-legacy);
   color: $color-white;
   border: none;
   border-radius: $border-radius-md;
@@ -416,12 +403,12 @@ $color-bg-light: #f7fafc;
   font-weight: $fw-semibold;
   cursor: pointer;
   transition: $transition-fast;
-  box-shadow: 0 4px 12px rgba($color-green-primary, 0.3);
+  box-shadow: 0 4px 12px rgba($color-green-primary-legacy, 0.3);
 
   &:hover {
-    background: linear-gradient(135deg, $color-green-dark, $color-green-darker);
+    background: linear-gradient(135deg, $color-green-dark-legacy, $color-green-darker-legacy);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba($color-green-primary, 0.4);
+    box-shadow: 0 6px 16px rgba($color-green-primary-legacy, 0.4);
   }
 }
 

@@ -17,18 +17,21 @@ defineProps({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .profile {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: $border-radius-lg;
+  padding: $spacer-md;
   display: grid;
-  gap: 0.5rem;
+  gap: $spacer-sm;
 }
+
 .meta {
   display: flex;
-  gap: 1rem;
-  color: #6b7280;
-  font-size: 0.85rem;
+  gap: $spacer-md;
+  color: $color-gray-500-legacy;
+  font-size: $text-sm;
 }
 </style>

@@ -77,10 +77,10 @@ const props = defineProps({
 }
 
 .contact-box {
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 32px 30px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba($color-white, 0.06);
+  padding: $spacer-xl 30px;
+  border-radius: $border-radius-md;
+  background: rgba($color-white, 0.03);
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -88,24 +88,24 @@ const props = defineProps({
 
 .contact-box strong {
   font-size: 1.35rem;
-  font-weight: 800;
-  color: #f5f5f5;
+  font-weight: $fw-extrabold;
+  color: $bg-paper;
 }
 
 .contact-box p {
   margin: 0;
-  font-size: 1.2rem;
-  color: #e8e8e8;
-  line-height: 1.6;
+  font-size: $text-xl;
+  color: $light-2;
+  line-height: $lh-relaxed;
 }
 
 .map-frame {
   width: 100%;
   min-height: 420px;
-  border-radius: 12px;
+  border-radius: $border-radius-lg;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  border: 1px solid rgba($color-white, 0.08);
+  box-shadow: 0 8px 24px rgba($color-black, 0.3);
 }
 
 .map-frame iframe {

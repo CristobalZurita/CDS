@@ -35,23 +35,23 @@ defineProps({
 
 .team-card {
     background: $vintage-beige;
-    border-radius: 16px;
-    border: 1px solid rgba(62, 60, 56, 0.16);
-    box-shadow: 0 12px 24px rgba(62, 60, 56, 0.15);
+    border-radius: $border-radius-xl;
+    border: 1px solid rgba($color-dark, 0.16);
+    box-shadow: 0 12px 24px rgba($color-dark, 0.15);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 1.5rem 1.25rem 1.75rem;
-    gap: 1rem;
+    padding: $spacer-lg 1.25rem 1.75rem;
+    gap: $spacer-md;
 }
 
 .team-image {
     width: 140px;
     height: 140px;
-    border-radius: 24px;
+    border-radius: $border-radius-xl;
     overflow: hidden;
-    border: 2px solid rgba(236, 107, 0, 0.5);
+    border: 2px solid rgba($color-primary, 0.5);
     background: $light-2;
 }
 
@@ -71,7 +71,7 @@ defineProps({
 .team-body p {
     margin: 0.35rem 0 0.75rem;
     color: $text-normal;
-    font-weight: 600;
+    font-weight: $fw-semibold;
 }
 
 .team-links {
@@ -84,18 +84,18 @@ defineProps({
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(62, 60, 56, 0.2);
+    border: 1px solid rgba($color-dark, 0.2);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     color: $orange-pastel;
-    background: rgba(236, 107, 0, 0.08);
-    transition: all 0.2s ease;
+    background: rgba($color-primary, 0.08);
+    transition: $transition-fast;
 }
 
 .team-links a:hover {
-    background: rgba(236, 107, 0, 0.2);
-    border-color: rgba(236, 107, 0, 0.5);
+    background: rgba($color-primary, 0.2);
+    border-color: rgba($color-primary, 0.5);
     color: $brand-text;
 }
 </style>

@@ -192,7 +192,9 @@ const submit = async () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .section-title {
   font-weight: 600;
   margin-top: 0.5rem;

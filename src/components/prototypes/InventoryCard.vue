@@ -6,8 +6,7 @@
           v-if="item.image_url"
           :src="item.image_url"
           alt=""
-          class="img-thumbnail me-3"
-          style="width:64px;height:64px;object-fit:cover;"
+          class="inventory-card-image img-thumbnail me-3"
         />
         <div>
           <h5 class="mb-0">{{ item.name }}</h5>
@@ -50,6 +49,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import '@/scss/_core.scss';
+
 .inventory-card { max-width: 420px }
+.inventory-card-image { width: 64px; height: 64px; object-fit: cover; }
 </style>

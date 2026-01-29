@@ -18,34 +18,40 @@ defineProps({
 defineEmits(['select'])
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/scss/_core.scss';
+
 .client-list {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 0.5rem;
+  gap: $spacer-sm;
 }
+
 .client-list li {
   padding: 0.75rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: $border-radius-md;
   cursor: pointer;
 }
+
 .client-header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 0.75rem;
 }
+
 .client-code {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #ec6b00;
+  font-size: $text-sm;
+  font-weight: $fw-bold;
+  color: $color-primary;
 }
+
 .client-list span {
   display: block;
-  color: #6b7280;
-  font-size: 0.95rem;
+  color: $color-gray-500-legacy;
+  font-size: $text-base;
 }
 </style>
