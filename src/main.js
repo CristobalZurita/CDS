@@ -49,6 +49,14 @@ router.afterEach((to) => {
 // Mount app
 app.mount("#app")
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {
+      // Keep silent: no hard failure for SW registration
+    })
+  })
+}
+
 // Allow mouse wheel to increment/decrement number inputs when hovered.
 document.addEventListener(
   "wheel",

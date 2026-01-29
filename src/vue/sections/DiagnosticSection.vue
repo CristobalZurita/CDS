@@ -10,7 +10,7 @@
 
         <!-- El Componente Wizard Principal -->
         <div class="container wizard-container">
-            <DiagnosticWizard />
+            <InteractiveInstrumentDiagnostic />
         </div>
 
     </section>
@@ -18,7 +18,7 @@
 
 <script setup>
 // Solo importamos el Wizard, PageWrapper ya lo maneja en Master.vue
-import DiagnosticWizard from "@/vue/components/articles/DiagnosticWizard.vue";
+import InteractiveInstrumentDiagnostic from "@/vue/components/quotation/InteractiveInstrumentDiagnostic.vue";
 </script>
 
 <style lang="scss" scoped>

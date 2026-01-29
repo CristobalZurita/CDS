@@ -1,0 +1,1578 @@
+<template>
+  <div class="interactive-diagnostic">
+    <!-- Header with Progress -->
+    <div class="diagnostic-header">
+      <h1>🎹 Diagnóstico Visual Interactivo</h1>
+      <div class="progress-tracker">
+        <div 
+          v-for="(step, idx) in steps" 
+          :key="idx"
+          class="progress-step"
+          :class="{ active: currentStep === idx, completed: currentStep > idx }"
+        >
+          <div class="step-circle">{{ idx + 1 }}</div>
+          <span class="step-label">{{ step }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1: Select/Upload Instrument -->
+    <div v-if="currentStep === 0" class="step-content">
+      <div class="upload-section">
+        <h2>Selecciona tu instrumento o sube fotos</h2>
+        
+        <div class="instrument-selector">
+          <div class="catalog-search">
+            <input 
+              v-model="searchQuery"
+              type="text"
+              placeholder="Busca por marca o modelo..."
+              @input="filterInstruments"
+            />
+            <i class="fas fa-search"></i>
+          </div>
+
+          <div v-if="filteredInstruments.length > 0" class="instruments-grid">
+            <div 
+              v-for="inst in filteredInstruments"
+              :key="inst.id"
+              class="instrument-card"
+              :class="{ selected: selectedInstrument?.id === inst.id }"
+              @click="selectInstrument(inst)"
+            >
+              <img :src="inst.imagePath" :alt="inst.model" />
+              <div class="card-info">
+                <h4>{{ inst.brandLabel }}</h4>
+                <p>{{ inst.model }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider">
+          <span>O</span>
+        </div>
+
+        <div class="upload-zone" @drop.prevent="handleDrop" @dragover.prevent>
+          <input 
+            ref="fileInput"
+            type="file"
+            multiple
+            accept="image/*"
+            @change="handleFileUpload"
+            style="display: none"
+          />
+          <div class="upload-placeholder" @click="$refs.fileInput.click()">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Arrastra fotos aquí o haz clic para seleccionar</p>
+            <small>Necesitamos: Vista frontal, trasera, y cenital (desde arriba)</small>
+          </div>
+
+          <div v-if="uploadedPhotos.length > 0" class="photo-preview-grid">
+            <div 
+              v-for="(photo, idx) in uploadedPhotos"
+              :key="idx"
+              class="photo-preview"
+            >
+              <img :src="photo.url" :alt="`Foto ${idx + 1}`" />
+              <button class="remove-btn" @click="removePhoto(idx)">
+                <i class="fas fa-times"></i>
+              </button>
+              <select v-model="photo.view" class="view-selector">
+                <option value="front">Frontal</option>
+                <option value="back">Trasera</option>
+                <option value="top">Cenital</option>
+                <option value="detail">Detalle</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button 
+          class="btn-primary btn-large"
+          :disabled="!canProceed"
+          @click="nextStep"
+        >
+          Continuar <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Component Template (Checkbox Form) -->
+    <div v-if="currentStep === 1" class="step-content">
+      <div class="template-section">
+        <h2>Completa la planilla de componentes</h2>
+        <p class="subtitle">Marca todos los elementos que tiene tu instrumento</p>
+
+        <div class="components-grid">
+          <div 
+            v-for="category in componentCategories"
+            :key="category.name"
+            class="component-category"
+          >
+            <h3>
+              <i :class="category.icon"></i>
+              {{ category.name }}
+            </h3>
+            
+            <div class="component-checkboxes">
+              <label 
+                v-for="comp in category.components"
+                :key="comp.id"
+                class="component-checkbox"
+              >
+                <input 
+                  type="checkbox"
+                  :value="comp.id"
+                  v-model="selectedComponents"
+                />
+                <span class="checkbox-custom"></span>
+                <span class="component-label">
+                  {{ comp.name }}
+                  <small v-if="comp.count">× {{ comp.count }}</small>
+                </span>
+                <input 
+                  v-if="comp.hasQuantity && selectedComponents.includes(comp.id)"
+                  type="number"
+                  v-model.number="componentQuantities[comp.id]"
+                  min="1"
+                  max="100"
+                  class="quantity-input"
+                  placeholder="Cantidad"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-secondary" @click="previousStep">
+            <i class="fas fa-arrow-left"></i> Atrás
+          </button>
+          <button class="btn-primary btn-large" @click="nextStep">
+            Continuar <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Interactive Photo Markup -->
+    <div v-if="currentStep === 2" class="step-content">
+      <div class="markup-section">
+        <h2>Marca las fallas en las fotos</h2>
+        <p class="subtitle">Haz doble clic sobre cada problema para marcarlo</p>
+
+        <div class="photo-tabs">
+          <button 
+            v-for="(photo, idx) in uploadedPhotos"
+            :key="idx"
+            class="tab-btn"
+            :class="{ active: activePhotoIndex === idx }"
+            @click="activePhotoIndex = idx"
+          >
+            <i class="fas fa-image"></i>
+            {{ photo.view === 'front' ? 'Frontal' : 
+               photo.view === 'back' ? 'Trasera' : 
+               photo.view === 'top' ? 'Cenital' : 'Detalle' }}
+          </button>
+        </div>
+
+        <div class="markup-workspace">
+          <div class="toolbar">
+            <div class="tool-group">
+              <button 
+                v-for="fault in commonFaults"
+                :key="fault.id"
+                class="tool-btn"
+                :class="{ active: selectedFaultType === fault.id }"
+                @click="selectedFaultType = fault.id"
+                :title="fault.description"
+              >
+                <i :class="fault.icon"></i>
+                {{ fault.name }}
+              </button>
+            </div>
+            <div class="tool-actions">
+              <button class="tool-btn danger" @click="clearMarkers" title="Limpiar marcas">
+                <i class="fas fa-eraser"></i>
+              </button>
+              <button class="tool-btn" @click="undoLastMarker" title="Deshacer">
+                <i class="fas fa-undo"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="canvas-container" ref="canvasContainer">
+            <canvas 
+              ref="markupCanvas"
+              @dblclick="addMarker"
+              @mousemove="updateCursor"
+            ></canvas>
+            
+            <div 
+              v-for="(marker, idx) in currentPhotoMarkers"
+              :key="idx"
+              class="fault-marker"
+              :class="`marker-${marker.type}`"
+              :style="{ left: marker.x + 'px', top: marker.y + 'px' }"
+              @click="editMarker(marker, idx)"
+            >
+              <div class="marker-icon">
+                <i :class="getFaultIcon(marker.type)"></i>
+              </div>
+              <div class="marker-label">{{ idx + 1 }}</div>
+              <button class="marker-remove" @click.stop="removeMarker(idx)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="markers-list">
+            <h4>Fallas marcadas ({{ totalMarkers }})</h4>
+            <div 
+              v-for="(marker, idx) in allMarkers"
+              :key="`${marker.photoIndex}-${idx}`"
+              class="marker-item"
+            >
+              <span class="marker-number">{{ idx + 1 }}</span>
+              <i :class="getFaultIcon(marker.type)"></i>
+              <span class="marker-description">
+                {{ getFaultName(marker.type) }} - 
+                {{ getPhotoViewName(marker.photoIndex) }}
+              </span>
+              <button 
+                class="btn-icon"
+                @click="focusMarker(marker.photoIndex, marker.markerIndex)"
+              >
+                <i class="fas fa-crosshairs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-secondary" @click="previousStep">
+            <i class="fas fa-arrow-left"></i> Atrás
+          </button>
+          <button 
+            class="btn-primary btn-large"
+            :disabled="totalMarkers === 0"
+            @click="nextStep"
+          >
+            Continuar <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Review & Quote -->
+    <div v-if="currentStep === 3" class="step-content">
+      <div class="review-section">
+        <h2>Revisión y cotización</h2>
+        
+        <!-- Disclaimer Modal -->
+        <div class="disclaimer-box">
+          <div class="disclaimer-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="disclaimer-content">
+            <h3>⚠️ Importante: Cotización Preliminar</h3>
+            <p>
+              Esta es una <strong>estimación preliminar automatizada</strong> basada en 
+              el diagnóstico visual. El costo final puede variar después de la 
+              inspección física en taller.
+            </p>
+            <ul>
+              <li>La revisión física puede revelar fallas adicionales</li>
+              <li>Algunos componentes pueden requerir repuestos especiales</li>
+              <li>Los tiempos de reparación son aproximados</li>
+            </ul>
+            <label class="disclaimer-checkbox">
+              <input type="checkbox" v-model="disclaimerAccepted" />
+              <span>He leído y acepto que esta es una cotización preliminar</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="diagnostic-summary">
+          <div class="summary-card">
+            <h3>
+              <i class="fas fa-tools"></i>
+              Resumen del diagnóstico
+            </h3>
+            
+            <div class="summary-item">
+              <strong>Instrumento:</strong>
+              <span v-if="selectedInstrument">
+                {{ selectedInstrument.brandLabel }} {{ selectedInstrument.model }}
+              </span>
+              <span v-else>Instrumento personalizado</span>
+            </div>
+
+            <div class="summary-item">
+              <strong>Componentes identificados:</strong>
+              <span>{{ selectedComponents.length }}</span>
+            </div>
+
+            <div class="summary-item">
+              <strong>Fallas detectadas:</strong>
+              <span>{{ totalMarkers }}</span>
+            </div>
+
+            <div class="summary-item">
+              <strong>Fotos del diagnóstico:</strong>
+              <span>{{ uploadedPhotos.length }}</span>
+            </div>
+          </div>
+
+          <!-- Fault Breakdown -->
+          <div class="fault-breakdown">
+            <h3>
+              <i class="fas fa-list-check"></i>
+              Desglose de fallas
+            </h3>
+            
+            <div 
+              v-for="(group, type) in groupedFaults"
+              :key="type"
+              class="fault-group"
+            >
+              <div class="fault-group-header">
+                <i :class="getFaultIcon(type)"></i>
+                <span>{{ getFaultName(type) }}</span>
+                <span class="count-badge">{{ group.length }}</span>
+              </div>
+              <ul class="fault-list">
+                <li v-for="(fault, idx) in group" :key="idx">
+                  Componente #{{ fault.markerIndex + 1 }} 
+                  ({{ getPhotoViewName(fault.photoIndex) }})
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Quote Result -->
+          <div class="quote-result">
+            <h3>
+              <i class="fas fa-calculator"></i>
+              Cotización estimada
+            </h3>
+            
+            <div v-if="quoteCalculation" class="quote-breakdown">
+              <div class="quote-row">
+                <span>Diagnóstico base:</span>
+                <span class="price">{{ formatPrice(quoteCalculation.baseDiagnostic) }}</span>
+              </div>
+              
+              <div class="quote-row">
+                <span>Reparaciones estimadas:</span>
+                <span class="price">{{ formatPrice(quoteCalculation.repairCost) }}</span>
+              </div>
+              
+              <div class="quote-row">
+                <span>Complejidad ({{ quoteCalculation.complexityFactor }}×):</span>
+                <span class="price">{{ formatPrice(quoteCalculation.complexityAdjustment) }}</span>
+              </div>
+              
+              <div class="quote-row subtotal">
+                <span>Subtotal:</span>
+                <span class="price">{{ formatPrice(quoteCalculation.subtotal) }}</span>
+              </div>
+              
+              <div class="quote-row total">
+                <span>Total estimado:</span>
+                <span class="price-large">{{ formatPrice(quoteCalculation.total) }}</span>
+              </div>
+              
+              <div class="time-estimate">
+                <i class="fas fa-clock"></i>
+                Tiempo estimado: {{ quoteCalculation.estimatedDays }} días hábiles
+              </div>
+            </div>
+
+            <div class="quote-actions">
+              <button 
+                class="btn-primary btn-large"
+                :disabled="!disclaimerAccepted"
+                @click="submitDiagnostic"
+              >
+                <i class="fas fa-paper-plane"></i>
+                Enviar diagnóstico
+              </button>
+              <button class="btn-secondary" @click="downloadReport">
+                <i class="fas fa-download"></i>
+                Descargar PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div v-if="showSuccessModal" class="modal-overlay" @click="closeSuccessModal">
+      <div class="modal-content success-modal" @click.stop>
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>¡Diagnóstico enviado!</h2>
+        <p>Hemos recibido tu solicitud de diagnóstico.</p>
+        <p>Te contactaremos pronto para coordinar la revisión en taller.</p>
+        <div class="reference-code">
+          <strong>Código de referencia:</strong>
+          <code>{{ referenceCode }}</code>
+        </div>
+        <button class="btn-primary" @click="closeSuccessModal">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, watch, nextTick } from 'vue'
+import { useInstrumentsCatalog } from '@/composables/useInstrumentsCatalog'
+
+const emit = defineEmits(['complete'])
+
+// Steps
+const steps = ['Selección', 'Componentes', 'Marcado', 'Cotización']
+const currentStep = ref(0)
+
+// Step 1: Instrument Selection
+const catalog = useInstrumentsCatalog()
+const searchQuery = ref('')
+const selectedInstrument = ref(null)
+const uploadedPhotos = ref([])
+const fileInput = ref(null)
+
+const filteredInstruments = ref([])
+const allInstruments = computed(() => {
+  const brands = catalog.getAllBrands(true)
+  const list = []
+  brands.forEach(b => {
+    list.push(...catalog.getInstrumentsByBrand(b.id))
+  })
+  return list
+})
+
+// Step 2: Component Template
+const componentCategories = ref([
+  {
+    name: 'Teclas',
+    icon: 'fas fa-keyboard',
+    components: [
+      { id: 'keys', name: 'Teclas', hasQuantity: true },
+      { id: 'keybed', name: 'Lecho de teclas', hasQuantity: false },
+      { id: 'aftertouch', name: 'Aftertouch', hasQuantity: false },
+    ]
+  },
+  {
+    name: 'Controles',
+    icon: 'fas fa-sliders-h',
+    components: [
+      { id: 'knobs', name: 'Perillas rotatorias', hasQuantity: true },
+      { id: 'sliders', name: 'Deslizantes/Faders', hasQuantity: true },
+      { id: 'buttons', name: 'Botones', hasQuantity: true },
+      { id: 'switches', name: 'Interruptores', hasQuantity: true },
+    ]
+  },
+  {
+    name: 'Conectividad',
+    icon: 'fas fa-plug',
+    components: [
+      { id: 'audio_out', name: 'Salidas de audio', hasQuantity: true },
+      { id: 'audio_in', name: 'Entradas de audio', hasQuantity: true },
+      { id: 'midi', name: 'Puertos MIDI', hasQuantity: false },
+      { id: 'cv_gate', name: 'CV/Gate', hasQuantity: true },
+      { id: 'usb', name: 'USB', hasQuantity: false },
+    ]
+  },
+  {
+    name: 'Otros',
+    icon: 'fas fa-cog',
+    components: [
+      { id: 'display', name: 'Pantalla/Display', hasQuantity: false },
+      { id: 'power', name: 'Fuente de poder', hasQuantity: false },
+      { id: 'pedals', name: 'Pedales', hasQuantity: true },
+      { id: 'wheels', name: 'Ruedas (pitch/mod)', hasQuantity: false },
+    ]
+  }
+])
+
+const selectedComponents = ref([])
+const componentQuantities = ref({})
+
+// Step 3: Photo Markup
+const activePhotoIndex = ref(0)
+const selectedFaultType = ref('broken')
+const markupCanvas = ref(null)
+const canvasContainer = ref(null)
+const photoMarkers = ref([]) // Array of arrays, one per photo
+
+const commonFaults = ref([
+  { id: 'broken', name: 'Roto', icon: 'fas fa-wrench', description: 'Componente roto o dañado', basePrice: 15000 },
+  { id: 'missing', name: 'Faltante', icon: 'fas fa-minus-circle', description: 'Componente faltante', basePrice: 20000 },
+  { id: 'loose', name: 'Suelto', icon: 'fas fa-compress-arrows-alt', description: 'Componente flojo o inestable', basePrice: 8000 },
+  { id: 'noisy', name: 'Ruidoso', icon: 'fas fa-volume-up', description: 'Ruido o estática', basePrice: 12000 },
+  { id: 'stuck', name: 'Atascado', icon: 'fas fa-lock', description: 'Componente atascado', basePrice: 10000 },
+  { id: 'oxidized', name: 'Oxidado', icon: 'fas fa-flask', description: 'Oxidación o corrosión', basePrice: 18000 },
+])
+
+// Step 4: Review
+const disclaimerAccepted = ref(false)
+const showSuccessModal = ref(false)
+const referenceCode = ref('')
+
+// Computed
+const canProceed = computed(() => {
+  return selectedInstrument.value !== null || uploadedPhotos.value.length >= 2
+})
+
+const currentPhotoMarkers = computed(() => {
+  return photoMarkers.value[activePhotoIndex.value] || []
+})
+
+const allMarkers = computed(() => {
+  const markers = []
+  photoMarkers.value.forEach((photoMarkersArray, photoIndex) => {
+    photoMarkersArray.forEach((marker, markerIndex) => {
+      markers.push({ ...marker, photoIndex, markerIndex })
+    })
+  })
+  return markers
+})
+
+const totalMarkers = computed(() => {
+  return allMarkers.value.length
+})
+
+const groupedFaults = computed(() => {
+  const grouped = {}
+  allMarkers.value.forEach(marker => {
+    if (!grouped[marker.type]) {
+      grouped[marker.type] = []
+    }
+    grouped[marker.type].push(marker)
+  })
+  return grouped
+})
+
+const quoteCalculation = computed(() => {
+  if (totalMarkers.value === 0) return null
+
+  const baseDiagnostic = 25000 // Base diagnostic fee
+  
+  // Calculate repair cost based on marked faults
+  let repairCost = 0
+  allMarkers.value.forEach(marker => {
+    const fault = commonFaults.value.find(f => f.id === marker.type)
+    if (fault) {
+      repairCost += fault.basePrice
+    }
+  })
+
+  // Complexity factor based on number of faults and components
+  const complexityFactor = 1 + (totalMarkers.value * 0.05) + (selectedComponents.value.length * 0.02)
+  const complexityAdjustment = repairCost * (complexityFactor - 1)
+  
+  const subtotal = baseDiagnostic + repairCost + complexityAdjustment
+  const total = Math.round(subtotal)
+
+  // Estimate days based on complexity
+  const estimatedDays = Math.max(3, Math.min(15, Math.ceil(totalMarkers.value * 0.5 + selectedComponents.value.length * 0.3)))
+
+  return {
+    baseDiagnostic,
+    repairCost,
+    complexityFactor: complexityFactor.toFixed(2),
+    complexityAdjustment,
+    subtotal,
+    total,
+    estimatedDays
+  }
+})
+
+// Methods
+const filterInstruments = () => {
+  const query = searchQuery.value.toLowerCase()
+  if (!query || query.trim() === '') {
+    filteredInstruments.value = allInstruments.value
+    return
+  }
+  filteredInstruments.value = catalog.searchInstruments(query)
+}
+
+const selectInstrument = (instrument) => {
+  selectedInstrument.value = instrument
+}
+
+const handleFileUpload = (event) => {
+  const files = Array.from(event.target.files)
+  processFiles(files)
+}
+
+const handleDrop = (event) => {
+  const files = Array.from(event.dataTransfer.files)
+  processFiles(files)
+}
+
+const processFiles = (files) => {
+  files.forEach((file, index) => {
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const photoIndex = uploadedPhotos.value.length
+        uploadedPhotos.value.push({
+          url: e.target.result,
+          view: index === 0 ? 'front' : index === 1 ? 'back' : index === 2 ? 'top' : 'detail',
+          file: file
+        })
+        photoMarkers.value[photoIndex] = []
+      }
+      reader.readAsDataURL(file)
+    }
+  })
+}
+
+const removePhoto = (index) => {
+  uploadedPhotos.value.splice(index, 1)
+  photoMarkers.value.splice(index, 1)
+  if (activePhotoIndex.value >= uploadedPhotos.value.length) {
+    activePhotoIndex.value = Math.max(0, uploadedPhotos.value.length - 1)
+  }
+}
+
+const initCanvas = () => {
+  if (!markupCanvas.value || !uploadedPhotos.value[activePhotoIndex.value]) return
+  
+  const canvas = markupCanvas.value
+  const container = canvasContainer.value
+  const photo = uploadedPhotos.value[activePhotoIndex.value]
+  
+  const img = new Image()
+  img.onload = () => {
+    // Set canvas size to match image
+    canvas.width = img.width
+    canvas.height = img.height
+    
+    // Scale to fit container
+    const containerWidth = container.clientWidth
+    const scale = containerWidth / img.width
+    canvas.style.width = containerWidth + 'px'
+    canvas.style.height = (img.height * scale) + 'px'
+    
+    // Draw image
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(img, 0, 0)
+  }
+  img.src = photo.url
+}
+
+const addMarker = (event) => {
+  if (!selectedFaultType.value) return
+  
+  const canvas = markupCanvas.value
+  const rect = canvas.getBoundingClientRect()
+  const scaleX = canvas.width / rect.width
+  const scaleY = canvas.height / rect.height
+  
+  const x = (event.clientX - rect.left) * scaleX
+  const y = (event.clientY - rect.top) * scaleY
+  
+  const marker = {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top,
+    actualX: x,
+    actualY: y,
+    type: selectedFaultType.value,
+    timestamp: Date.now()
+  }
+  
+  if (!photoMarkers.value[activePhotoIndex.value]) {
+    photoMarkers.value[activePhotoIndex.value] = []
+  }
+  photoMarkers.value[activePhotoIndex.value].push(marker)
+}
+
+const updateCursor = () => {
+  // Optional: Show preview of marker on hover
+}
+
+const removeMarker = (index) => {
+  photoMarkers.value[activePhotoIndex.value].splice(index, 1)
+}
+
+const clearMarkers = () => {
+  if (confirm('¿Limpiar todas las marcas de esta foto?')) {
+    photoMarkers.value[activePhotoIndex.value] = []
+  }
+}
+
+const undoLastMarker = () => {
+  if (currentPhotoMarkers.value.length > 0) {
+    photoMarkers.value[activePhotoIndex.value].pop()
+  }
+}
+
+const editMarker = () => {
+  // Optional: Open edit modal for marker
+}
+
+const focusMarker = (photoIndex) => {
+  activePhotoIndex.value = photoIndex
+}
+
+const getFaultIcon = (type) => {
+  const fault = commonFaults.value.find(f => f.id === type)
+  return fault ? fault.icon : 'fas fa-question'
+}
+
+const getFaultName = (type) => {
+  const fault = commonFaults.value.find(f => f.id === type)
+  return fault ? fault.name : 'Desconocido'
+}
+
+const getPhotoViewName = (index) => {
+  const photo = uploadedPhotos.value[index]
+  if (!photo) return 'Foto'
+  const viewNames = {
+    front: 'Frontal',
+    back: 'Trasera',
+    top: 'Cenital',
+    detail: 'Detalle'
+  }
+  return viewNames[photo.view] || 'Foto'
+}
+
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('es-CL', {
+    style: 'currency',
+    currency: 'CLP',
+    minimumFractionDigits: 0
+  }).format(price)
+}
+
+const nextStep = () => {
+  if (currentStep.value < steps.length - 1) {
+    currentStep.value++
+    if (currentStep.value === 2) {
+      nextTick(() => initCanvas())
+    }
+  }
+}
+
+const previousStep = () => {
+  if (currentStep.value > 0) {
+    currentStep.value--
+  }
+}
+
+const submitDiagnostic = async () => {
+  // Generate reference code
+  referenceCode.value = 'DIAG-' + Date.now().toString(36).toUpperCase()
+  
+  // Here you would send data to backend
+  const diagnosticData = {
+    instrument: selectedInstrument.value,
+    components: selectedComponents.value,
+    quantities: componentQuantities.value,
+    photos: uploadedPhotos.value.map(p => ({
+      view: p.view,
+      markers: photoMarkers.value[uploadedPhotos.value.indexOf(p)]
+    })),
+    quote: quoteCalculation.value,
+    referenceCode: referenceCode.value,
+    timestamp: new Date().toISOString()
+  }
+  
+  const faultTypes = Array.from(new Set(allMarkers.value.map(m => m.type)))
+  emit('complete', faultTypes)
+  console.log('Submitting diagnostic:', diagnosticData)
+  
+  // Show success modal
+  showSuccessModal.value = true
+}
+
+const downloadReport = () => {
+  // Generate PDF report (would use library like jsPDF)
+  alert('Descargando reporte PDF...')
+}
+
+const closeSuccessModal = () => {
+  showSuccessModal.value = false
+  // Reset form
+  currentStep.value = 0
+  selectedInstrument.value = null
+  uploadedPhotos.value = []
+  selectedComponents.value = []
+  photoMarkers.value = []
+  disclaimerAccepted.value = false
+}
+
+// Watch for photo changes to reinitialize canvas
+watch(activePhotoIndex, () => {
+  if (currentStep.value === 2) {
+    nextTick(() => initCanvas())
+  }
+})
+
+filteredInstruments.value = allInstruments.value
+</script>
+
+<style lang="scss" scoped>
+$primary: #FF6B35;
+$secondary: #004E89;
+$accent: #F7B32B;
+$dark: #1A1A2E;
+$danger: #E63946;
+$success: #06D6A0;
+
+$bg-light: #F8F9FA;
+$bg-card: #FFFFFF;
+$border: #E0E0E0;
+$text-primary: #2D3436;
+$text-secondary: #636E72;
+
+.interactive-diagnostic {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.diagnostic-header {
+  max-width: 1400px;
+  margin: 0 auto 3rem;
+  text-align: center;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: $dark;
+    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+  }
+}
+
+.progress-tracker {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .progress-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border-radius: 100px;
+    border: 2px solid $border;
+    transition: all 0.3s ease;
+
+    &.active {
+      border-color: $primary;
+      background: linear-gradient(135deg, $primary 0%, darken($primary, 10%) 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba($primary, 0.3);
+
+      .step-circle {
+        background: white;
+        color: $primary;
+      }
+    }
+
+    &.completed {
+      border-color: $success;
+      
+      .step-circle {
+        background: $success;
+        color: white;
+      }
+    }
+
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: $bg-light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .step-label {
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.step-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $dark;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: $text-secondary;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.upload-section {
+  .catalog-search {
+    position: relative;
+    margin-bottom: 2rem;
+
+    input {
+      width: 100%;
+      padding: 1rem 3rem 1rem 1.5rem;
+      border: 2px solid $border;
+      border-radius: 16px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 4px rgba($primary, 0.1);
+      }
+    }
+
+    i {
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $text-secondary;
+    }
+  }
+
+  .instruments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .instrument-card {
+      border: 2px solid $border;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        border-color: $primary;
+      }
+
+      &.selected {
+        border-color: $primary;
+        box-shadow: 0 0 0 4px rgba($primary, 0.2);
+
+        .card-info {
+          background: $primary;
+          color: white;
+        }
+      }
+
+      img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        background: $bg-light;
+      }
+
+      .card-info {
+        padding: 1rem;
+        transition: all 0.3s ease;
+
+        h4 {
+          font-size: 1rem;
+          font-weight: 700;
+          margin: 0 0 0.25rem 0;
+        }
+
+        p {
+          margin: 0;
+          font-size: 0.875rem;
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  .divider {
+    text-align: center;
+    margin: 2rem 0;
+    position: relative;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 45%;
+      height: 1px;
+      background: $border;
+    }
+
+    &::before { left: 0; }
+    &::after { right: 0; }
+
+    span {
+      background: white;
+      padding: 0 1rem;
+      color: $text-secondary;
+      font-weight: 600;
+    }
+  }
+
+  .upload-zone {
+    border: 3px dashed $border;
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: $primary;
+      background: rgba($primary, 0.02);
+    }
+
+    .upload-placeholder {
+      cursor: pointer;
+
+      i {
+        font-size: 3rem;
+        color: $primary;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      small {
+        color: $text-secondary;
+      }
+    }
+
+    .photo-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+
+      .photo-preview {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid $border;
+
+        img {
+          width: 100%;
+          height: 150px;
+          object-fit: cover;
+        }
+
+        .remove-btn {
+          position: absolute;
+          top: 0.5rem;
+          right: 0.5rem;
+          background: rgba($danger, 0.9);
+          color: white;
+          border: none;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        .view-selector {
+          position: absolute;
+          bottom: 0.5rem;
+          left: 0.5rem;
+          right: 0.5rem;
+          padding: 0.25rem;
+          border-radius: 6px;
+          border: none;
+          background: rgba(white, 0.9);
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+
+  .btn-primary {
+    margin-top: 2rem;
+  }
+}
+
+.components-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+
+  .component-category {
+    background: $bg-light;
+    padding: 1.5rem;
+    border-radius: 16px;
+
+    h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      color: $dark;
+    }
+  }
+
+  .component-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .component-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+
+      input[type="checkbox"] {
+        display: none;
+      }
+
+      .checkbox-custom {
+        width: 20px;
+        height: 20px;
+        border: 2px solid $border;
+        border-radius: 4px;
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 2px;
+          left: 6px;
+          width: 4px;
+          height: 8px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+          opacity: 0;
+        }
+      }
+
+      input:checked + .checkbox-custom {
+        background: $primary;
+        border-color: $primary;
+
+        &::after {
+          opacity: 1;
+        }
+      }
+
+      .component-label {
+        flex: 1;
+        font-weight: 500;
+      }
+
+      .quantity-input {
+        width: 80px;
+        padding: 0.25rem;
+        border: 1px solid $border;
+        border-radius: 6px;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+.markup-workspace {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .tool-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tool-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid $border;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+
+    &:hover {
+      border-color: $primary;
+      color: $primary;
+    }
+
+    &.active {
+      background: $primary;
+      color: white;
+      border-color: $primary;
+    }
+
+    &.danger {
+      color: $danger;
+      
+      &:hover {
+        border-color: $danger;
+      }
+    }
+  }
+}
+
+.canvas-container {
+  position: relative;
+  border: 2px solid $border;
+  border-radius: 12px;
+  overflow: hidden;
+  background: $bg-light;
+}
+
+.fault-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  
+  .marker-icon {
+    width: 32px;
+    height: 32px;
+    background: $danger;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .marker-label {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: $dark;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+  
+  .marker-remove {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: $danger;
+    color: white;
+    font-size: 0.625rem;
+    cursor: pointer;
+  }
+}
+
+.markers-list {
+  background: $bg-light;
+  padding: 1.5rem;
+  border-radius: 12px;
+
+  h4 {
+    margin-bottom: 1rem;
+    color: $dark;
+  }
+
+  .marker-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+
+    .marker-number {
+      width: 24px;
+      height: 24px;
+      background: $primary;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .marker-description {
+      flex: 1;
+      font-size: 0.875rem;
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: $secondary;
+    }
+  }
+}
+
+.photo-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+
+  .tab-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid $border;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.active {
+      background: $primary;
+      color: white;
+      border-color: $primary;
+    }
+  }
+}
+
+.disclaimer-box {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #FFF3CD;
+  border: 2px solid $accent;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+
+  .disclaimer-icon {
+    font-size: 2rem;
+    color: $accent;
+  }
+}
+
+.disclaimer-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.diagnostic-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summary-card {
+  background: $bg-light;
+  padding: 1.5rem;
+  border-radius: 12px;
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.fault-breakdown {
+  background: $bg-light;
+  padding: 1.5rem;
+  border-radius: 12px;
+
+  .fault-group {
+    margin-bottom: 1rem;
+  }
+
+  .fault-group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .count-badge {
+    background: $primary;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+  }
+}
+
+.quote-result {
+  background: $bg-light;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+  grid-column: 1 / -1;
+
+  .quote-breakdown {
+    margin-top: 1rem;
+  }
+
+  .quote-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+
+    &.total {
+      font-weight: 700;
+      font-size: 1.25rem;
+      border-top: 2px solid $border;
+      padding-top: 0.5rem;
+      margin-top: 1rem;
+    }
+  }
+
+  .price {
+    font-weight: 600;
+    color: $primary;
+  }
+
+  .price-large {
+    font-size: 1.5rem;
+    color: $primary;
+    font-weight: 800;
+  }
+
+  .time-estimate {
+    margin-top: 1rem;
+    color: $text-secondary;
+  }
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background: $primary;
+    color: white;
+  }
+
+  .btn-secondary {
+    background: $secondary;
+    color: white;
+  }
+}
+
+.btn-large {
+  padding: 1rem 2.5rem !important;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: $primary;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: $secondary;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 400px;
+}
+
+.success-icon {
+  font-size: 3rem;
+  color: $success;
+  margin-bottom: 1rem;
+}
+
+.reference-code {
+  margin-top: 1rem;
+  background: $bg-light;
+  padding: 0.75rem;
+  border-radius: 8px;
+}
