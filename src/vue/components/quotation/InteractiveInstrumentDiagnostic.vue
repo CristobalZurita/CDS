@@ -823,24 +823,12 @@ filteredInstruments.value = allInstruments.value
 </script>
 
 <style lang="scss" scoped>
-$primary: #FF6B35;
-$secondary: #004E89;
-$accent: #F7B32B;
-$dark: #1A1A2E;
-$danger: #E63946;
-$success: #06D6A0;
-
-$bg-light: #F8F9FA;
-$bg-card: #FFFFFF;
-$border: #E0E0E0;
-$text-primary: #2D3436;
-$text-secondary: #636E72;
+@import '@/scss/_core.scss';
 
 .interactive-diagnostic {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, $color-slate-50-legacy 0%, $color-slate-200-legacy 100%);
+  padding: $spacer-xl;
 }
 
 .diagnostic-header {
@@ -868,29 +856,29 @@ $text-secondary: #636E72;
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: white;
+    background: $color-white;
     border-radius: 100px;
-    border: 2px solid $border;
+    border: 2px solid $light-3;
     transition: all 0.3s ease;
 
     &.active {
       border-color: $primary;
       background: linear-gradient(135deg, $primary 0%, darken($primary, 10%) 100%);
-      color: white;
+      color: $color-white;
       box-shadow: 0 4px 12px rgba($primary, 0.3);
 
       .step-circle {
-        background: white;
+        background: $color-white;
         color: $primary;
       }
     }
 
     &.completed {
-      border-color: $success;
+      border-color: $color-success;
       
       .step-circle {
-        background: $success;
-        color: white;
+        background: $color-success;
+        color: $color-white;
       }
     }
 
@@ -898,7 +886,7 @@ $text-secondary: #636E72;
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: $bg-light;
+      background: $light-1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -916,9 +904,9 @@ $text-secondary: #636E72;
 .step-content {
   max-width: 1400px;
   margin: 0 auto;
-  background: white;
+  background: $color-white;
   border-radius: 24px;
-  padding: 3rem;
+  padding: $spacer-xxl;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
 
   h2 {
@@ -929,7 +917,7 @@ $text-secondary: #636E72;
   }
 
   .subtitle {
-    color: $text-secondary;
+    color: $text-color-muted;
     font-size: 1.125rem;
     margin-bottom: 2rem;
   }
@@ -943,7 +931,7 @@ $text-secondary: #636E72;
     input {
       width: 100%;
       padding: 1rem 3rem 1rem 1.5rem;
-      border: 2px solid $border;
+      border: 2px solid $light-3;
       border-radius: 16px;
       font-size: 1rem;
       transition: all 0.3s ease;
@@ -960,7 +948,7 @@ $text-secondary: #636E72;
       right: 1.5rem;
       top: 50%;
       transform: translateY(-50%);
-      color: $text-secondary;
+      color: $text-color-muted;
     }
   }
 
@@ -971,12 +959,12 @@ $text-secondary: #636E72;
     margin-bottom: 2rem;
 
     .instrument-card {
-      border: 2px solid $border;
+      border: 2px solid $light-3;
       border-radius: 16px;
       overflow: hidden;
       cursor: pointer;
       transition: all 0.3s ease;
-      background: white;
+      background: $color-white;
 
       &:hover {
         transform: translateY(-4px);
@@ -990,7 +978,7 @@ $text-secondary: #636E72;
 
         .card-info {
           background: $primary;
-          color: white;
+          color: $color-white;
         }
       }
 
@@ -998,7 +986,7 @@ $text-secondary: #636E72;
         width: 100%;
         height: 180px;
         object-fit: cover;
-        background: $bg-light;
+        background: $light-1;
       }
 
       .card-info {
@@ -1032,22 +1020,22 @@ $text-secondary: #636E72;
       top: 50%;
       width: 45%;
       height: 1px;
-      background: $border;
+      background: $light-3;
     }
 
     &::before { left: 0; }
     &::after { right: 0; }
 
     span {
-      background: white;
+      background: $color-white;
       padding: 0 1rem;
-      color: $text-secondary;
+      color: $text-color-muted;
       font-weight: 600;
     }
   }
 
   .upload-zone {
-    border: 3px dashed $border;
+    border: 3px dashed $light-3;
     border-radius: 20px;
     padding: 3rem;
     text-align: center;
@@ -1074,7 +1062,7 @@ $text-secondary: #636E72;
       }
 
       small {
-        color: $text-secondary;
+        color: $text-color-muted;
       }
     }
 
@@ -1088,7 +1076,7 @@ $text-secondary: #636E72;
         position: relative;
         border-radius: 12px;
         overflow: hidden;
-        border: 2px solid $border;
+        border: 2px solid $light-3;
 
         img {
           width: 100%;
@@ -1100,8 +1088,8 @@ $text-secondary: #636E72;
           position: absolute;
           top: 0.5rem;
           right: 0.5rem;
-          background: rgba($danger, 0.9);
-          color: white;
+          background: rgba($color-danger, 0.9);
+          color: $color-white;
           border: none;
           width: 28px;
           height: 28px;
@@ -1117,7 +1105,7 @@ $text-secondary: #636E72;
           padding: 0.25rem;
           border-radius: 6px;
           border: none;
-          background: rgba(white, 0.9);
+          background: rgba($color-white, 0.9);
           font-size: 0.75rem;
         }
       }
@@ -1136,7 +1124,7 @@ $text-secondary: #636E72;
   margin-bottom: 2rem;
 
   .component-category {
-    background: $bg-light;
+    background: $light-1;
     padding: 1.5rem;
     border-radius: 16px;
 
@@ -1167,7 +1155,7 @@ $text-secondary: #636E72;
       .checkbox-custom {
         width: 20px;
         height: 20px;
-        border: 2px solid $border;
+        border: 2px solid $light-3;
         border-radius: 4px;
         position: relative;
 
@@ -1178,7 +1166,7 @@ $text-secondary: #636E72;
           left: 6px;
           width: 4px;
           height: 8px;
-          border: solid white;
+          border: solid $color-white;
           border-width: 0 2px 2px 0;
           transform: rotate(45deg);
           opacity: 0;
@@ -1202,7 +1190,7 @@ $text-secondary: #636E72;
       .quantity-input {
         width: 80px;
         padding: 0.25rem;
-        border: 1px solid $border;
+        border: 1px solid $light-3;
         border-radius: 6px;
         font-size: 0.875rem;
       }
@@ -1235,9 +1223,9 @@ $text-secondary: #636E72;
 
   .tool-btn {
     padding: 0.5rem 1rem;
-    border: 2px solid $border;
+    border: 2px solid $light-3;
     border-radius: 8px;
-    background: white;
+    background: $color-white;
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 0.875rem;
@@ -1249,15 +1237,15 @@ $text-secondary: #636E72;
 
     &.active {
       background: $primary;
-      color: white;
+      color: $color-white;
       border-color: $primary;
     }
 
     &.danger {
-      color: $danger;
+      color: $color-danger;
       
       &:hover {
-        border-color: $danger;
+        border-color: $color-danger;
       }
     }
   }
@@ -1265,10 +1253,10 @@ $text-secondary: #636E72;
 
 .canvas-container {
   position: relative;
-  border: 2px solid $border;
+  border: 2px solid $light-3;
   border-radius: 12px;
   overflow: hidden;
-  background: $bg-light;
+  background: $light-1;
 }
 
 .fault-marker {
@@ -1279,12 +1267,12 @@ $text-secondary: #636E72;
   .marker-icon {
     width: 32px;
     height: 32px;
-    background: $danger;
+    background: $color-danger;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: $color-white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
   
@@ -1293,8 +1281,8 @@ $text-secondary: #636E72;
     top: -20px;
     left: 50%;
     transform: translateX(-50%);
-    background: $dark;
-    color: white;
+    background: $color-dark;
+    color: $color-white;
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.75rem;
@@ -1308,15 +1296,15 @@ $text-secondary: #636E72;
     height: 20px;
     border: none;
     border-radius: 50%;
-    background: $danger;
-    color: white;
+    background: $color-danger;
+    color: $color-white;
     font-size: 0.625rem;
     cursor: pointer;
   }
 }
 
 .markers-list {
-  background: $bg-light;
+  background: $light-1;
   padding: 1.5rem;
   border-radius: 12px;
 
@@ -1330,7 +1318,7 @@ $text-secondary: #636E72;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem;
-    background: white;
+    background: $color-white;
     border-radius: 8px;
     margin-bottom: 0.5rem;
 
@@ -1338,7 +1326,7 @@ $text-secondary: #636E72;
       width: 24px;
       height: 24px;
       background: $primary;
-      color: white;
+      color: $color-white;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -1356,7 +1344,7 @@ $text-secondary: #636E72;
       background: none;
       border: none;
       cursor: pointer;
-      color: $secondary;
+      color: $color-primary-700-legacy;
     }
   }
 }
@@ -1368,15 +1356,15 @@ $text-secondary: #636E72;
 
   .tab-btn {
     padding: 0.5rem 1rem;
-    border: 2px solid $border;
+    border: 2px solid $light-3;
     border-radius: 8px;
-    background: white;
+    background: $color-white;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &.active {
       background: $primary;
-      color: white;
+      color: $color-white;
       border-color: $primary;
     }
   }
@@ -1386,14 +1374,14 @@ $text-secondary: #636E72;
   display: flex;
   gap: 1rem;
   padding: 1.5rem;
-  background: #FFF3CD;
-  border: 2px solid $accent;
+  background: $color-warning-bg-legacy;
+  border: 2px solid $color-warning-accent-legacy;
   border-radius: 12px;
   margin-bottom: 2rem;
 
   .disclaimer-icon {
     font-size: 2rem;
-    color: $accent;
+    color: $color-warning-accent-legacy;
   }
 }
 
@@ -1416,7 +1404,7 @@ $text-secondary: #636E72;
 }
 
 .summary-card {
-  background: $bg-light;
+  background: $light-1;
   padding: 1.5rem;
   border-radius: 12px;
 
@@ -1428,7 +1416,7 @@ $text-secondary: #636E72;
 }
 
 .fault-breakdown {
-  background: $bg-light;
+  background: $light-1;
   padding: 1.5rem;
   border-radius: 12px;
 
@@ -1446,7 +1434,7 @@ $text-secondary: #636E72;
 
   .count-badge {
     background: $primary;
-    color: white;
+    color: $color-white;
     padding: 2px 8px;
     border-radius: 12px;
     font-size: 0.75rem;
@@ -1454,7 +1442,7 @@ $text-secondary: #636E72;
 }
 
 .quote-result {
-  background: $bg-light;
+  background: $light-1;
   padding: 1.5rem;
   border-radius: 12px;
   margin-top: 2rem;
@@ -1472,7 +1460,7 @@ $text-secondary: #636E72;
     &.total {
       font-weight: 700;
       font-size: 1.25rem;
-      border-top: 2px solid $border;
+      border-top: 2px solid $light-3;
       padding-top: 0.5rem;
       margin-top: 1rem;
     }
@@ -1491,7 +1479,7 @@ $text-secondary: #636E72;
 
   .time-estimate {
     margin-top: 1rem;
-    color: $text-secondary;
+    color: $text-color-muted;
   }
 }
 
@@ -1512,12 +1500,12 @@ $text-secondary: #636E72;
 
   .btn-primary {
     background: $primary;
-    color: white;
+    color: $color-white;
   }
 
   .btn-secondary {
-    background: $secondary;
-    color: white;
+    background: $color-primary-700-legacy;
+    color: $color-white;
   }
 }
 
@@ -1528,7 +1516,7 @@ $text-secondary: #636E72;
 
 .btn-primary {
   background: $primary;
-  color: white;
+  color: $color-white;
   border: none;
   border-radius: 12px;
   padding: 0.75rem 2rem;
@@ -1537,8 +1525,8 @@ $text-secondary: #636E72;
 }
 
 .btn-secondary {
-  background: $secondary;
-  color: white;
+  background: $color-primary-700-legacy;
+  color: $color-white;
   border: none;
   border-radius: 12px;
   padding: 0.75rem 2rem;
@@ -1557,7 +1545,7 @@ $text-secondary: #636E72;
 }
 
 .modal-content {
-  background: white;
+  background: $color-white;
   padding: 2rem;
   border-radius: 16px;
   text-align: center;
@@ -1566,13 +1554,13 @@ $text-secondary: #636E72;
 
 .success-icon {
   font-size: 3rem;
-  color: $success;
+  color: $color-success;
   margin-bottom: 1rem;
 }
 
 .reference-code {
   margin-top: 1rem;
-  background: $bg-light;
+  background: $light-1;
   padding: 0.75rem;
   border-radius: 8px;
 }

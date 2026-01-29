@@ -17,10 +17,8 @@
         <p>Paso 2 de 4 - Selecciona las fallas que observas</p>
       </div>
 
-      <DiagnosticWizard
-        :instrument="selectedInstrument"
+      <InteractiveInstrumentDiagnostic
         @complete="onDiagnosticComplete"
-        @back="step = 1"
       />
     </div>
 
@@ -57,13 +55,12 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotation } from '@/composables/useQuotation'
-import { useDiagnostic } from '@/composables/useDiagnostic'
 import { useQuotationStore } from '@/stores/quotation'
 import TurnstileWidget from '@/vue/components/widgets/TurnstileWidget.vue'
 
 // Components
 import InstrumentSelector from '@/vue/components/quotation/InstrumentSelector.vue'
-import DiagnosticWizard from '@/vue/components/articles/DiagnosticWizard.vue'
+import InteractiveInstrumentDiagnostic from '@/vue/components/quotation/InteractiveInstrumentDiagnostic.vue'
 import DisclaimerModal from '@/vue/components/quotation/DisclaimerModal.vue'
 import QuotationResult from '@/vue/components/quotation/QuotationResult.vue'
 
@@ -73,7 +70,6 @@ const { quotation, loading, estimate, reset } = useQuotation()
 
 // State
 const step = ref(1)
-const selectedInstrument = ref(null)
 const selectedFaults = ref([])
 const turnstileToken = ref('')
 
