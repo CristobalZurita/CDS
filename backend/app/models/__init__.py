@@ -9,6 +9,7 @@ from app.models.category import Category
 from app.models.inventory import Product
 from app.models.brand import Brand
 from app.models.instrument import Instrument
+from app.models.instrument_photo import InstrumentPhoto
 from app.models.stock import Stock
 from app.models.stock_movement import StockMovement
 from app.models.payment import Payment, PaymentStatus
@@ -46,6 +47,7 @@ __all__ = [
     "Product",
     "Brand",
     "Instrument",
+    "InstrumentPhoto",
     "Stock",
     "StockMovement",
     "Payment", "PaymentStatus",

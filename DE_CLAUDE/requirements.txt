@@ -1,0 +1,45 @@
+# FastAPI Backend Dependencies
+# Install: pip install -r requirements.txt
+
+# Core Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.9
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+
+# Data Validation
+pydantic==2.5.3
+pydantic[email]==2.5.3
+
+# Image Processing
+opencv-python-headless==4.9.0.80
+Pillow==10.2.0
+numpy==1.26.3
+
+# CORS & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+
+# Rate Limiting
+slowapi==0.1.9
+
+# Email (optional)
+fastapi-mail==1.4.1
+
+# PDF Generation (optional)
+reportlab==4.0.9
+pypdf==3.17.4
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+httpx==0.26.0
+
+# Development
+black==24.1.1
+flake8==7.0.0
+mypy==1.8.0

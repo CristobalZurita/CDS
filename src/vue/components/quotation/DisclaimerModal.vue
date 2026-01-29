@@ -92,7 +92,7 @@ const accepted = ref(false)
 .disclaimer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba($color-black, 0.6);
+  background: rgba($color-black, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,11 +103,12 @@ const accepted = ref(false)
 
 /* Modal */
 .disclaimer-modal {
-  background: $color-white;
+  background: $color-black;
+  color: $color-warning;
   border-radius: $border-radius-lg;
   max-width: 700px;
   width: 100%;
-  box-shadow: $shadow-xl;
+  box-shadow: 0 0 0 6px $color-warning, 0 18px 50px rgba($color-black, 0.6);
   display: flex;
   flex-direction: column;
   max-height: 90vh;
@@ -120,10 +121,10 @@ const accepted = ref(false)
   align-items: flex-start;
   gap: $spacer-md;
   padding: $spacer-xl;
-  border-bottom: 2px solid $color-red-150-legacy;
+  border-bottom: 4px solid $color-black;
   position: sticky;
   top: 0;
-  background: $color-white;
+  background: $color-warning;
   z-index: 1;
 }
 
@@ -135,17 +136,17 @@ const accepted = ref(false)
 
 .disclaimer-header h2 {
   margin: 0;
-  color: $color-danger;
+  color: $color-black;
   font-size: $text-xl;
   flex: 1;
 }
 
 .close-btn {
-  background: none;
-  border: none;
+  background: $color-black;
+  border: 2px solid $color-black;
   font-size: $spacer-xl;
   cursor: pointer;
-  color: $light-6;
+  color: $color-warning;
   padding: 0;
   width: $spacer-xl;
   height: $spacer-xl;
@@ -157,8 +158,8 @@ const accepted = ref(false)
 }
 
 .close-btn:hover {
-  background-color: $light-1;
-  color: $color-dark;
+  background-color: $color-danger;
+  color: $color-white;
 }
 
 /* Content */
@@ -169,8 +170,8 @@ const accepted = ref(false)
 }
 
 .highlight {
-  background: linear-gradient(135deg, $color-red-50-legacy, $color-red-100-legacy);
-  border-left: 4px solid $color-danger;
+  background: $color-warning;
+  border-left: 6px solid $color-danger;
   padding: $spacer-md;
   margin-bottom: $spacer-lg;
   border-radius: $border-radius-sm;
@@ -179,7 +180,7 @@ const accepted = ref(false)
 }
 
 .highlight strong {
-  color: $color-danger;
+  color: $color-black;
   font-weight: $fw-bold;
 }
 
@@ -194,14 +195,14 @@ const accepted = ref(false)
   padding-left: 1.75rem;
   position: relative;
   line-height: $lh-relaxed;
-  color: $color-dark;
+  color: $color-warning;
 }
 
 .disclaimer-list > li:before {
-  content: '✓';
+  content: '✖';
   position: absolute;
   left: 0;
-  color: $color-success;
+  color: $color-danger;
   font-weight: $fw-bold;
   font-size: $text-xl;
 }
@@ -215,20 +216,20 @@ const accepted = ref(false)
 .sub-list li {
   margin: $spacer-sm 0;
   font-size: $text-sm;
-  color: $text-color-muted;
+  color: $color-warning;
 }
 
 .sub-list li strong {
-  color: $color-dark;
+  color: $color-warning;
 }
 
 /* Acceptance */
 .acceptance-section {
   margin-top: $spacer-xl;
   padding: $spacer-md;
-  background: $light-1;
+  background: $color-warning;
   border-radius: $border-radius-md;
-  border: 1px solid $light-4;
+  border: 3px solid $color-black;
 }
 
 .checkbox-label {
@@ -243,13 +244,13 @@ const accepted = ref(false)
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: $color-success;
+  accent-color: $color-danger;
   flex-shrink: 0;
 }
 
 .checkbox-text {
-  color: $color-dark;
-  font-weight: $fw-medium;
+  color: $color-black;
+  font-weight: $fw-bold;
 }
 
 /* Actions */
@@ -258,8 +259,8 @@ const accepted = ref(false)
   justify-content: space-between;
   gap: $spacer-md;
   padding: $spacer-xl;
-  border-top: 1px solid $light-3;
-  background: $light-1;
+  border-top: 4px solid $color-warning;
+  background: $color-black;
   position: sticky;
   bottom: 0;
 }
@@ -277,26 +278,27 @@ const accepted = ref(false)
 }
 
 .btn-cancel {
-  background: $color-white;
-  border: 2px solid $light-4;
-  color: $text-color-muted;
+  background: transparent;
+  border: 2px solid $color-warning;
+  color: $color-warning;
 }
 
 .btn-cancel:hover {
-  background: $light-2;
-  border-color: $light-5;
+  background: $color-warning;
+  border-color: $color-warning;
+  color: $color-black;
 }
 
 .btn-accept {
-  background: linear-gradient(135deg, $color-success, darken($color-success, 10%));
+  background: $color-danger;
   color: $color-white;
-  box-shadow: 0 4px 12px rgba($color-success, 0.3);
+  box-shadow: 0 4px 12px rgba($color-danger, 0.4);
 }
 
 .btn-accept:hover:not(:disabled) {
-  background: linear-gradient(135deg, darken($color-success, 10%), darken($color-success, 15%));
+  background: darken($color-danger, 8%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba($color-success, 0.4);
+  box-shadow: 0 6px 16px rgba($color-danger, 0.5);
 }
 
 .btn-accept:active:not(:disabled) {
@@ -305,9 +307,11 @@ const accepted = ref(false)
 
 .btn-accept--disabled,
 .btn-accept:disabled {
-  background: $light-4;
+  background: $color-black;
   cursor: not-allowed;
   box-shadow: none;
+  border: 2px solid $color-warning;
+  color: $color-warning;
   opacity: 0.6;
 }
 

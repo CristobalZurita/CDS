@@ -1,0 +1,16 @@
+{
+  "name": "Cirujano de Sintetizadores",
+  "short_name": "Cirujano",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#3e3c38",
+  "theme_color": "#ec6b00",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/images/logo/logo_square_002.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
