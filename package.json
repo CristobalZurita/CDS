@@ -16,6 +16,7 @@
     "@popperjs/core": "^2.11.7",
     "axios": "^1.13.2",
     "bootstrap": "^5.2.3",
+    "dompurify": "^3.3.1",
     "emailjs": "^4.0.3",
     "gh-pages": "^6.3.0",
     "leaflet": "^1.9.4",

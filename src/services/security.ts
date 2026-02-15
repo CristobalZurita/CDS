@@ -3,7 +3,7 @@
  * Uso: sanitizeHtml(userInput), getCSRFToken(), etc
  */
 
-import DOMPurify from 'dompurify';
+import DOMPurify from 'dompurify/dist/purify.cjs';
 
 /**
  * Sanitize HTML - Prevenir XSS attacks
@@ -11,7 +11,7 @@ import DOMPurify from 'dompurify';
  * @returns HTML limpio y seguro
  */
 export function sanitizeHtml(dirty: string): string {
-  return DOMPurify.sanitize(dirty, {
+  return (DOMPurify as any).sanitize(dirty, {
     ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br'],
     ALLOWED_ATTR: [],
   });
@@ -64,7 +64,7 @@ export function validateInput(input: string, type: 'email' | 'url' | 'phone' | '
  * Check HTTPS - Asegurar que la conexión es HTTPS en producción
  */
 export function enforceHttps(): void {
-  if (import.meta.env.PROD && window.location.protocol !== 'https:') {
+  if ((import.meta.env.PROD as unknown as boolean) && window.location.protocol !== 'https:') {
     window.location.protocol = 'https:';
   }
 }

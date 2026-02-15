@@ -12,6 +12,7 @@
     "noEmit": true,
     "checkJs": false,
     "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
     "types": [],
     "typeRoots": ["./node_modules/@types"]
   },
