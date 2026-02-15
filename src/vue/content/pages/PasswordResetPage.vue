@@ -3,7 +3,7 @@
     <div class="reset-container">
       <div class="reset-header">
         <img
-          src="/images/logo/NUEVO_cirujano.png"
+          src="/images/logo/NUEVO_cirujano.webp"
           alt="Cirujano de Sintetizadores"
           class="reset-logo"
         />

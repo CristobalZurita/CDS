@@ -90,7 +90,7 @@
 
             <div class="pinout-card">
               <img
-                src="/images/calculadoras/555_Pinout.png"
+                src="/images/calculadoras/555_Pinout.webp"
                 alt="Pinout NE555"
                 class="pinout-image"
               />

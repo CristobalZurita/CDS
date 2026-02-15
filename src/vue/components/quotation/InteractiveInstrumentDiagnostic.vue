@@ -1344,7 +1344,7 @@ filteredInstruments.value = allInstruments.value
       background: none;
       border: none;
       cursor: pointer;
-      color: $color-primary-700-legacy;
+      color: $color-primary-dark;
     }
   }
 }
@@ -1504,7 +1504,7 @@ filteredInstruments.value = allInstruments.value
   }
 
   .btn-secondary {
-    background: $color-primary-700-legacy;
+    background: $color-primary-dark;
     color: $color-white;
   }
 }
@@ -1525,7 +1525,7 @@ filteredInstruments.value = allInstruments.value
 }
 
 .btn-secondary {
-  background: $color-primary-700-legacy;
+  background: $color-primary-dark;
   color: $color-white;
   border: none;
   border-radius: 12px;
@@ -1564,3 +1564,4 @@ filteredInstruments.value = allInstruments.value
   padding: 0.75rem;
   border-radius: 8px;
 }
+</style>

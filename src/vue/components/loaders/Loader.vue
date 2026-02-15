@@ -9,7 +9,7 @@
          }">
         <!-- Loader Content -->
         <div class="foxy-loader-content">
-            <ImageView src="/images/logo/logo_square_004.png"
+            <ImageView src="/images/logo/logo_square_004.webp"
                        alt="Logo"
                        class="image-view-logo"
                        :class="{

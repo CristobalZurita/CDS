@@ -107,61 +107,61 @@ const historyEvents = [
     {
         year: "Inicios",
         title: "Músico de Conservatorio",
-        image: "/images/instrumentos/KORG_MICROKORG_XL.jpg",
+        image: "/images/instrumentos/KORG_MICROKORG_XL.webp",
         description: "Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido y la música."
     },
     {
         year: "2000s",
         title: "Cineasta",
-        image: "/images/instrumentos/YAMAHA_DX7_MK1.jpg",
+        image: "/images/instrumentos/YAMAHA_DX7_MK1.webp",
         description: "Experiencia en audiovisual, sonido para cine, post-producción y diseño de audio en contextos creativos."
     },
     {
         year: "2005",
         title: "Técnico en Electrónica",
-        image: "/images/instrumentos/KORG_KINGKORG.jpg",
+        image: "/images/instrumentos/KORG_KINGKORG.webp",
         description: "Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos."
     },
     {
         year: "2008-2010",
         title: "Síntesis y Diseño Sonoro",
-        image: "/images/instrumentos/KORG_M1.jpg",
+        image: "/images/instrumentos/KORG_M1.webp",
         description: "Estudios con Ernesto Romeo en Argentina. Síntesis sustractiva, FM, granular. Diseño sonoro avanzado."
     },
     {
         year: "2010-2014",
         title: "Formación Continua",
-        image: "/images/instrumentos/YAMAHA_MONTAGE_8.jpg",
+        image: "/images/instrumentos/YAMAHA_MONTAGE_8.webp",
         description: "Clases particulares en Chile con varios especialistas. Integración de conocimientos musicales y técnicos."
     },
     {
         year: "2014",
         title: "El Origen del Taller",
-        image: "/images/instrumentos/KORG_ELECTRIBE_EMX.jpg",
+        image: "/images/instrumentos/KORG_ELECTRIBE_EMX.webp",
         description: "Alrededor de 2014, nace la necesidad de crear un espacio dedicado a la reparación especializada de equipos musicales electrónicos."
     },
     {
         year: "2015-2018",
         title: "Luthería Electrónica",
-        image: "/images/instrumentos/ROLAND_D50.jpg",
+        image: "/images/instrumentos/ROLAND_D50.webp",
         description: "Ampliación del taller: teclados, pianos eléctricos, sintetizadores, drum machines, procesadores de efecto, pedales."
     },
     {
         year: "2018-2019",
         title: "Taller en Providencia",
-        image: "/images/instrumentos/KORG_TRITON.jpg",
+        image: "/images/instrumentos/KORG_TRITON.webp",
         description: "Local comercial en Providencia, Santiago. Consolidación de procesos, experiencia con diversos modelos y estilos musicales."
     },
     {
         year: "2020",
         title: "Marimbista Profesional",
-        image: "/images/instrumentos/YAMAHA_MONTAGE_7.jpg",
+        image: "/images/instrumentos/YAMAHA_MONTAGE_7.webp",
         description: "Integración del trabajo como marimbista profesional. Posesión de marimba propia. Música y técnica unidas."
     },
     {
         year: "2024",
         title: "Valparaíso y Proyección",
-        image: "/images/instrumentos/KORG_WAVESTATE.png",
+        image: "/images/instrumentos/KORG_WAVESTATE.webp",
         description: "Cirujano de Sintetizadores en Valparaíso. Servicio especializado regional y nacional. Criterio profesional, mediciones rigurosas, pruebas en contexto musical."
     }
 ]
