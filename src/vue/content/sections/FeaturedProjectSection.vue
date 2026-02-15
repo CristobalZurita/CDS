@@ -6,7 +6,7 @@
   <PageSectionContent>
     <ArticleCustomContent>
       <!-- Último trabajo -->
-      <ProjectInfo image="/images/portfolio/ultimo-trabajo-juno106.jpg">
+      <ProjectInfo image="/images/portfolio/ultimo-trabajo-juno106.webp">
         <ProjectInfoFeaturedContent
           title="*Último trabajo*"
           description="

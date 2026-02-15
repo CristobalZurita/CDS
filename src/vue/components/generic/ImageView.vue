@@ -67,7 +67,7 @@ const _onImageLoadError = () => {
         const currentSrc = img.value?.getAttribute('src') || props.src
         if (currentSrc && currentSrc.includes('/images/instrumentos/') && !currentSrc.includes('-fallback')) {
             // Attempt a single fallback to an agency logo
-            const fallback = '/images/logo/agency-logo.png'
+            const fallback = '/images/logo/agency-logo.webp'
             if (img.value) img.value.setAttribute('src', fallback)
             loadStatus.value = LoadStatus.LOADING
             return

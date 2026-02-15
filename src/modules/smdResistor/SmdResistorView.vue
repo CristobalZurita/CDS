@@ -56,7 +56,7 @@
 
             <div class="pinout-card">
               <img
-                src="/images/calculadoras/CD40106.png"
+                src="/images/calculadoras/CD40106.webp"
                 alt="Pinout CD40106"
                 class="pinout-image"
               />

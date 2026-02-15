@@ -19,7 +19,7 @@ div.foxy-promo-background {
     width: 100%;
     z-index: -1;
 
-    background-image: url('/src/assets/header-bg.jpeg');
+    background-image: url('/src/assets/header-bg.webp');
     background-position: center;
     background-size: cover;
 }

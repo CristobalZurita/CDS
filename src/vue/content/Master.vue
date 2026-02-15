@@ -81,7 +81,7 @@ import ToastNotification from "/src/vue/components/system/ToastNotification.vue"
 import { setToastComponent } from '/src/services/toastService.js'
 
 const toastComponent = ref(null)
-const brandLogo = `${import.meta.env.BASE_URL}images/logo/logo_square_002.png`
+const brandLogo = `${import.meta.env.BASE_URL}images/logo/logo_square_002.webp`
 
 onMounted(() => {
   // Initialize toast service with component reference
@@ -92,7 +92,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-@import "/src/scss/_theming.scss";
+@import "@/scss/_theming.scss";
 
 .site-body {
   padding-top: var(--navbar-height, 120px);

@@ -40,7 +40,7 @@ const items = [
   { to: '/admin/archive', label: 'Archivo', icon: 'fa-solid fa-box-archive' }
 ]
 
-const brandLogo = `${import.meta.env.BASE_URL}images/logo/Logo%20Nuevo.jpg`
+const brandLogo = `${import.meta.env.BASE_URL}images/logo/Logo%20Nuevo.webp`
 
 const isActive = (item) => {
   if (item.to === '/admin') return route.path === '/admin'

@@ -93,7 +93,7 @@
 
           <form class="panel-form" @submit.prevent="onDecode">
             <div class="cap-visual-inline">
-              <img src="/images/calculadoras/CAP_C.png" alt="Capacitor cerámico" />
+              <img src="/images/calculadoras/CAP_C.webp" alt="Capacitor cerámico" />
               <p>Cerámico (Cap C)</p>
             </div>
             <div class="form-grid">

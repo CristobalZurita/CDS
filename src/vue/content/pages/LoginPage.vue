@@ -4,7 +4,7 @@
       <div class="login-header">
         <!-- Logo oficial desde /public/images/logo/ -->
         <img
-          src="/images/logo/NUEVO_cirujano.png"
+          src="/images/logo/NUEVO_cirujano.webp"
           alt="Cirujano de Sintetizadores"
           class="login-logo"
         />

@@ -55,7 +55,7 @@ export function useInstrumentsCatalog() {
 
   /**
    * Generate image path for an instrument
-   * Convention: /images/instruments/{instrument.id}.jpg
+   * Convention: /images/instruments/{instrument.id}.webp (now prioritizing WebP format)
    * Falls back to placeholder if not found
    */
   const getInstrumentImage = (instrument) => {
@@ -71,39 +71,43 @@ export function useInstrumentsCatalog() {
       const model = (instrument.model || '').replace(/\s+/g, '_')
       const brand = (instrument.brand || '').toUpperCase()
       const brandModel = `${brand}_${model.toUpperCase()}`
-      // Prefer common extensions and case patterns so the most likely existing file is used
+      // Prefer WebP (modern, efficient format) and common extensions
       const candidates = [
-        // Brand logo fallbacks (many repos include LOGO_BRAND.png)
-        `/images/instrumentos/LOGO_${brand}.png`,
-        `/images/instrumentos/LOGO_${brand}.jpg`,
+        // Brand logo fallbacks (prioritize WebP)
+        `/images/instrumentos/LOGO_${brand}.webp`,
+        `/images/instrumentos/LOGO_${brand}.webp`,
+        `/images/instrumentos/LOGO_${brand}.webp`,
 
-        // BRAND_MODEL uppercase with common extensions
-        `/images/instrumentos/${brandModel}.jpg`,
-        `/images/instrumentos/${brandModel}.png`,
+        // BRAND_MODEL uppercase with common extensions (WebP first)
+        `/images/instrumentos/${brandModel}.webp`,
+        `/images/instrumentos/${brandModel}.webp`,
         `/images/instrumentos/${brandModel}.webp`,
         `/images/instrumentos/${brandModel}.avif`,
 
-        // ID derived variants (uppercase underscore), try common extensions
+        // ID derived variants (uppercase underscore), try WebP first
+        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
         `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.jpg`,
         `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.png`,
-        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
 
-        // ID uppercase
-        `/images/instrumentos/${id.toUpperCase()}.jpg`,
-        `/images/instrumentos/${id.toUpperCase()}.png`,
+        // ID uppercase (WebP first)
+        `/images/instrumentos/${id.toUpperCase()}.webp`,
+        `/images/instrumentos/${id.toUpperCase()}.webp`,
+        `/images/instrumentos/${id.toUpperCase()}.webp`,
 
-        // Original id (lowercase) fallbacks
-        `/images/instrumentos/${id}.jpg`,
-        `/images/instrumentos/${id}.png`,
+        // Original id (lowercase) fallbacks (WebP first)
+        `/images/instrumentos/${id}.webp`,
+        `/images/instrumentos/${id}.webp`,
+        `/images/instrumentos/${id}.webp`,
 
-        // Model-based fallbacks
-        `/images/instrumentos/${model}.jpg`,
-        `/images/instrumentos/${model}.png`
+        // Model-based fallbacks (WebP first)
+        `/images/instrumentos/${model}.webp`,
+        `/images/instrumentos/${model}.webp`,
+        `/images/instrumentos/${model}.webp`
       ]
 
       // Return the most likely candidate (first in list). If a given file doesn't exist,
       // the browser will 404 and the UI will show the placeholder. This ordering improves
-      // hit-rate for images that are present in the repo (many are .jpg and uppercase).
+      // hit-rate for WebP images that are now the primary format in the repo.
       return candidates[0]
     }
 

@@ -3,7 +3,7 @@
     <PageHeader :id="props.id"
                 title="*<strong>RESTAURACIÓN</strong>* <span class='hero-title-sep'>&bull;</span> *<strong>MANTENCIÓN</strong>* <span class='hero-title-sep'>&bull;</span> *<strong>REPARACIÓN</strong>*"
                 subtitle=""
-                logo-url="/images/logo/NUEVO_cirujano.png"
+                logo-url="/images/logo/NUEVO_cirujano.webp"
                 :show-button="false"
                 :show-cta-buttons="true"
                 @scroll-to-top="scrollToTop"/>
