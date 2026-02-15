@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "test": "vitest --environment jsdom",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --environment jsdom --coverage",
     "build": "vite build",
     "preview": "vite preview",
     "ghdeploy": "vite build && cd dist && cp index.html 404.html"
