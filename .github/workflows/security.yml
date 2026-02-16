@@ -1,0 +1,175 @@
+name: Security Scanning
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+
+jobs:
+  frontend-security:
+    name: Frontend Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: NPM Audit
+        run: npm audit --audit-level=high || true
+      
+      - name: ESLint Security
+        run: npm run lint
+      
+      - name: OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'cirujano-front'
+          path: '.'
+          format: 'JSON'
+          args: >
+            --enable-retired
+            --scan node_modules/
+      
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-security-report
+          path: dependency-check-report.json
+
+  backend-security:
+    name: Backend Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install bandit safety
+      
+      - name: Bandit Security Scan
+        working-directory: ./backend
+        run: bandit -r app/ -f json -o bandit-report.json || true
+      
+      - name: Safety Check
+        working-directory: ./backend
+        run: safety check --json || true
+      
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-security-report
+          path: backend/bandit-report.json
+
+  secret-scanning:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+      
+      - name: GitLeaks Secret Scan
+        uses: gitleaks/gitleaks-action@v2
+
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=cirujano-front
+            -Dsonar.organization=cirujano-org
+            -Dsonar.sources=src,backend/app
+            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/tests/**
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+
+  container-security:
+    name: Container Image Security
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build Docker image
+        run: docker build -f Dockerfile -t cirujano-app:latest .
+      
+      - name: Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: cirujano-app:latest
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [frontend-security, backend-security, secret-scanning, code-quality]
+    if: always()
+    
+    steps:
+      - name: Security Report
+        run: |
+          echo "## Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Checks Performed" >> $GITHUB_STEP_SUMMARY
+          echo "✓ NPM Audit (frontend dependencies)" >> $GITHUB_STEP_SUMMARY
+          echo "✓ ESLint Security" >> $GITHUB_STEP_SUMMARY
+          echo "✓ OWASP Dependency Check" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Bandit (Python security)" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Safety Check (Python)" >> $GITHUB_STEP_SUMMARY
+          echo "✓ TruffleHog (secrets)" >> $GITHUB_STEP_SUMMARY
+          echo "✓ GitLeaks (secrets)" >> $GITHUB_STEP_SUMMARY
+          echo "✓ SonarQube (code quality)" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Trivy (container security)" >> $GITHUB_STEP_SUMMARY

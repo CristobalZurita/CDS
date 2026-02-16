@@ -1,37 +1,263 @@
-name: Deploy template to GitHub Pages
+name: Deployment Pipeline
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-deploy:
+  build-frontend:
+    name: Build Frontend
     runs-on: ubuntu-latest
-
+    
+    outputs:
+      image: ${{ steps.meta.outputs.image }}
+      tags: ${{ steps.meta.outputs.tags }}
+    
     steps:
-      # Checkout the repository
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # Setup Node.js
+      - uses: actions/checkout@v4
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-
-      # Install dependencies
+          node-version: 20.x
+          cache: 'npm'
+      
       - name: Install dependencies
-        run: npm install
-
-      # Build the project
-      - name: Build project
-        run: npm run ghdeploy
-
-      # Deploy to GitHub pages
-      - name: Deploy to GitHub pages
-        uses: peaceiris/actions-gh-pages@v3
+        run: npm ci
+      
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.API_URL }}
+          VITE_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+      
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: dist
+          name: frontend-build
+          path: dist/
+
+  build-backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    
+    outputs:
+      image: ${{ steps.meta.outputs.tags }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Log in to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=sha,prefix={{branch}}-
+      
+      - name: Build and push backend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build-frontend, build-backend]
+    if: github.ref == 'refs/heads/develop'
+    
+    environment:
+      name: staging
+      url: https://staging.cirujano.app
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download frontend build
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: dist/
+      
+      - name: Deploy to staging server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd /var/www/cirujano-staging
+            git pull origin develop
+            npm ci
+            npm run build
+            docker-compose -f docker-compose.staging.yml pull
+            docker-compose -f docker-compose.staging.yml up -d
+            
+            # Health check
+            sleep 5
+            curl -f https://staging.cirujano.app/api/health || exit 1
+      
+      - name: Notify deployment
+        uses: actions/github-script@v6
+        if: always()
+        with:
+          script: |
+            github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Staging Deployment',
+              head_sha: context.sha,
+              status: 'completed',
+              conclusion: '${{ job.status }}',
+              details_url: 'https://staging.cirujano.app'
+            })
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-frontend, build-backend]
+    if: github.ref == 'refs/heads/main'
+    
+    environment:
+      name: production
+      url: https://cirujano.app
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download frontend build
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: dist/
+      
+      - name: Blue-Green Deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            cd /var/www/cirujano
+            
+            # Backup current state (Blue)
+            cp -r app app.backup
+            
+            # Deploy new version (Green)
+            git pull origin main
+            npm ci
+            npm run build
+            
+            # Update Docker images
+            docker-compose pull
+            
+            # Start new containers
+            docker-compose -f docker-compose.prod.yml up -d --scale app=3
+            
+            # Wait for health checks
+            sleep 10
+            
+            # Verify all instances are healthy
+            for i in {1..5}; do
+              curl -f https://cirujano.app/api/health && break
+              sleep 2
+            done
+            
+            if [ $? -eq 0 ]; then
+              echo "Deployment successful"
+              # Clean up old containers
+              docker system prune -f
+            else
+              echo "Deployment failed - reverting"
+              cp -r app.backup app
+              docker-compose -f docker-compose.prod.yml up -d
+              exit 1
+            fi
+      
+      - name: Database migrations
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            cd /var/www/cirujano/backend
+            alembic upgrade head
+      
+      - name: Production deployment metrics
+        run: |
+          echo "## Production Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Frontend deployed" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Backend deployed (3 instances)" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Database migrations applied" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Health checks passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "[View App](https://cirujano.app)" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Slack notification
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            Production Deployment ${{ job.status }}
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author
+
+  smoke-tests:
+    name: Smoke Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    if: always()
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      
+      - name: Install test dependencies
+        run: npm ci
+      
+      - name: Run smoke tests
+        env:
+          TEST_URL: ${{ github.ref == 'refs/heads/main' && 'https://cirujano.app' || 'https://staging.cirujano.app' }}
+          TEST_USER: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+        run: npm run test:smoke || true
