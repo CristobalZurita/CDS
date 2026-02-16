@@ -1,7 +1,13 @@
 <template>
     <div class="team-card">
         <div class="team-image">
-            <img :src="image" :alt="name" />
+            <img 
+                :src="image" 
+                :alt="name"
+                width="140"
+                height="140"
+                loading="lazy"
+            />
         </div>
 
         <div class="team-body">

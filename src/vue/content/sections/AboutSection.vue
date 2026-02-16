@@ -33,7 +33,10 @@
                             v-if="activeEvent"
                             :src="activeEvent.image"
                             :alt="activeEvent.title"
-                            class="gallery-image">
+                            class="gallery-image"
+                            loading="lazy"
+                            width="500"
+                            height="500">
                     </div>
                 </div>
             </div>

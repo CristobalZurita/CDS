@@ -30,7 +30,13 @@
       <h3>Fotos</h3>
       <div class="photos">
         <figure v-for="photo in detail.photos" :key="photo.id">
-          <img :src="resolvePhotoUrl(photo)" :alt="photo.caption || 'foto'" />
+          <img 
+            :src="resolvePhotoUrl(photo)" 
+            :alt="photo.caption || 'foto'"
+            loading="lazy"
+            width="400"
+            height="300"
+          />
           <figcaption>{{ photo.caption || 'Foto del proceso' }}</figcaption>
         </figure>
       </div>
