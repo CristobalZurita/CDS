@@ -457,7 +457,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useInstrumentsCatalog } from '@/composables/useInstrumentsCatalog'
 
