@@ -20,6 +20,8 @@ from app.core.database import init_db, close_db
 from app.api.v1.router import api_router
 from app.core.ratelimit import limiter
 from slowapi.errors import RateLimitExceeded
+from app.routers import csrf as csrf_router
+from app.middleware.validation import ValidationMiddleware
 
 
 async def _rate_limit_exceeded_handler(request, exc):
@@ -117,6 +119,9 @@ app.add_middleware(
 
 logger.info(f"CORS configured for origins: {allowed_origins}")
 
+# Add security middlewares
+app.add_middleware(ValidationMiddleware)
+
 # Enforce HTTPS and add basic security headers when running in production
 if settings.environment and settings.environment.lower() in ("production", "prod"):
     # Redirect HTTP to HTTPS
@@ -147,6 +152,18 @@ if settings.environment and settings.environment.lower() in ("production", "prod
 
 # Include API v1 routes
 app.include_router(api_router)
+
+# Include CSRF token endpoint
+app.include_router(csrf_router.router)
+
+# Initialize audit logging service
+try:
+    from app.services.audit_service import AuditService
+    audit_service = AuditService()
+    app.state.audit_service = audit_service
+    logger.info("✓ Audit logging service initialized")
+except Exception as e:
+    logger.warning(f"Could not initialize audit service: {e}")
 
 # Serve uploaded files only in non-production or when explicitly enabled
 if (settings.environment.lower() in ("development", "dev", "testing", "test")) or settings.enable_public_uploads:
