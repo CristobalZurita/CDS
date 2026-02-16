@@ -47,8 +47,8 @@
         <!-- Step 1C: Product Photo (only if model selected) -->
         <div v-if="selectedInstrument" class="product-preview">
           <h3>{{ selectedInstrument.brandLabel }} - {{ selectedInstrument.model }}</h3>
-          <div v-if="selectedInstrument.image_url" class="product-image">
-            <img :src="selectedInstrument.image_url" :alt="selectedInstrument.model" />
+          <div v-if="selectedInstrument.imagePath && !isPlaceholderImage(selectedInstrument.imagePath)" class="product-image">
+            <img :src="selectedInstrument.imagePath" :alt="selectedInstrument.model" />
           </div>
           <div v-else class="product-image-placeholder">
             <i class="fas fa-keyboard"></i>
@@ -462,7 +462,10 @@ const availableModels = computed(() => {
   return catalog.getInstrumentsByBrand(selectedBrandId.value)
 })
 const instrumentFoundInDB = computed(() => {
-  return selectedInstrument.value && selectedInstrument.value.image_url
+  // Instrument is considered found if it has a valid image path (not placeholder)
+  return selectedInstrument.value && 
+         selectedInstrument.value.imagePath && 
+         !selectedInstrument.value.imagePath.includes('placeholder')
 })
 
 const filteredInstruments = ref([])
@@ -640,6 +643,10 @@ const onModelChange = () => {
       }
     }
   }
+}
+
+const isPlaceholderImage = (imagePath: string): boolean => {
+  return !imagePath || imagePath.includes('placeholder')
 }
 
 const filterInstruments = () => {
