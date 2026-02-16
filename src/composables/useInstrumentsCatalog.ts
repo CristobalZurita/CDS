@@ -123,8 +123,8 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
 
         // ID derived variants (uppercase underscore), try WebP first
         `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
-        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.jpg`,
-        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.png`,
+        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
+        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
 
         // ID uppercase (WebP first)
         `/images/instrumentos/${id.toUpperCase()}.webp`,
