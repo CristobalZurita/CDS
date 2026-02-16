@@ -36,3 +36,63 @@ DATABASE_URL=postgresql+asyncpg://user:pass@localhost/cirujano_db
  - Use the helper script `scripts/check_env.py` to validate your environment before starting in production: `python scripts/check_env.py --env-file .env --strict`.
 
 If you want, I can prepare a GitHub Action job that fails if `SECRET_KEY` or `JWT_SECRET` are accidentally found in committed files.
+
+## Docker & Environment Variables (Feb 2026)
+
+### Using docker-compose with environment variables
+
+The `docker-compose.yml` has been updated to use environment variables with safe defaults:
+
+```bash
+# 1. Copy .env.docker to .env and customize
+cp .env.docker .env
+
+# 2. Edit .env with your values
+nano .env
+
+# 3. Start containers with .env file
+docker-compose --env-file .env up -d
+```
+
+### Environment Files
+
+- **`.env.docker`** - Development defaults for docker-compose
+- **`.env.example`** - General reference for all available variables
+- **`.env.production.example`** - Template for production secrets (NEVER commit `.env` itself)
+- **`.env`** - LOCAL ONLY, ignored by git (see `.gitignore`)
+
+### Security Best Practices
+
+1. **Never commit secrets** - `.env` is in `.gitignore`, good practice
+2. **Use strong passwords** - For production, use `openssl rand -hex 32` to generate secure secrets
+3. **Rotate secrets regularly** - In production, rotate `SECRET_KEY`, `JWT_SECRET` periodically
+4. **CI/CD Secrets** - Store actual secrets in GitHub Actions secrets, not in files:
+   ```yaml
+   # GitHub Actions example
+   - name: Deploy with secrets
+     env:
+       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+       SECRET_KEY: ${{ secrets.SECRET_KEY }}
+     run: docker-compose up -d
+   ```
+
+5. **Production checklist**:
+   - [ ] Generate strong `SECRET_KEY`: `openssl rand -hex 32`
+   - [ ] Generate strong `JWT_SECRET`: `openssl rand -hex 32`
+   - [ ] Change `POSTGRES_PASSWORD` from default
+   - [ ] Set `ENVIRONMENT=production`
+   - [ ] Set `DEBUG=false`
+   - [ ] Use production database URL
+   - [ ] Set `VITE_API_URL` to production domain
+   - [ ] Verify `.env` is NOT in git (check `.gitignore`)
+
+### Variable Defaults in docker-compose
+
+All variables have safe defaults with `${VAR_NAME:-default_value}` syntax. If `.env` is not provided, defaults will be used, which is safe for development but NOT for production.
+
+Example database URL construction:
+```
+# From: postgresql://${POSTGRES_USER:-cirujano}:${POSTGRES_PASSWORD:-change_me}@postgres:5432/${POSTGRES_DB:-cirujano_db}
+# If .env provides: POSTGRES_USER=myuser, POSTGRES_PASSWORD=mypass
+# Result: postgresql://myuser:mypass@postgres:5432/cirujano_db
+```
