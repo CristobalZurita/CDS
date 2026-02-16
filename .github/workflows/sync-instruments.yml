@@ -1,0 +1,53 @@
+name: Sincronizar Instrumentos Automáticamente
+
+on:
+  push:
+    paths:
+      - 'public/images/instrumentos/**/*.webp'
+      - 'scripts/sync_instruments.py'
+  workflow_dispatch:  # Permite ejecución manual
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Ejecutar sincronizador
+        run: python3 scripts/sync_instruments.py
+
+      - name: Verificar cambios
+        id: changes
+        run: |
+          if git diff --quiet src/assets/data/instruments.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "---"
+            git diff src/assets/data/instruments.json | head -50
+            echo "---"
+          fi
+
+      - name: Commit y push cambios
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action - Sync Instruments"
+          git add src/assets/data/instruments.json
+          git commit -m "refactor(data): Sync instruments - new photos detected [skip ci]"
+          git push
+
+      - name: Comentar si no hay cambios
+        if: steps.changes.outputs.changed == 'false'
+        run: echo "✅ JSON ya está sincronizado con todas las fotos en disco"
