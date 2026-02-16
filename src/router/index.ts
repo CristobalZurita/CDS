@@ -4,44 +4,45 @@
  */
 
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { defineAsyncComponent } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
 // Layouts
 import Master from '@/vue/content/Master.vue'
 
-// Pages
-import HomePage from '@/vue/content/pages/HomePage.vue'
-import LoginPage from '@/vue/content/pages/LoginPage.vue'
-import RegisterPage from '@/vue/content/pages/RegisterPage.vue'
-import PasswordResetPage from '@/vue/content/pages/PasswordResetPage.vue'
-import DashboardPage from '@/vue/content/pages/DashboardPage.vue'
-import RepairsPage from '@/vue/content/pages/RepairsPage.vue'
-import RepairDetailPage from '@/vue/content/pages/RepairDetailPage.vue'
-import ProfilePage from '@/vue/content/pages/ProfilePage.vue'
-import CotizadorIAPage from '@/vue/content/pages/CotizadorIAPage.vue'
-import LicensePage from '@/vue/content/pages/LicensePage.vue'
-import PolicyPage from '@/vue/content/pages/PolicyPage.vue'
-import TermsPage from '@/vue/content/pages/TermsPage.vue'
-import PrivacyPage from '@/vue/content/pages/PrivacyPage.vue'
-import SchedulePage from '@/vue/content/pages/SchedulePage.vue'
-import CalculatorsPage from '@/vue/content/pages/CalculatorsPage.vue'
+// Lazy load pages (code splitting)
+const HomePage = defineAsyncComponent(() => import('@/vue/content/pages/HomePage.vue'))
+const LoginPage = defineAsyncComponent(() => import('@/vue/content/pages/LoginPage.vue'))
+const RegisterPage = defineAsyncComponent(() => import('@/vue/content/pages/RegisterPage.vue'))
+const PasswordResetPage = defineAsyncComponent(() => import('@/vue/content/pages/PasswordResetPage.vue'))
+const DashboardPage = defineAsyncComponent(() => import('@/vue/content/pages/DashboardPage.vue'))
+const RepairsPage = defineAsyncComponent(() => import('@/vue/content/pages/RepairsPage.vue'))
+const RepairDetailPage = defineAsyncComponent(() => import('@/vue/content/pages/RepairDetailPage.vue'))
+const ProfilePage = defineAsyncComponent(() => import('@/vue/content/pages/ProfilePage.vue'))
+const CotizadorIAPage = defineAsyncComponent(() => import('@/vue/content/pages/CotizadorIAPage.vue'))
+const LicensePage = defineAsyncComponent(() => import('@/vue/content/pages/LicensePage.vue'))
+const PolicyPage = defineAsyncComponent(() => import('@/vue/content/pages/PolicyPage.vue'))
+const TermsPage = defineAsyncComponent(() => import('@/vue/content/pages/TermsPage.vue'))
+const PrivacyPage = defineAsyncComponent(() => import('@/vue/content/pages/PrivacyPage.vue'))
+const SchedulePage = defineAsyncComponent(() => import('@/vue/content/pages/SchedulePage.vue'))
+const CalculatorsPage = defineAsyncComponent(() => import('@/vue/content/pages/CalculatorsPage.vue'))
 
-// Admin Pages
-import AdminDashboard from '@/vue/content/pages/admin/AdminDashboard.vue'
-import InventoryPage from '@/vue/content/pages/admin/InventoryPage.vue'
-import InventoryUnified from '@/views/InventoryUnified.vue'
-import ClientsPage from '@/vue/content/pages/admin/ClientsPage.vue'
-import RepairsAdminPage from '@/vue/content/pages/admin/RepairsAdminPage.vue'
-import CategoriesPage from '@/vue/content/pages/admin/CategoriesPage.vue'
-import ContactMessagesPage from '@/vue/content/pages/admin/ContactMessagesPage.vue'
-import NewsletterSubscriptionsPage from '@/vue/content/pages/admin/NewsletterSubscriptionsPage.vue'
-import AppointmentsPage from '@/vue/content/pages/admin/AppointmentsPage.vue'
-import RepairDetailAdminPage from '@/vue/content/pages/admin/RepairDetailAdminPage.vue'
-import TicketsPage from '@/vue/content/pages/admin/TicketsPage.vue'
-import PurchaseRequestsPage from '@/vue/content/pages/admin/PurchaseRequestsPage.vue'
-import ArchivePage from '@/vue/content/pages/admin/ArchivePage.vue'
-import SignaturePage from '@/vue/content/pages/SignaturePage.vue'
-import PhotoUploadPage from '@/vue/content/pages/PhotoUploadPage.vue'
+// Admin Pages - lazy load
+const AdminDashboard = defineAsyncComponent(() => import('@/vue/content/pages/admin/AdminDashboard.vue'))
+const InventoryPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/InventoryPage.vue'))
+const InventoryUnified = defineAsyncComponent(() => import('@/views/InventoryUnified.vue'))
+const ClientsPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/ClientsPage.vue'))
+const RepairsAdminPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/RepairsAdminPage.vue'))
+const CategoriesPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/CategoriesPage.vue'))
+const ContactMessagesPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/ContactMessagesPage.vue'))
+const NewsletterSubscriptionsPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/NewsletterSubscriptionsPage.vue'))
+const AppointmentsPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/AppointmentsPage.vue'))
+const RepairDetailAdminPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/RepairDetailAdminPage.vue'))
+const TicketsPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/TicketsPage.vue'))
+const PurchaseRequestsPage = defineAsyncComponent(() => import('@/vue/content/pages/admin/PurchaseRequestsPage.vue'))
+const ArchivePage = defineAsyncComponent(() => import('@/vue/content/pages/admin/ArchivePage.vue'))
+const SignaturePage = defineAsyncComponent(() => import('@/vue/content/pages/SignaturePage.vue'))
+const PhotoUploadPage = defineAsyncComponent(() => import('@/vue/content/pages/PhotoUploadPage.vue'))
 
 const routes: RouteRecordRaw[] = [
   // Public routes
