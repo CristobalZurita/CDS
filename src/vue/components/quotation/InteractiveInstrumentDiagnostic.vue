@@ -40,7 +40,11 @@
               :class="{ selected: selectedInstrument?.id === inst.id }"
               @click="selectInstrument(inst)"
             >
-              <img :src="inst.imagePath" :alt="inst.model" />
+              <img 
+                :src="inst.imagePath" 
+                :alt="inst.model"
+                @error="(e) => e.target.classList.add('img-broken')"
+              />
               <div class="card-info">
                 <h4>{{ inst.brandLabel }}</h4>
                 <p>{{ inst.model }}</p>
@@ -1563,5 +1567,17 @@ filteredInstruments.value = allInstruments.value
   background: $light-1;
   padding: 0.75rem;
   border-radius: 8px;
+}
+
+// Hide broken/missing images to prevent clutter
+img:broken,
+img[src=""]:not([alt]),
+img[src*="undefined"] {
+  display: none !important;
+}
+
+// Also hide images with 404 errors via onerror attribute
+img.img-broken {
+  display: none !important;
 }
 </style>

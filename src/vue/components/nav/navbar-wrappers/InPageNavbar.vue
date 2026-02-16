@@ -21,10 +21,9 @@ const authStore = useAuthStore()
 /**
  * @type {{value: SectionInfo[]}}
  */
-const currentPageSections = inject("currentPageSections")
-
-const LoaderAnimationStatus = inject("LoaderAnimationStatus")
-const loaderAnimationStatus = inject("loaderAnimationStatus")
+const currentPageSections = inject("currentPageSections", { value: [] })
+const LoaderAnimationStatus = inject("LoaderAnimationStatus", { IDLE: 'IDLE', LOADING: 'LOADING', LEAVING: 'LEAVING' })
+const loaderAnimationStatus = inject("loaderAnimationStatus", ref('IDLE'))
 
 const currentSection = ref(null)
 
@@ -74,8 +73,8 @@ onUnmounted(() => {
     window.removeEventListener('resize', _onWindowEvent)
 })
 
-watch(() => loaderAnimationStatus.value, () => {
-    if(loaderAnimationStatus.value === LoaderAnimationStatus.LEAVING) {
+watch(() => loaderAnimationStatus?.value, () => {
+    if(loaderAnimationStatus?.value === LoaderAnimationStatus?.LEAVING) {
         _onWindowEvent()
     }
 })

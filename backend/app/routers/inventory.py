@@ -78,6 +78,7 @@ def list_inventory(
             "stock": stock_qty,
             "available_stock": available_qty,
             "stock_unit": "u",  # Unidades por defecto
+            "image_url": product.image_url,  # Agregar URL de imagen desde BD
             "price": product.price,
             "min_stock": stock.minimum_stock if stock else product.min_quantity,
             "is_low_stock": available_qty <= (stock.minimum_stock if stock else product.min_quantity),

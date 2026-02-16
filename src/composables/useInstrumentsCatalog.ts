@@ -58,10 +58,13 @@ export interface UseInstrumentsCatalogComposable {
  * useInstrumentsCatalog - Central data catalog for brands and instruments
  *
  * This composable provides:
- * - Unified access to brands and instruments
+ * - Unified access to brands and instruments from JSON (catalog ONLY)
  * - Brand → Instruments mapping
- * - Image path generation based on instrument ID
- * - No database needed; all data derived from JSON
+ * - Image path generation (uses static assets only, NO inventory data)
+ * - Separates CATALOG (static) from INVENTORY (dynamic database)
+ * 
+ * NOTE: This catalog is NOT connected to inventory database.
+ * Inventory photos should come from /api/v1/inventory endpoint
  */
 export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
   // Raw data

@@ -220,6 +220,7 @@ class InventoryItemBase(BaseModel):
     supplier: Optional[str] = None
     unit_cost: int = Field(..., gt=0)
     location: Optional[str] = None
+    image_url: Optional[str] = None  # URL to product image
 
 
 class InventoryItemCreate(InventoryItemBase):

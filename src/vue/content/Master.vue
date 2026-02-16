@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, provide } from 'vue'
 import Navigation from "/src/vue/components/nav/Navigation.vue"
 import Footer from "/src/vue/components/footer/Footer.vue"
 import FooterBlock from "/src/vue/components/footer/FooterBlock.vue"
@@ -82,6 +82,15 @@ import { setToastComponent } from '/src/services/toastService.js'
 
 const toastComponent = ref(null)
 const brandLogo = `${import.meta.env.BASE_URL}images/logo/logo_square_002.webp`
+
+// Provide global injections for child components
+const currentPageSections = ref([])
+const loaderAnimationStatus = ref('IDLE')
+const LoaderAnimationStatus = { IDLE: 'IDLE', LOADING: 'LOADING', LEAVING: 'LEAVING' }
+
+provide('currentPageSections', currentPageSections)
+provide('loaderAnimationStatus', loaderAnimationStatus)
+provide('LoaderAnimationStatus', LoaderAnimationStatus)
 
 onMounted(() => {
   // Initialize toast service with component reference

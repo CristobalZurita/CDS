@@ -1,58 +1,27 @@
 <template>
-    <StateProviderLayer>
-        <FeedbacksLayer>
-            <ContentLayer>
-                <!-- Let the router mount the layout (Master) and its children -->
-                <router-view />
-            </ContentLayer>
-        </FeedbacksLayer>
-    </StateProviderLayer>
-
-    <FloatingQuoteButton />
+    <div id="app-root" class="app-container">
+        <router-view />
+    </div>
 </template>
 
 <script setup>
-import StateProviderLayer from "/src/vue/stack/StateProviderLayer.vue"
-import FeedbacksLayer from "/src/vue/stack/FeedbacksLayer.vue"
-import ContentLayer from "/src/vue/stack/ContentLayer.vue"
-import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"
-import {useEmails} from "/src/composables/emails.js"
-import { useMonitoring } from "@/composables/useMonitoring"
-import {onMounted} from "vue"
-import { setAnalyticsContext, track } from '@/analytics'
-import { AnalyticsEvents } from '@/analytics/events'
+import { onMounted } from "vue"
+import { useAuthStore } from "@/stores/auth"
+import { initAnalytics, track } from "@/analytics"
+import { AnalyticsEvents } from "@/analytics/events"
 
-const emails = useEmails()
-useMonitoring() // Initialize observability tracking
+const auth = useAuthStore()
 
 onMounted(() => {
-    emails.init()
-    setAnalyticsContext({ page: window.location.pathname })
-
-    const firedDepths = new Set()
-    const depthMap = [
-        { threshold: 0.25, event: AnalyticsEvents.SCROLL_DEPTH_25 },
-        { threshold: 0.5, event: AnalyticsEvents.SCROLL_DEPTH_50 },
-        { threshold: 0.75, event: AnalyticsEvents.SCROLL_DEPTH_75 },
-        { threshold: 0.98, event: AnalyticsEvents.SCROLL_DEPTH_100 }
-    ]
-
-    const onScroll = () => {
-        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
-        if (scrollHeight <= 0) return
-        const progress = window.scrollY / scrollHeight
-        depthMap.forEach(({ threshold, event }) => {
-            if (progress >= threshold && !firedDepths.has(event)) {
-                firedDepths.add(event)
-                track(event, null, { page: window.location.pathname })
-            }
-        })
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
+    initAnalytics()
+    track(AnalyticsEvents.PAGE_VIEW, {
+        page: window.location.pathname,
+    })
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+#app-root {
+    min-height: 100vh;
+}
 </style>
