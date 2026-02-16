@@ -53,16 +53,10 @@
             <h3>{{ selectedInstrument.brandLabel }} - {{ selectedInstrument.model }}</h3>
           </div>
 
-          <!-- Loading state -->
-          <div v-if="isLoadingVariants" class="product-image-placeholder">
-            <i class="fas fa-spinner fa-spin"></i>
-            <p>Cargando fotos...</p>
-          </div>
-
-          <!-- Main image display -->
-          <div v-else-if="imageVariants.length > 0 && selectedInstrument.imagePath && !isPlaceholderImage(selectedInstrument.imagePath)" class="product-image">
+          <!-- Main image display (show immediately, don't wait for variants) -->
+          <div v-if="selectedInstrument.imagePath && !isPlaceholderImage(selectedInstrument.imagePath)" class="product-image">
             <img 
-              :src="imageVariants[selectedPhotoVariant] || selectedInstrument.imagePath" 
+              :src="imageVariants.length > 0 ? imageVariants[selectedPhotoVariant] : selectedInstrument.imagePath" 
               :alt="`${selectedInstrument.model} - Vista ${selectedPhotoVariant + 1}`" 
             />
           </div>

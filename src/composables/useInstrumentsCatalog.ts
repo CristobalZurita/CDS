@@ -131,8 +131,8 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
         `/images/instrumentos/LOGOS/LOGO_${brand}.webp`,
       ]
 
-      // Return primary candidate (first in list)
-      // Browser will fetch and display, or show placeholder if 404
+      // Return first candidate - browser will load it
+      // If 404, placeholder will display instead
       return candidates[0]
     }
 
