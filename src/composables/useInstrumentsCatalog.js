@@ -71,43 +71,30 @@ export function useInstrumentsCatalog() {
       const model = (instrument.model || '').replace(/\s+/g, '_')
       const brand = (instrument.brand || '').toUpperCase()
       const brandModel = `${brand}_${model.toUpperCase()}`
-      // Prefer WebP (modern, efficient format) and common extensions
+
+      // Generate candidates in priority order
+      // Most candidates will have BRAND_MODEL pattern with optional suffixes
       const candidates = [
-        // Brand logo fallbacks (prioritize WebP)
-        `/images/instrumentos/LOGO_${brand}.webp`,
-        `/images/instrumentos/LOGO_${brand}.webp`,
-        `/images/instrumentos/LOGO_${brand}.webp`,
-
-        // BRAND_MODEL uppercase with common extensions (WebP first)
+        // Primary: BRAND_MODEL uppercase (most common pattern)
         `/images/instrumentos/${brandModel}.webp`,
-        `/images/instrumentos/${brandModel}.webp`,
-        `/images/instrumentos/${brandModel}.webp`,
-        `/images/instrumentos/${brandModel}.avif`,
-
-        // ID derived variants (uppercase underscore), try WebP first
+        
+        // Try with -MK1, -XL variants for known models
+        `/images/instrumentos/${brandModel}_MK1.webp`,
+        `/images/instrumentos/${brandModel}_MK2.webp`,
+        `/images/instrumentos/${brandModel}_XL.webp`,
+        `/images/instrumentos/${brandModel}_S.webp`,
+        `/images/instrumentos/${brandModel}_PLUS.webp`,
+        
+        // Try original id formats
         `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
-        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
-        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
-
-        // ID uppercase (WebP first)
-        `/images/instrumentos/${id.toUpperCase()}.webp`,
-        `/images/instrumentos/${id.toUpperCase()}.webp`,
-        `/images/instrumentos/${id.toUpperCase()}.webp`,
-
-        // Original id (lowercase) fallbacks (WebP first)
-        `/images/instrumentos/${id}.webp`,
-        `/images/instrumentos/${id}.webp`,
-        `/images/instrumentos/${id}.webp`,
-
-        // Model-based fallbacks (WebP first)
-        `/images/instrumentos/${model}.webp`,
-        `/images/instrumentos/${model}.webp`,
-        `/images/instrumentos/${model}.webp`
+        `/images/instrumentos/${id.replace(/-/g, ' ').toUpperCase()}.webp`,
+        
+        // Brand logo fallback
+        `/images/instrumentos/LOGO_${brand}.webp`,
       ]
 
-      // Return the most likely candidate (first in list). If a given file doesn't exist,
-      // the browser will 404 and the UI will show the placeholder. This ordering improves
-      // hit-rate for WebP images that are now the primary format in the repo.
+      // Return the first candidate (browser will 404 if not found)
+      // The ordering here is crucial - put most likely matches first
       return candidates[0]
     }
 
