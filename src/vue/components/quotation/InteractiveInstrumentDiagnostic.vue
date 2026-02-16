@@ -52,27 +52,40 @@
             </div>
             <h3>{{ selectedInstrument.brandLabel }} - {{ selectedInstrument.model }}</h3>
           </div>
-          <div v-if="selectedInstrument.imagePath && !isPlaceholderImage(selectedInstrument.imagePath)" class="product-image">
-            <img :src="selectedInstrument.imagePath" :alt="selectedInstrument.model" />
+
+          <!-- Loading state -->
+          <div v-if="isLoadingVariants" class="product-image-placeholder">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando fotos...</p>
           </div>
+
+          <!-- Main image display -->
+          <div v-else-if="imageVariants.length > 0 && selectedInstrument.imagePath && !isPlaceholderImage(selectedInstrument.imagePath)" class="product-image">
+            <img 
+              :src="imageVariants[selectedPhotoVariant] || selectedInstrument.imagePath" 
+              :alt="`${selectedInstrument.model} - Vista ${selectedPhotoVariant + 1}`" 
+            />
+          </div>
+
+          <!-- No image placeholder -->
           <div v-else class="product-image-placeholder">
             <i class="fas fa-keyboard"></i>
             <p>Sin imagen en la base de datos</p>
           </div>
-          
-          <!-- Show additional variants if available -->
-          <div v-if="selectedInstrument.imageVariants && selectedInstrument.imageVariants.length > 1" class="product-variants">
-            <p class="variants-label">Vistas disponibles:</p>
+
+          <!-- Thumbnail gallery (show only if 2+ photos exist) -->
+          <div v-if="imageVariants.length > 1" class="product-variants">
             <div class="variants-grid">
-              <div 
-                v-for="(variant, idx) in selectedInstrument.imageVariants" 
+              <button 
+                v-for="(variant, idx) in imageVariants" 
                 :key="idx"
                 class="variant-thumb"
-                @click="selectedPhotoVariant = idx"
                 :class="{ active: selectedPhotoVariant === idx }"
+                @click="selectedPhotoVariant = idx"
+                :title="`Vista ${idx + 1}`"
               >
                 <img :src="variant" :alt="`Vista ${idx + 1}`" />
-              </div>
+              </button>
             </div>
           </div>
         </div>
@@ -96,7 +109,7 @@
                 type="file"
                 multiple
                 accept="image/*"
-                style="display: none"
+                class="hidden"
                 @change="handleFileUpload"
               />
               <button class="btn-primary" @click="fileInput?.click()">
@@ -478,6 +491,8 @@ const fileInput = ref(null)
 const selectedBrandId = ref('')
 const selectedModelId = ref('')
 const selectedPhotoVariant = ref(0)
+const imageVariants = ref<string[]>([]) // Loaded dynamically
+const isLoadingVariants = ref(false)
 const availableBrands = computed(() => catalog.getAllBrands(true))
 const availableModels = computed(() => {
   if (!selectedBrandId.value) return []
@@ -650,15 +665,30 @@ const onBrandChange = () => {
   // Reset model selection when brand changes
   selectedModelId.value = ''
   selectedInstrument.value = null
+  imageVariants.value = []
+  selectedPhotoVariant.value = 0
   uploadedPhotos.value = []
 }
 
-const onModelChange = () => {
+const onModelChange = async () => {
   // Select the instrument when model is chosen
   if (selectedModelId.value && availableModels.value.length > 0) {
     const model = availableModels.value.find(m => m.id === selectedModelId.value)
     if (model) {
       selectedInstrument.value = model
+      selectedPhotoVariant.value = 0
+      
+      // Load image variants asynchronously
+      isLoadingVariants.value = true
+      try {
+        imageVariants.value = await catalog.getInstrumentImageVariants(model)
+      } catch (error) {
+        console.warn('Error loading image variants:', error)
+        imageVariants.value = []
+      } finally {
+        isLoadingVariants.value = false
+      }
+      
       // Clear uploads if model exists in DB
       if (instrumentFoundInDB.value) {
         uploadedPhotos.value = []

@@ -50,6 +50,8 @@ export interface UseInstrumentsCatalogComposable {
   getInstrumentsByBrand: (brandId: string) => EnrichedInstrument[]
   getInstrumentById: (instrumentId: string) => EnrichedInstrument | null
   getInstrumentImage: (instrument: Instrument) => string
+  getInstrumentImageVariants: (instrument: Instrument) => Promise<string[]>
+  getBrandLogo: (brandId: string) => string
   searchInstruments: (query: string) => EnrichedInstrument[]
 
   // Stats
@@ -139,10 +141,25 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
   }
 
   /**
-   * Get all image variants for an instrument (front, back, etc.)
-   * Returns array of image paths that may exist for this instrument
+   * Check if an image exists by trying to load it
+   * Used to build real variants list only from existing files
    */
-  const getInstrumentImageVariants = (instrument: Instrument): string[] => {
+  const imageExists = async (imagePath: string): Promise<boolean> => {
+    try {
+      const response = await fetch(imagePath, { method: 'HEAD' })
+      return response.ok
+    } catch {
+      return false
+    }
+  }
+
+  /**
+   * Get all image variants for an instrument that ACTUALLY EXIST
+   * Searches for base image and common variant suffixes
+   * Returns only paths for files that are verified to exist
+   * Pattern: BRAND_MODEL.webp, BRAND_MODEL_BACK.webp, etc.
+   */
+  const getInstrumentImageVariants = async (instrument: Instrument): Promise<string[]> => {
     if (!instrument?.id || !instrument?.brand || !instrument?.model) {
       return []
     }
@@ -155,14 +172,36 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
     
     const brandModel = `${brand}_${model}`
 
-    // Common variants in product photos (front, back, overhead, etc.)
-    return [
-      `/images/instrumentos/${brandModel}.webp`,
-      `/images/instrumentos/${brandModel}_BACK.webp`,
-      `/images/instrumentos/${brandModel}_FRONT.webp`,
-      `/images/instrumentos/${brandModel}_TOP.webp`,
-      `/images/instrumentos/${brandModel}_SIDE.webp`,
-    ].filter(path => path !== '') // Remove empty paths
+    // Possible variant suffixes in order of likelihood
+    const suffixes = [
+      '', // Base image first (e.g., BRAND_MODEL.webp)
+      '_BACK',
+      '_FRONT',
+      '_TOP',
+      '_LATERAL',
+      '_SIDE',
+      '_MK1',
+      '_MK2',
+      '_XL',
+      '_S',
+    ]
+
+    // Build candidate paths
+    const candidates = suffixes.map(
+      suffix => `/images/instrumentos/${brandModel}${suffix}.webp`
+    )
+
+    // Test each candidate and keep only ones that exist
+    const results = await Promise.all(
+      candidates.map(async (path) => ({
+        path,
+        exists: await imageExists(path)
+      }))
+    )
+
+    return results
+      .filter(r => r.exists)
+      .map(r => r.path)
   }
 
   /**
@@ -178,6 +217,7 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
   /**
    * Enrich instrument object with computed fields
    * (adds image path, formatted price, etc.)
+   * Note: imageVariants are NOT included here (loaded async by component)
    */
   const enrichInstrument = (inst: Instrument): EnrichedInstrument => {
     if (!inst) {
@@ -195,7 +235,7 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
     return {
       ...inst,
       imagePath: getInstrumentImage(inst),
-      imageVariants: getInstrumentImageVariants(inst),
+      // imageVariants: NOT included here - loaded async when needed
       brandLogo: getBrandLogo(inst.brand),
       // Do not include any price/valor fields for frontend rendering
       // Prices are not rendered in the frontend by design
@@ -271,6 +311,8 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
     getInstrumentsByBrand,
     getInstrumentById,
     getInstrumentImage,
+    getInstrumentImageVariants,
+    getBrandLogo,
     searchInstruments,
 
     // Stats
