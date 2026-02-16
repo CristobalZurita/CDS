@@ -1,0 +1,2216 @@
+{
+  "version": "1.0.0",
+  "total_bases": 214,
+  "total_variantes": 35,
+  "total_fotos": 249,
+  "instruments": [
+    {
+      "id": "access_virus_a",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_A",
+      "foto_principal": "ACCESS_VIRUS_A",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "access_virus_b",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_B",
+      "foto_principal": "ACCESS_VIRUS_B",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "access_virus_b_rack",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_B_RACK",
+      "foto_principal": "ACCESS_VIRUS_B_RACK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "access_virus_c",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_C",
+      "foto_principal": "ACCESS_VIRUS_C",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "access_virus_indigo",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_INDIGO",
+      "foto_principal": "ACCESS_VIRUS_INDIGO",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "access_virus_kb",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_KB",
+      "foto_principal": "ACCESS_VIRUS_KB",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "acces_virus_ti",
+      "marca": "ACCES",
+      "modelo": "VIRUS_TI",
+      "foto_principal": "ACCES_VIRUS_TI",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_apc_64",
+      "marca": "AKAI",
+      "modelo": "APC_64",
+      "foto_principal": "AKAI_APC_64",
+      "fotos_adicionales": [
+        "AKAI_APC_64_BACK",
+        "AKAI_APC_64_FRONT"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_midimix",
+      "marca": "AKAI",
+      "modelo": "MIDIMIX",
+      "foto_principal": "AKAI_MIDIMIX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_1000",
+      "marca": "AKAI",
+      "modelo": "MPC_1000",
+      "foto_principal": "AKAI_MPC_1000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_2000",
+      "marca": "AKAI",
+      "modelo": "MPC_2000",
+      "foto_principal": "AKAI_MPC_2000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_2000xl",
+      "marca": "AKAI",
+      "modelo": "MPC_2000XL",
+      "foto_principal": "AKAI_MPC_2000XL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_2500",
+      "marca": "AKAI",
+      "modelo": "MPC_2500",
+      "foto_principal": "AKAI_MPC_2500",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_3000",
+      "marca": "AKAI",
+      "modelo": "MPC_3000",
+      "foto_principal": "AKAI_MPC_3000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_4000",
+      "marca": "AKAI",
+      "modelo": "MPC_4000",
+      "foto_principal": "AKAI_MPC_4000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_500",
+      "marca": "AKAI",
+      "modelo": "MPC_500",
+      "foto_principal": "AKAI_MPC_500",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_5000",
+      "marca": "AKAI",
+      "modelo": "MPC_5000",
+      "foto_principal": "AKAI_MPC_5000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_60",
+      "marca": "AKAI",
+      "modelo": "MPC_60",
+      "foto_principal": "AKAI_MPC_60",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_keys37",
+      "marca": "AKAI",
+      "modelo": "MPC_KEYS37",
+      "foto_principal": "AKAI_MPC_KEYS37",
+      "fotos_adicionales": [
+        "AKAI_MPC_KEYS37_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_live",
+      "marca": "AKAI",
+      "modelo": "MPC_LIVE",
+      "foto_principal": "AKAI_MPC_LIVE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_renaissance",
+      "marca": "AKAI",
+      "modelo": "MPC_RENAISSANCE",
+      "foto_principal": "AKAI_MPC_RENAISSANCE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpc_studio",
+      "marca": "AKAI",
+      "modelo": "MPC_STUDIO",
+      "foto_principal": "AKAI_MPC_STUDIO",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpd_18",
+      "marca": "AKAI",
+      "modelo": "MPD_18",
+      "foto_principal": "AKAI_MPD_18",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpd_218",
+      "marca": "AKAI",
+      "modelo": "MPD_218",
+      "foto_principal": "AKAI_MPD_218",
+      "fotos_adicionales": [
+        "AKAI_MPD_218_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpd_24",
+      "marca": "AKAI",
+      "modelo": "MPD_24",
+      "foto_principal": "AKAI_MPD_24",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpd_26",
+      "marca": "AKAI",
+      "modelo": "MPD_26",
+      "foto_principal": "AKAI_MPD_26",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpk_225",
+      "marca": "AKAI",
+      "modelo": "MPK_225",
+      "foto_principal": "AKAI_MPK_225",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpk_249",
+      "marca": "AKAI",
+      "modelo": "MPK_249",
+      "foto_principal": "AKAI_MPK_249",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpk_49",
+      "marca": "AKAI",
+      "modelo": "MPK_49",
+      "foto_principal": "AKAI_MPK_49",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpk_61",
+      "marca": "AKAI",
+      "modelo": "MPK_61",
+      "foto_principal": "AKAI_MPK_61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpk_mini",
+      "marca": "AKAI",
+      "modelo": "MPK_MINI",
+      "foto_principal": "AKAI_MPK_MINI",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpk_mini4",
+      "marca": "AKAI",
+      "modelo": "MPK_MINI4",
+      "foto_principal": "AKAI_MPK_MINI4",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpk_miniplay",
+      "marca": "AKAI",
+      "modelo": "MPK_MINIPLAY",
+      "foto_principal": "AKAI_MPK_MINIPLAY",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "akai_mpk_mini_plus",
+      "marca": "AKAI",
+      "modelo": "MPK_MINI_PLUS",
+      "foto_principal": "AKAI_MPK_MINI_PLUS",
+      "fotos_adicionales": [
+        "AKAI_MPK_MINI_PLUS_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "alesis_compreso_3060",
+      "marca": "ALESIS",
+      "modelo": "COMPRESO_3060",
+      "foto_principal": "ALESIS_COMPRESO_3060",
+      "fotos_adicionales": [
+        "ALESIS_COMPRESO_3060_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "alesis_micron",
+      "marca": "ALESIS",
+      "modelo": "MICRON",
+      "foto_principal": "ALESIS_MICRON",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "alesis_microverb2",
+      "marca": "ALESIS",
+      "modelo": "MICROVERB2",
+      "foto_principal": "ALESIS_MICROVERB2",
+      "fotos_adicionales": [
+        "ALESIS_MICROVERB2_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "alesis_midiverb",
+      "marca": "ALESIS",
+      "modelo": "MIDIVERB",
+      "foto_principal": "ALESIS_MIDIVERB",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "alesis_midiverb2",
+      "marca": "ALESIS",
+      "modelo": "MIDIVERB2",
+      "foto_principal": "ALESIS_MIDIVERB2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "alesis_midiverb3",
+      "marca": "ALESIS",
+      "modelo": "MIDIVERB3",
+      "foto_principal": "ALESIS_MIDIVERB3",
+      "fotos_adicionales": [
+        "ALESIS_MIDIVERB3_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "alesis_nano_piano",
+      "marca": "ALESIS",
+      "modelo": "NANO_PIANO",
+      "foto_principal": "ALESIS_NANO_PIANO",
+      "fotos_adicionales": [
+        "ALESIS_NANO_PIANO_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "alesis_quadraverb",
+      "marca": "ALESIS",
+      "modelo": "QUADRAVERB",
+      "foto_principal": "ALESIS_QUADRAVERB",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "arturia_beatstep_pro",
+      "marca": "ARTURIA",
+      "modelo": "BEATSTEP_PRO",
+      "foto_principal": "ARTURIA_BEATSTEP_PRO",
+      "fotos_adicionales": [
+        "ARTURIA_BEATSTEP_PRO_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "arturia_drumbrute_impact",
+      "marca": "ARTURIA",
+      "modelo": "DRUMBRUTE_IMPACT",
+      "foto_principal": "ARTURIA_DRUMBRUTE_IMPACT",
+      "fotos_adicionales": [
+        "ARTURIA_DRUMBRUTE_IMPACT_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "arturia_keylab_88",
+      "marca": "ARTURIA",
+      "modelo": "KEYLAB_88",
+      "foto_principal": "ARTURIA_KEYLAB_88",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "arturia_microfreak",
+      "marca": "ARTURIA",
+      "modelo": "MICROFREAK",
+      "foto_principal": "ARTURIA_MICROFREAK",
+      "fotos_adicionales": [
+        "ARTURIA_MICROFREAK_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "arturia_minilab_3",
+      "marca": "ARTURIA",
+      "modelo": "MINILAB_3",
+      "foto_principal": "ARTURIA_MINILAB_3",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "asm_hydrasynth",
+      "marca": "ASM",
+      "modelo": "HYDRASYNTH",
+      "foto_principal": "ASM_HYDRASYNTH",
+      "fotos_adicionales": [
+        "ASM_HYDRASYNTH_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "beheringer_deepmind",
+      "marca": "BEHERINGER",
+      "modelo": "DEEPMIND",
+      "foto_principal": "BEHERINGER_DEEPMIND",
+      "fotos_adicionales": [
+        "BEHERINGER_DEEPMIND_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "beheringer_monopoly",
+      "marca": "BEHERINGER",
+      "modelo": "MONOPOLY",
+      "foto_principal": "BEHERINGER_MONOPOLY",
+      "fotos_adicionales": [
+        "BEHERINGER_MONOPOLY_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "beheringer_neutron",
+      "marca": "BEHERINGER",
+      "modelo": "NEUTRON",
+      "foto_principal": "BEHERINGER_NEUTRON",
+      "fotos_adicionales": [
+        "BEHERINGER_NEUTRON_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "beheringer_odyssey",
+      "marca": "BEHERINGER",
+      "modelo": "ODYSSEY",
+      "foto_principal": "BEHERINGER_ODYSSEY",
+      "fotos_adicionales": [
+        "BEHERINGER_ODYSSEY_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "beheringer_proton",
+      "marca": "BEHERINGER",
+      "modelo": "PROTON",
+      "foto_principal": "BEHERINGER_PROTON",
+      "fotos_adicionales": [
+        "BEHERINGER_PROTON_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_ckt_671",
+      "marca": "CASIO",
+      "modelo": "CKT_671",
+      "foto_principal": "CASIO_CKT_671",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_ctk_1100",
+      "marca": "CASIO",
+      "modelo": "CTK_1100",
+      "foto_principal": "CASIO_CTK_1100",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_ctk_541",
+      "marca": "CASIO",
+      "modelo": "CTK_541",
+      "foto_principal": "CASIO_CTK_541",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_ct_202",
+      "marca": "CASIO",
+      "modelo": "CT_202",
+      "foto_principal": "CASIO_CT_202",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_ct_650",
+      "marca": "CASIO",
+      "modelo": "CT_650",
+      "foto_principal": "CASIO_CT_650",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_cz_101",
+      "marca": "CASIO",
+      "modelo": "CZ_101",
+      "foto_principal": "CASIO_CZ_101",
+      "fotos_adicionales": [
+        "CASIO_CZ_101_BACK",
+        "CASIO_CZ_101_LATERAL"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_mt_70",
+      "marca": "CASIO",
+      "modelo": "MT_70",
+      "foto_principal": "CASIO_MT_70",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_110",
+      "marca": "CASIO",
+      "modelo": "WK_110",
+      "foto_principal": "CASIO_WK_110",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_1300",
+      "marca": "CASIO",
+      "modelo": "WK_1300",
+      "foto_principal": "CASIO_WK_1300",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_1350",
+      "marca": "CASIO",
+      "modelo": "WK_1350",
+      "foto_principal": "CASIO_WK_1350",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_1600",
+      "marca": "CASIO",
+      "modelo": "WK_1600",
+      "foto_principal": "CASIO_WK_1600",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_1800",
+      "marca": "CASIO",
+      "modelo": "WK_1800",
+      "foto_principal": "CASIO_WK_1800",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_200",
+      "marca": "CASIO",
+      "modelo": "WK_200",
+      "foto_principal": "CASIO_WK_200",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_3000",
+      "marca": "CASIO",
+      "modelo": "WK_3000",
+      "foto_principal": "CASIO_WK_3000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_3200",
+      "marca": "CASIO",
+      "modelo": "WK_3200",
+      "foto_principal": "CASIO_WK_3200",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_3300",
+      "marca": "CASIO",
+      "modelo": "WK_3300",
+      "foto_principal": "CASIO_WK_3300",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_3500",
+      "marca": "CASIO",
+      "modelo": "WK_3500",
+      "foto_principal": "CASIO_WK_3500",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_3700",
+      "marca": "CASIO",
+      "modelo": "WK_3700",
+      "foto_principal": "CASIO_WK_3700",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_wk_3800",
+      "marca": "CASIO",
+      "modelo": "WK_3800",
+      "foto_principal": "CASIO_WK_3800",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "casio_xw_p1",
+      "marca": "CASIO",
+      "modelo": "XW_P1",
+      "foto_principal": "CASIO_XW_P1",
+      "fotos_adicionales": [
+        "CASIO_XW_P1_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "kawai_100f",
+      "marca": "KAWAI",
+      "modelo": "100F",
+      "foto_principal": "KAWAI_100F",
+      "fotos_adicionales": [
+        "KAWAI_100F_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "kawai_sx_210",
+      "marca": "KAWAI",
+      "modelo": "SX_210",
+      "foto_principal": "KAWAI_SX_210",
+      "fotos_adicionales": [
+        "KAWAI_SX_210_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "kawai_sx_240",
+      "marca": "KAWAI",
+      "modelo": "SX_240",
+      "foto_principal": "KAWAI_SX_240",
+      "fotos_adicionales": [
+        "KAWAI_SX_240_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_01wfd",
+      "marca": "KORG",
+      "modelo": "01WFD",
+      "foto_principal": "KORG_01WFD",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_707",
+      "marca": "KORG",
+      "modelo": "707",
+      "foto_principal": "KORG_707",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_dw8000",
+      "marca": "KORG",
+      "modelo": "DW8000",
+      "foto_principal": "KORG_DW8000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_electribe_2a",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_2A",
+      "foto_principal": "KORG_ELECTRIBE_2A",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_electribe_2r",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_2R",
+      "foto_principal": "KORG_ELECTRIBE_2R",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_electribe_amk2",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_AMK2",
+      "foto_principal": "KORG_ELECTRIBE_AMK2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_electribe_ea1",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_EA1",
+      "foto_principal": "KORG_ELECTRIBE_EA1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_electribe_em1",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_EM1",
+      "foto_principal": "KORG_ELECTRIBE_EM1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_electribe_emx",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_EMX",
+      "foto_principal": "KORG_ELECTRIBE_EMX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_electribe_esx",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_ESX",
+      "foto_principal": "KORG_ELECTRIBE_ESX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_electribe_r",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_R",
+      "foto_principal": "KORG_ELECTRIBE_R",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_electribe_rmk2",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_RMK2",
+      "foto_principal": "KORG_ELECTRIBE_RMK2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_kaospad3plus",
+      "marca": "KORG",
+      "modelo": "KAOSPAD3PLUS",
+      "foto_principal": "KORG_KAOSPAD3PLUS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_kaospad_1",
+      "marca": "KORG",
+      "modelo": "KAOSPAD_1",
+      "foto_principal": "KORG_KAOSPAD_1",
+      "fotos_adicionales": [
+        "KORG_KAOSPAD_1_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_kaospad_2s",
+      "marca": "KORG",
+      "modelo": "KAOSPAD_2S",
+      "foto_principal": "KORG_KAOSPAD_2S",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_kaossilator_pro",
+      "marca": "KORG",
+      "modelo": "KAOSSILATOR_PRO",
+      "foto_principal": "KORG_KAOSSILATOR_PRO",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_kaos_quad",
+      "marca": "KORG",
+      "modelo": "KAOS_QUAD",
+      "foto_principal": "KORG_KAOS_QUAD",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_karma",
+      "marca": "KORG",
+      "modelo": "KARMA",
+      "foto_principal": "KORG_KARMA",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_kingkorg",
+      "marca": "KORG",
+      "modelo": "KINGKORG",
+      "foto_principal": "KORG_KINGKORG",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_kontrol",
+      "marca": "KORG",
+      "modelo": "KONTROL",
+      "foto_principal": "KORG_KONTROL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_korme",
+      "marca": "KORG",
+      "modelo": "KORME",
+      "foto_principal": "KORG_KORME",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_m1",
+      "marca": "KORG",
+      "modelo": "M1",
+      "foto_principal": "KORG_M1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_microarranger",
+      "marca": "KORG",
+      "modelo": "MICROARRANGER",
+      "foto_principal": "KORG_MICROARRANGER",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_microkorg_mk1",
+      "marca": "KORG",
+      "modelo": "MICROKORG_MK1",
+      "foto_principal": "KORG_MICROKORG_MK1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_microkorg_xl",
+      "marca": "KORG",
+      "modelo": "MICROKORG_XL",
+      "foto_principal": "KORG_MICROKORG_XL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_microsampler",
+      "marca": "KORG",
+      "modelo": "MICROSAMPLER",
+      "foto_principal": "KORG_MICROSAMPLER",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_microstation",
+      "marca": "KORG",
+      "modelo": "MICROSTATION",
+      "foto_principal": "KORG_MICROSTATION",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_microx",
+      "marca": "KORG",
+      "modelo": "MICROX",
+      "foto_principal": "KORG_MICROX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_minilogue",
+      "marca": "KORG",
+      "modelo": "MINILOGUE",
+      "foto_principal": "KORG_MINILOGUE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_monologue",
+      "marca": "KORG",
+      "modelo": "MONOLOGUE",
+      "foto_principal": "KORG_MONOLOGUE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_monotron_delay",
+      "marca": "KORG",
+      "modelo": "MONOTRON_DELAY",
+      "foto_principal": "KORG_MONOTRON_DELAY",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_ms2000",
+      "marca": "KORG",
+      "modelo": "MS2000",
+      "foto_principal": "KORG_MS2000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_ms2000r",
+      "marca": "KORG",
+      "modelo": "MS2000R",
+      "foto_principal": "KORG_MS2000R",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_ms20mini",
+      "marca": "KORG",
+      "modelo": "MS20MINI",
+      "foto_principal": "KORG_MS20MINI",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_multi_poly",
+      "marca": "KORG",
+      "modelo": "MULTI_POLY",
+      "foto_principal": "KORG_MULTI_POLY",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_n364",
+      "marca": "KORG",
+      "modelo": "N364",
+      "foto_principal": "KORG_N364",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_nanokey2",
+      "marca": "KORG",
+      "modelo": "NANOKEY2",
+      "foto_principal": "KORG_NANOKEY2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_pa1000",
+      "marca": "KORG",
+      "modelo": "PA1000",
+      "foto_principal": "KORG_PA1000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_pa700",
+      "marca": "KORG",
+      "modelo": "PA700",
+      "foto_principal": "KORG_PA700",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_poly61",
+      "marca": "KORG",
+      "modelo": "POLY61",
+      "foto_principal": "KORG_POLY61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_poly800",
+      "marca": "KORG",
+      "modelo": "POLY800",
+      "foto_principal": "KORG_POLY800",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_sp_170",
+      "marca": "KORG",
+      "modelo": "SP_170",
+      "foto_principal": "KORG_SP_170",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_sp_170s",
+      "marca": "KORG",
+      "modelo": "SP_170S",
+      "foto_principal": "KORG_SP_170S",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_sp_280",
+      "marca": "KORG",
+      "modelo": "SP_280",
+      "foto_principal": "KORG_SP_280",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_triton",
+      "marca": "KORG",
+      "modelo": "TRITON",
+      "foto_principal": "KORG_TRITON",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_triton_le",
+      "marca": "KORG",
+      "modelo": "TRITON_LE",
+      "foto_principal": "KORG_TRITON_LE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_triton_taktile",
+      "marca": "KORG",
+      "modelo": "TRITON_TAKTILE",
+      "foto_principal": "KORG_TRITON_TAKTILE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_volca_bass",
+      "marca": "KORG",
+      "modelo": "VOLCA_BASS",
+      "foto_principal": "KORG_VOLCA_BASS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_volca_drum",
+      "marca": "KORG",
+      "modelo": "VOLCA_DRUM",
+      "foto_principal": "KORG_VOLCA_DRUM",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_volca_fm",
+      "marca": "KORG",
+      "modelo": "VOLCA_FM",
+      "foto_principal": "KORG_VOLCA_FM",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_volca_fm2",
+      "marca": "KORG",
+      "modelo": "VOLCA_FM2",
+      "foto_principal": "KORG_VOLCA_FM2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_volca_kick",
+      "marca": "KORG",
+      "modelo": "VOLCA_KICK",
+      "foto_principal": "KORG_VOLCA_KICK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_volca_mix",
+      "marca": "KORG",
+      "modelo": "VOLCA_MIX",
+      "foto_principal": "KORG_VOLCA_MIX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_volca_nubass",
+      "marca": "KORG",
+      "modelo": "VOLCA_NUBASS",
+      "foto_principal": "KORG_VOLCA_NUBASS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_volca_sample_1",
+      "marca": "KORG",
+      "modelo": "VOLCA_SAMPLE_1",
+      "foto_principal": "KORG_VOLCA_SAMPLE_1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_wavestate",
+      "marca": "KORG",
+      "modelo": "WAVESTATE",
+      "foto_principal": "KORG_WAVESTATE",
+      "fotos_adicionales": [
+        "KORG_WAVESTATE_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_wavestation",
+      "marca": "KORG",
+      "modelo": "WAVESTATION",
+      "foto_principal": "KORG_WAVESTATION",
+      "fotos_adicionales": [
+        "KORG_WAVESTATION_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_x50",
+      "marca": "KORG",
+      "modelo": "X50",
+      "foto_principal": "KORG_X50",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "korg_x5d",
+      "marca": "KORG",
+      "modelo": "X5D",
+      "foto_principal": "KORG_X5D",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "novation_launchpad_mini",
+      "marca": "NOVATION",
+      "modelo": "LAUNCHPAD_MINI",
+      "foto_principal": "NOVATION_LAUNCHPAD_MINI",
+      "fotos_adicionales": [
+        "NOVATION_LAUNCHPAD_MINI_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_a01",
+      "marca": "ROLAND",
+      "modelo": "A01",
+      "foto_principal": "ROLAND_A01",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_ax09_lucina",
+      "marca": "ROLAND",
+      "modelo": "AX09_LUCINA",
+      "foto_principal": "ROLAND_AX09_LUCINA",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_d05",
+      "marca": "ROLAND",
+      "modelo": "D05",
+      "foto_principal": "ROLAND_D05",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_d10",
+      "marca": "ROLAND",
+      "modelo": "D10",
+      "foto_principal": "ROLAND_D10",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_d50",
+      "marca": "ROLAND",
+      "modelo": "D50",
+      "foto_principal": "ROLAND_D50",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_d550",
+      "marca": "ROLAND",
+      "modelo": "D550",
+      "foto_principal": "ROLAND_D550",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_gw7",
+      "marca": "ROLAND",
+      "modelo": "GW7",
+      "foto_principal": "ROLAND_GW7",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_jd800",
+      "marca": "ROLAND",
+      "modelo": "JD800",
+      "foto_principal": "ROLAND_JD800",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_jdxa",
+      "marca": "ROLAND",
+      "modelo": "JDXA",
+      "foto_principal": "ROLAND_JDXA",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_jdxi",
+      "marca": "ROLAND",
+      "modelo": "JDXI",
+      "foto_principal": "ROLAND_JDXI",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_jp08",
+      "marca": "ROLAND",
+      "modelo": "JP08",
+      "foto_principal": "ROLAND_JP08",
+      "fotos_adicionales": [
+        "ROLAND_JP08_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_ju06",
+      "marca": "ROLAND",
+      "modelo": "JU06",
+      "foto_principal": "ROLAND_JU06",
+      "fotos_adicionales": [
+        "ROLAND_JU06_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "roland_jx03",
+      "marca": "ROLAND",
+      "modelo": "JX03",
+      "foto_principal": "ROLAND_JX03",
+      "fotos_adicionales": [
+        "ROLAND_JX03_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "studiologic_sl88",
+      "marca": "STUDIOLOGIC",
+      "modelo": "SL88",
+      "foto_principal": "STUDIOLOGIC_SL88",
+      "fotos_adicionales": [
+        "STUDIOLOGIC_SL88_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_cp_1",
+      "marca": "YAMAHA",
+      "modelo": "CP_1",
+      "foto_principal": "YAMAHA_CP_1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_cp_300",
+      "marca": "YAMAHA",
+      "modelo": "CP_300",
+      "foto_principal": "YAMAHA_CP_300",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_cp_40",
+      "marca": "YAMAHA",
+      "modelo": "CP_40",
+      "foto_principal": "YAMAHA_CP_40",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_cp_73",
+      "marca": "YAMAHA",
+      "modelo": "CP_73",
+      "foto_principal": "YAMAHA_CP_73",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_cp_88",
+      "marca": "YAMAHA",
+      "modelo": "CP_88",
+      "foto_principal": "YAMAHA_CP_88",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_dx11",
+      "marca": "YAMAHA",
+      "modelo": "DX11",
+      "foto_principal": "YAMAHA_DX11",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_dx7_mk1",
+      "marca": "YAMAHA",
+      "modelo": "DX7_MK1",
+      "foto_principal": "YAMAHA_DX7_MK1",
+      "fotos_adicionales": [
+        "YAMAHA_DX7_MK1_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_dx7_mk2",
+      "marca": "YAMAHA",
+      "modelo": "DX7_MK2",
+      "foto_principal": "YAMAHA_DX7_MK2",
+      "fotos_adicionales": [
+        "YAMAHA_DX7_MK2_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_dx9",
+      "marca": "YAMAHA",
+      "modelo": "DX9",
+      "foto_principal": "YAMAHA_DX9",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_ez_220",
+      "marca": "YAMAHA",
+      "modelo": "EZ_220",
+      "foto_principal": "YAMAHA_EZ_220",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_ez_300",
+      "marca": "YAMAHA",
+      "modelo": "EZ_300",
+      "foto_principal": "YAMAHA_EZ_300",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_genos",
+      "marca": "YAMAHA",
+      "modelo": "GENOS",
+      "foto_principal": "YAMAHA_GENOS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_kx_61",
+      "marca": "YAMAHA",
+      "modelo": "KX_61",
+      "foto_principal": "YAMAHA_KX_61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_mcs2",
+      "marca": "YAMAHA",
+      "modelo": "MCS2",
+      "foto_principal": "YAMAHA_MCS2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_mm8",
+      "marca": "YAMAHA",
+      "modelo": "MM8",
+      "foto_principal": "YAMAHA_MM8",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_modx6",
+      "marca": "YAMAHA",
+      "modelo": "MODX6",
+      "foto_principal": "YAMAHA_MODX6",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_modx7",
+      "marca": "YAMAHA",
+      "modelo": "MODX7",
+      "foto_principal": "YAMAHA_MODX7",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_modx8",
+      "marca": "YAMAHA",
+      "modelo": "MODX8",
+      "foto_principal": "YAMAHA_MODX8",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_moiif_rack",
+      "marca": "YAMAHA",
+      "modelo": "MOIIF_RACK",
+      "foto_principal": "YAMAHA_MOIIF_RACK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_montage_6",
+      "marca": "YAMAHA",
+      "modelo": "MONTAGE_6",
+      "foto_principal": "YAMAHA_MONTAGE_6",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_montage_7",
+      "marca": "YAMAHA",
+      "modelo": "MONTAGE_7",
+      "foto_principal": "YAMAHA_MONTAGE_7",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_montage_8",
+      "marca": "YAMAHA",
+      "modelo": "MONTAGE_8",
+      "foto_principal": "YAMAHA_MONTAGE_8",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_montaje_m8x",
+      "marca": "YAMAHA",
+      "modelo": "MONTAJE_M8X",
+      "foto_principal": "YAMAHA_MONTAJE_M8X",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_motif_xf7",
+      "marca": "YAMAHA",
+      "modelo": "MOTIF_XF7",
+      "foto_principal": "YAMAHA_MOTIF_XF7",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_motif_xs6",
+      "marca": "YAMAHA",
+      "modelo": "MOTIF_XS6",
+      "foto_principal": "YAMAHA_MOTIF_XS6",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_mr_10",
+      "marca": "YAMAHA",
+      "modelo": "MR_10",
+      "foto_principal": "YAMAHA_MR_10",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_mx_49",
+      "marca": "YAMAHA",
+      "modelo": "MX_49",
+      "foto_principal": "YAMAHA_MX_49",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_mx_61",
+      "marca": "YAMAHA",
+      "modelo": "MX_61",
+      "foto_principal": "YAMAHA_MX_61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_mx_88",
+      "marca": "YAMAHA",
+      "modelo": "MX_88",
+      "foto_principal": "YAMAHA_MX_88",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_540",
+      "marca": "YAMAHA",
+      "modelo": "PSR_540",
+      "foto_principal": "YAMAHA_PSR_540",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_a350",
+      "marca": "YAMAHA",
+      "modelo": "PSR_A350",
+      "foto_principal": "YAMAHA_PSR_A350",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_a5000",
+      "marca": "YAMAHA",
+      "modelo": "PSR_A5000",
+      "foto_principal": "YAMAHA_PSR_A5000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_e273",
+      "marca": "YAMAHA",
+      "modelo": "PSR_E273",
+      "foto_principal": "YAMAHA_PSR_E273",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_e360",
+      "marca": "YAMAHA",
+      "modelo": "PSR_E360",
+      "foto_principal": "YAMAHA_PSR_E360",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_e463",
+      "marca": "YAMAHA",
+      "modelo": "PSR_E463",
+      "foto_principal": "YAMAHA_PSR_E463",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_e473",
+      "marca": "YAMAHA",
+      "modelo": "PSR_E473",
+      "foto_principal": "YAMAHA_PSR_E473",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_ew410",
+      "marca": "YAMAHA",
+      "modelo": "PSR_EW410",
+      "foto_principal": "YAMAHA_PSR_EW410",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_ew425",
+      "marca": "YAMAHA",
+      "modelo": "PSR_EW425",
+      "foto_principal": "YAMAHA_PSR_EW425",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_gx76",
+      "marca": "YAMAHA",
+      "modelo": "PSR_GX76",
+      "foto_principal": "YAMAHA_PSR_GX76",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_i500",
+      "marca": "YAMAHA",
+      "modelo": "PSR_I500",
+      "foto_principal": "YAMAHA_PSR_I500",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_s950",
+      "marca": "YAMAHA",
+      "modelo": "PSR_S950",
+      "foto_principal": "YAMAHA_PSR_S950",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_sx600",
+      "marca": "YAMAHA",
+      "modelo": "PSR_SX600",
+      "foto_principal": "YAMAHA_PSR_SX600",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_sx700",
+      "marca": "YAMAHA",
+      "modelo": "PSR_SX700",
+      "foto_principal": "YAMAHA_PSR_SX700",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_psr_sx900",
+      "marca": "YAMAHA",
+      "modelo": "PSR_SX900",
+      "foto_principal": "YAMAHA_PSR_SX900",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_pss_47",
+      "marca": "YAMAHA",
+      "modelo": "PSS_47",
+      "foto_principal": "YAMAHA_PSS_47",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_pss_a50",
+      "marca": "YAMAHA",
+      "modelo": "PSS_A50",
+      "foto_principal": "YAMAHA_PSS_A50",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_pss_e30",
+      "marca": "YAMAHA",
+      "modelo": "PSS_E30",
+      "foto_principal": "YAMAHA_PSS_E30",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_pss_f30",
+      "marca": "YAMAHA",
+      "modelo": "PSS_F30",
+      "foto_principal": "YAMAHA_PSS_F30",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_p_125",
+      "marca": "YAMAHA",
+      "modelo": "P_125",
+      "foto_principal": "YAMAHA_P_125",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_p_45",
+      "marca": "YAMAHA",
+      "modelo": "P_45",
+      "foto_principal": "YAMAHA_P_45",
+      "fotos_adicionales": [
+        "YAMAHA_P_45_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_reface_cp",
+      "marca": "YAMAHA",
+      "modelo": "REFACE_CP",
+      "foto_principal": "YAMAHA_REFACE_CP",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_reface_yc",
+      "marca": "YAMAHA",
+      "modelo": "REFACE_YC",
+      "foto_principal": "YAMAHA_REFACE_YC",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_rm1x",
+      "marca": "YAMAHA",
+      "modelo": "RM1X",
+      "foto_principal": "YAMAHA_RM1X",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_rs_7000",
+      "marca": "YAMAHA",
+      "modelo": "RS_7000",
+      "foto_principal": "YAMAHA_RS_7000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_rx_5",
+      "marca": "YAMAHA",
+      "modelo": "RX_5",
+      "foto_principal": "YAMAHA_RX_5",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_s70_xs",
+      "marca": "YAMAHA",
+      "modelo": "S70_XS",
+      "foto_principal": "YAMAHA_S70_XS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_sy_77",
+      "marca": "YAMAHA",
+      "modelo": "SY_77",
+      "foto_principal": "YAMAHA_SY_77",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_tx_81z",
+      "marca": "YAMAHA",
+      "modelo": "TX_81Z",
+      "foto_principal": "YAMAHA_TX_81Z",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_v50",
+      "marca": "YAMAHA",
+      "modelo": "V50",
+      "foto_principal": "YAMAHA_V50",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_yc_61",
+      "marca": "YAMAHA",
+      "modelo": "YC_61",
+      "foto_principal": "YAMAHA_YC_61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_ypt_360",
+      "marca": "YAMAHA",
+      "modelo": "YPT_360",
+      "foto_principal": "YAMAHA_YPT_360",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha_ys_200",
+      "marca": "YAMAHA",
+      "modelo": "YS_200",
+      "foto_principal": "YAMAHA_YS_200",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha__np_12",
+      "marca": "YAMAHA",
+      "modelo": "_NP_12",
+      "foto_principal": "YAMAHA__NP_12",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    },
+    {
+      "id": "yamaha__p_105",
+      "marca": "YAMAHA",
+      "modelo": "_P_105",
+      "foto_principal": "YAMAHA__P_105",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ]
+    }
+  ]
+}
