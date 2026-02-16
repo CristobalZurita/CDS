@@ -46,4 +46,30 @@ export default defineConfig({
             },
         },
     },
+
+    build: {
+        // Code splitting para chunks menores
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    // Vendor libraries
+                    vue: ['vue', 'vue-router', 'pinia'],
+                    ui: ['bootstrap', '@fortawesome/fontawesome-free'],
+                    utils: ['axios', 'dompurify'],
+                },
+            },
+        },
+        // Minify agresivamente
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: true,
+                drop_debugger: true,
+            },
+        },
+        // Reportar chunks grandes
+        chunkSizeWarningLimit: 600,
+        // Reporte detallado
+        reportCompressedSize: true,
+    },
 })
