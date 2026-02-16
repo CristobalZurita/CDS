@@ -41,9 +41,11 @@
     "happy-dom": "^20.6.1",
     "jsdom": "^27.4.0",
     "sass": "^1.62.1",
+    "sharp": "^0.34.5",
     "terser": "^5.46.0",
     "typescript": "^5.2.2",
     "vite": "^6.2.5",
+    "vite-plugin-imagemin": "^0.6.1",
     "vitest": "^1.6.1",
     "vue-eslint-parser": "^10.2.0"
   }
