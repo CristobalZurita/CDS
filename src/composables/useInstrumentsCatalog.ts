@@ -94,7 +94,7 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
   /**
    * Generate image paths for an instrument
    * Returns primary image path based on actual files in /public/images/instrumentos/
-   * Pattern: /images/instrumentos/{BRAND_MODEL}.webp (all files are WEBP format)
+   * Pattern: /images/instrumentos/{BRAND_MODEL...}.webp (all files are WEBP format)
    */
   const getInstrumentImage = (instrument: Instrument): string => {
     // Priority 1: Use existing imagen_url if valid
@@ -113,17 +113,17 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
       const brandModel = `${brand}_${model}`
 
       // Candidates in priority order based on actual file patterns
-      // Files are named: BRAND_MODEL.webp (or BRAND_MODEL_VARIANT.webp for alternates)
+      // TRY VARIANTS FIRST (most likely to exist in public folder)
       const candidates = [
-        // Primary pattern: BRAND_MODEL
-        `/images/instrumentos/${brandModel}.webp`,
-        
-        // Variants (specific versions): _MK1, _MK2, _XL, _S, _PLUS
+        // Variants with suffixes (most files have these)
         `/images/instrumentos/${brandModel}_MK1.webp`,
         `/images/instrumentos/${brandModel}_MK2.webp`,
         `/images/instrumentos/${brandModel}_XL.webp`,
         `/images/instrumentos/${brandModel}_S.webp`,
         `/images/instrumentos/${brandModel}_PLUS.webp`,
+        
+        // Only then try base pattern
+        `/images/instrumentos/${brandModel}.webp`,
         
         // Fallback to brand logo
         `/images/instrumentos/LOGOS/LOGO_${brand}.webp`,
