@@ -124,55 +124,6 @@
       </div>
     </div>
 
-        <div class="divider">
-          <span>O</span>
-        </div>
-
-        <div class="upload-zone" @drop.prevent="handleDrop" @dragover.prevent>
-          <input 
-            ref="fileInput"
-            type="file"
-            multiple
-            accept="image/*"
-            @change="handleFileUpload"
-            style="display: none"
-          />
-          <div class="upload-placeholder" @click="$refs.fileInput.click()">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p>Arrastra fotos aquí o haz clic para seleccionar</p>
-            <small>Necesitamos: Vista frontal, trasera, y cenital (desde arriba)</small>
-          </div>
-
-          <div v-if="uploadedPhotos.length > 0" class="photo-preview-grid">
-            <div 
-              v-for="(photo, idx) in uploadedPhotos"
-              :key="idx"
-              class="photo-preview"
-            >
-              <img :src="photo.url" :alt="`Foto ${idx + 1}`" />
-              <button class="remove-btn" @click="removePhoto(idx)">
-                <i class="fas fa-times"></i>
-              </button>
-              <select v-model="photo.view" class="view-selector">
-                <option value="front">Frontal</option>
-                <option value="back">Trasera</option>
-                <option value="top">Cenital</option>
-                <option value="detail">Detalle</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <button 
-          class="btn-primary btn-large"
-          :disabled="!canProceed"
-          @click="nextStep"
-        >
-          Continuar <i class="fas fa-arrow-right"></i>
-        </button>
-      </div>
-    </div>
-
     <!-- Step 2: Component Template (Checkbox Form) -->
     <div v-if="currentStep === 1" class="step-content">
       <div class="template-section">
@@ -1001,106 +952,106 @@ filteredInstruments.value = allInstruments.value
 .upload-section {
   .upload-area {
     margin-bottom: 3rem;
+  }
 
-    .upload-zone {
-      border: 3px dashed $primary;
-      border-radius: 16px;
-      padding: 3rem 2rem;
-      background: rgba($primary, 0.05);
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
+  .upload-zone {
+    border: 3px dashed $primary;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    background: rgba($primary, 0.05);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
 
-      &:hover {
-        border-color: darken($primary, 10%);
-        background: rgba($primary, 0.1);
+    &:hover {
+      border-color: darken($primary, 10%);
+      background: rgba($primary, 0.1);
+    }
+
+    .upload-content {
+      i {
+        font-size: 3rem;
+        color: $primary;
+        margin-bottom: 1rem;
+        display: block;
       }
 
-      .upload-content {
-        i {
-          font-size: 3rem;
-          color: $primary;
-          margin-bottom: 1rem;
-          display: block;
+      p {
+        margin: 0.5rem 0;
+        font-size: 1rem;
+
+        &.subtitle {
+          color: $text-color-muted;
+          font-size: 0.875rem;
+        }
+      }
+
+      .btn-primary {
+        margin-top: 1rem;
+      }
+    }
+  }
+
+  .photos-preview {
+    margin-top: 2rem;
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+
+    .preview-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: $light-1;
+
+      img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .preview-info {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+
+        &:hover {
+          opacity: 1;
         }
 
         p {
-          margin: 0.5rem 0;
-          font-size: 1rem;
-
-          &.subtitle {
-            color: $text-color-muted;
-            font-size: 0.875rem;
-          }
+          color: $color-white;
+          font-size: 0.75rem;
+          margin: 0;
+          font-weight: 600;
         }
 
-        .btn-primary {
-          margin-top: 1rem;
-        }
-      }
-    }
+        .btn-remove {
+          background: $color-danger;
+          color: $color-white;
+          border: none;
+          border-radius: 6px;
+          padding: 0.5rem;
+          cursor: pointer;
+          font-size: 0.875rem;
 
-    .photos-preview {
-      margin-top: 2rem;
-
-      h3 {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-      }
-
-      .preview-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 1rem;
-
-        .preview-item {
-          position: relative;
-          border-radius: 12px;
-          overflow: hidden;
-          background: $light-1;
-
-          img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            display: block;
-          }
-
-          .preview-info {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 0.5rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-
-            &:hover {
-              opacity: 1;
-            }
-
-            p {
-              color: $color-white;
-              font-size: 0.75rem;
-              margin: 0;
-              font-weight: 600;
-            }
-
-            .btn-remove {
-              background: $color-danger;
-              color: $color-white;
-              border: none;
-              border-radius: 6px;
-              padding: 0.5rem;
-              cursor: pointer;
-              font-size: 0.875rem;
-
-              &:hover {
-                background: darken($color-danger, 10%);
-              }
-            }
+          &:hover {
+            background: darken($color-danger, 10%);
           }
         }
       }
@@ -1157,186 +1108,64 @@ filteredInstruments.value = allInstruments.value
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
-
-    .instrument-card {
-      border: 2px solid $light-3;
-      border-radius: 16px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      background: $color-white;
-
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        border-color: $primary;
-      }
-
-      &.selected {
-        border-color: $primary;
-        box-shadow: 0 0 0 4px rgba($primary, 0.2);
-
-        .card-info {
-          background: $primary;
-          color: $color-white;
-        }
-      }
-
-      .card-image {
-        width: 100%;
-        height: 120px;
-        background: $light-1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        i {
-          font-size: 2.5rem;
-          color: $primary;
-        }
-      }
-
-      .card-info {
-        padding: 1rem;
-        transition: all 0.3s ease;
-
-        h4 {
-          font-size: 1rem;
-          font-weight: 700;
-          margin: 0 0 0.25rem 0;
-        }
-
-        p {
-          margin: 0;
-          font-size: 0.875rem;
-          opacity: 0.8;
-        }
-      }
-    }
   }
 
-  .no-results {
-    text-align: center;
-    padding: 2rem;
-    color: $text-color-muted;
-
-    p {
-      margin: 0;
-    }
-  }
-
-        }
-      }
-    }
-  }
-
-  .divider {
-    text-align: center;
-    margin: 2rem 0;
-    position: relative;
-
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 45%;
-      height: 1px;
-      background: $light-3;
-    }
-
-    &::before { left: 0; }
-    &::after { right: 0; }
-
-    span {
-      background: $color-white;
-      padding: 0 1rem;
-      color: $text-color-muted;
-      font-weight: 600;
-    }
-  }
-
-  .upload-zone {
-    border: 3px dashed $light-3;
-    border-radius: 20px;
-    padding: 3rem;
-    text-align: center;
+  .instrument-card {
+    border: 2px solid $light-3;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
     transition: all 0.3s ease;
+    background: $color-white;
 
     &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
       border-color: $primary;
-      background: rgba($primary, 0.02);
     }
 
-    .upload-placeholder {
-      cursor: pointer;
+    &.selected {
+      border-color: $primary;
+      box-shadow: 0 0 0 4px rgba($primary, 0.2);
+
+      .card-info {
+        background: $primary;
+        color: $color-white;
+      }
+    }
+
+    .card-image {
+      width: 100%;
+      height: 120px;
+      background: $light-1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       i {
-        font-size: 3rem;
+        font-size: 2.5rem;
         color: $primary;
-        margin-bottom: 1rem;
+      }
+    }
+
+    .card-info {
+      padding: 1rem;
+      transition: all 0.3s ease;
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 0 0 0.25rem 0;
       }
 
       p {
-        font-size: 1.125rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-      }
-
-      small {
-        color: $text-color-muted;
-      }
-    }
-
-    .photo-preview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-
-      .photo-preview {
-        position: relative;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 2px solid $light-3;
-
-        img {
-          width: 100%;
-          height: 150px;
-          object-fit: cover;
-        }
-
-        .remove-btn {
-          position: absolute;
-          top: 0.5rem;
-          right: 0.5rem;
-          background: rgba($color-danger, 0.9);
-          color: $color-white;
-          border: none;
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-
-        .view-selector {
-          position: absolute;
-          bottom: 0.5rem;
-          left: 0.5rem;
-          right: 0.5rem;
-          padding: 0.25rem;
-          border-radius: 6px;
-          border: none;
-          background: rgba($color-white, 0.9);
-          font-size: 0.75rem;
-        }
+        margin: 0;
+        font-size: 0.875rem;
+        opacity: 0.8;
       }
     }
   }
 
-  .btn-primary {
-    margin-top: 2rem;
-  }
 }
 
 .components-grid {
