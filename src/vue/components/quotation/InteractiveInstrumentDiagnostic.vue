@@ -19,11 +19,48 @@
     <!-- Step 1: Select/Upload Instrument -->
     <div v-if="currentStep === 0" class="step-content">
       <div class="upload-section">
-        <h2>📸 Sube fotos de tu instrumento</h2>
-        <p class="subtitle">O selecciona marca y modelo si la conoces</p>
+        <h2>🔍 Busca tu instrumento</h2>
+        <p class="subtitle">Selecciona marca y modelo para cargar desde nuestros registros</p>
         
-        <!-- Upload Area -->
-        <div class="upload-area">
+        <!-- Step 1A: Brand Selection -->
+        <div class="brand-selector">
+          <label>Marca</label>
+          <select v-model="selectedBrandId" class="form-select" @change="onBrandChange">
+            <option value="">-- Selecciona una marca --</option>
+            <option v-for="brand in availableBrands" :key="brand.id" :value="brand.id">
+              {{ brand.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Step 1B: Model Selection (only if brand selected) -->
+        <div v-if="selectedBrandId" class="model-selector">
+          <label>Modelo</label>
+          <select v-model="selectedModelId" class="form-select" @change="onModelChange">
+            <option value="">-- Selecciona un modelo --</option>
+            <option v-for="model in availableModels" :key="model.id" :value="model.id">
+              {{ model.model }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Step 1C: Product Photo (only if model selected) -->
+        <div v-if="selectedInstrument" class="product-preview">
+          <h3>{{ selectedInstrument.brandLabel }} - {{ selectedInstrument.model }}</h3>
+          <div v-if="selectedInstrument.image_url" class="product-image">
+            <img :src="selectedInstrument.image_url" :alt="selectedInstrument.model" />
+          </div>
+          <div v-else class="product-image-placeholder">
+            <i class="fas fa-keyboard"></i>
+            <p>Sin imagen en la base de datos</p>
+          </div>
+        </div>
+
+        <!-- Step 1D: Upload photos (only if product NOT found) -->
+        <div v-if="selectedBrandId && selectedModelId && !instrumentFoundInDB" class="upload-area">
+          <p class="warning-text">⚠️ Este instrumento no existe en nuestra base de datos</p>
+          <p class="info-text">Sube al menos 2 fotos para continuar (frontal y trasera)</p>
+          
           <div 
             class="upload-zone"
             @drop.prevent="handleDrop"
@@ -32,7 +69,7 @@
             <div class="upload-content">
               <i class="fas fa-cloud-upload-alt"></i>
               <p><strong>Arrastra fotos aquí</strong> o haz clic para seleccionar</p>
-              <p class="subtitle">Mínimo 2 fotos (frontal, trasera, etc.)</p>
+              <p class="subtitle">Necesitamos: frontal, trasera y cenital</p>
               <input 
                 ref="fileInput"
                 type="file"
@@ -48,67 +85,9 @@
             </div>
           </div>
 
-          <!-- Uploaded Photos Preview -->
-          <div v-if="uploadedPhotos.length > 0" class="photos-preview">
-            <h3>Fotos cargadas ({{ uploadedPhotos.length }})</h3>
-            <div class="preview-grid">
-              <div 
-                v-for="(photo, idx) in uploadedPhotos"
-                :key="idx"
-                class="preview-item"
-              >
-                <img :src="photo.url" :alt="`Foto ${idx + 1}`" />
-                <div class="preview-info">
-                  <p>{{ idx + 1 }}. {{ photo.view }}</p>
-                  <button 
-                    class="btn-remove"
-                    @click="removePhoto(idx)"
-                    title="Eliminar foto"
-                  >
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Optional: Instrument Catalog -->
-        <div class="instrument-selector">
-          <hr />
-          <h3>✨ O selecciona tu instrumento (opcional)</h3>
-          <p class="subtitle">Nos ayuda a mejorar la cotización</p>
-          
-          <div class="catalog-search">
-            <input 
-              v-model="searchQuery"
-              type="text"
-              placeholder="Busca por marca o modelo..."
-              @input="filterInstruments"
-            />
-            <i class="fas fa-search"></i>
-          </div>
-
-          <!-- Only show instruments that we have data for (with image paths) -->
-          <div v-if="filteredInstruments.length > 0" class="instruments-grid">
-            <div 
-              v-for="inst in filteredInstruments"
-              :key="inst.id"
-              class="instrument-card"
-              :class="{ selected: selectedInstrument?.id === inst.id }"
-              @click="selectInstrument(inst)"
-            >
-              <div class="card-image">
-                <i class="fas fa-keyboard"></i>
-              </div>
-              <div class="card-info">
-                <h4>{{ inst.brandLabel }}</h4>
-                <p>{{ inst.model }}</p>
-              </div>
-            </div>
-          </div>
-          <div v-else-if="searchQuery" class="no-results">
-            <p>No se encontraron instrumentos. ¡Pero puedes continuar con tus fotos!</p>
+          <!-- Show count of uploaded photos -->
+          <div v-if="uploadedPhotos.length > 0" class="photos-count">
+            <p>✅ {{ uploadedPhotos.length }} foto(s) cargada(s)</p>
           </div>
         </div>
 
@@ -474,6 +453,18 @@ const selectedInstrument = ref(null)
 const uploadedPhotos = ref([])
 const fileInput = ref(null)
 
+// Brand/Model selection (NEW - ADITIVO)
+const selectedBrandId = ref('')
+const selectedModelId = ref('')
+const availableBrands = computed(() => catalog.getAllBrands(true))
+const availableModels = computed(() => {
+  if (!selectedBrandId.value) return []
+  return catalog.getInstrumentsByBrand(selectedBrandId.value)
+})
+const instrumentFoundInDB = computed(() => {
+  return selectedInstrument.value && selectedInstrument.value.image_url
+})
+
 const filteredInstruments = ref([])
 const allInstruments = computed(() => {
   const brands = catalog.getAllBrands(true)
@@ -554,7 +545,15 @@ const referenceCode = ref('')
 
 // Computed
 const canProceed = computed(() => {
-  return selectedInstrument.value !== null || uploadedPhotos.value.length >= 2
+  // If instrument found in DB, can proceed
+  if (selectedInstrument.value !== null && instrumentFoundInDB.value) {
+    return true
+  }
+  // If instrument NOT in DB, need at least 2 uploaded photos
+  if (selectedInstrument.value !== null && !instrumentFoundInDB.value && uploadedPhotos.value.length >= 2) {
+    return true
+  }
+  return false
 })
 
 const currentPhotoMarkers = computed(() => {
@@ -622,6 +621,27 @@ const quoteCalculation = computed(() => {
 })
 
 // Methods
+const onBrandChange = () => {
+  // Reset model selection when brand changes
+  selectedModelId.value = ''
+  selectedInstrument.value = null
+  uploadedPhotos.value = []
+}
+
+const onModelChange = () => {
+  // Select the instrument when model is chosen
+  if (selectedModelId.value && availableModels.value.length > 0) {
+    const model = availableModels.value.find(m => m.id === selectedModelId.value)
+    if (model) {
+      selectedInstrument.value = model
+      // Clear uploads if model exists in DB
+      if (instrumentFoundInDB.value) {
+        uploadedPhotos.value = []
+      }
+    }
+  }
+}
+
 const filterInstruments = () => {
   const query = searchQuery.value.toLowerCase()
   if (!query || query.trim() === '') {
@@ -992,69 +1012,19 @@ filteredInstruments.value = allInstruments.value
     }
   }
 
-  .photos-preview {
-    margin-top: 2rem;
+  .photos-count {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba($color-success, 0.1);
+    border: 2px solid $color-success;
+    border-radius: 12px;
+    text-align: center;
 
-    h3 {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 1rem;
-    }
-
-    .preview-item {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      background: $light-1;
-
-      img {
-        width: 100%;
-        height: 120px;
-        object-fit: cover;
-        display: block;
-      }
-
-      .preview-info {
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.6);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 0.5rem;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-
-        &:hover {
-          opacity: 1;
-        }
-
-        p {
-          color: $color-white;
-          font-size: 0.75rem;
-          margin: 0;
-          font-weight: 600;
-        }
-
-        .btn-remove {
-          background: $color-danger;
-          color: $color-white;
-          border: none;
-          border-radius: 6px;
-          padding: 0.5rem;
-          cursor: pointer;
-          font-size: 0.875rem;
-
-          &:hover {
-            background: darken($color-danger, 10%);
-          }
-        }
-      }
+    p {
+      margin: 0;
+      color: $color-success;
+      font-weight: 600;
+      font-size: 1rem;
     }
   }
 
