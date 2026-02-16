@@ -103,12 +103,12 @@ export const useInventoryStore = defineStore('inventory', () => {
     isLoading.value = true;
     error.value = null;
     try {
-      const payload = { ...data };
+      const payload: Record<string, any> = { ...data };
       // Normalize: handle both quantity and stock
-      if ((payload as any).quantity !== undefined && !('stock' in payload)) {
-        (payload as any).stock = (payload as any).quantity;
+      if (payload.quantity !== undefined && !('stock' in payload)) {
+        payload.stock = payload.quantity;
       }
-      delete (payload as any).quantity;
+      delete payload.quantity;
 
       const response = await post<InventoryItem>('/inventory', payload);
       if (response.data.data) {
@@ -131,12 +131,12 @@ export const useInventoryStore = defineStore('inventory', () => {
     isLoading.value = true;
     error.value = null;
     try {
-      const payload = { ...data };
+      const payload: Record<string, any> = { ...data };
       // Normalize: handle both quantity and stock
-      if ((payload as any).quantity !== undefined && !('stock' in payload)) {
-        (payload as any).stock = (payload as any).quantity;
+      if (payload.quantity !== undefined && !('stock' in payload)) {
+        payload.stock = payload.quantity;
       }
-      delete (payload as any).quantity;
+      delete payload.quantity;
 
       await put<InventoryItem>(`/inventory/${id}`, payload);
       await fetchItems(page.value, limit.value);
