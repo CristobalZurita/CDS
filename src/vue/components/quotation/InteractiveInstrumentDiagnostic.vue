@@ -19,9 +19,66 @@
     <!-- Step 1: Select/Upload Instrument -->
     <div v-if="currentStep === 0" class="step-content">
       <div class="upload-section">
-        <h2>Selecciona tu instrumento o sube fotos</h2>
+        <h2>📸 Sube fotos de tu instrumento</h2>
+        <p class="subtitle">O selecciona marca y modelo si la conoces</p>
         
+        <!-- Upload Area -->
+        <div class="upload-area">
+          <div 
+            class="upload-zone"
+            @drop.prevent="handleDrop"
+            @dragover.prevent
+          >
+            <div class="upload-content">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p><strong>Arrastra fotos aquí</strong> o haz clic para seleccionar</p>
+              <p class="subtitle">Mínimo 2 fotos (frontal, trasera, etc.)</p>
+              <input 
+                ref="fileInput"
+                type="file"
+                multiple
+                accept="image/*"
+                style="display: none"
+                @change="handleFileUpload"
+              />
+              <button class="btn-primary" @click="fileInput?.click()">
+                <i class="fas fa-image me-2"></i>
+                Seleccionar fotos
+              </button>
+            </div>
+          </div>
+
+          <!-- Uploaded Photos Preview -->
+          <div v-if="uploadedPhotos.length > 0" class="photos-preview">
+            <h3>Fotos cargadas ({{ uploadedPhotos.length }})</h3>
+            <div class="preview-grid">
+              <div 
+                v-for="(photo, idx) in uploadedPhotos"
+                :key="idx"
+                class="preview-item"
+              >
+                <img :src="photo.url" :alt="`Foto ${idx + 1}`" />
+                <div class="preview-info">
+                  <p>{{ idx + 1 }}. {{ photo.view }}</p>
+                  <button 
+                    class="btn-remove"
+                    @click="removePhoto(idx)"
+                    title="Eliminar foto"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Optional: Instrument Catalog -->
         <div class="instrument-selector">
+          <hr />
+          <h3>✨ O selecciona tu instrumento (opcional)</h3>
+          <p class="subtitle">Nos ayuda a mejorar la cotización</p>
+          
           <div class="catalog-search">
             <input 
               v-model="searchQuery"
@@ -32,6 +89,7 @@
             <i class="fas fa-search"></i>
           </div>
 
+          <!-- Only show instruments that we have data for (with image paths) -->
           <div v-if="filteredInstruments.length > 0" class="instruments-grid">
             <div 
               v-for="inst in filteredInstruments"
@@ -40,18 +98,31 @@
               :class="{ selected: selectedInstrument?.id === inst.id }"
               @click="selectInstrument(inst)"
             >
-              <img 
-                :src="inst.imagePath" 
-                :alt="inst.model"
-                @error="(e) => e.target.classList.add('img-broken')"
-              />
+              <div class="card-image">
+                <i class="fas fa-keyboard"></i>
+              </div>
               <div class="card-info">
                 <h4>{{ inst.brandLabel }}</h4>
                 <p>{{ inst.model }}</p>
               </div>
             </div>
           </div>
+          <div v-else-if="searchQuery" class="no-results">
+            <p>No se encontraron instrumentos. ¡Pero puedes continuar con tus fotos!</p>
+          </div>
         </div>
+
+        <div class="step-actions">
+          <button 
+            class="btn-primary btn-large"
+            :disabled="!canProceed"
+            @click="nextStep"
+          >
+            Continuar <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
 
         <div class="divider">
           <span>O</span>
@@ -928,6 +999,131 @@ filteredInstruments.value = allInstruments.value
 }
 
 .upload-section {
+  .upload-area {
+    margin-bottom: 3rem;
+
+    .upload-zone {
+      border: 3px dashed $primary;
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      background: rgba($primary, 0.05);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: darken($primary, 10%);
+        background: rgba($primary, 0.1);
+      }
+
+      .upload-content {
+        i {
+          font-size: 3rem;
+          color: $primary;
+          margin-bottom: 1rem;
+          display: block;
+        }
+
+        p {
+          margin: 0.5rem 0;
+          font-size: 1rem;
+
+          &.subtitle {
+            color: $text-color-muted;
+            font-size: 0.875rem;
+          }
+        }
+
+        .btn-primary {
+          margin-top: 1rem;
+        }
+      }
+    }
+
+    .photos-preview {
+      margin-top: 2rem;
+
+      h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+
+      .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+
+        .preview-item {
+          position: relative;
+          border-radius: 12px;
+          overflow: hidden;
+          background: $light-1;
+
+          img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+          }
+
+          .preview-info {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+
+            &:hover {
+              opacity: 1;
+            }
+
+            p {
+              color: $color-white;
+              font-size: 0.75rem;
+              margin: 0;
+              font-weight: 600;
+            }
+
+            .btn-remove {
+              background: $color-danger;
+              color: $color-white;
+              border: none;
+              border-radius: 6px;
+              padding: 0.5rem;
+              cursor: pointer;
+              font-size: 0.875rem;
+
+              &:hover {
+                background: darken($color-danger, 10%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .instrument-selector {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid $light-2;
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      color: $text-color-muted;
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
   .catalog-search {
     position: relative;
     margin-bottom: 2rem;
@@ -958,7 +1154,7 @@ filteredInstruments.value = allInstruments.value
 
   .instruments-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 
@@ -986,11 +1182,18 @@ filteredInstruments.value = allInstruments.value
         }
       }
 
-      img {
+      .card-image {
         width: 100%;
-        height: 180px;
-        object-fit: cover;
+        height: 120px;
         background: $light-1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          font-size: 2.5rem;
+          color: $primary;
+        }
       }
 
       .card-info {
@@ -1007,6 +1210,21 @@ filteredInstruments.value = allInstruments.value
           margin: 0;
           font-size: 0.875rem;
           opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 2rem;
+    color: $text-color-muted;
+
+    p {
+      margin: 0;
+    }
+  }
+
         }
       }
     }
