@@ -1,2 +1,11 @@
-// Vendors index
-// Overrides de librerías externas
+// ============================================
+// VENDORS INDEX
+// ============================================
+// Overrides and customizations for third-party libraries
+// Includes Bootstrap, FontAwesome, and other vendor styles
+
+// Note: Bootstrap and FontAwesome imported directly in main.scss
+// This layer is reserved for vendor-specific customizations
+
+// @forward 'bootstrap-overrides';    // Uncomment when adding customizations
+// @forward 'fontawesome-customizations'; // Uncomment when adding customizations

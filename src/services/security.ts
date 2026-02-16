@@ -3,7 +3,7 @@
  * Uso: sanitizeHtml(userInput), getCSRFToken(), etc
  */
 
-import DOMPurify from 'dompurify/dist/purify.cjs';
+import DOMPurify from 'dompurify';
 
 /**
  * Sanitize HTML - Prevenir XSS attacks
@@ -11,7 +11,8 @@ import DOMPurify from 'dompurify/dist/purify.cjs';
  * @returns HTML limpio y seguro
  */
 export function sanitizeHtml(dirty: string): string {
-  return (DOMPurify as any).sanitize(dirty, {
+  const sanitizer = DOMPurify.sanitize || DOMPurify;
+  return sanitizer(dirty, {
     ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br'],
     ALLOWED_ATTR: [],
   });

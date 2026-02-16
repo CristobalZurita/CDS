@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 import imagemin from 'vite-plugin-imagemin'
-import Critters from 'critters'
 
 // https://vitejs.dev/config/
 export default defineConfig({

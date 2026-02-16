@@ -137,12 +137,13 @@ export async function deleteRequest<T = any>(
  */
 export function handleApiError(error: unknown): ApiErrorResponse {
   if (axios.isAxiosError(error)) {
-    const data = error.response?.data as any;
+    const data = error.response?.data as ApiResponse | undefined;
+    const errorInfo = data?.error;
     return {
-      code: data?.error?.code || 'UNKNOWN_ERROR',
-      message: data?.error?.message || error.message || 'Unknown error occurred',
+      code: errorInfo?.code || 'UNKNOWN_ERROR',
+      message: errorInfo?.message || error.message || 'Unknown error occurred',
       statusCode: error.response?.status || 500,
-      details: data?.error?.details,
+      details: errorInfo?.details,
     };
   }
 
