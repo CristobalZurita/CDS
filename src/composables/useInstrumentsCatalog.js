@@ -64,42 +64,59 @@ export function useInstrumentsCatalog() {
       return instrument.imagen_url
     }
 
-    // Priority 2: Generate from convention (use Spanish 'instrumentos' directory)
-    if (instrument?.id) {
-      // Try common filename variations so we match existing images in /public/images/instrumentos
-      const id = instrument.id
-      const model = (instrument.model || '').replace(/\s+/g, '_')
-      const brand = (instrument.brand || '').toUpperCase()
-      const brandModel = `${brand}_${model.toUpperCase()}`
+    // Priority 2: Generate from convention using BRAND_MODEL pattern
+    if (instrument?.id && instrument?.brand && instrument?.model) {
+      const brand = instrument.brand.toUpperCase()
+      const model = (instrument.model || '')
+        .toUpperCase()
+        .replace(/\s+/g, '_')
+        .replace(/[^A-Z0-9_]/g, '') // Remove special chars
+      
+      const brandModel = `${brand}_${model}`
 
-      // Generate candidates in priority order
-      // Most candidates will have BRAND_MODEL pattern with optional suffixes
+      // Candidates in priority order based on actual file patterns
       const candidates = [
-        // Primary: BRAND_MODEL uppercase (most common pattern)
         `/images/instrumentos/${brandModel}.webp`,
-        
-        // Try with -MK1, -XL variants for known models
         `/images/instrumentos/${brandModel}_MK1.webp`,
         `/images/instrumentos/${brandModel}_MK2.webp`,
         `/images/instrumentos/${brandModel}_XL.webp`,
         `/images/instrumentos/${brandModel}_S.webp`,
         `/images/instrumentos/${brandModel}_PLUS.webp`,
-        
-        // Try original id formats
-        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
-        `/images/instrumentos/${id.replace(/-/g, ' ').toUpperCase()}.webp`,
-        
-        // Brand logo fallback
-        `/images/instrumentos/LOGO_${brand}.webp`,
+        `/images/instrumentos/LOGOS/LOGO_${brand}.webp`,
       ]
 
-      // Return the first candidate (browser will 404 if not found)
-      // The ordering here is crucial - put most likely matches first
       return candidates[0]
     }
 
-    // Priority 3: Placeholder
     return '/images/placeholder.svg'
+  }
+
+  const getInstrumentImageVariants = (instrument) => {
+    if (!instrument?.id || !instrument?.brand || !instrument?.model) {
+      return []
+    }
+
+    const brand = instrument.brand.toUpperCase()
+    const model = (instrument.model || '')
+      .toUpperCase()
+      .replace(/\s+/g, '_')
+      .replace(/[^A-Z0-9_]/g, '')
+    
+    const brandModel = `${brand}_${model}`
+
+    return [
+      `/images/instrumentos/${brandModel}.webp`,
+      `/images/instrumentos/${brandModel}_BACK.webp`,
+      `/images/instrumentos/${brandModel}_FRONT.webp`,
+      `/images/instrumentos/${brandModel}_TOP.webp`,
+      `/images/instrumentos/${brandModel}_SIDE.webp`,
+    ].filter(path => path !== '')
+  }
+
+  const getBrandLogo = (brandId) => {
+    if (!brandId) return ''
+    const brand = brandId.toUpperCase()
+    return `/images/instrumentos/LOGOS/LOGO_${brand}.webp`
   }
 
   /**
@@ -112,6 +129,8 @@ export function useInstrumentsCatalog() {
     return {
       ...inst,
       imagePath: getInstrumentImage(inst),
+      imageVariants: getInstrumentImageVariants(inst),
+      brandLogo: getBrandLogo(inst.brand),
       // Do not include any price/valor fields for frontend rendering
       // Prices are not rendered in the frontend by design
       displayName: `${inst.model} (${inst.year || '?'})`,

@@ -46,13 +46,34 @@
 
         <!-- Step 1C: Product Photo (only if model selected) -->
         <div v-if="selectedInstrument" class="product-preview">
-          <h3>{{ selectedInstrument.brandLabel }} - {{ selectedInstrument.model }}</h3>
+          <div class="product-header">
+            <div v-if="selectedInstrument.brandLogo" class="brand-logo">
+              <img :src="selectedInstrument.brandLogo" :alt="selectedInstrument.brandLabel" />
+            </div>
+            <h3>{{ selectedInstrument.brandLabel }} - {{ selectedInstrument.model }}</h3>
+          </div>
           <div v-if="selectedInstrument.imagePath && !isPlaceholderImage(selectedInstrument.imagePath)" class="product-image">
             <img :src="selectedInstrument.imagePath" :alt="selectedInstrument.model" />
           </div>
           <div v-else class="product-image-placeholder">
             <i class="fas fa-keyboard"></i>
             <p>Sin imagen en la base de datos</p>
+          </div>
+          
+          <!-- Show additional variants if available -->
+          <div v-if="selectedInstrument.imageVariants && selectedInstrument.imageVariants.length > 1" class="product-variants">
+            <p class="variants-label">Vistas disponibles:</p>
+            <div class="variants-grid">
+              <div 
+                v-for="(variant, idx) in selectedInstrument.imageVariants" 
+                :key="idx"
+                class="variant-thumb"
+                @click="selectedPhotoVariant = idx"
+                :class="{ active: selectedPhotoVariant === idx }"
+              >
+                <img :src="variant" :alt="`Vista ${idx + 1}`" />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -456,6 +477,7 @@ const fileInput = ref(null)
 // Brand/Model selection (NEW - ADITIVO)
 const selectedBrandId = ref('')
 const selectedModelId = ref('')
+const selectedPhotoVariant = ref(0)
 const availableBrands = computed(() => catalog.getAllBrands(true))
 const availableModels = computed(() => {
   if (!selectedBrandId.value) return []

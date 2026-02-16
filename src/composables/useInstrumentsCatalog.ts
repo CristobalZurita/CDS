@@ -26,6 +26,8 @@ interface Instrument {
 
 interface EnrichedInstrument extends Instrument {
   imagePath: string
+  imageVariants?: string[]
+  brandLogo?: string
   displayName: string
   brandLabel: string
 }
@@ -90,9 +92,9 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
   }
 
   /**
-   * Generate image path for an instrument
-   * Convention: /images/instrumentos/{BRAND_MODEL...}.webp (WebP format)
-   * Try multiple candidate patterns to match existing files
+   * Generate image paths for an instrument
+   * Returns primary image path based on actual files in /public/images/instrumentos/
+   * Pattern: /images/instrumentos/{BRAND_MODEL}.webp (all files are WEBP format)
    */
   const getInstrumentImage = (instrument: Instrument): string => {
     // Priority 1: Use existing imagen_url if valid
@@ -100,41 +102,77 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
       return instrument.imagen_url
     }
 
-    // Priority 2: Generate from convention (use Spanish 'instrumentos' directory)
-    if (instrument?.id) {
-      const id = instrument.id
-      const model = (instrument.model || '').replace(/\s+/g, '_')
-      const brand = (instrument.brand || '').toUpperCase()
-      const brandModel = `${brand}_${model.toUpperCase()}`
+    // Priority 2: Generate from convention using BRAND_MODEL pattern
+    if (instrument?.id && instrument?.brand && instrument?.model) {
+      const brand = instrument.brand.toUpperCase()
+      const model = (instrument.model || '')
+        .toUpperCase()
+        .replace(/\s+/g, '_')
+        .replace(/[^A-Z0-9_]/g, '') // Remove special chars
+      
+      const brandModel = `${brand}_${model}`
 
-      // Generate candidates in priority order
-      // Most candidates will have BRAND_MODEL pattern with optional suffixes
+      // Candidates in priority order based on actual file patterns
+      // Files are named: BRAND_MODEL.webp (or BRAND_MODEL_VARIANT.webp for alternates)
       const candidates = [
-        // Primary: BRAND_MODEL uppercase (most common pattern)
+        // Primary pattern: BRAND_MODEL
         `/images/instrumentos/${brandModel}.webp`,
         
-        // Try with -MK1, -XL variants for known models
+        // Variants (specific versions): _MK1, _MK2, _XL, _S, _PLUS
         `/images/instrumentos/${brandModel}_MK1.webp`,
         `/images/instrumentos/${brandModel}_MK2.webp`,
         `/images/instrumentos/${brandModel}_XL.webp`,
         `/images/instrumentos/${brandModel}_S.webp`,
         `/images/instrumentos/${brandModel}_PLUS.webp`,
         
-        // Try original id formats
-        `/images/instrumentos/${id.replace(/-/g, '_').toUpperCase()}.webp`,
-        `/images/instrumentos/${id.replace(/-/g, ' ').toUpperCase()}.webp`,
-        
-        // Brand logo fallback
-        `/images/instrumentos/LOGO_${brand}.webp`,
+        // Fallback to brand logo
+        `/images/instrumentos/LOGOS/LOGO_${brand}.webp`,
       ]
 
-      // Return the first candidate (browser will 404 if not found)
-      // The ordering here is crucial - put most likely matches first
+      // Return primary candidate (first in list)
+      // Browser will fetch and display, or show placeholder if 404
       return candidates[0]
     }
 
-    // Priority 3: Placeholder
+    // Priority 3: Fallback placeholder
     return '/images/placeholder.svg'
+  }
+
+  /**
+   * Get all image variants for an instrument (front, back, etc.)
+   * Returns array of image paths that may exist for this instrument
+   */
+  const getInstrumentImageVariants = (instrument: Instrument): string[] => {
+    if (!instrument?.id || !instrument?.brand || !instrument?.model) {
+      return []
+    }
+
+    const brand = instrument.brand.toUpperCase()
+    const model = (instrument.model || '')
+      .toUpperCase()
+      .replace(/\s+/g, '_')
+      .replace(/[^A-Z0-9_]/g, '')
+    
+    const brandModel = `${brand}_${model}`
+
+    // Common variants in product photos (front, back, overhead, etc.)
+    return [
+      `/images/instrumentos/${brandModel}.webp`,
+      `/images/instrumentos/${brandModel}_BACK.webp`,
+      `/images/instrumentos/${brandModel}_FRONT.webp`,
+      `/images/instrumentos/${brandModel}_TOP.webp`,
+      `/images/instrumentos/${brandModel}_SIDE.webp`,
+    ].filter(path => path !== '') // Remove empty paths
+  }
+
+  /**
+   * Get brand logo path
+   * Pattern: /images/instrumentos/LOGOS/LOGO_{BRAND}.webp
+   */
+  const getBrandLogo = (brandId: string): string => {
+    if (!brandId) return ''
+    const brand = brandId.toUpperCase()
+    return `/images/instrumentos/LOGOS/LOGO_${brand}.webp`
   }
 
   /**
@@ -157,6 +195,8 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
     return {
       ...inst,
       imagePath: getInstrumentImage(inst),
+      imageVariants: getInstrumentImageVariants(inst),
+      brandLogo: getBrandLogo(inst.brand),
       // Do not include any price/valor fields for frontend rendering
       // Prices are not rendered in the frontend by design
       displayName: `${inst.model} (${inst.year || '?'})`,
