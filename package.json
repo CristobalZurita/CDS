@@ -10,7 +10,8 @@
     "test:coverage": "vitest --environment jsdom --coverage",
     "build": "vite build",
     "preview": "vite preview",
-    "ghdeploy": "vite build && cd dist && cp index.html 404.html"
+    "ghdeploy": "vite build && cd dist && cp index.html 404.html",
+    "sync:instruments": "python3 scripts/sync_instruments.py"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
