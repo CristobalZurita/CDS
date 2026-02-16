@@ -1626,4 +1626,138 @@ img[src*="undefined"] {
 img.img-broken {
   display: none !important;
 }
+
+// Product Preview Section - Centrado y contenido
+.product-preview {
+  background: $color-white;
+  border-radius: 16px;
+  padding: $spacer-lg;
+  margin: $spacer-lg 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+
+  .product-header {
+    display: flex;
+    align-items: center;
+    gap: $spacer-md;
+    margin-bottom: $spacer-lg;
+    padding-bottom: $spacer-md;
+    border-bottom: 2px solid $light-2;
+
+    .brand-logo {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $light-1;
+      border-radius: 12px;
+      padding: $spacer-sm;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: $dark;
+      flex: 1;
+    }
+  }
+
+  .product-image {
+    width: 100%;
+    max-height: 350px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: $light-1;
+    margin-bottom: $spacer-md;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+  }
+
+  .product-image-placeholder {
+    width: 100%;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: $light-1;
+    border-radius: 12px;
+    border: 2px dashed $light-3;
+    margin-bottom: $spacer-md;
+    color: $text-color-muted;
+
+    i {
+      font-size: 2.5rem;
+      margin-bottom: $spacer-sm;
+      color: $light-4;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.875rem;
+    }
+  }
+
+  .product-variants {
+    margin-top: $spacer-lg;
+    padding-top: $spacer-lg;
+    border-top: 2px solid $light-2;
+
+    .variants-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: $text-color-muted;
+      margin-bottom: $spacer-md;
+    }
+
+    .variants-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: $spacer-sm;
+
+      .variant-thumb {
+        aspect-ratio: 1;
+        border: 2px solid $light-3;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: $light-1;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
+        }
+
+        &:hover {
+          border-color: $primary;
+          transform: scale(1.05);
+        }
+
+        &.active {
+          border-color: $primary;
+          box-shadow: 0 0 0 3px rgba($primary, 0.1);
+        }
+      }
+    }
+  }
+}
 </style>

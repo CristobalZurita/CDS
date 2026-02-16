@@ -70,18 +70,18 @@ export function useInstrumentsCatalog() {
       const model = (instrument.model || '')
         .toUpperCase()
         .replace(/\s+/g, '_')
-        .replace(/[^A-Z0-9_]/g, '') // Remove special chars
+        .replace(/[^A-Z0-9_]/g, '')
       
       const brandModel = `${brand}_${model}`
 
-      // Candidates in priority order based on actual file patterns
+      // Try variants FIRST (most likely to exist)
       const candidates = [
-        `/images/instrumentos/${brandModel}.webp`,
         `/images/instrumentos/${brandModel}_MK1.webp`,
         `/images/instrumentos/${brandModel}_MK2.webp`,
         `/images/instrumentos/${brandModel}_XL.webp`,
         `/images/instrumentos/${brandModel}_S.webp`,
         `/images/instrumentos/${brandModel}_PLUS.webp`,
+        `/images/instrumentos/${brandModel}.webp`,
         `/images/instrumentos/LOGOS/LOGO_${brand}.webp`,
       ]
 
