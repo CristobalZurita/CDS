@@ -17,11 +17,13 @@ import FeedbacksLayer from "/src/vue/stack/FeedbacksLayer.vue"
 import ContentLayer from "/src/vue/stack/ContentLayer.vue"
 import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"
 import {useEmails} from "/src/composables/emails.js"
+import { useMonitoring } from "@/composables/useMonitoring"
 import {onMounted} from "vue"
 import { setAnalyticsContext, track } from '@/analytics'
 import { AnalyticsEvents } from '@/analytics/events'
 
 const emails = useEmails()
+useMonitoring() // Initialize observability tracking
 
 onMounted(() => {
     emails.init()

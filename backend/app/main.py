@@ -21,6 +21,7 @@ from app.api.v1.router import api_router
 from app.core.ratelimit import limiter
 from slowapi.errors import RateLimitExceeded
 from app.routers import csrf as csrf_router
+from app.routers import logging as logging_router
 from app.middleware.validation import ValidationMiddleware
 
 
@@ -155,6 +156,9 @@ app.include_router(api_router)
 
 # Include CSRF token endpoint
 app.include_router(csrf_router.router)
+
+# Include Logging endpoints
+app.include_router(logging_router.router)
 
 # Initialize audit logging service
 try:
