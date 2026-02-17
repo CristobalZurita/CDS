@@ -1,19 +1,19 @@
-/**
- * 🎠 InstrumentCarousel - Carrusel adaptativo de fotos de instrumentos
- * 
- * Características:
- * - Flechas izquierda/derecha para navegar
- * - Miniaturas abajo para saltar directamente
- * - Adaptativo: 1 foto (sin controles), 2-3 fotos (carrusel completo)
- * - Transiciones suaves
- * - Indicador de página (1/2, 1/3, etc)
- * 
- * USO:
- * <InstrumentCarousel 
- *   :instrument="instrument"
- *   @photo-changed="handlePhotoChange"
- * />
- */
+<!--
+🎠 InstrumentCarousel - Carrusel adaptativo de fotos de instrumentos
+
+Características:
+- Flechas izquierda/derecha para navegar
+- Miniaturas abajo para saltar directamente
+- Adaptativo: 1 foto (sin controles), 2-3 fotos (carrusel completo)
+- Transiciones suaves
+- Indicador de página (1/2, 1/3, etc)
+
+USO:
+<InstrumentCarousel 
+  :instrument="instrument"
+  @photo-changed="handlePhotoChange"
+/>
+-->
 
 <template>
   <div class="instrument-carousel">
