@@ -53,11 +53,11 @@
             <h3>{{ selectedInstrument.brandLabel }} - {{ selectedInstrument.model }}</h3>
           </div>
 
-          <!-- Main image display (show immediately, don't wait for variants) -->
-          <div v-if="selectedInstrument.imagePath && !isPlaceholderImage(selectedInstrument.imagePath)" class="product-image">
-            <img 
-              :src="imageVariants.length > 0 ? imageVariants[selectedPhotoVariant] : selectedInstrument.imagePath" 
-              :alt="`${selectedInstrument.model} - Vista ${selectedPhotoVariant + 1}`" 
+          <!-- Carousel for multi-photo instruments or single image -->
+          <div v-if="selectedInstrument.imagePath && !isPlaceholderImage(selectedInstrument.imagePath)" class="product-carousel">
+            <InstrumentCarousel 
+              :instrument="selectedInstrument"
+              :show-photo-label="false"
             />
           </div>
 
@@ -65,22 +65,6 @@
           <div v-else class="product-image-placeholder">
             <i class="fas fa-keyboard"></i>
             <p>Sin imagen en la base de datos</p>
-          </div>
-
-          <!-- Thumbnail gallery (show only if 2+ photos exist) -->
-          <div v-if="imageVariants.length > 1" class="product-variants">
-            <div class="variants-grid">
-              <button 
-                v-for="(variant, idx) in imageVariants" 
-                :key="idx"
-                class="variant-thumb"
-                :class="{ active: selectedPhotoVariant === idx }"
-                @click="selectedPhotoVariant = idx"
-                :title="`Vista ${idx + 1}`"
-              >
-                <img :src="variant" :alt="`Vista ${idx + 1}`" />
-              </button>
-            </div>
           </div>
         </div>
 
@@ -467,6 +451,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useInstrumentsCatalog } from '@/composables/useInstrumentsCatalog'
+import InstrumentCarousel from '@/components/InstrumentCarousel.vue'
 
 const emit = defineEmits(['complete'])
 
@@ -1695,6 +1680,13 @@ img.img-broken {
       color: $dark;
       flex: 1;
     }
+  }
+
+  .product-carousel {
+    width: 100%;
+    margin-bottom: $spacer-md;
+    display: flex;
+    justify-content: center;
   }
 
   .product-image {
