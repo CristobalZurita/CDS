@@ -1687,12 +1687,12 @@ img.img-broken {
     margin-bottom: $spacer-md;
     display: flex;
     justify-content: center;
+    max-height: 600px;
   }
 
   .product-image {
     width: 100%;
-    max-height: 350px;
-    overflow: hidden;
+    max-height: 600px;
     border-radius: 12px;
     background: $light-1;
     margin-bottom: $spacer-md;
@@ -1702,6 +1702,7 @@ img.img-broken {
       height: 100%;
       object-fit: contain;
       display: block;
+      border-radius: 12px;
     }
   }
 

@@ -1,8 +1,7 @@
 {
-  "version": "1.0.0",
-  "total_bases": 214,
-  "total_variantes": 35,
-  "total_fotos": 249,
+  "version": "2.0.0",
+  "total_instruments": 211,
+  "total_fotos": 244,
   "instruments": [
     {
       "id": "access_virus_a",
@@ -59,16 +58,6 @@
       "marca": "ACCESS",
       "modelo": "VIRUS_KB",
       "foto_principal": "ACCESS_VIRUS_KB",
-      "fotos_adicionales": [],
-      "tipos": [
-        "sintetizador"
-      ]
-    },
-    {
-      "id": "acces_virus_ti",
-      "marca": "ACCES",
-      "modelo": "VIRUS_TI",
-      "foto_principal": "ACCES_VIRUS_TI",
       "fotos_adicionales": [],
       "tipos": [
         "sintetizador"
@@ -493,18 +482,6 @@
       "modelo": "MINILAB_3",
       "foto_principal": "ARTURIA_MINILAB_3",
       "fotos_adicionales": [],
-      "tipos": [
-        "sintetizador"
-      ]
-    },
-    {
-      "id": "asm_hydrasynth",
-      "marca": "ASM",
-      "modelo": "HYDRASYNTH",
-      "foto_principal": "ASM_HYDRASYNTH",
-      "fotos_adicionales": [
-        "ASM_HYDRASYNTH_BACK"
-      ],
       "tipos": [
         "sintetizador"
       ]
@@ -1549,18 +1526,6 @@
       "foto_principal": "ROLAND_JX03",
       "fotos_adicionales": [
         "ROLAND_JX03_BACK"
-      ],
-      "tipos": [
-        "sintetizador"
-      ]
-    },
-    {
-      "id": "studiologic_sl88",
-      "marca": "STUDIOLOGIC",
-      "modelo": "SL88",
-      "foto_principal": "STUDIOLOGIC_SL88",
-      "fotos_adicionales": [
-        "STUDIOLOGIC_SL88_BACK"
       ],
       "tipos": [
         "sintetizador"
