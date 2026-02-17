@@ -222,26 +222,34 @@
           <div class="canvas-container" ref="canvasContainer">
             <canvas 
               ref="markupCanvas"
+              class="markup-canvas"
               @dblclick="addMarker"
               @mousemove="updateCursor"
             ></canvas>
-            
-            <div 
-              v-for="(marker, idx) in currentPhotoMarkers"
-              :key="idx"
-              class="fault-marker"
-              :class="`marker-${marker.type}`"
-              :style="{ left: marker.x + 'px', top: marker.y + 'px' }"
-              @click="editMarker(marker, idx)"
+
+            <svg
+              v-if="canvasDimensions.width > 0 && canvasDimensions.height > 0"
+              class="markers-overlay"
+              :viewBox="`0 0 ${canvasDimensions.width} ${canvasDimensions.height}`"
+              preserveAspectRatio="none"
+              aria-hidden="true"
             >
-              <div class="marker-icon">
-                <i :class="getFaultIcon(marker.type)"></i>
-              </div>
-              <div class="marker-label">{{ idx + 1 }}</div>
-              <button class="marker-remove" @click.stop="removeMarker(idx)">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
+              <g
+                v-for="(marker, idx) in currentPhotoMarkers"
+                :key="idx"
+                class="fault-marker-svg"
+                :class="`marker-${marker.type}`"
+                :transform="`translate(${getMarkerCanvasX(marker)} ${getMarkerCanvasY(marker)})`"
+                @click="editMarker(marker, idx)"
+              >
+                <circle class="marker-dot" r="13" />
+                <text class="marker-index" y="4">{{ idx + 1 }}</text>
+                <g class="marker-remove-control" transform="translate(15 -15)" @click.stop="removeMarker(idx)">
+                  <circle class="marker-remove-dot" r="7.5" />
+                  <text class="marker-remove-x" y="3">x</text>
+                </g>
+              </g>
+            </svg>
           </div>
 
           <div class="markers-list">
@@ -560,6 +568,7 @@ const activePhotoIndex = ref(0)
 const selectedFaultType = ref('broken')
 const markupCanvas = ref(null)
 const canvasContainer = ref(null)
+const canvasDimensions = ref({ width: 0, height: 0 })
 const photoMarkers = ref([]) // Array of arrays, one per photo
 
 const commonFaults = ref([
@@ -740,10 +749,9 @@ const removePhoto = (index) => {
 }
 
 const initCanvas = () => {
-  if (!markupCanvas.value || !uploadedPhotos.value[activePhotoIndex.value]) return
+  if (!markupCanvas.value || !canvasContainer.value || !uploadedPhotos.value[activePhotoIndex.value]) return
   
   const canvas = markupCanvas.value
-  const container = canvasContainer.value
   const photo = uploadedPhotos.value[activePhotoIndex.value]
   
   const img = new Image()
@@ -751,18 +759,35 @@ const initCanvas = () => {
     // Set canvas size to match image
     canvas.width = img.width
     canvas.height = img.height
-    
-    // Scale to fit container
-    const containerWidth = container.clientWidth
-    const scale = containerWidth / img.width
-    canvas.style.width = containerWidth + 'px'
-    canvas.style.height = (img.height * scale) + 'px'
+    canvasDimensions.value = { width: img.width, height: img.height }
     
     // Draw image
     const ctx = canvas.getContext('2d')
     ctx.drawImage(img, 0, 0)
   }
   img.src = photo.url
+}
+
+const getCanvasScaleX = () => {
+  const canvas = markupCanvas.value
+  if (!canvas || !canvas.clientWidth) return 1
+  return canvas.width / canvas.clientWidth
+}
+
+const getCanvasScaleY = () => {
+  const canvas = markupCanvas.value
+  if (!canvas || !canvas.clientHeight) return 1
+  return canvas.height / canvas.clientHeight
+}
+
+const getMarkerCanvasX = (marker) => {
+  if (Number.isFinite(marker.actualX)) return marker.actualX
+  return Number(marker.x || 0) * getCanvasScaleX()
+}
+
+const getMarkerCanvasY = (marker) => {
+  if (Number.isFinite(marker.actualY)) return marker.actualY
+  return Number(marker.y || 0) * getCanvasScaleY()
 }
 
 const addMarker = (event) => {
@@ -1328,47 +1353,56 @@ filteredInstruments.value = allInstruments.value
   background: $light-1;
 }
 
-.fault-marker {
+.markup-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.markers-overlay {
   position: absolute;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.fault-marker-svg {
+  pointer-events: all;
   cursor: pointer;
-  
-  .marker-icon {
-    width: 32px;
-    height: 32px;
-    background: $color-danger;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $color-white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  .marker-dot {
+    fill: $color-danger;
+    stroke: rgba($color-black, 0.28);
+    stroke-width: 1.4;
   }
-  
-  .marker-label {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: $color-dark;
-    color: $color-white;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.75rem;
+
+  .marker-index {
+    fill: $color-white;
+    font-size: 9px;
+    font-weight: 700;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
   }
-  
-  .marker-remove {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 20px;
-    height: 20px;
-    border: none;
-    border-radius: 50%;
-    background: $color-danger;
-    color: $color-white;
-    font-size: 0.625rem;
+
+  .marker-remove-control {
     cursor: pointer;
+  }
+
+  .marker-remove-dot {
+    fill: $color-danger;
+    stroke: $color-white;
+    stroke-width: 1.2;
+  }
+
+  .marker-remove-x {
+    fill: $color-white;
+    font-size: 8px;
+    font-weight: 700;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
   }
 }
 

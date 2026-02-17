@@ -66,7 +66,7 @@
 
           <div v-if="repair.status === 'in-progress'" class="repair-progress">
             <div class="progress-bar">
-              <div class="progress-fill" :style="{ width: repair.progress + '%' }"></div>
+              <div class="progress-fill" :class="getProgressClass(repair.progress)"></div>
             </div>
             <span class="progress-text">{{ repair.progress }}% completado</span>
           </div>
@@ -141,6 +141,11 @@ const formatPrice = (price) => {
 
 const viewRepair = (repair) => {
   router.push(`/repairs/${repair.id}`)
+}
+
+const getProgressClass = (progress) => {
+  const normalized = Math.max(0, Math.min(100, Math.round(Number(progress) || 0)))
+  return `progress-${normalized}`
 }
 
 const fetchRepairs = async () => {
@@ -386,6 +391,12 @@ onMounted(() => {
   height: 100%;
   background: linear-gradient(90deg, $color-primary, $color-primary-dark);
   transition: $transition-base;
+
+  @for $i from 0 through 100 {
+    &.progress-#{$i} {
+      width: #{$i}%;
+    }
+  }
 }
 
 .progress-text {

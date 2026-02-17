@@ -3,7 +3,7 @@
         <div class="progress">
             <div class="progress-bar"
                  role="progressbar"
-                 :style="style"
+                 :class="progressClass"
                  :aria-valuenow="parsedPercentage"
                  aria-valuemin="0"
                  aria-valuemax="100"/>
@@ -26,9 +26,8 @@ const parsedPercentage = computed(() => {
     return utils.clamp(props.percentage, 0, 100)
 })
 
-const style = computed(() => {
-    const percentageValue = parsedPercentage.value
-    return `width: ${percentageValue}%;`
+const progressClass = computed(() => {
+    return `progress-${Math.round(parsedPercentage.value)}`
 })
 </script>
 
@@ -48,5 +47,11 @@ div.progress-bar {
     -ms-transition: none;
     -o-transition: none;
     transition: none;
+
+    @for $i from 0 through 100 {
+        &.progress-#{$i} {
+            width: #{$i}%;
+        }
+    }
 }
 </style>

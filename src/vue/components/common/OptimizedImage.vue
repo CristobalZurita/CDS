@@ -8,7 +8,6 @@
     :width="width"
     :height="height"
     :class="computedClass"
-    :style="computedStyle"
   />
 </template>
 
@@ -59,11 +58,6 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  // Optional: Inline styles
-  style: {
-    type: Object,
-    default: () => ({}),
-  },
 })
 
 // Compute final CSS classes
@@ -75,17 +69,9 @@ const computedClass = computed(() => {
   return classes.join(' ')
 })
 
-// Compute final inline styles
-const computedStyle = computed(() => {
-  return {
-    ...props.style,
-    // Prevent layout shift with aspect ratio if width/height provided
-    aspectRatio: props.width && props.height ? `${props.width} / ${props.height}` : 'auto',
-  }
-})
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .optimized-image {
   /* Prevent layout shift (Cumulative Layout Shift - CLS) */
   display: block;
