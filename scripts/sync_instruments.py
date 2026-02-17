@@ -1,333 +1,370 @@
 #!/usr/bin/env python3
 """
-🎯 SYNC INSTRUMENTS - AUTOMATIC LITERAL + INTELLIGENT
-Lee EXACTAMENTE lo que existe en public/images/instrumentos/*.webp
-SIN inventar, SIN inferir, SIN patrones - solo los archivos reales
-
-CARACTERÍSTICAS INTELIGENTES:
-- Guarda último conteo de archivos en .sync_metadata.json
-- Si hay NUEVOS archivos → automáticamente los añade al JSON
-- Si hay MENOS archivos → marca como eliminados
-- NUNCA reinventa, NUNCA sobreescribe, SOLO AGREGA
-- Ejecuta automáticamente al iniciar o por CI/CD
+SYNC INSTRUMENTS - LITERAL + AUTO
+Lee exactamente lo que existe en public/images/instrumentos/*.webp y genera src/data/instruments.json.
+No inventa instrumentos: solo procesa fotos reales.
 """
 
-import json
-import sys
+import argparse
 import hashlib
-from pathlib import Path
-from typing import Dict, Set, List, Tuple
+import json
 from collections import defaultdict
 from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Set, Tuple
+
+DEFAULT_EXPECTED_FOTOS = 249
+VARIANT_SUFFIXES = (
+    "BACK2",
+    "FRONT2",
+    "BACK",
+    "FRONT",
+    "LATERAL",
+    "LADO",
+    "LADOS",
+    "SIDE",
+    "LEFT",
+    "RIGHT",
+    "TOP",
+    "BOTTOM",
+    "DETAIL",
+    "CLOSEUP",
+)
+BRAND_CANONICAL_ALIASES = {
+    "ACCES": "ACCESS",
+}
 
 
-def detect_variant_relationship(base_name: str, potential_variant: str, all_names: List[str]) -> bool:
-    """
-    Detecta si potential_variant es variante de base_name
-    LITERAL - solo si potential_variant EMPIEZA con base_name + underscore
-    
-    Ejemplos TRUE:
-    - base: AKAI_APC_64, variant: AKAI_APC_64_BACK → True
-    - base: YAMAHA_DX7_MK1, variant: YAMAHA_DX7_MK1_BACK → True
-    
-    Ejemplos FALSE:
-    - base: KORG_ELECTRIBE, variant: KORG_ELECTRIBE_2A → False (2A es part del base)
-    - base: YAMAHA_DX7, variant: YAMAHA_DX7_MK1 → False (no existe YAMAHA_DX7)
-    """
-    
-    # Verificación 1: potential_variant DEBE empezar con base_name + "_"
-    if not potential_variant.startswith(base_name + '_'):
-        return False
-    
-    # Verificación 2: base_name DEBE existir en all_names
-    if base_name not in all_names:
-        return False
-    
-    # Verificación 3: el sufijo DEBE ser una variante conocida
-    suffix = potential_variant[len(base_name) + 1:]
-    
-    # Estos son sufijos de VERDADERAS variantes (observadas en dataset real)
-    variant_suffixes = {
-        'BACK', 'FRONT', 'BACK2', 'FRONT2', 'TOP', 'BOTTOM',
-        'SIDE', 'LEFT', 'RIGHT', 'DETAIL', 'CLOSEUP', 'LATERAL'
-    }
-    
-    return suffix in variant_suffixes
+def canonical_brand(brand: str) -> str:
+    """Normaliza marca para evitar duplicados por typo."""
+    return BRAND_CANONICAL_ALIASES.get(brand, brand)
 
 
 class InstrumentSyncer:
-    """Sincroniza instrumentos LITERALMENTE desde archivos reales - INTELIGENTE Y ADITIVO"""
+    """Sincroniza instrumentos desde archivos reales y mantiene metadatos."""
 
-    def __init__(self, workspace_root: str):
+    def __init__(self, workspace_root: str, expected_fotos: int = DEFAULT_EXPECTED_FOTOS):
         self.workspace_root = Path(workspace_root)
         self.images_dir = self.workspace_root / "public" / "images" / "instrumentos"
+        self.logos_dir = self.images_dir / "LOGOS"
         self.json_path = self.workspace_root / "src" / "data" / "instruments.json"
         self.metadata_path = self.workspace_root / "src" / "data" / ".sync_metadata.json"
-    
+        self.expected_fotos = expected_fotos
+
     def get_metadata(self) -> Dict:
-        """Carga metadatos de última sincronización"""
+        """Carga metadatos previos de sincronización."""
         if self.metadata_path.exists():
-            with open(self.metadata_path, 'r') as f:
+            with open(self.metadata_path, "r", encoding="utf-8") as f:
                 return json.load(f)
-        
+
         return {
-            'last_count': 0,
-            'last_hash': None,
-            'last_sync': None,
-            'files_processed': [],
-            'added_count': 0,
-            'status': 'virgin'
+            "last_count": 0,
+            "last_hash": None,
+            "last_sync": None,
+            "files_processed": [],
+            "added_count": 0,
+            "status": "virgin",
         }
-    
-    def save_metadata(self, metadata: Dict):
-        """Guarda metadatos de sincronización"""
+
+    def save_metadata(self, metadata: Dict) -> None:
+        """Guarda metadatos de sincronización."""
         self.metadata_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.metadata_path, 'w') as f:
-            json.dump(metadata, f, indent=2)
-    
+        with open(self.metadata_path, "w", encoding="utf-8") as f:
+            json.dump(metadata, f, indent=2, ensure_ascii=False)
+
     def calculate_files_hash(self, all_names: List[str]) -> str:
-        """Calcula hash SHA256 de la lista de archivos"""
-        files_str = '|'.join(sorted(all_names))
+        """Hash SHA256 estable de la lista de fotos."""
+        files_str = "|".join(sorted(all_names))
         return hashlib.sha256(files_str.encode()).hexdigest()
-    
+
     def detect_changes(self, all_names: List[str], metadata: Dict) -> Tuple[Set[str], Set[str], bool]:
-        """
-        Detecta si hay cambios desde la última sincronización
-        
-        Returns:
-            (nuevos_archivos, archivos_eliminados, cambio_detectado)
-        """
+        """Detecta nuevos, eliminados y si hubo cambio respecto al último estado."""
         current_hash = self.calculate_files_hash(all_names)
-        last_hash = metadata.get('last_hash')
-        last_count = metadata.get('last_count', 0)
-        
+        last_hash = metadata.get("last_hash")
+        last_count = metadata.get("last_count", 0)
+
         all_names_set = set(all_names)
-        last_files = set(metadata.get('files_processed', []))
-        
+        last_files = set(metadata.get("files_processed", []))
+
         nuevos = all_names_set - last_files
         eliminados = last_files - all_names_set
-        
+
         cambio_detectado = (
-            len(all_names) != last_count or 
-            current_hash != last_hash or
-            len(nuevos) > 0 or
-            len(eliminados) > 0
+            len(all_names) != last_count
+            or current_hash != last_hash
+            or len(nuevos) > 0
+            or len(eliminados) > 0
         )
-        
+
         return nuevos, eliminados, cambio_detectado
 
     def get_all_webp_files(self) -> Set[str]:
-        """Obtiene TODOS los archivos .webp literalmente"""
+        """Obtiene todos los archivos .webp de instrumentos."""
         if not self.images_dir.exists():
             print(f"❌ Directorio no encontrado: {self.images_dir}")
             return set()
-        
-        files = set()
-        for webp_file in self.images_dir.glob("*.webp"):
-            # Quitar extensión .webp
-            name = webp_file.name.replace('.webp', '')
-            files.add(name)
-        
-        return files
-    
-    def identify_bases_and_variants(self, all_names: List[str]) -> tuple[Set[str], Dict[str, List[str]]]:
+
+        return {webp_file.stem for webp_file in self.images_dir.glob("*.webp")}
+
+    def get_logo_files(self) -> Dict[str, str]:
+        """Obtiene marcas con logo y su ruta pública."""
+        logos: Dict[str, str] = {}
+        if not self.logos_dir.exists():
+            return logos
+
+        for ext in ("webp", "svg", "png", "jpg", "jpeg"):
+            for logo_file in self.logos_dir.glob(f"LOGO_*.{ext}"):
+                marca = logo_file.stem.replace("LOGO_", "")
+                logos[marca] = f"/images/instrumentos/LOGOS/{logo_file.name}"
+        return logos
+
+    def resolve_variant_base(self, name: str, all_names_set: Set[str]) -> Tuple[str, str]:
         """
-        Identifica cuáles son bases y cuáles son variantes
-        LITERAL - solo busca si potential_variant = base_name + "_" + variant_suffix
+        Si name es variante de una base existente, retorna (base, suffix).
+        Si no, retorna (name, "").
         """
-        bases = set()
-        variants_map = defaultdict(list)
-        
+        for suffix in sorted(VARIANT_SUFFIXES, key=len, reverse=True):
+            token = f"_{suffix}"
+            if name.endswith(token):
+                base_name = name[: -len(token)]
+                if base_name in all_names_set:
+                    return base_name, suffix
+        return name, ""
+
+    def identify_bases_and_variants(self, all_names: List[str]) -> Tuple[Set[str], Dict[str, List[str]]]:
+        """
+        Agrupa variantes sobre su base:
+        - AKAI_MPD_218 + AKAI_MPD_218_BACK => 1 base, 1 variante.
+        """
+        all_names_set = set(all_names)
+        bases = set(all_names_set)
+        variants_map: Dict[str, List[str]] = defaultdict(list)
+
         for name in all_names:
-            is_variant = False
-            
-            # Buscar si este nombre es variante de algún otro
-            for potential_base in all_names:
-                if potential_base != name:
-                    if detect_variant_relationship(potential_base, name, all_names):
-                        variants_map[potential_base].append(name)
-                        is_variant = True
-                        break
-            
-            # Si no es variante, es un base
-            if not is_variant:
-                bases.add(name)
-        
-        return bases, dict(variants_map)
-    
-    def extract_marca_modelo(self, instrument_name: str) -> tuple[str, str]:
-        """
-        Extrae marca y modelo del nombre literal
-        Ej: KORG_ELECTRIBE_2A → marca=KORG, modelo=ELECTRIBE_2A
-        """
-        parts = instrument_name.split('_')
-        marca = parts[0]
-        modelo = '_'.join(parts[1:])
+            base_name, suffix = self.resolve_variant_base(name, all_names_set)
+            if suffix:
+                variants_map[base_name].append(name)
+                if name in bases:
+                    bases.remove(name)
+
+        for base_name in variants_map:
+            bases.add(base_name)
+
+        return bases, {k: sorted(v) for k, v in variants_map.items()}
+
+    def extract_marca_modelo(self, instrument_name: str) -> Tuple[str, str]:
+        """Extrae marca y modelo literal desde nombre de archivo."""
+        parts = instrument_name.split("_")
+        if len(parts) < 2:
+            return instrument_name, instrument_name
+
+        marca = canonical_brand(parts[0])
+        modelo = "_".join(parts[1:])
         return marca, modelo
-    
+
     def sync_and_generate_json(self, all_names: List[str], existing_data: Dict = None) -> Dict:
         """
-        Genera JSON LITERAL desde los nombres de archivo
-        Si hay JSON previo, AÑADE solo los nuevos, NUNCA reinventa
+        Genera JSON desde archivos reales.
+        Mantiene campos extra preexistentes por instrumento (modo aditivo).
         """
         bases, variants_map = self.identify_bases_and_variants(all_names)
-        
-        # Si hay JSON anterior, cargar instrumentos existentes
-        existing_instruments = {}
-        if existing_data:
-            for inst in existing_data.get('instruments', []):
-                existing_instruments[inst['id']] = inst
-        
-        instruments = []
-        
+        logos_map = self.get_logo_files()
+
+        existing_instruments: Dict[str, Dict] = {}
+        if existing_data and isinstance(existing_data, dict):
+            for inst in existing_data.get("instruments", []):
+                inst_id = inst.get("id")
+                if inst_id:
+                    existing_instruments[inst_id] = inst
+
+        instruments: List[Dict] = []
+        detected_brands: Set[str] = set()
+        enabled_brands: Set[str] = set()
+        disabled_brands: Set[str] = set()
+
         for base_name in sorted(bases):
+            marca, modelo = self.extract_marca_modelo(base_name)
+            fotos_adicionales = sorted(variants_map.get(base_name, []))
             base_id = base_name.lower()
-            
-            # Si ya existe en JSON anterior, usar ese
-            if base_id in existing_instruments:
-                instruments.append(existing_instruments[base_id])
+            logo_disponible = marca in logos_map
+
+            detected_brands.add(marca)
+            if logo_disponible:
+                enabled_brands.add(marca)
             else:
-                # SOLO crear si es nuevo
-                marca, modelo = self.extract_marca_modelo(base_name)
-                
-                fotos = [base_name]
-                if base_name in variants_map:
-                    fotos.extend(sorted(variants_map[base_name]))
-                
-                instrument = {
-                    'id': base_id,
-                    'marca': marca,
-                    'modelo': modelo,
-                    'foto_principal': base_name,
-                    'fotos_adicionales': fotos[1:] if len(fotos) > 1 else [],
-                    'tipos': ['sintetizador'],
-                    'agregado_en': datetime.now().isoformat()
-                }
-                
-                instruments.append(instrument)
-        
-        # Crear estructura final
+                disabled_brands.add(marca)
+
+            core_data = {
+                "id": base_id,
+                "marca": marca,
+                "modelo": modelo,
+                "foto_principal": base_name,
+                "fotos_adicionales": fotos_adicionales,
+                "tipos": ["sintetizador"],
+                "marca_logo_disponible": logo_disponible,
+                "marca_habilitada": logo_disponible,
+                "marca_logo_url": logos_map.get(marca),
+            }
+
+            previous = existing_instruments.get(base_id, {})
+            merged = dict(previous)
+            merged.update(core_data)
+            if "agregado_en" not in merged:
+                merged["agregado_en"] = datetime.now().isoformat()
+            instruments.append(merged)
+
+        total_variantes = sum(len(v) for v in variants_map.values())
+        total_fotos_json = sum(1 + len(i.get("fotos_adicionales", [])) for i in instruments)
+        fotos_en_carpeta = len(all_names)
+
         data = {
-            'version': '1.0.0',
-            'total_bases': len(bases),
-            'total_variantes': len([v for vs in variants_map.values() for v in vs]),
-            'total_fotos': len(all_names),
-            'instruments': instruments
+            "version": "2.1.0",
+            "generated_at": datetime.now().isoformat(),
+            "total_instruments": len(instruments),
+            "total_bases": len(bases),
+            "total_variantes": total_variantes,
+            "total_fotos": fotos_en_carpeta,
+            "total_fotos_json": total_fotos_json,
+            "marcas_detectadas": sorted(detected_brands),
+            "marcas_con_logo": sorted(enabled_brands),
+            "marcas_sin_logo": sorted(disabled_brands),
+            "marcas_habilitadas": sorted(enabled_brands),
+            "marcas_no_habilitadas": sorted(disabled_brands),
+            "validacion": {
+                "fotos_en_carpeta": fotos_en_carpeta,
+                "fotos_en_json": total_fotos_json,
+                "coinciden": fotos_en_carpeta == total_fotos_json,
+                "esperado_dataset_base": self.expected_fotos,
+                "coincide_con_esperado_dataset_base": fotos_en_carpeta == self.expected_fotos,
+            },
+            "instruments": instruments,
         }
-        
+
         return data
-    
-    def save_json(self, data: Dict):
-        """Guarda JSON a archivo"""
+
+    def save_json(self, data: Dict) -> None:
+        """Guarda JSON generado."""
         self.json_path.parent.mkdir(parents=True, exist_ok=True)
-        
-        with open(self.json_path, 'w', encoding='utf-8') as f:
+        with open(self.json_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
-    
+
     def run(self, force_sync: bool = False) -> int:
         """
-        Ejecuta sincronización INTELIGENTE:
-        - Si hay cambios en los archivos → actualiza automáticamente
-        - Si no hay cambios → salta (más rápido)
-        - force_sync=True → fuerza resincronización
+        Ejecuta sincronización inteligente:
+        - Si no hay cambios y no hay force, no regenera.
+        - Si hay cambios o force, regenera JSON y metadata.
         """
-        print("\n" + "="*100)
+        print("\n" + "=" * 100)
         print("🎯 SYNC INSTRUMENTS - AUTOMATIC LITERAL + INTELLIGENT")
-        print("="*100)
+        print("=" * 100)
         print(f"\n📁 Leyendo de: {self.images_dir}")
         print(f"📝 Generando: {self.json_path}\n")
-        
+
         try:
-            # 1. Obtener archivos actuales
             all_webp = self.get_all_webp_files()
             all_names = sorted(list(all_webp))
-            
+
             if not all_names:
                 print("❌ No hay archivos .webp encontrados")
                 return 1
-            
+
             print(f"✅ {len(all_names)} archivos .webp encontrados")
-            
-            # 2. Cargar metadatos anteriores
             metadata = self.get_metadata()
             print(f"📊 Último conteo: {metadata['last_count']} archivos")
             print(f"📊 Conteo actual: {len(all_names)} archivos\n")
-            
-            # 3. Detectar cambios
+
             nuevos, eliminados, cambio = self.detect_changes(all_names, metadata)
-            
             if not cambio and not force_sync:
                 print("✨ SIN CAMBIOS - Saltando sincronización (más rápido)")
                 print("   Usa --force para forzar resincronización\n")
                 return 0
-            
-            print(f"🔄 CAMBIOS DETECTADOS:")
+
+            print("🔄 CAMBIOS DETECTADOS:")
             if nuevos:
                 print(f"   ➕ NUEVOS: {len(nuevos)} archivo(s)")
                 for name in sorted(nuevos)[:5]:
                     print(f"      • {name}")
                 if len(nuevos) > 5:
                     print(f"      ... y {len(nuevos) - 5} más")
-            
+
             if eliminados:
                 print(f"   ❌ ELIMINADOS: {len(eliminados)} archivo(s)")
                 for name in sorted(eliminados)[:5]:
                     print(f"      • {name}")
                 if len(eliminados) > 5:
                     print(f"      ... y {len(eliminados) - 5} más")
-            
             print()
-            
-            # 4. Cargar JSON anterior (si existe)
+
             existing_data = None
             if self.json_path.exists():
-                with open(self.json_path, 'r') as f:
+                with open(self.json_path, "r", encoding="utf-8") as f:
                     existing_data = json.load(f)
-            
-            # 5. Generar JSON ADITIVO
+
             data = self.sync_and_generate_json(all_names, existing_data)
             self.save_json(data)
-            
-            # 6. Actualizar metadatos
+
+            old_ids = {i.get("id") for i in (existing_data or {}).get("instruments", []) if i.get("id")}
+            new_ids = {i.get("id") for i in data.get("instruments", []) if i.get("id")}
+            added_ids = sorted(new_ids - old_ids)
+            removed_ids = sorted(old_ids - new_ids)
+
             current_hash = self.calculate_files_hash(all_names)
-            metadata.update({
-                'last_count': len(all_names),
-                'last_hash': current_hash,
-                'last_sync': datetime.now().isoformat(),
-                'files_processed': all_names,
-                'added_count': metadata.get('added_count', 0) + len(nuevos),
-                'status': 'synced' if not nuevos else 'updated'
-            })
+            metadata.update(
+                {
+                    "last_count": len(all_names),
+                    "last_hash": current_hash,
+                    "last_sync": datetime.now().isoformat(),
+                    "files_processed": all_names,
+                    "added_count": metadata.get("added_count", 0) + len(added_ids),
+                    "new_ids_last_run": added_ids,
+                    "removed_ids_last_run": removed_ids,
+                    "total_bases": data["total_bases"],
+                    "total_variantes": data["total_variantes"],
+                    "total_fotos": data["total_fotos"],
+                    "total_instruments": data["total_instruments"],
+                    "marcas_habilitadas": data["marcas_habilitadas"],
+                    "marcas_no_habilitadas": data["marcas_no_habilitadas"],
+                    "status": "updated" if (added_ids or removed_ids or nuevos or eliminados) else "synced",
+                }
+            )
             self.save_metadata(metadata)
-            
-            # 7. Reporte final
-            print("="*100)
+
+            print("=" * 100)
             print("✅ SINCRONIZACIÓN EXITOSA")
-            print("="*100)
+            print("=" * 100)
             print(f"\n✓ Bases identificados: {data['total_bases']}")
             print(f"✓ Variantes identificadas: {data['total_variantes']}")
             print(f"✓ Total de fotos procesadas: {data['total_fotos']}")
             print(f"✓ JSON generado con {len(data['instruments'])} instrumentos")
+            print(f"✓ Marcas habilitadas (con logo): {len(data['marcas_habilitadas'])}")
+            print(f"✓ Marcas NO habilitadas (sin logo): {len(data['marcas_no_habilitadas'])}")
+            print(f"✓ Validación fotos JSON/carpeta: {data['validacion']['coinciden']}")
             print(f"✓ Metadatos guardados (próxima ejecución será más rápida)\n")
-            
+
             return 0
-            
         except Exception as e:
             print(f"\n❌ ERROR: {e}", flush=True)
             import traceback
+
             traceback.print_exc()
             return 1
 
 
-def main():
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Sincroniza instrumentos desde /public/images/instrumentos")
+    parser.add_argument("--force", "-f", action="store_true", help="Forzar resincronización")
+    parser.add_argument(
+        "--expected-fotos",
+        type=int,
+        default=DEFAULT_EXPECTED_FOTOS,
+        help="Cantidad base esperada de fotos para validación (informativa)",
+    )
+    args = parser.parse_args()
+
     workspace_root = Path(__file__).parent.parent
-    syncer = InstrumentSyncer(str(workspace_root))
-    
-    # Permitir --force para forzar resincronización
-    force_sync = '--force' in sys.argv or '-f' in sys.argv
-    
-    return syncer.run(force_sync=force_sync)
+    syncer = InstrumentSyncer(str(workspace_root), expected_fotos=args.expected_fotos)
+    return syncer.run(force_sync=args.force)
 
 
 if __name__ == "__main__":
-    exit(main())
+    raise SystemExit(main())

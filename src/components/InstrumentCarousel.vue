@@ -123,7 +123,7 @@ const photos = computed(() => {
   if (props.instrument.fotos_adicionales?.length > 0) {
     all.push(...props.instrument.fotos_adicionales)
   }
-  return all
+  return Array.from(new Set(all.filter(Boolean)))
 })
 
 // Navegar a foto anterior
@@ -195,8 +195,9 @@ const onImageLoad = () => {
     .photo-image {
       max-width: 100%;
       height: auto;
-      max-height: 500px;
+      max-height: 680px;
       object-fit: contain;
+      background: #f7f7f7;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
@@ -227,11 +228,17 @@ const onImageLoad = () => {
     position: relative;
     display: flex;
     justify-content: center;
-    max-width: 500px;
+    width: 100%;
+    max-width: 760px;
+    min-height: 420px;
+    background: #f7f7f7;
+    border-radius: 10px;
+    padding: 0.5rem;
 
     .photo-image {
       width: 100%;
-      max-height: 500px;
+      height: 100%;
+      max-height: 680px;
       object-fit: contain;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -280,7 +287,7 @@ const onImageLoad = () => {
     }
 
     &:disabled {
-      opacity: 0.3;
+      opacity: 0.55;
       cursor: not-allowed;
     }
 
@@ -309,13 +316,13 @@ const onImageLoad = () => {
 
   .thumbnail {
     flex-shrink: 0;
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border: 3px solid #ddd;
     border-radius: 6px;
-    padding: 0;
+    padding: 3px;
     cursor: pointer;
-    overflow: hidden;
+    overflow: visible;
     background: white;
     transition: all 0.3s ease;
 
@@ -333,7 +340,8 @@ const onImageLoad = () => {
     .thumbnail-image {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      background: #f7f7f7;
     }
   }
 
@@ -375,8 +383,8 @@ const onImageLoad = () => {
     }
 
     .thumbnail {
-      width: 60px;
-      height: 60px;
+      width: 72px;
+      height: 72px;
     }
 
     .carousel-thumbnails {
@@ -401,7 +409,7 @@ const onImageLoad = () => {
 
     .carousel-image-wrapper {
       .photo-image {
-        max-height: 350px;
+        max-height: 520px;
       }
 
       .carousel-page-indicator {
@@ -411,8 +419,8 @@ const onImageLoad = () => {
     }
 
     .thumbnail {
-      width: 50px;
-      height: 50px;
+      width: 58px;
+      height: 58px;
     }
   }
 }

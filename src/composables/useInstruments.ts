@@ -20,6 +20,7 @@
  */
 
 import { ref, computed, onMounted } from 'vue'
+import localInstrumentsData from '@/data/instruments.json'
 
 // ============================================================================
 // TIPOS
@@ -66,20 +67,17 @@ async function syncViaAPI(force: boolean = false): Promise<boolean> {
     loading.value = true
     error.value = null
     
-    const response = await fetch('/api/instruments/sync', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ force })
+    const response = await fetch(`/api/v1/instruments-sync/sync?force=${force ? 'true' : 'false'}`, {
+      method: 'POST'
     })
     
     if (!response.ok) {
       throw new Error(`API returned ${response.status}`)
     }
     
-    const data: InstrumentsData = await response.json()
-    
+    const payload = await response.json()
+    const data: InstrumentsData = payload?.result?.data || payload?.data || payload
+
     instruments.value = data.instruments
     synced.value = true
     lastSyncTime.value = new Date().toISOString()
@@ -106,14 +104,8 @@ async function loadFromJSON(): Promise<boolean> {
     loading.value = true
     error.value = null
     
-    const response = await fetch('/data/instruments.json')
-    
-    if (!response.ok) {
-      throw new Error('JSON no encontrado')
-    }
-    
-    const data: InstrumentsData = await response.json()
-    
+    const data = localInstrumentsData as InstrumentsData
+
     instruments.value = data.instruments
     synced.value = true
     lastSyncTime.value = new Date().toISOString()
