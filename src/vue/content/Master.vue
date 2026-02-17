@@ -10,6 +10,8 @@
 
     <!-- Toast Notifications -->
     <ToastNotification ref="toastComponent" />
+    <FloatingWhatsAppButton />
+    <FloatingQuoteButton />
 
     <!-- Footer -->
     <Footer>
@@ -78,6 +80,8 @@ import FooterBlock from "/src/vue/components/footer/FooterBlock.vue"
 import FooterCopyright from "/src/vue/components/footer/FooterCopyright.vue"
 import FooterColumn from "/src/vue/components/footer/FooterColumn.vue"
 import ToastNotification from "/src/vue/components/system/ToastNotification.vue"
+import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"
+import FloatingWhatsAppButton from "/src/vue/components/widgets/FloatingWhatsAppButton.vue"
 import { setToastComponent } from '/src/services/toastService.js'
 
 const toastComponent = ref(null)
