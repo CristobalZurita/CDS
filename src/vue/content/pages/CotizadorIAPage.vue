@@ -70,6 +70,7 @@ const { quotation, loading, estimate, reset } = useQuotation()
 
 // State
 const step = ref(1)
+const selectedInstrument = ref(null)
 const selectedFaults = ref([])
 const turnstileToken = ref('')
 

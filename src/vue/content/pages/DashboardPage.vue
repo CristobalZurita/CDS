@@ -84,7 +84,7 @@
 
               <div class="repair-progress">
                 <div class="progress-bar">
-                  <div class="progress-fill" :style="{ width: repair.progress + '%' }"></div>
+                  <div class="progress-fill" :class="getProgressClass(repair.progress)"></div>
                 </div>
                 <span class="progress-text">{{ repair.progress }}% completado</span>
               </div>
@@ -250,6 +250,11 @@ const formatTime = (date) => {
 
 const viewRepair = (repair) => {
   router.push(`/repairs/${repair.id}`)
+}
+
+const getProgressClass = (progress) => {
+  const normalized = Math.max(0, Math.min(100, Math.round(Number(progress) || 0)))
+  return `progress-${normalized}`
 }
 
 const handleLogout = () => {
@@ -529,6 +534,12 @@ onMounted(() => {
   height: 100%;
   background: linear-gradient(90deg, $color-primary-light, $color-secondary);
   transition: $transition-base;
+
+  @for $i from 0 through 100 {
+    &.progress-#{$i} {
+      width: #{$i}%;
+    }
+  }
 }
 
 .progress-text {

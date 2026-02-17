@@ -104,8 +104,7 @@
                 <span
                   v-for="(color, index) in previewBands"
                   :key="`${color}-${index}`"
-                  class="band"
-                  :style="{ background: colorMap[color]?.bg || 'var(--resistor-default-band)' }"
+                  :class="['band', bandClass(color)]"
                 ></span>
               </div>
             </div>
@@ -454,6 +453,12 @@ function resetSmd() {
   smdResult.value = null
 }
 
+function bandClass(color: string) {
+  const normalized = String(color || '').toLowerCase()
+  if (!normalized) return 'band-default'
+  return `band-${normalized}`
+}
+
 function formatOhms(value: number) {
   if (value >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(2)} GΩ`
   if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(2)} MΩ`
@@ -658,6 +663,20 @@ function formatOhms(value: number) {
     border-radius: 6px;
     box-shadow: inset 0 0 0 2px rgba($color-black, 0.1);
   }
+
+  .band-default { background: var(--resistor-default-band); }
+  .band-black { background: var(--resistor-black-bg); }
+  .band-brown { background: var(--resistor-brown-bg); }
+  .band-red { background: var(--resistor-red-bg); }
+  .band-orange { background: var(--resistor-orange-bg); }
+  .band-yellow { background: var(--resistor-yellow-bg); }
+  .band-green { background: var(--resistor-green-bg); }
+  .band-blue { background: var(--resistor-blue-bg); }
+  .band-violet { background: var(--resistor-violet-bg); }
+  .band-gray { background: var(--resistor-gray-bg); }
+  .band-white { background: var(--resistor-white-bg); }
+  .band-gold { background: var(--resistor-gold-bg); }
+  .band-silver { background: var(--resistor-silver-bg); }
 
   .output-value {
     font-family: 'Cervo Neue', $headings-font-family;

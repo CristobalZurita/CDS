@@ -2,12 +2,12 @@
 	<div class="status-changer">
 		<div class="current-status">
 			<span class="status-label">Estado actual:</span>
-			<span class="status-badge" :style="{ backgroundColor: currentStatusColor }">
+			<span class="status-badge" :class="currentStatusClass">
 				{{ currentStatusName }}
 			</span>
 			<span class="status-progress">
 				<div class="progress-bar">
-					<div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
+					<div class="progress-fill" :class="getProgressClass(progressPercent)"></div>
 				</div>
 				<span class="progress-text">{{ progressPercent }}%</span>
 			</span>
@@ -93,7 +93,7 @@ const changing = ref(false)
 // Computed
 const currentConfig = computed(() => STATE_CONFIG[props.currentStatusId] || STATE_CONFIG[1])
 const currentStatusName = computed(() => currentConfig.value.name)
-const currentStatusColor = computed(() => currentConfig.value.color)
+const currentStatusClass = computed(() => `status-${props.currentStatusId}`)
 const progressPercent = computed(() => currentConfig.value.progress)
 const isTerminal = computed(() => props.currentStatusId === 9)
 
@@ -111,6 +111,11 @@ const confirmTransition = (transition) => {
 	pendingTransition.value = transition
 	transitionNote.value = ''
 	showConfirmModal.value = true
+}
+
+const getProgressClass = (progress) => {
+	const normalized = Math.max(0, Math.min(100, Math.round(Number(progress) || 0)))
+	return `progress-${normalized}`
 }
 
 const executeTransition = async () => {
@@ -181,6 +186,12 @@ const executeTransition = async () => {
 	font-size: 0.9em;
 }
 
+@for $i from 1 through 10 {
+	.status-badge.status-#{$i} {
+		background-color: var(--status-color-#{$i});
+	}
+}
+
 .status-progress {
 	display: flex;
 	align-items: center;
@@ -200,6 +211,12 @@ const executeTransition = async () => {
 		height: 100%;
 		background: linear-gradient(90deg, $color-primary, lighten($color-primary, 10%));
 		transition: width 0.3s ease;
+
+		@for $i from 0 through 100 {
+			&.progress-#{$i} {
+				width: #{$i}%;
+			}
+		}
 	}
 
 	.progress-text {

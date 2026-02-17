@@ -173,7 +173,7 @@ const formatPrice = (price) => {
 }
 
 const onImageError = (event) => {
-  event.target.style.display = 'none'
+  event.target.classList.add('img-broken')
 }
 
 const proceed = () => {
@@ -319,6 +319,10 @@ const proceed = () => {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+
+    &.img-broken {
+      display: none !important;
+    }
   }
 }
 

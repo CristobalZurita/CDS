@@ -309,9 +309,21 @@ def notify_client(
             url = p.photo_url or ""
             if url and url.startswith("/"):
                 url = f"{settings.public_base_url}{url}"
-            photo_items.append(f'<img src="{url}" alt="Foto" style="width:140px;height:auto;margin:6px;border-radius:8px;border:1px solid #ddd;" />')
+            photo_items.append(f'<img src="{url}" alt="Foto" class="repair-photo-thumb" />')
 
     summary_html = f"""
+    <style>
+      .repair-photo-gallery {{
+        margin-top: 8px;
+      }}
+      .repair-photo-thumb {{
+        width: 140px;
+        height: auto;
+        margin: 6px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }}
+    </style>
     <h2>Resumen de tu OT {repair.repair_number}</h2>
     <p><strong>Cliente:</strong> {client.name}</p>
     <p><strong>Instrumento:</strong> {device.model if device else 'SIN_DATO'}</p>
@@ -319,7 +331,7 @@ def notify_client(
     <p><strong>Diagnóstico:</strong> {repair.diagnosis or 'SIN_DATO'}</p>
     <p><strong>Trabajo:</strong> {repair.work_performed or 'SIN_DATO'}</p>
     <p><strong>Total:</strong> ${repair.total_cost or 0:,.0f} CLP</p>
-    <div>{''.join(photo_items) if photo_items else ''}</div>
+    <div class="repair-photo-gallery">{''.join(photo_items) if photo_items else ''}</div>
     <p>Revisa el detalle completo en tu panel.</p>
     """
 
