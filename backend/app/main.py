@@ -6,13 +6,15 @@ FastAPI application with async database support, JWT authentication,
 and comprehensive diagnostic/quotation system.
 """
 
+import asyncio
+import logging
+from contextlib import asynccontextmanager, suppress
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi.responses import JSONResponse
-from contextlib import asynccontextmanager
-import logging
 
 from app.core.config import settings
 from app.core.security import verify_crypto_dependencies
@@ -38,6 +40,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     # Startup logic
     logger.info("🚀 Application startup")
+    instrument_sync_task = None
     # Verify cryptographic dependencies early (fail-fast)
     verify_crypto_dependencies()
     # Setup structured logging early
@@ -60,6 +63,27 @@ async def lifespan(app: FastAPI):
         logger.info("✓ Database initialized")
     except Exception as e:
         logger.error(f"✗ Database initialization failed: {e}")
+
+    # Auto-sync instrumentos: startup + intervalo periódico
+    if settings.enable_instrument_auto_sync:
+        try:
+            from app.services.instrument_sync_service import run_instrument_sync
+
+            if settings.instrument_sync_on_startup:
+                await asyncio.to_thread(run_instrument_sync, False, 120, "startup")
+                logger.info("✓ Instrument sync ejecutado en startup")
+
+            interval_minutes = max(5, int(settings.instrument_sync_interval_minutes))
+
+            async def _periodic_instrument_sync():
+                while True:
+                    await asyncio.sleep(interval_minutes * 60)
+                    await asyncio.to_thread(run_instrument_sync, False, 120, "periodic")
+
+            instrument_sync_task = asyncio.create_task(_periodic_instrument_sync())
+            logger.info(f"✓ Instrument auto-sync periódico activo cada {interval_minutes} minutos")
+        except Exception as e:
+            logger.error(f"✗ Instrument auto-sync initialization failed: {e}")
 
     # Attempt to import and register any routers that may have failed to import at module load
     try:
@@ -85,6 +109,11 @@ async def lifespan(app: FastAPI):
     
     # Shutdown logic
     logger.info("🛑 Application shutdown")
+    if instrument_sync_task:
+        instrument_sync_task.cancel()
+        with suppress(asyncio.CancelledError):
+            await instrument_sync_task
+
     try:
         await close_db()
         logger.info("✓ Database connection closed")

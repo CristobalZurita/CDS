@@ -1,32 +1,45 @@
 import { ref, computed } from 'vue'
 import brandsData from '@/assets/data/brands.json'
-import instrumentsData from '@/assets/data/instruments.json'
+import instrumentsData from '@/data/instruments.json'
 import type { ComputedRef, Ref } from 'vue'
 
 interface Brand {
   id: string
   name: string
   tier?: string
-  [key: string]: any
+  founded?: number | null
+  country?: string | null
+  description?: string
+  [key: string]: unknown
 }
 
-interface Instrument {
+interface SyncedInstrument {
   id: string
+  marca: string
+  modelo: string
+  foto_principal: string
+  fotos_adicionales: string[]
+  tipos?: string[]
+  agregado_en?: string
+  marca_logo_disponible?: boolean
+  marca_habilitada?: boolean
+  marca_logo_url?: string | null
+  [key: string]: unknown
+}
+
+interface Instrument extends SyncedInstrument {
   brand: string
   model: string
   type: string
-  year?: number
-  imagen_url?: string
-  image?: {
-    url: string
-  }
+  year?: number | null
   description?: string
-  [key: string]: any
+  imagen_url?: string
+  photo_key?: string
+  display_model?: string
 }
 
 interface EnrichedInstrument extends Instrument {
   imagePath: string
-  imageVariants?: string[]
   brandLogo?: string
   displayName: string
   brandLabel: string
@@ -40,11 +53,8 @@ interface CatalogStats {
 }
 
 export interface UseInstrumentsCatalogComposable {
-  // Data refs
   brands: Ref<Brand[]>
   instruments: Ref<Instrument[]>
-
-  // Query methods
   getBrandById: (brandId: string) => Brand | undefined
   getAllBrands: (sorted?: boolean) => Brand[]
   getInstrumentsByBrand: (brandId: string) => EnrichedInstrument[]
@@ -53,38 +63,110 @@ export interface UseInstrumentsCatalogComposable {
   getInstrumentImageVariants: (instrument: Instrument) => Promise<string[]>
   getBrandLogo: (brandId: string) => string
   searchInstruments: (query: string) => EnrichedInstrument[]
-
-  // Stats
   getCatalogStats: ComputedRef<CatalogStats>
 }
 
-/**
- * useInstrumentsCatalog - Central data catalog for brands and instruments
- *
- * This composable provides:
- * - Unified access to brands and instruments from JSON (catalog ONLY)
- * - Brand → Instruments mapping
- * - Image path generation (uses static assets only, NO inventory data)
- * - Separates CATALOG (static) from INVENTORY (dynamic database)
- * 
- * NOTE: This catalog is NOT connected to inventory database.
- * Inventory photos should come from /api/v1/inventory endpoint
- */
+const BRAND_ID_ALIASES: Record<string, string> = {
+  ACCESS: 'access',
+  AKAI: 'akai',
+  ALESIS: 'alesis',
+  ARTURIA: 'arturia',
+  ASM: 'asm',
+  BEHERINGER: 'behringer',
+  CASIO: 'casio',
+  KAWAI: 'kawai',
+  KORG: 'korg',
+  NOVATION: 'novation',
+  ROLAND: 'roland',
+  STUDIOLOGIC: 'studiologic',
+  YAMAHA: 'yamaha',
+}
+
+const BRAND_CANONICAL_ALIASES: Record<string, string> = {
+  ACCES: 'ACCESS',
+}
+
+const FALLBACK_BRAND_NAMES: Record<string, string> = {
+  asm: 'ASM',
+  studiologic: 'Studiologic',
+}
+
+const toCanonicalBrand = (marca: string): string =>
+  BRAND_CANONICAL_ALIASES[marca] || marca
+
+const toBrandId = (marca: string): string => {
+  const canonical = toCanonicalBrand((marca || '').toUpperCase())
+  return BRAND_ID_ALIASES[canonical] || canonical.toLowerCase().replace(/\s+/g, '-')
+}
+
+const normalizeModel = (modelo: string): string => String(modelo || '').replace(/_/g, ' ')
+
+const buildInstrumentPath = (photoName: string): string =>
+  `/images/instrumentos/${photoName}.webp`
+
 export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
-  // Raw data
-  const brands = ref<Brand[]>(brandsData.brands || [])
-  const instruments = ref<Instrument[]>(instrumentsData.instruments || [])
+  const allRawInstruments: SyncedInstrument[] = Array.isArray(instrumentsData?.instruments)
+    ? (instrumentsData.instruments as SyncedInstrument[])
+    : []
 
-  /**
-   * Get a brand by ID
-   */
-  const getBrandById = (brandId: string): Brand | undefined => {
-    return brands.value.find(b => b.id === brandId)
-  }
+  const allNormalizedInstruments: Instrument[] = allRawInstruments.map((inst) => {
+    const brandId = toBrandId(inst.marca)
+    const fotoPrincipal = inst.foto_principal
+    const fotosAdicionales = Array.isArray(inst.fotos_adicionales)
+      ? inst.fotos_adicionales
+      : []
 
-  /**
-   * Get all brands, optionally sorted A→Z
-   */
+    return {
+      ...inst,
+      id: inst.id,
+      brand: brandId,
+      model: normalizeModel(inst.modelo),
+      type: 'Keyboard / Synthesizer',
+      year: null,
+      description: `Instrumento ${normalizeModel(inst.modelo)}`.trim(),
+      imagen_url: buildInstrumentPath(fotoPrincipal),
+      photo_key: fotoPrincipal,
+      foto_principal: fotoPrincipal,
+      fotos_adicionales: fotosAdicionales,
+      marca: toCanonicalBrand(inst.marca),
+      marca_logo_disponible: Boolean(inst.marca_logo_disponible),
+      marca_habilitada: Boolean(inst.marca_habilitada),
+      marca_logo_url: inst.marca_logo_url || null,
+      display_model: normalizeModel(inst.modelo),
+    }
+  })
+
+  const enabledInstruments = allNormalizedInstruments.filter(
+    inst => inst.marca_habilitada && inst.marca_logo_disponible
+  )
+
+  const brandLogoById: Record<string, string> = {}
+  enabledInstruments.forEach((inst) => {
+    if (inst.brand && inst.marca_logo_url && !brandLogoById[inst.brand]) {
+      brandLogoById[inst.brand] = String(inst.marca_logo_url)
+    }
+  })
+
+  const enabledBrandIds = new Set(enabledInstruments.map(inst => inst.brand))
+  const knownBrands = Array.isArray(brandsData?.brands) ? (brandsData.brands as Brand[]) : []
+  const filteredKnownBrands = knownBrands.filter(brand => enabledBrandIds.has(brand.id))
+  const missingBrands: Brand[] = Array.from(enabledBrandIds)
+    .filter(brandId => !filteredKnownBrands.some(brand => brand.id === brandId))
+    .map((brandId) => ({
+      id: brandId,
+      name: FALLBACK_BRAND_NAMES[brandId] || brandId.toUpperCase(),
+      tier: 'standard',
+      founded: null,
+      country: null,
+      description: 'Marca detectada por fotos sincronizadas',
+    }))
+
+  const brands = ref<Brand[]>([...filteredKnownBrands, ...missingBrands])
+  const instruments = ref<Instrument[]>(enabledInstruments)
+
+  const getBrandById = (brandId: string): Brand | undefined =>
+    brands.value.find(brand => brand.id === brandId)
+
   const getAllBrands = (sorted = true): Brand[] => {
     const list = [...brands.value]
     if (sorted) {
@@ -93,219 +175,98 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
     return list
   }
 
-  /**
-   * Generate image paths for an instrument
-   * Returns primary image path based on actual files in /public/images/instrumentos/
-   * Pattern: /images/instrumentos/{BRAND_MODEL...}.webp (all files are WEBP format)
-   */
   const getInstrumentImage = (instrument: Instrument): string => {
-    // Priority 1: Use existing imagen_url if valid
+    if (instrument?.foto_principal) {
+      return buildInstrumentPath(instrument.foto_principal)
+    }
+    if (instrument?.photo_key) {
+      return buildInstrumentPath(instrument.photo_key)
+    }
     if (instrument?.imagen_url) {
       return instrument.imagen_url
     }
-
-    // Priority 2: Generate from convention using BRAND_MODEL pattern
-    if (instrument?.id && instrument?.brand && instrument?.model) {
-      const brand = instrument.brand.toUpperCase()
-      const model = (instrument.model || '')
-        .toUpperCase()
-        .replace(/\s+/g, '_')
-        .replace(/[^A-Z0-9_]/g, '') // Remove special chars
-      
-      const brandModel = `${brand}_${model}`
-
-      // Candidates in priority order based on actual file patterns
-      // TRY VARIANTS FIRST (most likely to exist in public folder)
-      const candidates = [
-        // Variants with suffixes (most files have these)
-        `/images/instrumentos/${brandModel}_MK1.webp`,
-        `/images/instrumentos/${brandModel}_MK2.webp`,
-        `/images/instrumentos/${brandModel}_XL.webp`,
-        `/images/instrumentos/${brandModel}_S.webp`,
-        `/images/instrumentos/${brandModel}_PLUS.webp`,
-        
-        // Only then try base pattern
-        `/images/instrumentos/${brandModel}.webp`,
-        
-        // Fallback to brand logo
-        `/images/instrumentos/LOGOS/LOGO_${brand}.webp`,
-      ]
-
-      // Return first candidate - browser will load it
-      // If 404, placeholder will display instead
-      return candidates[0]
-    }
-
-    // Priority 3: Fallback placeholder
     return '/images/placeholder.svg'
   }
 
-  /**
-   * Check if an image exists by trying to load it
-   * Used to build real variants list only from existing files
-   */
-  const imageExists = async (imagePath: string): Promise<boolean> => {
-    try {
-      const response = await fetch(imagePath, { method: 'HEAD' })
-      return response.ok
-    } catch {
-      return false
-    }
-  }
-
-  /**
-   * Get all image variants for an instrument that ACTUALLY EXIST
-   * Searches for base image and common variant suffixes
-   * Returns only paths for files that are verified to exist
-   * Pattern: BRAND_MODEL.webp, BRAND_MODEL_BACK.webp, etc.
-   */
   const getInstrumentImageVariants = async (instrument: Instrument): Promise<string[]> => {
-    if (!instrument?.id || !instrument?.brand || !instrument?.model) {
-      return []
+    if (!instrument) return []
+
+    const photos: string[] = []
+    if (instrument.foto_principal) {
+      photos.push(instrument.foto_principal)
+    } else if (instrument.photo_key) {
+      photos.push(instrument.photo_key)
     }
 
-    const brand = instrument.brand.toUpperCase()
-    const model = (instrument.model || '')
-      .toUpperCase()
-      .replace(/\s+/g, '_')
-      .replace(/[^A-Z0-9_]/g, '')
-    
-    const brandModel = `${brand}_${model}`
+    if (Array.isArray(instrument.fotos_adicionales)) {
+      photos.push(...instrument.fotos_adicionales)
+    }
 
-    // Possible variant suffixes in order of likelihood
-    const suffixes = [
-      '', // Base image first (e.g., BRAND_MODEL.webp)
-      '_BACK',
-      '_FRONT',
-      '_TOP',
-      '_LATERAL',
-      '_SIDE',
-      '_MK1',
-      '_MK2',
-      '_XL',
-      '_S',
-    ]
-
-    // Build candidate paths
-    const candidates = suffixes.map(
-      suffix => `/images/instrumentos/${brandModel}${suffix}.webp`
-    )
-
-    // Test each candidate and keep only ones that exist
-    const results = await Promise.all(
-      candidates.map(async (path) => ({
-        path,
-        exists: await imageExists(path)
-      }))
-    )
-
-    return results
-      .filter(r => r.exists)
-      .map(r => r.path)
+    return [...new Set(photos)].map(buildInstrumentPath)
   }
 
-  /**
-   * Get brand logo path
-   * Pattern: /images/instrumentos/LOGOS/LOGO_{BRAND}.webp
-   */
   const getBrandLogo = (brandId: string): string => {
     if (!brandId) return ''
-    const brand = brandId.toUpperCase()
-    return `/images/instrumentos/LOGOS/LOGO_${brand}.webp`
+    if (brandLogoById[brandId]) return brandLogoById[brandId]
+
+    const normalized = String(brandId).toUpperCase().replace(/-/g, '_')
+    const brandLogoFixes: Record<string, string> = {
+      BEHRINGER: 'BEHERINGER',
+    }
+    const logoKey = brandLogoFixes[normalized] || normalized
+    return `/images/instrumentos/LOGOS/LOGO_${logoKey}.webp`
   }
 
-  /**
-   * Enrich instrument object with computed fields
-   * (adds image path, formatted price, etc.)
-   * Note: imageVariants are NOT included here (loaded async by component)
-   */
   const enrichInstrument = (inst: Instrument): EnrichedInstrument => {
-    if (!inst) {
-      return {
-        id: '',
-        brand: '',
-        model: '',
-        type: '',
-        imagePath: '/images/placeholder.svg',
-        displayName: 'Unknown',
-        brandLabel: 'Unknown'
-      }
-    }
-
     return {
       ...inst,
       imagePath: getInstrumentImage(inst),
-      // imageVariants: NOT included here - loaded async when needed
       brandLogo: getBrandLogo(inst.brand),
-      // Do not include any price/valor fields for frontend rendering
-      // Prices are not rendered in the frontend by design
-      displayName: `${inst.model} (${inst.year || '?'})`,
-      brandLabel: getBrandById(inst.brand)?.name || inst.brand
+      displayName: inst.display_model || inst.model,
+      brandLabel: getBrandById(inst.brand)?.name || inst.marca || inst.brand,
     }
   }
 
-  /**
-   * Get instruments for a specific brand
-   * Returns array of instrument objects with image path included
-   */
-  const getInstrumentsByBrand = (brandId: string): EnrichedInstrument[] => {
-    return instruments.value
+  const getInstrumentsByBrand = (brandId: string): EnrichedInstrument[] =>
+    instruments.value
       .filter(inst => inst.brand === brandId)
       .map(inst => enrichInstrument(inst))
-      .sort((a, b) => a.model.localeCompare(b.model))
-  }
+      .sort((a, b) => (a.model || '').localeCompare(b.model || ''))
 
-  /**
-   * Get a specific instrument by ID
-   */
   const getInstrumentById = (instrumentId: string): EnrichedInstrument | null => {
     const inst = instruments.value.find(i => i.id === instrumentId)
     return inst ? enrichInstrument(inst) : null
   }
 
-  /**
-   * Search instruments by text
-   */
   const searchInstruments = (query: string): EnrichedInstrument[] => {
     if (!query || query.trim() === '') return []
-
     const lower = query.toLowerCase()
     return instruments.value
-      .filter(
-        inst =>
-          inst.model.toLowerCase().includes(lower) ||
-          inst.brand.toLowerCase().includes(lower) ||
-          inst.description?.toLowerCase().includes(lower)
+      .filter(inst =>
+        (inst.model || '').toLowerCase().includes(lower) ||
+        (inst.marca || '').toLowerCase().includes(lower) ||
+        (inst.description || '').toLowerCase().includes(lower)
       )
       .map(inst => enrichInstrument(inst))
   }
 
-  /**
-   * Get a summary of the catalog
-   */
   const getCatalogStats = computed((): CatalogStats => {
-    const brandsCount = brands.value.length
-    const instrumentsCount = instruments.value.length
-    const instrumentsWithImage = instruments.value.filter(
-      i => i.imagen_url || i.image?.url
-    ).length
-
+    const totalBrands = brands.value.length
+    const totalInstruments = instruments.value.length
+    const instrumentsWithImage = instruments.value.filter(i => Boolean(i.foto_principal)).length
     return {
-      totalBrands: brandsCount,
-      totalInstruments: instrumentsCount,
+      totalBrands,
+      totalInstruments,
       instrumentsWithImage,
-      coverage: instrumentsCount > 0
-        ? Math.round((instrumentsWithImage / instrumentsCount) * 100)
-        : 0
+      coverage: totalInstruments > 0
+        ? Math.round((instrumentsWithImage / totalInstruments) * 100)
+        : 0,
     }
   })
 
   return {
-    // Data refs
     brands,
     instruments,
-
-    // Query methods
     getBrandById,
     getAllBrands,
     getInstrumentsByBrand,
@@ -314,8 +275,6 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
     getInstrumentImageVariants,
     getBrandLogo,
     searchInstruments,
-
-    // Stats
-    getCatalogStats
+    getCatalogStats,
   }
 }

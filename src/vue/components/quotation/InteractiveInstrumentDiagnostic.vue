@@ -54,9 +54,9 @@
           </div>
 
           <!-- Carousel for multi-photo instruments or single image -->
-          <div v-if="selectedInstrument.imagePath && !isPlaceholderImage(selectedInstrument.imagePath)" class="product-carousel">
+          <div v-if="selectedInstrumentForCarousel" class="product-carousel">
             <InstrumentCarousel 
-              :instrument="selectedInstrument"
+              :instrument="selectedInstrumentForCarousel"
               :show-photo-label="false"
             />
           </div>
@@ -477,12 +477,26 @@ const availableModels = computed(() => {
   if (!selectedBrandId.value) return []
   return catalog.getInstrumentsByBrand(selectedBrandId.value)
 })
-const instrumentFoundInDB = computed(() => {
-  // Instrument is considered found if it has a valid image path (not placeholder)
-  return selectedInstrument.value && 
-         selectedInstrument.value.imagePath && 
-         !selectedInstrument.value.imagePath.includes('placeholder')
+const selectedInstrumentForCarousel = computed(() => {
+  if (!selectedInstrument.value) return null
+
+  const foto_principal = selectedInstrument.value.foto_principal || selectedInstrument.value.photo_key
+  if (!foto_principal) return null
+
+  const fotos_adicionales = Array.isArray(selectedInstrument.value.fotos_adicionales)
+    ? selectedInstrument.value.fotos_adicionales
+    : []
+
+  return {
+    id: selectedInstrument.value.id,
+    marca: selectedInstrument.value.marca || selectedInstrument.value.brandLabel || selectedInstrument.value.brand || '',
+    modelo: selectedInstrument.value.modelo || selectedInstrument.value.model || '',
+    foto_principal,
+    fotos_adicionales
+  }
 })
+
+const instrumentFoundInDB = computed(() => selectedInstrumentForCarousel.value !== null)
 
 const filteredInstruments = ref([])
 const allInstruments = computed(() => {
@@ -674,10 +688,6 @@ const onModelChange = async () => {
       }
     }
   }
-}
-
-const isPlaceholderImage = (imagePath: string): boolean => {
-  return !imagePath || imagePath.includes('placeholder')
 }
 
 const filterInstruments = () => {
@@ -1642,7 +1652,7 @@ img.img-broken {
   border-radius: 16px;
   padding: $spacer-lg;
   margin: $spacer-lg 0;
-  max-width: 500px;
+  max-width: 920px;
   margin-left: auto;
   margin-right: auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
@@ -1687,7 +1697,7 @@ img.img-broken {
     margin-bottom: $spacer-md;
     display: flex;
     justify-content: center;
-    max-height: 600px;
+    max-height: none;
   }
 
   .product-image {
