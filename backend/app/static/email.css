@@ -1,0 +1,203 @@
+@charset "UTF-8";
+/*! Entry point de compilacion para estilos de email (genera backend/app/static/email.css). */
+/*! Fuente SASS de emails CDS. No editar backend/app/static/email.css manualmente. */
+/** Font Awesome webfonts path **/
+/** Overriding Bootstrap's contrast ratio. **/
+/** Typography - Según Manual de Identidad Cirujano de Sintetizadores **/
+/** Bootstrap Colors - Paleta del Manual de Identidad **/
+/** Colores Adicionales del Manual de Identidad **/
+/** Legacy Status Tones (para migrar hardcoded) **/
+/** General **/
+/** Dimensions **/
+/** Texts **/
+/** Light Shades **/
+/** Typography - Base Text Sizes (Optimized for readability) **/
+/** Typography - Texts Breakpoints (MOBILE-FIRST: larger base on small screens) **/
+/** Typography - Headings Breakpoints (MOBILE-FIRST: larger headings on small screens) **/
+/** Typography - Headings Base Sizes **/
+.email-body {
+  font-family: "Cervo Neue", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #3e3c38;
+}
+
+.email-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.email-panel {
+  background: #f7fafc;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.email-btn {
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.email-btn-primary {
+  background: #667eea;
+}
+
+.email-btn-whatsapp {
+  background: #25d366;
+}
+
+.email-divider {
+  border: none;
+  border-top: 1px solid #dddddd;
+  margin: 20px 0;
+}
+
+.email-divider-spaced {
+  margin: 30px 0;
+}
+
+.email-footnote {
+  font-size: 12px;
+  color: #a0aec0;
+}
+
+.email-status-title {
+  color: #667eea;
+}
+
+.email-progress-wrap {
+  margin: 15px 0;
+}
+
+.email-progress-track {
+  background: #e2e8f0;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.email-progress-fill {
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  height: 100%;
+  width: 0;
+}
+
+.email-progress-fill--0 {
+  width: 0%;
+}
+
+.email-progress-fill--10 {
+  width: 10%;
+}
+
+.email-progress-fill--20 {
+  width: 20%;
+}
+
+.email-progress-fill--30 {
+  width: 30%;
+}
+
+.email-progress-fill--40 {
+  width: 40%;
+}
+
+.email-progress-fill--50 {
+  width: 50%;
+}
+
+.email-progress-fill--60 {
+  width: 60%;
+}
+
+.email-progress-fill--70 {
+  width: 70%;
+}
+
+.email-progress-fill--80 {
+  width: 80%;
+}
+
+.email-progress-fill--90 {
+  width: 90%;
+}
+
+.email-progress-fill--100 {
+  width: 100%;
+}
+
+.email-progress-label {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.email-code {
+  letter-spacing: 4px;
+}
+
+.email-success-panel {
+  background: #c6f6d5;
+  border-left: 4px solid #48bb78;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.email-success-title {
+  color: #22543d;
+  margin: 0 0 10px 0;
+}
+
+.email-success-row {
+  margin: 0;
+}
+
+.email-success-row-spaced {
+  margin: 10px 0 0 0;
+}
+
+.email-title-orange {
+  color: #ec6b00;
+}
+
+.email-panel-orange {
+  background-color: #f7fafc;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+.email-panel-orange-title {
+  margin-top: 0;
+  color: #ec6b00;
+}
+
+.email-text-muted {
+  color: #5a5652;
+  font-size: 0.9em;
+}
+
+.email-text-muted-small {
+  color: #5a5652;
+  font-size: 0.85em;
+}
+
+.email-link-orange {
+  color: #ec6b00;
+}
+
+.repair-photo-gallery {
+  margin-top: 8px;
+}
+
+.repair-photo-thumb {
+  width: 140px;
+  height: auto;
+  margin: 6px;
+  border-radius: 8px;
+  border: 1px solid #dddddd;
+}

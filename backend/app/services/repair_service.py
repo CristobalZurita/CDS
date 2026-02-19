@@ -52,7 +52,8 @@ class RepairService:
         component_table: str,
         component_id: int,
         quantity: int,
-        user_id: int,
+        user_id: Optional[int],
+        from_reserved: bool = False,
         notes: Optional[str] = None
     ) -> RepairComponentUsage:
         """
@@ -86,7 +87,14 @@ class RepairService:
 
         # Verificar disponibilidad
         available = stock.available_quantity
-        if available < quantity:
+        if from_reserved:
+            reserved_qty = stock.quantity_reserved or 0
+            if reserved_qty < quantity:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Reserva insuficiente. Reservado: {reserved_qty}, Requerido: {quantity}"
+                )
+        elif available < quantity:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Stock insuficiente. Disponible: {available}, Requerido: {quantity}"
@@ -105,13 +113,15 @@ class RepairService:
             self.db.add(usage)
 
             # 2. Descontar stock
+            if from_reserved:
+                stock.quantity_reserved = max((stock.quantity_reserved or 0) - quantity, 0)
             stock.quantity -= quantity
             stock.updated_at = datetime.utcnow()
 
             # 3. Registrar movimiento de stock
             movement = StockMovement(
                 stock_id=stock.id,
-                movement_type="OUT",
+                movement_type="OUT_RESERVED" if from_reserved else "OUT",
                 quantity=quantity,
                 repair_id=repair_id,
                 notes=f"Uso en reparación #{repair.repair_number}",
@@ -133,10 +143,146 @@ class RepairService:
                 detail=f"Error de integridad: {str(e)}"
             )
 
+    def reserve_component(
+        self,
+        repair_id: int,
+        component_table: str,
+        component_id: int,
+        quantity: int,
+        user_id: Optional[int],
+        notes: Optional[str] = None,
+    ) -> dict:
+        """
+        Reserva stock para una reparación sin consumirlo todavía.
+        """
+        repair = self.get_repair(repair_id)
+
+        if self.is_repair_closed(repair):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No se puede reservar en reparación cerrada"
+            )
+
+        stock = self.db.query(Stock).filter(
+            Stock.component_table == component_table,
+            Stock.component_id == component_id
+        ).first()
+
+        if not stock:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Stock no encontrado para {component_table}.{component_id}"
+            )
+
+        available = stock.available_quantity
+        if available < quantity:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Stock insuficiente para reservar. Disponible: {available}, Requerido: {quantity}"
+            )
+
+        try:
+            stock.quantity_reserved = (stock.quantity_reserved or 0) + quantity
+            stock.updated_at = datetime.utcnow()
+
+            movement = StockMovement(
+                stock_id=stock.id,
+                movement_type="RESERVE",
+                quantity=quantity,
+                repair_id=repair_id,
+                notes=notes or f"Reserva para reparación #{repair.repair_number}",
+                performed_by=user_id
+            )
+            self.db.add(movement)
+
+            self.db.commit()
+            self.db.refresh(stock)
+            return {
+                "stock_id": stock.id,
+                "reserved_quantity": quantity,
+                "total_reserved": stock.quantity_reserved or 0,
+                "available_quantity": stock.available_quantity,
+            }
+        except IntegrityError as e:
+            self.db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Error de integridad: {str(e)}"
+            )
+
+    def release_component_reservation(
+        self,
+        repair_id: int,
+        component_table: str,
+        component_id: int,
+        quantity: int,
+        user_id: Optional[int],
+        notes: Optional[str] = None,
+    ) -> dict:
+        """
+        Libera reserva de stock asociada a reparación.
+        """
+        repair = self.get_repair(repair_id)
+
+        if self.is_repair_closed(repair):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No se puede liberar reserva en reparación cerrada"
+            )
+
+        stock = self.db.query(Stock).filter(
+            Stock.component_table == component_table,
+            Stock.component_id == component_id
+        ).first()
+
+        if not stock:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Stock no encontrado para {component_table}.{component_id}"
+            )
+
+        current_reserved = stock.quantity_reserved or 0
+        if current_reserved <= 0:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No hay reserva para liberar"
+            )
+
+        release_qty = min(quantity, current_reserved)
+
+        try:
+            stock.quantity_reserved = current_reserved - release_qty
+            stock.updated_at = datetime.utcnow()
+
+            movement = StockMovement(
+                stock_id=stock.id,
+                movement_type="UNRESERVE",
+                quantity=release_qty,
+                repair_id=repair_id,
+                notes=notes or f"Liberación de reserva reparación #{repair.repair_number}",
+                performed_by=user_id
+            )
+            self.db.add(movement)
+
+            self.db.commit()
+            self.db.refresh(stock)
+            return {
+                "stock_id": stock.id,
+                "released_quantity": release_qty,
+                "total_reserved": stock.quantity_reserved or 0,
+                "available_quantity": stock.available_quantity,
+            }
+        except IntegrityError as e:
+            self.db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Error de integridad: {str(e)}"
+            )
+
     def remove_component_usage(
         self,
         usage_id: int,
-        user_id: int
+        user_id: Optional[int]
     ) -> dict:
         """
         Elimina uso de componente y devuelve stock.

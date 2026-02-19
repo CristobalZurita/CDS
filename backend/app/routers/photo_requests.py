@@ -48,7 +48,7 @@ async def create_photo_request(
 
 @router.get("/token/{token}")
 @limiter.limit("30/minute")
-def get_photo_request(token: str, response: Response, db: Session = Depends(get_db)):
+def get_photo_request(token: str, request: Request, response: Response, db: Session = Depends(get_db)):
     req = db.query(PhotoUploadRequest).filter(PhotoUploadRequest.token == token).first()
     if not req:
         raise HTTPException(status_code=404, detail="Token inválido")

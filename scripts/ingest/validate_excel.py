@@ -30,6 +30,10 @@ REF_RESISTORS = os.path.join(REF_DIR, 'resistors.json')
 REF_CAPS = os.path.join(REF_DIR, 'capacitors_ceramic.json')
 REF_ICS = os.path.join(REF_DIR, 'integrated_circuits.json')
 REF_TRANS = os.path.join(REF_DIR, 'transistors.json')
+DEFAULT_EXCEL = os.getenv(
+    "INVENTORY_EXCEL_PATH",
+    os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..', 'Inventario_Cirujanosintetizadores.xlsx'))
+)
 
 
 def md5_of_file(path, blocksize=65536):
@@ -293,7 +297,7 @@ def save_reports(report_json_path, report):
 
 def main():
     p = argparse.ArgumentParser(description='Validate Excel inventory and produce reports')
-    p.add_argument('excel', nargs='?', default='./Inventario_Cirujanosintetizadores.xlsx', help='Excel file path')
+    p.add_argument('excel', nargs='?', default=DEFAULT_EXCEL, help='Excel file path')
     p.add_argument('--sheet', default=0, help='Sheet index (int) or name', type=str)
     p.add_argument('--output', default='reports/validation_report.json', help='Output JSON path')
     args = p.parse_args()

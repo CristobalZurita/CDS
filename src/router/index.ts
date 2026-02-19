@@ -40,6 +40,8 @@ const RepairDetailAdminPage = () => import('@/vue/content/pages/admin/RepairDeta
 const TicketsPage = () => import('@/vue/content/pages/admin/TicketsPage.vue')
 const PurchaseRequestsPage = () => import('@/vue/content/pages/admin/PurchaseRequestsPage.vue')
 const ArchivePage = () => import('@/vue/content/pages/admin/ArchivePage.vue')
+const ManualsPage = () => import('@/vue/content/pages/admin/ManualsPage.vue')
+const StatsPage = () => import('@/vue/content/pages/admin/StatsPage.vue')
 const SignaturePage = () => import('@/vue/content/pages/SignaturePage.vue')
 const PhotoUploadPage = () => import('@/vue/content/pages/PhotoUploadPage.vue')
 
@@ -208,13 +210,19 @@ const routes: RouteRecordRaw[] = [
         component: PurchaseRequestsPage
       },
       {
+        path: 'manuals',
+        name: 'admin-manuals',
+        component: ManualsPage
+      },
+      {
+        path: 'stats',
+        name: 'admin-stats',
+        component: StatsPage
+      },
+      {
         path: 'archive',
         name: 'admin-archive',
         component: ArchivePage
-      },
-      {
-        path: 'manuals',
-        redirect: '/admin/archive'
       }
     ]
   },

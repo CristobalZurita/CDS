@@ -87,6 +87,7 @@ def get_signature_request(
 @limiter.limit("30/minute")
 def get_signature_request_by_token(
     token: str,
+    request: Request,
     response: Response,
     db: Session = Depends(get_db),
 ):

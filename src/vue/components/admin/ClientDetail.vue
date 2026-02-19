@@ -133,7 +133,7 @@
                 <select v-model.number="selectedParentRepairId" class="form-select">
                   <option :value="null">Selecciona OT base</option>
                   <option v-for="r in clientRepairs" :key="r.id" :value="r.id">
-                    {{ r.repair_number || ('OT #' + r.id) }} - {{ r.problem_reported }}
+                    {{ r.repair_code || r.repair_number || ('OT #' + r.id) }} - {{ r.problem_reported }}
                   </option>
                 </select>
               </div>

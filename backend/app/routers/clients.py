@@ -14,6 +14,7 @@ from app.core.dependencies import get_current_admin, require_permission
 from app.models.client import Client
 from app.models.device import Device
 from app.models.repair import Repair
+from app.services.ot_code_service import repair_code as _repair_code
 
 router = APIRouter(prefix="/clients", tags=["clients"])
 
@@ -37,6 +38,18 @@ def _auto_archive_repairs(db: Session) -> None:
     db.commit()
 
 
+def _resolved_repair_code(repair: Repair, client_id: int) -> str:
+    if repair.repair_number and not str(repair.repair_number).startswith("R-"):
+        return repair.repair_number
+    if repair.ot_parent_id and repair.ot_sequence:
+        if repair.ot_parent_id == repair.id:
+            if int(repair.ot_sequence) <= 1:
+                return _repair_code(client_id, repair.id)
+            return _repair_code(client_id, repair.id, int(repair.ot_sequence))
+        return _repair_code(client_id, int(repair.ot_parent_id), int(repair.ot_sequence))
+    return _repair_code(client_id, repair.id)
+
+
 @router.get("", response_model=List[Dict])
 @router.get("/", response_model=List[Dict])
 def list_clients(
@@ -52,7 +65,19 @@ def list_clients(
             "name": client.name,
             "email": client.email,
             "phone": client.phone,
+            "phone_alt": client.phone_alt,
             "address": client.address,
+            "city": client.city,
+            "region": client.region,
+            "country": client.country,
+            "notes": client.notes,
+            "internal_notes": client.internal_notes,
+            "tax_id": client.tax_id,
+            "company_name": client.company_name,
+            "billing_address": client.billing_address,
+            "customer_segment": client.customer_segment,
+            "language_preference": client.language_preference,
+            "service_preference": client.service_preference,
             "total_repairs": client.total_repairs,
             "total_spent": client.total_spent,
         })
@@ -70,8 +95,19 @@ def get_client(client_id: int, db: Session = Depends(get_db), user: dict = Depen
         "name": client.name,
         "email": client.email,
         "phone": client.phone,
+        "phone_alt": client.phone_alt,
         "address": client.address,
+        "city": client.city,
+        "region": client.region,
+        "country": client.country,
         "notes": client.notes,
+        "internal_notes": client.internal_notes,
+        "tax_id": client.tax_id,
+        "company_name": client.company_name,
+        "billing_address": client.billing_address,
+        "customer_segment": client.customer_segment,
+        "language_preference": client.language_preference,
+        "service_preference": client.service_preference,
         "total_repairs": client.total_repairs,
         "total_spent": client.total_spent,
     }
@@ -90,14 +126,33 @@ def create_client(
         name=payload.get("name"),
         email=payload.get("email"),
         phone=payload.get("phone"),
+        phone_alt=payload.get("phone_alt"),
         address=payload.get("address"),
+        city=payload.get("city"),
+        region=payload.get("region"),
+        country=payload.get("country") or "Chile",
         notes=payload.get("notes"),
         preferred_contact=payload.get("preferred_contact") or "whatsapp",
+        internal_notes=payload.get("internal_notes"),
+        tax_id=payload.get("tax_id"),
+        company_name=payload.get("company_name"),
+        billing_address=payload.get("billing_address"),
+        customer_segment=payload.get("customer_segment") or "regular",
+        language_preference=payload.get("language_preference") or "es",
+        service_preference=payload.get("service_preference") or payload.get("preferred_contact") or "whatsapp",
     )
     db.add(client)
     db.commit()
     db.refresh(client)
-    return {"id": client.id, "name": client.name, "client_code": _client_code(client.id)}
+    return {
+        "id": client.id,
+        "name": client.name,
+        "client_code": _client_code(client.id),
+        "email": client.email,
+        "phone": client.phone,
+        "city": client.city,
+        "region": client.region,
+    }
 
 
 @router.put("/{client_id}")
@@ -153,6 +208,9 @@ def list_client_repairs(client_id: int, db: Session = Depends(get_db), user: dic
         payload.append({
             "id": repair.id,
             "repair_number": repair.repair_number,
+            "repair_code": _resolved_repair_code(repair, client_id),
+            "ot_parent_id": repair.ot_parent_id,
+            "ot_sequence": repair.ot_sequence,
             "status_id": repair.status_id,
             "problem_reported": repair.problem_reported,
             "created_at": repair.created_at.isoformat() if repair.created_at else None,
@@ -161,6 +219,7 @@ def list_client_repairs(client_id: int, db: Session = Depends(get_db), user: dic
     return payload
 
 
+@router.get("/code/next", response_model=Dict)
 @router.get("/next-code", response_model=Dict)
 def get_next_client_code(db: Session = Depends(get_db), user: dict = Depends(require_permission("clients", "read"))):
     last = db.query(Client).order_by(Client.id.desc()).first()

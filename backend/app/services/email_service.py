@@ -30,121 +30,17 @@ logger = logging.getLogger(__name__)
 
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 SENDGRID_FROM_EMAIL = os.getenv('SENDGRID_FROM_EMAIL', 'noreply@cirujanodesintetizadores.cl')
-
-BASE_EMAIL_CSS = """
-.email-body {
-    font-family: Arial, sans-serif;
-    color: #333;
-}
-.email-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-.email-panel {
-    background: #f5f5f5;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 20px 0;
-}
-.email-btn {
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-}
-.email-btn-primary {
-    background: #667eea;
-}
-.email-btn-whatsapp {
-    background: #25D366;
-}
-.email-divider {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 20px 0;
-}
-.email-footnote {
-    font-size: 12px;
-    color: #999;
-}
-.email-status-title {
-    color: #667eea;
-}
-.email-progress-wrap {
-    margin: 15px 0;
-}
-.email-progress-track {
-    background: #e2e8f0;
-    height: 10px;
-    border-radius: 5px;
-    overflow: hidden;
-}
-.email-progress-fill {
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    height: 100%;
-}
-.email-progress-label {
-    text-align: center;
-    margin-top: 10px;
-    font-weight: bold;
-}
-.email-code {
-    letter-spacing: 4px;
-}
-.email-success-panel {
-    background: #c6f6d5;
-    border-left: 4px solid #48bb78;
-    padding: 20px;
-    border-radius: 8px;
-    margin: 20px 0;
-}
-.email-success-title {
-    color: #22543d;
-    margin: 0 0 10px 0;
-}
-.email-success-row {
-    margin: 0;
-}
-.email-success-row-spaced {
-    margin: 10px 0 0 0;
-}
-.email-title-orange {
-    color: #ec6b00;
-}
-.email-panel-orange {
-    background-color: #f5f5f5;
-    padding: 15px;
-    border-radius: 5px;
-    margin: 20px 0;
-}
-.email-panel-orange-title {
-    margin-top: 0;
-    color: #ec6b00;
-}
-.email-text-muted {
-    color: #5a5652;
-    font-size: 0.9em;
-}
-.email-text-muted-small {
-    color: #5a5652;
-    font-size: 0.85em;
-}
-.email-link-orange {
-    color: #ec6b00;
-}
-"""
+EMAIL_STYLESHEET_PATH = "/static/email.css"
 
 
 def build_email_html(content: str, extra_css: str = "") -> str:
+    stylesheet_url = f"{settings.public_base_url.rstrip('/')}{EMAIL_STYLESHEET_PATH}"
+    if extra_css:
+        logger.warning("build_email_html recibió extra_css y será ignorado para cumplir política sin CSS embebido")
     return f"""
     <html>
         <head>
-            <style>
-                {BASE_EMAIL_CSS}
-                {extra_css}
-            </style>
+            <link rel="stylesheet" href="{stylesheet_url}" />
         </head>
         <body class="email-body">
             {content}
@@ -269,6 +165,14 @@ class EmailService:
         
         subject = f"Actualización: Tu reparación {repair_id} - {status_labels.get(status, status)}"
         
+        progress_value = 0
+        if progress is not None:
+            try:
+                progress_value = max(0, min(100, int(progress)))
+            except Exception:
+                progress_value = 0
+        progress_bucket = int(round(progress_value / 10) * 10)
+
         content = f"""
         <h2>¡Hola {customer_name}!</h2>
         <p>Tenemos una actualización sobre tu reparación:</p>
@@ -277,9 +181,9 @@ class EmailService:
             <h3 class="email-status-title">Estado: {status_labels.get(status, status)}</h3>
             <div class="email-progress-wrap">
                 <div class="email-progress-track">
-                    <div class="email-progress-fill"></div>
+                    <div class="email-progress-fill email-progress-fill--{progress_bucket}"></div>
                 </div>
-                <p class="email-progress-label">{progress}% completado</p>
+                <p class="email-progress-label">{progress_value}% completado</p>
             </div>
         </div>
         
@@ -296,8 +200,7 @@ class EmailService:
             +56 9 8295 7538
         </p>
         """
-        extra_css = f".email-progress-fill {{ width: {progress}%; }}"
-        html_content = build_email_html(content, extra_css=extra_css)
+        html_content = build_email_html(content)
         
         return self._send_email(email, subject, html_content)
     
@@ -330,7 +233,7 @@ class EmailService:
             Confirmar por WhatsApp
         </a></p>
         
-        <hr class="email-divider">
+        <hr class="email-divider email-divider-spaced">
         <p class="email-footnote">
             Cirujano de Sintetizadores<br>
             Valparaíso, Chile<br>
@@ -499,11 +402,7 @@ async def send_appointment_confirmation(
         </p>
     </div>
     """
-    extra_css = """
-    .email-body { color: #3e3c38; }
-    .email-divider { margin: 30px 0; }
-    """
-    html_content = build_email_html(content, extra_css=extra_css)
+    html_content = build_email_html(content)
     
     service = EmailService()
     return service.send_email(

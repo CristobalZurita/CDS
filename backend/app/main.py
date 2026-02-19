@@ -9,6 +9,7 @@ and comprehensive diagnostic/quotation system.
 import asyncio
 import logging
 from contextlib import asynccontextmanager, suppress
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -201,6 +202,11 @@ except Exception as e:
 # Serve uploaded files only in non-production or when explicitly enabled
 if (settings.environment.lower() in ("development", "dev", "testing", "test")) or settings.enable_public_uploads:
     app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
+# Static assets for backend-rendered/email templates
+backend_static_dir = Path(__file__).resolve().parent / "static"
+if backend_static_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(backend_static_dir)), name="static")
 
 
 # Middleware: block unexpected HTML/XML payloads for API endpoints to reduce attack surface
