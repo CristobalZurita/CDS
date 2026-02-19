@@ -8,9 +8,11 @@ Lee el Excel y genera SQL con tablas + componentes
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
+import os
 
-EXCEL_PATH = Path("/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front/Inventario_Cirujanosintetizadores.xlsx")
-SQL_OUTPUT = Path("/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front/database/cirujano_database.sql")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+EXCEL_PATH = Path(os.getenv("INVENTORY_EXCEL_PATH", str(REPO_ROOT / "Inventario_Cirujanosintetizadores.xlsx")))
+SQL_OUTPUT = Path(os.getenv("GENERATED_SQL_OUTPUT", str(REPO_ROOT / "database" / "cirujano_database.sql")))
 
 def generate_create_tables():
     """Genera CREATE TABLE statements"""

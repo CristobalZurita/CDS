@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 SYNC INSTRUMENTS - LITERAL + AUTO
-Lee exactamente lo que existe en public/images/instrumentos/*.webp y genera src/data/instruments.json.
+Lee exactamente lo que existe en public/images/instrumentos/*.webp y genera:
+- src/data/instruments.json (canónico)
+- src/assets/data/instruments.json (compatibilidad front/back legado)
 No inventa instrumentos: solo procesa fotos reales.
 """
 
@@ -33,6 +35,46 @@ VARIANT_SUFFIXES = (
 BRAND_CANONICAL_ALIASES = {
     "ACCES": "ACCESS",
 }
+BRAND_ID_ALIASES = {
+    "ACCESS": "access",
+    "AKAI": "akai",
+    "ALESIS": "alesis",
+    "ARTURIA": "arturia",
+    "ASM": "asm",
+    "BEHERINGER": "behringer",
+    "BEHRINGER": "behringer",
+    "CASIO": "casio",
+    "KAWAI": "kawai",
+    "KORG": "korg",
+    "NOVATION": "novation",
+    "ROLAND": "roland",
+    "STUDIOLOGIC": "studiologic",
+    "YAMAHA": "yamaha",
+}
+DEFAULT_COMPONENTS_TEMPLATE = {
+    "encoders_rotativos": None,
+    "botones": None,
+    "lcd": None,
+    "leds": None,
+    "usb": None,
+    "midi_din": True,
+    "salidas_audio": 2,
+    "faders": None,
+    "aftertouch": None,
+    "rueda_pitch": True,
+    "pedal": True,
+}
+DEFAULT_FALLAS_COMUNES = [
+    "POWER",
+    "CONNECTOR_LOOSE",
+    "COSMETIC_DAMAGE",
+    "WATER_DAMAGE",
+    "KEYBOARD_DEAD_KEY",
+    "KEYBOARD_STUCK_KEY",
+    "ENCODER_INTERMITTENT",
+    "BUTTON_DEAD",
+]
+ASSETS_SYNC_SCHEMA_VERSION = "1.0.0"
 
 
 def canonical_brand(brand: str) -> str:
@@ -48,6 +90,7 @@ class InstrumentSyncer:
         self.images_dir = self.workspace_root / "public" / "images" / "instrumentos"
         self.logos_dir = self.images_dir / "LOGOS"
         self.json_path = self.workspace_root / "src" / "data" / "instruments.json"
+        self.assets_json_path = self.workspace_root / "src" / "assets" / "data" / "instruments.json"
         self.metadata_path = self.workspace_root / "src" / "data" / ".sync_metadata.json"
         self.expected_fotos = expected_fotos
 
@@ -248,6 +291,137 @@ class InstrumentSyncer:
         with open(self.json_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
+    @staticmethod
+    def _normalize_lookup(value: str) -> str:
+        return "".join(ch for ch in str(value or "").lower() if ch.isalnum())
+
+    @staticmethod
+    def _humanize_model(modelo: str) -> str:
+        return str(modelo or "").replace("_", " ").strip()
+
+    @staticmethod
+    def _default_components() -> Dict:
+        return dict(DEFAULT_COMPONENTS_TEMPLATE)
+
+    def _to_brand_id(self, marca: str) -> str:
+        canonical = canonical_brand(str(marca or "").upper())
+        return BRAND_ID_ALIASES.get(canonical, canonical.lower().replace(" ", "-"))
+
+    def sync_and_generate_assets_json(self, canonical_data: Dict, existing_assets_data: Dict = None) -> Dict:
+        """
+        Genera dataset compatible para consumidores legados (frontend/backend).
+        Mantiene campos extra existentes por instrumento (modo aditivo).
+        """
+        existing_assets_instruments = []
+        if existing_assets_data and isinstance(existing_assets_data, dict):
+            existing_assets_instruments = existing_assets_data.get("instruments", []) or []
+
+        existing_by_photo: Dict[str, Dict] = {}
+        existing_by_brand_model: Dict[Tuple[str, str], Dict] = {}
+        for inst in existing_assets_instruments:
+            photo_key = inst.get("photo_key") or inst.get("foto_principal")
+            if photo_key:
+                existing_by_photo[photo_key] = inst
+            brand_key = str(inst.get("brand", "")).lower()
+            model_key = self._normalize_lookup(inst.get("model") or inst.get("modelo"))
+            if brand_key and model_key and (brand_key, model_key) not in existing_by_brand_model:
+                existing_by_brand_model[(brand_key, model_key)] = inst
+
+        assets_instruments: List[Dict] = []
+        matched_photo_keys: Set[str] = set()
+
+        for canonical_inst in canonical_data.get("instruments", []):
+            photo_key = canonical_inst.get("foto_principal")
+            marca = canonical_brand(canonical_inst.get("marca", ""))
+            modelo = canonical_inst.get("modelo", "")
+            brand_id = self._to_brand_id(marca)
+            model_human = self._humanize_model(modelo)
+
+            previous = existing_by_photo.get(photo_key)
+            if not previous:
+                lookup_key = (brand_id, self._normalize_lookup(model_human))
+                previous = existing_by_brand_model.get(lookup_key, {})
+
+            previous_photo_key = previous.get("photo_key") or previous.get("foto_principal")
+            if previous_photo_key:
+                matched_photo_keys.add(previous_photo_key)
+
+            merged = dict(previous)
+            components = self._default_components()
+            if isinstance(previous.get("components"), dict):
+                components.update(previous["components"])
+
+            image_payload = previous.get("image")
+            if not isinstance(image_payload, dict):
+                image_payload = {"url": None, "status": "pending"}
+            else:
+                image_payload = dict(image_payload)
+                image_payload.setdefault("status", "pending")
+
+            value_payload = previous.get("valor_estimado")
+            if not isinstance(value_payload, dict):
+                value_payload = {"min": 300000, "max": 1500000, "moneda": "CLP"}
+
+            fallas_comunes = previous.get("fallas_comunes")
+            if not isinstance(fallas_comunes, list) or not fallas_comunes:
+                fallas_comunes = list(DEFAULT_FALLAS_COMUNES)
+
+            merged.update(
+                {
+                    "id": previous.get("id") or canonical_inst.get("id"),
+                    "brand": brand_id,
+                    "model": previous.get("model") or model_human,
+                    "type": previous.get("type") or "Keyboard / Synthesizer",
+                    "year": previous.get("year", 1995),
+                    "description": previous.get("description") or f"Sintetizador {model_human}",
+                    "components": components,
+                    "valor_estimado": value_payload,
+                    "fallas_comunes": fallas_comunes,
+                    "imagen_url": f"/images/instrumentos/{photo_key}.webp",
+                    "manual_url": previous.get("manual_url"),
+                    "image": image_payload,
+                    "photo_key": photo_key,
+                    # Campos canónicos expuestos también en salida legada
+                    "marca": marca,
+                    "modelo": modelo,
+                    "foto_principal": photo_key,
+                    "fotos_adicionales": canonical_inst.get("fotos_adicionales", []),
+                    "marca_logo_disponible": canonical_inst.get("marca_logo_disponible"),
+                    "marca_habilitada": canonical_inst.get("marca_habilitada"),
+                    "marca_logo_url": canonical_inst.get("marca_logo_url"),
+                    "tipos": canonical_inst.get("tipos", ["sintetizador"]),
+                    "agregado_en": canonical_inst.get("agregado_en"),
+                }
+            )
+            assets_instruments.append(merged)
+
+        legacy_archived = []
+        for inst in existing_assets_instruments:
+            photo_key = inst.get("photo_key") or inst.get("foto_principal")
+            if not photo_key or photo_key not in matched_photo_keys:
+                legacy_archived.append(inst)
+
+        return {
+            "version": canonical_data.get("version", "2.1.0"),
+            "sync_schema_version": ASSETS_SYNC_SCHEMA_VERSION,
+            "generated_at": canonical_data.get("generated_at", datetime.now().isoformat()),
+            "source": "scripts/sync_instruments.py",
+            "total_instruments": len(assets_instruments),
+            "total_fotos": canonical_data.get("total_fotos"),
+            "total_fotos_json": canonical_data.get("total_fotos_json"),
+            "validacion": canonical_data.get("validacion", {}),
+            "marcas_habilitadas": canonical_data.get("marcas_habilitadas", []),
+            "marcas_no_habilitadas": canonical_data.get("marcas_no_habilitadas", []),
+            "legacy_archived_count": len(legacy_archived),
+            "legacy_archived": legacy_archived,
+            "instruments": assets_instruments,
+        }
+
+    def save_assets_json(self, data: Dict) -> None:
+        self.assets_json_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.assets_json_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
     def run(self, force_sync: bool = False) -> int:
         """
         Ejecuta sincronización inteligente:
@@ -273,8 +447,22 @@ class InstrumentSyncer:
             print(f"📊 Último conteo: {metadata['last_count']} archivos")
             print(f"📊 Conteo actual: {len(all_names)} archivos\n")
 
+            assets_data_exists = False
+            assets_needs_schema_sync = True
+            if self.assets_json_path.exists():
+                try:
+                    with open(self.assets_json_path, "r", encoding="utf-8") as f:
+                        existing_assets_snapshot = json.load(f)
+                    assets_data_exists = True
+                    assets_needs_schema_sync = (
+                        existing_assets_snapshot.get("sync_schema_version") != ASSETS_SYNC_SCHEMA_VERSION
+                    )
+                except Exception:
+                    assets_data_exists = False
+                    assets_needs_schema_sync = True
+
             nuevos, eliminados, cambio = self.detect_changes(all_names, metadata)
-            if not cambio and not force_sync:
+            if not cambio and not force_sync and assets_data_exists and not assets_needs_schema_sync:
                 print("✨ SIN CAMBIOS - Saltando sincronización (más rápido)")
                 print("   Usa --force para forzar resincronización\n")
                 return 0
@@ -303,6 +491,13 @@ class InstrumentSyncer:
             data = self.sync_and_generate_json(all_names, existing_data)
             self.save_json(data)
 
+            existing_assets_data = None
+            if self.assets_json_path.exists():
+                with open(self.assets_json_path, "r", encoding="utf-8") as f:
+                    existing_assets_data = json.load(f)
+            assets_data = self.sync_and_generate_assets_json(data, existing_assets_data)
+            self.save_assets_json(assets_data)
+
             old_ids = {i.get("id") for i in (existing_data or {}).get("instruments", []) if i.get("id")}
             new_ids = {i.get("id") for i in data.get("instruments", []) if i.get("id")}
             added_ids = sorted(new_ids - old_ids)
@@ -324,6 +519,8 @@ class InstrumentSyncer:
                     "total_instruments": data["total_instruments"],
                     "marcas_habilitadas": data["marcas_habilitadas"],
                     "marcas_no_habilitadas": data["marcas_no_habilitadas"],
+                    "assets_total_instruments": assets_data["total_instruments"],
+                    "assets_legacy_archived_count": assets_data["legacy_archived_count"],
                     "status": "updated" if (added_ids or removed_ids or nuevos or eliminados) else "synced",
                 }
             )
@@ -339,6 +536,8 @@ class InstrumentSyncer:
             print(f"✓ Marcas habilitadas (con logo): {len(data['marcas_habilitadas'])}")
             print(f"✓ Marcas NO habilitadas (sin logo): {len(data['marcas_no_habilitadas'])}")
             print(f"✓ Validación fotos JSON/carpeta: {data['validacion']['coinciden']}")
+            print(f"✓ Dataset legado actualizado: {assets_data['total_instruments']} instrumentos")
+            print(f"✓ Legacy archivado (no borrado): {assets_data['legacy_archived_count']}")
             print(f"✓ Metadatos guardados (próxima ejecución será más rápida)\n")
 
             return 0

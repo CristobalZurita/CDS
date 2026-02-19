@@ -47,7 +47,6 @@ except Exception:
 	warranty_router = None
 	analytics_router = None
 	search_router = None
-	search_router = None
 	signature_router = None
 	tickets_router = None
 	purchase_requests_router = None
@@ -57,7 +56,13 @@ except Exception:
 # If any router failed to import previously (e.g., due to transient import errors),
 # attempt a second import pass so that fixes applied at runtime are picked up.
 import importlib
-for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment", "client", "newsletter", "tools", "signature", "tickets", "purchase_requests", "manuals", "photo_requests", "inventory", "repair_status"):
+for name in (
+	"repair", "user", "instrument", "category", "stock_movement", "contact",
+	"quotation", "appointment", "client", "clients", "device",
+	"newsletter", "tools", "signature", "tickets", "purchase_requests",
+	"manuals", "photo_requests", "inventory", "repair_status",
+	"invoice", "warranty", "analytics", "search",
+):
 	var_name = f"{name}_router"
 	if globals().get(var_name) is None:
 		try:
@@ -137,8 +142,6 @@ if globals().get("warranty_router"):
 	api_router.include_router(globals()["warranty_router"].router)
 if globals().get("analytics_router"):
 	api_router.include_router(globals()["analytics_router"].router)
-if globals().get("search_router"):
-	api_router.include_router(globals()["search_router"].router)
 if globals().get("search_router"):
 	api_router.include_router(globals()["search_router"].router)
 if globals().get("signature_router"):

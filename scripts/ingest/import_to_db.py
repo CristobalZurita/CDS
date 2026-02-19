@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Import normalized items into a SQLite database (idempotent).
 
-Writes into `backend/instance/cirujano.sqlite` and records an import_run entry.
+Writes into `backend/cirujano.db` and records an import_run entry.
 """
 from __future__ import annotations
 import os
@@ -21,6 +21,38 @@ def ensure_db(path=DB_PATH):
     return conn
 
 
+def ensure_import_metadata_tables(cur):
+    """
+    Garantiza tablas mínimas de trazabilidad sin tocar estructuras existentes.
+    """
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS import_runs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id TEXT UNIQUE NOT NULL,
+            source_file TEXT,
+            started_at TEXT,
+            finished_at TEXT,
+            status TEXT,
+            summary TEXT
+        )
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS audit_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            actor TEXT,
+            action TEXT,
+            object_type TEXT,
+            object_id TEXT,
+            details TEXT,
+            created_at TEXT
+        )
+        """
+    )
+
+
 def run_import(user_id: str | None = None, run_id: str | None = None):
     if not os.path.exists(NORMALIZED):
         raise SystemExit('Run normalize_excel.py first to produce normalized_items.json')
@@ -29,6 +61,8 @@ def run_import(user_id: str | None = None, run_id: str | None = None):
 
     conn = ensure_db()
     cur = conn.cursor()
+    ensure_import_metadata_tables(cur)
+    conn.commit()
 
     provided_run_id = run_id is not None
     if not provided_run_id:

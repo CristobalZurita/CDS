@@ -37,6 +37,8 @@ const items = [
   { to: '/admin/newsletter', label: 'Newsletter', icon: 'fa-solid fa-paper-plane' },
   { to: '/admin/tickets', label: 'Tickets', icon: 'fa-solid fa-ticket' },
   { to: '/admin/purchase-requests', label: 'Compras', icon: 'fa-solid fa-cart-shopping' },
+  { to: '/admin/manuals', label: 'Manuales', icon: 'fa-solid fa-book-open' },
+  { to: '/admin/stats', label: 'Estadísticas', icon: 'fa-solid fa-chart-line' },
   { to: '/admin/archive', label: 'Archivo', icon: 'fa-solid fa-box-archive' }
 ]
 

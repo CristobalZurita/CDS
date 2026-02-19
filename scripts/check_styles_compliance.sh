@@ -3,6 +3,7 @@ set -euo pipefail
 
 INLINE_PATTERN=":style\\s*=|v-bind:style\\s*=|(?<![-\\\\w])style\\s*=\\s*[\\\"']"
 BACKEND_INLINE_PATTERN=":style\\s*=|v-bind:style\\s*=|(?<![-\\\\w])style\\s*=\\s*[\\\"']"
+BACKEND_STYLE_BLOCK_PATTERN="<style|</style>"
 DOM_STYLE_MUTATION_PATTERN='\\.style\\.'
 NON_SCSS_STYLE_PATTERN='<style(?![^>]*lang="scss")[^>]*>'
 
@@ -22,11 +23,27 @@ if [[ -n "${dom_style_matches}" ]]; then
   exit 1
 fi
 
-echo "Checking inline style usage in backend app code..."
-backend_inline_matches="$(rg -n -P --glob '!backend/.venv/**' "${BACKEND_INLINE_PATTERN}" backend/app || true)"
+echo "Checking inline style usage in backend code..."
+backend_inline_matches="$(rg -n -P \
+  --glob '!backend/.venv/**' \
+  --glob '!backend/**/__pycache__/**' \
+  --glob '*.py' --glob '*.html' --glob '*.j2' --glob '*.jinja' --glob '*.jinja2' --glob '*.vue' --glob '*.js' --glob '*.ts' \
+  "${BACKEND_INLINE_PATTERN}" backend || true)"
 if [[ -n "${backend_inline_matches}" ]]; then
   echo "Inline styles found in backend:"
   echo "${backend_inline_matches}"
+  exit 1
+fi
+
+echo "Checking embedded <style> blocks in backend code..."
+backend_style_block_matches="$(rg -n -P \
+  --glob '!backend/.venv/**' \
+  --glob '!backend/**/__pycache__/**' \
+  --glob '*.py' --glob '*.html' --glob '*.j2' --glob '*.jinja' --glob '*.jinja2' --glob '*.vue' --glob '*.js' --glob '*.ts' \
+  "${BACKEND_STYLE_BLOCK_PATTERN}" backend || true)"
+if [[ -n "${backend_style_block_matches}" ]]; then
+  echo "Embedded <style> blocks found in backend:"
+  echo "${backend_style_block_matches}"
   exit 1
 fi
 

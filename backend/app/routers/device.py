@@ -24,7 +24,17 @@ def _ensure_default_type(db: Session) -> DeviceType:
 @router.get("/", response_model=List[Dict])
 def list_devices(db: Session = Depends(get_db), user: dict = Depends(require_permission("devices", "read"))):
     devices = db.query(Device).all()
-    return [{"id": d.id, "client_id": d.client_id, "model": d.model, "serial_number": d.serial_number} for d in devices]
+    return [
+        {
+            "id": d.id,
+            "client_id": d.client_id,
+            "model": d.model,
+            "serial_number": d.serial_number,
+            "year_manufactured": d.year_manufactured,
+            "brand_other": d.brand_other,
+        }
+        for d in devices
+    ]
 
 
 @router.get("/{device_id}", response_model=Dict)
@@ -39,7 +49,10 @@ def get_device(device_id: int, db: Session = Depends(get_db), user: dict = Depen
         "brand_id": device.brand_id,
         "model": device.model,
         "serial_number": device.serial_number,
+        "year_manufactured": device.year_manufactured,
         "description": device.description,
+        "condition_notes": device.condition_notes,
+        "brand_other": device.brand_other,
     }
 
 
@@ -56,6 +69,12 @@ def create_device(payload: Dict, db: Session = Depends(get_db), user: dict = Dep
     if not device_type_id:
         device_type_id = _ensure_default_type(db).id
 
+    description_value = payload.get("description")
+    accessories = payload.get("accessories")
+    if accessories:
+        accessories_line = f"Accesorios: {accessories}"
+        description_value = f"{description_value}\n{accessories_line}" if description_value else accessories_line
+
     device = Device(
         client_id=client_id,
         device_type_id=device_type_id,
@@ -63,7 +82,8 @@ def create_device(payload: Dict, db: Session = Depends(get_db), user: dict = Dep
         brand_other=payload.get("brand_other"),
         model=payload.get("model") or "Unknown",
         serial_number=payload.get("serial_number"),
-        description=payload.get("description"),
+        year_manufactured=payload.get("year_manufactured"),
+        description=description_value,
         condition_notes=payload.get("condition_notes"),
     )
     db.add(device)

@@ -3,7 +3,9 @@ Database configuration and session management
 SQLAlchemy async engine and session factory with connection pooling
 """
 
-from sqlalchemy import create_engine
+import re
+
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.pool import QueuePool
 import logging
@@ -37,6 +39,122 @@ SessionLocal = sessionmaker(
     expire_on_commit=False
 )
 
+_OT_CODE_PATTERN = re.compile(r"^CDS-\d{3}-OT-(\d{3})(?:-(\d{2}))?$")
+
+
+def _derive_ot_group_assignment(repair_id: int, repair_number: str | None, valid_ids: set[int]) -> tuple[int, int]:
+    """
+    Deriva parent/sequence OT desde código legacy.
+    Fallback seguro: self + secuencia 1.
+    """
+    if repair_number:
+        match = _OT_CODE_PATTERN.match(str(repair_number).strip())
+        if match:
+            base_id = int(match.group(1))
+            suffix = int(match.group(2)) if match.group(2) else 1
+            if base_id in valid_ids:
+                return base_id, max(suffix, 1)
+    return repair_id, 1
+
+
+def _ensure_repairs_ot_schema() -> None:
+    """
+    Ajuste aditivo para DBs existentes sin columnas OT.
+    Evita romper entornos legacy que usan create_all sin migraciones.
+    """
+    inspector = inspect(engine)
+    if "repairs" not in inspector.get_table_names():
+        return
+
+    current_columns = {column["name"] for column in inspector.get_columns("repairs")}
+
+    with engine.begin() as conn:
+        if "ot_parent_id" not in current_columns:
+            conn.execute(text("ALTER TABLE repairs ADD COLUMN ot_parent_id INTEGER"))
+        if "ot_sequence" not in current_columns:
+            conn.execute(text("ALTER TABLE repairs ADD COLUMN ot_sequence INTEGER"))
+
+    inspector = inspect(engine)
+    current_columns = {column["name"] for column in inspector.get_columns("repairs")}
+    if "ot_parent_id" not in current_columns or "ot_sequence" not in current_columns:
+        return
+
+    with engine.begin() as conn:
+        rows = conn.execute(
+            text(
+                """
+                SELECT id, repair_number, ot_parent_id, ot_sequence
+                FROM repairs
+                ORDER BY id ASC
+                """
+            )
+        ).mappings().all()
+
+        valid_ids = {int(row["id"]) for row in rows}
+        used_sequences: dict[int, set[int]] = {}
+
+        for row in rows:
+            repair_id = int(row["id"])
+            parent_id = row.get("ot_parent_id")
+            sequence = row.get("ot_sequence")
+
+            if parent_id is not None and sequence is not None:
+                try:
+                    candidate_parent = int(parent_id)
+                    candidate_sequence = int(sequence)
+                except (TypeError, ValueError):
+                    candidate_parent = repair_id
+                    candidate_sequence = 1
+            else:
+                candidate_parent, candidate_sequence = _derive_ot_group_assignment(
+                    repair_id=repair_id,
+                    repair_number=row.get("repair_number"),
+                    valid_ids=valid_ids,
+                )
+
+            if candidate_parent not in valid_ids:
+                candidate_parent = repair_id
+            if candidate_sequence <= 0:
+                candidate_sequence = 1
+
+            reserved = used_sequences.setdefault(candidate_parent, set())
+            while candidate_sequence in reserved:
+                candidate_sequence += 1
+            reserved.add(candidate_sequence)
+
+            if parent_id != candidate_parent or sequence != candidate_sequence:
+                conn.execute(
+                    text(
+                        """
+                        UPDATE repairs
+                        SET ot_parent_id = :parent_id,
+                            ot_sequence = :ot_sequence
+                        WHERE id = :repair_id
+                        """
+                    ),
+                    {
+                        "parent_id": candidate_parent,
+                        "ot_sequence": candidate_sequence,
+                        "repair_id": repair_id,
+                    },
+                )
+
+    inspector = inspect(engine)
+    existing_indexes = {index["name"] for index in inspector.get_indexes("repairs")}
+
+    with engine.begin() as conn:
+        if "ix_repairs_ot_parent_id" not in existing_indexes:
+            conn.execute(text("CREATE INDEX ix_repairs_ot_parent_id ON repairs (ot_parent_id)"))
+        if "uq_repairs_ot_parent_sequence" not in existing_indexes:
+            conn.execute(
+                text(
+                    """
+                    CREATE UNIQUE INDEX uq_repairs_ot_parent_sequence
+                    ON repairs (ot_parent_id, ot_sequence)
+                    """
+                )
+            )
+
 def get_db():
     """
     Dependency to get database session
@@ -60,6 +178,7 @@ async def init_db():
         from app import models  # noqa: F401
         # Create all tables from models (sync operation)
         Base.metadata.create_all(bind=engine)
+        _ensure_repairs_ot_schema()
         logger.info("✓ Database tables created successfully")
     except Exception as e:
         logger.error(f"✗ Error creating database tables: {e}")

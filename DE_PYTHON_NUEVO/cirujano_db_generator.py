@@ -12,6 +12,7 @@ Salida: /output/cirujano_database.sql + /output/json/*.json
 import os
 import re
 import json
+import hashlib
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
@@ -22,11 +23,23 @@ from typing import Dict, List, Any, Optional
 # ==============================================================================
 
 class Config:
-    EXCEL_PATH = "//mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DE_PYTHON_NUEVO/Inventario_Cirujanosintetizadores.xlsx"
+    MASTER_EXCEL_PATH = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/Inventario_Cirujanosintetizadores.xlsx"
+    LEGACY_EXCEL_PATH = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DE_PYTHON_NUEVO/Inventario_Cirujanosintetizadores.xlsx"
+    EXCEL_PATH = os.getenv("INVENTORY_EXCEL_PATH", MASTER_EXCEL_PATH)
     BASE_DATOS_PATH = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/BASE_DATOS.txt"
     OUTPUT_DIR = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DE_PYTHON_NUEVO/"
     JSON_DIR = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DE_PYTHON_NUEVO/json"
     SQL_OUTPUT = "/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DE_PYTHON_NUEVO/cirujano_database.sql"
+
+
+def sha256_of_file(path: str) -> Optional[str]:
+    if not path or not os.path.exists(path):
+        return None
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for block in iter(lambda: fh.read(65536), b""):
+            h.update(block)
+    return h.hexdigest()
 
 
 # ==============================================================================
@@ -1170,9 +1183,25 @@ VALUES ('admin@cirujano.cl', 'admin', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN
 
 class CirujanoDatabaseGenerator:
     def __init__(self):
-        self.excel_reader = ExcelReader(Config.EXCEL_PATH)
+        self.excel_path = self._resolve_excel_path()
+        self.excel_reader = ExcelReader(self.excel_path)
         self.sql_generator = SQLGenerator()
         self.consolidated_data = {}
+
+    def _resolve_excel_path(self) -> str:
+        candidate = os.path.abspath(os.path.expanduser(Config.EXCEL_PATH))
+        if os.path.exists(candidate):
+            return candidate
+
+        if os.path.exists(Config.MASTER_EXCEL_PATH):
+            return Config.MASTER_EXCEL_PATH
+
+        if os.path.exists(Config.LEGACY_EXCEL_PATH):
+            return Config.LEGACY_EXCEL_PATH
+
+        raise FileNotFoundError(
+            f"No se encontró Excel en rutas esperadas: {candidate}, {Config.MASTER_EXCEL_PATH}, {Config.LEGACY_EXCEL_PATH}"
+        )
     
     def run(self):
         print("=" * 70)
@@ -1183,6 +1212,15 @@ class CirujanoDatabaseGenerator:
         Path(Config.JSON_DIR).mkdir(parents=True, exist_ok=True)
         
         print("\n[1/4] Leyendo Excel de inventario...")
+        master_hash = sha256_of_file(Config.MASTER_EXCEL_PATH)
+        legacy_hash = sha256_of_file(Config.LEGACY_EXCEL_PATH)
+        selected_hash = sha256_of_file(self.excel_path)
+        print(f"      - Fuente Excel: {self.excel_path}")
+        print(f"      - Hash Excel usado: {selected_hash}")
+        if master_hash and legacy_hash and master_hash != legacy_hash:
+            print("      - WARNING: Excel raíz y copia DE_PYTHON_NUEVO tienen hash distinto.")
+            print(f"        root={Config.MASTER_EXCEL_PATH}")
+            print(f"        legacy={Config.LEGACY_EXCEL_PATH}")
         excel_data = self.excel_reader.read()
         print(f"      - Resistencias: {len(excel_data.get('resistors', []))}")
         print(f"      - Capacitores cerámicos: {len(excel_data.get('capacitors_ceramic', []))}")
