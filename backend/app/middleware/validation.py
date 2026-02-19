@@ -3,11 +3,14 @@ PHASE 3: Backend Security Wiring - Validation Middleware
 Wire validators.py, encryption.py, sanitizers.py to all 165 endpoints
 """
 
-from fastapi import Request, HTTPException, status
-from typing import Any, Callable, Dict, Optional
+import json
+import logging
 import re
 from datetime import datetime
-import logging
+from fastapi import Request, HTTPException, status
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from typing import Any, Callable, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -201,61 +204,96 @@ ENDPOINT_VALIDATION_RULES = {
 }
 
 
-class ValidationMiddleware:
+class ValidationMiddleware(BaseHTTPMiddleware):
     """Middleware para validar inputs en todos los endpoints"""
-    
+
+    _PATH_PARAM_PATTERN = re.compile(r"\{[^/]+\}")
+
     @staticmethod
-    async def validate_endpoint_input(request: Request, call_next: Callable) -> Any:
-        """Middleware que valida inputs según reglas del endpoint"""
-        
-        # Obtener endpoint key
+    def _candidate_endpoint_keys(method: str, path: str) -> list[str]:
+        """
+        Mantiene compatibilidad con reglas legacy (/api/...) y rutas reales (/api/v1/...).
+        """
+        candidates = [f"{method} {path}"]
+        if path.startswith("/api/v1/"):
+            candidates.append(f"{method} {path.replace('/api/v1/', '/api/', 1)}")
+        elif path == "/api/v1":
+            candidates.append(f"{method} /api")
+        return candidates
+
+    @classmethod
+    def _resolve_validation_rules(cls, method: str, path: str) -> tuple[str, Dict[str, Callable]] | tuple[None, None]:
+        candidates = cls._candidate_endpoint_keys(method, path)
+
+        # Exact match first
+        for endpoint_key in candidates:
+            if endpoint_key in ENDPOINT_VALIDATION_RULES:
+                return endpoint_key, ENDPOINT_VALIDATION_RULES[endpoint_key]
+
+        # Pattern fallback for keys like /resource/{id}
+        for endpoint_key, rules in ENDPOINT_VALIDATION_RULES.items():
+            for candidate in candidates:
+                method_expected, route_expected = endpoint_key.split(" ", 1)
+                method_candidate, route_candidate = candidate.split(" ", 1)
+                if method_expected != method_candidate:
+                    continue
+                pattern = "^" + cls._PATH_PARAM_PATTERN.sub(r"[^/]+", route_expected).replace("*", ".*") + "$"
+                if re.match(pattern, route_candidate):
+                    return candidate, rules
+
+        return None, None
+
+    @staticmethod
+    async def _inject_json_body(request: Request, body: Dict[str, Any]) -> None:
+        raw = json.dumps(body).encode("utf-8")
+
+        async def receive():
+            return {"type": "http.request", "body": raw, "more_body": False}
+
+        request._receive = receive
+
+    async def dispatch(self, request: Request, call_next: Callable) -> Any:
         method = request.method
-        path = request.url.path
-        endpoint_key = f"{method} {path}"
-        
-        # Verificar si hay reglas para este endpoint
-        if endpoint_key in ENDPOINT_VALIDATION_RULES:
-            try:
-                # Obtener body
-                if method in ["POST", "PUT", "PATCH"]:
-                    body = await request.json()
-                    rules = ENDPOINT_VALIDATION_RULES[endpoint_key]
-                    
-                    # Validar cada campo
-                    for field, validator in rules.items():
-                        if field in body:
-                            try:
-                                body[field] = validator(body[field])
-                            except ValueError as e:
-                                logger.warning(f"Validation failed for {endpoint_key}.{field}: {str(e)}")
-                                raise HTTPException(
-                                    status_code=status.HTTP_400_BAD_REQUEST,
-                                    detail=f"Invalid {field}: {str(e)}"
-                                )
-                        elif field.endswith("*"):  # Campo obligatorio
-                            raise HTTPException(
-                                status_code=status.HTTP_400_BAD_REQUEST,
-                                detail=f"Missing required field: {field}"
-                            )
-                    
-                    # Re-set body in request
-                    async def receive():
-                        return {"type": "http.request", "body": str(body).encode()}
-                    
-                    request._receive = receive
-                    
-            except HTTPException:
-                raise
-            except Exception as e:
-                logger.error(f"Validation error on {endpoint_key}: {str(e)}")
-                raise HTTPException(
+        if method not in ("POST", "PUT", "PATCH"):
+            return await call_next(request)
+
+        endpoint_key, rules = self._resolve_validation_rules(method, request.url.path)
+        if not rules:
+            return await call_next(request)
+
+        try:
+            body = await request.json()
+            if not isinstance(body, dict):
+                return JSONResponse(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Invalid request data"
+                    content={"detail": "Invalid request data"},
                 )
-        
-        # Continuar con siguiente middleware/handler
-        response = await call_next(request)
-        return response
+
+            for field, validator in rules.items():
+                if field in body:
+                    try:
+                        body[field] = validator(body[field])
+                    except ValueError as exc:
+                        logger.warning("Validation failed for %s.%s: %s", endpoint_key, field, str(exc))
+                        return JSONResponse(
+                            status_code=status.HTTP_400_BAD_REQUEST,
+                            content={"detail": f"Invalid {field}: {str(exc)}"},
+                        )
+                elif field.endswith("*"):  # Campo obligatorio
+                    return JSONResponse(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        content={"detail": f"Missing required field: {field}"},
+                    )
+
+            await self._inject_json_body(request, body)
+        except Exception as exc:
+            logger.error("Validation error on %s: %s", endpoint_key, str(exc))
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={"detail": "Invalid request data"},
+            )
+
+        return await call_next(request)
 
 
 # Decorator para aplicar validación a endpoints específicos

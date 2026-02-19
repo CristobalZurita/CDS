@@ -8,6 +8,7 @@ and comprehensive diagnostic/quotation system.
 
 import asyncio
 import logging
+import os
 from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 
@@ -24,6 +25,7 @@ from app.api.v1.router import api_router
 from app.core.ratelimit import limiter
 from slowapi.errors import RateLimitExceeded
 from app.routers import csrf as csrf_router
+from app.routers.csrf import validate_csrf_token
 from app.routers import logging as logging_router
 from app.middleware.validation import ValidationMiddleware
 
@@ -66,7 +68,8 @@ async def lifespan(app: FastAPI):
         logger.error(f"✗ Database initialization failed: {e}")
 
     # Auto-sync instrumentos: startup + intervalo periódico
-    if settings.enable_instrument_auto_sync:
+    is_test_env = settings.environment and settings.environment.lower() in ("test", "testing")
+    if settings.enable_instrument_auto_sync and not is_test_env:
         try:
             from app.services.instrument_sync_service import run_instrument_sync
 
@@ -85,6 +88,8 @@ async def lifespan(app: FastAPI):
             logger.info(f"✓ Instrument auto-sync periódico activo cada {interval_minutes} minutos")
         except Exception as e:
             logger.error(f"✗ Instrument auto-sync initialization failed: {e}")
+    elif is_test_env:
+        logger.info("ℹ️ Instrument auto-sync deshabilitado en entorno de testing")
 
     # Attempt to import and register any routers that may have failed to import at module load
     try:
@@ -122,12 +127,25 @@ async def lifespan(app: FastAPI):
         logger.error(f"✗ Error during shutdown: {e}")
 
 
+@asynccontextmanager
+async def _testing_lifespan(app: FastAPI):
+    """
+    Lifespan reducido para tests.
+    Evita bloqueos de TestClient por inicializaciones pesadas y asume que tests
+    preparan schema/datos vía fixtures o setup explícito.
+    """
+    logger.info("🧪 Test lifespan activo (startup pesado omitido)")
+    yield
+
+
 # Initialize FastAPI app
+_is_test_env = settings.environment and settings.environment.lower() in ("test", "testing")
+_use_light_test_lifespan = _is_test_env and os.getenv("ENABLE_FULL_STARTUP_IN_TESTS", "false").lower() != "true"
 app = FastAPI(
     title="Cirujano de Sintetizadores API",
     description="Sistema integral de gestión para taller de reparación de sintetizadores",
     version="1.0.0",
-    lifespan=lifespan,
+    lifespan=_testing_lifespan if _use_light_test_lifespan else lifespan,
     docs_url="/docs" if settings.enable_api_docs else None,
     redoc_url="/redoc" if settings.enable_api_docs else None,
     openapi_url="/openapi.json" if settings.enable_api_docs else None,
@@ -152,6 +170,9 @@ logger.info(f"CORS configured for origins: {allowed_origins}")
 
 # Add security middlewares
 app.add_middleware(ValidationMiddleware)
+# Rate limiter registration should be available in all environments
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Enforce HTTPS and add basic security headers when running in production
 if settings.environment and settings.environment.lower() in ("production", "prod"):
@@ -168,11 +189,6 @@ if settings.environment and settings.environment.lower() in ("production", "prod
         response.headers["Referrer-Policy"] = "no-referrer-when-downgrade"
         response.headers["Permissions-Policy"] = "geolocation=(), microphone=()"
         return response
-
-
-    # Attach rate limiter to the application state and register handler
-    app.state.limiter = limiter
-    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
     # Expose audit service for internal use
     try:
@@ -220,6 +236,45 @@ async def block_html_payloads(request, call_next):
     except Exception:
         # Best-effort: don't let middleware crash the app
         pass
+    return await call_next(request)
+
+
+@app.middleware("http")
+async def enforce_csrf_for_mutations(request, call_next):
+    """
+    Enforce CSRF token on state-changing API operations when configured.
+    Se mantiene aditivo: activo por default solo en producción.
+    """
+    if not settings.enforce_csrf:
+        return await call_next(request)
+
+    method = request.method.upper()
+    path = request.url.path
+    if method not in ("POST", "PUT", "PATCH", "DELETE"):
+        return await call_next(request)
+    if not path.startswith("/api/v1/"):
+        return await call_next(request)
+
+    # Endpoints públicos y/o de bootstrap excluidos.
+    csrf_exempt_paths = {
+        "/api/v1/auth/login",
+        "/api/v1/auth/register",
+        "/api/v1/auth/forgot-password",
+        "/api/v1/auth/reset-password",
+        "/api/v1/auth/confirm-email",
+        "/api/csrf-token",
+    }
+    if path in csrf_exempt_paths:
+        return await call_next(request)
+
+    # Si va con Bearer explícito, no depende de cookie y no aplica CSRF clásico.
+    auth_header = str(request.headers.get("authorization") or "").strip().lower()
+    if auth_header.startswith("bearer "):
+        return await call_next(request)
+
+    if not validate_csrf_token(request):
+        return JSONResponse(status_code=403, content={"detail": "Invalid or missing CSRF token"})
+
     return await call_next(request)
 
 

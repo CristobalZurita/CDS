@@ -1,7 +1,7 @@
 {
   "last_count": 249,
   "last_hash": "839df095babba9e2a2946932c4e29052b3ce9d04632b9185fb5ccef3d27e4d7a",
-  "last_sync": "2026-02-19T08:55:07.323984",
+  "last_sync": "2026-02-19T19:13:49.157085",
   "files_processed": [
     "ACCESS_VIRUS_A",
     "ACCESS_VIRUS_B",
@@ -279,5 +279,6 @@
     "STUDIOLOGIC"
   ],
   "assets_total_instruments": 214,
-  "assets_legacy_archived_count": 7
+  "assets_legacy_archived_count": 0,
+  "brands_total_habilitadas": 11
 }
