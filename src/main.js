@@ -50,12 +50,32 @@ router.afterEach((to) => {
 // Mount app
 app.mount("#app")
 
-if ("serviceWorker" in navigator) {
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js").catch(() => {
       // Keep silent: no hard failure for SW registration
     })
   })
+}
+
+if ("serviceWorker" in navigator && import.meta.env.DEV) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => {
+      registration.unregister().catch(() => {
+        // Keep silent in dev cleanup
+      })
+    })
+  })
+
+  if ("caches" in window) {
+    caches.keys().then((keys) => {
+      keys
+        .filter((key) => key.startsWith("cds-"))
+        .forEach((key) => caches.delete(key).catch(() => {
+          // Keep silent in dev cleanup
+        }))
+    })
+  }
 }
 
 // Allow mouse wheel to increment/decrement number inputs when hovered.

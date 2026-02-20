@@ -22,11 +22,6 @@ const BRAND_CANONICAL_ALIASES = {
   ACCES: 'ACCESS',
 }
 
-const FALLBACK_BRAND_NAMES = {
-  asm: 'ASM',
-  studiologic: 'Studiologic',
-}
-
 const toCanonicalBrand = (marca) => BRAND_CANONICAL_ALIASES[marca] || marca
 
 const toBrandId = (marca) => {
@@ -42,8 +37,9 @@ const normalizeModel = (modelo) => {
 const buildInstrumentPath = (photoName) => `/images/instrumentos/${photoName}.webp`
 
 export function useInstrumentsCatalog() {
-  const allRawInstruments = Array.isArray(instrumentsData?.instruments)
-    ? instrumentsData.instruments
+  const syncedPayload = instrumentsData
+  const allRawInstruments = Array.isArray(syncedPayload?.instruments)
+    ? syncedPayload.instruments
     : []
 
   const allNormalizedInstruments = allRawInstruments.map((inst) => {
@@ -73,9 +69,19 @@ export function useInstrumentsCatalog() {
     }
   })
 
-  const enabledInstruments = allNormalizedInstruments.filter(
-    inst => inst.marca_habilitada && inst.marca_logo_disponible
+  const enabledBrandAllowList = new Set(
+    Array.isArray(syncedPayload?.marcas_habilitadas)
+      ? syncedPayload.marcas_habilitadas.map((marca) => toBrandId(String(marca)))
+      : []
   )
+  const hasEnabledBrandAllowList = enabledBrandAllowList.size > 0
+
+  const enabledInstruments = allNormalizedInstruments.filter((inst) => {
+    const hasBrandLogo = Boolean(inst.marca_logo_disponible && inst.marca_logo_url)
+    const isBrandEnabled = Boolean(inst.marca_habilitada)
+    const isAllowedBySync = !hasEnabledBrandAllowList || enabledBrandAllowList.has(inst.brand)
+    return hasBrandLogo && isBrandEnabled && isAllowedBySync
+  })
 
   const brandLogoById = {}
   enabledInstruments.forEach((inst) => {
@@ -85,15 +91,13 @@ export function useInstrumentsCatalog() {
   })
 
   const enabledBrandIds = new Set(enabledInstruments.map(inst => inst.brand))
-
   const knownBrands = Array.isArray(brandsData?.brands) ? brandsData.brands : []
   const filteredKnownBrands = knownBrands.filter(brand => enabledBrandIds.has(brand.id))
-
   const missingBrands = Array.from(enabledBrandIds)
     .filter(brandId => !filteredKnownBrands.some(brand => brand.id === brandId))
     .map(brandId => ({
       id: brandId,
-      name: FALLBACK_BRAND_NAMES[brandId] || brandId.toUpperCase(),
+      name: brandId.toUpperCase(),
       tier: 'standard',
       founded: null,
       country: null,

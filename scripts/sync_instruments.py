@@ -51,6 +51,19 @@ BRAND_ID_ALIASES = {
     "STUDIOLOGIC": "studiologic",
     "YAMAHA": "yamaha",
 }
+BRAND_NAME_OVERRIDES = {
+    "access": "Access",
+    "akai": "Akai",
+    "alesis": "Alesis",
+    "arturia": "Arturia",
+    "behringer": "Behringer",
+    "casio": "Casio",
+    "kawai": "Kawai",
+    "korg": "Korg",
+    "novation": "Novation",
+    "roland": "Roland",
+    "yamaha": "Yamaha",
+}
 DEFAULT_COMPONENTS_TEMPLATE = {
     "encoders_rotativos": None,
     "botones": None,
@@ -91,6 +104,7 @@ class InstrumentSyncer:
         self.logos_dir = self.images_dir / "LOGOS"
         self.json_path = self.workspace_root / "src" / "data" / "instruments.json"
         self.assets_json_path = self.workspace_root / "src" / "assets" / "data" / "instruments.json"
+        self.brands_json_path = self.workspace_root / "src" / "assets" / "data" / "brands.json"
         self.metadata_path = self.workspace_root / "src" / "data" / ".sync_metadata.json"
         self.expected_fotos = expected_fotos
 
@@ -422,6 +436,41 @@ class InstrumentSyncer:
         with open(self.assets_json_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
+    def sync_and_generate_brands_json(self, canonical_data: Dict, existing_brands_data: Dict = None) -> Dict:
+        """
+        Genera brands.json usando SOLO marcas habilitadas (con logo real en carpeta LOGOS).
+        Mantiene metadatos existentes de cada marca cuando ya existan.
+        """
+        previous_brands = []
+        if existing_brands_data and isinstance(existing_brands_data, dict):
+            previous_brands = existing_brands_data.get("brands", []) or []
+        previous_map = {str(b.get("id")): b for b in previous_brands if b.get("id")}
+
+        enabled_brands = canonical_data.get("marcas_habilitadas", []) or []
+        result = []
+
+        for marca in sorted(enabled_brands):
+            brand_id = self._to_brand_id(marca)
+            previous = previous_map.get(brand_id, {})
+            fallback_name = BRAND_NAME_OVERRIDES.get(brand_id) or str(marca).replace("_", " ").title()
+
+            merged = {
+                "id": brand_id,
+                "name": previous.get("name") or fallback_name,
+                "tier": previous.get("tier") or "standard",
+                "founded": previous.get("founded"),
+                "country": previous.get("country"),
+                "description": previous.get("description") or f"Marca habilitada por logo disponible ({marca})",
+            }
+            result.append(merged)
+
+        return {"brands": sorted(result, key=lambda b: str(b.get("name", "")).lower())}
+
+    def save_brands_json(self, data: Dict) -> None:
+        self.brands_json_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.brands_json_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
     def run(self, force_sync: bool = False) -> int:
         """
         Ejecuta sincronización inteligente:
@@ -498,6 +547,13 @@ class InstrumentSyncer:
             assets_data = self.sync_and_generate_assets_json(data, existing_assets_data)
             self.save_assets_json(assets_data)
 
+            existing_brands_data = None
+            if self.brands_json_path.exists():
+                with open(self.brands_json_path, "r", encoding="utf-8") as f:
+                    existing_brands_data = json.load(f)
+            brands_data = self.sync_and_generate_brands_json(data, existing_brands_data)
+            self.save_brands_json(brands_data)
+
             old_ids = {i.get("id") for i in (existing_data or {}).get("instruments", []) if i.get("id")}
             new_ids = {i.get("id") for i in data.get("instruments", []) if i.get("id")}
             added_ids = sorted(new_ids - old_ids)
@@ -521,6 +577,7 @@ class InstrumentSyncer:
                     "marcas_no_habilitadas": data["marcas_no_habilitadas"],
                     "assets_total_instruments": assets_data["total_instruments"],
                     "assets_legacy_archived_count": assets_data["legacy_archived_count"],
+                    "brands_total_habilitadas": len(brands_data.get("brands", [])),
                     "status": "updated" if (added_ids or removed_ids or nuevos or eliminados) else "synced",
                 }
             )
@@ -538,6 +595,7 @@ class InstrumentSyncer:
             print(f"✓ Validación fotos JSON/carpeta: {data['validacion']['coinciden']}")
             print(f"✓ Dataset legado actualizado: {assets_data['total_instruments']} instrumentos")
             print(f"✓ Legacy archivado (no borrado): {assets_data['legacy_archived_count']}")
+            print(f"✓ Marcas JSON actualizadas: {len(brands_data.get('brands', []))}")
             print(f"✓ Metadatos guardados (próxima ejecución será más rápida)\n")
 
             return 0
