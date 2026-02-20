@@ -27,6 +27,11 @@ interface SyncedInstrument {
   [key: string]: unknown
 }
 
+interface SyncedInstrumentsPayload {
+  instruments?: SyncedInstrument[]
+  marcas_habilitadas?: string[]
+}
+
 interface Instrument extends SyncedInstrument {
   brand: string
   model: string
@@ -86,11 +91,6 @@ const BRAND_CANONICAL_ALIASES: Record<string, string> = {
   ACCES: 'ACCESS',
 }
 
-const FALLBACK_BRAND_NAMES: Record<string, string> = {
-  asm: 'ASM',
-  studiologic: 'Studiologic',
-}
-
 const toCanonicalBrand = (marca: string): string =>
   BRAND_CANONICAL_ALIASES[marca] || marca
 
@@ -105,8 +105,9 @@ const buildInstrumentPath = (photoName: string): string =>
   `/images/instrumentos/${photoName}.webp`
 
 export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
-  const allRawInstruments: SyncedInstrument[] = Array.isArray(instrumentsData?.instruments)
-    ? (instrumentsData.instruments as SyncedInstrument[])
+  const syncedPayload = instrumentsData as SyncedInstrumentsPayload
+  const allRawInstruments: SyncedInstrument[] = Array.isArray(syncedPayload?.instruments)
+    ? (syncedPayload.instruments as SyncedInstrument[])
     : []
 
   const allNormalizedInstruments: Instrument[] = allRawInstruments.map((inst) => {
@@ -136,9 +137,19 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
     }
   })
 
-  const enabledInstruments = allNormalizedInstruments.filter(
-    inst => inst.marca_habilitada && inst.marca_logo_disponible
+  const enabledBrandAllowList = new Set(
+    Array.isArray(syncedPayload?.marcas_habilitadas)
+      ? syncedPayload.marcas_habilitadas.map((marca) => toBrandId(String(marca)))
+      : []
   )
+  const hasEnabledBrandAllowList = enabledBrandAllowList.size > 0
+
+  const enabledInstruments = allNormalizedInstruments.filter((inst) => {
+    const hasBrandLogo = Boolean(inst.marca_logo_disponible && inst.marca_logo_url)
+    const isBrandEnabled = Boolean(inst.marca_habilitada)
+    const isAllowedBySync = !hasEnabledBrandAllowList || enabledBrandAllowList.has(inst.brand)
+    return hasBrandLogo && isBrandEnabled && isAllowedBySync
+  })
 
   const brandLogoById: Record<string, string> = {}
   enabledInstruments.forEach((inst) => {
@@ -154,7 +165,7 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
     .filter(brandId => !filteredKnownBrands.some(brand => brand.id === brandId))
     .map((brandId) => ({
       id: brandId,
-      name: FALLBACK_BRAND_NAMES[brandId] || brandId.toUpperCase(),
+      name: brandId.toUpperCase(),
       tier: 'standard',
       founded: null,
       country: null,

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cds-v1';
+const CACHE_NAME = 'cds-v2';
 const CORE_ASSETS = [
   '/',
   '/index.html',
