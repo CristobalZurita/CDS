@@ -209,6 +209,14 @@
 				<button class="btn btn-outline-primary" @click="notifyClient">
 					<i class="fa-solid fa-paper-plane me-1"></i> Enviar al cliente
 				</button>
+				<button
+					class="btn btn-outline-dark"
+					:disabled="downloadingClosurePdf"
+					@click="downloadClosurePdf"
+				>
+					<i class="fa-solid fa-file-pdf me-1"></i>
+					{{ downloadingClosurePdf ? 'Generando PDF...' : 'Descargar Cierre OT' }}
+				</button>
 				<router-link
 					:to="{ name: 'admin-purchase-requests', query: { repair_id: repairId } }"
 					class="btn btn-outline-info"
@@ -289,6 +297,7 @@ const newNoteType = ref('internal')
 const savingNote = ref(false)
 const signatureLink = ref('')
 const photoUploadLink = ref('')
+const downloadingClosurePdf = ref(false)
 
 const archiveRepair = async () => {
 	if (isArchived.value) return
@@ -308,6 +317,35 @@ const notifyClient = async () => {
 		window.alert('Enviado al cliente.')
 	} catch (e) {
 		window.alert(e?.response?.data?.detail || 'No se pudo enviar.')
+	}
+}
+
+const sanitizeFilePart = (value) => {
+	const text = String(value || '').trim()
+	if (!text) return 'OT'
+	return text.replace(/[^a-zA-Z0-9._-]+/g, '_')
+}
+
+const downloadClosurePdf = async () => {
+	downloadingClosurePdf.value = true
+	try {
+		const response = await api.get(`/repairs/${repairId}/closure-pdf`, {
+			responseType: 'blob'
+		})
+		const blob = new Blob([response.data], { type: 'application/pdf' })
+		const blobUrl = window.URL.createObjectURL(blob)
+		const preferredCode = repair.value?.repair_code || repair.value?.repair_number || `OT_${repairId}`
+		const link = document.createElement('a')
+		link.href = blobUrl
+		link.download = `CIERRE_${sanitizeFilePart(preferredCode)}.pdf`
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
+		window.URL.revokeObjectURL(blobUrl)
+	} catch (e) {
+		window.alert(e?.response?.data?.detail || 'No se pudo generar el PDF de cierre OT.')
+	} finally {
+		downloadingClosurePdf.value = false
 	}
 }
 

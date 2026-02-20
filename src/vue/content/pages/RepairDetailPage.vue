@@ -5,7 +5,12 @@
         <h1>{{ detail.repair?.instrument || 'Reparación' }}</h1>
         <p class="muted">Ticket {{ detail.repair?.repair_number || detail.repair?.id }}</p>
       </div>
-      <span class="status">{{ detail.repair?.status }}</span>
+      <div class="header-actions">
+        <span class="status">{{ detail.repair?.status }}</span>
+        <button class="btn-download" :disabled="downloadingPdf" @click="downloadClosurePdf">
+          {{ downloadingPdf ? 'Generando PDF...' : 'Descargar Cierre OT' }}
+        </button>
+      </div>
     </div>
 
     <section class="card">
@@ -62,6 +67,7 @@ import { api } from '@/services/api'
 
 const route = useRoute()
 const detail = ref({ timeline: [], photos: [], notes: [] })
+const downloadingPdf = ref(false)
 
 const formatDate = (value) => {
   if (!value) return '—'
@@ -87,6 +93,36 @@ async function load() {
   detail.value = res.data
 }
 
+const sanitizeFilePart = (value) => {
+  const text = String(value || '').trim()
+  if (!text) return 'OT'
+  return text.replace(/[^a-zA-Z0-9._-]+/g, '_')
+}
+
+async function downloadClosurePdf() {
+  downloadingPdf.value = true
+  try {
+    const repairId = route.params.id
+    const response = await api.get(`/client/repairs/${repairId}/closure-pdf`, {
+      responseType: 'blob'
+    })
+    const blob = new Blob([response.data], { type: 'application/pdf' })
+    const blobUrl = window.URL.createObjectURL(blob)
+    const preferredCode = detail.value?.repair?.repair_number || detail.value?.repair?.id || `OT_${repairId}`
+    const link = document.createElement('a')
+    link.href = blobUrl
+    link.download = `CIERRE_CLIENTE_${sanitizeFilePart(preferredCode)}.pdf`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(blobUrl)
+  } catch (error) {
+    window.alert(error?.response?.data?.detail || 'No se pudo descargar el PDF de cierre.')
+  } finally {
+    downloadingPdf.value = false
+  }
+}
+
 onMounted(load)
 </script>
 
@@ -103,6 +139,11 @@ onMounted(load)
   justify-content: space-between;
   align-items: center;
 }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
 .muted {
   color: $color-gray-500-legacy;
 }
@@ -110,6 +151,16 @@ onMounted(load)
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
   background: $color-indigo-50-legacy;
+}
+.btn-download {
+  border: 1px solid $color-gray-200-legacy;
+  background: $color-white;
+  border-radius: 10px;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.82rem;
+}
+.btn-download:disabled {
+  opacity: 0.7;
 }
 .card {
   margin-top: 1rem;

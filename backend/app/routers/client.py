@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from datetime import datetime
@@ -14,10 +15,13 @@ from app.models.device_lookup import DeviceBrand
 from app.models.repair import Repair, RepairStatus
 from app.models.payment import Payment, PaymentStatus
 from app.models.purchase_request import PurchaseRequest
+from app.models.repair_component_usage import RepairComponentUsage
+from app.models.repair_intake_sheet import RepairIntakeSheet
 from app.models.repair_note import RepairNote
 from app.models.repair_photo import RepairPhoto
 from app.core.config import settings
 from app.services.logging_service import create_audit
+from app.services.pdf_generator import generate_repair_closure_pdf_bytes
 
 router = APIRouter(prefix="/client", tags=["client"])
 
@@ -119,6 +123,19 @@ def _parse_payment_notes(raw_notes: str | None) -> dict:
     return {"text": text}
 
 
+def _safe_pdf_filename(value: str) -> str:
+    text = str(value or "OT").strip()
+    if not text:
+        text = "OT"
+    sanitized = []
+    for char in text:
+        if char.isalnum() or char in ("-", "_", "."):
+            sanitized.append(char)
+        else:
+            sanitized.append("_")
+    return "".join(sanitized)
+
+
 def _build_client_purchase_request_payload(req: PurchaseRequest, latest_payment: Payment | None) -> Dict:
     total_items_amount = round(sum(
         float(item.quantity or 0) * float(item.unit_price or 0)
@@ -179,8 +196,10 @@ def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(require_pe
     completed_repairs = 0
     total_spent = 0.0
     active_list = []
+    repair_ids = []
 
     for repair in repairs:
+        repair_ids.append(int(repair.id))
         code = _status_code(repair)
         if code in pending_codes:
             pending_repairs += 1
@@ -204,6 +223,52 @@ def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(require_pe
                 "progress": _status_progress(code),
             })
 
+    open_payment_statuses = {"requested", "pending_payment", "proof_submitted"}
+    purchase_query = db.query(PurchaseRequest)
+    if repair_ids:
+        purchase_query = purchase_query.filter(
+            or_(
+                PurchaseRequest.client_id == client.id,
+                PurchaseRequest.repair_id.in_(repair_ids),
+            )
+        )
+    else:
+        purchase_query = purchase_query.filter(PurchaseRequest.client_id == client.id)
+
+    open_payment_requests = (
+        purchase_query
+        .filter(PurchaseRequest.status.in_(open_payment_statuses))
+        .order_by(PurchaseRequest.updated_at.desc())
+        .limit(8)
+        .all()
+    )
+
+    notifications = []
+    for req in open_payment_requests:
+        latest_payment = (
+            db.query(Payment)
+            .filter(Payment.purchase_request_id == req.id)
+            .order_by(Payment.id.desc())
+            .first()
+        )
+        due_text = ""
+        if latest_payment and latest_payment.payment_due_date:
+            due_text = f" (vence {latest_payment.payment_due_date.strftime('%d-%m-%Y')})"
+
+        if req.status in {"requested", "pending_payment"}:
+            message = f"Tienes un pago OT pendiente para la solicitud #{req.id}{due_text}"
+            notif_type = "warning"
+        else:
+            message = f"Tu comprobante OT #{req.id} fue recibido y está en validación"
+            notif_type = "info"
+
+        notifications.append({
+            "id": f"ot-payment-{req.id}",
+            "type": notif_type,
+            "message": message,
+            "date": req.updated_at or datetime.utcnow(),
+        })
+
     return {
         "user": {
             "id": user_obj.id,
@@ -217,9 +282,10 @@ def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(require_pe
             "active_repairs": active_repairs,
             "completed_repairs": completed_repairs,
             "total_spent": round(total_spent, 2),
+            "pending_ot_payments": len(open_payment_requests),
         },
         "active_repairs": active_list,
-        "notifications": [],
+        "notifications": notifications,
     }
 
 
@@ -342,6 +408,135 @@ def get_repair_details(repair_id: int, db: Session = Depends(get_db), user: dict
             for n in notes
         ],
     }
+
+
+@router.get("/repairs/{repair_id}/closure-pdf")
+def get_client_repair_closure_pdf(
+    repair_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read")),
+):
+    user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
+    if not user_obj:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    client = _ensure_client(db, user_obj)
+    repair = (
+        db.query(Repair)
+        .join(Device, Repair.device_id == Device.id)
+        .filter(Device.client_id == client.id, Repair.id == repair_id)
+        .first()
+    )
+    if not repair:
+        raise HTTPException(status_code=404, detail="Reparación no encontrada")
+
+    notes = (
+        db.query(RepairNote)
+        .filter(RepairNote.repair_id == repair.id, RepairNote.note_type != "internal")
+        .order_by(RepairNote.created_at.asc())
+        .all()
+    )
+    components = (
+        db.query(RepairComponentUsage)
+        .filter(RepairComponentUsage.repair_id == repair.id)
+        .order_by(RepairComponentUsage.created_at.asc())
+        .all()
+    )
+    photos_count = db.query(RepairPhoto).filter(
+        RepairPhoto.repair_id == repair.id,
+        RepairPhoto.visible_to_client == 1
+    ).count()
+    intake_sheet = (
+        db.query(RepairIntakeSheet)
+        .filter(RepairIntakeSheet.repair_id == repair.id)
+        .first()
+    )
+
+    payload = {
+        "repair_id": repair.id,
+        "repair_number": repair.repair_number,
+        "repair_code": repair.repair_number,
+        "status_id": repair.status_id,
+        "status_name": _status_code(repair),
+        "intake_date": repair.intake_date,
+        "diagnosis_date": repair.diagnosis_date,
+        "start_date": repair.start_date,
+        "completion_date": repair.completion_date,
+        "delivery_date": repair.delivery_date,
+        "problem_reported": repair.problem_reported,
+        "diagnosis": repair.diagnosis,
+        "work_performed": repair.work_performed,
+        "parts_cost": repair.parts_cost,
+        "labor_cost": repair.labor_cost,
+        "additional_cost": repair.additional_cost,
+        "discount": repair.discount,
+        "total_cost": repair.total_cost,
+        "paid_amount": repair.paid_amount,
+        "payment_status": repair.payment_status,
+        "payment_method": repair.payment_method,
+        "signature_ingreso_path": repair.signature_ingreso_path,
+        "signature_retiro_path": repair.signature_retiro_path,
+        "client_name": client.name,
+        "client_email": client.email,
+        "client_phone": client.phone,
+        "device_model": repair.device.model if repair.device else None,
+        "device_serial": repair.device.serial_number if repair.device else None,
+        "components": [
+            {
+                "component_table": c.component_table,
+                "component_id": c.component_id,
+                "quantity": c.quantity,
+                "unit_cost": c.unit_cost or 0,
+                "total_cost": c.total_cost,
+            }
+            for c in components
+        ],
+        "notes": [
+            {
+                "id": n.id,
+                "note_type": n.note_type,
+                "note": n.note,
+                "created_at": n.created_at,
+            }
+            for n in notes
+        ],
+        "photos_count": photos_count,
+        "intake_sheet": (
+            {
+                "client_code": intake_sheet.client_code,
+                "ot_code": intake_sheet.ot_code,
+                "instrument_code": intake_sheet.instrument_code,
+                "equipment_type": intake_sheet.equipment_type,
+                "requested_service_type": intake_sheet.requested_service_type,
+                "repair_tariff": intake_sheet.repair_tariff,
+                "material_tariff": intake_sheet.material_tariff,
+                "estimated_repair_time": intake_sheet.estimated_repair_time,
+                "estimated_completion_date": intake_sheet.estimated_completion_date,
+                "annotations": intake_sheet.annotations,
+            }
+            if intake_sheet
+            else None
+        ),
+    }
+    pdf_bytes = generate_repair_closure_pdf_bytes(payload)
+    safe_code = _safe_pdf_filename(repair.repair_number or f"OT_{repair.id}")
+    filename = f"CIERRE_CLIENTE_{safe_code}.pdf"
+
+    try:
+        create_audit(
+            event_type="repair.closure_pdf.client_download",
+            user_id=user_obj.id,
+            details={"repair_id": repair.id, "filename": filename},
+            message=f"Client downloaded closure PDF for repair #{repair.id}",
+        )
+    except Exception:
+        pass
+
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 @router.get("/profile")

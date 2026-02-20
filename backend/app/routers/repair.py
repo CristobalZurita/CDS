@@ -5,7 +5,7 @@ Endpoints para gestión de reparaciones.
 Usa permisos granulares (require_permission).
 """
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.exc import IntegrityError
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from app.models.repair import Repair, RepairStatus
 from app.models.audit import AuditLog
@@ -17,24 +17,23 @@ from app.services.repair_service import RepairService
 from app.models.repair_note import RepairNote
 from app.models.repair_photo import RepairPhoto
 from app.models.device import Device
-from app.models.device_lookup import DeviceType
 from app.models.client import Client
-from app.models.user import User
 from app.models.repair_intake_sheet import RepairIntakeSheet
 from datetime import date as dt_date, datetime, timedelta
-import uuid
 import json
 from app.core.config import settings
 from app.services.email_service import EmailService, build_email_html
 from app.services.whatsapp_service import WhatsAppService
+from app.services.pdf_generator import generate_repair_closure_pdf_bytes
+from app.services.repair_read_service import RepairReadService
+from app.services.repair_write_service import RepairWriteService
 from app.services.ot_code_service import (
-    assign_repair_ot_code,
     client_code as _client_code,
-    ensure_repair_ot_fields,
     next_group_suffix,
     parent_belongs_to_client,
     repair_code as _repair_code,
 )
+from app.models.repair_component_usage import RepairComponentUsage
 
 router = APIRouter(prefix="/repairs", tags=["repairs"])
 
@@ -160,6 +159,97 @@ def _serialize_intake_sheet(sheet: RepairIntakeSheet) -> Dict:
     }
 
 
+def _build_repair_closure_payload(repair: Repair, db: Session) -> Dict:
+    device = db.query(Device).filter(Device.id == repair.device_id).first()
+    client = db.query(Client).filter(Client.id == device.client_id).first() if device else None
+    status_obj = db.query(RepairStatus).filter(RepairStatus.id == repair.status_id).first()
+    intake_sheet = (
+        db.query(RepairIntakeSheet)
+        .filter(RepairIntakeSheet.repair_id == repair.id)
+        .first()
+    )
+    notes = (
+        db.query(RepairNote)
+        .filter(RepairNote.repair_id == repair.id)
+        .order_by(RepairNote.created_at.asc())
+        .all()
+    )
+    components = (
+        db.query(RepairComponentUsage)
+        .filter(RepairComponentUsage.repair_id == repair.id)
+        .order_by(RepairComponentUsage.created_at.asc())
+        .all()
+    )
+    photos_count = db.query(RepairPhoto).filter(RepairPhoto.repair_id == repair.id).count()
+    repair_code = _resolved_repair_code(repair, client.id if client else None)
+
+    return {
+        "repair_id": repair.id,
+        "repair_number": repair.repair_number,
+        "repair_code": repair_code,
+        "status_id": repair.status_id,
+        "status_name": status_obj.name if status_obj else repair.status,
+        "intake_date": repair.intake_date,
+        "diagnosis_date": repair.diagnosis_date,
+        "start_date": repair.start_date,
+        "completion_date": repair.completion_date,
+        "delivery_date": repair.delivery_date,
+        "problem_reported": repair.problem_reported,
+        "diagnosis": repair.diagnosis,
+        "work_performed": repair.work_performed,
+        "parts_cost": repair.parts_cost,
+        "labor_cost": repair.labor_cost,
+        "additional_cost": repair.additional_cost,
+        "discount": repair.discount,
+        "total_cost": repair.total_cost,
+        "paid_amount": repair.paid_amount,
+        "payment_status": repair.payment_status,
+        "payment_method": repair.payment_method,
+        "signature_ingreso_path": repair.signature_ingreso_path,
+        "signature_retiro_path": repair.signature_retiro_path,
+        "client_name": client.name if client else None,
+        "client_email": client.email if client else None,
+        "client_phone": client.phone if client else None,
+        "device_model": device.model if device else None,
+        "device_serial": device.serial_number if device else None,
+        "components": [
+            {
+                "component_table": c.component_table,
+                "component_id": c.component_id,
+                "quantity": c.quantity,
+                "unit_cost": c.unit_cost or 0,
+                "total_cost": c.total_cost,
+                "notes": c.notes,
+            }
+            for c in components
+        ],
+        "notes": [
+            {
+                "id": n.id,
+                "note_type": n.note_type,
+                "note": n.note,
+                "created_at": n.created_at,
+            }
+            for n in notes
+        ],
+        "photos_count": photos_count,
+        "intake_sheet": _serialize_intake_sheet(intake_sheet) if intake_sheet else None,
+    }
+
+
+def _safe_pdf_filename(value: str) -> str:
+    text = str(value or "OT").strip()
+    if not text:
+        text = "OT"
+    sanitized = []
+    for char in text:
+        if char.isalnum() or char in ("-", "_", "."):
+            sanitized.append(char)
+        else:
+            sanitized.append("_")
+    return "".join(sanitized)
+
+
 @router.get("")
 @router.get("/")
 def list_repairs(
@@ -167,7 +257,7 @@ def list_repairs(
     user: dict = Depends(require_permission("repairs", "read"))
 ):
     _auto_archive_repairs(db)
-    repairs = db.query(Repair).filter(Repair.archived_at.is_(None)).all()
+    repairs = RepairReadService(db).list_active()
     return [_repair_payload(repair, db) for repair in repairs]
 
 
@@ -177,7 +267,7 @@ def list_archived_repairs(
     user: dict = Depends(require_permission("repairs", "read"))
 ):
     _auto_archive_repairs(db)
-    repairs = db.query(Repair).filter(Repair.archived_at.isnot(None)).all()
+    repairs = RepairReadService(db).list_archived()
     return [_repair_payload(repair, db) for repair in repairs]
 
 
@@ -199,7 +289,8 @@ def get_next_repair_code(
         raise HTTPException(status_code=404, detail="Client not found")
 
     if ot_parent_id is not None:
-        parent = db.query(Repair).filter(Repair.id == int(ot_parent_id)).first()
+        read_svc = RepairReadService(db)
+        parent = read_svc.get_by_id(int(ot_parent_id))
         if not parent:
             raise HTTPException(status_code=404, detail="Parent repair not found")
 
@@ -218,7 +309,7 @@ def get_next_repair_code(
             "repair_code": _repair_code(client.id, parent.id, next_suffix),
         }
 
-    last_repair = db.query(Repair).order_by(Repair.id.desc()).first()
+    last_repair = RepairReadService(db).get_last_created()
     next_repair_id = (last_repair.id + 1) if last_repair else 1
     return {
         "client_id": client.id,
@@ -236,169 +327,23 @@ def create_repair(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("repairs", "create"))
 ):
-    def _ensure_default_device_type():
-        dt = db.query(DeviceType).first()
-        if not dt:
-            dt = DeviceType(code="generic", name="Generic", description="Autocreated")
-            db.add(dt)
-            db.flush()
-        return dt
-
-    def _ensure_default_status():
-        st = db.query(RepairStatus).filter(RepairStatus.id == 1).first()
-        if not st:
-            st = RepairStatus(id=1, code="ingreso", name="Ingreso", description="Autocreated")
-            db.add(st)
-            db.flush()
-        return st
-
-    def _resolve_client(client_id: int | None):
-        if not client_id:
-            return None
-        user_obj = db.query(User).filter(User.id == client_id).first()
-        if user_obj:
-            # Prefer client linked to the user when payload sends User.id.
-            linked_client = db.query(Client).filter(Client.user_id == user_obj.id).first()
-            if linked_client:
-                return linked_client
-
-            # Backward compatibility: reuse legacy client row with same PK when possible.
-            legacy_client = db.query(Client).filter(Client.id == client_id).first()
-            if legacy_client and (legacy_client.user_id is None or legacy_client.user_id == user_obj.id):
-                if legacy_client.user_id is None:
-                    legacy_client.user_id = user_obj.id
-                    db.flush()
-                return legacy_client
-
-            client = Client(user_id=user_obj.id, name=user_obj.full_name, email=user_obj.email)
-            db.add(client)
-            db.flush()
-            return client
-
-        # Fallback: payload may already be using Client.id directly.
-        client = db.query(Client).filter(Client.id == client_id).first()
-        if client:
-            return client
-        return None
-
-    _ensure_default_status()
-    device_id = repair.get("device_id")
-    if not device_id:
-        client = _resolve_client(repair.get("client_id"))
-        if client:
-            dt = _ensure_default_device_type()
-            device = Device(
-                client_id=client.id,
-                device_type_id=dt.id,
-                model=repair.get("model") or repair.get("title") or "Unknown"
-            )
-            db.add(device)
-            db.flush()
-            device_id = device.id
-
-    if not device_id:
-        raise HTTPException(status_code=400, detail="device_id or client_id required")
-
-    explicit_repair_number = repair.get("repair_number")
-    parent_id = repair.get("ot_parent_id") or repair.get("ot_base_repair_id")
-    requested_suffix = repair.get("ot_suffix")
-
-    db_repair = Repair(
-        repair_number=explicit_repair_number or f"R-{uuid.uuid4().hex[:8]}",
-        device_id=device_id,
-        quote_id=repair.get("quote_id"),
-        status_id=repair.get("status_id") or 1,
-        assigned_to=repair.get("assigned_to"),
-        problem_reported=repair.get("problem_reported") or repair.get("description") or repair.get("title") or "Sin detalle",
-        diagnosis=repair.get("diagnosis"),
-        work_performed=repair.get("work_performed"),
-        parts_cost=repair.get("parts_cost", 0),
-        labor_cost=repair.get("labor_cost", 0),
-        additional_cost=repair.get("additional_cost", 0),
-        discount=repair.get("discount", 0),
-        total_cost=repair.get("total_cost", 0),
-        payment_status=repair.get("payment_status") or "pending",
-        payment_method=repair.get("payment_method"),
-        paid_amount=repair.get("paid_amount", 0),
-        priority=repair.get("priority", 2),
-    )
-    db.add(db_repair)
-    db.flush()
-
-    device = db.query(Device).filter(Device.id == db_repair.device_id).first()
-    client_id = device.client_id if device else None
-
-    parent_repair = None
-    if parent_id is not None:
-        try:
-            parent_lookup_id = int(parent_id)
-        except (TypeError, ValueError):
-            raise HTTPException(status_code=400, detail="Invalid ot_parent_id")
-
-        parent_repair = db.query(Repair).filter(Repair.id == parent_lookup_id).first()
-        if not parent_repair:
-            raise HTTPException(status_code=404, detail="Parent repair not found")
-        if client_id and not parent_belongs_to_client(db, parent_repair, int(client_id)):
-            raise HTTPException(status_code=400, detail="Parent repair does not belong to device client")
-
-    if client_id:
-        if explicit_repair_number:
-            if parent_repair:
-                candidate_sequence = None
-                if requested_suffix is not None:
-                    try:
-                        candidate = int(requested_suffix)
-                    except (TypeError, ValueError):
-                        candidate = 0
-                    if candidate > 0:
-                        collision = (
-                            db.query(Repair.id)
-                            .filter(
-                                Repair.ot_parent_id == parent_repair.id,
-                                Repair.ot_sequence == candidate,
-                            )
-                            .first()
-                        )
-                        if not collision:
-                            candidate_sequence = candidate
-
-                if candidate_sequence is None:
-                    candidate_sequence = next_group_suffix(db, int(client_id), parent_repair)
-
-                db_repair.ot_parent_id = parent_repair.id
-                db_repair.ot_sequence = candidate_sequence
-            else:
-                ensure_repair_ot_fields(db, db_repair)
-        else:
-            assign_repair_ot_code(
-                db=db,
-                repair=db_repair,
-                client_id=int(client_id),
-                parent_repair=parent_repair,
-                requested_suffix=requested_suffix,
-            )
-
-    try:
-        db.commit()
-    except IntegrityError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=409,
-            detail="Conflict creating repair. Verify OT code and sequence uniqueness.",
-        ) from exc
-
-    db.refresh(db_repair)
+    db_repair = RepairWriteService(db).create_repair(repair)
 
     # Audit: repair created
     try:
-        create_audit(
+        audit_row = AuditLog(
             event_type="repair.create",
             user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
             details={"repair_id": db_repair.id},
-            message="Repair created"
+            message="Repair created",
         )
+        db.add(audit_row)
+        db.commit()
     except Exception:
-        # Non-fatal: auditing should not break main flow
+        try:
+            db.rollback()
+        except Exception:
+            pass
         pass
     return db_repair
 
@@ -409,7 +354,7 @@ def get_repair(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("repairs", "read"))
 ):
-    repair = db.query(Repair).filter(Repair.id == repair_id).first()
+    repair = RepairReadService(db).get_by_id(repair_id)
     if not repair:
         raise HTTPException(status_code=404, detail="Repair not found")
     device = db.query(Device).filter(Device.id == repair.device_id).first()
@@ -455,6 +400,40 @@ def get_repair(
         "archived_at": repair.archived_at.isoformat() if repair.archived_at else None,
         "intake_sheet": _serialize_intake_sheet(intake_sheet) if intake_sheet else None,
     }
+
+
+@router.get("/{repair_id}/closure-pdf")
+def download_repair_closure_pdf(
+    repair_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "update")),
+):
+    repair = db.query(Repair).filter(Repair.id == repair_id).first()
+    if not repair:
+        raise HTTPException(status_code=404, detail="Repair not found")
+
+    payload = _build_repair_closure_payload(repair, db)
+    pdf_bytes = generate_repair_closure_pdf_bytes(payload)
+
+    file_code = payload.get("repair_code") or payload.get("repair_number") or f"OT_{repair_id}"
+    safe_code = _safe_pdf_filename(str(file_code))
+    filename = f"CIERRE_{safe_code}.pdf"
+
+    try:
+        create_audit(
+            event_type="repair.closure_pdf.download",
+            user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
+            details={"repair_id": repair_id, "filename": filename},
+            message=f"Closure PDF generated for repair #{repair_id}",
+        )
+    except Exception:
+        pass
+
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 @router.get("/{repair_id}/intake-sheet")

@@ -50,6 +50,14 @@
             <div class="stat-label">Total Invertido</div>
           </div>
         </div>
+
+        <div class="stat-card">
+          <div class="stat-icon pending">💳</div>
+          <div class="stat-content">
+            <div class="stat-value">{{ pendingOtPayments }}</div>
+            <div class="stat-label">Pagos OT Pendientes</div>
+          </div>
+        </div>
       </div>
 
       <!-- Main Content -->
@@ -208,6 +216,7 @@ const pendingRepairs = computed(() => stats.value.pending_repairs)
 const activeRepairs = computed(() => stats.value.active_repairs)
 const completedRepairs = computed(() => stats.value.completed_repairs)
 const totalSpent = computed(() => stats.value.total_spent)
+const pendingOtPayments = computed(() => stats.value.pending_ot_payments || 0)
 
 // Methods
 const getStatusLabel = (status) => {
