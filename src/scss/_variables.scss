@@ -1,3 +1,4 @@
+@use "sass:color";
 /** Font Awesome webfonts path **/
 $fa-font-path:"@fortawesome/fontawesome-free/webfonts";
 
@@ -151,7 +152,7 @@ $legacy-purple-600: #6f42c1;
 $background-color: #d3d0c3;
 $nav-background-color: $dark;
 $footer-bg-color: $dark;
-$footer-bg-highlight-color: darken($dark, 1%);
+$footer-bg-highlight-color: color.adjust($dark, $lightness: -1%);
 
 /** Dimensions **/
 $navbar-height: 86px;

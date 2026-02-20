@@ -280,6 +280,7 @@ async def enforce_csrf_for_mutations(request, call_next):
 
 # Health check endpoint
 @app.get("/health")
+@app.get("/api/health")
 async def health_check():
     return {"status": "ok", "message": "Cirujano de Sintetizadores API is running"}
 

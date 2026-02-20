@@ -1,7 +1,6 @@
 @use "sass:math";
 /*! Fuente SASS de emails CDS. No editar backend/app/static/email.css manualmente. */
-@import "abstracts/variables";
-@import "variables";
+@use "variables" as *;
 
 .email-body {
   font-family: $font-family-base;
