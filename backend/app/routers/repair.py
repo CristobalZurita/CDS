@@ -255,14 +255,29 @@ def create_repair(
     def _resolve_client(client_id: int | None):
         if not client_id:
             return None
-        client = db.query(Client).filter(Client.id == client_id).first()
-        if client:
-            return client
         user_obj = db.query(User).filter(User.id == client_id).first()
         if user_obj:
+            # Prefer client linked to the user when payload sends User.id.
+            linked_client = db.query(Client).filter(Client.user_id == user_obj.id).first()
+            if linked_client:
+                return linked_client
+
+            # Backward compatibility: reuse legacy client row with same PK when possible.
+            legacy_client = db.query(Client).filter(Client.id == client_id).first()
+            if legacy_client and (legacy_client.user_id is None or legacy_client.user_id == user_obj.id):
+                if legacy_client.user_id is None:
+                    legacy_client.user_id = user_obj.id
+                    db.flush()
+                return legacy_client
+
             client = Client(user_id=user_obj.id, name=user_obj.full_name, email=user_obj.email)
             db.add(client)
             db.flush()
+            return client
+
+        # Fallback: payload may already be using Client.id directly.
+        client = db.query(Client).filter(Client.id == client_id).first()
+        if client:
             return client
         return None
 
