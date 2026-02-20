@@ -625,39 +625,20 @@ def update_repair(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("repairs", "update"))
 ):
-    db_repair = db.query(Repair).get(repair_id)
-    if not db_repair:
-        raise HTTPException(status_code=404, detail="Repair not found")
-
     user_id = int(user.get("user_id")) if user and user.get("user_id") else None
-    svc = RepairService(db)
+    db_repair, updated_fields = RepairWriteService(db).update_repair(
+        repair_id=repair_id,
+        payload=repair,
+        user_id=user_id,
+    )
 
-    # Si hay cambio de status_id, usar el service con validación de state machine
-    new_status_id = repair.get("status_id")
-    if new_status_id is not None and new_status_id != db_repair.status_id:
-        # Delegar al service que valida transición y emite eventos
-        db_repair = svc.update_status(
-            repair_id=repair_id,
-            new_status_id=new_status_id,
-            user_id=user_id,
-            notes=repair.get("status_notes")  # Notas opcionales del cambio de estado
-        )
-        # Remover status_id del dict para no procesarlo de nuevo
-        repair = {k: v for k, v in repair.items() if k not in ("status_id", "status_notes")}
-
-    # Actualizar resto de campos (sin status_id)
-    if repair:
-        for key, value in repair.items():
-            setattr(db_repair, key, value)
-        db.commit()
-        db.refresh(db_repair)
-
-        # Audit: repair updated (campos no-status)
+    # Audit: repair updated (campos no-status)
+    if updated_fields:
         try:
             create_audit(
                 event_type="repair.update",
                 user_id=user_id,
-                details={"repair_id": db_repair.id, "fields": list(repair.keys())},
+                details={"repair_id": db_repair.id, "fields": updated_fields},
                 message="Repair updated"
             )
         except Exception:
