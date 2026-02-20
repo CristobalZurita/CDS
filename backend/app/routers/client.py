@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from datetime import datetime
 from typing import Dict, List
+import json
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_user, require_permission
@@ -10,9 +12,12 @@ from app.models.client import Client
 from app.models.device import Device
 from app.models.device_lookup import DeviceBrand
 from app.models.repair import Repair, RepairStatus
+from app.models.payment import Payment, PaymentStatus
+from app.models.purchase_request import PurchaseRequest
 from app.models.repair_note import RepairNote
 from app.models.repair_photo import RepairPhoto
 from app.core.config import settings
+from app.services.logging_service import create_audit
 
 router = APIRouter(prefix="/client", tags=["client"])
 
@@ -99,6 +104,54 @@ def _timeline_from_repair(repair: Repair) -> List[Dict]:
             timeline.append({"label": label, "date": value})
     timeline.sort(key=lambda x: x["date"])
     return timeline
+
+
+def _parse_payment_notes(raw_notes: str | None) -> dict:
+    text = str(raw_notes or "").strip()
+    if not text:
+        return {}
+    try:
+        parsed = json.loads(text)
+        if isinstance(parsed, dict):
+            return parsed
+    except Exception:
+        pass
+    return {"text": text}
+
+
+def _build_client_purchase_request_payload(req: PurchaseRequest, latest_payment: Payment | None) -> Dict:
+    total_items_amount = round(sum(
+        float(item.quantity or 0) * float(item.unit_price or 0)
+        for item in (req.items or [])
+    ), 2)
+    payment_notes = _parse_payment_notes(latest_payment.notes if latest_payment else None)
+    return {
+        "id": req.id,
+        "status": req.status,
+        "notes": req.notes,
+        "repair_id": req.repair_id,
+        "repair_number": req.repair.repair_number if req.repair else None,
+        "items_count": len(req.items or []),
+        "total_items_amount": total_items_amount,
+        "requested_amount": int((latest_payment.amount or 0) if latest_payment else round(total_items_amount)),
+        "payment_due_date": latest_payment.payment_due_date.isoformat() if latest_payment and latest_payment.payment_due_date else None,
+        "latest_payment": (
+            {
+                "id": latest_payment.id,
+                "status": latest_payment.status.value if isinstance(latest_payment.status, PaymentStatus) else str(latest_payment.status),
+                "payment_method": latest_payment.payment_method,
+                "amount": latest_payment.amount,
+                "proof_path": payment_notes.get("proof_path"),
+                "deposit_reference": payment_notes.get("deposit_reference"),
+                "depositor_name": payment_notes.get("depositor_name"),
+                "client_notes": payment_notes.get("client_notes"),
+                "admin_notes": payment_notes.get("admin_notes"),
+                "transaction_id": latest_payment.transaction_id,
+            }
+            if latest_payment
+            else None
+        ),
+    }
 
 
 @router.get("/dashboard")
@@ -359,4 +412,170 @@ def update_profile(payload: Dict, db: Session = Depends(get_db), user: dict = De
             "total_repairs": client.total_repairs,
             "total_spent": client.total_spent,
         },
+    }
+
+
+@router.get("/purchase-requests")
+def list_client_purchase_requests(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read")),
+):
+    user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
+    if not user_obj:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    client = _ensure_client(db, user_obj)
+
+    repair_ids = [
+        row[0]
+        for row in (
+            db.query(Repair.id)
+            .join(Device, Repair.device_id == Device.id)
+            .filter(Device.client_id == client.id)
+            .all()
+        )
+    ]
+
+    query = db.query(PurchaseRequest)
+    if repair_ids:
+        query = query.filter(
+            or_(
+                PurchaseRequest.client_id == client.id,
+                PurchaseRequest.repair_id.in_(repair_ids),
+            )
+        )
+    else:
+        query = query.filter(PurchaseRequest.client_id == client.id)
+
+    requests = query.order_by(PurchaseRequest.updated_at.desc()).all()
+    request_ids = [req.id for req in requests]
+
+    latest_by_request: Dict[int, Payment] = {}
+    if request_ids:
+        payments = (
+            db.query(Payment)
+            .filter(Payment.purchase_request_id.in_(request_ids))
+            .order_by(Payment.id.desc())
+            .all()
+        )
+        for payment in payments:
+            request_id = int(payment.purchase_request_id or 0)
+            if request_id > 0 and request_id not in latest_by_request:
+                latest_by_request[request_id] = payment
+
+    return [
+        _build_client_purchase_request_payload(req, latest_by_request.get(req.id))
+        for req in requests
+    ]
+
+
+@router.post("/purchase-requests/{request_id}/deposit-proof")
+def submit_client_deposit_proof(
+    request_id: int,
+    payload: Dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read")),
+):
+    user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
+    if not user_obj:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    client = _ensure_client(db, user_obj)
+    req = db.query(PurchaseRequest).filter(PurchaseRequest.id == request_id).first()
+    if not req:
+        raise HTTPException(status_code=404, detail="Solicitud de compra no encontrada")
+
+    allowed_client_ids = {client.id}
+    if req.repair_id:
+        repair = db.query(Repair).filter(Repair.id == req.repair_id).first()
+        if repair:
+            device = db.query(Device).filter(Device.id == repair.device_id).first()
+            if device and device.client_id:
+                allowed_client_ids.add(int(device.client_id))
+    if req.client_id and int(req.client_id) not in allowed_client_ids:
+        raise HTTPException(status_code=403, detail="No autorizado para esta solicitud de compra")
+    if req.client_id is None and client.id not in allowed_client_ids:
+        raise HTTPException(status_code=403, detail="No autorizado para esta solicitud de compra")
+
+    if req.status not in {"pending_payment", "requested", "proof_submitted"}:
+        raise HTTPException(status_code=400, detail="La solicitud no está en estado de pago")
+
+    payment = (
+        db.query(Payment)
+        .filter(
+            Payment.purchase_request_id == req.id,
+            Payment.status == PaymentStatus.PENDING,
+        )
+        .order_by(Payment.id.desc())
+        .first()
+    )
+
+    requested_amount = payload.get("amount")
+    if requested_amount is None:
+        requested_amount = int(round(sum(
+            float(item.quantity or 0) * float(item.unit_price or 0)
+            for item in (req.items or [])
+        )))
+    amount = int(round(float(requested_amount)))
+    if amount <= 0:
+        raise HTTPException(status_code=400, detail="Monto inválido")
+
+    if not payment:
+        payment = Payment(
+            user_id=user_obj.id,
+            repair_id=req.repair_id,
+            purchase_request_id=req.id,
+            amount=amount,
+            payment_method="transfer",
+            status=PaymentStatus.PENDING,
+            transaction_id=f"DEP-{req.id}-{int(datetime.utcnow().timestamp())}",
+            payment_processor="manual",
+            currency="CLP",
+        )
+        db.add(payment)
+        db.flush()
+    else:
+        payment.amount = amount
+        if not payment.transaction_id:
+            payment.transaction_id = f"DEP-{req.id}-{int(datetime.utcnow().timestamp())}"
+
+    payment_notes = _parse_payment_notes(payment.notes)
+    payment_notes["proof_path"] = payload.get("proof_path")
+    payment_notes["deposit_reference"] = payload.get("deposit_reference")
+    payment_notes["depositor_name"] = payload.get("depositor_name") or user_obj.full_name
+    payment_notes["client_notes"] = payload.get("client_notes")
+    payment.notes = json.dumps(payment_notes, ensure_ascii=False)
+
+    deposited_at = payload.get("deposited_at")
+    if deposited_at:
+        try:
+            payment.payment_date = datetime.fromisoformat(str(deposited_at))
+        except Exception:
+            payment.payment_date = datetime.utcnow()
+    else:
+        payment.payment_date = datetime.utcnow()
+
+    req.status = "proof_submitted"
+    db.commit()
+    db.refresh(req)
+    db.refresh(payment)
+
+    try:
+        create_audit(
+            event_type="purchase_request.deposit_proof_submitted",
+            user_id=user_obj.id,
+            details={
+                "request_id": req.id,
+                "payment_id": payment.id,
+                "amount": payment.amount,
+                "proof_path": payload.get("proof_path"),
+            },
+            message=f"Deposit proof submitted for purchase request #{req.id}",
+        )
+    except Exception:
+        pass
+
+    return {
+        "ok": True,
+        "request": _build_client_purchase_request_payload(req, payment),
     }

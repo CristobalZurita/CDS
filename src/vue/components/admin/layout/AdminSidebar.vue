@@ -28,6 +28,7 @@ const route = useRoute()
 const items = [
   { to: '/admin', label: 'Dashboard', icon: 'fa-solid fa-gauge' },
   { to: '/admin/repairs', label: 'Reparaciones', icon: 'fa-solid fa-screwdriver-wrench' },
+  { to: '/admin/quotes', label: 'Cotizaciones', icon: 'fa-solid fa-file-invoice-dollar' },
   { to: '/admin/clients', label: 'Clientes', icon: 'fa-solid fa-user-group' },
   { to: '/admin/inventory', label: 'Inventario', icon: 'fa-solid fa-boxes-stacked' },
   { to: '/admin/inventory/unified', label: 'Inventario Unificado', icon: 'fa-solid fa-layer-group' },

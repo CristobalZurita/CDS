@@ -124,6 +124,14 @@
               </div>
             </router-link>
 
+            <router-link to="/ot-payments" class="action-card">
+              <div class="action-icon">💳</div>
+              <div class="action-text">
+                <h4>Pagos OT</h4>
+                <p>Sube comprobantes y revisa cobros de repuestos</p>
+              </div>
+            </router-link>
+
             <router-link to="/repairs" class="action-card">
               <div class="action-icon">📋</div>
               <div class="action-text">

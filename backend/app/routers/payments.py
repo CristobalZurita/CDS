@@ -35,6 +35,7 @@ def create_payment(payload: PaymentCreate, db: Session = Depends(get_db), user: 
     payment = Payment(
         user_id=data.get("user_id"),
         repair_id=data.get("repair_id"),
+        purchase_request_id=data.get("purchase_request_id"),
         amount=data.get("amount"),
         payment_method=data.get("payment_method"),
         transaction_id=data.get("transaction_id"),

@@ -18,7 +18,7 @@ from app.models.audit import AuditLog
 from app.models.storage_location import StorageLocation
 from app.models.client import Client
 from app.models.device import Device
-from app.models.quote import Quote
+from app.models.quote import Quote, QuoteItem, QuoteRecipient, QuoteStatus
 from app.models.tool import Tool
 from app.models.tool_lookup import ToolBrand, ToolCategory
 from app.models.device_lookup import DeviceBrand, DeviceType
@@ -58,6 +58,9 @@ __all__ = [
     "Client",
     "Device",
     "Quote",
+    "QuoteItem",
+    "QuoteRecipient",
+    "QuoteStatus",
     "Tool",
     "ToolBrand",
     "ToolCategory",
