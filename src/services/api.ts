@@ -33,6 +33,12 @@ api.interceptors.request.use((config) => {
     config.headers['X-CSRF-Token'] = csrfMeta.getAttribute('content') || '';
   }
 
+  // Compatibilidad aditiva: si existe token legacy en localStorage, adjuntarlo.
+  const accessToken = localStorage.getItem('access_token');
+  if (accessToken && !config.headers?.Authorization) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+
   // Agregar User-Agent para tracking
   config.headers['User-Agent'] = `CirujanoFront/${import.meta.env.VITE_APP_VERSION as string || '1.0.0'}`;
 

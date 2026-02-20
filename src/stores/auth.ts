@@ -1,23 +1,53 @@
 /**
- * Store Pinia - auth.ts (TypeScript)
- * Gestiona el estado global de autenticación
- *
- * Uso en componentes:
- * import { useAuthStore } from '@/stores/auth'
- * const auth = useAuthStore()
- * auth.login(email, password)
+ * Store Pinia - auth.ts
+ * Capa TypeScript alineada con endpoints reales backend (/auth/*)
+ * sin romper el flujo legacy existente en JS.
  */
 
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { User } from '@/types/common';
-import type { AuthStoreState, AuthStoreActions, RegisterFormData } from '@/types/stores';
 import api from '@/services/api';
+
+type RegisterPayload = {
+  email: string;
+  username: string;
+  full_name: string;
+  password: string;
+  phone?: string | null;
+  turnstile_token?: string | null;
+};
+
+function buildAuthHeaders(token: string | null): Record<string, string> {
+  if (!token) {
+    return {};
+  }
+  return { Authorization: `Bearer ${token}` };
+}
+
+function toRegisterPayload(data: Record<string, any>): RegisterPayload {
+  const email = String(data?.email || '').trim();
+  const username = String(data?.username || '').trim() || (email.split('@')[0] || 'usuario');
+  const fullNameFromForm = String(data?.full_name || '').trim();
+  const composedFullName = `${String(data?.firstName || '').trim()} ${String(data?.lastName || '').trim()}`.trim();
+  const full_name = fullNameFromForm || composedFullName || username;
+
+  return {
+    email,
+    username,
+    full_name,
+    password: String(data?.password || ''),
+    phone: data?.phone || null,
+    turnstile_token: data?.turnstile_token || null,
+  };
+}
 
 export const useAuthStore = defineStore('auth', () => {
   // State
   const user = ref<User | null>(null);
-  const isAuthenticated = ref(false);
+  const token = ref<string | null>(localStorage.getItem('access_token'));
+  const refreshToken = ref<string | null>(localStorage.getItem('refresh_token'));
+  const isAuthenticated = ref<boolean>(!!token.value);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
   const requires2FA = ref(false);
@@ -27,48 +57,78 @@ export const useAuthStore = defineStore('auth', () => {
   const isAdmin = computed(() => user.value?.role === 'admin');
   const isTechnician = computed(() => user.value?.role === 'technician');
 
+  function setTokens(access: string | null, refresh: string | null): void {
+    token.value = access;
+    refreshToken.value = refresh;
+    if (access) {
+      localStorage.setItem('access_token', access);
+    } else {
+      localStorage.removeItem('access_token');
+    }
+    if (refresh) {
+      localStorage.setItem('refresh_token', refresh);
+    } else {
+      localStorage.removeItem('refresh_token');
+    }
+  }
+
+  function clearSession(): void {
+    setTokens(null, null);
+    user.value = null;
+    isAuthenticated.value = false;
+    error.value = null;
+    requires2FA.value = false;
+    twoFAChallengeId.value = null;
+  }
+
   /**
    * Inicializar auth desde sesión existente
    */
   async function checkAuth(): Promise<void> {
+    if (!token.value) {
+      clearSession();
+      return;
+    }
     try {
-      const response = await api.get('/users/me');
-      if (response.data.success) {
-        user.value = response.data.data;
-        isAuthenticated.value = true;
-        error.value = null;
-      }
-    } catch (err: any) {
-      isAuthenticated.value = false;
-      user.value = null;
+      await fetchUserInfo();
+    } catch {
+      clearSession();
     }
   }
 
   /**
    * Login
    */
-  async function login(email: string, password: string): Promise<void> {
+  async function login(email: string, password: string, turnstileToken?: string): Promise<{ requires_2fa?: boolean; challenge_id?: string | null }> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await api.post('/users/login', { email, password });
+      const response = await api.post('/auth/login', {
+        email,
+        password,
+        turnstile_token: turnstileToken || null,
+      });
+      const payload = response.data || {};
 
-      if (!response.data.success) {
-        throw new Error(response.data.error?.message || 'Login failed');
-      }
-
-      // Check 2FA
-      if (response.data.data?.requires_2fa) {
+      if (payload?.requires_2fa) {
         requires2FA.value = true;
-        twoFAChallengeId.value = response.data.data.challenge_id;
-        return;
+        twoFAChallengeId.value = String(payload.challenge_id || '');
+        isAuthenticated.value = false;
+        return { requires_2fa: true, challenge_id: twoFAChallengeId.value };
       }
 
-      user.value = response.data.data.user;
-      isAuthenticated.value = true;
+      if (!payload?.access_token || !payload?.refresh_token) {
+        throw new Error('Login failed');
+      }
+
+      setTokens(String(payload.access_token), String(payload.refresh_token));
+      requires2FA.value = false;
+      twoFAChallengeId.value = null;
+      await fetchUserInfo();
+      return {};
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Login failed';
+      error.value = err?.response?.data?.detail || 'Login failed';
       throw err;
     } finally {
       isLoading.value = false;
@@ -78,21 +138,17 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * Registrar
    */
-  async function register(data: RegisterFormData): Promise<void> {
+  async function register(data: Record<string, any>): Promise<void> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await api.post('/users/register', data);
-
-      if (!response.data.success) {
-        throw new Error(response.data.error?.message || 'Registration failed');
-      }
-
-      user.value = response.data.data.user;
-      isAuthenticated.value = true;
+      const payload = toRegisterPayload(data);
+      await api.post('/auth/register', payload);
+      // Register no inicia sesión en backend actual.
+      isAuthenticated.value = false;
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Registration failed';
+      error.value = err?.response?.data?.detail || 'Registration failed';
       throw err;
     } finally {
       isLoading.value = false;
@@ -102,8 +158,9 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * Verify 2FA
    */
-  async function verify2FA(code: string): Promise<void> {
-    if (!twoFAChallengeId.value) {
+  async function verifyTwoFactor(challengeId: string | null, code: string): Promise<void> {
+    const resolvedChallengeId = challengeId || twoFAChallengeId.value;
+    if (!resolvedChallengeId) {
       throw new Error('No 2FA challenge in progress');
     }
 
@@ -111,42 +168,49 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
 
     try {
-      const response = await api.post('/users/verify-2fa', {
-        challenge_id: twoFAChallengeId.value,
+      const response = await api.post('/auth/verify-2fa', {
+        challenge_id: resolvedChallengeId,
         code,
       });
+      const payload = response.data || {};
 
-      if (!response.data.success) {
-        throw new Error(response.data.error?.message || '2FA verification failed');
+      if (!payload?.access_token || !payload?.refresh_token) {
+        throw new Error('2FA verification failed');
       }
 
-      user.value = response.data.data.user;
-      isAuthenticated.value = true;
+      setTokens(String(payload.access_token), String(payload.refresh_token));
       requires2FA.value = false;
       twoFAChallengeId.value = null;
+      await fetchUserInfo();
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Invalid code';
+      error.value = err?.response?.data?.detail || 'Invalid code';
       throw err;
     } finally {
       isLoading.value = false;
     }
   }
 
+  // Alias aditivo para compatibilidad con nombre anterior.
+  async function verify2FA(code: string): Promise<void> {
+    await verifyTwoFactor(twoFAChallengeId.value, code);
+  }
+
   /**
    * Fetch user info
    */
   async function fetchUserInfo(): Promise<void> {
+    if (!token.value) {
+      clearSession();
+      return;
+    }
     try {
-      const response = await api.get('/users/me');
-
-      if (response.data.success) {
-        user.value = response.data.data;
-        isAuthenticated.value = true;
-      } else {
-        logout();
-      }
+      const response = await api.get('/auth/me', {
+        headers: buildAuthHeaders(token.value),
+      });
+      user.value = response.data as User;
+      isAuthenticated.value = true;
     } catch (err) {
-      logout();
+      clearSession();
       throw err;
     }
   }
@@ -155,17 +219,23 @@ export const useAuthStore = defineStore('auth', () => {
    * Refresh access token
    */
   async function refreshAccessToken(): Promise<boolean> {
-    try {
-      const response = await api.post('/users/refresh-token', {});
-
-      if (response.data.success) {
-        return true;
-      }
-
-      logout();
+    if (!refreshToken.value) {
+      clearSession();
       return false;
-    } catch (err) {
-      logout();
+    }
+    try {
+      const response = await api.post('/auth/refresh', {
+        refresh_token: refreshToken.value,
+      });
+      const payload = response.data || {};
+      if (!payload?.access_token || !payload?.refresh_token) {
+        clearSession();
+        return false;
+      }
+      setTokens(String(payload.access_token), String(payload.refresh_token));
+      return true;
+    } catch {
+      clearSession();
       return false;
     }
   }
@@ -175,15 +245,13 @@ export const useAuthStore = defineStore('auth', () => {
    */
   async function logout(): Promise<void> {
     try {
-      await api.post('/users/logout', {});
+      await api.post('/auth/logout', {}, {
+        headers: buildAuthHeaders(token.value),
+      });
     } catch (err) {
       console.error('Logout error:', err);
     } finally {
-      user.value = null;
-      isAuthenticated.value = false;
-      error.value = null;
-      requires2FA.value = false;
-      twoFAChallengeId.value = null;
+      clearSession();
     }
   }
 
@@ -193,15 +261,10 @@ export const useAuthStore = defineStore('auth', () => {
   async function requestPasswordReset(email: string): Promise<void> {
     isLoading.value = true;
     error.value = null;
-
     try {
-      const response = await api.post('/users/password-reset', { email });
-
-      if (!response.data.success) {
-        throw new Error(response.data.error?.message || 'Request failed');
-      }
+      await api.post('/auth/forgot-password', { email });
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Password reset request failed';
+      error.value = err?.response?.data?.detail || 'Password reset request failed';
       throw err;
     } finally {
       isLoading.value = false;
@@ -211,21 +274,16 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * Confirm password reset
    */
-  async function confirmPasswordReset(token: string, newPassword: string): Promise<void> {
+  async function confirmPasswordReset(tokenValue: string, newPassword: string): Promise<void> {
     isLoading.value = true;
     error.value = null;
-
     try {
-      const response = await api.post('/users/confirm-reset', {
-        token,
-        newPassword,
+      await api.post('/auth/reset-password', {
+        token: tokenValue,
+        new_password: newPassword,
       });
-
-      if (!response.data.success) {
-        throw new Error(response.data.error?.message || 'Confirmation failed');
-      }
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Password reset confirmation failed';
+      error.value = err?.response?.data?.detail || 'Password reset confirmation failed';
       throw err;
     } finally {
       isLoading.value = false;
@@ -233,35 +291,18 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   /**
-   * Delete account
+   * Delete account (placeholder de compatibilidad)
    */
   async function deleteAccount(password: string): Promise<void> {
-    isLoading.value = true;
-    error.value = null;
-
-    try {
-      const response = await api.delete('/users/me', {
-        data: { password },
-      });
-
-      if (!response.data.success) {
-        throw new Error(response.data.error?.message || 'Deletion failed');
-      }
-
-      await logout();
-    } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Account deletion failed';
-      throw err;
-    } finally {
-      isLoading.value = false;
-    }
+    void password;
+    throw new Error('deleteAccount endpoint not implemented in backend');
   }
 
   /**
    * Check if user has permission
    */
   function hasPermission(permission: string): boolean {
-    return user.value?.permissions.includes(permission) ?? false;
+    return user.value?.permissions?.includes(permission) ?? false;
   }
 
   /**
@@ -281,6 +322,8 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     // State
     user,
+    token,
+    refreshToken,
     isAuthenticated,
     isLoading,
     error,
@@ -295,6 +338,7 @@ export const useAuthStore = defineStore('auth', () => {
     checkAuth,
     login,
     register,
+    verifyTwoFactor,
     verify2FA,
     fetchUserInfo,
     refreshAccessToken,
