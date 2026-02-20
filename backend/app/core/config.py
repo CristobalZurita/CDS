@@ -27,6 +27,10 @@ def _load_dotenv_for_env() -> None:
 
 _load_dotenv_for_env()
 
+_ENVIRONMENT_NAME = os.getenv("ENVIRONMENT", "development").lower()
+_IS_TEST_ENV = _ENVIRONMENT_NAME in ("test", "testing")
+_IS_PROD_ENV = _ENVIRONMENT_NAME in ("production", "prod")
+
 
 class Settings(BaseModel):
     """Application settings"""
@@ -50,9 +54,19 @@ class Settings(BaseModel):
     allow_token_in_response: bool = os.getenv("ALLOW_TOKEN_IN_RESPONSE", "false").lower() == "true"
     enable_api_docs: bool = os.getenv("ENABLE_API_DOCS", "false").lower() == "true"
     enable_public_uploads: bool = os.getenv("ENABLE_PUBLIC_UPLOADS", "false").lower() == "true"
-    enable_instrument_auto_sync: bool = os.getenv("ENABLE_INSTRUMENT_AUTO_SYNC", "true").lower() == "true"
-    instrument_sync_on_startup: bool = os.getenv("INSTRUMENT_SYNC_ON_STARTUP", "true").lower() == "true"
+    enable_instrument_auto_sync: bool = os.getenv(
+        "ENABLE_INSTRUMENT_AUTO_SYNC",
+        "false" if _IS_TEST_ENV else "true",
+    ).lower() == "true"
+    instrument_sync_on_startup: bool = os.getenv(
+        "INSTRUMENT_SYNC_ON_STARTUP",
+        "false" if _IS_TEST_ENV else "true",
+    ).lower() == "true"
     instrument_sync_interval_minutes: int = int(os.getenv("INSTRUMENT_SYNC_INTERVAL_MINUTES", "360"))
+    enforce_csrf: bool = os.getenv(
+        "ENFORCE_CSRF",
+        "true" if _IS_PROD_ENV else "false",
+    ).lower() == "true"
 
     # CORS Configuration
     # ALLOWED_ORIGINS or CORS_ORIGINS can be provided as a comma-separated env var

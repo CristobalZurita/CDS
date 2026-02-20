@@ -1,7 +1,7 @@
 """add instrument template fields and instrument_photos table
 
 Revision ID: 006_add_instrument_templates_photos
-Revises: 005_add_2fa_and_photo_requests
+Revises: 005_aditivo
 Create Date: 2026-01-29
 """
 
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 revision = "006_add_instrument_templates_photos"
-down_revision = "005_add_2fa_and_photo_requests"
+down_revision = "005_aditivo"
 branch_labels = None
 depends_on = None
 

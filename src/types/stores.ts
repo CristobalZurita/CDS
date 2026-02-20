@@ -16,6 +16,8 @@ import type {
  */
 export interface AuthStoreState {
   user: User | null;
+  token: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
@@ -24,12 +26,13 @@ export interface AuthStoreState {
 }
 
 export interface AuthStoreActions {
-  login(email: string, password: string): Promise<void>;
-  register(data: RegisterFormData): Promise<void>;
+  login(email: string, password: string, turnstileToken?: string): Promise<{ requires_2fa?: boolean; challenge_id?: string | null }>;
+  register(data: Record<string, any>): Promise<void>;
   logout(): Promise<void>;
   fetchUserInfo(): Promise<void>;
   checkAuth(): Promise<void>;
   verify2FA(code: string): Promise<void>;
+  verifyTwoFactor(challengeId: string | null, code: string): Promise<void>;
   setError(error: string): void;
 }
 
