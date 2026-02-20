@@ -24,6 +24,7 @@ class PurchaseRequest(Base):
     repair = relationship("Repair")
     creator = relationship("User", foreign_keys=[created_by])
     items = relationship("PurchaseRequestItem", back_populates="request", cascade="all, delete-orphan")
+    payments = relationship("Payment", back_populates="purchase_request")
 
 
 class PurchaseRequestItem(Base):

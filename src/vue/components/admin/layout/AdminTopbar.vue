@@ -79,6 +79,10 @@ const goToResult = (item) => {
     router.push(`/admin/repairs/${item.repair_id || item.id}`)
     return
   }
+  if (item.type === 'quote') {
+    router.push(`/admin/quotes?quote_id=${item.quote_id || item.id}`)
+    return
+  }
   if (item.type === 'inventory') {
     router.push(`/admin/inventory?edit=${item.product_id || item.id}`)
     return

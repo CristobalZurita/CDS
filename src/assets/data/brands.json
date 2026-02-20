@@ -6,7 +6,13 @@
       "tier": "professional",
       "founded": 1992,
       "country": "Germany",
-      "description": "Virus - sintetizador digital líder"
+      "description": "Virus - sintetizador digital líder",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "akai",
@@ -14,7 +20,13 @@
       "tier": "standard",
       "founded": 1929,
       "country": "Japan",
-      "description": "APC, MPC - Controladores"
+      "description": "APC, MPC - Controladores",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "alesis",
@@ -22,7 +34,13 @@
       "tier": "standard",
       "founded": 1980,
       "country": "USA",
-      "description": "Micron, Ion, controladores MIDI"
+      "description": "Micron, Ion, controladores MIDI",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "arturia",
@@ -30,7 +48,13 @@
       "tier": "standard",
       "founded": 2007,
       "country": "France",
-      "description": "Minibrute, Microbrute, MiniBrute 3"
+      "description": "Minibrute, Microbrute, MiniBrute 3",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_ARTURIA.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_ARTURIA.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_ARTURIA.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "behringer",
@@ -38,7 +62,13 @@
       "tier": "standard",
       "founded": 1989,
       "country": "Germany",
-      "description": "Modelo, Crave, UB-Xa"
+      "description": "Modelo, Crave, UB-Xa",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_BEHERINGER.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_BEHERINGER.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_BEHERINGER.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "casio",
@@ -46,7 +76,13 @@
       "tier": "standard",
       "founded": 1957,
       "country": "Japan",
-      "description": "VZ-1, MT-65"
+      "description": "VZ-1, MT-65",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "kawai",
@@ -54,7 +90,13 @@
       "tier": "established",
       "founded": 1927,
       "country": "Japan",
-      "description": "Teclados, pianos digitales y sintetizadores japoneses"
+      "description": "Teclados, pianos digitales y sintetizadores japoneses",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "korg",
@@ -62,7 +104,13 @@
       "tier": "professional",
       "founded": 1963,
       "country": "Japan",
-      "description": "Minimoog, Monotron, Volca"
+      "description": "Minimoog, Monotron, Volca",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "novation",
@@ -70,7 +118,13 @@
       "tier": "standard",
       "founded": 1987,
       "country": "UK",
-      "description": "Bass Station, Supernova"
+      "description": "Bass Station, Supernova",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_NOVATION.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_NOVATION.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_NOVATION.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "roland",
@@ -78,7 +132,13 @@
       "tier": "professional",
       "founded": 1972,
       "country": "Japan",
-      "description": "TR-808, TR-909, Juno, Jupiter"
+      "description": "TR-808, TR-909, Juno, Jupiter",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+        "status": "loaded"
+      }
     },
     {
       "id": "yamaha",
@@ -86,7 +146,13 @@
       "tier": "professional",
       "founded": 1887,
       "country": "Japan",
-      "description": "DX7, CS, VL-Tone"
+      "description": "DX7, CS, VL-Tone",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+        "status": "loaded"
+      }
     }
   ]
 }

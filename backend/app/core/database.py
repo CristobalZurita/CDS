@@ -155,6 +155,27 @@ def _ensure_repairs_ot_schema() -> None:
                 )
             )
 
+
+def _ensure_payments_purchase_request_schema() -> None:
+    """
+    Ajuste aditivo para asociar pagos con solicitudes de compra OT.
+    Compatible con DBs existentes sin migraciones.
+    """
+    inspector = inspect(engine)
+    if "payments" not in inspector.get_table_names():
+        return
+
+    current_columns = {column["name"] for column in inspector.get_columns("payments")}
+    with engine.begin() as conn:
+        if "purchase_request_id" not in current_columns:
+            conn.execute(text("ALTER TABLE payments ADD COLUMN purchase_request_id INTEGER"))
+
+    inspector = inspect(engine)
+    existing_indexes = {index["name"] for index in inspector.get_indexes("payments")}
+    with engine.begin() as conn:
+        if "ix_payments_purchase_request_id" not in existing_indexes:
+            conn.execute(text("CREATE INDEX ix_payments_purchase_request_id ON payments (purchase_request_id)"))
+
 def get_db():
     """
     Dependency to get database session
@@ -179,6 +200,7 @@ async def init_db():
         # Create all tables from models (sync operation)
         Base.metadata.create_all(bind=engine)
         _ensure_repairs_ot_schema()
+        _ensure_payments_purchase_request_schema()
         logger.info("✓ Database tables created successfully")
     except Exception as e:
         logger.error(f"✗ Error creating database tables: {e}")

@@ -15,6 +15,7 @@ const LoginPage = () => import('@/vue/content/pages/LoginPage.vue')
 const RegisterPage = () => import('@/vue/content/pages/RegisterPage.vue')
 const PasswordResetPage = () => import('@/vue/content/pages/PasswordResetPage.vue')
 const DashboardPage = () => import('@/vue/content/pages/DashboardPage.vue')
+const OtPaymentsPage = () => import('@/vue/content/pages/OtPaymentsPage.vue')
 const RepairsPage = () => import('@/vue/content/pages/RepairsPage.vue')
 const RepairDetailPage = () => import('@/vue/content/pages/RepairDetailPage.vue')
 const ProfilePage = () => import('@/vue/content/pages/ProfilePage.vue')
@@ -32,6 +33,7 @@ const InventoryPage = () => import('@/vue/content/pages/admin/InventoryPage.vue'
 const InventoryUnified = () => import('@/views/InventoryUnified.vue')
 const ClientsPage = () => import('@/vue/content/pages/admin/ClientsPage.vue')
 const RepairsAdminPage = () => import('@/vue/content/pages/admin/RepairsAdminPage.vue')
+const QuotesAdminPage = () => import('@/vue/content/pages/admin/QuotesAdminPage.vue')
 const CategoriesPage = () => import('@/vue/content/pages/admin/CategoriesPage.vue')
 const ContactMessagesPage = () => import('@/vue/content/pages/admin/ContactMessagesPage.vue')
 const NewsletterSubscriptionsPage = () => import('@/vue/content/pages/admin/NewsletterSubscriptionsPage.vue')
@@ -125,6 +127,12 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/ot-payments',
+    name: 'ot-payments',
+    component: OtPaymentsPage,
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/repairs',
     name: 'repairs',
     component: RepairsPage,
@@ -173,6 +181,11 @@ const routes: RouteRecordRaw[] = [
         path: 'repairs',
         name: 'admin-repairs',
         component: RepairsAdminPage
+      },
+      {
+        path: 'quotes',
+        name: 'admin-quotes',
+        component: QuotesAdminPage
       },
       {
         path: 'repairs/:id',

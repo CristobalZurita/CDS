@@ -162,6 +162,7 @@ class PaymentCreate(BaseModel):
     payment_method: str
     transaction_id: Optional[str] = None
     user_id: Optional[int] = None
+    purchase_request_id: Optional[int] = None
     status: Optional[str] = None
     notes: Optional[str] = None
 
@@ -178,6 +179,7 @@ class PaymentRead(BaseModel):
     id: int
     user_id: Optional[int]
     repair_id: Optional[int]
+    purchase_request_id: Optional[int]
     amount: int
     payment_method: str
     transaction_id: Optional[str]

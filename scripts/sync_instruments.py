@@ -447,12 +447,27 @@ class InstrumentSyncer:
         previous_map = {str(b.get("id")): b for b in previous_brands if b.get("id")}
 
         enabled_brands = canonical_data.get("marcas_habilitadas", []) or []
+        canonical_instruments = canonical_data.get("instruments", []) or []
+        logo_by_brand: Dict[str, str] = {}
+        for inst in canonical_instruments:
+            marca = str(inst.get("marca") or "").strip().upper()
+            logo_url = inst.get("marca_logo_url")
+            if marca and logo_url and marca not in logo_by_brand:
+                logo_by_brand[marca] = str(logo_url)
         result = []
 
         for marca in sorted(enabled_brands):
             brand_id = self._to_brand_id(marca)
             previous = previous_map.get(brand_id, {})
             fallback_name = BRAND_NAME_OVERRIDES.get(brand_id) or str(marca).replace("_", " ").title()
+            current_logo_url = logo_by_brand.get(str(marca).upper())
+            previous_logo = previous.get("logo") if isinstance(previous.get("logo"), dict) else {}
+            merged_logo_url = (
+                previous_logo.get("url")
+                or previous.get("logo_url")
+                or current_logo_url
+            )
+            logo_status = "loaded" if merged_logo_url else "missing"
 
             merged = {
                 "id": brand_id,
@@ -461,6 +476,12 @@ class InstrumentSyncer:
                 "founded": previous.get("founded"),
                 "country": previous.get("country"),
                 "description": previous.get("description") or f"Marca habilitada por logo disponible ({marca})",
+                "logo_url": merged_logo_url,
+                "logo": {
+                    "url": merged_logo_url,
+                    "path": merged_logo_url,
+                    "status": previous_logo.get("status") or logo_status,
+                },
             }
             result.append(merged)
 

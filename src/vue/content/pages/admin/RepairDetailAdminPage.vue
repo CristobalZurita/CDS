@@ -209,6 +209,12 @@
 				<button class="btn btn-outline-primary" @click="notifyClient">
 					<i class="fa-solid fa-paper-plane me-1"></i> Enviar al cliente
 				</button>
+				<router-link
+					:to="{ name: 'admin-purchase-requests', query: { repair_id: repairId } }"
+					class="btn btn-outline-info"
+				>
+					<i class="fa-solid fa-cart-shopping me-1"></i> Compras OT
+				</router-link>
 				<button
 					class="btn btn-outline-warning"
 					:disabled="isArchived"

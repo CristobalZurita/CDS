@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint src tests --ext .js,.ts,.vue",
     "test": "vitest --environment jsdom",
+    "test:integration": "vitest run tests/integration --environment jsdom",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --environment jsdom --coverage",
     "build:email:styles": "sass src/scss/email.scss backend/app/static/email.css --no-source-map --style=expanded",
