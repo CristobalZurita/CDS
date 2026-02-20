@@ -24,6 +24,7 @@ from app.services.ot_code_service import (
     next_group_suffix,
     parent_belongs_to_client,
 )
+from app.services.repair_service import RepairService
 
 
 class RepairWriteService:
@@ -188,3 +189,40 @@ class RepairWriteService:
             ) from exc
 
         return db_repair
+
+    def update_repair(
+        self,
+        repair_id: int,
+        payload: Dict,
+        user_id: int | None = None,
+    ) -> tuple[Repair, list[str]]:
+        """
+        Actualiza una OT/reparación manteniendo comportamiento existente del router.
+        Retorna (repair_actualizada, campos_actualizados_sin_status).
+        """
+        db_repair = self.repo.get_by_id(repair_id)
+        if not db_repair:
+            raise HTTPException(status_code=404, detail="Repair not found")
+
+        patch = dict(payload or {})
+        svc = RepairService(self.db)
+
+        new_status_id = patch.get("status_id")
+        if new_status_id is not None and new_status_id != db_repair.status_id:
+            db_repair = svc.update_status(
+                repair_id=repair_id,
+                new_status_id=new_status_id,
+                user_id=user_id,
+                notes=patch.get("status_notes"),
+            )
+            patch = {k: v for k, v in patch.items() if k not in ("status_id", "status_notes")}
+
+        updated_fields: list[str] = []
+        if patch:
+            for key, value in patch.items():
+                setattr(db_repair, key, value)
+            self.db.commit()
+            self.db.refresh(db_repair)
+            updated_fields = list(patch.keys())
+
+        return db_repair, updated_fields
