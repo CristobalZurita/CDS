@@ -176,7 +176,7 @@ def _ensure_payments_purchase_request_schema() -> None:
         if "ix_payments_purchase_request_id" not in existing_indexes:
             conn.execute(text("CREATE INDEX ix_payments_purchase_request_id ON payments (purchase_request_id)"))
 
-def get_db():
+async def get_db():
     """
     Dependency to get database session
     Usage: from fastapi import Depends

@@ -72,11 +72,14 @@ def _rebind_session(db_url: str):
 
 
 def _ensure_schema(db_url: str):
-    from app.core.database import Base
+    from app.core.database import Base, _ensure_payments_purchase_request_schema, _ensure_repairs_ot_schema
     from app import models  # noqa: F401
 
     engine = _rebind_session(db_url)
     Base.metadata.create_all(bind=engine)
+    # Ajuste aditivo para DBs de test legacy que ya existían sin columnas OT/pagos.
+    _ensure_repairs_ot_schema()
+    _ensure_payments_purchase_request_schema()
     return engine
 
 
