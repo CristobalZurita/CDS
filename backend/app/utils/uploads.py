@@ -15,6 +15,20 @@ def allowed_extension(filename: str) -> bool:
     return ext in ALLOWED_EXTENSIONS
 
 
+def _matches_image_signature(filename: str, content: bytes) -> bool:
+    sig = content[:12]
+    lower_name = str(filename or "").lower()
+    if lower_name.endswith(".png") and sig.startswith(b"\x89PNG\r\n\x1a\n"):
+        return True
+    if lower_name.endswith((".jpg", ".jpeg")) and sig.startswith(b"\xff\xd8\xff"):
+        return True
+    if lower_name.endswith(".gif") and (sig.startswith(b"GIF87a") or sig.startswith(b"GIF89a")):
+        return True
+    if lower_name.endswith(".webp") and sig[0:4] == b"RIFF" and sig[8:12] == b"WEBP":
+        return True
+    return False
+
+
 async def validate_image(file: UploadFile) -> None:
     # Check extension
     if not allowed_extension(file.filename):
@@ -24,6 +38,8 @@ async def validate_image(file: UploadFile) -> None:
     size = 0
     content = await file.read()
     size = len(content)
+    if size <= 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Empty image file")
     if size > MAX_IMAGE_SIZE:
         raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Image too large")
 
@@ -32,23 +48,16 @@ async def validate_image(file: UploadFile) -> None:
         img = Image.open(BytesIO(content))
         img.verify()
     except UnidentifiedImageError:
-        # Pillow couldn't verify the image; as a fallback, allow uploads that contain
-        # a valid image magic signature (useful for minimal or streaming uploads in tests)
-        sig = content[:12]
-        if file.filename.lower().endswith(".png") and sig.startswith(b"\x89PNG\r\n\x1a\n"):
-            await file.seek(0)
-            return
-        if file.filename.lower().endswith(('.jpg', '.jpeg')) and sig.startswith(b"\xff\xd8\xff"):
-            await file.seek(0)
-            return
-        if file.filename.lower().endswith('.gif') and (sig.startswith(b'GIF87a') or sig.startswith(b'GIF89a')):
-            await file.seek(0)
-            return
-        if file.filename.lower().endswith('.webp') and sig[0:4] == b'RIFF' and sig[8:12] == b'WEBP':
+        # Pillow couldn't verify the image; fallback to signature validation.
+        if _matches_image_signature(file.filename, content):
             await file.seek(0)
             return
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded file is not a valid image")
     except Exception:
+        # Some valid small/borderline files may trigger generic parser errors.
+        if _matches_image_signature(file.filename, content):
+            await file.seek(0)
+            return
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid image file")
 
     # reset the file pointer for further processing

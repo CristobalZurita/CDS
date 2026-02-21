@@ -217,7 +217,9 @@ except Exception as e:
 
 # Serve uploaded files only in non-production or when explicitly enabled
 if (settings.environment.lower() in ("development", "dev", "testing", "test")) or settings.enable_public_uploads:
-    app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+    uploads_dir = Path("uploads")
+    uploads_dir.mkdir(parents=True, exist_ok=True)
+    app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
 
 # Static assets for backend-rendered/email templates
 backend_static_dir = Path(__file__).resolve().parent / "static"

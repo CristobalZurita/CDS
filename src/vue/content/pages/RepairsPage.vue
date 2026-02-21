@@ -20,10 +20,10 @@
           <label>Filtrar por estado:</label>
           <select v-model="selectedStatus" class="filter-select">
             <option value="">Todos</option>
-            <option value="completed">Completadas</option>
+            <option value="pending_quote">Ingreso / Diagnóstico</option>
             <option value="in_progress">En Proceso</option>
-            <option value="waiting_parts">En Espera</option>
-            <option value="cancelled">Canceladas</option>
+            <option value="completed">Completadas / Entregadas</option>
+            <option value="cancelled">Rechazadas</option>
           </select>
         </div>
       </div>
@@ -40,8 +40,8 @@
               <h3>{{ repair.instrument }}</h3>
               <p class="repair-ticket">Ticket: {{ repair.id }}</p>
             </div>
-            <div class="repair-status" :class="repair.status">
-              {{ getStatusLabel(repair.status) }}
+            <div class="repair-status" :class="repair.status_normalized">
+              {{ getStatusLabel(repair.status_normalized || repair.status) }}
             </div>
           </div>
 
@@ -64,7 +64,7 @@
             </div>
           </div>
 
-          <div v-if="repair.status === 'in-progress'" class="repair-progress">
+          <div v-if="shouldShowProgress(repair)" class="repair-progress">
             <div class="progress-bar">
               <div class="progress-fill" :class="getProgressClass(repair.progress)"></div>
             </div>
@@ -96,30 +96,41 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '@/services/api'
 import { showError } from '@/services/toastService'
+import {
+  getRepairProgressByStatus,
+  getRepairStatusBucket,
+  getRepairStatusLabel,
+  isActiveRepairStatus,
+  normalizeRepairStatus
+} from '@/utils/repairStatus'
 
 const router = useRouter()
 const selectedStatus = ref('')
 const repairs = ref([])
 const isLoading = ref(false)
 
+const decoratedRepairs = computed(() => {
+  return (repairs.value || []).map((repair) => {
+    const normalizedStatus = normalizeRepairStatus(repair.status_normalized || repair.status)
+    const fallbackProgress = getRepairProgressByStatus(normalizedStatus)
+    return {
+      ...repair,
+      status_normalized: normalizedStatus,
+      status_bucket: getRepairStatusBucket(normalizedStatus),
+      progress: Number.isFinite(Number(repair.progress))
+        ? Number(repair.progress)
+        : fallbackProgress
+    }
+  })
+})
+
 const filteredRepairs = computed(() => {
-  if (!selectedStatus.value) return repairs.value
-  return repairs.value.filter(r => r.status === selectedStatus.value)
+  if (!selectedStatus.value) return decoratedRepairs.value
+  return decoratedRepairs.value.filter(r => r.status_bucket === selectedStatus.value)
 })
 
 const getStatusLabel = (status) => {
-  const labels = {
-    pending_quote: '⏳ Pendiente',
-    quoted: '💬 Cotizado',
-    approved: '✅ Aprobado',
-    in_progress: '🔧 En Proceso',
-    waiting_parts: '⌛ En Espera',
-    testing: '🧪 En Pruebas',
-    completed: '✓ Completada',
-    delivered: '📦 Entregado',
-    cancelled: '✕ Cancelada'
-  }
-  return labels[status] || status
+  return getRepairStatusLabel(status)
 }
 
 const formatDate = (date) => {
@@ -141,6 +152,10 @@ const formatPrice = (price) => {
 
 const viewRepair = (repair) => {
   router.push(`/repairs/${repair.id}`)
+}
+
+const shouldShowProgress = (repair) => {
+  return isActiveRepairStatus(repair?.status_normalized || repair?.status)
 }
 
 const getProgressClass = (progress) => {
@@ -327,6 +342,32 @@ onMounted(() => {
 .repair-status.in_progress {
   background: $color-blue-150-legacy;
   color: $color-blue-800-legacy;
+}
+
+.repair-status.ingreso,
+.repair-status.diagnostico,
+.repair-status.presupuesto,
+.repair-status.aprobado {
+  background: $color-orange-100-legacy;
+  color: $color-amber-800-legacy;
+}
+
+.repair-status.en_trabajo,
+.repair-status.listo {
+  background: $color-blue-150-legacy;
+  color: $color-blue-800-legacy;
+}
+
+.repair-status.entregado,
+.repair-status.noventena,
+.repair-status.archivado {
+  background: $color-green-200-legacy;
+  color: $color-green-darker-legacy;
+}
+
+.repair-status.rechazado {
+  background: $color-red-200-legacy;
+  color: $color-red-900-legacy;
 }
 
 .repair-status.pending_quote,
