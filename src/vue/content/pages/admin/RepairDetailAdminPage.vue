@@ -382,7 +382,7 @@ const requestSignature = async (type) => {
 		const res = await api.post('/signatures/requests', {
 			repair_id: Number(repairId),
 			request_type: type,
-			expires_minutes: 30
+			expires_minutes: 5
 		})
 		const token = res.data?.token || res.token
 		if (token) {
@@ -397,7 +397,7 @@ const requestPhotoUpload = async () => {
 	photoUploadLink.value = ''
 	try {
 		const res = await api.post('/photo-requests/', null, {
-			params: { repair_id: Number(repairId), photo_type: 'client', expires_minutes: 60 }
+			params: { repair_id: Number(repairId), photo_type: 'client', expires_minutes: 10 }
 		})
 		const token = res.data?.token || res.token
 		if (token) {

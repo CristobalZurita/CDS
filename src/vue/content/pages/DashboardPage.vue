@@ -77,8 +77,8 @@
                   <h3>{{ repair.instrument }}</h3>
                   <p class="repair-id">Ticket: {{ repair.id }}</p>
                 </div>
-                <div class="repair-status" :class="repair.status">
-                  {{ getStatusLabel(repair.status) }}
+                <div class="repair-status" :class="getStatusClass(repair.status_normalized || repair.status)">
+                  {{ getStatusLabel(repair.status_normalized || repair.status) }}
                 </div>
               </div>
 
@@ -196,6 +196,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { api } from '@/services/api'
 import { showError } from '@/services/toastService'
+import { getRepairStatusLabel, normalizeRepairStatus } from '@/utils/repairStatus'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -220,18 +221,11 @@ const pendingOtPayments = computed(() => stats.value.pending_ot_payments || 0)
 
 // Methods
 const getStatusLabel = (status) => {
-  const labels = {
-    pending_quote: '⏳ Pendiente',
-    quoted: '💬 Cotizado',
-    approved: '✅ Aprobado',
-    in_progress: '🔧 En Proceso',
-    waiting_parts: '⌛ En Espera',
-    testing: '🧪 En Pruebas',
-    completed: '✓ Completada',
-    delivered: '📦 Entregado',
-    cancelled: '✕ Cancelada'
-  }
-  return labels[status] || status
+  return getRepairStatusLabel(status)
+}
+
+const getStatusClass = (status) => {
+  return normalizeRepairStatus(status)
 }
 
 const getNotificationIcon = (type) => {
@@ -508,6 +502,32 @@ onMounted(() => {
 .repair-status.in-progress,
 .repair-status.in_progress {
   background: rgba($color-primary, 0.2);
+  color: $text-color;
+}
+
+.repair-status.ingreso,
+.repair-status.diagnostico,
+.repair-status.presupuesto,
+.repair-status.aprobado {
+  background: rgba($color-primary-light, 0.25);
+  color: $text-color;
+}
+
+.repair-status.en_trabajo,
+.repair-status.listo {
+  background: rgba($color-primary, 0.2);
+  color: $text-color;
+}
+
+.repair-status.entregado,
+.repair-status.noventena,
+.repair-status.archivado {
+  background: rgba($color-success, 0.18);
+  color: $text-color;
+}
+
+.repair-status.rechazado {
+  background: rgba($color-danger, 0.18);
   color: $text-color;
 }
 

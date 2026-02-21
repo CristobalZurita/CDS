@@ -28,7 +28,7 @@
           </div>
           <div>
             <label>Expira (min)</label>
-            <input v-model.number="form.expires_minutes" type="number" min="5" class="form-control" />
+            <input v-model.number="form.expires_minutes" type="number" min="1" max="5" class="form-control" />
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@ const result = ref(null)
 const form = ref({
   repair_id: null,
   request_type: 'ingreso',
-  expires_minutes: 15
+  expires_minutes: 5
 })
 
 const canContinue = computed(() => {

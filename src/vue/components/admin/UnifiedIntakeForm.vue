@@ -609,11 +609,11 @@ const validate = () => {
 
 const submit = async () => {
   errorMessage.value = ''
-  const defaultsApplied = applyDefaults()
   if (!validate()) {
     errorMessage.value = 'Completa todos los campos obligatorios.'
     return
   }
+  const defaultsApplied = applyDefaults()
 
   saving.value = true
   try {

@@ -26,6 +26,34 @@ from app.services.pdf_generator import generate_repair_closure_pdf_bytes
 router = APIRouter(prefix="/client", tags=["client"])
 
 
+_STATUS_ALIASES = {
+    # Legacy/UI english-like aliases
+    "pending": "ingreso",
+    "pending_quote": "ingreso",
+    "quoted": "presupuesto",
+    "approved": "aprobado",
+    "in_progress": "en_trabajo",
+    "in-progress": "en_trabajo",
+    "waiting_parts": "en_trabajo",
+    "waiting": "en_trabajo",
+    "testing": "listo",
+    "completed": "entregado",
+    "delivered": "entregado",
+    "cancelled": "rechazado",
+    # Domain canonical (already normalized)
+    "ingreso": "ingreso",
+    "diagnostico": "diagnostico",
+    "presupuesto": "presupuesto",
+    "aprobado": "aprobado",
+    "en_trabajo": "en_trabajo",
+    "listo": "listo",
+    "entregado": "entregado",
+    "noventena": "noventena",
+    "archivado": "archivado",
+    "rechazado": "rechazado",
+}
+
+
 def _split_full_name(full_name: str) -> tuple[str | None, str | None]:
     parts = (full_name or "").strip().split()
     if not parts:
@@ -55,27 +83,40 @@ def _status_code(repair: Repair) -> str:
     if repair.status_obj and repair.status_obj.code:
         return repair.status_obj.code
     fallback = {
-        1: "pending",
-        2: "in_progress",
-        3: "completed",
-        4: "delivered",
+        1: "ingreso",
+        2: "diagnostico",
+        3: "presupuesto",
+        4: "aprobado",
+        5: "en_trabajo",
+        6: "listo",
+        7: "entregado",
+        8: "noventena",
+        9: "archivado",
+        10: "rechazado",
     }
-    return fallback.get(repair.status_id, "pending")
+    return fallback.get(repair.status_id, "ingreso")
+
+
+def _normalize_status_code(code: str | None) -> str:
+    value = str(code or "").strip().lower()
+    return _STATUS_ALIASES.get(value, value or "ingreso")
 
 
 def _status_progress(code: str) -> int:
+    normalized = _normalize_status_code(code)
     mapping = {
-        "pending_quote": 10,
-        "quoted": 20,
-        "approved": 30,
-        "in_progress": 60,
-        "waiting_parts": 35,
-        "testing": 80,
-        "completed": 100,
-        "delivered": 100,
-        "cancelled": 0,
+        "ingreso": 10,
+        "diagnostico": 20,
+        "presupuesto": 30,
+        "aprobado": 40,
+        "en_trabajo": 60,
+        "listo": 80,
+        "entregado": 100,
+        "noventena": 100,
+        "archivado": 100,
+        "rechazado": 0,
     }
-    return mapping.get(code, 10)
+    return mapping.get(normalized, 10)
 
 
 def _device_label(db: Session, device: Device) -> str:
@@ -187,9 +228,9 @@ def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(require_pe
         .all()
     )
 
-    pending_codes = {"pending_quote", "quoted", "approved"}
-    active_codes = {"in_progress", "waiting_parts", "testing"}
-    completed_codes = {"completed", "delivered"}
+    pending_codes = {"ingreso", "diagnostico", "presupuesto"}
+    active_codes = {"aprobado", "en_trabajo", "listo"}
+    completed_codes = {"entregado", "noventena", "archivado"}
 
     pending_repairs = 0
     active_repairs = 0
@@ -200,27 +241,29 @@ def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(require_pe
 
     for repair in repairs:
         repair_ids.append(int(repair.id))
-        code = _status_code(repair)
-        if code in pending_codes:
+        raw_code = _status_code(repair)
+        normalized_code = _normalize_status_code(raw_code)
+        if normalized_code in pending_codes:
             pending_repairs += 1
-        elif code in active_codes:
+        elif normalized_code in active_codes:
             active_repairs += 1
-        elif code in completed_codes:
+        elif normalized_code in completed_codes:
             completed_repairs += 1
 
-        if code in completed_codes and repair.total_cost:
+        if normalized_code in completed_codes and repair.total_cost:
             total_spent += repair.total_cost
 
-        if code in active_codes:
+        if normalized_code in active_codes:
             active_list.append({
                 "id": repair.id,
                 "repair_number": repair.repair_number,
                 "instrument": _device_label(db, repair.device),
                 "fault": repair.problem_reported,
-                "status": code,
+                "status": raw_code,
+                "status_normalized": normalized_code,
                 "date_in": repair.intake_date,
                 "estimated_completion": repair.completion_date,
-                "progress": _status_progress(code),
+                "progress": _status_progress(normalized_code),
             })
 
     open_payment_statuses = {"requested", "pending_payment", "proof_submitted"}
@@ -306,17 +349,19 @@ def list_client_repairs(db: Session = Depends(get_db), user: dict = Depends(requ
 
     payload = []
     for repair in repairs:
-        code = _status_code(repair)
+        raw_code = _status_code(repair)
+        normalized_code = _normalize_status_code(raw_code)
         payload.append({
             "id": repair.id,
             "repair_number": repair.repair_number,
             "instrument": _device_label(db, repair.device),
             "fault": repair.problem_reported,
-            "status": code,
+            "status": raw_code,
+            "status_normalized": normalized_code,
             "date_in": repair.intake_date,
             "date_out": repair.delivery_date or repair.completion_date,
             "cost": repair.total_cost,
-            "progress": _status_progress(code),
+            "progress": _status_progress(normalized_code),
         })
 
     return payload
@@ -342,6 +387,7 @@ def get_repair_timeline(repair_id: int, db: Session = Depends(get_db), user: dic
         "repair_id": repair.id,
         "repair_number": repair.repair_number,
         "status": _status_code(repair),
+        "status_normalized": _normalize_status_code(_status_code(repair)),
         "timeline": _timeline_from_repair(repair),
     }
 
@@ -381,6 +427,7 @@ def get_repair_details(repair_id: int, db: Session = Depends(get_db), user: dict
             "repair_number": repair.repair_number,
             "instrument": _device_label(db, repair.device),
             "status": _status_code(repair),
+            "status_normalized": _normalize_status_code(_status_code(repair)),
             "problem_reported": repair.problem_reported,
             "diagnosis": repair.diagnosis,
             "work_performed": repair.work_performed,
