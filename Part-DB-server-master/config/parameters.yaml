@@ -1,0 +1,112 @@
+# Here you can configure the global behavior of Part-DB
+
+parameters:
+
+  ######################################################################################################################
+  # Common
+  ######################################################################################################################
+
+  # This is used as workaround for places where we can not access the settings directly (like the 2FA application names)
+  partdb.title: '%env(string:settings:customization:instanceName)%'  # The title shown inside of Part-DB (e.g. in the navbar and on homepage)
+  partdb.locale_menu: ['en', 'de', 'it', 'fr', 'ru', 'ja', 'cs', 'da', 'zh', 'pl', 'hu']    # The languages that are shown in user drop down menu
+
+  partdb.default_uri: '%env(addSlash:string:DEFAULT_URI)%'             # The default URI to use for the Part-DB instance (e.g. https://part-db.example.com/). This is used for generating links in emails
+
+  partdb.db.emulate_natural_sort: '%env(bool:DATABASE_EMULATE_NATURAL_SORT)%' # If this is set to true, natural sorting is emulated on platforms that do not support it natively. This can be slow on large datasets.
+
+  ######################################################################################################################
+  # Users and Privacy
+  ######################################################################################################################
+  partdb.gdpr_compliance: true                                  # If this option is activated, IP addresses are anonymized to be GDPR compliant
+  partdb.users.email_pw_reset: '%env(bool:ALLOW_EMAIL_PW_RESET)%' # Config if users are able, to reset their password by email. By default this enabled, when a mail server is configured.
+
+  ######################################################################################################################
+  # Mail settings
+  ######################################################################################################################
+  partdb.mail.sender_email: '%env(string:EMAIL_SENDER_EMAIL)%'         # The email address from which all emails are sent from
+  partdb.mail.sender_name: '%env(string:EMAIL_SENDER_NAME)%'           # The name that will be used for all mails sent by Part-DB
+
+  ######################################################################################################################
+  # Attachments and files
+  ######################################################################################################################
+  partdb.attachments.dir.media: 'public/media/'                                   # The folder where uploaded attachment files are saved (must be in public folder)
+  partdb.attachments.dir.secure: 'uploads/'                                       # The folder where secured attachment files are saved (must not be in public/)
+
+  ######################################################################################################################
+  # Error pages
+  ######################################################################################################################
+  partdb.error_pages.admin_email: '%env(trim:string:ERROR_PAGE_ADMIN_EMAIL)%'     # You can set an email address here, which is shown on an error page, how to contact an administrator
+  partdb.error_pages.show_help: '%env(trim:string:ERROR_PAGE_SHOW_HELP)%'         # If this is set to true, solutions to common problems are shown on error pages. Disable this, if you do not want your users to see them...
+
+  ######################################################################################################################
+  # SAML
+  ######################################################################################################################
+  partdb.saml.enabled: '%env(bool:SAML_ENABLED)%'              # If this is set to true, SAML authentication is enabled
+
+
+  ######################################################################################################################
+  # Miscellaneous
+  ######################################################################################################################
+  partdb.demo_mode: '%env(bool:DEMO_MODE)%'                   # If set to true, all potentially dangerous things are disabled (like changing passwords of the own user)
+
+  # Set the themes from which the user can choose from in the settings.
+  # Themes commented here by default, are not really usable, because of display problems. Enable them at your own risk!
+  partdb.available_themes:
+    - bootstrap
+    - cerulean
+    - cosmo
+    - cyborg
+    - darkly
+    - flatly
+    - journal
+    - litera
+    - lumen
+    - lux
+    #- materia
+    - minty
+    #- morph
+    #- pulse
+    #- quartz
+    - sandstone
+    - simplex
+    - sketchy
+    - slate
+    - solar
+    - spacelab
+    - superhero
+    - united
+    #- vapor
+    - yeti
+    - zephyr
+
+
+  ######################################################################################################################
+  # Env default values
+  ######################################################################################################################
+
+  env(REDIRECT_TO_HTTPS): 0
+
+  env(ERROR_PAGE_ADMIN_EMAIL): ''
+  env(ERROR_PAGE_SHOW_HELP): 1
+
+  env(DEMO_MODE): 0
+
+
+  env(EMAIL_SENDER_EMAIL): 'noreply@partdb.changeme'
+  env(EMAIL_SENDER_NAME): 'Part-DB Mailer'
+  env(ALLOW_EMAIL_PW_RESET): 0
+
+  env(TRUSTED_PROXIES): '127.0.0.1' #By default trust only our own server
+  env(TRUSTED_HOSTS): '' # Trust all host names by default
+
+  env(DEFAULT_URI): 'https://partdb.changeme.invalid/'
+
+  env(SAML_ROLE_MAPPING): '{}'
+
+  env(DATABASE_EMULATE_NATURAL_SORT): 0
+
+  ######################################################################################################################
+  # Bulk Info Provider Import Configuration
+  ######################################################################################################################
+  partdb.bulk_import.batch_size: 20                      # Number of parts to process in each batch during bulk operations
+  partdb.bulk_import.max_parts_per_operation: 1000       # Maximum number of parts allowed per bulk import operation

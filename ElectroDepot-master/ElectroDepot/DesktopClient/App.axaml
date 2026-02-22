@@ -1,0 +1,160 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DesktopClient.App"
+             xmlns:themes="using:RangeSlider.Avalonia.Themes.Fluent"
+             xmlns:local="using:DesktopClient"
+             RequestedThemeVariant="Default">
+  <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+  <Application.DataTemplates>
+    <local:ViewLocator/>
+  </Application.DataTemplates>
+
+  <Application.Styles>
+    <FluentTheme>
+      <FluentTheme.Palettes>
+        <ColorPaletteResources x:Key="Light" Accent="#ff2a70a2" AltHigh="White" AltLow="White" AltMedium="White" AltMediumHigh="White" AltMediumLow="White" BaseHigh="Black" BaseLow="#ffcccccc" BaseMedium="#ff898989" BaseMediumHigh="#ff5d5d5d" BaseMediumLow="#ff737373" ChromeAltLow="#ff5d5d5d" ChromeBlackHigh="Black" ChromeBlackLow="#ffcccccc" ChromeBlackMedium="#ff5d5d5d" ChromeBlackMediumLow="#ff898989" ChromeDisabledHigh="#ffcccccc" ChromeDisabledLow="#ff898989" ChromeGray="#ff737373" ChromeHigh="#ffcccccc" ChromeLow="#ffececec" ChromeMedium="#ffe6e6e6" ChromeMediumLow="#ffececec" ChromeWhite="White" ListLow="#ffe6e6e6" ListMedium="#ffcccccc" RegionColor="White" />
+        <ColorPaletteResources x:Key="Dark" Accent="#ff2a70a2" AltHigh="Black" AltLow="Black" AltMedium="Black" AltMediumHigh="Black" AltMediumLow="Black" BaseHigh="White" BaseLow="#ff333333" BaseMedium="#ff9a9a9a" BaseMediumHigh="#ffb4b4b4" BaseMediumLow="#ff676767" ChromeAltLow="#ffb4b4b4" ChromeBlackHigh="Black" ChromeBlackLow="#ffb4b4b4" ChromeBlackMedium="Black" ChromeBlackMediumLow="Black" ChromeDisabledHigh="#ff333333" ChromeDisabledLow="#ff9a9a9a" ChromeGray="Gray" ChromeHigh="Gray" ChromeLow="#ff151515" ChromeMedium="#ff1d1d1d" ChromeMediumLow="#ff2c2c2c" ChromeWhite="White" ListLow="#ff1d1d1d" ListMedium="#ff333333" RegionColor="Black" />
+      </FluentTheme.Palettes>
+    </FluentTheme>
+
+    <themes:RangeSliderTheme />
+    <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/AppDefaultStyles.axaml"/>
+    <StyleInclude Source="avares://Notification.Avalonia/Themes/Generic.xaml" />
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+
+    <!-- MessageBox -->
+    <Style Selector="Grid.MsBoxCustomContainer">
+      <Setter Property="Background" Value="{DynamicResource SectionGradient}"></Setter>
+      <!--<Setter Property="Background">
+        <Setter.Value>
+          <ImageBrush Source="avares://DesktopClient/Assets/Background_FHD_White.png" AlignmentY="Center"
+                                        AlignmentX="Center"
+                                        Stretch="UniformToFill"/>
+        </Setter.Value>
+      </Setter>-->
+    </Style>
+  </Application.Styles>
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/MinusButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/PlusButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/UploadFileButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/RefreshButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/RevertWideButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/RevertButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/OkButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/GenerateRaportButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/ReportBugButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/SaveButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/NightModeButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/HelpButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/AddButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/SelectButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/CancelButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/ClearButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/DownloadOnlineContentButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/CopyToClipboardButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/UploadContentButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/DeleteButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/EditWideButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/EditButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/PDFButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/FirstPageButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/LastPageButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/NextPageButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/PreviousPageButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/CustomControls/ImageSelector.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/CustomControls/SupplierNodeButton.axaml' />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+    <FontFamily x:Key="Roboto">avares://ElectroDepot/Assets#Roboto</FontFamily>
+    <FontFamily x:Key="Phosphor">avares://ElectroDepot/Assets/Fonts/Phosphor-Light.ttf#Phosphor-Light</FontFamily>
+
+    <!-- Primary Purple -->
+    <SolidColorBrush x:Key="UIDeepPurple" Color="#6A4C9C" />
+
+    <!-- Accent Purple -->
+    <SolidColorBrush x:Key="UIAccentPurple" Color="#9B7BC0" />
+
+    <!-- Dark Gray -->
+    <SolidColorBrush x:Key="UIDarkGray" Color="#333333" />
+
+    <!-- Medium Gray -->
+    <SolidColorBrush x:Key="UIMediumGray" Color="#808080" />
+
+    <!-- Light Gray -->
+    <SolidColorBrush x:Key="UILightGray" Color="#D3D3D3" />
+
+    <!-- Off White -->
+    <SolidColorBrush x:Key="UIOffWhite" Color="#F4F4F4" />
+    
+    <!-- New pallete -->
+    <!--<SolidColorBrush x:Key="PltWhite" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="PltGreenBlue" Color="#3C6E71" />
+    <SolidColorBrush x:Key="PltGreen" Color="#41805F" />
+    <SolidColorBrush x:Key="PltDeepGreen" Color="#3E8440" />
+    <SolidColorBrush x:Key="PltBlue" Color="#284B63" />
+    <SolidColorBrush x:Key="PltRed" Color="#DB324D" />
+    <SolidColorBrush x:Key="PltDeepRed" Color="#D71333" />-->
+
+    <SolidColorBrush x:Key="PltBlack" Color="#353535" />
+    <SolidColorBrush x:Key="PltGray" Color="#D9D9D9" />
+    <SolidColorBrush x:Key="PltSilver" Color="#CCCCCC" />
+    <SolidColorBrush x:Key="PltGrayDark" Color="#9C9C9C" />
+    <SolidColorBrush x:Key="PltGrayDarkDark" Color="#4C4C4C" />
+    <SolidColorBrush x:Key="PltGrayDarkDarkDark" Color="#3D3D3D" />
+    <SolidColorBrush x:Key="PltWhite" Color="#F1FAEE" />
+    <!--<SolidColorBrush x:Key="PltWhiteMilk" Color="#EDEAD8" />-->
+    <SolidColorBrush x:Key="PltWhiteMilk" Color="#F7F5E7" />
+    <SolidColorBrush x:Key="PltRed" Color="#E63946" />
+    <SolidColorBrush x:Key="PltLightBlue" Color="#99D0EA" />
+    <SolidColorBrush x:Key="PltBlue" Color="#457B9D" />
+    <SolidColorBrush x:Key="PltDarkBlue" Color="#1D3557" />
+    <SolidColorBrush x:Key="PltDarkBlueS2" Color="#192F4D" />
+    <SolidColorBrush x:Key="PltGreenS1" Color="#60E672" />
+    <SolidColorBrush x:Key="PltGreenS2" Color="#40DD50" />
+    <SolidColorBrush x:Key="PltOrangeS1" Color="#ECAA5B" />
+    <SolidColorBrush x:Key="PltOrangeS2" Color="#E8A435" />
+    <SolidColorBrush x:Key="PltPurpleS1" Color="#A678E2" />
+    <SolidColorBrush x:Key="PltPurpleS2" Color="#9058DB" />
+
+
+    <Color x:Key="PltBlueColorS1">#457B9D</Color>
+    <Color x:Key="PltDarkBlueColorS1">#1D3557</Color>
+    <Color x:Key="PltDarkBlueColorS2">#192F4D</Color>
+    <!--<Color x:Key="PltLightBlueColorS1">#99D0EA</Color>
+    <Color x:Key="PltLightBlueColorS2">#78C1E3</Color>
+    <Color x:Key="PltLightBlueColorS3">#56B2DC</Color>-->
+    <Color x:Key="PltLightBlueColorS1">#2A70A2</Color>
+    <Color x:Key="PltLightBlueColorS2">#206297</Color>
+    <Color x:Key="PltLightBlueColorS3">#154165</Color>
+    <Color x:Key="PltBlueColor">#457B9D</Color>
+
+    <Color x:Key="PltMilkColorS1">#00F7F5E7</Color>
+    <Color x:Key="PltMilkColorS2">#80F7F5E7</Color>
+    <Color x:Key="PltMilkColorS3">#FFF7F5E7</Color>
+
+    <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="30%,0%" EndPoint="50%,100%">
+      <GradientStop Color="{DynamicResource PltDarkBlueColorS2}" Offset="0.0"/>
+      <GradientStop Color="{DynamicResource PltDarkBlueColorS1}" Offset="0.5"/>
+      <GradientStop Color="{DynamicResource PltBlueColorS1}" Offset="1.0"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="SectionGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="{DynamicResource PltLightBlueColorS1}" Offset="0.1"/>
+      <GradientStop Color="{DynamicResource PltLightBlueColorS2}" Offset="0.5"/>
+      <GradientStop Color="{DynamicResource PltLightBlueColorS3}" Offset="1.0"/>
+    </LinearGradientBrush>
+
+    <RadialGradientBrush x:Key="MiddleGradient">
+      <GradientStop Color="{DynamicResource PltMilkColorS3}" Offset="0.5"/>
+      <GradientStop Color="{DynamicResource PltMilkColorS2}" Offset="1"/>
+    </RadialGradientBrush>
+    
+  </Application.Resources>
+  
+</Application>

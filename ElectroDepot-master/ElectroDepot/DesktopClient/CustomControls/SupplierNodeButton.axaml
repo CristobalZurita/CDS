@@ -1,0 +1,99 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:DesktopClient.CustomControls">
+
+  <Design.PreviewWith>
+    <controls:SupplierNodeButton />
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type controls:SupplierNodeButton}" TargetType="controls:SupplierNodeButton">
+    <Setter Property="Template">
+      <ControlTemplate TargetType="controls:SupplierNodeButton">
+        <Button x:Name="OutterButton" 
+                Background="Transparent" 
+                BorderBrush="Transparent"
+                Command="{TemplateBinding Command}"
+                CommandParameter="{TemplateBinding CommandParameter}">
+          <Button.Content>
+            <!-- Use a Border or Panel to define the visual style -->
+            <Border x:Name="MainBorder">
+              <Grid Width="84" Height="84"
+                    Margin="0"
+                    x:Name="SupplierGrid"
+                    RowDefinitions="*"
+                    ColumnDefinitions="*">
+
+                <!-- Image Container -->
+                <Border BorderThickness="1"
+                        x:Name="SupplierBorder"
+                        Margin="0,0,0,0">
+                  <Image x:Name="Icon1" Width="96"/>
+                </Border>
+              </Grid>
+            </Border>
+          </Button.Content>
+
+          <Button.Styles>
+            <!-- Outter button -->
+            <Style Selector="Button#OutterButton">
+              <Setter Property="Margin" Value="0"/>
+              <Setter Property="Padding" Value="0"/>
+              <Setter Property="VerticalAlignment" Value="Center"/>
+              <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+
+            <!-- Outter button : click-->
+            <Style Selector="Button#OutterButton:pressed Border#MainBorder:pointerover">
+              <Setter Property="Background" Value="White"/>
+            </Style>
+
+            <Style Selector="Border /template/ ContentPresenter">
+              <Setter Property="Transitions">
+                <Transitions>
+                  <BrushTransition Property="Background" Duration="0:0:0.1"></BrushTransition>
+                  <BrushTransition Property="Foreground" Duration="0:0:0.1"></BrushTransition>
+                </Transitions>
+              </Setter>
+            </Style>
+            
+            <!-- Border style -->
+            <Style Selector="Border#MainBorder">
+              <Setter Property="Background" Value="{DynamicResource PltBlue}"/>
+              <Setter Property="BorderBrush" Value="Black"/>
+              <Setter Property="BorderThickness" Value="1"/>
+              <Setter Property="VerticalAlignment" Value="Center"/>
+              <Setter Property="HorizontalAlignment" Value="Center"/>
+              <Setter Property="CornerRadius" Value="5"/>
+              <Setter Property="Padding" Value="0"/>
+
+              <!-- Image styles -->
+              <Style Selector="^ Grid#SupplierGrid Border#SupplierBorder Image#Icon1">
+                <Setter Property="Transitions">
+                  <Transitions>
+                    <DoubleTransition Property="Width" Duration="0:0:0.1"/>
+                    <DoubleTransition Property="Height" Duration="0:0:0.1"/>
+                  </Transitions>
+                </Setter>
+                <Setter Property="Source" Value="{TemplateBinding Image}"></Setter>
+                <Setter Property="Width" Value="74"></Setter>
+                <Setter Property="Height" Value="74"></Setter>
+                <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                <Setter Property="Margin" Value="0,0,0,0"></Setter>
+              </Style>
+            </Style>
+
+            <!-- Hover border style -->
+            <Style Selector="Border#MainBorder:pointerover">
+              <Setter Property="Background" Value="{DynamicResource PltDarkBlue}"/>
+              <Style Selector="^ Grid#SupplierGrid Border#SupplierBorder Image#Icon1">
+                <Setter Property="Width" Value="82"></Setter>
+                <Setter Property="Height" Value="82"></Setter>
+              </Style>
+            </Style>
+          </Button.Styles>
+      </Button>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>
