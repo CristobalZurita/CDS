@@ -3,9 +3,10 @@ Router de Inventario
 ====================
 Endpoints para consultar productos disponibles en inventario.
 """
+import json
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import Optional
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_user, require_permission
@@ -16,10 +17,33 @@ from app.models.category import Category
 router = APIRouter(prefix="/inventory", tags=["Inventory"])
 
 
+def _parse_product_meta(description: Optional[str]) -> dict:
+    if not description:
+        return {}
+    text = str(description).strip()
+    if not text.startswith("{"):
+        return {}
+    try:
+        payload = json.loads(text)
+        return payload if isinstance(payload, dict) else {}
+    except Exception:
+        return {}
+
+
+def _sku_family(sku: Optional[str]) -> Optional[str]:
+    if not sku:
+        return None
+    prefix = str(sku).strip().split("-", 1)[0].upper()
+    return prefix or None
+
+
 @router.get("/")
 def list_inventory(
     search: Optional[str] = None,
     category_id: Optional[int] = None,
+    family: Optional[str] = None,
+    origin_status: Optional[str] = None,
+    enabled_only: bool = False,
     low_stock_only: bool = False,
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("inventory", "read"))
@@ -46,10 +70,24 @@ def list_inventory(
         query = query.filter(Product.category_id == category_id)
 
     products = query.order_by(Product.name).all()
+    family_filter = str(family).strip().upper() if family else None
+    origin_filter = str(origin_status).strip().upper() if origin_status else None
 
     # Enriquecer con información de stock
     result = []
     for product in products:
+        meta = _parse_product_meta(product.description)
+        product_family = _sku_family(product.sku)
+        product_origin = str(meta.get("origin_status") or "").strip().upper() or None
+        product_enabled = bool(meta.get("enabled")) if "enabled" in meta else None
+
+        if family_filter and product_family != family_filter:
+            continue
+        if origin_filter and product_origin != origin_filter:
+            continue
+        if enabled_only and product_enabled is not True:
+            continue
+
         # Buscar stock para este producto
         stock = db.query(Stock).filter(
             Stock.component_table == "products",
@@ -73,8 +111,13 @@ def list_inventory(
             "name": product.name,
             "sku": product.sku,
             "description": product.description,
+            "family": product_family,
             "category": category.name if category else None,
             "category_id": product.category_id,
+            "origin_status": product_origin,
+            "enabled": product_enabled,
+            "kicad_symbol": meta.get("kicad_symbol"),
+            "kicad_footprint_default": meta.get("kicad_footprint_default"),
             "stock": stock_qty,
             "available_stock": available_qty,
             "stock_unit": "u",  # Unidades por defecto

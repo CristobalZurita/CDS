@@ -23,7 +23,7 @@
           <header class="request-head">
             <div>
               <h2>Solicitud #{{ request.id }}</h2>
-              <p class="request-subtitle">OT: {{ request.repair_number || 'SIN_OT' }}</p>
+              <p class="request-subtitle">OT: {{ request.repair_code || request.repair_number || 'SIN_OT' }}</p>
             </div>
             <span class="status-pill">{{ request.status }}</span>
           </header>

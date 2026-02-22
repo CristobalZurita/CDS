@@ -475,10 +475,15 @@ const addNote = async () => {
 	}
 }
 
+const resolveApiHost = () => {
+	const base = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
+	return base.includes('/api/') ? base.split('/api/')[0] : base
+}
+
 const getPhotoUrl = (path) => {
 	if (!path) return ''
 	if (path.startsWith('http')) return path
-	const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+	const baseUrl = resolveApiHost()
 	return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`
 }
 

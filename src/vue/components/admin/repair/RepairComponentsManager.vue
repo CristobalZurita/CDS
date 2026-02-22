@@ -13,6 +13,32 @@
 		<div v-if="showAddForm && !isReadOnly" class="add-form">
 			<div class="row g-2">
 				<div class="col-md-4">
+					<div class="filters-grid">
+						<div>
+							<label class="form-label">Familia</label>
+							<select v-model="familyFilter" class="form-select" @change="onFiltersChanged">
+								<option value="ALL">Todas</option>
+								<option value="RES">RES</option>
+								<option value="CAPC">CAPC</option>
+								<option value="CAPE">CAPE</option>
+								<option value="DIO">DIO</option>
+								<option value="Q">Q</option>
+								<option value="IC">IC</option>
+							</select>
+						</div>
+						<div>
+							<label class="form-label">Origen</label>
+							<select v-model="originFilter" class="form-select" @change="onFiltersChanged">
+								<option value="REAL">Solo reales</option>
+								<option value="ALL">Todos</option>
+								<option value="CATALOGO_ONLY">Solo catálogo</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-check mb-2 mt-2">
+						<input id="enabledOnly" v-model="enabledOnly" class="form-check-input" type="checkbox" @change="onFiltersChanged" />
+						<label class="form-check-label" for="enabledOnly">Solo habilitados</label>
+					</div>
 					<label class="form-label">Buscar en inventario</label>
 					<input
 						v-model="searchQuery"
@@ -29,8 +55,14 @@
 							class="search-item"
 							@click="selectItem(item)"
 						>
-							<span class="item-name">{{ item.name }}</span>
-							<span class="item-stock">Stock: {{ item.stock }} {{ item.stock_unit || 'u' }}</span>
+							<div class="search-item-main">
+								<span class="item-name">{{ item.name }}</span>
+								<div class="item-meta">
+									<span class="badge bg-secondary me-1">{{ item.family || 'NA' }}</span>
+									<span class="badge bg-info text-dark">{{ item.origin_status || 'LEGACY' }}</span>
+								</div>
+							</div>
+							<span class="item-stock">Stock: {{ item.available_stock ?? item.stock }} {{ item.stock_unit || 'u' }}</span>
 							<span class="item-price">${{ formatNumber(item.price) }}</span>
 						</div>
 					</div>
@@ -42,7 +74,7 @@
 						type="number"
 						class="form-control"
 						min="1"
-						:max="selectedItem?.stock || 999"
+						:max="selectedItem?.available_stock || selectedItem?.stock || 999"
 					/>
 				</div>
 				<div class="col-md-3">
@@ -144,6 +176,9 @@ const inventory = ref([])
 const searchQuery = ref('')
 const searchResults = ref([])
 const selectedItem = ref(null)
+const familyFilter = ref('ALL')
+const originFilter = ref('REAL')
+const enabledOnly = ref(true)
 const showAddForm = ref(false)
 const adding = ref(false)
 const removing = ref(null)
@@ -158,7 +193,8 @@ const totalMaterials = computed(() => {
 })
 
 const canAddComponent = computed(() => {
-	return selectedItem.value && newComponent.value.quantity > 0 && newComponent.value.quantity <= (selectedItem.value.stock || 0)
+	const available = Number(selectedItem.value?.available_stock ?? selectedItem.value?.stock ?? 0)
+	return selectedItem.value && newComponent.value.quantity > 0 && newComponent.value.quantity <= available
 })
 
 // Watch totalMaterials and emit to parent
@@ -184,8 +220,20 @@ const loadComponents = async () => {
 
 const loadInventory = async () => {
 	try {
-		const res = await api.get('/inventory/')
+		const params = new URLSearchParams()
+		if (familyFilter.value && familyFilter.value !== 'ALL') {
+			params.set('family', familyFilter.value)
+		}
+		if (originFilter.value && originFilter.value !== 'ALL') {
+			params.set('origin_status', originFilter.value)
+		}
+		if (enabledOnly.value) {
+			params.set('enabled_only', 'true')
+		}
+		const suffix = params.toString() ? `?${params.toString()}` : ''
+		const res = await api.get(`/inventory/${suffix}`)
 		inventory.value = res.data || res || []
+		searchInventory()
 	} catch (error) {
 		console.error('Error cargando inventario:', error)
 		inventory.value = []
@@ -204,9 +252,20 @@ const searchInventory = () => {
 			(item.name?.toLowerCase().includes(query) ||
 			item.sku?.toLowerCase().includes(query) ||
 			item.category?.toLowerCase().includes(query)) &&
-			item.stock > 0
+			Number(item.available_stock ?? item.stock ?? 0) > 0
 		)
 		.slice(0, 10)
+}
+
+const onFiltersChanged = async () => {
+	await loadInventory()
+	if (selectedItem.value) {
+		const stillAvailable = inventory.value.find((item) => item.id === selectedItem.value.id)
+		if (!stillAvailable) {
+			selectedItem.value = null
+			newComponent.value.quantity = 1
+		}
+	}
 }
 
 const selectItem = (item) => {
@@ -304,6 +363,12 @@ defineExpose({ loadComponents, totalMaterials })
 	border: 1px solid rgba($brand-primary, 0.2);
 }
 
+.filters-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.5rem;
+}
+
 .search-results {
 	position: absolute;
 	z-index: 100;
@@ -323,6 +388,7 @@ defineExpose({ loadComponents, totalMaterials })
 	justify-content: space-between;
 	align-items: center;
 	border-bottom: 1px solid $color-gray-190-legacy;
+	gap: 0.5rem;
 
 	&:hover {
 		background: lighten($brand-primary, 45%);
@@ -335,6 +401,15 @@ defineExpose({ loadComponents, totalMaterials })
 	.item-name {
 		font-weight: 500;
 		flex: 1;
+	}
+
+	.search-item-main {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.item-meta {
+		margin-top: 0.25rem;
 	}
 
 	.item-stock {
