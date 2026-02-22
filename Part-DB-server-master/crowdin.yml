@@ -1,9 +1,0 @@
-files:
-  - source: /translations/messages.en.xlf
-    translation: /translations/messages.%two_letters_code%.xlf
-  - source: /translations/validators.en.xlf
-    translation: /translations/validators.%two_letters_code%.xlf
-  - source: /translations/security.en.xlf
-    translation: /translations/security.%two_letters_code%.xlf
-  - source: /translations/frontend.en.xlf
-    translation: /translations/frontend.%two_letters_code%.xlf
