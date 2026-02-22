@@ -1,0 +1,38 @@
+.partTypesTreeView .MuiTreeItem-group {
+	margin-left: 10px !important;
+}
+.partTypesTreeView li.MuiTreeItem-root {
+	margin-left: 0px;
+}
+.partTypesTreeView .MuiTreeItem-content {
+	padding-left: 0;
+}
+.partTypesTreeView .MuiTreeItem-group .MuiTreeItem-content {
+	padding-left: 0 !important;
+}
+
+.partTypesTreeView svg.parttype {
+	color: #bbb;
+	margin-right: 4px;
+}
+
+.partTypesTreeView div.parttype:has(svg) {
+	color: #bbb;
+	margin-right: 4px;
+	vertical-align: baseline;
+}
+
+.partTypesTreeView div.parttype>svg {
+	max-width: 24px;
+	max-height: 24px;
+	vertical-align: baseline;
+}
+
+.field.icons .ui.dropdown .item svg {
+	margin-left: 10px;
+	color: #bbb;
+}
+
+.field.icons .ui.dropdown .item span {
+	margin-left: 40px;
+}

@@ -1,0 +1,72 @@
+parameters:
+
+    level: 5
+
+    paths:
+        - src
+    #    - tests
+
+    banned_code:
+         non_ignorable: false # Allow to ignore some banned code
+
+    excludePaths:
+            - src/DataTables/Adapter/*
+            - src/Configuration/*
+            - src/Doctrine/Purger/*
+            - src/DataTables/Adapters/TwoStepORMAdapter.php
+            - src/Form/Fixes/*
+            - src/Translation/Fixes/*
+
+
+
+    inferPrivatePropertyTypeFromConstructor: true
+    treatPhpDocTypesAsCertain: false
+
+    symfony:
+        containerXmlPath: '%rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml'
+
+    doctrine:
+    	objectManagerLoader: tests/object-manager.php
+    	allowNullablePropertyForRequiredField: true
+
+    checkUninitializedProperties: true
+
+    checkFunctionNameCase: false
+
+    reportMaybesInPropertyPhpDocTypes: false
+    reportMaybesInMethodSignatures: false
+
+    strictRules:
+    	disallowedLooseComparison: false
+    	booleansInConditions: false
+    	uselessCast: false
+    	requireParentConstructorCall: true
+    	overwriteVariablesWithLoop: false
+    	closureUsesThis: false
+    	matchingInheritedMethodNames: true
+    	numericOperandsInArithmeticOperators: true
+    	switchConditionsMatchingType: false
+    	noVariableVariables: false
+    	disallowedEmpty: false
+    	disallowedShortTernary: false
+
+    ignoreErrors:
+        # Ignore errors caused by complex mapping with AbstractStructuralDBElement
+        - '#AbstractStructuralDBElement does not have a field named \$parent#'
+        #- '#AbstractStructuralDBElement does not have a field named \$name#'
+
+        # Ignore errors related to the use of the ParametersTrait in Part entity
+        - '#expects .*PartParameter, .*AbstractParameter given.#'
+        - '#Part::getParameters\(\) should return .*AbstractParameter#'
+
+        # Ignore doctrine type mapping mismatch
+        - '#Property .* type mapping mismatch: property can contain .* but database expects .*#'
+
+        # Ignore error of unused WithPermPresetsTrait, as it is used in the migrations which are not analyzed by Phpstan
+        - '#Trait App\\Migration\\WithPermPresetsTrait is used zero times and is not analysed#'
+        -
+            message: '#Should not use function "shell_exec"#'
+            path: src/Services/System/UpdateExecutor.php
+
+        - message: '#Access to an undefined property Brick\\Schema\\Interfaces\\#'
+          path: src/Services/InfoProviderSystem/Providers/GenericWebProvider.php
