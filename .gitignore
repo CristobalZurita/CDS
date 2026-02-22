@@ -76,3 +76,20 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Production - SSL certificates (NEVER commit real certs)
+certs/
+certbot/
+
+# Database backups (contain sensitive data)
+backups/
+
+# Uploads (user content)
+uploads/
+
+# Docker volumes
+postgres_data/
+
+# Security scan cache
+.cache_ggshield
+.ggshield-ignore

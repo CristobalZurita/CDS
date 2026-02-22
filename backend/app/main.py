@@ -284,7 +284,50 @@ async def enforce_csrf_for_mutations(request, call_next):
 @app.get("/health")
 @app.get("/api/health")
 async def health_check():
-    return {"status": "ok", "message": "Cirujano de Sintetizadores API is running"}
+    """
+    Production-grade health check.
+    Verifica DB y Redis cuando están disponibles.
+    """
+    health = {
+        "status": "ok",
+        "message": "Cirujano de Sintetizadores API is running",
+        "environment": settings.environment,
+    }
+    checks = {}
+
+    # Check database connectivity
+    try:
+        from app.core.database import SessionLocal
+        from sqlalchemy import text as sa_text
+        db = SessionLocal()
+        try:
+            db.execute(sa_text("SELECT 1"))
+            checks["database"] = "ok"
+        except Exception as e:
+            checks["database"] = f"error: {str(e)[:80]}"
+            health["status"] = "degraded"
+        finally:
+            db.close()
+    except Exception:
+        checks["database"] = "unavailable"
+        health["status"] = "degraded"
+
+    # Check Redis connectivity (optional)
+    try:
+        import redis as redis_lib
+        redis_url = os.getenv("REDIS_URL")
+        if redis_url:
+            r = redis_lib.from_url(redis_url, socket_connect_timeout=2)
+            r.ping()
+            checks["redis"] = "ok"
+        else:
+            checks["redis"] = "not configured"
+    except Exception:
+        checks["redis"] = "unavailable"
+
+    health["checks"] = checks
+    status_code = 200 if health["status"] == "ok" else 503
+    return JSONResponse(content=health, status_code=status_code)
 
 
 # Root endpoint
