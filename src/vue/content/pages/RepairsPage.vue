@@ -38,7 +38,7 @@
           <div class="repair-card-header">
             <div class="repair-info">
               <h3>{{ repair.instrument }}</h3>
-              <p class="repair-ticket">Ticket: {{ repair.id }}</p>
+              <p class="repair-ticket">OT: {{ repair.repair_code || repair.repair_number || repair.id }}</p>
             </div>
             <div class="repair-status" :class="repair.status_normalized">
               {{ getStatusLabel(repair.status_normalized || repair.status) }}

@@ -3,7 +3,7 @@
     <div class="header">
       <div>
         <h1>{{ detail.repair?.instrument || 'Reparación' }}</h1>
-        <p class="muted">Ticket {{ detail.repair?.repair_number || detail.repair?.id }}</p>
+        <p class="muted">OT {{ detail.repair?.repair_code || detail.repair?.repair_number || detail.repair?.id }}</p>
       </div>
       <div class="header-actions">
         <span class="status">{{ detail.repair?.status }}</span>
@@ -78,12 +78,17 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 }).format(price)
 }
 
+const resolveApiHost = () => {
+  const base = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
+  return base.includes('/api/') ? base.split('/api/')[0] : base
+}
+
 const resolvePhotoUrl = (photo) => {
   if (!photo) return ''
   const path = photo.photo_download_url || photo.photo_url || ''
   if (!path) return ''
   if (path.startsWith('http')) return path
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+  const baseUrl = resolveApiHost()
   return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`
 }
 
@@ -108,7 +113,7 @@ async function downloadClosurePdf() {
     })
     const blob = new Blob([response.data], { type: 'application/pdf' })
     const blobUrl = window.URL.createObjectURL(blob)
-    const preferredCode = detail.value?.repair?.repair_number || detail.value?.repair?.id || `OT_${repairId}`
+    const preferredCode = detail.value?.repair?.repair_code || detail.value?.repair?.repair_number || detail.value?.repair?.id || `OT_${repairId}`
     const link = document.createElement('a')
     link.href = blobUrl
     link.download = `CIERRE_CLIENTE_${sanitizeFilePart(preferredCode)}.pdf`

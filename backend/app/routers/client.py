@@ -22,6 +22,7 @@ from app.models.repair_photo import RepairPhoto
 from app.core.config import settings
 from app.services.logging_service import create_audit
 from app.services.pdf_generator import generate_repair_closure_pdf_bytes
+from app.services.ot_code_service import repair_code as _repair_code
 
 router = APIRouter(prefix="/client", tags=["client"])
 
@@ -119,6 +120,24 @@ def _status_progress(code: str) -> int:
     return mapping.get(normalized, 10)
 
 
+def _resolved_repair_code(repair: Repair | None, client_id: int | None) -> str | None:
+    if not repair:
+        return None
+    if repair.repair_number and not str(repair.repair_number).startswith("R-"):
+        return repair.repair_number
+    if not client_id:
+        return repair.repair_number
+
+    if repair.ot_parent_id and repair.ot_sequence:
+        if repair.ot_parent_id == repair.id:
+            if int(repair.ot_sequence) <= 1:
+                return _repair_code(client_id, repair.id)
+            return _repair_code(client_id, repair.id, int(repair.ot_sequence))
+        return _repair_code(client_id, int(repair.ot_parent_id), int(repair.ot_sequence))
+
+    return _repair_code(client_id, repair.id)
+
+
 def _device_label(db: Session, device: Device) -> str:
     if not device:
         return "Equipo"
@@ -177,18 +196,25 @@ def _safe_pdf_filename(value: str) -> str:
     return "".join(sanitized)
 
 
-def _build_client_purchase_request_payload(req: PurchaseRequest, latest_payment: Payment | None) -> Dict:
+def _build_client_purchase_request_payload(
+    req: PurchaseRequest,
+    latest_payment: Payment | None,
+    client_id: int | None = None,
+) -> Dict:
     total_items_amount = round(sum(
         float(item.quantity or 0) * float(item.unit_price or 0)
         for item in (req.items or [])
     ), 2)
     payment_notes = _parse_payment_notes(latest_payment.notes if latest_payment else None)
+    resolved_client_id = int(client_id or req.client_id or 0) or None
+    resolved_repair_code = _resolved_repair_code(req.repair, resolved_client_id)
     return {
         "id": req.id,
         "status": req.status,
         "notes": req.notes,
         "repair_id": req.repair_id,
         "repair_number": req.repair.repair_number if req.repair else None,
+        "repair_code": resolved_repair_code,
         "items_count": len(req.items or []),
         "total_items_amount": total_items_amount,
         "requested_amount": int((latest_payment.amount or 0) if latest_payment else round(total_items_amount)),
@@ -243,6 +269,7 @@ def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(require_pe
         repair_ids.append(int(repair.id))
         raw_code = _status_code(repair)
         normalized_code = _normalize_status_code(raw_code)
+        repair_code = _resolved_repair_code(repair, client.id)
         if normalized_code in pending_codes:
             pending_repairs += 1
         elif normalized_code in active_codes:
@@ -257,6 +284,7 @@ def get_dashboard(db: Session = Depends(get_db), user: dict = Depends(require_pe
             active_list.append({
                 "id": repair.id,
                 "repair_number": repair.repair_number,
+                "repair_code": repair_code,
                 "instrument": _device_label(db, repair.device),
                 "fault": repair.problem_reported,
                 "status": raw_code,
@@ -351,9 +379,11 @@ def list_client_repairs(db: Session = Depends(get_db), user: dict = Depends(requ
     for repair in repairs:
         raw_code = _status_code(repair)
         normalized_code = _normalize_status_code(raw_code)
+        repair_code = _resolved_repair_code(repair, client.id)
         payload.append({
             "id": repair.id,
             "repair_number": repair.repair_number,
+            "repair_code": repair_code,
             "instrument": _device_label(db, repair.device),
             "fault": repair.problem_reported,
             "status": raw_code,
@@ -386,6 +416,7 @@ def get_repair_timeline(repair_id: int, db: Session = Depends(get_db), user: dic
     return {
         "repair_id": repair.id,
         "repair_number": repair.repair_number,
+        "repair_code": _resolved_repair_code(repair, client.id),
         "status": _status_code(repair),
         "status_normalized": _normalize_status_code(_status_code(repair)),
         "timeline": _timeline_from_repair(repair),
@@ -425,6 +456,7 @@ def get_repair_details(repair_id: int, db: Session = Depends(get_db), user: dict
         "repair": {
             "id": repair.id,
             "repair_number": repair.repair_number,
+            "repair_code": _resolved_repair_code(repair, client.id),
             "instrument": _device_label(db, repair.device),
             "status": _status_code(repair),
             "status_normalized": _normalize_status_code(_status_code(repair)),
@@ -498,11 +530,12 @@ def get_client_repair_closure_pdf(
         .filter(RepairIntakeSheet.repair_id == repair.id)
         .first()
     )
+    resolved_repair_code = _resolved_repair_code(repair, client.id)
 
     payload = {
         "repair_id": repair.id,
         "repair_number": repair.repair_number,
-        "repair_code": repair.repair_number,
+        "repair_code": resolved_repair_code,
         "status_id": repair.status_id,
         "status_name": _status_code(repair),
         "intake_date": repair.intake_date,
@@ -566,7 +599,7 @@ def get_client_repair_closure_pdf(
         ),
     }
     pdf_bytes = generate_repair_closure_pdf_bytes(payload)
-    safe_code = _safe_pdf_filename(repair.repair_number or f"OT_{repair.id}")
+    safe_code = _safe_pdf_filename(resolved_repair_code or repair.repair_number or f"OT_{repair.id}")
     filename = f"CIERRE_CLIENTE_{safe_code}.pdf"
 
     try:
@@ -706,7 +739,7 @@ def list_client_purchase_requests(
                 latest_by_request[request_id] = payment
 
     return [
-        _build_client_purchase_request_payload(req, latest_by_request.get(req.id))
+        _build_client_purchase_request_payload(req, latest_by_request.get(req.id), client.id)
         for req in requests
     ]
 
@@ -819,5 +852,5 @@ def submit_client_deposit_proof(
 
     return {
         "ok": True,
-        "request": _build_client_purchase_request_payload(req, payment),
+        "request": _build_client_purchase_request_payload(req, payment, client.id),
     }

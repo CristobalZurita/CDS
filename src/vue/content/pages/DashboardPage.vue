@@ -75,7 +75,7 @@
               <div class="repair-header">
                 <div class="repair-info">
                   <h3>{{ repair.instrument }}</h3>
-                  <p class="repair-id">Ticket: {{ repair.id }}</p>
+                  <p class="repair-id">OT: {{ repair.repair_code || repair.repair_number || repair.id }}</p>
                 </div>
                 <div class="repair-status" :class="getStatusClass(repair.status_normalized || repair.status)">
                   {{ getStatusLabel(repair.status_normalized || repair.status) }}

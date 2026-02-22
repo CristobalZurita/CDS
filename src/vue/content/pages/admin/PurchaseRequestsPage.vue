@@ -40,7 +40,7 @@
             <td>#{{ req.id }}</td>
             <td>
               <div><strong>{{ req.client_name || 'SIN_CLIENTE' }}</strong></div>
-              <small class="text-muted">{{ req.repair_number || 'SIN_OT' }}</small>
+              <small class="text-muted">{{ req.repair_code || req.repair_number || 'SIN_OT' }}</small>
             </td>
             <td>
               <span class="badge text-bg-secondary">{{ req.status }}</span>
