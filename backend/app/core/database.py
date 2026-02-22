@@ -18,18 +18,33 @@ logger = logging.getLogger(__name__)
 Base = declarative_base()
 
 # Create engine with connection pooling
+# SQLite needs check_same_thread=False; PostgreSQL does not accept it.
+_is_sqlite = settings.database_url.startswith("sqlite")
+_connect_args: dict = {"check_same_thread": False, "timeout": 30} if _is_sqlite else {}
+_pool_kwargs: dict = (
+    {"poolclass": QueuePool, "pool_size": 10, "max_overflow": 20}
+    if not _is_sqlite
+    else {}
+)
+
 engine = create_engine(
     settings.database_url,
     echo=settings.debug,
-    pool_size=10,
-    max_overflow=20,
-    pool_pre_ping=True,  # Verify connections before using them
-    poolclass=QueuePool,
-    connect_args={
-        "check_same_thread": False,
-        "timeout": 30,
-    }
+    pool_pre_ping=True,
+    connect_args=_connect_args,
+    **_pool_kwargs,
 )
+
+# TEMPO MAESTRO: Force UTC on every PostgreSQL connection.
+# This ensures the DB "master clock" always ticks in UTC regardless of
+# the server's local timezone setting.  SQLite ignores this (no SET).
+if not _is_sqlite:
+    from sqlalchemy import event
+
+    @event.listens_for(engine, "connect")
+    def _set_timezone_utc(dbapi_conn, connection_record):
+        with dbapi_conn.cursor() as cur:
+            cur.execute("SET timezone = 'UTC'")
 
 # Session factory
 SessionLocal = sessionmaker(
