@@ -10,9 +10,7 @@
 
 import { ref, computed, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
+import { api } from '@/services/api'
 
 // Estado global de autenticación
 const user = ref(null)
@@ -37,7 +35,7 @@ export function useAuth() {
     error.value = null
 
     try {
-      const response = await axios.post(`${API_URL}/auth/register`, {
+      const response = await api.post('/auth/register', {
         email: data.email,
         username: data.username,
         full_name: data.full_name,
@@ -66,7 +64,7 @@ export function useAuth() {
     error.value = null
 
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
+      const response = await api.post('/auth/login', {
         email,
         password,
         turnstile_token: turnstileToken
@@ -100,7 +98,7 @@ export function useAuth() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await axios.post(`${API_URL}/auth/verify-2fa`, {
+      const response = await api.post('/auth/verify-2fa', {
         challenge_id: challengeId,
         code
       })
@@ -126,7 +124,7 @@ export function useAuth() {
     if (!token.value) return null
 
     try {
-      const response = await axios.get(`${API_URL}/auth/me`, {
+      const response = await api.get('/auth/me', {
         headers: {
           Authorization: `Bearer ${token.value}`
         }
@@ -151,7 +149,7 @@ export function useAuth() {
     }
 
     try {
-      const response = await axios.post(`${API_URL}/auth/refresh`, {
+      const response = await api.post('/auth/refresh', {
         refresh_token: refreshToken.value
       })
 

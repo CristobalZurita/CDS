@@ -1,39 +1,27 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.models.category import Category
 from app.core.database import get_db
-from app.core.dependencies import get_current_user, require_permission
+from app.core.dependencies import require_permission
+from app.services.category_service import CategoryService
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
 @router.get("/")
 def list_categories(db: Session = Depends(get_db)):
-    return db.query(Category).all()
+    svc = CategoryService(db)
+    return svc.list_categories()
 
 @router.post("/")
 def create_category(payload: dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("categories", "create"))):
-    db_cat = Category(**payload)
-    db.add(db_cat)
-    db.commit()
-    db.refresh(db_cat)
-    return db_cat
+    svc = CategoryService(db)
+    return svc.create_category(payload)
 
 @router.put("/{category_id}")
 def update_category(category_id: int, payload: dict, db: Session = Depends(get_db), user: dict = Depends(require_permission("categories", "update"))):
-    db_cat = db.query(Category).get(category_id)
-    if not db_cat:
-        raise HTTPException(status_code=404, detail="Category not found")
-    for k, v in payload.items():
-        setattr(db_cat, k, v)
-    db.commit()
-    db.refresh(db_cat)
-    return db_cat
+    svc = CategoryService(db)
+    return svc.update_category(category_id, payload)
 
 @router.delete("/{category_id}")
 def delete_category(category_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("categories", "delete"))):
-    db_cat = db.query(Category).get(category_id)
-    if not db_cat:
-        raise HTTPException(status_code=404, detail="Category not found")
-    db.delete(db_cat)
-    db.commit()
-    return {"ok": True}
+    svc = CategoryService(db)
+    return svc.delete_category(category_id)
