@@ -22,7 +22,7 @@ test('admin can log in from UI and reach admin dashboard', async ({ page }) => {
 
   await loginFromUi(page, 'e2e.admin@example.com', 'admin12')
 
-  await expect(page).toHaveURL(/\/admin$/)
+  await expect.poll(async () => page.evaluate(() => window.location.pathname)).toBe('/admin')
   await waitForAppToSettle(page)
   await expect(page.getByTestId('admin-shell')).toBeVisible()
   await expectNoBrowserErrors(tracker)
@@ -35,7 +35,7 @@ test('client can log in from UI and reach dashboard', async ({ page }) => {
 
   await loginFromUi(page, 'e2e.client@example.com', 'client12')
 
-  await expect(page).toHaveURL(/\/dashboard$/)
+  await expect.poll(async () => page.evaluate(() => window.location.pathname)).toBe('/dashboard')
   await waitForAppToSettle(page)
   await expect(page.getByRole('heading', { name: 'Mi Panel de Control' })).toBeVisible()
   await expectNoBrowserErrors(tracker)

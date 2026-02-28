@@ -7,9 +7,10 @@
           v-model="searchQuery"
           type="search"
           class="form-control form-control-sm"
+          data-testid="repairs-search"
           placeholder="Buscar OT, cliente o instrumento..."
         />
-        <button class="admin-btn admin-btn-outline" @click="fetchRepairs">Actualizar</button>
+        <button class="admin-btn admin-btn-outline" data-testid="repairs-refresh" @click="fetchRepairs">Actualizar</button>
       </div>
     </div>
     <table class="admin-table admin-table--stack">
@@ -23,7 +24,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="repair in filteredRepairs" :key="repair.id">
+        <tr v-for="repair in filteredRepairs" :key="repair.id" data-testid="repair-row">
           <td data-label="OT">{{ repair.repair_code || repair.repair_number || repair.id }}</td>
           <td data-label="Cliente">
             <div class="cell-stack">
@@ -34,8 +35,8 @@
           <td data-label="Instrumento">{{ repair.device_model || 'Sin modelo' }}</td>
           <td data-label="Estado">{{ repair.status }}</td>
           <td data-label="Acciones">
-            <button class="admin-btn admin-btn-outline" @click="editRepair(repair)">Editar</button>
-            <button class="admin-btn admin-btn-primary" @click="deleteRepair(repair.id)">Borrar</button>
+            <button class="admin-btn admin-btn-outline" data-testid="repair-edit" @click="editRepair(repair)">Editar</button>
+            <button class="admin-btn admin-btn-primary" data-testid="repair-delete" @click="deleteRepair(repair.id)">Borrar</button>
           </td>
         </tr>
       </tbody>
@@ -52,8 +53,8 @@ const searchQuery = ref('')
 
 const filteredRepairs = computed(() => {
   const q = searchQuery.value.trim().toLowerCase()
-  if (!q) return repairs
-  return (repairs || []).filter((repair) => {
+  if (!q) return repairs.value
+  return (repairs.value || []).filter((repair) => {
     const haystack = [
       repair.repair_code,
       repair.repair_number,

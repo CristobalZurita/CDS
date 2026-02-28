@@ -13,12 +13,17 @@ class UserCreate(BaseModel):
     full_name: str
     password: str = Field(..., min_length=8)
     phone: Optional[str] = None
+    role: Optional[str] = "client"
 
 
 class UserUpdate(BaseModel):
     """Schema para actualizar usuario"""
+    email: Optional[EmailStr] = None
+    username: Optional[str] = Field(None, min_length=3)
     full_name: Optional[str] = None
     phone: Optional[str] = None
+    role: Optional[str] = None
+    password: Optional[str] = Field(None, min_length=8)
 
 
 class UserResponse(BaseModel):

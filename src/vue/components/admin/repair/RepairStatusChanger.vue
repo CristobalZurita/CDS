@@ -2,7 +2,7 @@
 	<div class="status-changer">
 		<div class="current-status">
 			<span class="status-label">Estado actual:</span>
-			<span class="status-badge" :class="currentStatusClass">
+			<span class="status-badge" :class="currentStatusClass" data-testid="repair-current-status">
 				{{ currentStatusName }}
 			</span>
 			<span class="status-progress">
@@ -20,6 +20,7 @@
 					v-for="transition in allowedTransitions"
 					:key="transition.id"
 					class="transition-btn"
+					:data-testid="`repair-transition-${transition.id}`"
 					:class="{ 'btn-danger': transition.id === 10 }"
 					:disabled="changing"
 					@click="confirmTransition(transition)"
@@ -48,8 +49,8 @@
 					<textarea v-model="transitionNote" class="form-control" rows="2" placeholder="Agregar comentario sobre el cambio..."></textarea>
 				</div>
 				<div class="d-flex gap-2 justify-content-end">
-					<button class="btn btn-secondary" @click="showConfirmModal = false">Cancelar</button>
-					<button class="btn btn-primary" :disabled="changing" @click="executeTransition">
+					<button class="btn btn-secondary" data-testid="repair-status-cancel" @click="showConfirmModal = false">Cancelar</button>
+					<button class="btn btn-primary" data-testid="repair-status-confirm" :disabled="changing" @click="executeTransition">
 						{{ changing ? 'Cambiando...' : 'Confirmar' }}
 					</button>
 				</div>

@@ -87,6 +87,15 @@ if globals().get("diagnostic_router") is None:
 	except Exception:
 		globals()["diagnostic_router"] = None
 
+# inventory uses a custom variable name, so recover it explicitly if the broad
+# import block failed earlier.
+if globals().get("inventory_products_router") is None:
+	try:
+		mod = importlib.import_module("app.routers.inventory")
+		globals()["inventory_products_router"] = mod
+	except Exception:
+		globals()["inventory_products_router"] = None
+
 api_router = APIRouter(prefix="/api/v1")
 
 api_router.include_router(brands.router)

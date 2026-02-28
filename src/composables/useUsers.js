@@ -1,10 +1,12 @@
+import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/stores/users'
 export function useUsers() {
   const store = useUsersStore()
+  const { users, loading, error } = storeToRefs(store)
   return {
-    users: store.users,
-    loading: store.loading,
-    error: store.error,
+    users,
+    loading,
+    error,
     fetchUsers: store.fetchUsers,
     createUser: store.createUser,
     updateUser: store.updateUser,

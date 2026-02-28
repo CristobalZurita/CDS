@@ -2,7 +2,10 @@
 WhatsApp Service - Meta Cloud API
 """
 import logging
-import requests
+try:
+    import requests
+except ImportError:  # pragma: no cover - fallback for trimmed local envs
+    requests = None
 
 from app.core.config import settings
 
@@ -16,9 +19,12 @@ class WhatsAppService:
         self.api_url = settings.whatsapp_api_url.rstrip("/")
         self.template_name = settings.whatsapp_template_name
         self.template_lang = settings.whatsapp_template_lang
-        self.enabled = bool(self.token and self.phone_id)
+        self.enabled = bool(requests and self.token and self.phone_id)
 
     def send_text(self, to_phone: str, message: str) -> bool:
+        if requests is None:
+            logger.warning("WhatsApp disabled because 'requests' is not installed.")
+            return False
         if not self.enabled:
             logger.warning("WhatsApp not configured. Skipping send.")
             return False

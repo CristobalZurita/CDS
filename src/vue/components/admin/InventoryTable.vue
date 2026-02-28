@@ -11,14 +11,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="item in items" :key="item.id">
+				<tr v-for="item in items" :key="item.id" data-testid="inventory-row">
 					<td data-label="Id">{{ item.id }}</td>
 					<td data-label="Nombre">{{ item.name || item.nombre || '-' }}</td>
 					<td data-label="Categoría">{{ item.category || '-' }}</td>
-					<td data-label="Cantidad">{{ item.quantity ?? item.cantidad ?? 0 }}</td>
+					<td data-label="Cantidad">{{ item.stock ?? item.quantity ?? item.cantidad ?? 0 }}</td>
 					<td data-label="Acciones">
-						<button class="btn btn-sm btn-outline-primary me-2" @click="$emit('edit', item)">Editar</button>
-						<button class="btn btn-sm btn-outline-danger" @click="$emit('delete', item)">Eliminar</button>
+						<button class="btn btn-sm btn-outline-primary me-2" data-testid="inventory-edit" @click="$emit('edit', item)">Editar</button>
+						<button class="btn btn-sm btn-outline-danger" data-testid="inventory-delete" @click="$emit('delete', item)">Eliminar</button>
 					</td>
 				</tr>
 			</tbody>

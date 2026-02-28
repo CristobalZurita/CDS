@@ -37,6 +37,7 @@ def _sku_family(sku: Optional[str]) -> Optional[str]:
     return prefix or None
 
 
+@router.get("", include_in_schema=False)
 @router.get("/")
 def list_inventory(
     search: Optional[str] = None,
@@ -139,6 +140,7 @@ def list_inventory(
     return result
 
 
+@router.post("", status_code=status.HTTP_201_CREATED, include_in_schema=False)
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_inventory_item(
     payload: dict,

@@ -653,10 +653,17 @@ def delete_repair(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("repairs", "delete"))
 ):
-    db_repair = db.query(Repair).get(repair_id)
-    if not db_repair:
+    existing = db.query(Repair.id).filter(Repair.id == repair_id).first()
+    if not existing:
         raise HTTPException(status_code=404, detail="Repair not found")
-    db.delete(db_repair)
+
+    # Break OT parent links in SQL first so self-referential repairs do not
+    # trigger circular dependency resolution inside the ORM unit of work.
+    db.query(Repair).filter(Repair.ot_parent_id == repair_id).update(
+        {Repair.ot_parent_id: None},
+        synchronize_session=False,
+    )
+    db.query(Repair).filter(Repair.id == repair_id).delete(synchronize_session=False)
     db.commit()
     # Audit: repair deleted
     try:

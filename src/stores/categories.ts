@@ -21,7 +21,7 @@ export const useCategoriesStore = defineStore('categories', () => {
     isLoading.value = true;
     error.value = null;
     try {
-      const response = await get<Category[]>('/categories');
+      const response = await get<Category[]>('/categories/');
       categories.value = response.data.data || [];
     } catch (err: any) {
       const apiError = handleApiError(err);
@@ -53,7 +53,7 @@ export const useCategoriesStore = defineStore('categories', () => {
     isLoading.value = true;
     error.value = null;
     try {
-      const response = await post<Category>('/categories', data);
+      const response = await post<Category>('/categories/', data);
       if (response.data.data) {
         categories.value.push(response.data.data);
       }

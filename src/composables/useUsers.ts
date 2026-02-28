@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/stores/users'
 import type { Ref } from 'vue'
 
@@ -23,11 +24,13 @@ export interface UseUsersComposable {
 
 export function useUsers(): UseUsersComposable {
   const store = useUsersStore()
+  const { users, error } = storeToRefs(store)
+  const loading = 'loading' in store ? storeToRefs(store).loading : storeToRefs(store).isLoading
 
   return {
-    users: store.users,
-    loading: store.loading,
-    error: store.error,
+    users,
+    loading,
+    error,
     fetchUsers: store.fetchUsers,
     createUser: store.createUser,
     updateUser: store.updateUser,

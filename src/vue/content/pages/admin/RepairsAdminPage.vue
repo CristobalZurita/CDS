@@ -3,7 +3,7 @@
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h1 class="h4">Reparaciones</h1>
 			<div>
-				<button class="btn btn-sm btn-success me-2" @click="showForm = !showForm">
+				<button class="btn btn-sm btn-success me-2" data-testid="repairs-new" @click="showForm = !showForm">
 					{{ showForm ? 'Cancelar' : 'Nueva Reparación' }}
 				</button>
 			</div>
