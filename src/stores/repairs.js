@@ -9,17 +9,21 @@ export const useRepairsStore = defineStore('repairs', {
   }),
   actions: {
     async fetchRepairs() {
+      this.error = null
       this.loading = true
       try {
-        this.repairs = await useApi().get('/repairs')
+        this.repairs = await useApi().get('/repairs/')
+        return this.repairs
       } catch (e) {
         this.error = e
+        this.repairs = []
+        return []
       } finally {
         this.loading = false
       }
     },
     async createRepair(data) {
-      return await useApi().post('/repairs', data)
+      return await useApi().post('/repairs/', data)
     },
     async updateRepair(id, data) {
       return await useApi().put(`/repairs/${id}`, data)

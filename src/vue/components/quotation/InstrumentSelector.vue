@@ -17,6 +17,7 @@
           v-for="brand in filteredBrands"
           :key="brand.id"
           @click="selectBrand(brand)"
+          data-testid="quotation-brand-card"
           :class="['brand-card', { active: selectedBrand?.id === brand.id }]"
         >
           <div class="brand-name">{{ brand.name }}</div>
@@ -43,6 +44,7 @@
           v-for="instrument in filteredInstruments"
           :key="instrument.id"
           @click="selectInstrument(instrument)"
+          data-testid="quotation-instrument-card"
           :class="['instrument-card', { active: selectedInstrument?.id === instrument.id }]"
         >
           <div class="instrument-image">
@@ -92,7 +94,7 @@
         </div>
       </div>
 
-      <button @click="proceed" class="btn-proceed">
+      <button @click="proceed" class="btn-proceed" data-testid="quotation-proceed">
         Continuar al Diagnóstico →
       </button>
     </div>

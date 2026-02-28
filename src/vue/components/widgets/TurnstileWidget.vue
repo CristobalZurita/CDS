@@ -1,11 +1,19 @@
 <template>
   <div class="turnstile-widget">
+    <div
+      v-if="isTurnstileBypassed"
+      class="turnstile-bypass"
+      data-testid="turnstile-bypass"
+    >
+      Captcha desactivado en desarrollo
+    </div>
     <div ref="containerRef"></div>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { TURNSTILE_BYPASS_TOKEN, isTurnstileBypassed } from '@/config/turnstile'
 
 const emit = defineEmits(['verify'])
 const containerRef = ref(null)
@@ -48,8 +56,18 @@ const renderWidget = () => {
 }
 
 onMounted(async () => {
-  await loadScript()
-  renderWidget()
+  if (isTurnstileBypassed) {
+    emit('verify', TURNSTILE_BYPASS_TOKEN)
+    return
+  }
+
+  try {
+    await loadScript()
+    renderWidget()
+  } catch (error) {
+    console.warn('[turnstile] Failed to initialize widget', error)
+    emit('verify', '')
+  }
 })
 </script>
 
@@ -58,7 +76,23 @@ onMounted(async () => {
 
 .turnstile-widget {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
   margin: 1rem 0;
+}
+
+.turnstile-bypass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  background: rgba($color-success, 0.12);
+  border: 1px solid rgba($color-success, 0.35);
+  color: darken($color-success, 15%);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 </style>

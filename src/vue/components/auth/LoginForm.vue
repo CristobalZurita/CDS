@@ -8,6 +8,7 @@
           v-model="formData.email"
           type="email"
           class="form-control"
+          data-testid="login-email"
           placeholder="tu@email.com"
           required
           :disabled="isLoading"
@@ -23,6 +24,7 @@
             v-model="formData.password"
             :type="showPassword ? 'text' : 'password'"
             class="form-control"
+            data-testid="login-password"
             placeholder="••••••••"
             required
             :disabled="isLoading"
@@ -48,13 +50,14 @@
         />
       </div>
 
-      <div v-if="apiError" class="alert alert-danger">
+      <div v-if="apiError" class="alert alert-danger" data-testid="login-error">
         {{ apiError }}
       </div>
 
       <button
         type="submit"
         class="btn btn-primary btn-block"
+        data-testid="login-submit"
         :disabled="isLoading"
       >
         <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>

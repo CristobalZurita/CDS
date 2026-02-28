@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-shell">
+  <div class="admin-shell" data-testid="admin-shell">
     <AdminSidebar />
     <div class="admin-main">
       <AdminTopbar :title="title" :subtitle="subtitle" />

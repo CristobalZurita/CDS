@@ -191,6 +191,23 @@ def _ensure_payments_purchase_request_schema() -> None:
         if "ix_payments_purchase_request_id" not in existing_indexes:
             conn.execute(text("CREATE INDEX ix_payments_purchase_request_id ON payments (purchase_request_id)"))
 
+
+def _ensure_products_image_url_schema() -> None:
+    """
+    Ajuste aditivo para DBs legacy sin products.image_url.
+    Evita que el ORM falle al seleccionar Product en inventario/stats.
+    """
+    inspector = inspect(engine)
+    if "products" not in inspector.get_table_names():
+        return
+
+    current_columns = {column["name"] for column in inspector.get_columns("products")}
+    if "image_url" in current_columns:
+        return
+
+    with engine.begin() as conn:
+        conn.execute(text("ALTER TABLE products ADD COLUMN image_url VARCHAR(500)"))
+
 async def get_db():
     """
     Dependency to get database session
@@ -216,6 +233,7 @@ async def init_db():
         Base.metadata.create_all(bind=engine)
         _ensure_repairs_ot_schema()
         _ensure_payments_purchase_request_schema()
+        _ensure_products_image_url_schema()
         logger.info("✓ Database tables created successfully")
     except Exception as e:
         logger.error(f"✗ Error creating database tables: {e}")

@@ -25,7 +25,12 @@
         <!-- Step 1A: Brand Selection -->
         <div class="brand-selector">
           <label>Marca</label>
-          <select v-model="selectedBrandId" class="form-select" @change="onBrandChange">
+          <select
+            v-model="selectedBrandId"
+            class="form-select"
+            data-testid="diagnostic-brand-select"
+            @change="onBrandChange"
+          >
             <option value="">-- Selecciona una marca --</option>
             <option v-for="brand in availableBrands" :key="brand.id" :value="brand.id">
               {{ brand.name }}
@@ -36,7 +41,12 @@
         <!-- Step 1B: Model Selection (only if brand selected) -->
         <div v-if="selectedBrandId" class="model-selector">
           <label>Modelo</label>
-          <select v-model="selectedModelId" class="form-select" @change="onModelChange">
+          <select
+            v-model="selectedModelId"
+            class="form-select"
+            data-testid="diagnostic-model-select"
+            @change="onModelChange"
+          >
             <option value="">-- Selecciona un modelo --</option>
             <option v-for="model in availableModels" :key="model.id" :value="model.id">
               {{ model.model }}
@@ -107,6 +117,7 @@
           <button 
             class="btn-primary btn-large"
             :disabled="!canProceed"
+            data-testid="diagnostic-step0-continue"
             @click="nextStep"
           >
             Continuar <i class="fas fa-arrow-right"></i>
@@ -166,7 +177,7 @@
           <button class="btn-secondary" @click="previousStep">
             <i class="fas fa-arrow-left"></i> Atrás
           </button>
-          <button class="btn-primary btn-large" @click="nextStep">
+          <button class="btn-primary btn-large" data-testid="diagnostic-step1-continue" @click="nextStep">
             Continuar <i class="fas fa-arrow-right"></i>
           </button>
         </div>
@@ -184,6 +195,7 @@
             v-for="(photo, idx) in uploadedPhotos"
             :key="idx"
             class="tab-btn"
+            data-testid="diagnostic-photo-tab"
             :class="{ active: activePhotoIndex === idx }"
             @click="activePhotoIndex = idx"
           >
@@ -223,6 +235,7 @@
             <canvas 
               ref="markupCanvas"
               class="markup-canvas"
+              data-testid="diagnostic-markup-canvas"
               @dblclick="addMarker"
               @mousemove="updateCursor"
             ></canvas>
@@ -253,7 +266,7 @@
           </div>
 
           <div class="markers-list">
-            <h4>Fallas marcadas ({{ totalMarkers }})</h4>
+            <h4 data-testid="diagnostic-marker-count">Fallas marcadas ({{ totalMarkers }})</h4>
             <div 
               v-for="(marker, idx) in allMarkers"
               :key="`${marker.photoIndex}-${idx}`"
@@ -282,6 +295,7 @@
           <button 
             class="btn-primary btn-large"
             :disabled="totalMarkers === 0"
+            data-testid="diagnostic-step2-continue"
             @click="nextStep"
           >
             Continuar <i class="fas fa-arrow-right"></i>
@@ -463,6 +477,15 @@ import InstrumentCarousel from '@/components/InstrumentCarousel.vue'
 
 const emit = defineEmits(['complete'])
 
+type DiagnosticPhotoView = 'front' | 'back' | 'top' | 'detail'
+
+type DiagnosticPhoto = {
+  url: string
+  view: DiagnosticPhotoView
+  file?: File
+  source: 'catalog' | 'upload'
+}
+
 // Steps
 const steps = ['Selección', 'Componentes', 'Marcado', 'Cotización']
 const currentStep = ref(0)
@@ -471,7 +494,7 @@ const currentStep = ref(0)
 const catalog = useInstrumentsCatalog()
 const searchQuery = ref('')
 const selectedInstrument = ref(null)
-const uploadedPhotos = ref([])
+const uploadedPhotos = ref<DiagnosticPhoto[]>([])
 const fileInput = ref(null)
 
 // Brand/Model selection (NEW - ADITIVO)
@@ -605,6 +628,7 @@ const currentPhotoMarkers = computed(() => {
 const allMarkers = computed(() => {
   const markers = []
   photoMarkers.value.forEach((photoMarkersArray, photoIndex) => {
+    if (!Array.isArray(photoMarkersArray)) return
     photoMarkersArray.forEach((marker, markerIndex) => {
       markers.push({ ...marker, photoIndex, markerIndex })
     })
@@ -662,6 +686,28 @@ const quoteCalculation = computed(() => {
   }
 })
 
+const getPhotoViewByIndex = (index: number): DiagnosticPhotoView => {
+  if (index === 0) return 'front'
+  if (index === 1) return 'back'
+  if (index === 2) return 'top'
+  return 'detail'
+}
+
+const replaceDiagnosticPhotos = (photos: DiagnosticPhoto[]) => {
+  uploadedPhotos.value = photos
+  photoMarkers.value = photos.map(() => [])
+  activePhotoIndex.value = 0
+}
+
+const buildCatalogPhotos = (urls: string[]): DiagnosticPhoto[] =>
+  urls
+    .filter(Boolean)
+    .map((url, index) => ({
+      url,
+      view: getPhotoViewByIndex(index),
+      source: 'catalog' as const,
+    }))
+
 // Methods
 const onBrandChange = () => {
   // Reset model selection when brand changes
@@ -669,7 +715,7 @@ const onBrandChange = () => {
   selectedInstrument.value = null
   imageVariants.value = []
   selectedPhotoVariant.value = 0
-  uploadedPhotos.value = []
+  replaceDiagnosticPhotos([])
 }
 
 const onModelChange = async () => {
@@ -691,9 +737,13 @@ const onModelChange = async () => {
         isLoadingVariants.value = false
       }
       
-      // Clear uploads if model exists in DB
+      // Reuse catalog photos directly when the instrument already exists.
       if (instrumentFoundInDB.value) {
-        uploadedPhotos.value = []
+        const fallbackImage = catalog.getInstrumentImage(model)
+        const catalogPhotos = buildCatalogPhotos(
+          imageVariants.value.length > 0 ? imageVariants.value : [fallbackImage]
+        )
+        replaceDiagnosticPhotos(catalogPhotos)
       }
     }
   }
@@ -723,15 +773,17 @@ const handleDrop = (event) => {
 }
 
 const processFiles = (files) => {
-  files.forEach((file, index) => {
+  files.forEach((file) => {
     if (file.type.startsWith('image/')) {
       const reader = new FileReader()
       reader.onload = (e) => {
         const photoIndex = uploadedPhotos.value.length
+        const result = typeof e.target?.result === 'string' ? e.target.result : ''
         uploadedPhotos.value.push({
-          url: e.target.result,
-          view: index === 0 ? 'front' : index === 1 ? 'back' : index === 2 ? 'top' : 'detail',
-          file: file
+          url: result,
+          view: getPhotoViewByIndex(photoIndex),
+          file,
+          source: 'upload'
         })
         photoMarkers.value[photoIndex] = []
       }
@@ -925,9 +977,8 @@ const closeSuccessModal = () => {
   // Reset form
   currentStep.value = 0
   selectedInstrument.value = null
-  uploadedPhotos.value = []
+  replaceDiagnosticPhotos([])
   selectedComponents.value = []
-  photoMarkers.value = []
   disclaimerAccepted.value = false
 }
 
