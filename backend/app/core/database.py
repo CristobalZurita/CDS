@@ -208,6 +208,67 @@ def _ensure_products_image_url_schema() -> None:
     with engine.begin() as conn:
         conn.execute(text("ALTER TABLE products ADD COLUMN image_url VARCHAR(500)"))
 
+
+def _ensure_appointments_schema() -> None:
+    """
+    Ajuste aditivo para DBs legacy sin columnas nuevas en appointments.
+    Evita que el ORM falle al cargar el módulo admin de citas.
+    """
+    inspector = inspect(engine)
+    if "appointments" not in inspector.get_table_names():
+        return
+
+    current_columns = {column["name"] for column in inspector.get_columns("appointments")}
+    additions = {
+        "client_id": "INTEGER",
+        "device_id": "INTEGER",
+        "repair_id": "INTEGER",
+        "technician_id": "INTEGER",
+        "appointment_type": "VARCHAR(30) DEFAULT 'consultation'",
+        "duration_minutes": "INTEGER DEFAULT 30",
+        "fecha_fin": "DATETIME",
+        "reminder_sent_at": "DATETIME",
+        "reminder_count": "INTEGER DEFAULT 0",
+        "cancellation_reason": "TEXT",
+        "cancelled_at": "DATETIME",
+        "reschedule_count": "INTEGER DEFAULT 0",
+        "original_fecha": "DATETIME",
+        "notes_internal": "TEXT",
+        "video_call_link": "VARCHAR(500)",
+        "location": "VARCHAR(255)",
+        "status_history": "TEXT",
+    }
+
+    with engine.begin() as conn:
+        for column_name, column_ddl in additions.items():
+            if column_name in current_columns:
+                continue
+            conn.execute(text(f"ALTER TABLE appointments ADD COLUMN {column_name} {column_ddl}"))
+
+
+def _ensure_instruments_schema() -> None:
+    """
+    Ajuste aditivo para DBs legacy sin columnas nuevas en instruments.
+    Evita que el módulo admin/manuales falle al consultar el catálogo.
+    """
+    inspector = inspect(engine)
+    if "instruments" not in inspector.get_table_names():
+        return
+
+    current_columns = {column["name"] for column in inspector.get_columns("instruments")}
+    additions = {
+        "photo_base_url": "VARCHAR(512)",
+        "template_json": "JSON",
+        "mapping_status": "VARCHAR(50)",
+        "family": "VARCHAR(50)",
+    }
+
+    with engine.begin() as conn:
+        for column_name, column_ddl in additions.items():
+            if column_name in current_columns:
+                continue
+            conn.execute(text(f"ALTER TABLE instruments ADD COLUMN {column_name} {column_ddl}"))
+
 async def get_db():
     """
     Dependency to get database session
@@ -234,6 +295,8 @@ async def init_db():
         _ensure_repairs_ot_schema()
         _ensure_payments_purchase_request_schema()
         _ensure_products_image_url_schema()
+        _ensure_appointments_schema()
+        _ensure_instruments_schema()
         logger.info("✓ Database tables created successfully")
     except Exception as e:
         logger.error(f"✗ Error creating database tables: {e}")

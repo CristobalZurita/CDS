@@ -36,7 +36,7 @@
       <div class="photos">
         <figure v-for="photo in detail.photos" :key="photo.id">
           <img 
-            :src="resolvePhotoUrl(photo)" 
+            :src="photo.resolved_photo_url" 
             :alt="photo.caption || 'foto'"
             loading="lazy"
             width="400"
@@ -61,9 +61,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { api } from '@/services/api'
+import { hydrateRepairPhotos, revokeHydratedRepairPhotos } from '@/services/secureMedia'
 
 const route = useRoute()
 const detail = ref({ timeline: [], photos: [], notes: [] })
@@ -78,24 +79,14 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 }).format(price)
 }
 
-const resolveApiHost = () => {
-  const base = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
-  return base.includes('/api/') ? base.split('/api/')[0] : base
-}
-
-const resolvePhotoUrl = (photo) => {
-  if (!photo) return ''
-  const path = photo.photo_download_url || photo.photo_url || ''
-  if (!path) return ''
-  if (path.startsWith('http')) return path
-  const baseUrl = resolveApiHost()
-  return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`
-}
-
 async function load() {
   const repairId = route.params.id
   const res = await api.get(`/client/repairs/${repairId}/details`)
-  detail.value = res.data
+  const resolvedPhotos = await hydrateRepairPhotos(res.data?.photos || [])
+  detail.value = {
+    ...res.data,
+    photos: resolvedPhotos,
+  }
 }
 
 const sanitizeFilePart = (value) => {
@@ -129,6 +120,9 @@ async function downloadClosurePdf() {
 }
 
 onMounted(load)
+onBeforeUnmount(() => {
+  revokeHydratedRepairPhotos(detail.value?.photos || [])
+})
 </script>
 
 <style scoped lang="scss">

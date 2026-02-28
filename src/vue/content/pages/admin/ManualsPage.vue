@@ -3,14 +3,14 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="h4">Manuales y esquemas</h1>
       <div>
-        <button class="btn btn-sm btn-success me-2" @click="showWizard = !showWizard">
+        <button class="btn btn-sm btn-success me-2" data-testid="manuals-new" @click="showWizard = !showWizard">
           {{ showWizard ? 'Cerrar' : 'Nuevo manual' }}
         </button>
-        <button class="btn btn-sm btn-outline-secondary" @click="loadManuals">Actualizar</button>
+        <button class="btn btn-sm btn-outline-secondary" data-testid="manuals-refresh" @click="loadManuals">Actualizar</button>
       </div>
     </div>
 
-    <div v-if="showWizard" class="card p-3 mb-3">
+    <div v-if="showWizard" class="card p-3 mb-3" data-testid="manuals-wizard">
       <WizardManualUpload @completed="onCompleted" />
     </div>
 

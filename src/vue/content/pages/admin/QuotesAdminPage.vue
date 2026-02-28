@@ -11,22 +11,23 @@
             v-model="searchQuery"
             type="search"
             class="form-control form-control-sm"
+            data-testid="quotes-search"
             placeholder="Buscar COT, cliente o problema..."
             @keyup.enter="loadBoard"
           />
-          <select v-model="statusFilter" class="form-select form-select-sm" @change="loadBoard">
+          <select v-model="statusFilter" class="form-select form-select-sm" data-testid="quotes-status-filter" @change="loadBoard">
             <option value="">Todos los estados</option>
             <option v-for="option in statusOptions" :key="option.value" :value="option.value">
               {{ option.label }}
             </option>
           </select>
-          <button class="btn btn-sm btn-outline-primary" :disabled="loading" @click="loadBoard">
+          <button class="btn btn-sm btn-outline-primary" data-testid="quotes-refresh" :disabled="loading" @click="loadBoard">
             {{ loading ? 'Actualizando...' : 'Actualizar' }}
           </button>
         </div>
       </header>
 
-      <div class="board-summary">
+      <div class="board-summary" data-testid="quotes-summary">
         <span class="summary-pill">En tablero: {{ counts.total }}</span>
         <span class="summary-pill">Abiertas: {{ metrics.open_total }}</span>
         <span class="summary-pill">Pendientes: {{ metrics.pending }}</span>
@@ -51,7 +52,7 @@
 
       <div v-if="error" class="alert alert-warning mt-2">{{ error }}</div>
 
-      <div class="board-columns">
+      <div class="board-columns" data-testid="quotes-board">
         <article
           v-for="column in columnDefs"
           :key="column.key"

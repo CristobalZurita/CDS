@@ -4,14 +4,14 @@
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h1 class="h4">Clientes</h1>
 			<div>
-				<button class="btn btn-sm btn-primary me-2" @click="showIntake = !showIntake">
+				<button class="btn btn-sm btn-primary me-2" data-testid="clients-intake-toggle" @click="showIntake = !showIntake">
 					{{ showIntake ? 'Cerrar ingreso' : 'Ingreso completo' }}
 				</button>
-				<button class="btn btn-sm btn-outline-secondary" @click="load">Actualizar</button>
+				<button class="btn btn-sm btn-outline-secondary" data-testid="clients-refresh" @click="load">Actualizar</button>
 			</div>
 		</div>
 
-		<div v-if="showIntake" class="mb-3">
+		<div v-if="showIntake" class="mb-3" data-testid="clients-intake">
 			<UnifiedIntakeForm @completed="onIntakeCompleted" />
 		</div>
 
@@ -21,6 +21,7 @@
 					v-model="searchQuery"
 					type="search"
 					class="form-control"
+					data-testid="clients-search"
 					placeholder="Buscar por nombre, email, código o teléfono..."
 				/>
 			</div>

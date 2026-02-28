@@ -3,7 +3,7 @@
     <section class="admin-section">
       <div class="admin-section-header">
         <h2 class="admin-section-title">Mensajes</h2>
-        <button class="admin-btn admin-btn-outline" @click="fetchMessages">
+        <button class="admin-btn admin-btn-outline" data-testid="contact-refresh" @click="fetchMessages">
           <i class="fa-solid fa-rotate" />
           Actualizar
         </button>
@@ -16,7 +16,7 @@
       No hay mensajes registrados.
       </div>
 
-      <table v-else class="admin-table admin-table--stack">
+      <table v-else class="admin-table admin-table--stack" data-testid="contact-table">
         <thead>
           <tr>
             <th>Nombre</th>

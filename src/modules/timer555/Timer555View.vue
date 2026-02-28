@@ -458,14 +458,14 @@ const drawCircuit = () => {
   ctx.fillText('Vcc', 48, topY - 12)
   ctx.fillText('Gnd', 48, bottomY + 10)
 
-  drawChip(ctx, 170, 90, 80, 90)
+  drawChip(ctx, 170, 90, 80, 90, palette)
 
   if (isAstable.value) {
-    drawResistor(ctx, 110, 55, 55, true)
+    drawResistor(ctx, 110, 55, 55, true, palette)
     ctx.fillText('R1', 94, 80)
-    drawResistor(ctx, 110, 120, 55, true)
+    drawResistor(ctx, 110, 120, 55, true, palette)
     ctx.fillText('R2', 94, 145)
-    drawCap(ctx, 110, 185)
+    drawCap(ctx, 110, 185, palette)
     ctx.fillText('C1', 94, 200)
     ctx.beginPath()
     ctx.moveTo(110, topY)
@@ -474,11 +474,11 @@ const drawCircuit = () => {
     ctx.lineTo(110, bottomY)
     ctx.stroke()
   } else {
-    drawResistor(ctx, 95, 80, 50, true)
+    drawResistor(ctx, 95, 80, 50, true, palette)
     ctx.fillText('R', 80, 105)
-    drawCap(ctx, 140, 185)
+    drawCap(ctx, 140, 185, palette)
     ctx.fillText('C', 126, 200)
-    drawSwitch(ctx, 70, 160)
+    drawSwitch(ctx, 70, 160, palette)
     ctx.beginPath()
     ctx.moveTo(95, topY)
     ctx.lineTo(95, 80)
@@ -489,7 +489,7 @@ const drawCircuit = () => {
     ctx.stroke()
   }
 
-  drawResistor(ctx, 300, 120, 40, true)
+  drawResistor(ctx, 300, 120, 40, true, palette)
   ctx.fillText('RL', 286, 140)
   drawLed(ctx, 320, 190, ledOn, palette)
   ctx.beginPath()
@@ -513,7 +513,14 @@ const roundRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.closePath()
 }
 
-const drawChip = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) => {
+const drawChip = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  palette: ReturnType<typeof getCanvasPalette>
+) => {
   ctx.fillStyle = palette.chipFill
   ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
@@ -525,7 +532,14 @@ const drawChip = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number
   ctx.fillText('555', x + 24, y + 50)
 }
 
-const drawResistor = (ctx: CanvasRenderingContext2D, x: number, y: number, length: number, vertical: boolean) => {
+const drawResistor = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  length: number,
+  vertical: boolean,
+  palette: ReturnType<typeof getCanvasPalette>
+) => {
   const steps = 6
   const amplitude = 6
   ctx.strokeStyle = palette.stroke
@@ -547,7 +561,12 @@ const drawResistor = (ctx: CanvasRenderingContext2D, x: number, y: number, lengt
   ctx.stroke()
 }
 
-const drawCap = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
+const drawCap = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  palette: ReturnType<typeof getCanvasPalette>
+) => {
   ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
@@ -558,7 +577,12 @@ const drawCap = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
   ctx.stroke()
 }
 
-const drawSwitch = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
+const drawSwitch = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  palette: ReturnType<typeof getCanvasPalette>
+) => {
   ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()

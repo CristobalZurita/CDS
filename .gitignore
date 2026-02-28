@@ -81,6 +81,7 @@ Thumbs.db
 test-results/
 playwright-report/
 tests/e2e/.auth/
+coverage/
 
 # Production - SSL certificates (NEVER commit real certs)
 certs/
