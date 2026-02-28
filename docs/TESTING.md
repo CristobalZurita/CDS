@@ -10,3 +10,6 @@
 
 ## Objetivo mínimo
 - Cobertura sobre flujos críticos: auth, inventory, repairs, payments.
+
+## Matriz actual
+- Ver `docs/TESTING_COVERAGE_MATRIX.md` para el estado cuantificado de rutas, auditoría admin, CRUD E2E y coverage instrumentado.

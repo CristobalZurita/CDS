@@ -2,14 +2,14 @@
   <AdminLayout title="Archivo" subtitle="OT archivadas y cerradas">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="h4">Archivo</h1>
-      <button class="btn btn-sm btn-outline-secondary" @click="load">Actualizar</button>
+      <button class="btn btn-sm btn-outline-secondary" data-testid="archive-refresh" @click="load">Actualizar</button>
     </div>
 
     <div class="mb-3">
-      <input v-model="searchQuery" class="form-control" placeholder="Buscar por cliente, OT, instrumento..." />
+      <input v-model="searchQuery" class="form-control" data-testid="archive-search" placeholder="Buscar por cliente, OT, instrumento..." />
     </div>
 
-    <div class="card p-3">
+    <div class="card p-3" data-testid="archive-table">
       <table class="table table-sm">
         <thead>
           <tr>

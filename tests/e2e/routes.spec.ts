@@ -13,6 +13,15 @@ const publicRoutes = [
   '/password-reset',
   '/cotizador-ia',
   '/calculadoras',
+  '/calc/555',
+  '/calc/resistor-color',
+  '/calc/smd-capacitor',
+  '/calc/smd-resistor',
+  '/calc/ohms-law',
+  '/calc/temperature',
+  '/calc/number-system',
+  '/calc/length',
+  '/calc/awg',
 ]
 
 const clientRoutes = [
@@ -26,6 +35,7 @@ const clientRoutes = [
 const adminRoutes = [
   '/admin',
   '/admin/inventory',
+  '/admin/inventory/unified',
   '/admin/clients',
   '/admin/repairs',
   '/admin/quotes',

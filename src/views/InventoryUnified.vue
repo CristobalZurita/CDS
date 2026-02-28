@@ -3,8 +3,8 @@
     <div class="p-6">
       <h1 class="text-2xl font-bold mb-4">Inventario Unificado (POC)</h1>
       <div class="mb-4">
-        <input v-model="filter" @keyup.enter="load" placeholder="Filtrar por categoría" class="input" />
-        <button @click="load" class="btn btn-primary ml-2">Buscar</button>
+        <input v-model="filter" data-testid="inventory-unified-filter" @keyup.enter="load" placeholder="Filtrar por categoría" class="input" />
+        <button data-testid="inventory-unified-search" @click="load" class="btn btn-primary ml-2">Buscar</button>
         <button @click="triggerImport" class="btn btn-secondary ml-4" :disabled="importing">{{ importing ? 'Importando...' : 'Iniciar importación' }}</button>
       </div>
 

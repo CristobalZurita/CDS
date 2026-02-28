@@ -7,6 +7,7 @@
 					type="button"
 					class="btn"
 					:class="filter === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+					data-testid="appointments-filter-all"
 					@click="filter = 'all'"
 				>
 					Todas
@@ -15,6 +16,7 @@
 					type="button"
 					class="btn"
 					:class="filter === 'pendiente' ? 'btn-warning' : 'btn-outline-warning'"
+					data-testid="appointments-filter-pending"
 					@click="filter = 'pendiente'"
 				>
 					Pendientes
@@ -23,6 +25,7 @@
 					type="button"
 					class="btn"
 					:class="filter === 'confirmado' ? 'btn-success' : 'btn-outline-success'"
+					data-testid="appointments-filter-confirmed"
 					@click="filter = 'confirmado'"
 				>
 					Confirmadas
@@ -31,12 +34,13 @@
 					type="button"
 					class="btn"
 					:class="filter === 'cancelado' ? 'btn-secondary' : 'btn-outline-secondary'"
+					data-testid="appointments-filter-cancelled"
 					@click="filter = 'cancelado'"
 				>
 					Canceladas
 				</button>
 			</div>
-			<button class="btn btn-outline-primary ms-3" @click="loadAppointments">
+			<button class="btn btn-outline-primary ms-3" data-testid="appointments-refresh" @click="loadAppointments">
 				<i class="fa-solid fa-refresh me-1"></i> Actualizar
 			</button>
 		</div>
@@ -49,7 +53,7 @@
 		</div>
 
 		<!-- Lista de citas -->
-		<div v-else-if="filteredAppointments.length > 0" class="appointments-list">
+		<div v-else-if="filteredAppointments.length > 0" class="appointments-list" data-testid="appointments-list">
 			<div
 				v-for="appointment in filteredAppointments"
 				:key="appointment.id"
@@ -110,7 +114,7 @@
 		</div>
 
 		<!-- Empty state -->
-		<div v-else class="text-center py-5 text-muted">
+		<div v-else class="text-center py-5 text-muted" data-testid="appointments-empty">
 			<i class="fa-solid fa-calendar-xmark fa-3x mb-3"></i>
 			<p>No hay citas {{ filter !== 'all' ? 'con estado "' + filter + '"' : '' }}</p>
 		</div>

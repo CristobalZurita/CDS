@@ -3,19 +3,19 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="h4">Solicitudes de compra</h1>
       <div>
-        <button class="btn btn-sm btn-success me-2" @click="showWizard = !showWizard">
+        <button class="btn btn-sm btn-success me-2" data-testid="purchase-requests-new" @click="showWizard = !showWizard">
           {{ showWizard ? 'Cerrar' : 'Nueva solicitud' }}
         </button>
-        <button class="btn btn-sm btn-outline-secondary" @click="loadRequests">Actualizar</button>
+        <button class="btn btn-sm btn-outline-secondary" data-testid="purchase-requests-refresh" @click="loadRequests">Actualizar</button>
       </div>
     </div>
 
     <div v-if="activeRepairFilter" class="alert alert-info d-flex flex-wrap justify-content-between align-items-center gap-2">
       <span>Filtro activo por OT ID: <strong>#{{ activeRepairFilter }}</strong></span>
-      <button class="btn btn-sm btn-outline-secondary" @click="clearRepairFilter">Quitar filtro</button>
+      <button class="btn btn-sm btn-outline-secondary" data-testid="purchase-requests-clear-filter" @click="clearRepairFilter">Quitar filtro</button>
     </div>
 
-    <div v-if="showWizard" class="card p-3 mb-3">
+    <div v-if="showWizard" class="card p-3 mb-3" data-testid="purchase-requests-wizard">
       <WizardPurchaseRequest @completed="onCompleted" />
     </div>
 

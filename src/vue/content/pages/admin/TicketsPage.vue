@@ -3,14 +3,14 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="h4">Tickets</h1>
       <div>
-        <button class="btn btn-sm btn-success me-2" @click="showWizard = !showWizard">
+        <button class="btn btn-sm btn-success me-2" data-testid="tickets-new" @click="showWizard = !showWizard">
           {{ showWizard ? 'Cerrar' : 'Nuevo ticket' }}
         </button>
-        <button class="btn btn-sm btn-outline-secondary" @click="loadTickets">Actualizar</button>
+        <button class="btn btn-sm btn-outline-secondary" data-testid="tickets-refresh" @click="loadTickets">Actualizar</button>
       </div>
     </div>
 
-    <div v-if="showWizard" class="card p-3 mb-3">
+    <div v-if="showWizard" class="card p-3 mb-3" data-testid="tickets-wizard">
       <WizardTicket @completed="onCompleted" />
     </div>
 

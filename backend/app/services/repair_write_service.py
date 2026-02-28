@@ -54,27 +54,23 @@ class RepairWriteService:
         if not client_id:
             return None
 
+        # La UI admin actual envía Client.id. En DBs legacy puede coexistir con
+        # User.id numéricamente idéntico, así que debemos privilegiar Client.id.
+        client = self.db.query(Client).filter(Client.id == client_id).first()
+        if client:
+            return client
+
         user_obj = self.db.query(User).filter(User.id == client_id).first()
         if user_obj:
             linked_client = self.db.query(Client).filter(Client.user_id == user_obj.id).first()
             if linked_client:
                 return linked_client
 
-            legacy_client = self.db.query(Client).filter(Client.id == client_id).first()
-            if legacy_client and (legacy_client.user_id is None or legacy_client.user_id == user_obj.id):
-                if legacy_client.user_id is None:
-                    legacy_client.user_id = user_obj.id
-                    self.db.flush()
-                return legacy_client
-
             client = Client(user_id=user_obj.id, name=user_obj.full_name, email=user_obj.email)
             self.db.add(client)
             self.db.flush()
             return client
 
-        client = self.db.query(Client).filter(Client.id == client_id).first()
-        if client:
-            return client
         return None
 
     def create_repair(self, repair: Dict) -> Repair:

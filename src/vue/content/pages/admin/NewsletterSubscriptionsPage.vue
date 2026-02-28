@@ -3,7 +3,7 @@
     <section class="admin-section">
       <div class="admin-section-header">
         <h2 class="admin-section-title">Suscripciones</h2>
-        <button class="admin-btn admin-btn-outline" @click="fetchSubscriptions">
+        <button class="admin-btn admin-btn-outline" data-testid="newsletter-refresh" @click="fetchSubscriptions">
           <i class="fa-solid fa-rotate" />
           Actualizar
         </button>
@@ -16,7 +16,7 @@
         No hay suscripciones registradas.
       </div>
 
-      <table v-else class="admin-table admin-table--stack">
+      <table v-else class="admin-table admin-table--stack" data-testid="newsletter-table">
         <thead>
           <tr>
             <th>Email</th>

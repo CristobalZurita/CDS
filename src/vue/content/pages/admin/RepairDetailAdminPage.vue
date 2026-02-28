@@ -65,17 +65,17 @@
 				<div class="d-flex justify-content-between align-items-center mb-2">
 					<h5 class="card-title mb-0"><i class="fa-solid fa-signature me-2"></i>Firmas</h5>
 					<div class="d-flex gap-2">
-						<button class="btn btn-sm btn-outline-primary" @click="requestSignature('ingreso')">
+						<button class="btn btn-sm btn-outline-primary" data-testid="signature-request-ingreso" @click="requestSignature('ingreso')">
 							Solicitar firma ingreso
 						</button>
-						<button class="btn btn-sm btn-outline-primary" @click="requestSignature('retiro')">
+						<button class="btn btn-sm btn-outline-primary" data-testid="signature-request-retiro" @click="requestSignature('retiro')">
 							Solicitar firma retiro
 						</button>
 					</div>
 				</div>
 				<div v-if="signatureLink" class="alert alert-info">
 					<strong>Link firma:</strong>
-					<input class="form-control mt-2" :value="signatureLink" readonly />
+					<input class="form-control mt-2" data-testid="signature-link" :value="signatureLink" readonly />
 				</div>
 				<div class="row">
 					<div class="col-md-6">
@@ -91,13 +91,13 @@
 			<div class="detail-card mb-4">
 				<div class="d-flex justify-content-between align-items-center mb-2">
 					<h5 class="card-title mb-0"><i class="fa-solid fa-image me-2"></i>Fotos cliente</h5>
-					<button class="btn btn-sm btn-outline-primary" @click="requestPhotoUpload">
+					<button class="btn btn-sm btn-outline-primary" data-testid="photo-request" @click="requestPhotoUpload">
 						Solicitar foto
 					</button>
 				</div>
 				<div v-if="photoUploadLink" class="alert alert-info">
 					<strong>Link foto:</strong>
-					<input class="form-control mt-2" :value="photoUploadLink" readonly />
+					<input class="form-control mt-2" data-testid="photo-upload-link" :value="photoUploadLink" readonly />
 				</div>
 			</div>
 
@@ -151,7 +151,7 @@
 				<!-- Photos Grid -->
 				<div v-if="photos.length > 0" class="photos-grid">
 					<div v-for="photo in photos" :key="photo.id" class="photo-item">
-						<img :src="getPhotoUrl(photo.photo_download_url || photo.photo_url)" :alt="photo.caption || 'Foto'" />
+						<img :src="photo.resolved_photo_url" :alt="photo.caption || 'Foto'" />
 						<div class="photo-info">
 							<span class="badge bg-secondary">{{ photo.photo_type }}</span>
 							<small v-if="photo.caption">{{ photo.caption }}</small>
@@ -246,9 +246,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { api } from '@/services/api'
+import { hydrateRepairPhotos, revokeHydratedRepairPhotos } from '@/services/secureMedia'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 import RepairStatusChanger from '@/vue/components/admin/repair/RepairStatusChanger.vue'
 import RepairComponentsManager from '@/vue/components/admin/repair/RepairComponentsManager.vue'
@@ -367,7 +368,9 @@ const loadRepair = async () => {
 			repair.value = found || null
 		}
 
-		photos.value = photosRes?.data || photosRes || []
+		const nextPhotos = await hydrateRepairPhotos(photosRes?.data || photosRes || [])
+		revokeHydratedRepairPhotos(photos.value)
+		photos.value = nextPhotos
 		notes.value = notesRes?.data || notesRes || []
 	} catch (error) {
 		console.error('Error cargando reparación:', error)
@@ -434,7 +437,9 @@ const uploadPhoto = async () => {
 
 		// 3. Reload photos
 		const photosRes = await api.get(`/repairs/${repairId}/photos`)
-		photos.value = photosRes?.data || photosRes || []
+		const nextPhotos = await hydrateRepairPhotos(photosRes?.data || photosRes || [])
+		revokeHydratedRepairPhotos(photos.value)
+		photos.value = nextPhotos
 
 		// Reset form
 		selectedFile.value = null
@@ -473,18 +478,6 @@ const addNote = async () => {
 	} finally {
 		savingNote.value = false
 	}
-}
-
-const resolveApiHost = () => {
-	const base = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
-	return base.includes('/api/') ? base.split('/api/')[0] : base
-}
-
-const getPhotoUrl = (path) => {
-	if (!path) return ''
-	if (path.startsWith('http')) return path
-	const baseUrl = resolveApiHost()
-	return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`
 }
 
 const getPriorityLabel = (p) => {
@@ -533,6 +526,9 @@ const formatDate = (dateStr) => {
 
 onMounted(() => {
 	loadRepair()
+})
+onBeforeUnmount(() => {
+	revokeHydratedRepairPhotos(photos.value)
 })
 </script>
 

@@ -18,6 +18,10 @@ function isRelevantUrl(url: string) {
   return relevantOrigins.some((origin) => url.startsWith(origin))
 }
 
+function isIgnorableRequestFailure(errorText: string | undefined) {
+  return (errorText || '').includes('net::ERR_ABORTED')
+}
+
 export function trackBrowserErrors(page: Page): BrowserErrorTracker {
   const consoleErrors: string[] = []
   const pageErrors: string[] = []
@@ -38,7 +42,11 @@ export function trackBrowserErrors(page: Page): BrowserErrorTracker {
     if (!isRelevantUrl(request.url())) {
       return
     }
-    requestFailures.push(`${request.method()} ${request.url()} :: ${request.failure()?.errorText || 'request failed'}`)
+    const errorText = request.failure()?.errorText
+    if (isIgnorableRequestFailure(errorText)) {
+      return
+    }
+    requestFailures.push(`${request.method()} ${request.url()} :: ${errorText || 'request failed'}`)
   })
 
   page.on('response', (response) => {
