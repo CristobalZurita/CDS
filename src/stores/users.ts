@@ -22,7 +22,7 @@ export const useUsersStore = defineStore('users', () => {
     isLoading.value = true;
     error.value = null;
     try {
-      const response = await get<User[]>('/users');
+      const response = await get<User[]>('/users/');
       users.value = response.data.data || [];
     } catch (err: any) {
       const apiError = handleApiError(err);
@@ -54,7 +54,7 @@ export const useUsersStore = defineStore('users', () => {
     isLoading.value = true;
     error.value = null;
     try {
-      const response = await post<User>('/users', data);
+      const response = await post<User>('/users/', data);
       if (response.data.data) {
         users.value.push(response.data.data);
       }

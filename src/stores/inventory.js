@@ -17,7 +17,7 @@ export const useInventoryStore = defineStore('inventory', {
       if (search) q.set('search', search)
       if (categoryId) q.set('category_id', String(categoryId))
       try {
-        const res = await api.get(`/inventory?${q.toString()}`)
+        const res = await api.get(`/inventory/?${q.toString()}`)
         this.items = res.data || []
       } catch (e) {
         this.items = []
@@ -28,8 +28,7 @@ export const useInventoryStore = defineStore('inventory', {
     async deleteItem(itemId) {
       try {
         await api.delete(`/inventory/${itemId}`)
-        // refresh list
-        await this.fetchItems(this.page, this.limit)
+        this.items = this.items.filter((item) => String(item.id) !== String(itemId))
         return true
       } catch (e) {
         console.error('Error deleting item', e)
@@ -42,16 +41,20 @@ export const useInventoryStore = defineStore('inventory', {
       if (body.quantity !== undefined && body.stock === undefined) body.stock = body.quantity
       delete body.quantity
       const updatedRes = await api.put(`/inventory/${itemId}`, body)
-      await this.fetchItems(this.page, this.limit)
-      return updatedRes.data
+      const updated = updatedRes.data
+      this.items = this.items.map((item) =>
+        String(item.id) === String(itemId) ? { ...item, ...updated } : item
+      )
+      return updated
     },
     async createItem(payload) {
       const body = Object.assign({}, payload)
       if (body.quantity !== undefined && body.stock === undefined) body.stock = body.quantity
       delete body.quantity
-      const createdRes = await api.post('/inventory', body)
-      await this.fetchItems(this.page, this.limit)
-      return createdRes.data
+      const createdRes = await api.post('/inventory/', body)
+      const created = createdRes.data
+      this.items = [created, ...this.items.filter((item) => String(item.id) !== String(created.id))]
+      return created
     }
   }
 })

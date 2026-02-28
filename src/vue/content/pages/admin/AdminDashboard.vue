@@ -16,14 +16,15 @@
 		<section>
 			<div class="d-flex justify-content-between align-items-center mb-2">
 				<h3 class="mb-0">Usuarios</h3>
-				<button class="btn btn-sm btn-success" @click="showUserForm = !showUserForm">
+				<button class="btn btn-sm btn-success" data-testid="users-new" @click="toggleUserForm">
 					{{ showUserForm ? 'Cancelar' : 'Nuevo Usuario' }}
 				</button>
 			</div>
 			<div v-if="showUserForm" class="card p-3 mb-3">
-				<UserForm @saved="onUserSaved" />
+				<h5 class="mb-3">{{ selectedUser ? 'Editar usuario' : 'Crear usuario' }}</h5>
+				<UserForm :user="selectedUser" @saved="onUserSaved" />
 			</div>
-			<UserList :key="userRefreshKey" />
+			<UserList :key="userRefreshKey" @edit="onEditUser" />
 		</section>
 	</AdminLayout>
 </template>
@@ -46,6 +47,7 @@ const kpiInventory = ref({})
 const kpiClients = ref({})
 const kpiWarranty = ref({})
 const showUserForm = ref(false)
+const selectedUser = ref(null)
 const userRefreshKey = ref(0)
 
 const safeData = (result, fallback = {}) => {
@@ -85,7 +87,23 @@ onMounted(loadStats)
 
 function onUserSaved() {
 	showUserForm.value = false
+	selectedUser.value = null
 	userRefreshKey.value += 1
+}
+
+function toggleUserForm() {
+	if (showUserForm.value) {
+		showUserForm.value = false
+		selectedUser.value = null
+		return
+	}
+	selectedUser.value = null
+	showUserForm.value = true
+}
+
+function onEditUser(user) {
+	selectedUser.value = user
+	showUserForm.value = true
 }
 </script>
 

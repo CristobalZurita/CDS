@@ -1,10 +1,12 @@
+import { storeToRefs } from 'pinia'
 import { useRepairsStore } from '@/stores/repairs'
 export function useRepairs() {
   const store = useRepairsStore()
+  const { repairs, loading, error } = storeToRefs(store)
   return {
-    repairs: store.repairs,
-    loading: store.loading,
-    error: store.error,
+    repairs,
+    loading,
+    error,
     fetchRepairs: store.fetchRepairs,
     createRepair: store.createRepair,
     updateRepair: store.updateRepair,

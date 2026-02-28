@@ -3,11 +3,11 @@
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h1 class="h4">Inventario</h1>
 			<div>
-				<button class="btn btn-sm btn-outline-primary me-2" @click="activeView = 'sheet'">Planilla simple</button>
-				<button class="btn btn-sm btn-outline-primary me-2" @click="activeView = 'states'">Estados stock</button>
-				<button class="btn btn-sm btn-outline-secondary me-2" @click="activeView = 'manage'">Administrar items</button>
-				<button class="btn btn-sm btn-success me-2" @click="onNew">Nuevo item</button>
-				<button class="btn btn-sm btn-outline-secondary" @click="reload">Refrescar</button>
+				<button class="btn btn-sm btn-outline-primary me-2" data-testid="inventory-view-sheet" @click="activeView = 'sheet'">Planilla simple</button>
+				<button class="btn btn-sm btn-outline-primary me-2" data-testid="inventory-view-states" @click="activeView = 'states'">Estados stock</button>
+				<button class="btn btn-sm btn-outline-secondary me-2" data-testid="inventory-view-manage" @click="activeView = 'manage'">Administrar items</button>
+				<button class="btn btn-sm btn-success me-2" data-testid="inventory-new" @click="onNew">Nuevo item</button>
+				<button class="btn btn-sm btn-outline-secondary" data-testid="inventory-refresh" @click="reload">Refrescar</button>
 			</div>
 		</div>
 
@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/services/api'
 import InventoryTable from '@/vue/components/admin/InventoryTable.vue'
@@ -37,7 +37,7 @@ const store = useInventoryStore()
 const route = useRoute()
 const router = useRouter()
 
-const items = ref([])
+const items = computed(() => store.items)
 const warnedSkus = new Set()
 const showForm = ref(false)
 const selected = ref(null)
@@ -45,7 +45,6 @@ const activeView = ref('sheet')
 
 async function load() {
 	await store.fetchItems(1, 50)
-	items.value = store.items
 	checkLowStockAlerts()
 }
 
@@ -96,7 +95,6 @@ async function onDelete(item) {
 	if (!confirm(`Eliminar item "${item.name || item.id}"?`)) return
 	try {
 		await store.deleteItem(item.id)
-		await load()
 	} catch (e) {
 		console.error(e)
 		alert('No fue posible eliminar el item')
@@ -116,7 +114,6 @@ async function onSave(payload) {
 		const q = { ...route.query }
 		delete q.edit
 		router.replace({ query: q })
-		await load()
 	} catch (e) {
 		console.error(e)
 		alert('Error guardando item: ' + (e.message || e))

@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia'
 import { useRepairsStore } from '@/stores/repairs'
 import type { Ref } from 'vue'
 
@@ -21,11 +22,13 @@ export interface UseRepairsComposable {
 
 export function useRepairs(): UseRepairsComposable {
   const store = useRepairsStore()
+  const { repairs, error } = storeToRefs(store)
+  const loading = 'loading' in store ? storeToRefs(store).loading : storeToRefs(store).isLoading
 
   return {
-    repairs: store.repairs,
-    loading: store.loading,
-    error: store.error,
+    repairs,
+    loading,
+    error,
     fetchRepairs: store.fetchRepairs,
     createRepair: store.createRepair,
     updateRepair: store.updateRepair,

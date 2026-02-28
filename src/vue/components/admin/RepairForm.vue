@@ -1,8 +1,8 @@
 <template>
-  <form class="repair-form" @submit.prevent="onSubmit">
+  <form class="repair-form" data-testid="repair-form" @submit.prevent="onSubmit">
     <div class="mb-2">
       <label class="form-label">Cliente</label>
-      <select v-model.number="form.client_id" class="form-select" required>
+      <select v-model.number="form.client_id" class="form-select" data-testid="repair-client" required>
         <option :value="null">Selecciona cliente</option>
         <option v-for="client in clients" :key="client.id" :value="client.id">
           {{ client.client_code || client.id }} - {{ client.name }}
@@ -11,20 +11,20 @@
     </div>
     <div class="mb-2">
       <label class="form-label">Modelo/Instrumento</label>
-      <input v-model="form.model" class="form-control" placeholder="Ej: Korg MS-20" required />
+      <input v-model="form.model" class="form-control" data-testid="repair-model" placeholder="Ej: Korg MS-20" required />
     </div>
     <div class="mb-2">
       <label class="form-label">Problema reportado</label>
-      <textarea v-model="form.problem_reported" class="form-control" rows="2" required></textarea>
+      <textarea v-model="form.problem_reported" class="form-control" data-testid="repair-problem" rows="2" required></textarea>
     </div>
     <div class="row g-2">
       <div class="col-md-6">
         <label class="form-label">Abono (CLP)</label>
-        <input v-model.number="form.paid_amount" type="number" min="0" class="form-control" />
+        <input v-model.number="form.paid_amount" type="number" min="0" class="form-control" data-testid="repair-paid-amount" />
       </div>
       <div class="col-md-6">
         <label class="form-label">Medio de pago</label>
-        <select v-model="form.payment_method" class="form-select">
+        <select v-model="form.payment_method" class="form-select" data-testid="repair-payment-method">
           <option value="cash">Efectivo</option>
           <option value="web">Web</option>
           <option value="transfer">Transferencia</option>
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="mt-3 d-flex justify-content-end gap-2">
-      <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+      <button type="submit" class="btn btn-primary btn-sm" data-testid="repair-save">Guardar</button>
     </div>
   </form>
 </template>

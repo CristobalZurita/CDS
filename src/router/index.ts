@@ -326,9 +326,8 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // Verificar autenticación si no está hecho aún
-  if (!authStore.token && to.meta.requiresAuth) {
-    // Intentar recuperar sesión del localStorage
+  // Verificar autenticación si existe ruta protegida y la sesión aún no está hidratada.
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     await authStore.checkAuth()
   }
 

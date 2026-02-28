@@ -9,23 +9,33 @@ export const useUsersStore = defineStore('users', {
   }),
   actions: {
     async fetchUsers() {
+      this.error = null
       this.loading = true
       try {
         this.users = await useApi().get('/users')
       } catch (e) {
         this.error = e
+        this.users = []
       } finally {
         this.loading = false
       }
     },
     async createUser(data) {
-      return await useApi().post('/users', data)
+      const created = await useApi().post('/users/', data)
+      this.users.push(created)
+      return created
     },
     async updateUser(id, data) {
-      return await useApi().put(`/users/${id}`, data)
+      const updated = await useApi().put(`/users/${id}`, data)
+      this.users = this.users.map((user) =>
+        String(user.id) === String(id) ? updated : user
+      )
+      return updated
     },
     async deleteUser(id) {
-      return await useApi().delete(`/users/${id}`)
+      const result = await useApi().delete(`/users/${id}`)
+      this.users = this.users.filter((user) => String(user.id) !== String(id))
+      return result
     }
   }
 })

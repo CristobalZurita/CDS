@@ -1,20 +1,20 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="onSubmit" data-testid="user-form">
     <div>
       <label>Email</label>
-      <input v-model="form.email" required type="email" />
+      <input v-model="form.email" required type="email" data-testid="user-email" />
     </div>
     <div>
       <label>Nombre completo</label>
-      <input v-model="form.full_name" required />
+      <input v-model="form.full_name" required data-testid="user-full-name" />
     </div>
     <div>
       <label>Usuario</label>
-      <input v-model="form.username" required />
+      <input v-model="form.username" required data-testid="user-username" />
     </div>
     <div>
       <label>Rol</label>
-      <select v-model="form.role">
+      <select v-model="form.role" data-testid="user-role">
         <option value="client">Cliente</option>
         <option value="technician">Técnico</option>
         <option value="admin">Admin</option>
@@ -23,31 +23,66 @@
     <div>
       <label>Contraseña</label>
       <div class="password-field">
-        <input v-model="form.password" required :type="showPassword ? 'text' : 'password'" />
+        <input
+          v-model="form.password"
+          :required="!isEditing"
+          :type="showPassword ? 'text' : 'password'"
+          data-testid="user-password"
+        />
         <button type="button" class="toggle-password" @click="showPassword = !showPassword">
           {{ showPassword ? 'Ocultar' : 'Mostrar' }}
         </button>
       </div>
     </div>
-    <button type="submit">Guardar</button>
+    <button type="submit" data-testid="user-save">{{ isEditing ? 'Actualizar' : 'Guardar' }}</button>
   </form>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useUsers } from '@/composables/useUsers'
 const { createUser, updateUser } = useUsers()
 const emit = defineEmits(['saved'])
-const form = ref({ email: '', full_name: '', username: '', role: 'client', password: '' })
+const props = defineProps({
+  user: {
+    type: Object,
+    default: null
+  }
+})
+const emptyForm = () => ({ email: '', full_name: '', username: '', role: 'client', password: '' })
+const form = ref(emptyForm())
 const showPassword = ref(false)
+const isEditing = computed(() => Boolean(props.user?.id))
+
+watch(
+  () => props.user,
+  (user) => {
+    form.value = {
+      email: user?.email || '',
+      full_name: user?.full_name || '',
+      username: user?.username || '',
+      role: user?.role || 'client',
+      password: ''
+    }
+  },
+  { immediate: true }
+)
+
 async function onSubmit() {
-  // Si es edición, usar updateUser, si es nuevo, usar createUser
   try {
-    await createUser(form.value)
+    const payload = { ...form.value }
+    if (isEditing.value) {
+      if (!payload.password) {
+        delete payload.password
+      }
+      await updateUser(props.user.id, payload)
+    } else {
+      await createUser(payload)
+    }
     emit('saved')
-    form.value = { email: '', full_name: '', username: '', role: 'client', password: '' }
+    form.value = emptyForm()
   } catch (e) {
-    console.error('Error creando usuario:', e)
-    alert('Error creando usuario')
+    console.error('Error guardando usuario:', e)
+    alert('Error guardando usuario')
   }
 }
 </script>

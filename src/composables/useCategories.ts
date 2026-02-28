@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia'
 import { useCategoriesStore } from '@/stores/categories'
 import type { Ref } from 'vue'
 
@@ -21,11 +22,13 @@ export interface UseCategoriesComposable {
 
 export function useCategories(): UseCategoriesComposable {
   const store = useCategoriesStore()
+  const { categories, error } = storeToRefs(store)
+  const loading = 'loading' in store ? storeToRefs(store).loading : storeToRefs(store).isLoading
 
   return {
-    categories: store.categories,
-    loading: store.loading,
-    error: store.error,
+    categories,
+    loading,
+    error,
     fetchCategories: store.fetchCategories,
     createCategory: store.createCategory,
     updateCategory: store.updateCategory,
