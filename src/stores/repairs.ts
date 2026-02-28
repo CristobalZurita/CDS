@@ -28,7 +28,7 @@ export const useRepairsStore = defineStore('repairs', () => {
     }
 
     try {
-      const response = await get<Repair[]>('/repairs');
+      const response = await get<Repair[]>('/repairs/');
       repairs.value = response.data.data || [];
     } catch (err: any) {
       const apiError = handleApiError(err);
@@ -60,7 +60,7 @@ export const useRepairsStore = defineStore('repairs', () => {
     isLoading.value = true;
     error.value = null;
     try {
-      const response = await post<Repair>('/repairs', data);
+      const response = await post<Repair>('/repairs/', data);
       if (response.data.data) {
         repairs.value.push(response.data.data);
       }

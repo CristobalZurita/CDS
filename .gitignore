@@ -77,6 +77,11 @@ env/
 .DS_Store
 Thumbs.db
 
+# Playwright artifacts
+test-results/
+playwright-report/
+tests/e2e/.auth/
+
 # Production - SSL certificates (NEVER commit real certs)
 certs/
 certbot/
