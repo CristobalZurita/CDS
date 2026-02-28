@@ -66,6 +66,7 @@ env/
 *.db
 *.sqlite
 *.sqlite3
+DOCUMJENTOS_EXTRAS/ARCHIVO_VIEJO_SOBRANTE/db/
 
 # IDE
 .vscode/
