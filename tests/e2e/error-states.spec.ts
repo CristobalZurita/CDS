@@ -55,4 +55,85 @@ test.describe('authenticated client guards', () => {
 
     await expect.poll(async () => page.evaluate(() => window.location.pathname)).toBe('/dashboard')
   })
+
+  test('schedule page shows backend 422 validation errors without fake success', async ({ page }) => {
+    await page.route('**/api/v1/appointments/', async (route) => {
+      await route.fulfill({
+        status: 422,
+        contentType: 'application/json',
+        body: JSON.stringify({ detail: 'La fecha ya no está disponible' }),
+      })
+    })
+
+    await page.goto('/agendar')
+    await waitForAppToSettle(page)
+
+    await page.getByTestId('schedule-next-month').click()
+    await page.locator('[data-testid="schedule-day"][data-disabled="false"]').first().click()
+    await page.getByTestId('schedule-date-next').click()
+    await page.getByTestId('schedule-time-slot').first().click()
+    await page.getByTestId('schedule-time-next').click()
+    await page.locator('input[type="checkbox"]').check()
+    await page.getByTestId('schedule-confirm').click()
+
+    await expect(page.getByTestId('schedule-error')).toContainText('La fecha ya no está disponible')
+    await expect(page.getByTestId('schedule-success')).toHaveCount(0)
+  })
+
+  test('OT payments page shows a visible error when the backend load fails with 500', async ({ page }) => {
+    await page.route('**/api/v1/client/purchase-requests', async (route) => {
+      await route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({ detail: 'Error interno OT' }),
+      })
+    })
+
+    await page.goto('/ot-payments')
+    await waitForAppToSettle(page)
+
+    await expect(page.getByTestId('ot-payments-error')).toContainText('Error interno OT')
+  })
+
+  test('OT payments page surfaces 403 errors when a deposit proof is rejected', async ({ page }) => {
+    await page.route('**/api/v1/client/purchase-requests', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            id: 99,
+            status: 'pending_payment',
+            repair_code: 'CDS-010-OT-099',
+            requested_amount: 24000,
+            payment_due_date: '2026-03-10T00:00:00Z',
+            items_count: 1,
+            notes: 'Pago pendiente de autorización',
+            latest_payment: {
+              admin_notes: 'Deposita y sube tu comprobante',
+              proof_path: null,
+            },
+          },
+        ]),
+      })
+    })
+
+    await page.route('**/api/v1/client/purchase-requests/99/deposit-proof', async (route) => {
+      await route.fulfill({
+        status: 403,
+        contentType: 'application/json',
+        body: JSON.stringify({ detail: 'No autorizado para esta solicitud de compra' }),
+      })
+    })
+
+    await page.goto('/ot-payments')
+    await waitForAppToSettle(page)
+
+    const requestRow = page.getByTestId('ot-payment-row').filter({ hasText: 'Solicitud #99' })
+    await expect(requestRow).toBeVisible()
+    await requestRow.getByTestId('ot-payment-reference').fill('DEP-E2E-403')
+    await requestRow.getByTestId('ot-payment-submit').click()
+
+    await expect(page.getByTestId('ot-payments-error')).toContainText('No autorizado para esta solicitud de compra')
+  })
 })

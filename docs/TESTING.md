@@ -42,11 +42,11 @@ npm run build
 
 ## Foto actual
 - `npm run test:coverage`:
-  - `160/160` passing
-  - lines/statements: `36.99%`
-  - branches: `59.76%`
-  - functions: `36.85%`
+  - `170/170` passing
+  - lines/statements: `39.07%`
+  - branches: `61.9%`
+  - functions: `41%`
 - `npm run test:e2e`:
-  - `88/88` passing
+  - `91/91` passing
 - `npm run build`:
   - passing

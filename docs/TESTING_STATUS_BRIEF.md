@@ -1,11 +1,11 @@
 # Testing Status Brief
 
-Fecha de corte: 2026-02-28
+Fecha de corte: 2026-03-01
 
 ## Qué está automatizado hoy
 
 - `npm run test:e2e`
-  - `88/88` pruebas pasando
+  - `91/91` pruebas pasando
   - cubre rutas públicas, cliente, admin y dinámicas
   - audita enlaces internos visibles
   - detecta errores JS, requests fallidos y respuestas `4xx/5xx`
@@ -28,15 +28,18 @@ Fecha de corte: 2026-02-28
     - estados de error visibles:
       - login inválido
       - token inválido de carga de foto
+      - backend `422` en agenda
+      - backend `500` al cargar pagos OT
+      - backend `403` al rechazar comprobante OT
       - redirecciones por permisos/guest routes
       - rutas inexistentes
 
 - `npm run test:coverage`
-  - `160/160` pruebas Vitest pasando
+  - `170/170` pruebas Vitest pasando
   - coverage real actual:
-    - statements/lines: `36.99%`
-    - branches: `59.76%`
-    - functions: `36.85%`
+    - statements/lines: `39.07%`
+    - branches: `61.9%`
+    - functions: `41%`
   - reportes para IDE:
     - `coverage/lcov.info`
     - `coverage/coverage-summary.json`

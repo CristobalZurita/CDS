@@ -18,7 +18,7 @@
       <div class="filters">
         <div class="filter-group">
           <label>Filtrar por estado:</label>
-          <select v-model="selectedStatus" class="filter-select">
+          <select v-model="selectedStatus" class="filter-select" data-testid="repairs-status-filter">
             <option value="">Todos</option>
             <option value="pending_quote">Ingreso / Diagnóstico</option>
             <option value="in_progress">En Proceso</option>
@@ -34,6 +34,7 @@
           v-for="repair in filteredRepairs"
           :key="repair.id"
           class="repair-card"
+          data-testid="repairs-card"
         >
           <div class="repair-card-header">
             <div class="repair-info">
@@ -72,7 +73,7 @@
           </div>
 
           <div class="repair-actions">
-            <button @click="viewRepair(repair)" class="btn-view">
+            <button @click="viewRepair(repair)" class="btn-view" data-testid="repair-view">
               Ver detalles →
             </button>
           </div>
@@ -80,7 +81,7 @@
       </div>
 
       <!-- Empty State -->
-      <div v-else class="empty-state">
+      <div v-else class="empty-state" data-testid="repairs-empty">
         <div class="empty-icon">📋</div>
         <p>No hay reparaciones que coincidan con los filtros</p>
         <router-link to="/cotizador-ia" class="btn-primary">
