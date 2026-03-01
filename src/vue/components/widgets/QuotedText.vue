@@ -37,7 +37,7 @@ const lastSpanContent = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 span.last-span {
     white-space: nowrap;

@@ -37,7 +37,7 @@ const parsedAnswer = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 div.foxy-item-faq-question {
     display: flex;

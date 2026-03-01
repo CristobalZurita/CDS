@@ -96,7 +96,7 @@ const _onInputChanged = (e) => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 div.foxy-contact-form-row {
     --column-spacing: 12px;

@@ -123,7 +123,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .password-reset {
   display: flex;

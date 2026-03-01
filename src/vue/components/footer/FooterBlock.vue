@@ -26,7 +26,7 @@ const className = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 div.foxy-footer-block {
     min-height: 40px;

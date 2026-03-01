@@ -75,7 +75,7 @@ const submitPhoto = async () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .photo-upload-page {
   min-height: 100vh;

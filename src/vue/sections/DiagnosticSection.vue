@@ -22,7 +22,7 @@ import InteractiveInstrumentDiagnostic from "@/vue/components/quotation/Interact
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import '@/scss/variables';
 
 .diagnostic-section {
     background-color: $light; // Vintage Beige

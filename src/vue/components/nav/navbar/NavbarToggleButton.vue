@@ -22,7 +22,7 @@ const icon = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 button.foxy-navbar-toggle {
     $button-size: 40px;

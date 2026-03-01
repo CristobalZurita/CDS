@@ -166,7 +166,7 @@ const formatDateTime = (isoString) => {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .quotation-result {
   width: 100%;

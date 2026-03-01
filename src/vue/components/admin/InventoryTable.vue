@@ -38,7 +38,7 @@ const props = defineProps({
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 .inventory-table .table {
 	width: 100%;

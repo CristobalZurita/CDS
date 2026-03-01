@@ -1,3 +1,23 @@
-// Legacy entry point kept for compatibility.
-// The active global stylesheet is main.scss.
-@use "./main";
+@import "variables";
+@import "brand"; // variables and palette from MANUAL_CIRUJANO
+@import "mixins";
+@import "reset";
+
+// importing bootstrap
+@import "/node_modules/bootstrap/scss/bootstrap";
+
+// importing core styling file
+@import "/node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+// our project needs Solid + Brands
+@import "/node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+@import "/node_modules/@fortawesome/fontawesome-free/scss/regular.scss";
+@import "/node_modules/@fortawesome/fontawesome-free/scss/brands.scss";
+
+// importing prime icons...
+@import "primeicons/primeicons.css";
+
+@import "layout";
+@import "typography";
+@import "global";
+@import "admin";
+@import "public";

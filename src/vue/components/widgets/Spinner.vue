@@ -13,7 +13,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 img.foxy-spinner-widget {
     @include generate-dynamic-styles-with-hash((

@@ -21,7 +21,7 @@ const lowStock = computed(() => props.items.filter((item) => item.is_low_stock |
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .alerts {
   border: 1px solid $color-red-100-legacy;

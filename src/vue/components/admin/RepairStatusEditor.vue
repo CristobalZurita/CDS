@@ -19,7 +19,7 @@ defineEmits(['update:modelValue'])
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .status-editor {
   display: grid;

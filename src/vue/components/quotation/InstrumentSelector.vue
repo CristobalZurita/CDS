@@ -187,7 +187,7 @@ const proceed = () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 // Colores legacy centralizados en abstracts/_variables.scss
 

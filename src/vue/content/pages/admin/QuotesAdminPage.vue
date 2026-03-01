@@ -418,7 +418,7 @@ onMounted(loadBoard)
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .quotes-board-page {
   display: flex;

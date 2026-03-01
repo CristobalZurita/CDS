@@ -13,7 +13,7 @@ import ItemTimelineEntry from "/src/vue/components/articles/items/ItemTimelineEn
 </script>
 
 <style lang="scss">
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 :root {
     --padding: 0 1rem;

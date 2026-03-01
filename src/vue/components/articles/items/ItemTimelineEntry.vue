@@ -69,7 +69,7 @@ const date = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 li.foxy-timeline-item {
     position: relative;

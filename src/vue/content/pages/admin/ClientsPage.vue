@@ -102,7 +102,7 @@ onMounted(load)
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .clients-page {
 	padding: 1rem;

@@ -221,7 +221,7 @@ const submit = async () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .wizard-step-body h4 {
   margin-bottom: $spacer-md;

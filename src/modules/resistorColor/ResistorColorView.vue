@@ -468,7 +468,7 @@ function formatOhms(value: number) {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 #resistor-color-calculator {
   --resistor-default-band: #{$color-sand-300-legacy};

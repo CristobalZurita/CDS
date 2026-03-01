@@ -181,7 +181,7 @@ const percent = (value) => {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 .kpi-zones {
   display: grid;

@@ -112,7 +112,7 @@ const handleLogout = () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .admin-topbar {
   display: flex;

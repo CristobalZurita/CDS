@@ -59,7 +59,7 @@ const parsedAuthor = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 div.foxy-testimonial-item {
     @include generate-dynamic-styles-with-hash((

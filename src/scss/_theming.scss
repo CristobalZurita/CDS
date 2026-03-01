@@ -1,3 +1,10 @@
-// Legacy bridge.
-// New component styles should use: @use "@/scss/theming" as *;
-@forward "./theming";
+// Central theming import for Vue components.
+// Order matters: import Bootstrap functions first, then project variables (which can use those functions),
+// then Bootstrap variables, then mixins.
+@import "/node_modules/bootstrap/scss/functions";
+@import "./abstracts/_variables";
+@import "./_brand";
+@import "./_variables";
+@import "/node_modules/bootstrap/scss/variables";
+@import "./_mixins.scss";
+@import "/node_modules/bootstrap/scss/mixins";

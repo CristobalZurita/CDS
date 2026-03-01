@@ -86,7 +86,7 @@ const accepted = ref(false)
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 /* Overlay */
 .disclaimer-overlay {

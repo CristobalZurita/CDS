@@ -31,28 +31,19 @@ REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 def hash_password(password: str) -> str:
     """Hash una contraseña usando bcrypt"""
-    # Bcrypt has a 72-byte input limit. Truncate the UTF-8 encoded
-    # password to avoid ValueError being raised by the backend hashing
-    # implementation when a too-long password is supplied.
     try:
         pw_bytes = password.encode("utf-8")
     except Exception:
-        # Fallback: coerce to str then encode
-        pw_bytes = str(password).encode("utf-8")
-
-    if len(pw_bytes) > 72:
-        pw_bytes = pw_bytes[:72]
+        safe_password = str(password)
+        pw_bytes = safe_password.encode("utf-8")
+    else:
+        safe_password = password
 
     if _bcrypt_available:
         try:
-            return bcrypt.hashpw(pw_bytes, bcrypt.gensalt()).decode("utf-8")
+            return bcrypt.hashpw(pw_bytes[:72], bcrypt.gensalt()).decode("utf-8")
         except ValueError:
-            # Fall through to pbkdf2 when the native bcrypt backend rejects
-            # the input in constrained environments.
             pass
-
-    # Pass the (possibly truncated) bytes back as string to the pbkdf2 fallback.
-    safe_password = pw_bytes.decode("utf-8", errors="ignore")
 
     return pbkdf2_context.hash(safe_password)
 
@@ -62,7 +53,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     # Intentar con bcrypt directamente primero (evita bugs de passlib)
     if _bcrypt_available and hashed_password.startswith("$2"):
         try:
-            password_bytes = plain_password.encode("utf-8")
+            password_bytes = plain_password.encode("utf-8")[:72]
             hash_bytes = hashed_password.encode("utf-8")
             return bcrypt.checkpw(password_bytes, hash_bytes)
         except Exception:

@@ -442,7 +442,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .diagnostic-wizard {
   padding: $spacer-xxl $spacer-xl;

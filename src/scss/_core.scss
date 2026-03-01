@@ -1,3 +1,29 @@
-// Legacy bridge.
-// New component styles should use: @use "@/scss/core" as *;
-@forward "./core";
+// ============================================
+// CORE - Import para componentes Vue
+// ============================================
+// USO EN COMPONENTES VUE:
+//
+// <style lang="scss" scoped>
+// @import "@/scss/_core.scss";
+//
+// .mi-componente {
+//     @include text-body;  // Hereda tipografía global
+//     color: $color-primary;
+// }
+// </style>
+// ============================================
+
+// 1. Bootstrap functions (necesarias para manipular colores)
+@import "/node_modules/bootstrap/scss/functions";
+
+// 2. Nuestras variables unificadas
+@import "./abstracts/variables";
+
+// 3. Bootstrap variables (para $grid-breakpoints, etc.)
+@import "/node_modules/bootstrap/scss/variables";
+
+// 4. Bootstrap mixins (media-breakpoint-down, etc.)
+@import "/node_modules/bootstrap/scss/mixins";
+
+// 5. Nuestros mixins (DESPUÉS de Bootstrap para usar sus mixins)
+@import "./abstracts/mixins";

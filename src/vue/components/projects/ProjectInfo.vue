@@ -24,7 +24,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 div.foxy-project-info {
     @include generate-dynamic-styles-with-hash((

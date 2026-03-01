@@ -21,7 +21,7 @@ defineEmits(['open'])
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .repairs-list {
   display: grid;

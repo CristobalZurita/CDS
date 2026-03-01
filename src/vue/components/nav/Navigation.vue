@@ -40,5 +40,5 @@ const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 </style>

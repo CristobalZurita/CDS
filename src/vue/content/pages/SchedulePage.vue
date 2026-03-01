@@ -401,7 +401,7 @@ const emit = defineEmits(['cancel'])
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .schedule-page {
   min-height: 100vh;

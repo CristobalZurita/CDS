@@ -22,7 +22,7 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 .stats {
   display: grid;

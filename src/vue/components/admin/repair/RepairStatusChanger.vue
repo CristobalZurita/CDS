@@ -147,7 +147,7 @@ const executeTransition = async () => {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .status-changer {
 	background: $vintage-beige;

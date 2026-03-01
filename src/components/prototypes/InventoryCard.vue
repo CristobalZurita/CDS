@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .inventory-card { max-width: 420px }
 .inventory-card-image { width: 64px; height: 64px; object-fit: cover; }

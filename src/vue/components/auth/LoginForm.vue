@@ -181,7 +181,7 @@ function onVerify(token) {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 /* ===========================================
    LOGINFORM - Manual de Identidad Visual

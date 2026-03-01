@@ -17,7 +17,7 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .category-manager ul {
   list-style: none;

@@ -42,7 +42,7 @@ const _selectItem = (item) => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 div.btn-group {
     margin: 0 auto;
