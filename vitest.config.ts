@@ -14,6 +14,8 @@ export default defineConfig({
       exclude: [
         'node_modules/',
         'tests/',
+        'DOCUMJENTOS_EXTRAS/**',
+        'playwright.config.ts',
         '**/*.d.ts',
         '**/mockData.ts',
         '**/fixtures/**'

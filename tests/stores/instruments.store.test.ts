@@ -1,130 +1,67 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+
+const apiMock = vi.hoisted(() => ({
+  get: vi.fn(),
+  post: vi.fn(),
+  put: vi.fn(),
+  delete: vi.fn(),
+}))
+
+vi.mock('@/composables/useApi', () => ({
+  useApi: () => apiMock,
+}))
+
 import { useInstrumentsStore } from '@stores/instruments'
 
-describe('Instruments Store', () => {
+describe('instruments store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
   })
 
-  it('should have initial state', () => {
+  it('starts empty', () => {
     const store = useInstrumentsStore()
+
     expect(store.instruments).toEqual([])
-    expect(store.isLoading).toBe(false)
+    expect(store.loading).toBe(false)
+    expect(store.error).toBeNull()
   })
 
-  it('should add instrument', () => {
+  it('fetches instruments', async () => {
+    apiMock.get.mockResolvedValueOnce([{ id: 1, name: 'Juno-106' }])
+
     const store = useInstrumentsStore()
-    const instrument = {
-      id: 1,
-      name: 'Multimeter',
-      category: 'Testing',
-      status: 'available',
-      lastCalibration: new Date()
-    }
-    store.instruments.push(instrument)
-    expect(store.instruments).toContainEqual(instrument)
+    await store.fetchInstruments()
+
+    expect(apiMock.get).toHaveBeenCalledWith('/instruments')
+    expect(store.instruments).toEqual([{ id: 1, name: 'Juno-106' }])
+    expect(store.loading).toBe(false)
   })
 
-  it('should find instrument by ID', () => {
+  it('captures fetch errors', async () => {
+    const failure = { message: 'backend down' }
+    apiMock.get.mockRejectedValueOnce(failure)
+
     const store = useInstrumentsStore()
-    const instrument = {
-      id: 1,
-      name: 'Multimeter',
-      category: 'Testing',
-      status: 'available',
-      lastCalibration: new Date()
-    }
-    store.instruments = [instrument]
-    expect(store.instruments.find(i => i.id === 1)).toEqual(instrument)
+    await store.fetchInstruments()
+
+    expect(store.error).toEqual(failure)
   })
 
-  it('should update instrument', () => {
-    const store = useInstrumentsStore()
-    store.instruments = [{
-      id: 1,
-      name: 'Multimeter',
-      category: 'Testing',
-      status: 'available',
-      lastCalibration: new Date()
-    }]
-    store.instruments[0].status = 'maintenance'
-    expect(store.instruments[0].status).toBe('maintenance')
-  })
+  it('delegates create, update and delete to the API', async () => {
+    apiMock.post.mockResolvedValueOnce({ id: 2 })
+    apiMock.put.mockResolvedValueOnce({ id: 2, name: 'DX7' })
+    apiMock.delete.mockResolvedValueOnce({ ok: true })
 
-  it('should delete instrument', () => {
     const store = useInstrumentsStore()
-    store.instruments = [
-      { id: 1, name: 'Multimeter', category: 'Testing', status: 'available', lastCalibration: new Date() },
-      { id: 2, name: 'Soldering Iron', category: 'Soldering', status: 'available', lastCalibration: new Date() }
-    ]
-    store.instruments = store.instruments.filter(i => i.id !== 1)
-    expect(store.instruments).toHaveLength(1)
-  })
 
-  it('should filter available instruments', () => {
-    const store = useInstrumentsStore()
-    store.instruments = [
-      { id: 1, name: 'Multimeter', category: 'Testing', status: 'available', lastCalibration: new Date() },
-      { id: 2, name: 'Soldering Iron', category: 'Soldering', status: 'maintenance', lastCalibration: new Date() },
-      { id: 3, name: 'Screwdriver', category: 'Hand Tools', status: 'available', lastCalibration: new Date() }
-    ]
-    const available = store.instruments.filter(i => i.status === 'available')
-    expect(available).toHaveLength(2)
-  })
+    await expect(store.createInstrument({ name: 'DX7' })).resolves.toEqual({ id: 2 })
+    await expect(store.updateInstrument(2, { name: 'DX7' })).resolves.toEqual({ id: 2, name: 'DX7' })
+    await expect(store.deleteInstrument(2)).resolves.toEqual({ ok: true })
 
-  it('should filter instruments in maintenance', () => {
-    const store = useInstrumentsStore()
-    store.instruments = [
-      { id: 1, name: 'Multimeter', category: 'Testing', status: 'available', lastCalibration: new Date() },
-      { id: 2, name: 'Soldering Iron', category: 'Soldering', status: 'maintenance', lastCalibration: new Date() }
-    ]
-    const maintenance = store.instruments.filter(i => i.status === 'maintenance')
-    expect(maintenance).toHaveLength(1)
-  })
-
-  it('should group instruments by category', () => {
-    const store = useInstrumentsStore()
-    store.instruments = [
-      { id: 1, name: 'Multimeter', category: 'Testing', status: 'available', lastCalibration: new Date() },
-      { id: 2, name: 'Soldering Iron', category: 'Soldering', status: 'available', lastCalibration: new Date() },
-      { id: 3, name: 'Oscilloscope', category: 'Testing', status: 'available', lastCalibration: new Date() }
-    ]
-    const testingInstruments = store.instruments.filter(i => i.category === 'Testing')
-    expect(testingInstruments).toHaveLength(2)
-  })
-
-  it('should search instruments by name', () => {
-    const store = useInstrumentsStore()
-    store.instruments = [
-      { id: 1, name: 'Multimeter', category: 'Testing', status: 'available', lastCalibration: new Date() },
-      { id: 2, name: 'Soldering Iron', category: 'Soldering', status: 'available', lastCalibration: new Date() }
-    ]
-    const results = store.instruments.filter(i => i.name.includes('Multi'))
-    expect(results).toHaveLength(1)
-  })
-
-  it('should count total instruments', () => {
-    const store = useInstrumentsStore()
-    store.instruments = [
-      { id: 1, name: 'Multimeter', category: 'Testing', status: 'available', lastCalibration: new Date() },
-      { id: 2, name: 'Soldering Iron', category: 'Soldering', status: 'available', lastCalibration: new Date() },
-      { id: 3, name: 'Screwdriver', category: 'Hand Tools', status: 'available', lastCalibration: new Date() }
-    ]
-    expect(store.instruments.length).toBe(3)
-  })
-
-  it('should track last calibration date', () => {
-    const store = useInstrumentsStore()
-    const calibDate = new Date('2024-01-01')
-    store.instruments = [{
-      id: 1,
-      name: 'Multimeter',
-      category: 'Testing',
-      status: 'available',
-      lastCalibration: calibDate
-    }]
-    expect(store.instruments[0].lastCalibration).toEqual(calibDate)
+    expect(apiMock.post).toHaveBeenCalledWith('/instruments', { name: 'DX7' })
+    expect(apiMock.put).toHaveBeenCalledWith('/instruments/2', { name: 'DX7' })
+    expect(apiMock.delete).toHaveBeenCalledWith('/instruments/2')
   })
 })

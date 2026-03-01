@@ -1,84 +1,72 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+
+const apiMock = vi.hoisted(() => ({
+  get: vi.fn(),
+  post: vi.fn(),
+  put: vi.fn(),
+  delete: vi.fn(),
+}))
+
+vi.mock('@/composables/useApi', () => ({
+  useApi: () => apiMock,
+}))
+
 import { useUsersStore } from '@stores/users'
 
-describe('Users Store', () => {
+describe('users store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
   })
 
-  it('should have initial empty state', () => {
+  it('starts empty', () => {
     const store = useUsersStore()
+
     expect(store.users).toEqual([])
-    expect(store.isLoading).toBe(false)
+    expect(store.loading).toBe(false)
+    expect(store.error).toBeNull()
   })
 
-  it('should add user', () => {
+  it('fetches users successfully', async () => {
+    apiMock.get.mockResolvedValueOnce([{ id: 1, email: 'admin@test.com' }])
+
     const store = useUsersStore()
-    const user = { id: 1, name: 'John', email: 'john@test.com', role: 'user' }
-    store.users.push(user)
-    expect(store.users).toContainEqual(user)
+    await store.fetchUsers()
+
+    expect(apiMock.get).toHaveBeenCalledWith('/users')
+    expect(store.users).toEqual([{ id: 1, email: 'admin@test.com' }])
+    expect(store.error).toBeNull()
   })
 
-  it('should find user by ID', () => {
+  it('captures fetch errors and clears stale users', async () => {
+    const failure = { message: '403' }
+    apiMock.get.mockRejectedValueOnce(failure)
+
     const store = useUsersStore()
-    const user = { id: 1, name: 'John', email: 'john@test.com', role: 'user' }
-    store.users = [user]
-    expect(store.users.find(u => u.id === 1)).toEqual(user)
+    store.users = [{ id: 99 }]
+
+    await store.fetchUsers()
+
+    expect(store.users).toEqual([])
+    expect(store.error).toEqual(failure)
   })
 
-  it('should update user', () => {
-    const store = useUsersStore()
-    store.users = [{ id: 1, name: 'John', email: 'john@test.com', role: 'user' }]
-    store.users[0].name = 'Jane'
-    expect(store.users[0].name).toBe('Jane')
-  })
+  it('adds, updates and deletes users', async () => {
+    apiMock.post.mockResolvedValueOnce({ id: 2, email: 'new@test.com' })
+    apiMock.put.mockResolvedValueOnce({ id: 2, email: 'updated@test.com' })
+    apiMock.delete.mockResolvedValueOnce({ ok: true })
 
-  it('should delete user', () => {
     const store = useUsersStore()
-    store.users = [
-      { id: 1, name: 'John', email: 'john@test.com', role: 'user' },
-      { id: 2, name: 'Jane', email: 'jane@test.com', role: 'admin' }
-    ]
-    store.users = store.users.filter(u => u.id !== 1)
-    expect(store.users).toHaveLength(1)
-  })
+    store.users = [{ id: 1, email: 'old@test.com' }]
 
-  it('should count users', () => {
-    const store = useUsersStore()
-    store.users = [
-      { id: 1, name: 'User1', email: 'user1@test.com', role: 'user' },
-      { id: 2, name: 'User2', email: 'user2@test.com', role: 'admin' },
-      { id: 3, name: 'User3', email: 'user3@test.com', role: 'user' }
-    ]
-    expect(store.users.length).toBe(3)
-  })
+    await expect(store.createUser({ email: 'new@test.com' })).resolves.toEqual({ id: 2, email: 'new@test.com' })
+    await expect(store.updateUser(2, { email: 'updated@test.com' })).resolves.toEqual({ id: 2, email: 'updated@test.com' })
+    await expect(store.deleteUser(1)).resolves.toEqual({ ok: true })
 
-  it('should filter admins', () => {
-    const store = useUsersStore()
-    store.users = [
-      { id: 1, name: 'John', email: 'john@test.com', role: 'admin' },
-      { id: 2, name: 'Jane', email: 'jane@test.com', role: 'user' },
-      { id: 3, name: 'Bob', email: 'bob@test.com', role: 'admin' }
-    ]
-    const admins = store.users.filter(u => u.role === 'admin')
-    expect(admins).toHaveLength(2)
-  })
-
-  it('should search users by email', () => {
-    const store = useUsersStore()
-    store.users = [
-      { id: 1, name: 'John', email: 'john@test.com', role: 'user' },
-      { id: 2, name: 'Jane', email: 'jane@test.com', role: 'admin' }
-    ]
-    const results = store.users.filter(u => u.email.includes('john'))
-    expect(results).toHaveLength(1)
-  })
-
-  it('should set loading state', () => {
-    const store = useUsersStore()
-    store.isLoading = true
-    expect(store.isLoading).toBe(true)
+    expect(apiMock.post).toHaveBeenCalledWith('/users/', { email: 'new@test.com' })
+    expect(apiMock.put).toHaveBeenCalledWith('/users/2', { email: 'updated@test.com' })
+    expect(apiMock.delete).toHaveBeenCalledWith('/users/1')
+    expect(store.users).toEqual([{ id: 2, email: 'updated@test.com' }])
   })
 })

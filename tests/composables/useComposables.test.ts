@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
 import { useRepairs } from '@composables/useRepairs'
 import { useInventory } from '@composables/useInventory'
 import { useQuotation } from '@composables/useQuotation'
@@ -8,185 +9,126 @@ import { useDiagnostic } from '@composables/useDiagnostic'
 import { useDiagnostics } from '@composables/useDiagnostics'
 import { useInstruments } from '@composables/useInstruments'
 import { useInstrumentsCatalog } from '@composables/useInstrumentsCatalog'
+import { useRepairsStore } from '@stores/repairs'
+import { useInventoryStore } from '@stores/inventory'
+import { useCategoriesStore } from '@stores/categories'
+import { useUsersStore } from '@stores/users'
+import { useDiagnosticsStore } from '@stores/diagnostics'
+import { useInstrumentsStore } from '@stores/instruments'
 
-describe('useRepairs Composable', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('should expose repairs list', () => {
-    const { repairs } = useRepairs()
-    expect(repairs).toBeDefined()
+describe('store-backed composables', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
   })
 
-  it('should expose repair methods', () => {
-    const { createRepair, updateRepair, deleteRepair, getRepairs } = useRepairs()
-    expect(typeof createRepair).toBe('function')
-    expect(typeof updateRepair).toBe('function')
-    expect(typeof deleteRepair).toBe('function')
-    expect(typeof getRepairs).toBe('function')
+  it('exposes repairs refs and actions from the store', () => {
+    const store = useRepairsStore()
+    store.repairs = [{ id: 1, status: 'pending' }]
+
+    const composable = useRepairs()
+
+    expect(composable.repairs.value).toEqual([{ id: 1, status: 'pending' }])
+    expect(typeof composable.fetchRepairs).toBe('function')
+    expect(typeof composable.createRepair).toBe('function')
+    expect(typeof composable.updateRepair).toBe('function')
+    expect(typeof composable.deleteRepair).toBe('function')
   })
 
-  it('should filter repairs by status', () => {
-    const { getRepairsByStatus } = useRepairs()
-    expect(typeof getRepairsByStatus).toBe('function')
+  it('exposes inventory refs and refresh helpers', () => {
+    const store = useInventoryStore()
+    store.items = [{ id: 10, name: 'Capacitor' }]
+    store.page = 2
+    store.limit = 50
+
+    const composable = useInventory()
+
+    expect(composable.items.value).toEqual([{ id: 10, name: 'Capacitor' }])
+    expect(composable.page.value).toBe(2)
+    expect(composable.limit.value).toBe(50)
+    expect(typeof composable.refresh).toBe('function')
+    expect(typeof composable.createItem).toBe('function')
+    expect(typeof composable.updateItem).toBe('function')
+    expect(typeof composable.deleteItem).toBe('function')
   })
 
-  it('should calculate repair statistics', () => {
-    const { getRepairStats } = useRepairs()
-    expect(typeof getRepairStats).toBe('function')
-  })
-})
+  it('exposes categories, users, diagnostics and instruments wrappers', () => {
+    useCategoriesStore().categories = [{ id: 1, name: 'Sintes' }]
+    useUsersStore().users = [{ id: 1, email: 'admin@test.com' }]
+    useDiagnosticsStore().diagnostics = [{ id: 1, result: 'ok' }]
+    useInstrumentsStore().instruments = [{ id: 1, name: 'Juno-106' }]
 
-describe('useInventory Composable', () => {
-  beforeEach(() => vi.clearAllMocks())
+    const categories = useCategories()
+    const users = useUsers()
+    const diagnostics = useDiagnostics()
+    const instruments = useInstruments()
 
-  it('should expose inventory items', () => {
-    const { items } = useInventory()
-    expect(items).toBeDefined()
-  })
-
-  it('should expose inventory methods', () => {
-    const { addItem, updateItem, deleteItem, getItems } = useInventory()
-    expect(typeof addItem).toBe('function')
-    expect(typeof updateItem).toBe('function')
-    expect(typeof deleteItem).toBe('function')
-    expect(typeof getItems).toBe('function')
-  })
-
-  it('should check low stock items', () => {
-    const { getLowStockItems } = useInventory()
-    expect(typeof getLowStockItems).toBe('function')
-  })
-
-  it('should calculate inventory value', () => {
-    const { getTotalInventoryValue } = useInventory()
-    expect(typeof getTotalInventoryValue).toBe('function')
-  })
-})
-
-describe('useQuotation Composable', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('should expose quotations', () => {
-    const { quotations } = useQuotation()
-    expect(quotations).toBeDefined()
-  })
-
-  it('should expose quotation methods', () => {
-    const { createQuotation, updateQuotation, sendQuotation } = useQuotation()
-    expect(typeof createQuotation).toBe('function')
-    expect(typeof updateQuotation).toBe('function')
-    expect(typeof sendQuotation).toBe('function')
-  })
-
-  it('should calculate quotation totals', () => {
-    const { calculateTotal } = useQuotation()
-    expect(typeof calculateTotal).toBe('function')
+    expect(categories.categories.value).toHaveLength(1)
+    expect(users.users.value).toHaveLength(1)
+    expect(diagnostics.diagnostics).toHaveLength(1)
+    expect(instruments.instruments).toHaveLength(1)
+    expect(typeof categories.fetchCategories).toBe('function')
+    expect(typeof users.fetchUsers).toBe('function')
+    expect(typeof diagnostics.fetchDiagnostics).toBe('function')
+    expect(typeof instruments.fetchInstruments).toBe('function')
   })
 })
 
-describe('useCategories Composable', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('should expose categories', () => {
-    const { categories } = useCategories()
-    expect(categories).toBeDefined()
+describe('standalone composables', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
   })
 
-  it('should expose category methods', () => {
-    const { getCategories, addCategory, updateCategory } = useCategories()
-    expect(typeof getCategories).toBe('function')
-    expect(typeof addCategory).toBe('function')
-    expect(typeof updateCategory).toBe('function')
-  })
-})
+  it('provides diagnostic helpers over the catalog datasets', () => {
+    const diagnostic = useDiagnostic()
+    const firstBrand = diagnostic.brands.value[0]
 
-describe('useUsers Composable', () => {
-  beforeEach(() => vi.clearAllMocks())
+    expect(diagnostic.brands.value.length).toBeGreaterThan(0)
+    expect(diagnostic.instruments.value.length).toBeGreaterThan(0)
+    expect(diagnostic.faults.value).toBeDefined()
+    expect(diagnostic.getBrands()).toContainEqual(firstBrand)
+    expect(typeof diagnostic.getModelsByBrand).toBe('function')
+    expect(typeof diagnostic.calculateQuote).toBe('function')
 
-  it('should expose users list', () => {
-    const { users } = useUsers()
-    expect(users).toBeDefined()
-  })
-
-  it('should expose user methods', () => {
-    const { getUsers, createUser, updateUser, deleteUser } = useUsers()
-    expect(typeof getUsers).toBe('function')
-    expect(typeof createUser).toBe('function')
-    expect(typeof updateUser).toBe('function')
-    expect(typeof deleteUser).toBe('function')
+    diagnostic.selectedBrand.value = firstBrand.id
+    const models = diagnostic.getModelsByBrand(firstBrand.id)
+    if (models.length > 0) {
+      diagnostic.selectedModel.value = models[0].id
+      const availableFaults = diagnostic.getAvailableFaults()
+      expect(Array.isArray(availableFaults)).toBe(true)
+    }
   })
 
-  it('should search users', () => {
-    const { searchUsers } = useUsers()
-    expect(typeof searchUsers).toBe('function')
-  })
-})
+  it('exposes quotation state and derived prices', () => {
+    const quotation = useQuotation()
 
-describe('useDiagnostic Composable', () => {
-  beforeEach(() => vi.clearAllMocks())
+    quotation.quotation.value = {
+      min_price: 100000,
+      max_price: 200000,
+      exceeds_recommendation: true,
+    }
 
-  it('should expose current diagnostic', () => {
-    const { currentDiagnostic } = useDiagnostic()
-    expect(currentDiagnostic).toBeDefined()
-  })
+    expect(quotation.hasQuotation.value).toBe(true)
+    expect(quotation.exceedsRecommendation.value).toBe(true)
+    expect(quotation.priceRange.value.min).toBe(100000)
+    expect(quotation.priceRange.value.max).toBe(200000)
+    expect(quotation.priceRange.value.mid).toBe(150000)
 
-  it('should expose diagnostic methods', () => {
-    const { createDiagnostic, updateDiagnostic, finalizeDiagnostic } = useDiagnostic()
-    expect(typeof createDiagnostic).toBe('function')
-    expect(typeof updateDiagnostic).toBe('function')
-    expect(typeof finalizeDiagnostic).toBe('function')
-  })
-})
-
-describe('useDiagnostics Composable', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('should expose diagnostics list', () => {
-    const { diagnostics } = useDiagnostics()
-    expect(diagnostics).toBeDefined()
+    quotation.reset()
+    expect(quotation.quotation.value).toBeNull()
+    expect(quotation.hasQuotation.value).toBe(false)
   })
 
-  it('should expose diagnostic list methods', () => {
-    const { getDiagnostics, filterByStatus, filterByRepair } = useDiagnostics()
-    expect(typeof getDiagnostics).toBe('function')
-    expect(typeof filterByStatus).toBe('function')
-    expect(typeof filterByRepair).toBe('function')
-  })
-})
+  it('exposes the synchronized instrument catalog', () => {
+    const catalog = useInstrumentsCatalog()
+    const brands = catalog.getAllBrands()
 
-describe('useInstruments Composable', () => {
-  beforeEach(() => vi.clearAllMocks())
+    expect(catalog.brands.value.length).toBeGreaterThan(0)
+    expect(catalog.instruments.value.length).toBeGreaterThan(0)
+    expect(brands.length).toBeGreaterThan(0)
+    expect(catalog.getCatalogStats.value.totalBrands).toBe(brands.length)
 
-  it('should expose instruments', () => {
-    const { instruments } = useInstruments()
-    expect(instruments).toBeDefined()
-  })
-
-  it('should expose instrument methods', () => {
-    const { getInstruments, addInstrument, updateInstrument } = useInstruments()
-    expect(typeof getInstruments).toBe('function')
-    expect(typeof addInstrument).toBe('function')
-    expect(typeof updateInstrument).toBe('function')
-  })
-
-  it('should check instrument availability', () => {
-    const { getAvailableInstruments } = useInstruments()
-    expect(typeof getAvailableInstruments).toBe('function')
-  })
-})
-
-describe('useInstrumentsCatalog Composable', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('should expose catalog', () => {
-    const { catalog } = useInstrumentsCatalog()
-    expect(catalog).toBeDefined()
-  })
-
-  it('should expose catalog methods', () => {
-    const { getCatalog, searchCatalog, filterBycategory } = useInstrumentsCatalog()
-    expect(typeof getCatalog).toBe('function')
-    expect(typeof searchCatalog).toBe('function')
-    expect(typeof filterBycategory).toBe('function')
+    const firstInstrument = catalog.instruments.value[0]
+    expect(catalog.getInstrumentById(firstInstrument.id)?.id).toBe(firstInstrument.id)
+    expect(Array.isArray(catalog.searchInstruments(firstInstrument.model))).toBe(true)
   })
 })
