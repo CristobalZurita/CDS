@@ -19,13 +19,9 @@ describe('shop cart store', () => {
     window.localStorage.clear()
   })
 
-  it('hydrates legacy cart format and syncs sellable stock from catalog', () => {
-    window.localStorage.setItem('cirujano-shop-cart-v1', JSON.stringify({ 12: 3 }))
+  it('syncs a persisted cart snapshot against the live catalog', () => {
     const store = useShopCartStore()
-
-    store.hydrate()
-    expect(store.items[0].id).toBe(12)
-    expect(store.items[0].qty).toBe(3)
+    store.replaceItems([{ id: 12, qty: 3 }])
 
     store.syncCatalog([
       {

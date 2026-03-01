@@ -46,9 +46,12 @@ function normalizeCartItem(item) {
 }
 
 function maxAllowedQty(item) {
-  const sellable = Number(item?.sellable_stock || 0)
-  if (sellable > 0) {
-    return Math.min(MAX_QTY_PER_PRODUCT, sellable)
+  const rawSellable = item?.sellable_stock
+  if (rawSellable !== undefined && rawSellable !== null && String(rawSellable).trim() !== '') {
+    const sellable = Number(rawSellable)
+    if (Number.isFinite(sellable) && sellable > 0) {
+      return Math.min(MAX_QTY_PER_PRODUCT, sellable)
+    }
   }
   return MAX_QTY_PER_PRODUCT
 }

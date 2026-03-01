@@ -61,6 +61,7 @@ test.describe('admin extended CRUD flows', () => {
       const match = page.url().match(/\/admin\/repairs\/(\d+)$/)
       repairId = match ? Number(match[1]) : null
       expect(repairId).not.toBeNull()
+      await expectNoBrowserErrors(tracker)
     } finally {
       if (repairId) {
         await apiAs('admin', `/repairs/${repairId}`, { method: 'DELETE' }).catch(() => null)
@@ -70,7 +71,6 @@ test.describe('admin extended CRUD flows', () => {
       }
     }
 
-    await expectNoBrowserErrors(tracker)
   })
 
   test('appointments CRUD works from admin UI', async ({ page }) => {
