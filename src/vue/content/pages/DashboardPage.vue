@@ -11,7 +11,7 @@
           <router-link to="/cotizador-ia" class="btn-primary">
             + Nueva Cotización
           </router-link>
-          <button class="btn-logout" type="button" @click="handleLogout">
+          <button class="btn-logout" type="button" data-testid="dashboard-logout" @click="handleLogout">
             Cerrar sesión
           </button>
         </div>
@@ -71,6 +71,7 @@
               v-for="repair in activeRepairsList"
               :key="repair.id"
               class="repair-card"
+              data-testid="dashboard-repair-card"
             >
               <div class="repair-header">
                 <div class="repair-info">
@@ -98,12 +99,12 @@
               </div>
 
               <div class="repair-actions">
-                <button @click="viewRepair(repair)" class="btn-link">Ver detalles →</button>
+                <button @click="viewRepair(repair)" class="btn-link" data-testid="dashboard-repair-view">Ver detalles →</button>
               </div>
             </div>
           </div>
 
-          <div v-else class="empty-state">
+          <div v-else class="empty-state" data-testid="dashboard-empty-repairs">
             <p>No tienes reparaciones activas</p>
             <router-link to="/cotizador-ia" class="btn-secondary">
               Solicitar cotización
@@ -166,6 +167,7 @@
               :key="notification.id"
               class="notification-card"
               :class="notification.type"
+              data-testid="dashboard-notification"
             >
               <div class="notification-icon">{{ getNotificationIcon(notification.type) }}</div>
               <div class="notification-content">
@@ -175,13 +177,14 @@
               <button
                 @click="dismissNotification(notification.id)"
                 class="notification-close"
+                data-testid="dashboard-notification-dismiss"
               >
                 ✕
               </button>
             </div>
           </div>
 
-          <div v-else class="empty-state">
+          <div v-else class="empty-state" data-testid="dashboard-empty-notifications">
             <p>No hay notificaciones nuevas</p>
           </div>
         </div>

@@ -5,17 +5,17 @@
       <p>Firma dentro del recuadro y presiona Enviar.</p>
 
       <div class="canvas-wrap">
-        <canvas ref="canvasRef" width="600" height="260"></canvas>
+        <canvas ref="canvasRef" width="600" height="260" data-testid="signature-canvas"></canvas>
       </div>
 
       <div class="actions">
-        <button class="btn btn-outline-secondary" @click="clearCanvas">Limpiar</button>
-        <button class="btn btn-primary" :disabled="saving" @click="submitSignature">
+        <button class="btn btn-outline-secondary" data-testid="signature-clear" @click="clearCanvas">Limpiar</button>
+        <button class="btn btn-primary" :disabled="saving" data-testid="signature-submit" @click="submitSignature">
           {{ saving ? 'Enviando...' : 'Enviar' }}
         </button>
       </div>
 
-      <p v-if="status" class="status">{{ status }}</p>
+      <p v-if="status" class="status" data-testid="signature-status">{{ status }}</p>
     </div>
   </div>
 </template>

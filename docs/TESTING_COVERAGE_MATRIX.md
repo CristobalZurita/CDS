@@ -1,6 +1,6 @@
 # Testing Coverage Matrix
 
-Fecha de corte: 2026-02-28
+Fecha de corte: 2026-03-01
 
 ## Qué significa "100% cubierto" en este proyecto
 
@@ -103,6 +103,12 @@ Cubiertos hoy:
 - token inválido de carga de foto con feedback visible
 - firma por token
 - carga de foto por token
+- errores visibles por estado:
+  - `401` en login inválido
+  - `403` en rechazo de comprobante OT y guard de admin
+  - `404` en token inválido de carga de foto
+  - `422` en validación de agenda
+  - `500` en carga fallida de pagos OT
 - navegación pública, cliente y admin sin errores visibles
 
 Base:
@@ -118,13 +124,13 @@ Estado:
 - La instrumentación quedó operativa y la suite unitaria/integración ya no tiene deuda bloqueante.
 
 Última corrida:
-- `160` tests pasando
+- `170` tests pasando
 - `0` tests fallando
 - summary actual:
-  - statements: `36.99%`
-  - branches: `59.76%`
-  - functions: `36.85%`
-  - lines: `36.99%`
+  - statements: `39.07%`
+  - branches: `61.9%`
+  - functions: `41%`
+  - lines: `39.07%`
 
 Lectura correcta:
 - El coverage ya es real y estable, pero hoy es bajo.
@@ -137,7 +143,7 @@ Lectura correcta:
 ### Barrido E2E
 
 - `npm run test:e2e`
-- Resultado actual: `88/88` passing
+- Resultado actual: `91/91` passing
 
 ### Build
 
