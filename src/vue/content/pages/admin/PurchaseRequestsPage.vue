@@ -36,7 +36,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="req in requests" :key="req.id">
+          <tr v-for="req in requests" :key="req.id" data-testid="purchase-request-row">
             <td>#{{ req.id }}</td>
             <td>
               <div><strong>{{ req.client_name || 'SIN_CLIENTE' }}</strong></div>
@@ -72,6 +72,7 @@
                 />
                 <button
                   class="btn btn-sm btn-outline-primary"
+                  data-testid="purchase-request-request-payment"
                   :disabled="isBusy(req.id)"
                   @click="requestPayment(req)"
                 >
@@ -100,6 +101,7 @@
               <div class="actions-col">
                 <button
                   class="btn btn-sm btn-success"
+                  data-testid="purchase-request-confirm-payment"
                   :disabled="isBusy(req.id)"
                   @click="confirmPayment(req)"
                 >
@@ -107,6 +109,7 @@
                 </button>
                 <select
                   class="form-select form-select-sm"
+                  data-testid="purchase-request-status-select"
                   :disabled="isBusy(req.id)"
                   :value="req.status"
                   @change="setStatus(req, $event.target.value)"
@@ -115,6 +118,14 @@
                     {{ status }}
                   </option>
                 </select>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  data-testid="purchase-request-delete"
+                  :disabled="isBusy(req.id)"
+                  @click="deleteRequest(req)"
+                >
+                  Eliminar
+                </button>
               </div>
             </td>
           </tr>
@@ -264,6 +275,20 @@ const setStatus = async (req, status) => {
 const onCompleted = () => {
   showWizard.value = false
   loadRequests()
+}
+
+const deleteRequest = async (req) => {
+  if (!confirm(`¿Eliminar la solicitud #${req.id}?`)) return
+  setBusy(req.id, true)
+  error.value = ''
+  try {
+    await api.delete(`/purchase-requests/${req.id}`)
+    await loadRequests()
+  } catch (e) {
+    error.value = e?.response?.data?.detail || 'No se pudo eliminar la solicitud'
+  } finally {
+    setBusy(req.id, false)
+  }
 }
 
 const clearRepairFilter = async () => {

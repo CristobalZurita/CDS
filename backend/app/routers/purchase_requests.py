@@ -418,3 +418,17 @@ def update_purchase_request_status(
         pass
 
     return {"ok": True, "request": _serialize_request(db, req)}
+
+
+@router.delete("/{request_id}", status_code=204)
+def delete_purchase_request(
+    request_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("purchase_requests", "delete")),
+):
+    req = _get_request_or_404(db, request_id)
+
+    db.query(Payment).filter(Payment.purchase_request_id == req.id).delete(synchronize_session=False)
+    db.delete(req)
+    db.commit()
+    return None

@@ -23,18 +23,36 @@
             <th>Estado</th>
             <th>Prioridad</th>
             <th>Mensajes</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="ticket in tickets" :key="ticket.id">
+          <tr v-for="ticket in tickets" :key="ticket.id" data-testid="ticket-row">
             <td>#{{ ticket.id }}</td>
             <td>{{ ticket.subject }}</td>
             <td>{{ ticket.status }}</td>
             <td>{{ ticket.priority }}</td>
-            <td>{{ ticket.messages?.length || 0 }}</td>
+            <td data-testid="ticket-message-count">{{ ticket.messages?.length || 0 }}</td>
+            <td>
+              <div class="d-flex gap-2">
+                <select
+                  class="form-select form-select-sm"
+                  data-testid="ticket-status-select"
+                  :value="ticket.status"
+                  @change="updateTicketStatus(ticket, $event.target.value)"
+                >
+                  <option value="open">open</option>
+                  <option value="in_progress">in_progress</option>
+                  <option value="closed">closed</option>
+                </select>
+                <button class="btn btn-sm btn-outline-danger" data-testid="ticket-delete" @click="deleteTicket(ticket)">
+                  Eliminar
+                </button>
+              </div>
+            </td>
           </tr>
           <tr v-if="tickets.length === 0">
-            <td colspan="5" class="text-muted">Sin tickets registrados.</td>
+            <td colspan="6" class="text-muted">Sin tickets registrados.</td>
           </tr>
         </tbody>
       </table>
@@ -54,6 +72,17 @@ const showWizard = ref(false)
 const loadTickets = async () => {
   const res = await api.get('/tickets/').catch(() => ({ data: [] }))
   tickets.value = res.data || res || []
+}
+
+const updateTicketStatus = async (ticket, status) => {
+  await api.patch(`/tickets/${ticket.id}?status=${encodeURIComponent(status)}`).catch(() => null)
+  loadTickets()
+}
+
+const deleteTicket = async (ticket) => {
+  if (!confirm(`¿Eliminar ticket #${ticket.id}?`)) return
+  await api.delete(`/tickets/${ticket.id}`).catch(() => null)
+  loadTickets()
 }
 
 const onCompleted = () => {

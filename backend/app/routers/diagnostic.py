@@ -848,6 +848,22 @@ async def update_quote(
     return serialize_quote(quote, client)
 
 
+@router.delete("/quotes/{quote_id}")
+async def delete_quote(
+    quote_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_quote_permission("update")),
+):
+    quote = _get_quote_or_404(db, quote_id)
+    linked_repairs = db.query(Repair).filter(Repair.quote_id == quote.id).count()
+    if linked_repairs:
+        raise HTTPException(status_code=400, detail="No se puede eliminar una cotización asociada a una OT")
+
+    db.delete(quote)
+    db.commit()
+    return {"ok": True}
+
+
 @router.post("/quotes/{quote_id}/status")
 async def update_quote_status(
     quote_id: int,

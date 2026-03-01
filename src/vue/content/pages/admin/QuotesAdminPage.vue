@@ -68,6 +68,7 @@
               v-for="quote in getColumnItems(column.key)"
               :key="quote.id"
               class="quote-card"
+              data-testid="quote-card"
               :class="{ highlighted: highlightedQuoteId === quote.id }"
             >
               <div class="quote-card-head">
@@ -90,6 +91,7 @@
                 <button
                   v-if="quote.status === 'pending'"
                   class="btn btn-sm btn-primary"
+                  data-testid="quote-send"
                   :disabled="isBusy(quote.id)"
                   @click="sendQuote(quote)"
                 >
@@ -99,6 +101,7 @@
                 <button
                   v-if="quote.status === 'sent'"
                   class="btn btn-sm btn-success"
+                  data-testid="quote-approve"
                   :disabled="isBusy(quote.id)"
                   @click="changeStatus(quote, 'approved')"
                 >
@@ -108,6 +111,7 @@
                 <button
                   v-if="quote.status === 'sent'"
                   class="btn btn-sm btn-outline-danger"
+                  data-testid="quote-deny"
                   :disabled="isBusy(quote.id)"
                   @click="changeStatus(quote, 'denied')"
                 >
@@ -117,6 +121,7 @@
                 <button
                   v-if="quote.status === 'approved' && !quote.linked_repair_id"
                   class="btn btn-sm btn-outline-primary"
+                  data-testid="quote-create-repair"
                   :disabled="isBusy(quote.id)"
                   @click="createRepairFromQuote(quote)"
                 >
@@ -126,9 +131,20 @@
                 <button
                   v-if="quote.linked_repair_id"
                   class="btn btn-sm btn-outline-secondary"
+                  data-testid="quote-open-repair"
                   @click="openRepair(quote.linked_repair_id)"
                 >
                   Ver OT
+                </button>
+
+                <button
+                  v-if="!quote.linked_repair_id"
+                  class="btn btn-sm btn-outline-danger"
+                  data-testid="quote-delete"
+                  :disabled="isBusy(quote.id)"
+                  @click="deleteQuote(quote)"
+                >
+                  Eliminar
                 </button>
               </div>
             </article>
@@ -380,6 +396,21 @@ const openRepair = (repairId) => {
   const id = Number(repairId || 0)
   if (id > 0) {
     router.push(`/admin/repairs/${id}`)
+  }
+}
+
+const deleteQuote = async (quote) => {
+  if (!quote?.id) return
+  if (!confirm(`¿Eliminar la cotización ${quote.quote_number || quote.id}?`)) return
+
+  setBusy(quote.id, true)
+  try {
+    await api.delete(`/diagnostic/quotes/${quote.id}`)
+    await loadBoard()
+  } catch (e) {
+    error.value = e?.response?.data?.detail || 'No se pudo eliminar la cotización'
+  } finally {
+    setBusy(quote.id, false)
   }
 }
 
