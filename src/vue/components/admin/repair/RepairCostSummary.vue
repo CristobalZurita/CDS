@@ -261,7 +261,7 @@ watch(() => props.repair, (repair) => {
 </script>
 
 <style scoped lang="scss">
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 .cost-summary {
 	background: $vintage-beige;

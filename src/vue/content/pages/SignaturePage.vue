@@ -107,7 +107,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .signature-page {
   min-height: 100vh;

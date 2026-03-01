@@ -40,7 +40,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .admin-shell {
   display: grid;

@@ -533,7 +533,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 .detail-card {
 	background: $vintage-beige;

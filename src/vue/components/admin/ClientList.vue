@@ -19,7 +19,7 @@ defineEmits(['select'])
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .client-list {
   list-style: none;

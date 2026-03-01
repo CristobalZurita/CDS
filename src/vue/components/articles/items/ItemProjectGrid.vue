@@ -114,7 +114,7 @@ const _onItemSelected = () => {
 </script>
 
 <style lang="scss">
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 div.foxy-project-item {
     display: inline-flex;

@@ -32,7 +32,7 @@ const progressClass = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 div.progress {
     height: 4px;

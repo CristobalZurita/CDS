@@ -74,7 +74,7 @@ onMounted(fetchSubscriptions)
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 .admin-status {
   margin: 0 0 1rem;

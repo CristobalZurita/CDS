@@ -252,7 +252,7 @@ loadRequests()
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .ot-payments-page {
   min-height: 100vh;

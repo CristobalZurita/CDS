@@ -197,7 +197,7 @@ const scrollTimeline = (direction) => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_core.scss";
+@use '@/scss/core' as *;
 
 // ============================================
 // SECCIÓN ARRIBA: 2 COLUMNAS (Texto + Galería)

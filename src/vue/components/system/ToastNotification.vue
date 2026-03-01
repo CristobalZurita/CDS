@@ -65,7 +65,7 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .toast-container {
   position: fixed;

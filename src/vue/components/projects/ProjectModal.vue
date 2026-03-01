@@ -75,7 +75,7 @@ const _onHidden = () => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 div.modal-content {
     background-color: $light-1;

@@ -54,7 +54,7 @@ const parsedDescription = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 div.foxy-section-footer {
     @include generate-dynamic-styles-with-hash((

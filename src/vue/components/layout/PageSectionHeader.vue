@@ -27,7 +27,7 @@ const parsedSubtitle = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 div.foxy-section-header {
     @include generate-dynamic-styles-with-hash((

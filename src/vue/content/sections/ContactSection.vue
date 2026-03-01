@@ -55,7 +55,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 .contact-form-wrapper {
   width: 100%;

@@ -26,7 +26,7 @@ const formattedCopyright = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 p {
     color: $color-gray-230-legacy; /* slightly off-white for better contrast */

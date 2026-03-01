@@ -29,7 +29,7 @@ const formatDate = (value) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .table {
   width: 100%;
