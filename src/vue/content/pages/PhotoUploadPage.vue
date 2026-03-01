@@ -6,21 +6,32 @@
 
       <div class="form-group">
         <label>Foto (cámara o galería)</label>
-        <input type="file" accept="image/*" capture="environment" @change="onFileChange" />
+        <input
+          type="file"
+          accept="image/*"
+          capture="environment"
+          data-testid="photo-upload-file"
+          @change="onFileChange"
+        />
       </div>
 
       <div class="form-group">
         <label>Descripción (opcional)</label>
-        <input v-model="caption" type="text" />
+        <input v-model="caption" type="text" data-testid="photo-upload-caption" />
       </div>
 
       <div class="actions">
-        <button class="btn btn-primary" :disabled="!file || loading" @click="submitPhoto">
+        <button
+          class="btn btn-primary"
+          data-testid="photo-upload-submit"
+          :disabled="!file || loading"
+          @click="submitPhoto"
+        >
           {{ loading ? 'Enviando...' : 'Enviar foto' }}
         </button>
       </div>
 
-      <p v-if="status" class="status">{{ status }}</p>
+      <p v-if="status" class="status" data-testid="photo-upload-status">{{ status }}</p>
     </div>
   </div>
 </template>

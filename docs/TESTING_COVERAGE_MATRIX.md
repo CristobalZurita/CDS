@@ -89,12 +89,18 @@ Lectura correcta:
 Cubiertos hoy:
 - login admin por UI
 - login cliente por UI
+- login inválido con feedback visible
 - redirect de ruta protegida a login
+- redirect de cliente autenticado fuera de `/login`
+- redirect de cliente autenticado fuera de `/admin`
+- redirect de rutas inexistentes a home
 - cotizador/diagnóstico con fotos de catálogo
 - formulario de contacto público con persistencia real
 - actualización de perfil cliente con persistencia real
 - agendamiento de cita cliente con persistencia real
+- pagos OT cliente con subida real de comprobante
 - descarga cliente de PDF de cierre desde una reparación real
+- token inválido de carga de foto con feedback visible
 - firma por token
 - carga de foto por token
 - navegación pública, cliente y admin sin errores visibles
@@ -112,25 +118,26 @@ Estado:
 - La instrumentación quedó operativa y la suite unitaria/integración ya no tiene deuda bloqueante.
 
 Última corrida:
-- `150` tests pasando
+- `160` tests pasando
 - `0` tests fallando
 - summary actual:
-  - statements: `13.65%`
-  - branches: `53.72%`
-  - functions: `33.60%`
-  - lines: `13.65%`
+  - statements: `36.99%`
+  - branches: `59.76%`
+  - functions: `36.85%`
+  - lines: `36.99%`
 
 Lectura correcta:
 - El coverage ya es real y estable, pero hoy es bajo.
 - Ese porcentaje refleja que el frente completo es mucho más grande que la parte actualmente cubierta con Vitest.
 - La foto útil hoy no es "los tests fallan", sino "las pruebas unitarias sólo cubren una fracción pequeña del producto".
+- Para herramientas externas/IDE, el reporte consumible quedó en `coverage/lcov.info` y `coverage/coverage-summary.json`.
 
 ## Resultado operativo actual
 
 ### Barrido E2E
 
 - `npm run test:e2e`
-- Resultado actual: `82/82` passing
+- Resultado actual: `88/88` passing
 
 ### Build
 
