@@ -4,6 +4,14 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [vue()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+        silenceDeprecations: ['legacy-js-api', 'color-functions', 'global-builtin', 'import'],
+      },
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
