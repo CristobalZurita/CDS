@@ -22,11 +22,14 @@ class WhatsAppService:
         self.enabled = bool(requests and self.token and self.phone_id)
 
     def send_text(self, to_phone: str, message: str) -> bool:
+        if not self.token or not self.phone_id:
+            logger.info("WhatsApp not configured. Skipping send.")
+            return False
         if requests is None:
-            logger.warning("WhatsApp disabled because 'requests' is not installed.")
+            logger.info("WhatsApp disabled because 'requests' is not installed.")
             return False
         if not self.enabled:
-            logger.warning("WhatsApp not configured. Skipping send.")
+            logger.info("WhatsApp not configured. Skipping send.")
             return False
         url = f"{self.api_url}/{self.phone_id}/messages"
         headers = {
