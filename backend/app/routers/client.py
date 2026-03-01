@@ -821,6 +821,7 @@ def create_store_purchase_request(
     db.flush()
 
     total_items = 0
+    pending_availability = []
     for raw_item in raw_items:
         product_id = int(raw_item.get("product_id") or 0)
         quantity = int(raw_item.get("quantity") or 0)
@@ -835,10 +836,7 @@ def create_store_purchase_request(
 
         sellable_stock = _product_sellable_stock(db, product)
         if sellable_stock < quantity:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Stock vendible insuficiente para {product.sku}. Disponible: {sellable_stock}",
-            )
+            pending_availability.append(f"{product.sku} ({sellable_stock} vendible)")
 
         unit_price = float(raw_item.get("unit_price") or product.price or 0)
         req_item = PurchaseRequestItem(
@@ -852,6 +850,12 @@ def create_store_purchase_request(
         )
         total_items += quantity
         db.add(req_item)
+
+    if pending_availability:
+        note_parts.append(
+            "Revisar disponibilidad taller: " + ", ".join(pending_availability[:6])
+        )
+        req.notes = " | ".join(note_parts)
 
     db.commit()
     db.refresh(req)
