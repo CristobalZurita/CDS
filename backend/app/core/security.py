@@ -21,7 +21,7 @@ try:
 except ImportError:
     _bcrypt_available = False
 
-pwd_context = CryptContext(schemes=["bcrypt", "pbkdf2_sha256"], deprecated="auto")
+pbkdf2_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 # Configuración JWT
 ALGORITHM = "HS256"
@@ -43,18 +43,18 @@ def hash_password(password: str) -> str:
     if len(pw_bytes) > 72:
         pw_bytes = pw_bytes[:72]
 
-    # Pass the (possibly truncated) bytes back as string to passlib
+    if _bcrypt_available:
+        try:
+            return bcrypt.hashpw(pw_bytes, bcrypt.gensalt()).decode("utf-8")
+        except ValueError:
+            # Fall through to pbkdf2 when the native bcrypt backend rejects
+            # the input in constrained environments.
+            pass
+
+    # Pass the (possibly truncated) bytes back as string to the pbkdf2 fallback.
     safe_password = pw_bytes.decode("utf-8", errors="ignore")
 
-    try:
-        return pwd_context.hash(safe_password)
-    except ValueError:
-        # bcrypt backend may raise ValueError for unusually long inputs or
-        # if the native bcrypt implementation is problematic in this
-        # environment. Fall back to pbkdf2_sha256 to avoid crashing the
-        # registration flow (acceptable for development/test environments).
-        fallback_ctx = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
-        return fallback_ctx.hash(safe_password)
+    return pbkdf2_context.hash(safe_password)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -70,7 +70,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
     # Fallback a passlib para otros esquemas
     try:
-        return pwd_context.verify(plain_password, hashed_password)
+        return pbkdf2_context.verify(plain_password, hashed_password)
     except Exception:
         return False
 
