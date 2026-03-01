@@ -59,6 +59,11 @@ def _create_user(email: str) -> int:
             db.add(user)
             db.commit()
             db.refresh(user)
+        client = db.query(Client).filter(Client.user_id == user.id).first()
+        if not client:
+            client = Client(user_id=user.id, name=user.full_name, email=user.email)
+            db.add(client)
+            db.commit()
         return int(user.id)
     finally:
         db.close()
@@ -79,16 +84,15 @@ def test_ot_group_generation_and_next_code():
     client = _build_client()
 
     user_id = _create_user("ot-user-a@example.com")
+    client_id = _get_client_id_for_user(user_id)
 
     first = client.post(
         "/api/v1/repairs/",
-        json={"client_id": user_id, "title": "Base OT", "description": "first"},
+        json={"client_id": client_id, "title": "Base OT", "description": "first"},
     )
     assert first.status_code in (200, 201)
     first_body = first.json()
     first_id = int(first_body["id"])
-
-    client_id = _get_client_id_for_user(user_id)
 
     preview = client.get(
         "/api/v1/repairs/next-code",
@@ -102,7 +106,7 @@ def test_ot_group_generation_and_next_code():
     second = client.post(
         "/api/v1/repairs/",
         json={
-            "client_id": user_id,
+            "client_id": client_id,
             "title": "Grouped OT",
             "description": "second",
             "ot_parent_id": first_id,
@@ -134,14 +138,16 @@ def test_ot_parent_must_match_same_client():
 
     user_a = _create_user("ot-user-b@example.com")
     user_b = _create_user("ot-user-c@example.com")
+    client_a = _get_client_id_for_user(user_a)
+    client_b = _get_client_id_for_user(user_b)
 
     repair_a = client.post(
         "/api/v1/repairs/",
-        json={"client_id": user_a, "title": "A", "description": "A"},
+        json={"client_id": client_a, "title": "A", "description": "A"},
     )
     repair_b = client.post(
         "/api/v1/repairs/",
-        json={"client_id": user_b, "title": "B", "description": "B"},
+        json={"client_id": client_b, "title": "B", "description": "B"},
     )
     assert repair_a.status_code in (200, 201)
     assert repair_b.status_code in (200, 201)
@@ -151,7 +157,7 @@ def test_ot_parent_must_match_same_client():
     invalid_group = client.post(
         "/api/v1/repairs/",
         json={
-            "client_id": user_a,
+            "client_id": client_a,
             "title": "A child invalid",
             "description": "invalid",
             "ot_parent_id": parent_b_id,
@@ -165,9 +171,10 @@ def test_reserve_consume_and_release_stock_flow():
     client = _build_client()
 
     user_id = _create_user("ot-user-d@example.com")
+    client_id = _get_client_id_for_user(user_id)
     repair_res = client.post(
         "/api/v1/repairs/",
-        json={"client_id": user_id, "title": "Reserve flow", "description": "reserve test"},
+        json={"client_id": client_id, "title": "Reserve flow", "description": "reserve test"},
     )
     assert repair_res.status_code in (200, 201)
     repair_id = int(repair_res.json()["id"])

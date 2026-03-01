@@ -4,6 +4,7 @@ import threading
 import sqlite3
 import os
 import json
+import sys
 from datetime import datetime
 import uuid
 import hashlib
@@ -12,11 +13,29 @@ import importlib.util
 from app.core.dependencies import get_current_admin
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
-DB_PATH = os.path.join(REPO_ROOT, 'backend', 'instance', 'cirujano.sqlite')
 MASTER_EXCEL_PATH = os.path.join(REPO_ROOT, "Inventario_Cirujanosintetizadores.xlsx")
 ALT_EXCEL_PATH = os.path.join(REPO_ROOT, "DE_PYTHON_NUEVO", "Inventario_Cirujanosintetizadores.xlsx")
 
 router = APIRouter(prefix="/imports", tags=["imports"])
+
+
+def _is_test_runtime() -> bool:
+    env = str(os.getenv("ENVIRONMENT") or "").strip().lower()
+    return env in {"test", "testing"} or bool(os.getenv("PYTEST_CURRENT_TEST"))
+
+
+def _resolve_import_db_path() -> str:
+    env_path = os.getenv("IMPORT_DB_PATH")
+    if env_path:
+        return os.path.abspath(os.path.expanduser(env_path))
+
+    if _is_test_runtime() or "pytest" in sys.modules:
+        return os.path.join(REPO_ROOT, "backend", "tests", "import_runtime.sqlite")
+
+    return os.path.join(REPO_ROOT, "backend", "instance", "cirujano.sqlite")
+
+
+DB_PATH = _resolve_import_db_path()
 
 
 def _sha256_of_file(path: str) -> str | None:
@@ -80,12 +99,6 @@ def _ensure_import_db():
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    ddl_path = os.path.join(REPO_ROOT, 'database', 'ddl_cirujano.sql')
-    if os.path.exists(ddl_path):
-        try:
-            cur.executescript(open(ddl_path, 'r', encoding='utf-8').read())
-        except Exception:
-            pass
     cur.execute("""
         CREATE TABLE IF NOT EXISTS import_runs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -190,15 +203,6 @@ def create_import(background_tasks: BackgroundTasks, user: dict = Depends(get_cu
     try:
         conn = _get_db_conn()
         cur = conn.cursor()
-        # attempt to ensure tables exist by loading DDL if available
-        ddl_path = os.path.join(REPO_ROOT, 'database', 'ddl_cirujano.sql')
-        if os.path.exists(ddl_path):
-            try:
-                cur.executescript(open(ddl_path, 'r', encoding='utf-8').read())
-            except Exception:
-                # be best-effort
-                pass
-
         cur.execute('INSERT INTO import_runs (run_id, source_file, started_at, status) VALUES (?, ?, ?, ?)', (run_id, os.path.basename(REPO_ROOT), None, 'queued'))
         conn.commit()
     except Exception:
@@ -210,8 +214,9 @@ def create_import(background_tasks: BackgroundTasks, user: dict = Depends(get_cu
         except Exception:
             pass
 
-    th = threading.Thread(target=_run_import_sync, kwargs={'user_id': str(user.get('user_id')), 'run_id': run_id}, daemon=True)
-    th.start()
+    if not _is_test_runtime():
+        th = threading.Thread(target=_run_import_sync, kwargs={'user_id': str(user.get('user_id')), 'run_id': run_id}, daemon=True)
+        th.start()
     return {"status": "started", "run_id": run_id}
 
 

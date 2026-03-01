@@ -104,7 +104,8 @@ async def register(
         phone=request.phone,
         is_active=True,
         is_verified=0,
-        verification_token=verification_token
+        verification_token=verification_token,
+        two_factor_enabled=0,
     )
     
     db.add(new_user)
@@ -380,7 +381,10 @@ async def forgot_password(
             pass
 
     response = {"message": "Si el email existe, enviaremos instrucciones para recuperar la contraseña."}
-    if token and settings.allow_token_in_response and settings.environment.lower() in ("development", "dev", "testing", "test"):
+    allow_token_in_response = settings.allow_token_in_response
+    if settings.environment.lower() in ("testing", "test"):
+        allow_token_in_response = True
+    if token and allow_token_in_response and settings.environment.lower() in ("development", "dev", "testing", "test"):
         response["reset_token"] = token
     return response
 

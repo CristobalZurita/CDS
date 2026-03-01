@@ -86,14 +86,14 @@ def test_diagnostic_calculate_creates_audit():
     client = TestClient(_main.app)
 
     payload = {
-        "equipment": {"brand": "access", "model": "access-virus-c-desktop"},
+        "equipment": {"brand": "access", "model": "access_virus_c"},
         "faults": ["CONNECTOR_LOOSE"],
     }
     res = client.post("/api/v1/diagnostic/calculate", json=payload)
     assert res.status_code == 200
     rec = _latest_audit("diagnostic.calculate")
     assert rec is not None
-    assert rec.details and rec.details.get("model") == "access-virus-c-desktop"
+    assert rec.details and rec.details.get("model") == "access_virus_c"
 
 
 def test_payment_create_emits_audit():

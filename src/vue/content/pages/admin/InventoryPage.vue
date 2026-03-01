@@ -33,6 +33,7 @@ import InventoryStockSheet from '@/vue/components/admin/InventoryStockSheet.vue'
 import InventoryStockStates from '@/vue/components/admin/InventoryStockStates.vue'
 import InventoryAlerts from '@/vue/components/admin/InventoryAlerts.vue'
 import { useInventoryStore } from '@/stores/inventory'
+import { api } from '@/services/api'
 import { showError, showSuccess } from '@/services/toastService'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 

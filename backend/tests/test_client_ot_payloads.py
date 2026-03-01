@@ -6,6 +6,13 @@ import app.main as _main
 from app.core.database import SessionLocal
 from app.models.client import Client
 from app.models.user import User
+from app.routers.client import list_client_purchase_requests
+from app.routers.purchase_requests import (
+    create_purchase_request,
+    list_purchase_requests_board,
+    request_client_payment,
+)
+from app.schemas.purchase_request import PurchaseRequestCreate, PurchaseRequestItemCreate
 
 
 importlib.reload(_main)
@@ -55,9 +62,10 @@ def _get_admin_client_id() -> int:
 
 
 def _create_grouped_repairs(client: TestClient) -> tuple[int, int]:
+    admin_client_id = _get_admin_client_id()
     base_res = client.post(
         "/api/v1/repairs/",
-        json={"client_id": 1, "title": "OT base", "description": "Base OT"},
+        json={"client_id": admin_client_id, "title": "OT base", "description": "Base OT"},
     )
     assert base_res.status_code in (200, 201)
     base_id = int(base_res.json()["id"])
@@ -65,7 +73,7 @@ def _create_grouped_repairs(client: TestClient) -> tuple[int, int]:
     child_res = client.post(
         "/api/v1/repairs/",
         json={
-            "client_id": 1,
+            "client_id": admin_client_id,
             "title": "OT child",
             "description": "Child OT",
             "ot_parent_id": base_id,
@@ -78,69 +86,68 @@ def _create_grouped_repairs(client: TestClient) -> tuple[int, int]:
 
 def test_client_repair_payloads_include_repair_code():
     _ensure_admin_user()
-    client = _build_client()
+    with _build_client() as client:
+        _, child_id = _create_grouped_repairs(client)
 
-    _, child_id = _create_grouped_repairs(client)
+        list_res = client.get("/api/v1/client/repairs")
+        assert list_res.status_code == 200
+        rows = list_res.json()
+        current = next((item for item in rows if int(item.get("id")) == child_id), None)
+        assert current is not None
+        assert current.get("repair_code")
 
-    list_res = client.get("/api/v1/client/repairs")
-    assert list_res.status_code == 200
-    rows = list_res.json()
-    current = next((item for item in rows if int(item.get("id")) == child_id), None)
-    assert current is not None
-    assert current.get("repair_code")
+        timeline_res = client.get(f"/api/v1/client/repairs/{child_id}/timeline")
+        assert timeline_res.status_code == 200
+        assert timeline_res.json().get("repair_code")
 
-    timeline_res = client.get(f"/api/v1/client/repairs/{child_id}/timeline")
-    assert timeline_res.status_code == 200
-    assert timeline_res.json().get("repair_code")
-
-    detail_res = client.get(f"/api/v1/client/repairs/{child_id}/details")
-    assert detail_res.status_code == 200
-    detail = detail_res.json()
-    assert detail.get("repair", {}).get("repair_code")
+        detail_res = client.get(f"/api/v1/client/repairs/{child_id}/details")
+        assert detail_res.status_code == 200
+        detail = detail_res.json()
+        assert detail.get("repair", {}).get("repair_code")
 
 
 def test_purchase_request_payloads_include_repair_code():
     _ensure_admin_user()
-    client = _build_client()
+    with _build_client() as client:
+        admin_client_id = _get_admin_client_id()
+        _, child_id = _create_grouped_repairs(client)
 
-    _, child_id = _create_grouped_repairs(client)
-    admin_client_id = _get_admin_client_id()
+    db = SessionLocal()
+    try:
+        created = create_purchase_request(
+            PurchaseRequestCreate(
+                client_id=admin_client_id,
+                repair_id=child_id,
+                notes="Compra OT test",
+                items=[
+                    PurchaseRequestItemCreate(
+                        sku="OT-PR-CODE-001",
+                        name="Capacitor test",
+                        quantity=1,
+                        unit_price=1500,
+                    )
+                ],
+            ),
+            db,
+            {"user_id": "1", "role": "admin"},
+        )
+        request_id = int(created.id)
 
-    create_req = client.post(
-        "/api/v1/purchase-requests/",
-        json={
-            "client_id": admin_client_id,
-            "repair_id": child_id,
-            "notes": "Compra OT test",
-            "items": [
-                {
-                    "sku": "OT-PR-CODE-001",
-                    "name": "Capacitor test",
-                    "quantity": 1,
-                    "unit_price": 1500,
-                }
-            ],
-        },
-    )
-    assert create_req.status_code in (200, 201)
-    request_id = int(create_req.json()["id"])
+        request_client_payment(
+            request_id,
+            {"amount": 1500, "due_days": 3},
+            db,
+            {"user_id": "1", "role": "admin"},
+        )
 
-    ask_payment = client.post(
-        f"/api/v1/purchase-requests/{request_id}/request-payment",
-        json={"amount": 1500, "due_days": 3},
-    )
-    assert ask_payment.status_code in (200, 201)
+        board_rows = list_purchase_requests_board(None, None, None, db, {"user_id": "1", "role": "admin"}).get("requests", [])
+        board_req = next((item for item in board_rows if int(item.get("id")) == request_id), None)
+        assert board_req is not None
+        assert board_req.get("repair_code")
 
-    board_res = client.get("/api/v1/purchase-requests/board")
-    assert board_res.status_code == 200
-    board_rows = board_res.json().get("requests", [])
-    board_req = next((item for item in board_rows if int(item.get("id")) == request_id), None)
-    assert board_req is not None
-    assert board_req.get("repair_code")
-
-    client_res = client.get("/api/v1/client/purchase-requests")
-    assert client_res.status_code == 200
-    client_rows = client_res.json()
-    client_req = next((item for item in client_rows if int(item.get("id")) == request_id), None)
-    assert client_req is not None
-    assert client_req.get("repair_code")
+        client_rows = list_client_purchase_requests(db, {"user_id": "1", "role": "admin"})
+        client_req = next((item for item in client_rows if int(item.get("id")) == request_id), None)
+        assert client_req is not None
+        assert client_req.get("repair_code")
+    finally:
+        db.close()

@@ -3,6 +3,7 @@ Router for Appointment endpoints
 Handles appointment booking and management
 """
 
+import os
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 from typing import List
@@ -36,6 +37,11 @@ except Exception:
 router = APIRouter(prefix="/appointments", tags=["appointments"])
 
 
+def _should_skip_turnstile() -> bool:
+    env = str(os.getenv("ENVIRONMENT") or "").strip().lower()
+    return os.getenv("TURNSTILE_DISABLE", "false").lower() == "true" or env in {"test", "testing"}
+
+
 @router.post("/", response_model=AppointmentResponse, status_code=201)
 @limiter.limit("5/minute")
 async def create_appointment_endpoint(
@@ -54,9 +60,10 @@ async def create_appointment_endpoint(
     """
     try:
         # Turnstile verification (public endpoint)
-        from app.services.turnstile_service import verify_turnstile
-        if not appointment.turnstile_token or not verify_turnstile(appointment.turnstile_token, request.client.host if request.client else None):
-            raise HTTPException(status_code=400, detail="Captcha inválido")
+        if not _should_skip_turnstile():
+            from app.services.turnstile_service import verify_turnstile
+            if not appointment.turnstile_token or not verify_turnstile(appointment.turnstile_token, request.client.host if request.client else None):
+                raise HTTPException(status_code=400, detail="Captcha inválido")
 
         # Create appointment in database
         db_appointment = await create_appointment(db, appointment)
@@ -90,6 +97,8 @@ async def create_appointment_endpoint(
         
         return db_appointment
     
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
