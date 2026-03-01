@@ -14,7 +14,9 @@ from app.models.device import Device
 from app.models.device_lookup import DeviceBrand
 from app.models.repair import Repair, RepairStatus
 from app.models.payment import Payment, PaymentStatus
-from app.models.purchase_request import PurchaseRequest
+from app.models.purchase_request import PurchaseRequest, PurchaseRequestItem
+from app.models.inventory import Product
+from app.models.stock import Stock
 from app.models.repair_component_usage import RepairComponentUsage
 from app.models.repair_intake_sheet import RepairIntakeSheet
 from app.models.repair_note import RepairNote
@@ -181,6 +183,39 @@ def _parse_payment_notes(raw_notes: str | None) -> dict:
     except Exception:
         pass
     return {"text": text}
+
+
+def _parse_product_meta(description: str | None) -> dict:
+    text = str(description or "").strip()
+    if not text.startswith("{"):
+        return {}
+    try:
+        parsed = json.loads(text)
+        return parsed if isinstance(parsed, dict) else {}
+    except Exception:
+        return {}
+
+
+def _product_store_enabled(product: Product) -> bool:
+    meta = _parse_product_meta(product.description)
+    enabled = bool(meta.get("enabled")) if "enabled" in meta else False
+    if "store_visible" in meta:
+        return enabled and bool(meta.get("store_visible"))
+    return enabled
+
+
+def _product_sellable_stock(db: Session, product: Product) -> int:
+    stock = (
+        db.query(Stock)
+        .filter(
+            Stock.component_table == "products",
+            Stock.component_id == product.id,
+        )
+        .first()
+    )
+    available_qty = int(stock.available_quantity if stock else product.quantity or 0)
+    min_stock = int(stock.minimum_stock if stock else product.min_quantity or 0)
+    return max(available_qty - min_stock, 0)
 
 
 def _safe_pdf_filename(value: str) -> str:
@@ -742,6 +777,104 @@ def list_client_purchase_requests(
         _build_client_purchase_request_payload(req, latest_by_request.get(req.id), client.id)
         for req in requests
     ]
+
+
+@router.post("/store/purchase-requests")
+def create_store_purchase_request(
+    payload: Dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read")),
+):
+    user_obj = db.query(User).filter(User.id == int(user["user_id"])).first()
+    if not user_obj:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    client = _ensure_client(db, user_obj)
+    raw_items = payload.get("items") or []
+    if not isinstance(raw_items, list) or not raw_items:
+        raise HTTPException(status_code=400, detail="Debes enviar al menos un producto")
+
+    shipping_label = str(
+        payload.get("shipping_label")
+        or payload.get("shipping_name")
+        or "Retiro en taller"
+    ).strip()
+    shipping_key = str(payload.get("shipping_key") or "pickup").strip() or "pickup"
+    client_note = str(payload.get("notes") or "").strip()
+
+    note_parts = [
+        "Solicitud creada desde tienda web",
+        f"Despacho: {shipping_label}",
+        f"Canal: {shipping_key}",
+    ]
+    if client_note:
+        note_parts.append(f"Nota cliente: {client_note}")
+
+    req = PurchaseRequest(
+        client_id=client.id,
+        repair_id=None,
+        created_by=user_obj.id,
+        status="requested",
+        notes=" | ".join(note_parts),
+    )
+    db.add(req)
+    db.flush()
+
+    total_items = 0
+    for raw_item in raw_items:
+        product_id = int(raw_item.get("product_id") or 0)
+        quantity = int(raw_item.get("quantity") or 0)
+        if product_id <= 0 or quantity <= 0:
+            raise HTTPException(status_code=400, detail="Producto o cantidad inválida")
+
+        product = db.query(Product).filter(Product.id == product_id).first()
+        if not product:
+            raise HTTPException(status_code=404, detail=f"Producto no encontrado: {product_id}")
+        if not _product_store_enabled(product):
+            raise HTTPException(status_code=400, detail=f"Producto no disponible para tienda: {product.sku}")
+
+        sellable_stock = _product_sellable_stock(db, product)
+        if sellable_stock < quantity:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Stock vendible insuficiente para {product.sku}. Disponible: {sellable_stock}",
+            )
+
+        unit_price = float(raw_item.get("unit_price") or product.price or 0)
+        req_item = PurchaseRequestItem(
+            request_id=req.id,
+            product_id=product.id,
+            sku=product.sku,
+            name=product.name,
+            quantity=quantity,
+            unit_price=unit_price,
+            status="suggested",
+        )
+        total_items += quantity
+        db.add(req_item)
+
+    db.commit()
+    db.refresh(req)
+
+    try:
+        create_audit(
+            event_type="store.purchase_request_created",
+            user_id=user_obj.id,
+            details={
+                "request_id": req.id,
+                "client_id": client.id,
+                "items": total_items,
+                "shipping": shipping_key,
+            },
+            message=f"Store purchase request #{req.id} created",
+        )
+    except Exception:
+        pass
+
+    return {
+        "ok": True,
+        "request": _build_client_purchase_request_payload(req, None, client.id),
+    }
 
 
 @router.post("/purchase-requests/{request_id}/deposit-proof")
