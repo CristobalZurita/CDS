@@ -52,6 +52,15 @@ const linkList = computed(() => {
         })
     }
 
+    if (route.path !== '/tienda') {
+        links.push({
+            path: '/tienda',
+            label: 'TIENDA',
+            faIcon: 'fa-solid fa-cart-shopping',
+            isActive: false
+        })
+    }
+
     links.push({
         path: '/login',
         label: 'INICIAR SESIÓN',

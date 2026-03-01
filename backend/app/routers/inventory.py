@@ -4,7 +4,7 @@ Router de Inventario
 Endpoints para consultar productos disponibles en inventario.
 """
 import json
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
 
@@ -35,6 +35,53 @@ def _sku_family(sku: Optional[str]) -> Optional[str]:
         return None
     prefix = str(sku).strip().split("-", 1)[0].upper()
     return prefix or None
+
+
+def _serialize_inventory_product(db: Session, product: Product) -> dict:
+    meta = _parse_product_meta(product.description)
+    product_family = _sku_family(product.sku)
+    product_origin = str(meta.get("origin_status") or "").strip().upper() or None
+    product_enabled = bool(meta.get("enabled")) if "enabled" in meta else None
+
+    stock = db.query(Stock).filter(
+        Stock.component_table == "products",
+        Stock.component_id == product.id
+    ).first()
+
+    stock_qty = stock.quantity if stock else product.quantity
+    available_qty = stock.available_quantity if stock else product.quantity
+    min_stock = stock.minimum_stock if stock else product.min_quantity
+    category = db.query(Category).filter(Category.id == product.category_id).first()
+
+    return {
+        "id": product.id,
+        "name": product.name,
+        "sku": product.sku,
+        "description": product.description,
+        "family": product_family,
+        "category": category.name if category else None,
+        "category_id": product.category_id,
+        "origin_status": product_origin,
+        "enabled": product_enabled,
+        "kicad_symbol": meta.get("kicad_symbol"),
+        "kicad_footprint_default": meta.get("kicad_footprint_default"),
+        "stock": stock_qty,
+        "available_stock": available_qty,
+        "stock_unit": "u",
+        "image_url": product.image_url,
+        "price": product.price,
+        "min_stock": min_stock,
+        "is_low_stock": available_qty <= min_stock,
+        "quantity_reserved": stock.quantity_reserved if stock else 0,
+        "quantity_in_transit": stock.quantity_in_transit if stock else 0,
+        "quantity_damaged": stock.quantity_damaged if stock else 0,
+        "quantity_in_work": stock.quantity_in_work if stock else 0,
+        "quantity_under_review": stock.quantity_under_review if stock else 0,
+        "quantity_internal_use": stock.quantity_internal_use if stock else 0,
+        "location": stock.bin_code if stock else None,
+        "supplier": stock.supplier if stock else None,
+        "unit_cost": stock.unit_cost if stock else product.price
+    }
 
 
 @router.get("", include_in_schema=False)
@@ -74,13 +121,14 @@ def list_inventory(
     family_filter = str(family).strip().upper() if family else None
     origin_filter = str(origin_status).strip().upper() if origin_status else None
 
-    # Enriquecer con información de stock
     result = []
     for product in products:
-        meta = _parse_product_meta(product.description)
-        product_family = _sku_family(product.sku)
-        product_origin = str(meta.get("origin_status") or "").strip().upper() or None
-        product_enabled = bool(meta.get("enabled")) if "enabled" in meta else None
+        serialized = _serialize_inventory_product(db, product)
+        product_family = serialized["family"]
+        product_origin = serialized["origin_status"]
+        product_enabled = serialized["enabled"]
+        available_qty = serialized["available_stock"]
+        min_stock = serialized["min_stock"]
 
         if family_filter and product_family != family_filter:
             continue
@@ -89,52 +137,77 @@ def list_inventory(
         if enabled_only and product_enabled is not True:
             continue
 
-        # Buscar stock para este producto
-        stock = db.query(Stock).filter(
-            Stock.component_table == "products",
-            Stock.component_id == product.id
-        ).first()
-
-        stock_qty = stock.quantity if stock else product.quantity
-        available_qty = stock.available_quantity if stock else product.quantity
-
         # Filtrar por stock bajo si se solicita
         if low_stock_only:
-            min_stock = stock.minimum_stock if stock else product.min_quantity
             if available_qty > min_stock:
                 continue
 
-        # Obtener nombre de categoría
-        category = db.query(Category).filter(Category.id == product.category_id).first()
+        result.append(serialized)
+
+    return result
+
+
+@router.get("/public", include_in_schema=False)
+@router.get("/public/")
+def list_public_catalog(
+    search: Optional[str] = None,
+    category_id: Optional[int] = None,
+    family: Optional[str] = None,
+    origin_status: Optional[str] = None,
+    enabled_only: bool = Query(default=True),
+    in_stock_only: bool = Query(default=True),
+    limit: int = Query(default=120, ge=1, le=500),
+    db: Session = Depends(get_db),
+):
+    """
+    Catálogo público de productos basado en la misma fuente de verdad del inventario.
+    No expone permisos internos y por defecto sólo devuelve ítems habilitados y con stock.
+    """
+    query = db.query(Product)
+
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(
+            (Product.name.ilike(search_term)) |
+            (Product.sku.ilike(search_term)) |
+            (Product.description.ilike(search_term))
+        )
+
+    if category_id:
+        query = query.filter(Product.category_id == category_id)
+
+    products = query.order_by(Product.name).limit(limit).all()
+    family_filter = str(family).strip().upper() if family else None
+    origin_filter = str(origin_status).strip().upper() if origin_status else None
+
+    result = []
+    for product in products:
+        serialized = _serialize_inventory_product(db, product)
+
+        if family_filter and serialized["family"] != family_filter:
+            continue
+        if origin_filter and serialized["origin_status"] != origin_filter:
+            continue
+        if enabled_only and serialized["enabled"] is not True:
+            continue
+        if in_stock_only and int(serialized["available_stock"] or 0) <= 0:
+            continue
 
         result.append({
-            "id": product.id,
-            "name": product.name,
-            "sku": product.sku,
-            "description": product.description,
-            "family": product_family,
-            "category": category.name if category else None,
-            "category_id": product.category_id,
-            "origin_status": product_origin,
-            "enabled": product_enabled,
-            "kicad_symbol": meta.get("kicad_symbol"),
-            "kicad_footprint_default": meta.get("kicad_footprint_default"),
-            "stock": stock_qty,
-            "available_stock": available_qty,
-            "stock_unit": "u",  # Unidades por defecto
-            "image_url": product.image_url,  # Agregar URL de imagen desde BD
-            "price": product.price,
-            "min_stock": stock.minimum_stock if stock else product.min_quantity,
-            "is_low_stock": available_qty <= (stock.minimum_stock if stock else product.min_quantity),
-            "quantity_reserved": stock.quantity_reserved if stock else 0,
-            "quantity_in_transit": stock.quantity_in_transit if stock else 0,
-            "quantity_damaged": stock.quantity_damaged if stock else 0,
-            "quantity_in_work": stock.quantity_in_work if stock else 0,
-            "quantity_under_review": stock.quantity_under_review if stock else 0,
-            "quantity_internal_use": stock.quantity_internal_use if stock else 0,
-            "location": stock.bin_code if stock else None,
-            "supplier": stock.supplier if stock else None,
-            "unit_cost": stock.unit_cost if stock else product.price
+            "id": serialized["id"],
+            "name": serialized["name"],
+            "sku": serialized["sku"],
+            "description": serialized["description"],
+            "family": serialized["family"],
+            "category": serialized["category"],
+            "category_id": serialized["category_id"],
+            "origin_status": serialized["origin_status"],
+            "enabled": serialized["enabled"],
+            "available_stock": serialized["available_stock"],
+            "stock_unit": serialized["stock_unit"],
+            "image_url": serialized["image_url"],
+            "price": serialized["price"],
+            "is_low_stock": serialized["is_low_stock"],
         })
 
     return result

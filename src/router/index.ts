@@ -26,6 +26,7 @@ const TermsPage = () => import('@/vue/content/pages/TermsPage.vue')
 const PrivacyPage = () => import('@/vue/content/pages/PrivacyPage.vue')
 const SchedulePage = () => import('@/vue/content/pages/SchedulePage.vue')
 const CalculatorsPage = () => import('@/vue/content/pages/CalculatorsPage.vue')
+const StorePage = () => import('@/vue/content/pages/StorePage.vue')
 
 // Admin Pages - lazy load
 const AdminDashboard = () => import('@/vue/content/pages/admin/AdminDashboard.vue')
@@ -94,6 +95,12 @@ const routes: RouteRecordRaw[] = [
         path: 'calculadoras',
         name: 'calculadoras',
         component: CalculatorsPage,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'tienda',
+        name: 'tienda',
+        component: StorePage,
         meta: { requiresAuth: false }
       }
     ]

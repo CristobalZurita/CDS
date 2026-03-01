@@ -13,6 +13,7 @@ const publicRoutes = [
   '/password-reset',
   '/cotizador-ia',
   '/calculadoras',
+  '/tienda',
   '/calc/555',
   '/calc/resistor-color',
   '/calc/smd-capacitor',
