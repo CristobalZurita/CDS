@@ -87,7 +87,7 @@ async function onSubmit() {
 }
 </script>
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .password-field {
   display: flex;

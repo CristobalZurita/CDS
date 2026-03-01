@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .marker {
   display: inline-flex;

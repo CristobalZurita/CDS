@@ -76,7 +76,7 @@ onMounted(fetchMessages)
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 .admin-status {
   margin: 0 0 1rem;

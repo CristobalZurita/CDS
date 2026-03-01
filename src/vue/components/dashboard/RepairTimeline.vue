@@ -23,7 +23,7 @@ const formatDate = (value) => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .timeline {
   list-style: none;

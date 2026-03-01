@@ -62,7 +62,7 @@ const onCompleted = () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .wizard-grid {
   display: grid;

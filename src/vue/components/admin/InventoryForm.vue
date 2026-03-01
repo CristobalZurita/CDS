@@ -116,7 +116,7 @@ watch(() => props.item, (item) => syncForm(item))
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .card { background: $color-white }
 </style>

@@ -25,7 +25,8 @@ const variant = computed(() => props.variant)
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "/src/scss/_theming.scss";
+@import "/src/scss/_variables.scss";
 
 button.btn-xl {
     @include generate-dynamic-styles-with-hash((

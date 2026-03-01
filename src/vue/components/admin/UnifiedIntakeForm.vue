@@ -803,7 +803,7 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .sheet-header {
   position: sticky;

@@ -29,7 +29,7 @@ const toggle = (code) => {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .fault-detector {
   display: grid;

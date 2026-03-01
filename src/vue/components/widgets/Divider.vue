@@ -10,7 +10,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 hr.solid-divider {
     width: 60px;

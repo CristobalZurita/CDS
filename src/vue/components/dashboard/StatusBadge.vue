@@ -17,7 +17,7 @@ const statusClass = computed(() => `status-${normalizeRepairStatus(props.status 
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .status-badge {
   display: inline-flex;

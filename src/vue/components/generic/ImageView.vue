@@ -90,7 +90,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 div.image-view {
     display: flex;

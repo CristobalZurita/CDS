@@ -62,7 +62,7 @@ async function generate() {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .quote-generator {
   padding: $spacer-md;

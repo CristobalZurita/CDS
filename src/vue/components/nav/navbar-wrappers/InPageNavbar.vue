@@ -120,5 +120,5 @@ const _onWindowEvent = () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 </style>

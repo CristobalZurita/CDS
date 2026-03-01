@@ -45,7 +45,7 @@ const prev = () => emit('prev')
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .wizard-shell {
   display: flex;

@@ -299,7 +299,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .dashboard-page {
   min-height: 100vh;

@@ -9,7 +9,6 @@ import os
 import secrets
 from app.core.database import get_db
 from app.core.config import settings
-from app.core.config import settings
 from app.core.security import (
     hash_password, verify_password, create_access_token, create_refresh_token
 )
@@ -38,8 +37,6 @@ def _split_full_name(full_name: str) -> tuple[str | None, str | None]:
 
 
 def _should_skip_turnstile() -> bool:
-    if settings.environment and settings.environment.lower() in ("development", "dev", "test", "testing"):
-        return True
     return os.getenv("TURNSTILE_DISABLE", "false").lower() == "true"
 
 

@@ -103,7 +103,7 @@ const calculatorItems = [
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 .calculators-grid {
     display: grid;

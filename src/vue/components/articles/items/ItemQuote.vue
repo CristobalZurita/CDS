@@ -57,7 +57,7 @@ const parsedQuote = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 $balloon-color: lighten($primary, 46%);
 

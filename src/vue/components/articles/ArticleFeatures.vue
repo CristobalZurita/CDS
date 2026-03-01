@@ -8,7 +8,7 @@
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 article.foxy-features-article {
     text-align: center;

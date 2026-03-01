@@ -644,7 +644,7 @@ watch([resultValue, () => form.mode], () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 #timer-555-calculator {
   --timer555-panel-fill: #{$color-panel-fill-legacy};

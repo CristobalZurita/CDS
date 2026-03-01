@@ -220,7 +220,7 @@ const goToPrivacy = () => {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 .terms-page {
   min-height: 100vh;

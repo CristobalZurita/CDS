@@ -5,7 +5,7 @@
       class="turnstile-bypass"
       data-testid="turnstile-bypass"
     >
-      Captcha desactivado en desarrollo
+      Captcha desactivado para pruebas
     </div>
     <div ref="containerRef"></div>
   </div>
@@ -72,7 +72,7 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .turnstile-widget {
   display: flex;

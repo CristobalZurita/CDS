@@ -70,7 +70,7 @@ const _onLinkClicked = () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 nav.foxy-navbar {
     position: fixed;

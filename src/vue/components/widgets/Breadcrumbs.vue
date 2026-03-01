@@ -54,7 +54,7 @@ const breadcrumbItems = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 ul.breadcrumbs-link-list {
     list-style: none;

@@ -39,7 +39,7 @@ const parsedTitle = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 article.foxy-paragraph-article {
     &:not(:last-child) {

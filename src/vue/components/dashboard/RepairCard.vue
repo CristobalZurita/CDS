@@ -33,7 +33,7 @@ const formatDate = (value) => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .repair-card {
   border: 1px solid $color-gray-200-legacy;

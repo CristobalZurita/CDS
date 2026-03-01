@@ -238,7 +238,7 @@ const _executeLeavingStep = () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 div.foxy-loader {
     position: fixed;

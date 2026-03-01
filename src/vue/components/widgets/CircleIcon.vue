@@ -16,7 +16,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 span.icon-stack {
     @include generate-dynamic-styles-with-hash((

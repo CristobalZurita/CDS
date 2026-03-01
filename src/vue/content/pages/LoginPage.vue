@@ -25,7 +25,7 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 /* ===========================================
    LOGINPAGE - Manual de Identidad Visual

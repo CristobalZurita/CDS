@@ -126,7 +126,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-@use '@/scss/core' as *;
+@import "@/scss/_core.scss";
 
 .repair-detail {
   max-width: 900px;

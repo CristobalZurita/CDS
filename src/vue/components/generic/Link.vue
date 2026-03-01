@@ -61,7 +61,7 @@ const _onHashLinkClicked = () => {
 </script>
 
 <style lang="scss" scoped>
-@use '@/scss/theming' as *;
+@import "@/scss/_theming.scss";
 
 button.btn-link-wrapper {
     padding: 0;
