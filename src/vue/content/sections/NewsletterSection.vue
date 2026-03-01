@@ -98,7 +98,7 @@ const onVerify = (token) => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 .newsletter-form {
     display: flex;

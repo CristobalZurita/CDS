@@ -33,7 +33,7 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 div.foxy-page-wrapper {
     @include generate-dynamic-styles-with-hash((

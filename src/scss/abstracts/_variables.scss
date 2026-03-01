@@ -271,6 +271,13 @@ $fw-semibold:  600;    // ← DEFAULT PARA UI
 $fw-bold:      700;
 $fw-extrabold: 800;
 
+// Bootstrap-style aliases still used across legacy component styles.
+$font-weight-light: $fw-light;
+$font-weight-normal: $fw-normal;
+$font-weight-bold: $fw-bold;
+$font-weight-bolder: $fw-extrabold;
+$headings-font-weight: $fw-bold;
+
 // ---------------------------------------------
 // 5. ESPACIADO Y DIMENSIONES
 // ---------------------------------------------

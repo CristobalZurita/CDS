@@ -22,7 +22,7 @@ import PasswordReset from '@/vue/components/auth/PasswordReset.vue'
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .password-reset-page {
   min-height: 100vh;

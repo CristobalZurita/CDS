@@ -8,7 +8,7 @@
 </script>
 
 <style lang="scss">
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 .foxy-footer {
     background-color: $footer-bg-color;

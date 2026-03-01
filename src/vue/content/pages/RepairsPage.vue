@@ -182,7 +182,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .repairs-page {
   min-height: 100vh;

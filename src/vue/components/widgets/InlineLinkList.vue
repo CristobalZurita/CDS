@@ -60,7 +60,7 @@ const parsedLinks = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 ul.inline-link-list {
     position: relative;

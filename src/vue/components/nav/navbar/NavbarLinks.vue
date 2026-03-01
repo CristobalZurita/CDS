@@ -71,7 +71,7 @@ const _onLinkClicked = () => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 ul.foxy-navbar-links {
     list-style: none;

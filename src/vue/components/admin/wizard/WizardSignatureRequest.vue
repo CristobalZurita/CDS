@@ -101,7 +101,7 @@ onMounted(loadRepairs)
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .wizard-section {
   display: flex;

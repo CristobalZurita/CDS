@@ -12,7 +12,7 @@
 // Component placeholder - integrar datos reales desde stores
 </script>
 <style scoped lang="scss">
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .card { padding: 12px; border-radius: 6px; }

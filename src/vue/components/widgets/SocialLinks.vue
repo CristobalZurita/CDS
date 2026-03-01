@@ -64,7 +64,7 @@ const classList = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 @mixin create-btn-social-size($std-font-size, $md-down-font-size) {
     $font-size: $std-font-size;

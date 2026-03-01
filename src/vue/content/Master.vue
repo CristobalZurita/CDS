@@ -105,7 +105,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-@import "@/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 .site-body {
   padding-top: var(--navbar-height, 120px);

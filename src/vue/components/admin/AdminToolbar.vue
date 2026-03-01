@@ -26,7 +26,7 @@ const handleLogout = () => {
 </script>
 
 <style scoped lang="scss">
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 .admin-toolbar {
   display: flex;

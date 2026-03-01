@@ -1,0 +1,8 @@
+@use "./abstracts/variables" as abstract;
+
+$black: abstract.$color-black;
+$white: abstract.$color-white;
+$danger: abstract.$color-danger;
+
+@forward "./abstracts/variables";
+@forward "./breakpoints";

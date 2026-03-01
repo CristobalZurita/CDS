@@ -130,7 +130,7 @@ const onVerify = (token) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .cotizador-ia-page {
   min-height: 100vh;

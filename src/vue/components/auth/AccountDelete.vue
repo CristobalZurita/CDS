@@ -10,7 +10,7 @@ defineEmits(['confirm'])
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 .account-delete {
   padding: 1rem;

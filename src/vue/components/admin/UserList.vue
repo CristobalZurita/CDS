@@ -47,7 +47,7 @@ onMounted(() => {
 })
 </script>
 <style scoped lang="scss">
-@import "/src/scss/_theming.scss";
+@use '@/scss/theming' as *;
 
 @include media-breakpoint-down(md) {
   .admin-table--stack,

@@ -120,7 +120,7 @@ const handleAppointmentSubmit = async (formData) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/_core.scss';
+@use '@/scss/core' as *;
 
 header.foxy-header {
     /* expanded hero height to match reference - black box extends lower for buttons */
