@@ -13,13 +13,15 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { TURNSTILE_BYPASS_TOKEN, isTurnstileBypassed } from '@/config/turnstile'
 
 const emit = defineEmits(['verify'])
 const containerRef = ref(null)
 let widgetId = null
 
 const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
+const rawDisableFlag = String(import.meta.env.VITE_TURNSTILE_DISABLE || '').toLowerCase()
+const isTurnstileBypassed = rawDisableFlag === 'true'
+const turnstileBypassToken = 'dev-turnstile-bypass'
 
 const loadScript = () => {
   return new Promise((resolve, reject) => {
@@ -57,7 +59,7 @@ const renderWidget = () => {
 
 onMounted(async () => {
   if (isTurnstileBypassed) {
-    emit('verify', TURNSTILE_BYPASS_TOKEN)
+    emit('verify', turnstileBypassToken)
     return
   }
 
