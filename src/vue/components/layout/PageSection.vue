@@ -73,7 +73,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 section.foxy-section {
     opacity: 0;

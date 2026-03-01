@@ -333,7 +333,7 @@ defineExpose({ loadComponents, totalMaterials })
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 .components-manager {
 	background: $vintage-beige;

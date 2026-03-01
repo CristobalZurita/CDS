@@ -33,7 +33,7 @@ import { Pagination } from 'swiper/modules'
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 .swiper {
     height: 100%;

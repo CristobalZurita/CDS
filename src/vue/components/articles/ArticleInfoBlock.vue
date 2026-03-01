@@ -29,7 +29,7 @@ const parsedParagraphs = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 .article-logo {
     max-width: 320px;  // ajusta este número a gusto (180, 200, 250, etc.)

@@ -23,7 +23,7 @@ defineEmits(['update-status'])
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .repair-manager {
   display: grid;

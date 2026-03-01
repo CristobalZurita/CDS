@@ -36,7 +36,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/abstracts/_variables.scss';
+@use '@/scss/abstracts/_variables.scss' as *;
 
 .scroll-to-top-btn {
   position: fixed;

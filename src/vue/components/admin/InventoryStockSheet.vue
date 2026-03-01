@@ -104,7 +104,7 @@ const saveRow = (row) => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .stock-sheet {
 	display: grid;

@@ -203,7 +203,7 @@
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 .privacy-page {
   min-height: 100vh;

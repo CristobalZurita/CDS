@@ -75,7 +75,7 @@ onMounted(() => {
 })
 </script>
 <style scoped lang="scss">
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 .cell-stack {
   display: flex;

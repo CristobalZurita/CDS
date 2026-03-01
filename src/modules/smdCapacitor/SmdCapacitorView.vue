@@ -373,7 +373,7 @@ function resetCode() {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 #smd-capacitor-calculator {
   :deep(.container-xxl) {

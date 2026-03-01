@@ -77,7 +77,7 @@ function onVerify(token) {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .register-form { width: 100%; }
 .form-group { margin-bottom: 1rem; }

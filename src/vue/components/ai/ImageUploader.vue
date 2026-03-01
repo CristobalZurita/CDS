@@ -20,7 +20,7 @@ const onSelect = (event) => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .uploader {
   display: grid;

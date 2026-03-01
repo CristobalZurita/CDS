@@ -59,7 +59,7 @@ const props = defineProps(({
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 p, span {
     color: $color-gray-240-legacy; /* increase contrast for footer text */
