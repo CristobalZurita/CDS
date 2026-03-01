@@ -5,7 +5,7 @@ Fecha de corte: 2026-02-28
 ## Qué está automatizado hoy
 
 - `npm run test:e2e`
-  - `82/82` pruebas pasando
+  - `88/88` pruebas pasando
   - cubre rutas públicas, cliente, admin y dinámicas
   - audita enlaces internos visibles
   - detecta errores JS, requests fallidos y respuestas `4xx/5xx`
@@ -23,14 +23,23 @@ Fecha de corte: 2026-02-28
     - contacto público
     - edición de perfil cliente
     - agendamiento de cita
+    - pagos OT con comprobante real
     - descarga de PDF de cierre
+    - estados de error visibles:
+      - login inválido
+      - token inválido de carga de foto
+      - redirecciones por permisos/guest routes
+      - rutas inexistentes
 
 - `npm run test:coverage`
-  - `150/150` pruebas Vitest pasando
+  - `160/160` pruebas Vitest pasando
   - coverage real actual:
-    - statements/lines: `13.65%`
-    - branches: `53.72%`
-    - functions: `33.60%`
+    - statements/lines: `36.99%`
+    - branches: `59.76%`
+    - functions: `36.85%`
+  - reportes para IDE:
+    - `coverage/lcov.info`
+    - `coverage/coverage-summary.json`
 
 - `npm run build`
   - build de producción pasando

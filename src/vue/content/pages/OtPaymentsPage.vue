@@ -7,7 +7,12 @@
           <p>Solicitudes de compra asociadas a tus órdenes de trabajo</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-outline-primary btn-sm" :disabled="loading" @click="loadRequests">
+          <button
+            class="btn btn-outline-primary btn-sm"
+            data-testid="ot-payments-refresh"
+            :disabled="loading"
+            @click="loadRequests"
+          >
             {{ loading ? 'Actualizando...' : 'Actualizar' }}
           </button>
           <router-link to="/dashboard" class="btn btn-outline-secondary btn-sm">
@@ -16,10 +21,15 @@
         </div>
       </header>
 
-      <div v-if="error" class="alert alert-warning">{{ error }}</div>
+      <div v-if="error" class="alert alert-warning" data-testid="ot-payments-error">{{ error }}</div>
 
       <section v-if="requests.length > 0" class="requests-list">
-        <article v-for="request in requests" :key="request.id" class="request-card">
+        <article
+          v-for="request in requests"
+          :key="request.id"
+          class="request-card"
+          data-testid="ot-payment-row"
+        >
           <header class="request-head">
             <div>
               <h2>Solicitud #{{ request.id }}</h2>
@@ -51,7 +61,12 @@
             </div>
 
             <div v-if="request.latest_payment?.proof_path" class="proof-link">
-              <a :href="toApiPath(request.latest_payment.proof_path)" target="_blank" rel="noopener">
+              <a
+                :href="toApiPath(request.latest_payment.proof_path)"
+                target="_blank"
+                rel="noopener"
+                data-testid="ot-payment-proof-link"
+              >
                 Ver comprobante enviado
               </a>
             </div>
@@ -68,29 +83,34 @@
                 type="number"
                 min="1"
                 class="form-control form-control-sm"
+                data-testid="ot-payment-amount"
                 placeholder="Monto depositado (CLP)"
               />
               <input
                 v-model="forms[request.id].deposit_reference"
                 type="text"
                 class="form-control form-control-sm"
+                data-testid="ot-payment-reference"
                 placeholder="Referencia de transferencia"
               />
             </div>
             <textarea
               v-model="forms[request.id].client_notes"
               class="form-control form-control-sm"
+              data-testid="ot-payment-notes"
               rows="2"
               placeholder="Notas para administración"
             />
             <input
               type="file"
               class="form-control form-control-sm"
+              data-testid="ot-payment-file"
               accept="image/*"
               @change="onFileSelected(request.id, $event)"
             />
             <button
               class="btn btn-sm btn-primary"
+              data-testid="ot-payment-submit"
               :disabled="isBusy(request.id)"
               @click="submitProof(request)"
             >
@@ -107,7 +127,7 @@
         </article>
       </section>
 
-      <section v-else class="empty-state">
+      <section v-else class="empty-state" data-testid="ot-payments-empty">
         <p>No tienes solicitudes de pago OT pendientes por ahora.</p>
       </section>
     </div>

@@ -326,8 +326,9 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // Verificar autenticación si existe ruta protegida y la sesión aún no está hidratada.
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+  // Hidratar sesión también en rutas guest-only para poder redirigir correctamente
+  // a usuarios ya autenticados que llegan a /login o /register con tokens persistidos.
+  if ((to.meta.requiresAuth || to.meta.requiresGuest) && !authStore.isAuthenticated) {
     await authStore.checkAuth()
   }
 

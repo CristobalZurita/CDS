@@ -85,4 +85,43 @@ describe('SchedulePage', () => {
     expect(consoleLog).toHaveBeenCalled()
     expect(consoleWarn).not.toHaveBeenCalled()
   })
+
+  it('shows backend validation errors and stays on the confirmation step when creation fails', async () => {
+    apiMock.post.mockRejectedValue({
+      response: {
+        data: {
+          detail: 'La fecha seleccionada ya no está disponible',
+        },
+      },
+    })
+
+    const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    const wrapper = mount(SchedulePage, {
+      global: {
+        stubs: {
+          TurnstileWidget: turnstileStub,
+        },
+      },
+    })
+
+    await wrapper.get('[data-testid="schedule-next-month"]').trigger('click')
+    const selectableDay = wrapper
+      .findAll('[data-testid="schedule-day"]')
+      .find((node) => node.attributes('data-disabled') === 'false')
+
+    expect(selectableDay).toBeTruthy()
+    await selectableDay!.trigger('click')
+    await wrapper.get('[data-testid="schedule-date-next"]').trigger('click')
+    await wrapper.get('[data-testid="schedule-time-slot"]').trigger('click')
+    await wrapper.get('[data-testid="schedule-time-next"]').trigger('click')
+    await wrapper.get('input[type="checkbox"]').setValue(true)
+    await wrapper.get('[data-testid="turnstile-stub"]').trigger('click')
+    await wrapper.get('[data-testid="schedule-confirm"]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.find('[data-testid="schedule-success"]').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="schedule-error"]').text()).toContain('La fecha seleccionada ya no está disponible')
+    expect(consoleWarn).toHaveBeenCalled()
+  })
 })

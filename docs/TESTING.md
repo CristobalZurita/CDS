@@ -4,6 +4,9 @@
 - Runner: Vitest (`npm run test`).
 - Ubicación: `tests/`.
 - Coverage real: `npm run test:coverage`.
+- Reportes para IDE/herramientas:
+  - `coverage/lcov.info`
+  - `coverage/coverage-summary.json`
 
 ## Backend
 - Runner: pytest + pytest-asyncio.
@@ -39,11 +42,11 @@ npm run build
 
 ## Foto actual
 - `npm run test:coverage`:
-  - `150/150` passing
-  - lines/statements: `13.65%`
-  - branches: `53.72%`
-  - functions: `33.60%`
+  - `160/160` passing
+  - lines/statements: `36.99%`
+  - branches: `59.76%`
+  - functions: `36.85%`
 - `npm run test:e2e`:
-  - `82/82` passing
+  - `88/88` passing
 - `npm run build`:
   - passing

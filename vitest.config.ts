@@ -9,8 +9,10 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     coverage: {
+      all: true,
       provider: 'v8',
-      reporter: ['text', 'json', 'html', 'text-summary'],
+      reportsDirectory: './coverage',
+      reporter: ['text', 'json', 'json-summary', 'html', 'lcov', 'text-summary'],
       exclude: [
         'node_modules/',
         'tests/',
