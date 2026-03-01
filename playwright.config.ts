@@ -8,6 +8,10 @@ const frontendPort = process.env.PLAYWRIGHT_FRONTEND_PORT || '5174'
 const apiPort = process.env.PLAYWRIGHT_API_PORT || '8001'
 const baseURL = process.env.PLAYWRIGHT_BASE_URL || `http://127.0.0.1:${frontendPort}`
 const apiBaseURL = process.env.PLAYWRIGHT_API_URL || `http://127.0.0.1:${apiPort}/api/v1`
+const webServerEnv = { ...process.env }
+
+delete webServerEnv.NO_COLOR
+delete webServerEnv.FORCE_COLOR
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -51,19 +55,19 @@ export default defineConfig({
       reuseExistingServer: false,
       timeout: 120_000,
       env: {
-        ...process.env,
+        ...webServerEnv,
         PLAYWRIGHT_API_PORT: apiPort,
         PLAYWRIGHT_FRONTEND_PORT: frontendPort,
       },
     },
     {
-      command: `npm run dev -- --host 127.0.0.1 --port ${frontendPort} --strictPort`,
+      command: `env -u NO_COLOR -u FORCE_COLOR npm run dev -- --host 127.0.0.1 --port ${frontendPort} --strictPort`,
       url: baseURL,
       cwd: repoRoot,
       reuseExistingServer: false,
       timeout: 120_000,
       env: {
-        ...process.env,
+        ...webServerEnv,
         VITE_API_URL: apiBaseURL,
         VITE_TURNSTILE_DISABLE: 'true',
         PLAYWRIGHT_BASE_URL: baseURL,
