@@ -72,7 +72,15 @@ def _rebind_session(db_url: str):
 
 
 def _ensure_schema(db_url: str):
-    from app.core.database import Base, _ensure_payments_purchase_request_schema, _ensure_repairs_ot_schema
+    from app.core.database import (
+        Base,
+        _ensure_appointments_schema,
+        _ensure_instruments_schema,
+        _ensure_payments_purchase_request_schema,
+        _ensure_products_image_url_schema,
+        _ensure_purchase_request_items_schema,
+        _ensure_repairs_ot_schema,
+    )
     from app import models  # noqa: F401
 
     engine = _rebind_session(db_url)
@@ -80,6 +88,10 @@ def _ensure_schema(db_url: str):
     # Ajuste aditivo para DBs de test legacy que ya existían sin columnas OT/pagos.
     _ensure_repairs_ot_schema()
     _ensure_payments_purchase_request_schema()
+    _ensure_products_image_url_schema()
+    _ensure_appointments_schema()
+    _ensure_instruments_schema()
+    _ensure_purchase_request_items_schema()
     return engine
 
 

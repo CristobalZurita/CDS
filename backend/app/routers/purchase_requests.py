@@ -7,8 +7,11 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.dependencies import require_permission, get_current_user
+from app.models.inventory import Product
 from app.models.payment import Payment, PaymentStatus
 from app.models.purchase_request import PurchaseRequest, PurchaseRequestItem
+from app.models.stock import Stock
+from app.models.stock_movement import StockMovement
 from app.schemas import PaymentRead
 from app.schemas.purchase_request import PurchaseRequestCreate, PurchaseRequestOut
 from app.services.logging_service import create_audit
@@ -37,6 +40,17 @@ FLOW_STATUSES = {
 }
 
 VALID_STATUSES = LEGACY_STATUSES | FLOW_STATUSES
+RESERVE_PHASE_STATUSES = {
+    "requested",
+    "pending_payment",
+    "proof_submitted",
+    "paid_client",
+    "purchased_admin",
+}
+FULFILLED_PHASE_STATUSES = {
+    "received",
+    "applied_ot",
+}
 
 
 def _normalize_status(raw: str | None, fallback: str = "draft") -> str:
@@ -48,11 +62,216 @@ def _normalize_status(raw: str | None, fallback: str = "draft") -> str:
     return value
 
 
+def _stock_phase(raw: str | None) -> str:
+    value = _normalize_status(raw, fallback="draft")
+    if value in FULFILLED_PHASE_STATUSES:
+        return "fulfilled"
+    if value in RESERVE_PHASE_STATUSES:
+        return "reserved"
+    return "idle"
+
+
 def _request_total(req: PurchaseRequest) -> float:
     total = 0.0
     for item in req.items or []:
         total += float(item.quantity or 0) * float(item.unit_price or 0)
     return round(total, 2)
+
+
+def _request_item_reserved(item: PurchaseRequestItem) -> int:
+    return max(int(getattr(item, "reserved_quantity", 0) or 0), 0)
+
+
+def _request_item_label(item: PurchaseRequestItem) -> str:
+    value = str(item.sku or item.name or f"product:{item.product_id or 'n/a'}").strip()
+    return value or "producto"
+
+
+def _request_item_stock(db: Session, item: PurchaseRequestItem) -> Stock | None:
+    product_id = int(item.product_id or 0)
+    if product_id <= 0:
+        return None
+    return (
+        db.query(Stock)
+        .filter(
+            Stock.component_table == "products",
+            Stock.component_id == product_id,
+        )
+        .first()
+    )
+
+
+def _sellable_stock_including_item(stock: Stock, item: PurchaseRequestItem) -> int:
+    current_reserved = _request_item_reserved(item)
+    minimum_stock = max(int(stock.minimum_stock or 0), 0)
+    available_including_self = max(int(stock.available_quantity or 0), 0) + current_reserved
+    return max(available_including_self - minimum_stock, 0)
+
+
+def _desired_reserved_quantity(stock: Stock, item: PurchaseRequestItem) -> int:
+    requested_qty = max(int(item.quantity or 0), 0)
+    sellable_qty = _sellable_stock_including_item(stock, item)
+    return min(requested_qty, sellable_qty)
+
+
+def _append_stock_movement(
+    db: Session,
+    *,
+    stock: Stock,
+    req: PurchaseRequest,
+    item: PurchaseRequestItem,
+    movement_type: str,
+    quantity: int,
+    user_id: int | None,
+    status_label: str | None = None,
+) -> None:
+    qty = max(int(quantity or 0), 0)
+    if qty <= 0:
+        return
+
+    suffix = f" / estado {status_label}" if status_label else ""
+    db.add(
+        StockMovement(
+            stock_id=stock.id,
+            movement_type=movement_type,
+            quantity=qty,
+            repair_id=req.repair_id,
+            notes=f"Solicitud compra #{req.id} / {_request_item_label(item)}{suffix}",
+            performed_by=user_id,
+        )
+    )
+
+
+def _align_request_reservations(db: Session, req: PurchaseRequest, user_id: int | None) -> None:
+    for item in req.items or []:
+        stock = _request_item_stock(db, item)
+        current_reserved = _request_item_reserved(item)
+
+        if not stock:
+            if current_reserved > 0:
+                item.reserved_quantity = 0
+            continue
+
+        desired_reserved = _desired_reserved_quantity(stock, item)
+        if desired_reserved == current_reserved:
+            continue
+
+        if desired_reserved > current_reserved:
+            reserve_delta = desired_reserved - current_reserved
+            stock.quantity_reserved = int(stock.quantity_reserved or 0) + reserve_delta
+            item.reserved_quantity = desired_reserved
+            stock.updated_at = datetime.utcnow()
+            _append_stock_movement(
+                db,
+                stock=stock,
+                req=req,
+                item=item,
+                movement_type="RESERVE",
+                quantity=reserve_delta,
+                user_id=user_id,
+                status_label=req.status,
+            )
+            continue
+
+        release_delta = current_reserved - desired_reserved
+        stock.quantity_reserved = max(int(stock.quantity_reserved or 0) - release_delta, 0)
+        item.reserved_quantity = desired_reserved
+        stock.updated_at = datetime.utcnow()
+        _append_stock_movement(
+            db,
+            stock=stock,
+            req=req,
+            item=item,
+            movement_type="UNRESERVE",
+            quantity=release_delta,
+            user_id=user_id,
+            status_label=req.status,
+        )
+
+
+def _release_request_reservations(db: Session, req: PurchaseRequest, user_id: int | None) -> None:
+    for item in req.items or []:
+        stock = _request_item_stock(db, item)
+        reserved_qty = _request_item_reserved(item)
+        if reserved_qty <= 0:
+            continue
+
+        if stock:
+            stock.quantity_reserved = max(int(stock.quantity_reserved or 0) - reserved_qty, 0)
+            stock.updated_at = datetime.utcnow()
+            _append_stock_movement(
+                db,
+                stock=stock,
+                req=req,
+                item=item,
+                movement_type="UNRESERVE",
+                quantity=reserved_qty,
+                user_id=user_id,
+                status_label=req.status,
+            )
+        item.reserved_quantity = 0
+
+
+def _consume_request_reservations(
+    db: Session,
+    req: PurchaseRequest,
+    user_id: int | None,
+    target_status: str,
+) -> None:
+    for item in req.items or []:
+        stock = _request_item_stock(db, item)
+        reserved_qty = _request_item_reserved(item)
+        if reserved_qty <= 0:
+            continue
+
+        if not stock:
+            item.reserved_quantity = 0
+            continue
+
+        stock_reserved = max(int(stock.quantity_reserved or 0), 0)
+        stock_quantity = max(int(stock.quantity or 0), 0)
+        consume_qty = min(reserved_qty, stock_reserved, stock_quantity)
+        if consume_qty <= 0:
+            continue
+
+        stock.quantity = stock_quantity - consume_qty
+        stock.quantity_reserved = stock_reserved - consume_qty
+        stock.updated_at = datetime.utcnow()
+        item.reserved_quantity = max(reserved_qty - consume_qty, 0)
+        _append_stock_movement(
+            db,
+            stock=stock,
+            req=req,
+            item=item,
+            movement_type="OUT_RESERVED",
+            quantity=consume_qty,
+            user_id=user_id,
+            status_label=target_status,
+        )
+
+
+def _apply_request_stock_state(
+    db: Session,
+    req: PurchaseRequest,
+    previous_status: str | None,
+    next_status: str | None,
+    user_id: int | None,
+) -> None:
+    old_phase = _stock_phase(previous_status)
+    new_phase = _stock_phase(next_status)
+
+    if new_phase == "reserved":
+        _align_request_reservations(db, req, user_id)
+        return
+
+    if new_phase == "fulfilled":
+        if old_phase != "fulfilled":
+            _align_request_reservations(db, req, user_id)
+            _consume_request_reservations(db, req, user_id, _normalize_status(next_status))
+        return
+
+    if old_phase == "reserved":
+        _release_request_reservations(db, req, user_id)
 
 
 def _parse_notes_metadata(raw_notes: str | None) -> dict:
@@ -280,6 +499,7 @@ def request_client_payment(
     user: dict = Depends(require_permission("purchase_requests", "update")),
 ):
     req = _get_request_or_404(db, request_id)
+    previous_status = req.status
     requested_amount = payload.get("amount")
     default_amount = int(round(_request_total(req)))
     amount = int(round(float(requested_amount if requested_amount is not None else default_amount)))
@@ -325,6 +545,13 @@ def request_client_payment(
         )
         db.add(open_payment)
 
+    _apply_request_stock_state(
+        db,
+        req,
+        previous_status=previous_status,
+        next_status=req.status,
+        user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
+    )
     db.commit()
     db.refresh(req)
     db.refresh(open_payment)
@@ -350,6 +577,7 @@ def confirm_client_payment(
     user: dict = Depends(require_permission("purchase_requests", "update")),
 ):
     req = _get_request_or_404(db, request_id)
+    previous_status = req.status
     payment_id = payload.get("payment_id")
 
     query = db.query(Payment).filter(Payment.purchase_request_id == req.id)
@@ -369,6 +597,13 @@ def confirm_client_payment(
     payment.notes = json.dumps(notes, ensure_ascii=False)
 
     req.status = "paid_client"
+    _apply_request_stock_state(
+        db,
+        req,
+        previous_status=previous_status,
+        next_status=req.status,
+        user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
+    )
     db.commit()
     db.refresh(req)
     db.refresh(payment)
@@ -395,6 +630,7 @@ def update_purchase_request_status(
     user: dict = Depends(require_permission("purchase_requests", "update")),
 ):
     req = _get_request_or_404(db, request_id)
+    previous_status = req.status
     incoming = payload or {}
     target_status = incoming.get("status") or status
     if not target_status:
@@ -404,6 +640,13 @@ def update_purchase_request_status(
     if "notes" in incoming:
         req.notes = str(incoming.get("notes") or "").strip() or None
 
+    _apply_request_stock_state(
+        db,
+        req,
+        previous_status=previous_status,
+        next_status=req.status,
+        user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
+    )
     db.commit()
     db.refresh(req)
 
@@ -427,6 +670,12 @@ def delete_purchase_request(
     user: dict = Depends(require_permission("purchase_requests", "delete")),
 ):
     req = _get_request_or_404(db, request_id)
+    if _stock_phase(req.status) == "reserved":
+        _release_request_reservations(
+            db,
+            req,
+            user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
+        )
 
     db.query(Payment).filter(Payment.purchase_request_id == req.id).delete(synchronize_session=False)
     db.delete(req)

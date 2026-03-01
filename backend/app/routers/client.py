@@ -25,6 +25,7 @@ from app.core.config import settings
 from app.services.logging_service import create_audit
 from app.services.pdf_generator import generate_repair_closure_pdf_bytes
 from app.services.ot_code_service import repair_code as _repair_code
+from app.routers.purchase_requests import _apply_request_stock_state
 
 router = APIRouter(prefix="/client", tags=["client"])
 
@@ -857,6 +858,14 @@ def create_store_purchase_request(
         )
         req.notes = " | ".join(note_parts)
 
+    db.flush()
+    _apply_request_stock_state(
+        db,
+        req,
+        previous_status="draft",
+        next_status=req.status,
+        user_id=user_obj.id,
+    )
     db.commit()
     db.refresh(req)
 

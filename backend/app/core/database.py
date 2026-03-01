@@ -283,6 +283,27 @@ def _ensure_instruments_schema() -> None:
                 continue
             conn.execute(text(f"ALTER TABLE instruments ADD COLUMN {column_name} {column_ddl}"))
 
+
+def _ensure_purchase_request_items_schema() -> None:
+    """
+    Ajuste aditivo para DBs legacy sin columnas de reserva en purchase_request_items.
+    Permite conectar tienda/inventario sin migraciones destructivas.
+    """
+    inspector = inspect(engine)
+    if "purchase_request_items" not in inspector.get_table_names():
+        return
+
+    current_columns = {column["name"] for column in inspector.get_columns("purchase_request_items")}
+    additions = {
+        "reserved_quantity": "INTEGER DEFAULT 0",
+    }
+
+    with engine.begin() as conn:
+        for column_name, column_ddl in additions.items():
+            if column_name in current_columns:
+                continue
+            conn.execute(text(f"ALTER TABLE purchase_request_items ADD COLUMN {column_name} {column_ddl}"))
+
 async def get_db():
     """
     Dependency to get database session
@@ -311,6 +332,7 @@ async def init_db():
         _ensure_products_image_url_schema()
         _ensure_appointments_schema()
         _ensure_instruments_schema()
+        _ensure_purchase_request_items_schema()
         logger.info("✓ Database tables created successfully")
     except Exception as e:
         logger.error(f"✗ Error creating database tables: {e}")
