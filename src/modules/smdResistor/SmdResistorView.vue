@@ -443,7 +443,7 @@ watch([frequencyHz, () => form.r_kohm, () => form.c_uf], () => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 #smd-40106-calculator-root {
   --smd-panel-fill: #{$color-panel-fill-legacy};

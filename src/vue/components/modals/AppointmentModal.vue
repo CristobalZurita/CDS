@@ -270,7 +270,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .appointment-modal-overlay {
     position: fixed;

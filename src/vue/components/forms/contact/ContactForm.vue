@@ -139,7 +139,7 @@ const _resetScroll = () => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 #foxy-contact-form {
     width: 100%;

@@ -74,7 +74,7 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .turnstile-widget {
   display: flex;

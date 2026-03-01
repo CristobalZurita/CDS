@@ -993,7 +993,7 @@ filteredInstruments.value = allInstruments.value
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .interactive-diagnostic {
   min-height: 100vh;

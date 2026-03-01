@@ -33,7 +33,7 @@ const parsedLabel = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 div.foxy-navbar-brand {
     @include generate-dynamic-styles-with-hash((

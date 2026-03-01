@@ -16,7 +16,7 @@ const formatted = computed(() => JSON.stringify(props.result, null, 2))
 </script>
 
 <style lang="scss" scoped>
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .analysis {
   border: 1px solid $color-gray-200-legacy;

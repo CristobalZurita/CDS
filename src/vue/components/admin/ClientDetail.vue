@@ -279,7 +279,7 @@ watch(() => props.client?.id, () => {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 .client-detail {
   border: 1px solid $legacy-gray-200;

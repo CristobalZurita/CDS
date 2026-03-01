@@ -64,7 +64,7 @@ const _onCategorySelected = (categoryId) => {
 </script>
 
 <style lang="scss">
-@import "@/scss/_theming.scss";
+@use "@/scss/_theming.scss" as *;
 
 :root {
     --project-logo-size: min(clamp(140px, 20vh, 170px), clamp(140px, 10.5vw, 170px));

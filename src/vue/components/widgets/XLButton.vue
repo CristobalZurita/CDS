@@ -25,7 +25,7 @@ const variant = computed(() => props.variant)
 </script>
 
 <style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
+@use "/src/scss/_theming.scss" as *;
 @import "/src/scss/_variables.scss";
 
 button.btn-xl {

@@ -85,7 +85,7 @@ function onVerify(token) {
 </script>
 
 <style scoped lang="scss">
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .register-page { padding: 2rem; display:flex; justify-content:center }
 .register-container { width: 100%; max-width: 560px; background: $color-white; padding: 2rem; border-radius: 8px }
