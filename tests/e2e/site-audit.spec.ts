@@ -377,7 +377,7 @@ const adminActionAudits: ActionAudit[] = [
 ]
 
 function normalizePath(rawPath: string) {
-  const url = new URL(rawPath, 'http://127.0.0.1:5173')
+  const url = new URL(rawPath, process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:5174')
   const normalized = url.pathname.replace(/\/+$/, '')
   return normalized || '/'
 }

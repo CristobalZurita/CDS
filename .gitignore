@@ -83,6 +83,7 @@ test-results/
 playwright-report/
 tests/e2e/.auth/
 coverage/
+backend/tests/e2e_runtime/
 
 # Production - SSL certificates (NEVER commit real certs)
 certs/
