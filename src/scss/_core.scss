@@ -4,7 +4,7 @@
 // USO EN COMPONENTES VUE:
 //
 // <style lang="scss" scoped>
-// @import "@/scss/_core.scss";
+// @use "@/scss/_core.scss" as *;
 //
 // .mi-componente {
 //     @include text-body;  // Hereda tipografía global

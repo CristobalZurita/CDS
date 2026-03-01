@@ -1,101 +1,171 @@
-# Cirujano de Sintetizadores (CDS)
-Plataforma integral para gestion de reparaciones de instrumentos, inventario de taller y comunicacion cliente-tecnico.
-Incluye portal publico, panel cliente y panel administrador con magos de ingreso.
+# Cirujano de Sintetizadores
 
----
+Plataforma web para operacion de taller, seguimiento de reparaciones y relacion cliente-tecnico.
 
-## Modulos principales
-- Portal publico: servicios, trabajos, cotizador, contacto.
-- Panel cliente: estado de reparaciones, historial, perfil.
-- Panel admin: clientes, instrumentos, OT, inventario, categorias, citas, mensajes.
-- Magos (admin): ingreso completo, inventario, materiales, tickets, compras, manuales, firmas.
+El proyecto hoy integra tres capas funcionales:
+- Portal publico para servicios, contacto, contenido y diagnostico/cotizacion.
+- Portal cliente para seguimiento de OT, perfil, pagos y documentos.
+- Portal administrador para clientes, reparaciones, inventario, citas, tickets, compras y manuales.
 
----
+## Resumen Ejecutivo
 
-## Flujo operativo recomendado (admin)
-1) Crear cliente + instrumento + OT con el mago de ingreso.
-2) Registrar diagnostico, materiales usados y avances.
-3) Solicitar firma de ingreso y retiro (link publico).
-4) Cerrar OT y emitir documento final (pendiente de PDF).
-
----
-
-## Tecnologias
-- Frontend: Vue 3 + Vite
+La aplicacion esta construida sobre:
+- Frontend: Vue 3 + Vite + Pinia + Vue Router
 - Backend: FastAPI + SQLAlchemy
-- DB: SQLite (local), preparado para Postgres
+- Base de datos local por defecto: SQLite en `backend/cirujano.db`
+- Pruebas: Vitest para front unitario/integracion y Playwright para E2E
 
----
+El frontend trabaja como SPA, pero el repo ya incorpora una capa de auditoria automatizada para validar navegacion, rutas protegidas, formularios y CRUD criticos sin revisar el sistema boton por boton.
 
-## Configuracion
-### Frontend (.env)
-```
-VITE_API_URL=http://localhost:8000/api/v1
-```
+## Alcance Funcional
 
-### Backend
-- Base de datos local: `backend/cirujano.db`
+### Publico
+- Home y contenido institucional
+- Formulario de contacto
+- Agenda de citas
+- Diagnostico/cotizador online
+- Carga de fotos y firma por token publico
 
----
+### Cliente
+- Dashboard
+- Estado e historial de reparaciones
+- Perfil
+- Pagos OT y comprobantes
+- Acceso a documentos y cierre
 
-## Ejecutar en local
-### Backend
-```
-cd backend
-uvicorn app.main:app --reload
-```
+### Administrador
+- Dashboard interno
+- Gestion de clientes y usuarios
+- Reparaciones y OT
+- Inventario y categorias
+- Citas
+- Tickets
+- Solicitudes de compra
+- Manuales
+- Magos de ingreso y operacion
+
+## Estructura Relevante
+
+- Frontend: `src/`
+- Backend: `backend/app/`
+- Pruebas frontend: `tests/`
+- Pruebas backend: `backend/tests/`
+- Documentacion operativa: `docs/`
+- Documentacion complementaria/archivo: `DOCUMJENTOS_EXTRAS/`
+- Arquitectura Sass local: `src/scss/README.md`
+
+## Ejecucion Local
 
 ### Frontend
-```
+```bash
 npm install
 npm run dev
 ```
 
-Frontend: `http://localhost:5173`
-Backend: `http://localhost:8000`
-
----
-
-## Migraciones y permisos
-### Migraciones
-```
+### Backend
+```bash
 cd backend
-alembic upgrade head
+uvicorn app.main:app --reload
 ```
 
-### Seed de permisos/roles
-```
-cd backend
-source .venv/bin/activate
-PYTHONPATH=. python scripts/seed_permissions.py
-```
+Puertos habituales:
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8000`
 
----
+## Configuracion Base
 
-## Importacion de inventario (Excel)
-1) Normalizar Excel -> JSON:
-```
-python scripts/ingest/normalize_excel.py
-```
-2) Importar a DB (tabla products):
-```
-python scripts/ingest/import_to_db.py
+### Frontend
+Variable principal:
+```bash
+VITE_API_URL=http://localhost:8000/api/v1
 ```
 
----
+### Backend
+Configuracion por defecto:
+- entorno: `development`
+- base de datos: `sqlite:///./cirujano.db`
+- archivo operativo: `backend/cirujano.db`
 
-## Firma digital
-- UI publica: `/signature/:token`
-- Admin genera token desde mago o ficha de OT.
-- Firma se guarda en `uploads/signatures/`.
+Nota:
+- La configuracion efectiva sale de `backend/.env` y `backend/app/core/config.py`.
+- No exponer secretos del `.env` en documentacion publica.
 
----
+## Testing y Validacion
 
-## Auditoria y estado
-- Auditoria actual: `AUDITORIA_CDS_2026-01-22.md`
-- Todo-list operativo: `CDS_TODO_LIST_2026-01-22.md`
+Comandos principales:
+```bash
+npm run build
+npx vitest run --config vitest.config.ts --environment jsdom
+npm run test:coverage
+npm run test:e2e
+```
 
----
+Estado validado en esta revision:
+- `npm run build`: OK
+- `npx vitest run --config vitest.config.ts --environment jsdom`: `170/170` OK
+- `npm run test:e2e -- tests/e2e/auth.spec.ts`: `5/5` OK
+- `npm run test:coverage`: falla correctamente por umbrales globales no cumplidos
 
-## Licencia
-Uso interno del proyecto. Ajustar si se publica.
+Coverage actual medido sobre `src`:
+- lines/statements: `39.6%`
+- branches: `62.44%`
+- functions: `41.22%`
+
+El flujo E2E ya corre aislado de la base operativa:
+- frontend E2E: `127.0.0.1:5174`
+- backend E2E: `127.0.0.1:8001`
+- runtime E2E: `backend/tests/e2e_runtime/`
+
+Mas detalle:
+- `docs/TESTING.md`
+- `docs/TESTING_STATUS_BRIEF.md`
+- `docs/TESTING_COVERAGE_MATRIX.md`
+
+## Estado Sass
+
+La capa Sass del proyecto usa la estructura ya presente en `src/scss/`.
+
+Estado actual:
+- componentes Vue usando partials existentes con `_`
+- sin CSS inline detectado en `src/`, `public/` y `tests/`
+- sin `@extend`
+- imports legacy concentrados en archivos base existentes:
+  - `src/scss/_core.scss`
+  - `src/scss/_theming.scss`
+  - `src/scss/main.scss`
+  - `src/scss/style.scss`
+
+La guia local de esta capa vive en:
+- `src/scss/README.md`
+
+## Documentos Relacionados
+
+- Testing operativo: `docs/TESTING.md`
+- Estado corto de testing: `docs/TESTING_STATUS_BRIEF.md`
+- Matriz de cobertura: `docs/TESTING_COVERAGE_MATRIX.md`
+- Documento de rapidez/referencia externa: `DOCUMJENTOS_EXTRAS/RAPIDEZ.md`
+
+## Nota Sobre RAPIDEZ.md
+
+`DOCUMJENTOS_EXTRAS/RAPIDEZ.md` es una referencia de principios de performance, no la definicion de arquitectura del proyecto.
+
+En este repo esos principios aplican como criterio:
+- reducir trabajo innecesario
+- evitar bloqueos de carga
+- cargar solo lo necesario
+- mantener estructura simple y mantenible
+
+No obliga a cambiar el stack actual ni a salir de Vue/Vite/FastAPI.
+
+## Criterio de Trabajo Vigente
+
+Sobre este repo, la regla practica es:
+- trabajar sobre la estructura existente
+- preferir mejora aditiva
+- deconstruir antes de duplicar
+- reutilizar archivos, variables y capas ya presentes
+- evitar capas paralelas e inventario innecesario de archivos
+
+## Licencia y Uso
+
+Proyecto de uso interno. Revisar antes de publicar o redistribuir.

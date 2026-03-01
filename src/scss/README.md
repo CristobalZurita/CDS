@@ -45,7 +45,7 @@ scss/
 ### CORRECTO - Heredar del sistema global
 ```vue
 <style lang="scss" scoped>
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .mi-componente {
     // Usar variables globales
@@ -204,7 +204,7 @@ $spacer-xxl  // 48px
 
 Para limpiar un componente Vue que tiene estilos hardcodeados:
 
-1. Importar `_core.scss`
+1. Usar `_core.scss` con `@use`
 2. Reemplazar valores hardcodeados por variables
 3. Usar mixins en vez de redefinir estilos
 4. Eliminar `!important` innecesarios
@@ -231,7 +231,7 @@ Para limpiar un componente Vue que tiene estilos hardcodeados:
 **DESPUÉS:**
 ```vue
 <style lang="scss" scoped>
-@import "@/scss/_core.scss";
+@use "@/scss/_core.scss" as *;
 
 .section {
     h2 {
