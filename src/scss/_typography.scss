@@ -1,3 +1,5 @@
+@use "./_theming.scss" as *;
+
 @each $heading, $size in $headings-base-sizes {
     #{$heading}, .eq-#{$heading} {
         @include generate-dynamic-styles-with-multipliers($size, $headings-breakpoint-multipliers);

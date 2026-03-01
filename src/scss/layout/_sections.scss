@@ -3,6 +3,9 @@
 // Estilos para las secciones del landing
 // ============================================
 
+@use "../_theming.scss" as *;
+@use "../_core.scss" as core;
+
 // ---------------------------------------------
 // SECCIÓN BASE
 // ---------------------------------------------
@@ -120,7 +123,7 @@
 // CONTENEDOR XXL OVERRIDE
 // ---------------------------------------------
 .container-xxl {
-    @include dynamic-styles-hash((
+    @include core.dynamic-styles-hash((
         xxxl: (padding: 0),
         xxl: (padding: 0 4rem),
         xl: (padding: 0 2rem),

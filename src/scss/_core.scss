@@ -13,17 +13,5 @@
 // </style>
 // ============================================
 
-// 1. Bootstrap functions (necesarias para manipular colores)
-@import "/node_modules/bootstrap/scss/functions";
-
-// 2. Nuestras variables unificadas
-@import "./abstracts/variables";
-
-// 3. Bootstrap variables (para $grid-breakpoints, etc.)
-@import "/node_modules/bootstrap/scss/variables";
-
-// 4. Bootstrap mixins (media-breakpoint-down, etc.)
-@import "/node_modules/bootstrap/scss/mixins";
-
-// 5. Nuestros mixins (DESPUÉS de Bootstrap para usar sus mixins)
-@import "./abstracts/mixins";
+@forward "./abstracts/_variables.scss";
+@forward "./abstracts/_mixins.scss";

@@ -4,8 +4,17 @@
 // Overrides and customizations for third-party libraries
 // Includes Bootstrap, FontAwesome, and other vendor styles
 
-// Note: Bootstrap and FontAwesome imported directly in main.scss
-// This layer is reserved for vendor-specific customizations
+@use "../_variables.scss" as *;
+@use "bootstrap/scss/bootstrap" with (
+    $min-contrast-ratio: $min-contrast-ratio,
+    $font-family-base: $font-family-base,
+    $headings-font-family: $headings-font-family,
+    $primary: $primary,
+    $dark: $dark,
+    $success: $success,
+    $light: $light,
+    $white: $white
+);
 
 // @forward 'bootstrap-overrides';    // Uncomment when adding customizations
 // @forward 'fontawesome-customizations'; // Uncomment when adding customizations

@@ -1,10 +1,42 @@
-// Central theming import for Vue components.
-// Order matters: import Bootstrap functions first, then project variables (which can use those functions),
-// then Bootstrap variables, then mixins.
-@import "/node_modules/bootstrap/scss/functions";
-@import "./abstracts/_variables";
-@import "./_brand";
-@import "./_variables";
-@import "/node_modules/bootstrap/scss/variables";
-@import "./_mixins.scss";
-@import "/node_modules/bootstrap/scss/mixins";
+@use "./_core.scss" as core;
+
+@forward "./_core.scss" hide
+    $fa-font-path,
+    $min-contrast-ratio,
+    $font-family-base,
+    $headings-font-family,
+    $primary,
+    $dark,
+    $success,
+    $light,
+    $white,
+    $orange-primary,
+    $orange-pastel,
+    $vintage-black,
+    $vintage-beige,
+    $background-color,
+    $nav-background-color,
+    $footer-bg-color,
+    $navbar-height,
+    $headings-color,
+    $text-normal,
+    $text-muted,
+    $light-1,
+    $light-2,
+    $light-3,
+    $light-4,
+    $light-5,
+    $light-6,
+    $light-7,
+    $light-shades-palette;
+@forward "./_brand.scss" hide
+    $font-family-base,
+    $headings-font-family;
+@forward "./_variables.scss";
+@forward "./_mixins.scss" hide normalize-breakpoint;
+
+$danger: core.$color-danger;
+$black: core.$color-black;
+$orange: core.$color-orange-500-legacy;
+$font-weight-bold: core.$fw-bold;
+$headings-font-weight: core.$fw-bold;

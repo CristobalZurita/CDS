@@ -1,3 +1,5 @@
+@use "./_theming.scss" as *;
+
 /** ------------ BODY ----------------- **/
 html {
     scroll-padding-top: $navbar-height;
