@@ -66,20 +66,23 @@ Qué valida esta auditoría:
 
 ### 3. CRUD de entidades críticas
 
-- `4` módulos con CRUD E2E completo hoy:
+- `9/9` módulos admin críticos con CRUD E2E completo hoy:
   - usuarios
   - categorías
   - inventario
   - reparaciones
+  - cotizaciones
+  - citas
+  - tickets
+  - solicitudes de compra
+  - manuales
 - Base:
   - `tests/e2e/admin-crud.spec.ts`
+  - `tests/e2e/admin-extended-crud.spec.ts`
 
-Pendiente para decir "CRUD admin total":
-- cotizaciones
-- citas
-- tickets
-- solicitudes de compra
-- manuales
+Lectura correcta:
+- El CRUD admin principal quedó cubierto de punta a punta.
+- Lo que sigue faltando no es CRUD admin base, sino más profundidad en flujos cliente/público y estados de error.
 
 ### 4. Flujos transversales y roles
 
@@ -88,12 +91,17 @@ Cubiertos hoy:
 - login cliente por UI
 - redirect de ruta protegida a login
 - cotizador/diagnóstico con fotos de catálogo
+- formulario de contacto público con persistencia real
+- actualización de perfil cliente con persistencia real
+- agendamiento de cita cliente con persistencia real
+- descarga cliente de PDF de cierre desde una reparación real
 - firma por token
 - carga de foto por token
 - navegación pública, cliente y admin sin errores visibles
 
 Base:
 - `tests/e2e/auth.spec.ts`
+- `tests/e2e/client-public-actions.spec.ts`
 - `tests/e2e/quotation.spec.ts`
 - `tests/e2e/public.spec.ts`
 - `tests/e2e/site-audit.spec.ts`
@@ -104,13 +112,13 @@ Estado:
 - La instrumentación quedó operativa y la suite unitaria/integración ya no tiene deuda bloqueante.
 
 Última corrida:
-- `134` tests pasando
+- `150` tests pasando
 - `0` tests fallando
 - summary actual:
-  - statements: `3.49%`
-  - branches: `34.30%`
-  - functions: `21.10%`
-  - lines: `3.49%`
+  - statements: `13.65%`
+  - branches: `53.72%`
+  - functions: `33.60%`
+  - lines: `13.65%`
 
 Lectura correcta:
 - El coverage ya es real y estable, pero hoy es bajo.
@@ -122,7 +130,7 @@ Lectura correcta:
 ### Barrido E2E
 
 - `npm run test:e2e`
-- Resultado actual: `73/73` passing
+- Resultado actual: `82/82` passing
 
 ### Build
 
@@ -140,25 +148,24 @@ Si se resume en una sola frase:
 
 - Cobertura de rutas funcionales: `100%`
 - Cobertura de auditoría admin: `100%`
-- Cobertura CRUD profunda del negocio: `parcial`
-- Cobertura de código instrumentada: `desbloqueada, pero muy baja`
+- Cobertura CRUD admin profunda del negocio: `100%`
+- Cobertura de código instrumentada: `real, estable y todavía baja`
 
 ## Qué falta para acercarse al "100%"
 
 ### Fase 1: cerrar cobertura funcional
 
-1. Agregar CRUD E2E para:
-   - quotes
-   - appointments
-   - tickets
-   - purchase-requests
-   - manuals
-2. Cubrir estados de error:
+1. Cubrir estados de error:
    - `401`
    - `403`
    - `404`
    - `422`
    - `500`
+2. Extender flujos cliente/público con acciones profundas:
+   - OT payments
+   - historial de reparaciones con cambios de estado relevantes
+   - descargas/adjuntos adicionales
+   - formularios públicos secundarios
 3. Cubrir estados visuales:
    - loading
    - empty
@@ -186,4 +193,4 @@ npm run test:coverage
 
 ## Resumen corto para explicar a otra persona
 
-Hoy el sitio tiene cobertura E2E completa de rutas y una auditoría automatizada de todos los módulos visibles del admin. Eso permite detectar enlaces rotos, endpoints faltantes, errores JS y flujos críticos sin revisar todo a mano. Lo que todavía falta para hablar de "100% total" es completar CRUD profundo en módulos secundarios y sanear la suite unitaria para obtener porcentaje de código confiable.
+Hoy el sitio tiene cobertura E2E completa de rutas, auditoría automatizada de todos los módulos visibles del admin, CRUD admin profundo y flujos reales de cliente/público. Eso permite detectar enlaces rotos, endpoints faltantes, errores JS y regresiones funcionales sin revisar todo a mano. Lo que todavía falta para hablar de "100% total" es cubrir más estados de error, más acciones profundas fuera del admin y seguir levantando la cobertura unitaria del front.

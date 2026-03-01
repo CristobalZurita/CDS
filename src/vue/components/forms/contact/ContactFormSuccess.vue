@@ -1,5 +1,5 @@
 <template>
-    <div class="foxy-contact-form-success">
+    <div class="foxy-contact-form-success" data-testid="contact-success">
         <div class="foxy-contact-form-success-icon-wrapper display-3">
             <i class="fa-solid fa-envelope-circle-check"/>
         </div>
@@ -11,6 +11,7 @@
                v-html="utils.parseCustomText(strings.get('contact_thank_you_description'))"/>
 
             <p class="text-4"
+               data-testid="contact-success-email"
                v-html="utils.parseCustomText(strings.get('contact_thank_you_reply').replaceAll('{email}', props.email), true)"/>
         </div>
     </div>

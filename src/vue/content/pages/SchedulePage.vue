@@ -34,9 +34,9 @@
 
           <div class="calendar-container">
             <div class="calendar-header">
-              <button class="calendar-nav" @click="previousMonth">←</button>
+              <button class="calendar-nav" data-testid="schedule-prev-month" @click="previousMonth">←</button>
               <h3>{{ monthYearString }}</h3>
-              <button class="calendar-nav" @click="nextMonth">→</button>
+              <button class="calendar-nav" data-testid="schedule-next-month" @click="nextMonth">→</button>
             </div>
 
             <div class="calendar-weekdays">
@@ -55,6 +55,9 @@
                   disabled: isDateDisabled(day),
                   selected: isSameDate(selectedDate, day)
                 }"
+                data-testid="schedule-day"
+                :data-day="day || ''"
+                :data-disabled="isDateDisabled(day) ? 'true' : 'false'"
                 @click="selectDate(day)"
               >
                 {{ day }}
@@ -68,6 +71,7 @@
             </button>
             <button
               class="btn-primary"
+              data-testid="schedule-date-next"
               :disabled="!dateSelected"
               @click="step = 2"
             >
@@ -92,6 +96,8 @@
                   :key="time"
                   class="timeslot"
                   :class="{ selected: selectedTime === time }"
+                  data-testid="schedule-time-slot"
+                  :data-time="time"
                   @click="selectedTime = time"
                 >
                   {{ time }}
@@ -107,6 +113,8 @@
                   :key="time"
                   class="timeslot"
                   :class="{ selected: selectedTime === time }"
+                  data-testid="schedule-time-slot"
+                  :data-time="time"
                   @click="selectedTime = time"
                 >
                   {{ time }}
@@ -116,11 +124,12 @@
           </div>
 
           <div class="step-actions">
-            <button class="btn-secondary" @click="step = 1">
+            <button class="btn-secondary" data-testid="schedule-time-back" @click="step = 1">
               ← Atrás
             </button>
             <button
               class="btn-primary"
+              data-testid="schedule-time-next"
               :disabled="!timeSelected"
               @click="step = 3"
             >
@@ -172,22 +181,27 @@
 
           <TurnstileWidget @verify="onVerify" />
 
+          <p v-if="submissionError" class="schedule-error" data-testid="schedule-error">
+            {{ submissionError }}
+          </p>
+
           <div class="step-actions">
             <button class="btn-secondary" @click="step = 2">
               ← Atrás
             </button>
             <button
               class="btn-primary"
-              :disabled="!agreeConditions || !turnstileToken"
+              data-testid="schedule-confirm"
+              :disabled="isSubmitting || !agreeConditions || !turnstileToken"
               @click="confirmAppointment"
             >
-              Confirmar Cita
+              {{ isSubmitting ? 'Confirmando...' : 'Confirmar Cita' }}
             </button>
           </div>
         </div>
 
         <!-- Step 4: Success -->
-        <div v-if="step === 4" class="schedule-step success-step">
+        <div v-if="step === 4" class="schedule-step success-step" data-testid="schedule-success">
           <div class="success-icon">✓</div>
           <h2>¡Cita Confirmada!</h2>
           <p class="success-message">
@@ -197,7 +211,7 @@
           <div class="confirmation-card">
             <div class="confirmation-section">
               <span class="label">Número de cita:</span>
-              <span class="value monospace">{{ appointmentNumber }}</span>
+              <span class="value monospace" data-testid="schedule-appointment-number">{{ appointmentNumber }}</span>
             </div>
 
             <div class="confirmation-section">
@@ -244,6 +258,8 @@ const selectedTime = ref(null)
 const agreeConditions = ref(false)
 const appointmentNumber = ref('')
 const turnstileToken = ref('')
+const submissionError = ref('')
+const isSubmitting = ref(false)
 
 // Calendar
 const currentMonth = ref(new Date().getMonth())
@@ -326,41 +342,54 @@ const formatDate = (date) => {
   return new Intl.DateTimeFormat('es-CL', options).format(date)
 }
 
-const confirmAppointment = () => {
+const normalizeAppointmentName = (value) => {
+  const cleaned = String(value || '')
+    .replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  return cleaned || 'Cliente'
+}
+
+const confirmAppointment = async () => {
   if (!turnstileToken.value) {
     return
   }
-  // Generar número de cita
+  submissionError.value = ''
+  isSubmitting.value = true
   appointmentNumber.value = 'CIT-' + Date.now().toString().slice(-8)
-  step.value = 4
 
-  // Log original mantenido
-  console.log('Cita confirmada:', {
-    number: appointmentNumber.value,
-    date: selectedDate.value,
-    time: selectedTime.value,
-    instrument: quotationStore.selectedInstrument
-  })
+  try {
+    console.log('Cita confirmada:', {
+      number: appointmentNumber.value,
+      date: selectedDate.value,
+      time: selectedTime.value,
+      instrument: quotationStore.selectedInstrument
+    })
 
-  // Persistir en backend (en segundo plano, no bloquea UI)
-  const appointmentDate = new Date(selectedDate.value)
-  const [hours, minutes] = selectedTime.value.split(':')
-  appointmentDate.setHours(parseInt(hours), parseInt(minutes), 0, 0)
+    const appointmentDate = new Date(selectedDate.value)
+    const [hours, minutes] = selectedTime.value.split(':')
+    appointmentDate.setHours(parseInt(hours), parseInt(minutes), 0, 0)
 
-  api.post('/appointments/', {
-    nombre: authStore.user?.full_name || 'Cliente',
-    email: authStore.user?.email || '',
-    telefono: authStore.user?.phone || '+56900000000',
-    fecha: appointmentDate.toISOString(),
-    mensaje: quotationStore.selectedInstrument?.name
-      ? `Instrumento: ${quotationStore.selectedInstrument.name}`
-      : 'Cita de diagnóstico',
-    turnstile_token: turnstileToken.value
-  }).then(response => {
+    const response = await api.post('/appointments/', {
+      nombre: normalizeAppointmentName(authStore.user?.full_name),
+      email: authStore.user?.email || '',
+      telefono: authStore.user?.phone || '+56900000000',
+      fecha: appointmentDate.toISOString(),
+      mensaje: quotationStore.selectedInstrument?.name
+        ? `Instrumento: ${quotationStore.selectedInstrument.name}`
+        : 'Cita de diagnóstico',
+      turnstile_token: turnstileToken.value
+    })
+
     console.log('Cita guardada en backend:', response.data)
-  }).catch(error => {
+    step.value = 4
+  } catch (error) {
     console.warn('Error guardando cita en backend:', error)
-  })
+    submissionError.value = error?.response?.data?.detail || 'No se pudo agendar la cita. Intenta nuevamente.'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
 const onVerify = (token) => {

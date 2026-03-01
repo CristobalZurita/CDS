@@ -35,3 +35,15 @@ npm run build
 
 ## Matriz actual
 - Ver `docs/TESTING_COVERAGE_MATRIX.md` para el estado cuantificado de rutas, auditoría admin, CRUD E2E y coverage instrumentado.
+- Ver `docs/TESTING_STATUS_BRIEF.md` para un resumen corto listo para explicar a otra persona.
+
+## Foto actual
+- `npm run test:coverage`:
+  - `150/150` passing
+  - lines/statements: `13.65%`
+  - branches: `53.72%`
+  - functions: `33.60%`
+- `npm run test:e2e`:
+  - `82/82` passing
+- `npm run build`:
+  - passing
