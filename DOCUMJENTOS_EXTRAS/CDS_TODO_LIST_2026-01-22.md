@@ -124,6 +124,39 @@ Lista sólo brechas, incoherencias o piezas incompletas respecto de lo esperado 
 - No copiar y pegar DOM/manual JS como sistema final.
 - Montarlo como extensión del sitio actual, no como segundo front paralelo.
 
+### Qué parte de `mi-proyecto` sí se puede reutilizar
+
+- Normalización de cantidades y límites por producto.
+- Cálculo de subtotal, total, envío y cantidad de ítems.
+- Persistencia local del carrito en `localStorage`.
+- Selección de envío y actualización reactiva del resumen.
+- UX de tarjetas, drawer de carrito, estado vacío y feedback al agregar/quitar.
+
+### Qué parte de `mi-proyecto` no se puede copiar y pegar literal
+
+- Catálogo hardcodeado de productos Mario.
+- Generación local de números de orden.
+- Checkout local que hoy sólo persiste una orden falsa en `localStorage`.
+- Manipulación directa del DOM con `onclick`, `innerHTML`, `querySelector`.
+- HTML standalone como sistema final dentro del repo principal.
+
+### Cómo se proyecta al backend real
+
+- **Catálogo**: usar `products` + `stock` como fuente de verdad, no el arreglo `products[]` de `mi-proyecto`.
+- **Estado del carrito**: rearmarlo en Vue/Pinia sobre el front actual, conservando la lógica útil de sumatorias, cantidades y persistencia local.
+- **Envío**: mantener reglas simples de selección/costo en front mientras no exista cálculo de despacho real en backend.
+- **Checkout**: no simular orden real hasta tener endpoint/flujo real. Primero catálogo + carrito; después solicitud/orden; luego pago.
+- **Imágenes**: usar `image_url` y catálogo real; si faltan imágenes, no falsear fotos comerciales que no existen en la BD operativa.
+- **Pagos**: conectar después sobre la capa actual de `payments`/`purchase_requests`, no inventar una pasarela paralela.
+
+### Orden correcto de integración de `mi-proyecto`
+
+1. Exponer catálogo público real desde `products`.
+2. Montar página pública de tienda en el front actual.
+3. Reusar lógica de carrito y envío en Vue.
+4. Agregar creación real de solicitud/orden en backend.
+5. Integrar pago real sobre esa orden, no antes.
+
 ## 6. Pagos online reales no integrados
 
 ### Qué falta
