@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍄 MarioShop — Tienda Oficial Nintendo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/main.css" />
+</head>
+<body>
+
+  <!-- Decorative background stars -->
+  <div class="decorative-stars" id="decoStars"></div>
+
+  <!-- ============================================================
+    HEADER
+  ============================================================ -->
+  <header class="header">
+    <a class="header__logo" href="#">🍄 MARIO<span>SHOP</span></a>
+    <nav class="header__nav">
+      <a class="header__nav-link" href="#productos">Productos</a>
+      <a class="header__nav-link" href="#envios">Envíos</a>
+      <a class="header__nav-link" href="#nosotros">Nosotros</a>
+      <a class="header__nav-link" href="#contacto">Contacto</a>
+    </nav>
+    <button class="cart-btn" onclick="toggleCart()" aria-label="Abrir carrito">
+      🛒 Carrito
+      <div class="cart-badge" id="cartBadge">0</div>
+    </button>
+  </header>
+
+  <!-- ============================================================
+    HERO — Parallax Z-Index Scene
+  ============================================================ -->
+  <section class="hero" id="hero">
+    <!-- Layer 0: Sky -->
+    <div class="hero__sky"></div>
+
+    <!-- Layer 1: Stars (night accents) -->
+    <div class="hero__stars" id="heroStars"></div>
+
+    <!-- Layer 2: Clouds -->
+    <div class="hero__clouds" id="heroClouds"></div>
+
+    <!-- Layer 3: Hills (SVG drawn via JS) -->
+    <div class="hero__hills" id="heroHills"></div>
+
+    <button class="hero-secret" id="heroSecret" type="button" aria-label="Sorpresa secreta de Mario">
+      <img src="./public/images.jpeg" alt="Cabeza de Mario" />
+    </button>
+
+    <!-- Floating Coins -->
+    <div class="hero__coins" id="heroCoins"></div>
+
+    <!-- Question Blocks -->
+    <div id="qblocks"></div>
+
+    <!-- Layer 5: Ground -->
+    <div class="hero__ground"></div>
+
+    <!-- Ground walkers -->
+    <div class="hero__wigglers">
+      <div class="pixel-wiggler" id="pixelWiggler" aria-hidden="true"></div>
+    </div>
+
+    <!-- Layer 6: Characters (CSS pixel art) -->
+    <div class="hero__chars">
+      <div class="pixel-mario" id="pixelMario"></div>
+      <div class="pixel-yoshi" id="pixelYoshi"></div>
+    </div>
+
+    <!-- Title -->
+    <div class="hero__title">
+      <h1>MARIO<br>SHOP</h1>
+      <p>Coleccionables Nintendo • NES &amp; SNES</p>
+      <a class="hero__cta" href="#productos">▶ VER PRODUCTOS</a>
+    </div>
+
+    <div class="scroll-down">SCROLL</div>
+  </section>
+
+  <!-- ============================================================
+    PRODUCTS
+  ============================================================ -->
+  <main>
+    <section class="section" id="productos">
+      <div class="section__header">
+        <h2 class="section__title">TIENDA OFICIAL</h2>
+      </div>
+      <div class="products-grid" id="productsGrid"></div>
+    </section>
+
+    <!-- ============================================================
+      SHIPPING
+    ============================================================ -->
+    <section class="shipping-section" id="envios">
+      <div class="section">
+        <div class="section__header">
+          <h2 class="section__title">📦 ENVÍOS</h2>
+        </div>
+        <div class="shipping-grid">
+          <div class="shipping-info">
+            <h3>ZONAS DE ENVÍO</h3>
+            <article class="shipping-zone selected is-expanded" data-zone="nacional" data-price="5490" data-name="Envío Nacional">
+              <button class="shipping-zone__summary" type="button" aria-expanded="true">
+                <span class="shipping-zone__flag">🇨🇱</span>
+                <span class="shipping-zone__info">
+                  <span class="shipping-zone__name">Chile (Nacional)</span>
+                  <span class="shipping-zone__detail">3-5 días hábiles</span>
+                </span>
+                <span class="shipping-zone__price">$5.490</span>
+              </button>
+              <div class="shipping-zone__details">
+                <div class="shipping-breakdown">
+                  <div class="shipping-breakdown__row">
+                    <span>Base logística</span>
+                    <span>$3.990</span>
+                  </div>
+                  <div class="shipping-breakdown__row">
+                    <span>IVA (19%)</span>
+                    <span>$758</span>
+                  </div>
+                  <div class="shipping-breakdown__row">
+                    <span>Seguro de transporte</span>
+                    <span>$742</span>
+                  </div>
+                  <div class="shipping-breakdown__row shipping-breakdown__row--total">
+                    <span>Total envío</span>
+                    <span>$5.490</span>
+                  </div>
+                </div>
+                <button class="shipping-zone__select" type="button">SELECCIONAR ESTE ENVÍO</button>
+              </div>
+            </article>
+
+            <article class="shipping-zone" data-zone="latam" data-price="8990" data-name="Latinoamérica">
+              <button class="shipping-zone__summary" type="button" aria-expanded="false">
+                <span class="shipping-zone__flag">🌎</span>
+                <span class="shipping-zone__info">
+                  <span class="shipping-zone__name">Latinoamérica</span>
+                  <span class="shipping-zone__detail">7-14 días hábiles</span>
+                </span>
+                <span class="shipping-zone__price">$8.990</span>
+              </button>
+              <div class="shipping-zone__details">
+                <div class="shipping-breakdown">
+                  <div class="shipping-breakdown__row">
+                    <span>Base logística</span>
+                    <span>$6.290</span>
+                  </div>
+                  <div class="shipping-breakdown__row">
+                    <span>IVA (19%)</span>
+                    <span>$1.195</span>
+                  </div>
+                  <div class="shipping-breakdown__row">
+                    <span>Impuesto aduanero</span>
+                    <span>$1.505</span>
+                  </div>
+                  <div class="shipping-breakdown__row shipping-breakdown__row--total">
+                    <span>Total envío</span>
+                    <span>$8.990</span>
+                  </div>
+                </div>
+                <button class="shipping-zone__select" type="button">SELECCIONAR ESTE ENVÍO</button>
+              </div>
+            </article>
+
+            <article class="shipping-zone" data-zone="internacional" data-price="16990" data-name="Internacional">
+              <button class="shipping-zone__summary" type="button" aria-expanded="false">
+                <span class="shipping-zone__flag">🌍</span>
+                <span class="shipping-zone__info">
+                  <span class="shipping-zone__name">Internacional</span>
+                  <span class="shipping-zone__detail">14-21 días hábiles</span>
+                </span>
+                <span class="shipping-zone__price">$16.990</span>
+              </button>
+              <div class="shipping-zone__details">
+                <div class="shipping-breakdown">
+                  <div class="shipping-breakdown__row">
+                    <span>Base logística</span>
+                    <span>$10.990</span>
+                  </div>
+                  <div class="shipping-breakdown__row">
+                    <span>IVA (19%)</span>
+                    <span>$2.088</span>
+                  </div>
+                  <div class="shipping-breakdown__row">
+                    <span>Impuesto aduanero</span>
+                    <span>$3.912</span>
+                  </div>
+                  <div class="shipping-breakdown__row shipping-breakdown__row--total">
+                    <span>Total envío</span>
+                    <span>$16.990</span>
+                  </div>
+                </div>
+                <button class="shipping-zone__select" type="button">SELECCIONAR ESTE ENVÍO</button>
+              </div>
+            </article>
+
+            <article class="shipping-zone" data-zone="retiro" data-price="0" data-name="Retiro en tienda">
+              <button class="shipping-zone__summary" type="button" aria-expanded="false">
+                <span class="shipping-zone__flag">🏪</span>
+                <span class="shipping-zone__info">
+                  <span class="shipping-zone__name">Retiro en Tienda</span>
+                  <span class="shipping-zone__detail">Valparaiso, Eusebio Lillo 362</span>
+                </span>
+                <span class="shipping-zone__price shipping-zone__price--free">GRATIS</span>
+              </button>
+              <div class="shipping-zone__details">
+                <div class="shipping-breakdown">
+                  <div class="shipping-breakdown__row">
+                    <span>Preparación del pedido</span>
+                    <span>$0</span>
+                  </div>
+                  <div class="shipping-breakdown__row">
+                    <span>IVA/Impuestos</span>
+                    <span>$0</span>
+                  </div>
+                  <div class="shipping-breakdown__row shipping-breakdown__row--total">
+                    <span>Total retiro</span>
+                    <span>GRATIS</span>
+                  </div>
+                </div>
+                <button class="shipping-zone__select" type="button">SELECCIONAR RETIRO</button>
+              </div>
+            </article>
+          </div>
+
+          <div class="shipping-calc">
+            <h3>🧮 CALCULAR ENVÍO</h3>
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <input type="text" placeholder="Mario Mario" />
+            </div>
+            <div class="form-group">
+              <label>País</label>
+              <select id="countrySelect" onchange="updateShippingCalc()">
+                <option value="CL">Chile 🇨🇱</option>
+                <option value="AR">Argentina 🇦🇷</option>
+                <option value="MX">México 🇲🇽</option>
+                <option value="ES">España 🇪🇸</option>
+                <option value="US">USA 🇺🇸</option>
+                <option value="OTHER">Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Ciudad / Región</label>
+              <input type="text" placeholder="Ej: Mushroom Kingdom" />
+            </div>
+            <div class="form-group">
+              <label>Código Postal</label>
+              <input type="text" placeholder="7500000" />
+            </div>
+            <div class="shipping-total" id="shippingTotalBox">
+              <span class="shipping-total__label">COSTO DE ENVÍO</span>
+              <span class="shipping-total__price" id="shippingPrice">$5.490</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+      ABOUT
+    ============================================================ -->
+    <section class="section about-section" id="nosotros">
+      <div class="section__header">
+        <h2 class="section__title">SOBRE NOSOTROS</h2>
+      </div>
+      <p class="about-copy">
+        MARIOSHOP es la tienda fan-art de coleccionables<br>
+        inspirados en Nintendo NES &amp; SNES.<br><br>
+        🍄 Productos de calidad premium<br>
+        ⭐ Ediciones limitadas de colección<br>
+        🎮 Diseñados para fans de la primera hora
+      </p>
+    </section>
+
+    <!-- ============================================================
+      CONTACT
+    ============================================================ -->
+    <section class="contact-section" id="contacto">
+      <div class="section">
+        <div class="section__header">
+          <h2 class="section__title">CONTACTO</h2>
+        </div>
+        <div class="contact-grid">
+          <article class="contact-card">
+            <h3 class="contact-card__title">TIENDA FISICA</h3>
+            <p class="contact-card__line">📍 Valparaiso, Eusebio Lillo 362, Chile</p>
+            <p class="contact-card__line">📧 hola@marioshop.cl</p>
+            <p class="contact-card__line">📱 +56 9 1234 5678</p>
+            <p class="contact-card__line">⏰ Lun-Vie 10:00-19:00</p>
+            <div class="contact-map">
+              <iframe
+                class="contact-map__frame"
+                src="https://www.google.com/maps?q=Eusebio+Lillo+362,+Valparaiso,+Chile&output=embed"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Mapa de MarioShop en Valparaiso"
+                aria-label="Mapa de ubicacion de MarioShop">
+              </iframe>
+            </div>
+          </article>
+
+          <form class="contact-form">
+            <h3 class="contact-form__title">ESCRIBENOS</h3>
+            <label class="contact-form__group">
+              <span class="contact-form__label">Nombre</span>
+              <input class="contact-form__control" type="text" name="name" placeholder="Tu nombre" />
+            </label>
+            <label class="contact-form__group">
+              <span class="contact-form__label">Correo</span>
+              <input class="contact-form__control" type="email" name="email" placeholder="nombre@email.com" />
+            </label>
+            <label class="contact-form__group">
+              <span class="contact-form__label">Asunto</span>
+              <input class="contact-form__control" type="text" name="subject" placeholder="Consulta sobre productos o envios" />
+            </label>
+            <label class="contact-form__group">
+              <span class="contact-form__label">Mensaje</span>
+              <textarea class="contact-form__control contact-form__control--textarea" name="message" placeholder="Escribe tu mensaje"></textarea>
+            </label>
+            <button type="button" class="contact-form__submit">▶ ENVIAR MENSAJE</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+    FOOTER
+  ============================================================ -->
+  <footer class="footer">
+    <div class="section">
+      <div class="footer__grid">
+        <div class="footer__col">
+          <h4>🍄 MARIOSHOP</h4>
+          <p>Tienda fan-art de coleccionables Nintendo.</p>
+          <p>NES &amp; SNES desde 1985.</p>
+        </div>
+        <div class="footer__col">
+          <h4>PRODUCTOS</h4>
+          <a href="#">Lápices &amp; Cuadernos</a>
+          <a href="#">Gorros &amp; Guantes</a>
+          <a href="#">Llaveros &amp; Pins</a>
+          <a href="#">Mochilas &amp; Estuches</a>
+        </div>
+        <div class="footer__col">
+          <h4>AYUDA</h4>
+          <a href="#">Política de envíos</a>
+          <a href="#">Devoluciones</a>
+          <a href="#">Seguimiento</a>
+          <a href="#">FAQ</a>
+        </div>
+        <div class="footer__col">
+          <h4>CONTACTO</h4>
+          <p>📧 hola@marioshop.cl</p>
+          <p>📍 Valparaiso, Eusebio Lillo 362, Chile</p>
+          <p>⏰ Lun-Vie 9:00-18:00</p>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <div class="footer__emoji">🍄🐢⭐🌸🦕🔥</div>
+        © 2026 MARIOSHOP — Fan-Art Store<br>
+        No afiliado a Nintendo Co., Ltd.<br>
+        SUPER MARIO es marca registrada de Nintendo.
+        CREADO POR CRISTOBAL ZURITA QUINTANILLA
+        VALPARAÍSO, CHILE
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+    CART DRAWER
+  ============================================================ -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer__header">
+      <span class="cart-drawer__title">🛒 MI CARRITO</span>
+      <button class="cart-close" onclick="toggleCart()">✕ CERRAR</button>
+    </div>
+    <div class="cart-drawer__body" id="cartBody">
+      <div class="cart-empty" id="cartEmpty">
+        <span class="empty-icon">🛒</span>
+        <p>Tu carrito está vacío.<br>¡Añade productos y<br>empieza a coleccionar!</p>
+      </div>
+    </div>
+    <div class="cart-drawer__footer">
+      <div class="cart-summary">
+        <div class="cart-summary__row">
+          <span class="cart-summary__label">PRODUCTOS</span>
+          <span class="cart-summary__value" id="cartSubtotal">$0</span>
+        </div>
+        <div class="cart-summary__row">
+          <span class="cart-summary__label">ENVÍO</span>
+          <span class="cart-summary__value" id="cartShipping">$0</span>
+        </div>
+        <div class="cart-summary__shipping" id="cartShippingName">Sin envío seleccionado</div>
+        <div class="cart-summary__row cart-summary__row--total">
+          <span class="cart-summary__label">TOTAL</span>
+          <span class="cart-summary__value" id="cartTotal">$0</span>
+        </div>
+      </div>
+      <button class="btn-checkout" id="cartCheckoutBtn" type="button">
+        ▶ PROCEDER AL PAGO
+      </button>
+    </div>
+  </aside>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Volver arriba">↑</button>
+
+  <div class="pipe-game" id="pipeGame" aria-hidden="true">
+    <div class="pipe-game__panel" role="dialog" aria-modal="true" aria-labelledby="pipeGameTitle">
+      <div class="pipe-game__header">
+        <h3 class="pipe-game__title" id="pipeGameTitle">PIPE RUNNER</h3>
+        <button class="pipe-game__close" id="pipeGameClose" type="button" aria-label="Cerrar juego">✕</button>
+      </div>
+      <canvas class="pipe-game__canvas" id="pipeGameCanvas" width="840" height="220"></canvas>
+      <p class="pipe-game__hint">ESPACIO / ↑ / CLICK PARA SALTAR · ESC PARA CERRAR</p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+    JAVASCRIPT
+  ============================================================ -->
+  <script type="module" src="./assets/js/main.js"></script>
+</body>
+</html>

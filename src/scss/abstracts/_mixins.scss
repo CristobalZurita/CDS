@@ -1,3 +1,5 @@
+@use "./_variables.scss" as *;
+
 // ============================================
 // MIXINS - Cirujano de Sintetizadores
 // Usar estos mixins en componentes Vue para heredar estilos globales
@@ -7,8 +9,60 @@
 // 1. NORMALIZE BREAKPOINT (Bootstrap compat)
 // ---------------------------------------------
 @function normalize-breakpoint($bp) {
-    @if $bp == 'xxxl' or $bp == 'xxxxl' { @return 'xxl'; }
-    @return $bp;
+    $normalized: "#{$bp}";
+
+    @if $normalized == 'xxxl' or $normalized == 'xxxxl' { @return 'xxl'; }
+    @return $normalized;
+}
+
+@function breakpoint-min-value($bp) {
+    $normalized: normalize-breakpoint($bp);
+
+    @if $normalized == 'xs' { @return 0; }
+    @if $normalized == 'sm' { @return 576px; }
+    @if $normalized == 'md' { @return 768px; }
+    @if $normalized == 'lg' { @return 992px; }
+    @if $normalized == 'xl' { @return 1200px; }
+    @if $normalized == 'xxl' { @return 1400px; }
+
+    @error "Breakpoint `#{$bp}` no soportado.";
+}
+
+@function breakpoint-max-value($bp) {
+    $normalized: normalize-breakpoint($bp);
+
+    @if $normalized == 'xs' { @return null; }
+    @if $normalized == 'sm' { @return 575.98px; }
+    @if $normalized == 'md' { @return 767.98px; }
+    @if $normalized == 'lg' { @return 991.98px; }
+    @if $normalized == 'xl' { @return 1199.98px; }
+    @if $normalized == 'xxl' { @return 1399.98px; }
+
+    @error "Breakpoint `#{$bp}` no soportado.";
+}
+
+@mixin media-breakpoint-down($bp) {
+    $max: breakpoint-max-value($bp);
+
+    @if $max == null {
+        @content;
+    } @else {
+        @media (max-width: $max) {
+            @content;
+        }
+    }
+}
+
+@mixin media-breakpoint-up($bp) {
+    $min: breakpoint-min-value($bp);
+
+    @if $min == 0 {
+        @content;
+    } @else {
+        @media (min-width: $min) {
+            @content;
+        }
+    }
 }
 
 // ---------------------------------------------

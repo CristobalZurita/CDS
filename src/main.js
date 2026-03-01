@@ -1,6 +1,7 @@
 // SASS Architecture - main.scss es el nuevo entry point
 // Si hay problemas, cambiar a: import "./scss/style.scss"
 import "./scss/main.scss"
+import "primeicons/primeicons.css"
 // FontAwesome: Imported via CSS link in index.html (see line ~58)
 // import "@fortawesome/fontawesome-free/css/all"
 import { createApp } from "vue"
