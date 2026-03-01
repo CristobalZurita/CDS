@@ -29,6 +29,7 @@ class PurchaseRequestItemOut(BaseModel):
     sku: Optional[str]
     name: Optional[str]
     quantity: int
+    reserved_quantity: int = 0
     unit_price: float
     external_url: Optional[str]
     status: str

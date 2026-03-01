@@ -36,6 +36,7 @@ class PurchaseRequestItem(Base):
     sku = Column(String(120), nullable=True)
     name = Column(String(255), nullable=True)
     quantity = Column(Integer, default=1)
+    reserved_quantity = Column(Integer, default=0)
     unit_price = Column(Float, default=0.0)
     external_url = Column(String(500), nullable=True)
     status = Column(String(20), default="suggested")  # suggested | approved | purchased | received

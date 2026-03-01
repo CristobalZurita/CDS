@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { apiAs } from './helpers/adminApi'
 import { resolveAuthState } from './helpers/auth'
 import { expectNoBrowserErrors, trackBrowserErrors, waitForAppToSettle } from './helpers/page'
 
@@ -53,6 +54,72 @@ test.describe('authenticated store request flow', () => {
     await waitForAppToSettle(page)
     await expect(page.getByTestId('ot-payment-row').first()).toBeVisible()
     await expect(page.getByText(/TIENDA \/ SIN_OT|SIN_OT/).first()).toBeVisible()
+    await expectNoBrowserErrors(tracker)
+  })
+
+  test('store checkout reserves stock and admin completion consumes it', async ({ page }) => {
+    const tracker = trackBrowserErrors(page)
+    const slug = Date.now().toString(36)
+    const category = await apiAs('admin', '/categories/', {
+      method: 'POST',
+      body: {
+        name: `Categoria tienda ${slug}`,
+        description: 'Categoria E2E para tienda',
+      },
+    })
+
+    const product = await apiAs('admin', '/inventory/', {
+      method: 'POST',
+      body: {
+        name: `000 Resistencia tienda ${slug}`,
+        sku: `STORE-${slug.toUpperCase()}`,
+        category_id: category.id,
+        price: 2490,
+        stock: 12,
+        min_quantity: 3,
+        enabled: true,
+        store_visible: true,
+      },
+    })
+    const initialInventory = await apiAs('admin', `/inventory/${product.id}`)
+
+    await page.goto('/tienda')
+    await waitForAppToSettle(page)
+    await page.getByTestId('store-search-input').fill(product.sku)
+    await expect(page.getByTestId('store-product-card').filter({ hasText: product.sku })).toBeVisible()
+    await page.getByTestId('store-add-to-cart').click()
+    await page.getByTestId('store-add-to-cart').click()
+    await page.getByTestId('global-cart-trigger').click()
+    await expect(page.getByTestId('global-cart-item').filter({ hasText: product.sku })).toContainText(product.sku)
+    await page.getByTestId('global-cart-checkout').click()
+
+    await expect.poll(async () => page.evaluate(() => window.location.pathname)).toBe('/ot-payments')
+    await waitForAppToSettle(page)
+
+    const requests = await apiAs('admin', '/purchase-requests/')
+    const createdRequest = [...requests]
+      .reverse()
+      .find((request: any) => Array.isArray(request.items) && request.items.some((item: any) => item.sku === product.sku))
+
+    expect(createdRequest).toBeTruthy()
+    const createdItem = createdRequest.items.find((item: any) => item.sku === product.sku)
+    expect(createdItem.quantity).toBe(2)
+    expect(createdItem.reserved_quantity).toBe(2)
+
+    const reservedInventory = await apiAs('admin', `/inventory/${product.id}`)
+    expect(reservedInventory.quantity_reserved).toBe(2)
+    expect(reservedInventory.stock).toBe(initialInventory.stock)
+
+    await apiAs('admin', `/purchase-requests/${createdRequest.id}`, {
+      method: 'PATCH',
+      body: {
+        status: 'received',
+      },
+    })
+
+    const fulfilledInventory = await apiAs('admin', `/inventory/${product.id}`)
+    expect(fulfilledInventory.quantity_reserved).toBe(0)
+    expect(fulfilledInventory.stock).toBe(initialInventory.stock - 2)
     await expectNoBrowserErrors(tracker)
   })
 })
