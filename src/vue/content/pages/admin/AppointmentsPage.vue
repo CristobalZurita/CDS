@@ -59,6 +59,7 @@
 				:key="appointment.id"
 				class="appointment-card"
 				:class="'status-' + appointment.estado"
+				data-testid="appointment-row"
 			>
 				<div class="appointment-header">
 					<div class="appointment-info">
@@ -92,6 +93,7 @@
 					<button
 						v-if="appointment.estado === 'pendiente'"
 						class="btn btn-sm btn-success me-2"
+						data-testid="appointment-confirm"
 						@click="confirmAppointment(appointment)"
 					>
 						<i class="fa-solid fa-check me-1"></i> Confirmar
@@ -99,12 +101,14 @@
 					<button
 						v-if="appointment.estado !== 'cancelado'"
 						class="btn btn-sm btn-outline-danger"
+						data-testid="appointment-cancel"
 						@click="cancelAppointment(appointment)"
 					>
 						<i class="fa-solid fa-times me-1"></i> Cancelar
 					</button>
 					<button
 						class="btn btn-sm btn-outline-secondary ms-2"
+						data-testid="appointment-delete"
 						@click="deleteAppointment(appointment)"
 					>
 						<i class="fa-solid fa-trash"></i>

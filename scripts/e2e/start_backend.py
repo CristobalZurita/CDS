@@ -40,6 +40,7 @@ def main() -> None:
         **base_env,
         "DATABASE_URL": f"sqlite:///{DB_PATH}",
         "ENVIRONMENT": "testing",
+        "TURNSTILE_DISABLE": "true",
         "ENABLE_FULL_STARTUP_IN_TESTS": "true",
         "ENABLE_INSTRUMENT_AUTO_SYNC": "false",
         "INSTRUMENT_SYNC_ON_STARTUP": "false",

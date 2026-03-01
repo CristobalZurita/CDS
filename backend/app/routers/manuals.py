@@ -81,3 +81,55 @@ def upload_manual(
     db.commit()
     db.refresh(manual)
     return manual
+
+
+@router.patch("/{manual_id}", response_model=ManualOut)
+def update_manual(
+    manual_id: int,
+    payload: dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("manuals", "update")),
+):
+    manual = db.query(ManualDocument).filter(ManualDocument.id == manual_id).first()
+    if not manual:
+        raise HTTPException(status_code=404, detail="Manual not found")
+
+    if "instrument_id" in payload and payload.get("instrument_id"):
+        instrument = db.query(Instrument).filter(Instrument.id == int(payload.get("instrument_id"))).first()
+        if not instrument:
+            raise HTTPException(status_code=404, detail="Instrument not found")
+        manual.instrument_id = instrument.id
+
+    if "title" in payload and str(payload.get("title") or "").strip():
+        manual.title = str(payload.get("title")).strip()
+    if "source" in payload and str(payload.get("source") or "").strip():
+        manual.source = str(payload.get("source")).strip()
+    if "url" in payload:
+        manual.url = str(payload.get("url") or "").strip() or None
+
+    db.commit()
+    db.refresh(manual)
+    return manual
+
+
+@router.delete("/{manual_id}", status_code=204)
+def delete_manual(
+    manual_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("manuals", "delete")),
+):
+    manual = db.query(ManualDocument).filter(ManualDocument.id == manual_id).first()
+    if not manual:
+        raise HTTPException(status_code=404, detail="Manual not found")
+
+    file_path = manual.file_path
+    db.delete(manual)
+    db.commit()
+
+    if file_path and os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+        except OSError:
+            pass
+
+    return None

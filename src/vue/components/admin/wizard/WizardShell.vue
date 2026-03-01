@@ -13,10 +13,10 @@
         </div>
       </div>
       <div class="wizard-actions">
-        <button class="admin-btn admin-btn-outline" :disabled="currentIndex === 0" @click="prev">
+        <button class="admin-btn admin-btn-outline" data-testid="wizard-prev" :disabled="currentIndex === 0" @click="prev">
           Volver
         </button>
-        <button class="admin-btn admin-btn-primary" :disabled="!canContinue" @click="next">
+        <button class="admin-btn admin-btn-primary" data-testid="wizard-next" :disabled="!canContinue" @click="next">
           {{ isLast ? 'Finalizar' : 'Continuar' }}
         </button>
       </div>

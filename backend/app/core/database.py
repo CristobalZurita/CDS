@@ -173,7 +173,7 @@ def _ensure_repairs_ot_schema() -> None:
 
 def _ensure_payments_purchase_request_schema() -> None:
     """
-    Ajuste aditivo para asociar pagos con solicitudes de compra OT.
+    Ajuste aditivo para alinear payments legacy con el modelo actual.
     Compatible con DBs existentes sin migraciones.
     """
     inspector = inspect(engine)
@@ -181,13 +181,27 @@ def _ensure_payments_purchase_request_schema() -> None:
         return
 
     current_columns = {column["name"] for column in inspector.get_columns("payments")}
+    additions = {
+        "invoice_id": "INTEGER",
+        "purchase_request_id": "INTEGER",
+        "payment_date": "DATETIME",
+        "payment_due_date": "DATETIME",
+        "refund_of_id": "INTEGER",
+        "payment_processor": "VARCHAR(50)",
+        "processor_fee": "INTEGER DEFAULT 0",
+        "currency": "VARCHAR(3) DEFAULT 'CLP'",
+        "partial_payment_of": "INTEGER",
+    }
     with engine.begin() as conn:
-        if "purchase_request_id" not in current_columns:
-            conn.execute(text("ALTER TABLE payments ADD COLUMN purchase_request_id INTEGER"))
+        for column_name, column_def in additions.items():
+            if column_name not in current_columns:
+                conn.execute(text(f"ALTER TABLE payments ADD COLUMN {column_name} {column_def}"))
 
     inspector = inspect(engine)
     existing_indexes = {index["name"] for index in inspector.get_indexes("payments")}
     with engine.begin() as conn:
+        if "ix_payments_invoice_id" not in existing_indexes:
+            conn.execute(text("CREATE INDEX ix_payments_invoice_id ON payments (invoice_id)"))
         if "ix_payments_purchase_request_id" not in existing_indexes:
             conn.execute(text("CREATE INDEX ix_payments_purchase_request_id ON payments (purchase_request_id)"))
 

@@ -8,6 +8,8 @@ from typing import Optional
 from datetime import datetime
 import re
 
+from app.core.timezone import now_utc, to_utc
+
 
 class AppointmentCreate(BaseModel):
     """Schema for creating a new appointment"""
@@ -36,9 +38,10 @@ class AppointmentCreate(BaseModel):
     @validator('fecha')
     def validate_fecha(cls, v):
         """Validate that fecha is in the future"""
-        if v <= datetime.now():
+        normalized = to_utc(v)
+        if normalized <= now_utc():
             raise ValueError('La fecha debe ser en el futuro')
-        return v
+        return normalized
 
     @validator('mensaje')
     def validate_mensaje(cls, v):

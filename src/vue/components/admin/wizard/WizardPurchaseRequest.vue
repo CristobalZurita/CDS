@@ -12,7 +12,7 @@
         <div class="form-grid">
           <div>
             <label>Cliente (opcional)</label>
-            <select v-model="form.client_id" class="form-select">
+            <select v-model="form.client_id" class="form-select" data-testid="purchase-request-client">
               <option :value="null">Sin cliente</option>
               <option v-for="client in clients" :key="client.id" :value="client.id">
                 {{ client.client_code || `CDS-${client.id}` }} - {{ client.name }}
@@ -21,7 +21,7 @@
           </div>
           <div>
             <label>OT (opcional)</label>
-            <select v-model="form.repair_id" class="form-select">
+            <select v-model="form.repair_id" class="form-select" data-testid="purchase-request-repair">
               <option :value="null">Sin OT</option>
               <option v-for="repair in repairs" :key="repair.id" :value="repair.id">
                 {{ repair.repair_code || repair.repair_number }}
@@ -31,20 +31,20 @@
         </div>
         <div class="mt-3">
           <label>Notas</label>
-          <textarea v-model="form.notes" rows="3" class="form-control" />
+          <textarea v-model="form.notes" rows="3" class="form-control" data-testid="purchase-request-notes" />
         </div>
       </div>
 
       <div v-else-if="currentStep === 1" class="wizard-section">
         <h4>Items sugeridos</h4>
-        <div v-for="(item, index) in form.items" :key="index" class="item-row">
-          <input v-model="item.sku" class="form-control" placeholder="SKU" />
-          <input v-model="item.name" class="form-control" placeholder="Nombre" />
-          <input v-model.number="item.quantity" type="number" class="form-control" min="1" />
-          <input v-model.number="item.unit_price" type="number" class="form-control" min="0" />
-          <button class="btn btn-outline-danger" @click="removeItem(index)">Quitar</button>
+        <div v-for="(item, index) in form.items" :key="index" class="item-row" data-testid="purchase-request-item-row">
+          <input v-model="item.sku" class="form-control" data-testid="purchase-request-item-sku" placeholder="SKU" />
+          <input v-model="item.name" class="form-control" data-testid="purchase-request-item-name" placeholder="Nombre" />
+          <input v-model.number="item.quantity" type="number" class="form-control" data-testid="purchase-request-item-quantity" min="1" />
+          <input v-model.number="item.unit_price" type="number" class="form-control" data-testid="purchase-request-item-price" min="0" />
+          <button class="btn btn-outline-danger" :data-testid="`purchase-request-item-remove-${index}`" @click="removeItem(index)">Quitar</button>
         </div>
-        <button class="btn btn-outline-primary mt-2" @click="addItem">Agregar item</button>
+        <button class="btn btn-outline-primary mt-2" data-testid="purchase-request-item-add" @click="addItem">Agregar item</button>
       </div>
 
       <div v-else class="wizard-section">
@@ -54,7 +54,7 @@
           <div><strong>OT:</strong> {{ selectedRepairLabel }}</div>
           <div><strong>Items:</strong> {{ form.items.length }}</div>
         </div>
-        <div v-if="result" class="alert alert-success mt-3">Solicitud creada: #{{ result.id }}</div>
+        <div v-if="result" class="alert alert-success mt-3" data-testid="purchase-request-result">Solicitud creada: #{{ result.id }}</div>
       </div>
     </template>
   </WizardShell>
