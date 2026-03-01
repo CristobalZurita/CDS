@@ -7,7 +7,7 @@
       </div>
       <div class="header-actions">
         <span class="status">{{ detail.repair?.status }}</span>
-        <button class="btn-download" :disabled="downloadingPdf" @click="downloadClosurePdf">
+        <button class="btn-download" data-testid="repair-download" :disabled="downloadingPdf" @click="downloadClosurePdf">
           {{ downloadingPdf ? 'Generando PDF...' : 'Descargar Cierre OT' }}
         </button>
       </div>

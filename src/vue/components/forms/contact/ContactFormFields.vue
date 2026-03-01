@@ -20,6 +20,7 @@
 
                 <!-- Input -->
                 <input class="form-control"
+                       :data-testid="`contact-${item.id}`"
                        :id="`form-${item.id}`"
                        :type="item.type"
                        :name="item.id"
@@ -37,6 +38,7 @@
             <!-- Textarea -->
             <div class="form-group form-group-textarea mb-md-0">
                 <textarea class="form-control"
+                          data-testid="contact-message"
                           id="form-message"
                           placeholder="Message *"
                           maxlength="2048"

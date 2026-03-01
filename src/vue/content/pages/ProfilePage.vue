@@ -10,7 +10,7 @@
             <p class="subtitle">Cliente desde {{ memberSince }}</p>
           </div>
         </div>
-        <button @click="editMode = !editMode" class="btn-edit">
+        <button @click="editMode = !editMode" class="btn-edit" data-testid="profile-edit-toggle">
           {{ editMode ? '✕ Cancelar' : '✏️ Editar Perfil' }}
         </button>
       </div>
@@ -28,7 +28,7 @@
             </div>
             <div class="form-group" v-else>
               <label>Email</label>
-              <input v-model="formData.email" type="email" class="form-input" />
+              <input v-model="formData.email" type="email" class="form-input" data-testid="profile-email-input" />
             </div>
 
             <div class="form-group" v-if="!editMode">
@@ -37,7 +37,7 @@
             </div>
             <div class="form-group" v-else>
               <label>Nombre Completo</label>
-              <input v-model="formData.fullName" type="text" class="form-input" />
+              <input v-model="formData.fullName" type="text" class="form-input" data-testid="profile-name-input" />
             </div>
 
             <div class="form-group" v-if="!editMode">
@@ -46,7 +46,7 @@
             </div>
             <div class="form-group" v-else>
               <label>Teléfono</label>
-              <input v-model="formData.phone" type="tel" class="form-input" />
+              <input v-model="formData.phone" type="tel" class="form-input" data-testid="profile-phone-input" />
             </div>
 
             <div class="form-group" v-if="!editMode">
@@ -55,11 +55,11 @@
             </div>
             <div class="form-group" v-else>
               <label>Dirección</label>
-              <input v-model="formData.address" type="text" class="form-input" />
+              <input v-model="formData.address" type="text" class="form-input" data-testid="profile-address-input" />
             </div>
 
             <div class="form-group" v-if="editMode">
-              <button @click="saveProfile" class="btn-save">Guardar Cambios</button>
+              <button @click="saveProfile" class="btn-save" data-testid="profile-save">Guardar Cambios</button>
             </div>
           </div>
 
@@ -81,7 +81,7 @@
               <span>Recibir SMS de recordatorios</span>
             </label>
 
-            <button @click="savePreferences" class="btn-save mt">
+            <button @click="savePreferences" class="btn-save mt" data-testid="profile-preferences-save">
               Guardar Preferencias
             </button>
           </div>
@@ -108,11 +108,11 @@
           <div class="card">
             <h2>Seguridad</h2>
 
-            <button @click="showChangePassword = true" class="btn-secondary">
+            <button @click="showChangePassword = true" class="btn-secondary" data-testid="profile-open-password-modal">
               🔐 Cambiar contraseña
             </button>
 
-            <button @click="showTwoFactorSetup = true" class="btn-secondary">
+            <button @click="showTwoFactorSetup = true" class="btn-secondary" data-testid="profile-open-2fa">
               🛡️ Configurar 2FA
             </button>
 
@@ -126,7 +126,7 @@
             <p class="danger-warning">
               Estas acciones no se pueden deshacer
             </p>
-            <button @click="showDeleteAccount = true" class="btn-danger">
+            <button @click="showDeleteAccount = true" class="btn-danger" data-testid="profile-open-delete-modal">
               🗑️ Eliminar cuenta
             </button>
           </div>
@@ -141,7 +141,7 @@
         <div class="form-group">
           <label>Contraseña actual</label>
           <div class="password-field">
-            <input v-model="passwordForm.current" :type="showPassword ? 'text' : 'password'" class="form-input" />
+            <input v-model="passwordForm.current" :type="showPassword ? 'text' : 'password'" class="form-input" data-testid="profile-password-current" />
             <button type="button" class="toggle-password" @click="showPassword = !showPassword">
               {{ showPassword ? 'Ocultar' : 'Mostrar' }}
             </button>
@@ -150,7 +150,7 @@
         <div class="form-group">
           <label>Nueva contraseña</label>
           <div class="password-field">
-            <input v-model="passwordForm.new" :type="showPassword ? 'text' : 'password'" class="form-input" />
+            <input v-model="passwordForm.new" :type="showPassword ? 'text' : 'password'" class="form-input" data-testid="profile-password-new" />
             <button type="button" class="toggle-password" @click="showPassword = !showPassword">
               {{ showPassword ? 'Ocultar' : 'Mostrar' }}
             </button>
@@ -159,15 +159,15 @@
         <div class="form-group">
           <label>Confirmar contraseña</label>
           <div class="password-field">
-            <input v-model="passwordForm.confirm" :type="showPassword ? 'text' : 'password'" class="form-input" />
+            <input v-model="passwordForm.confirm" :type="showPassword ? 'text' : 'password'" class="form-input" data-testid="profile-password-confirm" />
             <button type="button" class="toggle-password" @click="showPassword = !showPassword">
               {{ showPassword ? 'Ocultar' : 'Mostrar' }}
             </button>
           </div>
         </div>
         <div class="modal-actions">
-          <button @click="showChangePassword = false" class="btn-secondary">Cancelar</button>
-          <button @click="changePassword" class="btn-primary">Cambiar</button>
+          <button @click="showChangePassword = false" class="btn-secondary" data-testid="profile-password-cancel">Cancelar</button>
+          <button @click="changePassword" class="btn-primary" data-testid="profile-password-save">Cambiar</button>
         </div>
       </div>
     </div>
@@ -180,8 +180,8 @@
           eliminarán todos tus datos.
         </p>
         <div class="modal-actions">
-          <button @click="showDeleteAccount = false" class="btn-secondary">Cancelar</button>
-          <button @click="deleteAccount" class="btn-danger">Eliminar Permanentemente</button>
+          <button @click="showDeleteAccount = false" class="btn-secondary" data-testid="profile-delete-cancel">Cancelar</button>
+          <button @click="deleteAccount" class="btn-danger" data-testid="profile-delete-confirm">Eliminar Permanentemente</button>
         </div>
       </div>
     </div>

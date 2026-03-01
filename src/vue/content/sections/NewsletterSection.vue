@@ -9,6 +9,7 @@
                 <div class="newsletter-input-group">
                     <input
                         v-model.trim="email"
+                        data-testid="newsletter-email"
                         class="newsletter-input"
                         type="email"
                         name="newsletter-email"
@@ -26,6 +27,7 @@
                 <TurnstileWidget @verify="onVerify" />
 
                 <p v-if="statusMessage"
+                   data-testid="newsletter-status"
                    class="newsletter-status"
                    :class="statusClass">
                     {{ statusMessage }}
