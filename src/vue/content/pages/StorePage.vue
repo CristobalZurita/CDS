@@ -6,8 +6,8 @@
           <p class="eyebrow">Catalogo publico</p>
           <h1>Tienda tecnica de repuestos</h1>
           <p class="subtitle">
-            Catalogo real basado en <code>products</code>. La logica de lista tecnica ya vive en el
-            front actual. El pedido backend y el pago real siguen pendientes.
+            Catálogo real basado en <code>products</code>, con stock vendible protegido para taller
+            y solicitud real al backend usando el mismo flujo de compras del sistema.
           </p>
         </div>
         <div class="header-actions">
@@ -109,14 +109,14 @@
                   {{ placeholderLabel(product) }}
                 </div>
 
-                <span v-if="Number(product.available_stock || 0) <= 0" class="stock-badge stock-badge--warning">
-                  Sin stock local
+                <span v-if="Number(product.sellable_stock || 0) <= 0" class="stock-badge stock-badge--warning">
+                  Reservado para taller
                 </span>
                 <span v-else-if="product.is_low_stock" class="stock-badge stock-badge--warning">
                   Stock bajo
                 </span>
                 <span v-else class="stock-badge">
-                  {{ product.available_stock }} {{ product.stock_unit || 'u' }}
+                  {{ product.sellable_stock }} {{ product.stock_unit || 'u' }}
                 </span>
               </div>
 
@@ -177,7 +177,7 @@
                 <span class="qty-value">{{ item.qty }}</span>
                 <button
                   class="qty-btn"
-                  :disabled="item.qty >= Number(item.available_stock || 0)"
+                  :disabled="!canAddProduct(item)"
                   @click="changeQty(item.id, 1)"
                 >
                   +
@@ -209,15 +209,15 @@
           <button
             class="btn btn-primary w-100"
             data-testid="store-checkout"
-            :disabled="cartItems.length === 0"
-            @click="showCheckoutPending"
+            :disabled="cartItems.length === 0 || shopCart.submitting"
+            @click="submitCheckout"
           >
-            Solicitud backend pendiente
+            {{ checkoutLabel }}
           </button>
 
           <p class="cart-note">
-            Este primer slice ya usa catalogo real y lista tecnica real del front.
-            La siguiente capa es solicitud backend y luego pago real.
+            El carro global queda disponible al navegar por todo el sitio. Si inicias sesión como cliente,
+            esta lista se convierte en una solicitud real dentro del módulo de compras.
           </p>
         </aside>
       </div>
@@ -226,26 +226,27 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { useShopCartStore } from '@/stores/shopCart'
 import { api } from '@/services/api'
-import { showInfo, showSuccess, showWarning } from '@/services/toastService'
-
-const CART_STORAGE_KEY = 'cirujano-shop-cart-v1'
-const SHIPPING_STORAGE_KEY = 'cirujano-shop-shipping-v1'
-const MAX_QTY_PER_PRODUCT = 20
-
-const shippingOptions = [
-  { key: 'pickup', name: 'Retiro en taller', price: 0 },
-  { key: 'manual', name: 'Despacho coordinado manualmente', price: 0 },
-]
+import { showError, showInfo, showSuccess, showWarning } from '@/services/toastService'
 
 const catalog = ref([])
 const loading = ref(false)
 const error = ref('')
 const searchTerm = ref('')
 const selectedCategory = ref('')
-const selectedShippingKey = ref(shippingOptions[0].key)
-const cart = ref({})
+const router = useRouter()
+const authStore = useAuthStore()
+const shopCart = useShopCartStore()
+const shippingOptions = shopCart.shippingOptions
+
+const selectedShippingKey = computed({
+  get: () => shopCart.selectedShippingKey,
+  set: (value) => shopCart.setShippingKey(value),
+})
 
 const availableCategories = computed(() => {
   const values = new Set(
@@ -291,43 +292,15 @@ const catalogById = computed(() => {
   return map
 })
 
-const cartItems = computed(() => {
-  return Object.entries(cart.value)
-    .map(([id, qty]) => {
-      const product = catalogById.value.get(String(id))
-      if (!product) return null
-      return {
-        ...product,
-        qty: normalizeQty(qty),
-      }
-    })
-    .filter(Boolean)
+const cartItems = computed(() => shopCart.items)
+const currentShipping = computed(() => shopCart.currentShipping)
+const totals = computed(() => shopCart.totals)
+const checkoutLabel = computed(() => {
+  if (authStore.isAdmin) return 'Cuenta admin no compra'
+  if (!authStore.isAuthenticated) return 'Inicia sesión para solicitar'
+  if (shopCart.submitting) return 'Enviando solicitud...'
+  return 'Enviar solicitud real'
 })
-
-const currentShipping = computed(() => {
-  return shippingOptions.find((option) => option.key === selectedShippingKey.value) || shippingOptions[0]
-})
-
-const totals = computed(() => {
-  const productsSubtotal = cartItems.value.reduce((sum, item) => sum + (Number(item.price || 0) * item.qty), 0)
-  const itemsCount = cartItems.value.reduce((sum, item) => sum + item.qty, 0)
-  const shippingPrice = Number(currentShipping.value.price || 0)
-  const hasQuotedAmount = cartItems.value.some((item) => Number(item.price || 0) > 0)
-
-  return {
-    itemsCount,
-    productsSubtotal,
-    shippingPrice,
-    grandTotal: productsSubtotal + shippingPrice,
-    hasQuotedAmount,
-  }
-})
-
-function normalizeQty(value) {
-  const qty = Number(value)
-  if (!Number.isFinite(qty)) return 0
-  return Math.min(MAX_QTY_PER_PRODUCT, Math.max(0, Math.floor(qty)))
-}
 
 function parseDescriptionMeta(rawDescription) {
   const text = String(rawDescription || '').trim()
@@ -395,118 +368,33 @@ function toApiPath(path) {
 }
 
 function canAddProduct(product) {
-  const currentQty = normalizeQty(cart.value[String(product.id)] || 0)
-  return currentQty < MAX_QTY_PER_PRODUCT
+  return shopCart.canAddProduct(product)
 }
 
 function addButtonLabel(product) {
   if (!canAddProduct(product)) {
-    return 'No disponible'
+    return Number(product.sellable_stock || 0) <= 0 ? 'Reservado taller' : 'No disponible'
   }
-  if (Number(product.available_stock || 0) > 0 && Number(product.price || 0) > 0) {
+  if (Number(product.sellable_stock || 0) > 0 && Number(product.price || 0) > 0) {
     return 'Agregar'
   }
   return 'Agregar a lista'
 }
 
 function addToCart(product) {
-  if (!product || !canAddProduct(product)) {
+  if (!product || !shopCart.addProduct(product)) {
     showWarning('Este item todavia no se puede agregar desde el catalogo actual.')
     return
-  }
-
-  const id = String(product.id)
-  const nextQty = normalizeQty((cart.value[id] || 0) + 1)
-  cart.value = {
-    ...cart.value,
-    [id]: nextQty,
   }
   showSuccess(`${product.name} agregado al carrito.`)
 }
 
 function removeFromCart(productId) {
-  const id = String(productId)
-  if (!(id in cart.value)) return
-
-  const next = { ...cart.value }
-  delete next[id]
-  cart.value = next
+  shopCart.removeItem(productId)
 }
 
 function changeQty(productId, delta) {
-  const id = String(productId)
-  const currentQty = normalizeQty(cart.value[id] || 0)
-  const nextQty = Math.min(MAX_QTY_PER_PRODUCT, normalizeQty(currentQty + delta))
-
-  if (nextQty <= 0) {
-    removeFromCart(productId)
-    return
-  }
-
-  cart.value = {
-    ...cart.value,
-    [id]: nextQty,
-  }
-}
-
-function hydrateCart() {
-  try {
-    const raw = window.localStorage.getItem(CART_STORAGE_KEY)
-    if (!raw) return
-    const parsed = JSON.parse(raw)
-    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return
-
-    const next = {}
-    for (const [id, qty] of Object.entries(parsed)) {
-      const normalized = normalizeQty(qty)
-      if (normalized > 0) {
-        next[String(id)] = normalized
-      }
-    }
-    cart.value = next
-  } catch {
-    cart.value = {}
-  }
-}
-
-function hydrateShipping() {
-  try {
-    const raw = window.localStorage.getItem(SHIPPING_STORAGE_KEY)
-    if (!raw) return
-    const value = String(JSON.parse(raw) || '')
-    if (shippingOptions.some((option) => option.key === value)) {
-      selectedShippingKey.value = value
-    }
-  } catch {
-    selectedShippingKey.value = shippingOptions[0].key
-  }
-}
-
-function persistCart() {
-  try {
-    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart.value))
-  } catch {
-    // noop
-  }
-}
-
-function persistShipping() {
-  try {
-    window.localStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify(selectedShippingKey.value))
-  } catch {
-    // noop
-  }
-}
-
-function cleanupCartAgainstCatalog() {
-  const validIds = new Set(catalog.value.map((product) => String(product.id)))
-  const next = {}
-  for (const [id, qty] of Object.entries(cart.value)) {
-    if (validIds.has(String(id)) && normalizeQty(qty) > 0) {
-      next[String(id)] = normalizeQty(qty)
-    }
-  }
-  cart.value = next
+  shopCart.changeQty(productId, delta)
 }
 
 async function loadCatalog() {
@@ -521,7 +409,7 @@ async function loadCatalog() {
       },
     })
     catalog.value = Array.isArray(res?.data) ? res.data : []
-    cleanupCartAgainstCatalog()
+    shopCart.syncCatalog(catalog.value)
   } catch (err) {
     error.value = err?.response?.data?.detail || 'No se pudo cargar el catalogo publico.'
     catalog.value = []
@@ -530,16 +418,35 @@ async function loadCatalog() {
   }
 }
 
-function showCheckoutPending() {
-  showInfo('La solicitud backend y el pago real todavia no estan conectados. Este slice deja catalogo y lista tecnica listos sobre datos reales.')
+async function submitCheckout() {
+  if (!cartItems.value.length) {
+    showWarning('El carrito está vacío.')
+    return
+  }
+
+  if (authStore.isAdmin) {
+    showInfo('La solicitud de tienda está disponible para cuentas cliente.')
+    return
+  }
+
+  if (!authStore.isAuthenticated) {
+    showInfo('Inicia sesión para convertir esta lista en una solicitud real.')
+    await router.push({ name: 'login', query: { redirect: '/tienda' } })
+    return
+  }
+
+  try {
+    const request = await shopCart.submitRequest()
+    showSuccess(`Solicitud #${request?.id || ''} enviada correctamente.`)
+    await router.push('/ot-payments')
+  } catch (err) {
+    const message = err?.response?.data?.detail || err?.message || 'No se pudo enviar la solicitud'
+    showError(message)
+  }
 }
 
-watch(cart, persistCart, { deep: true })
-watch(selectedShippingKey, persistShipping)
-
 onMounted(async () => {
-  hydrateCart()
-  hydrateShipping()
+  shopCart.hydrate()
   await loadCatalog()
 })
 </script>

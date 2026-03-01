@@ -37,8 +37,25 @@
           <input v-model.number="form.stock" type="number" class="form-control" data-testid="inventory-stock" />
         </div>
         <div class="col">
+          <label class="form-label">Stock mínimo</label>
+          <input v-model.number="form.min_quantity" type="number" class="form-control" data-testid="inventory-min-stock" />
+        </div>
+      </div>
+
+      <div class="mb-2 row">
+        <div class="col">
           <label class="form-label">Precio</label>
           <input v-model.number="form.price" type="number" step="0.01" class="form-control" data-testid="inventory-price" />
+        </div>
+        <div class="col d-flex align-items-end">
+          <div class="form-check me-3">
+            <input id="inventory-enabled" v-model="form.enabled" class="form-check-input" data-testid="inventory-enabled" type="checkbox" />
+            <label class="form-check-label" for="inventory-enabled">Habilitado</label>
+          </div>
+          <div class="form-check">
+            <input id="inventory-store-visible" v-model="form.store_visible" class="form-check-input" data-testid="inventory-store-visible" type="checkbox" />
+            <label class="form-check-label" for="inventory-store-visible">Visible en tienda</label>
+          </div>
         </div>
       </div>
       <div class="mb-3">
@@ -77,9 +94,12 @@ const form = reactive({
   category_label: '',
   sku: '',
   stock: 0,
+  min_quantity: 5,
   stock_unit: '',
   price: 0,
-  image_url: ''
+  image_url: '',
+  enabled: true,
+  store_visible: false,
 })
 
 function syncForm(item = props.item) {
@@ -88,9 +108,12 @@ function syncForm(item = props.item) {
   form.category_label = item?.category || ''
   form.sku = item?.sku || ''
   form.stock = item?.stock ?? 0
+  form.min_quantity = item?.min_stock ?? item?.min_quantity ?? 5
   form.stock_unit = item?.stock_unit || ''
   form.price = item?.price ?? 0
   form.image_url = item?.image_url || ''
+  form.enabled = item?.enabled ?? true
+  form.store_visible = item?.store_visible ?? false
 }
 
 function onSubmit() {

@@ -3,8 +3,8 @@
     <div class="ot-payments-container">
       <header class="page-header">
         <div>
-          <h1>Pagos OT</h1>
-          <p>Solicitudes de compra asociadas a tus órdenes de trabajo</p>
+          <h1>Pagos y solicitudes</h1>
+          <p>Solicitudes de compra asociadas a tus órdenes de trabajo y a la tienda</p>
         </div>
         <div class="header-actions">
           <button
@@ -33,7 +33,7 @@
           <header class="request-head">
             <div>
               <h2>Solicitud #{{ request.id }}</h2>
-              <p class="request-subtitle">OT: {{ request.repair_code || request.repair_number || 'SIN_OT' }}</p>
+              <p class="request-subtitle">{{ request.repair_code || request.repair_number ? `OT: ${request.repair_code || request.repair_number}` : 'TIENDA / SIN_OT' }}</p>
             </div>
             <span class="status-pill">{{ request.status }}</span>
           </header>

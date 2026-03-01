@@ -11,6 +11,8 @@
 			</div>
 		</div>
 
+		<InventoryAlerts :items="items" />
+
 		<InventoryStockSheet v-if="activeView === 'sheet'" :items="items" @save="onQuickSave" />
 		<InventoryStockStates v-else-if="activeView === 'states'" :items="items" @save="onStateSave" />
 
@@ -25,12 +27,13 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { api } from '@/services/api'
 import InventoryTable from '@/vue/components/admin/InventoryTable.vue'
 import InventoryForm from '@/vue/components/admin/InventoryForm.vue'
 import InventoryStockSheet from '@/vue/components/admin/InventoryStockSheet.vue'
 import InventoryStockStates from '@/vue/components/admin/InventoryStockStates.vue'
+import InventoryAlerts from '@/vue/components/admin/InventoryAlerts.vue'
 import { useInventoryStore } from '@/stores/inventory'
+import { showError, showSuccess } from '@/services/toastService'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 
 const store = useInventoryStore()
@@ -38,45 +41,16 @@ const route = useRoute()
 const router = useRouter()
 
 const items = computed(() => store.items)
-const warnedSkus = new Set()
 const showForm = ref(false)
 const selected = ref(null)
 const activeView = ref('sheet')
 
 async function load() {
 	await store.fetchItems(1, 50)
-	checkLowStockAlerts()
 }
 
 function reload() {
 	load()
-}
-
-function checkLowStockAlerts() {
-	if (!items.value?.length) return
-	const alerts = []
-	for (const item of items.value) {
-		const stock = Number(item.stock ?? 0)
-		const minStock = Number(item.min_stock ?? 0)
-		if (minStock <= 0) continue
-		if (warnedSkus.has(item.sku)) continue
-		if (stock <= Math.ceil(minStock * 0.25)) {
-			alerts.push({ level: '5%', item })
-		} else if (stock <= Math.ceil(minStock * 0.5)) {
-			alerts.push({ level: '10%', item })
-		} else if (stock <= minStock) {
-			alerts.push({ level: '20%', item })
-		}
-	}
-	if (!alerts.length) return
-	const top = alerts[0]
-	const lines = alerts.slice(0, 5).map(a => `${a.item.sku} (${a.item.name}) - ${a.level}`)
-	alert(
-		`Alerta de stock bajo (aprox.):\\n${lines.join('\\n')}\\n\\nReponer cuando sea posible.`
-	)
-	for (const a of alerts) {
-		warnedSkus.add(a.item.sku)
-	}
 }
 
 function onNew() {
@@ -95,9 +69,10 @@ async function onDelete(item) {
 	if (!confirm(`Eliminar item "${item.name || item.id}"?`)) return
 	try {
 		await store.deleteItem(item.id)
+		showSuccess('Item eliminado correctamente.')
 	} catch (e) {
 		console.error(e)
-		alert('No fue posible eliminar el item')
+		showError('No fue posible eliminar el item.')
 	}
 }
 
@@ -116,7 +91,7 @@ async function onSave(payload) {
 		router.replace({ query: q })
 	} catch (e) {
 		console.error(e)
-		alert('Error guardando item: ' + (e.message || e))
+		showError('Error guardando item: ' + (e.message || e))
 	}
 }
 
@@ -131,7 +106,7 @@ async function onQuickSave(payload) {
 		await load()
 	} catch (e) {
 		console.error(e)
-		alert('No se pudo guardar el stock.')
+		showError('No se pudo guardar el stock.')
 	}
 }
 
@@ -150,7 +125,7 @@ async function onStateSave(payload) {
 		await load()
 	} catch (e) {
 		console.error(e)
-		alert('No se pudo guardar estados de stock.')
+		showError('No se pudo guardar estados de stock.')
 	}
 }
 

@@ -8,8 +8,6 @@
             <router-view/>
         </main>
 
-    <!-- Toast Notifications -->
-    <ToastNotification ref="toastComponent" />
     <FloatingWhatsAppButton />
     <FloatingQuoteButton />
 
@@ -73,18 +71,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, provide } from 'vue'
+import { ref, provide } from 'vue'
 import Navigation from "/src/vue/components/nav/Navigation.vue"
 import Footer from "/src/vue/components/footer/Footer.vue"
 import FooterBlock from "/src/vue/components/footer/FooterBlock.vue"
 import FooterCopyright from "/src/vue/components/footer/FooterCopyright.vue"
 import FooterColumn from "/src/vue/components/footer/FooterColumn.vue"
-import ToastNotification from "/src/vue/components/system/ToastNotification.vue"
 import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"
 import FloatingWhatsAppButton from "/src/vue/components/widgets/FloatingWhatsAppButton.vue"
-import { setToastComponent } from '/src/services/toastService.js'
-
-const toastComponent = ref(null)
 const brandLogo = `${import.meta.env.BASE_URL}images/logo/logo_square_002.webp`
 
 // Provide global injections for child components
@@ -95,13 +89,6 @@ const LoaderAnimationStatus = { IDLE: 'IDLE', LOADING: 'LOADING', LEAVING: 'LEAV
 provide('currentPageSections', currentPageSections)
 provide('loaderAnimationStatus', loaderAnimationStatus)
 provide('LoaderAnimationStatus', LoaderAnimationStatus)
-
-onMounted(() => {
-  // Initialize toast service with component reference
-  if (toastComponent.value) {
-    setToastComponent(toastComponent.value)
-  }
-})
 </script>
 
 <style lang="scss">
