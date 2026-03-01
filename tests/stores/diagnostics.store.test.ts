@@ -1,89 +1,67 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+
+const apiMock = vi.hoisted(() => ({
+  get: vi.fn(),
+  post: vi.fn(),
+  put: vi.fn(),
+  delete: vi.fn(),
+}))
+
+vi.mock('@/composables/useApi', () => ({
+  useApi: () => apiMock,
+}))
+
 import { useDiagnosticsStore } from '@stores/diagnostics'
 
-describe('Diagnostics Store', () => {
+describe('diagnostics store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
   })
 
-  it('should have initial state', () => {
+  it('starts with the current diagnostics state shape', () => {
     const store = useDiagnosticsStore()
+
     expect(store.diagnostics).toEqual([])
-    expect(store.currentDiagnostic).toBeNull()
+    expect(store.loading).toBe(false)
+    expect(store.error).toBeNull()
   })
 
-  it('should add diagnostic', () => {
+  it('loads diagnostics from the API', async () => {
+    apiMock.get.mockResolvedValueOnce([{ id: 1, findings: 'Noise floor' }])
+
     const store = useDiagnosticsStore()
-    const diag = { id: 1, repairId: 1, findings: 'Screen broken', status: 'pending' }
-    store.diagnostics.push(diag)
-    expect(store.diagnostics).toContainEqual(diag)
+    await store.fetchDiagnostics()
+
+    expect(apiMock.get).toHaveBeenCalledWith('/diagnostic')
+    expect(store.diagnostics).toEqual([{ id: 1, findings: 'Noise floor' }])
+    expect(store.loading).toBe(false)
   })
 
-  it('should find diagnostic by ID', () => {
+  it('stores fetch errors', async () => {
+    const failure = { message: 'down' }
+    apiMock.get.mockRejectedValueOnce(failure)
+
     const store = useDiagnosticsStore()
-    const diag = { id: 1, repairId: 1, findings: 'Screen broken', status: 'pending' }
-    store.diagnostics = [diag]
-    store.currentDiagnostic = diag
-    expect(store.currentDiagnostic?.id).toBe(1)
+    await store.fetchDiagnostics()
+
+    expect(store.error).toEqual(failure)
   })
 
-  it('should update diagnostic', () => {
-    const store = useDiagnosticsStore()
-    store.diagnostics = [{ id: 1, repairId: 1, findings: 'Old findings', status: 'pending' }]
-    store.diagnostics[0].findings = 'Updated findings'
-    expect(store.diagnostics[0].findings).toBe('Updated findings')
-  })
+  it('delegates create, update and delete actions to the API', async () => {
+    apiMock.post.mockResolvedValueOnce({ id: 2 })
+    apiMock.put.mockResolvedValueOnce({ id: 2, findings: 'Updated' })
+    apiMock.delete.mockResolvedValueOnce({ ok: true })
 
-  it('should delete diagnostic', () => {
     const store = useDiagnosticsStore()
-    store.diagnostics = [
-      { id: 1, repairId: 1, findings: 'Finding1', status: 'pending' },
-      { id: 2, repairId: 2, findings: 'Finding2', status: 'pending' }
-    ]
-    store.diagnostics = store.diagnostics.filter(d => d.id !== 1)
-    expect(store.diagnostics).toHaveLength(1)
-  })
 
-  it('should filter diagnostics by status', () => {
-    const store = useDiagnosticsStore()
-    store.diagnostics = [
-      { id: 1, repairId: 1, findings: 'Finding1', status: 'pending' },
-      { id: 2, repairId: 2, findings: 'Finding2', status: 'completed' },
-      { id: 3, repairId: 3, findings: 'Finding3', status: 'pending' }
-    ]
-    const pending = store.diagnostics.filter(d => d.status === 'pending')
-    expect(pending).toHaveLength(2)
-  })
+    await expect(store.createDiagnostic({ repair_id: 4 })).resolves.toEqual({ id: 2 })
+    await expect(store.updateDiagnostic(2, { findings: 'Updated' })).resolves.toEqual({ id: 2, findings: 'Updated' })
+    await expect(store.deleteDiagnostic(2)).resolves.toEqual({ ok: true })
 
-  it('should search diagnostics by findings', () => {
-    const store = useDiagnosticsStore()
-    store.diagnostics = [
-      { id: 1, repairId: 1, findings: 'Screen broken', status: 'pending' },
-      { id: 2, repairId: 2, findings: 'Battery issue', status: 'pending' }
-    ]
-    const results = store.diagnostics.filter(d => d.findings.includes('Screen'))
-    expect(results).toHaveLength(1)
-  })
-
-  it('should count diagnostics', () => {
-    const store = useDiagnosticsStore()
-    store.diagnostics = [
-      { id: 1, repairId: 1, findings: 'Finding1', status: 'pending' },
-      { id: 2, repairId: 2, findings: 'Finding2', status: 'completed' }
-    ]
-    expect(store.diagnostics.length).toBe(2)
-  })
-
-  it('should group diagnostics by repair', () => {
-    const store = useDiagnosticsStore()
-    store.diagnostics = [
-      { id: 1, repairId: 1, findings: 'Finding1', status: 'pending' },
-      { id: 2, repairId: 1, findings: 'Finding2', status: 'completed' },
-      { id: 3, repairId: 2, findings: 'Finding3', status: 'pending' }
-    ]
-    const repair1 = store.diagnostics.filter(d => d.repairId === 1)
-    expect(repair1).toHaveLength(2)
+    expect(apiMock.post).toHaveBeenCalledWith('/diagnostic/calculate', { repair_id: 4 })
+    expect(apiMock.put).toHaveBeenCalledWith('/diagnostic/2', { findings: 'Updated' })
+    expect(apiMock.delete).toHaveBeenCalledWith('/diagnostic/2')
   })
 })

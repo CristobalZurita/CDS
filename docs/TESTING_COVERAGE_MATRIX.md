@@ -101,23 +101,21 @@ Base:
 ### 5. Cobertura de código con Vitest
 
 Estado:
-- La instrumentación ya quedó configurada y `npm run test:coverage` sí ejecuta coverage.
-- El número global todavía no es confiable porque la suite unitaria/integración actual está parcialmente obsoleta.
+- La instrumentación quedó operativa y la suite unitaria/integración ya no tiene deuda bloqueante.
 
 Última corrida:
-- `208` tests pasando
-- `74` tests fallando
-- `10` archivos fallando
-- `4` archivos pasando
+- `134` tests pasando
+- `0` tests fallando
+- summary actual:
+  - statements: `3.49%`
+  - branches: `34.30%`
+  - functions: `21.10%`
+  - lines: `3.49%`
 
-Tipos de fallo detectados:
-- tests que esperan contratos viejos de stores/composables
-- tests que usan Pinia sin `setActivePinia(createPinia())`
-- expectativas de APIs que ya no existen en `useAuth` y `useApi`
-
-Conclusión:
-- La cobertura de código está "medible", pero no "presentable" todavía.
-- Antes de reportar porcentaje de líneas/branches hay que sanear esa suite.
+Lectura correcta:
+- El coverage ya es real y estable, pero hoy es bajo.
+- Ese porcentaje refleja que el frente completo es mucho más grande que la parte actualmente cubierta con Vitest.
+- La foto útil hoy no es "los tests fallan", sino "las pruebas unitarias sólo cubren una fracción pequeña del producto".
 
 ## Resultado operativo actual
 
@@ -134,7 +132,7 @@ Conclusión:
 ### Coverage de Vitest
 
 - `npm run test:coverage`
-- Estado actual: ejecuta, pero falla por deuda en tests unitarios.
+- Estado actual: ejecuta y reporta coverage real.
 
 ## Cómo leer el porcentaje real hoy
 
@@ -143,7 +141,7 @@ Si se resume en una sola frase:
 - Cobertura de rutas funcionales: `100%`
 - Cobertura de auditoría admin: `100%`
 - Cobertura CRUD profunda del negocio: `parcial`
-- Cobertura de código instrumentada: `bloqueada por tests obsoletos`
+- Cobertura de código instrumentada: `desbloqueada, pero muy baja`
 
 ## Qué falta para acercarse al "100%"
 
@@ -169,10 +167,11 @@ Si se resume en una sola frase:
 
 ### Fase 2: cerrar cobertura técnica
 
-1. Corregir tests Vitest que quedaron fuera de contrato.
-2. Crear setup común de Pinia para composables/stores.
-3. Reescribir tests que validan APIs eliminadas o contratos viejos.
-4. Recién entonces reportar:
+1. Subir cobertura de componentes y vistas críticas.
+2. Cubrir más stores/composables activos del flujo real.
+3. Añadir tests unitarios para servicios front clave.
+4. Mantener el setup común actual y seguir creciendo desde esta base.
+5. Recién entonces reportar objetivos de umbral altos:
    - line coverage
    - branch coverage
    - function coverage

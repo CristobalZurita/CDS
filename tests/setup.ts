@@ -3,7 +3,7 @@ import { config } from '@vue/test-utils'
 
 // Mock localStorage
 const localStorageMock = {
-  getItem: vi.fn(),
+  getItem: vi.fn(() => null),
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
@@ -12,7 +12,7 @@ global.localStorage = localStorageMock as any
 
 // Mock sessionStorage
 const sessionStorageMock = {
-  getItem: vi.fn(),
+  getItem: vi.fn(() => null),
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),

@@ -6,12 +6,11 @@
  */
 
 import { ref, computed } from 'vue'
-import { useApi } from './useApi'
+import { api } from '@/services/api'
 import { useQuotationStore } from '@/stores/quotation'
 import { showSuccess, showError } from '@/services/toastService'
 
 export function useQuotation() {
-  const { api } = useApi()
   const quotationStore = useQuotationStore()
   
   // State
@@ -50,10 +49,11 @@ export function useQuotation() {
         turnstile_token: turnstileToken
       })
       
-      quotation.value = response.data
-      quotationStore.setQuotation(response.data)
+      const data = response.data?.data || response.data
+      quotation.value = data
+      quotationStore.setQuotation(data)
       showSuccess('Cotización generada exitosamente')
-      return response.data
+      return data
       
     } catch (err) {
       const errorMessage = err.response?.data?.detail || 
