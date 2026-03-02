@@ -1,203 +1,124 @@
 /**
- * Auth Service - JWT Management con HttpOnly Cookies
- * ✅ SEGURO: Tokens en HttpOnly cookies (no accesibles via JS)
- * ✅ XSS-proof: Aunque hackeen JS, no pueden acceder al token
- * Uso: useAuthService().login(), useAuthService().logout(), etc
+ * Servicio de compatibilidad sobre el composable alineado al backend real.
+ * Mantiene la API de clase sin sostener una segunda fuente de verdad.
  */
 
-import { ref } from 'vue';
-import type { User, AuthToken } from '@/types/common';
-import api from './api';
-import { getCSRFToken } from './security';
+import { useAuth } from '@/composables/useAuth';
 
 class AuthService {
-  private user = ref<User | null>(null);
-  private isAuthenticated = ref(false);
-  private isLoading = ref(false);
+  private auth = useAuth();
 
-  /**
-   * Inicializar autenticación - Restaurar sesión si existe
-   */
   async initialize(): Promise<void> {
-    try {
-      // Backend verifica HttpOnly cookie y retorna usuario
-      const response = await api.get('/users/me');
-      if (response.data.success) {
-        this.user.value = response.data.data;
-        this.isAuthenticated.value = true;
-      }
-    } catch (error) {
-      console.debug('No active session');
-      this.isAuthenticated.value = false;
-    }
+    await this.auth.initialize();
   }
 
-  /**
-   * Login - Obtener token (guardado en HttpOnly cookie por backend)
-   */
-  async login(email: string, password: string): Promise<boolean> {
-    this.isLoading.value = true;
+  async login(email: string, password: string, turnstileToken?: string): Promise<boolean> {
+    this.auth.error.value = null;
     try {
-      const response = await api.post('/users/login', {
-        email,
-        password,
-      });
-
-      if (response.data.success) {
-        this.user.value = response.data.data.user;
-        this.isAuthenticated.value = true;
-        // Token guardado automáticamente en HttpOnly cookie por backend
-        return true;
-      }
-      return false;
+      const result = await this.auth.login(email, password, turnstileToken || null);
+      return !('requires_2fa' in result);
     } catch (error) {
       console.error('Login failed:', error);
       return false;
-    } finally {
-      this.isLoading.value = false;
     }
   }
 
-  /**
-   * Register - Crear nueva cuenta
-   */
-  async register(email: string, password: string, firstName: string, lastName: string): Promise<boolean> {
-    this.isLoading.value = true;
+  async verifyTwoFactor(challengeId: string, code: string): Promise<boolean> {
     try {
-      const response = await api.post('/users/register', {
+      await this.auth.verifyTwoFactor(challengeId, code);
+      return true;
+    } catch (error) {
+      console.error('2FA verification failed:', error);
+      return false;
+    }
+  }
+
+  async register(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    phone?: string,
+    turnstileToken?: string
+  ): Promise<boolean> {
+    try {
+      await this.auth.register({
         email,
         password,
         firstName,
         lastName,
+        phone: phone || null,
+        turnstile_token: turnstileToken || null,
       });
-
-      if (response.data.success) {
-        this.user.value = response.data.data.user;
-        this.isAuthenticated.value = true;
-        return true;
-      }
-      return false;
+      return true;
     } catch (error) {
       console.error('Register failed:', error);
       return false;
-    } finally {
-      this.isLoading.value = false;
     }
   }
 
-  /**
-   * Logout - Limpiar sesión
-   */
   async logout(): Promise<void> {
-    try {
-      await api.post('/users/logout', {}, {
-        headers: { 'X-CSRF-Token': getCSRFToken() || '' },
-      });
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      this.user.value = null;
-      this.isAuthenticated.value = false;
-      // Backend limpia HttpOnly cookie
-    }
+    this.auth.logout();
   }
 
-  /**
-   * Refresh Token - Renovar sesión si está por expirar
-   */
   async refreshToken(): Promise<boolean> {
     try {
-      const response = await api.post('/users/refresh-token', {});
-      if (response.data.success) {
-        return true;
-      }
-      return false;
+      return Boolean(await this.auth.refreshAccessToken());
     } catch (error) {
       console.error('Token refresh failed:', error);
-      this.isAuthenticated.value = false;
       return false;
     }
   }
 
-  /**
-   * Request Password Reset - Solicitar reset
-   */
   async requestPasswordReset(email: string): Promise<boolean> {
     try {
-      const response = await api.post('/users/password-reset', { email });
-      return response.data.success;
+      return await this.auth.requestPasswordReset(email);
     } catch (error) {
       console.error('Password reset request failed:', error);
       return false;
     }
   }
 
-  /**
-   * Confirm Password Reset - Confirmar con token
-   */
   async confirmPasswordReset(token: string, newPassword: string): Promise<boolean> {
     try {
-      const response = await api.post('/users/confirm-reset', {
-        token,
-        newPassword,
-      });
-      return response.data.success;
+      return await this.auth.confirmPasswordReset(token, newPassword);
     } catch (error) {
       console.error('Password reset confirmation failed:', error);
       return false;
     }
   }
 
-  /**
-   * Delete Account - Eliminar cuenta (requiere confirmación)
-   */
   async deleteAccount(password: string): Promise<boolean> {
-    try {
-      const response = await api.delete('/users/me', {
-        data: { password },
-        headers: { 'X-CSRF-Token': getCSRFToken() || '' },
-      });
-
-      if (response.data.success) {
-        await this.logout();
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Account deletion failed:', error);
-      return false;
-    }
+    return this.auth.deleteAccount(password);
   }
 
-  /**
-   * Check if user has permission
-   */
   hasPermission(permission: string): boolean {
-    return this.user.value?.permissions.includes(permission) ?? false;
+    return this.auth.hasPermission(permission);
   }
 
-  /**
-   * Check if user has role
-   */
   hasRole(role: string): boolean {
-    return this.user.value?.role === role;
+    return this.auth.user.value?.role === role;
   }
 
-  /**
-   * Getters
-   */
   get currentUser() {
-    return this.user;
+    return this.auth.user;
   }
 
   get isAuth() {
-    return this.isAuthenticated;
+    return this.auth.isAuthenticated;
   }
 
   get loading() {
-    return this.isLoading;
+    return this.auth.isLoading;
+  }
+
+  get requiresTwoFactor() {
+    return this.auth.requires2FA;
+  }
+
+  get twoFactorChallengeId() {
+    return this.auth.twoFAChallengeId;
   }
 }
 
-// Singleton instance
 export const authService = new AuthService();

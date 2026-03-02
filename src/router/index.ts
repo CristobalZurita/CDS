@@ -45,6 +45,7 @@ const PurchaseRequestsPage = () => import('@/vue/content/pages/admin/PurchaseReq
 const ArchivePage = () => import('@/vue/content/pages/admin/ArchivePage.vue')
 const ManualsPage = () => import('@/vue/content/pages/admin/ManualsPage.vue')
 const StatsPage = () => import('@/vue/content/pages/admin/StatsPage.vue')
+const WizardsPage = () => import('@/vue/content/pages/admin/WizardsPage.vue')
 const SignaturePage = () => import('@/vue/content/pages/SignaturePage.vue')
 const PhotoUploadPage = () => import('@/vue/content/pages/PhotoUploadPage.vue')
 
@@ -238,6 +239,11 @@ const routes: RouteRecordRaw[] = [
         path: 'stats',
         name: 'admin-stats',
         component: StatsPage
+      },
+      {
+        path: 'wizards',
+        name: 'admin-wizards',
+        component: WizardsPage
       },
       {
         path: 'archive',

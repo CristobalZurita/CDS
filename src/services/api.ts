@@ -172,4 +172,5 @@ export async function healthCheck(): Promise<boolean> {
   }
 }
 
+export { api };
 export default api;
