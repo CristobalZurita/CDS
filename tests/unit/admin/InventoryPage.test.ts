@@ -7,6 +7,7 @@ const routeState = vi.hoisted(() => ({
 const routerReplace = vi.hoisted(() => vi.fn())
 const apiMock = vi.hoisted(() => ({
   get: vi.fn(),
+  post: vi.fn(),
 }))
 const toastMock = vi.hoisted(() => ({
   showError: vi.fn(),
@@ -71,7 +72,40 @@ describe('InventoryPage', () => {
     storeMock.deleteItem.mockResolvedValue(true)
     storeMock.updateItem.mockResolvedValue({})
     storeMock.createItem.mockResolvedValue({})
-    apiMock.get.mockResolvedValue({ data: { id: 5, name: 'Resistencia 10K' } })
+    apiMock.get.mockImplementation((url) => {
+      if (url === '/inventory/store-catalog/status') {
+        return Promise.resolve({
+          data: {
+            files_count: 10,
+            linked_products_count: 8,
+            explicit_store_visible_count: 8,
+            with_nonzero_stock_count: 2,
+            sellable_now_count: 1,
+            pending_images_count: 2,
+            orphan_rows_count: 0,
+            pending_images: ['nuevo_1.webp', 'nuevo_2.webp'],
+            orphan_rows: [],
+          },
+        })
+      }
+      return Promise.resolve({ data: { id: 5, name: 'Resistencia 10K' } })
+    })
+    apiMock.post.mockResolvedValue({
+      data: {
+        result: { matched: 8, created: 2 },
+        status: {
+          files_count: 10,
+          linked_products_count: 10,
+          explicit_store_visible_count: 10,
+          with_nonzero_stock_count: 2,
+          sellable_now_count: 1,
+          pending_images_count: 0,
+          orphan_rows_count: 0,
+          pending_images: [],
+          orphan_rows: [],
+        },
+      },
+    })
     vi.spyOn(window, 'confirm').mockReturnValue(true)
   })
 
@@ -83,6 +117,7 @@ describe('InventoryPage', () => {
     await flushPromises()
     expect(storeMock.fetchItems).toHaveBeenCalledWith(1, 50)
     expect(wrapper.find('[data-testid="inventory-stock-sheet"]').exists()).toBe(true)
+    expect(wrapper.get('[data-testid="inventory-catalog-pending"]').text()).toBe('2')
 
     await wrapper.get('[data-testid="inventory-new"]').trigger('click')
 
@@ -102,5 +137,20 @@ describe('InventoryPage', () => {
 
     expect(storeMock.deleteItem).toHaveBeenCalledWith(5)
     expect(toastMock.showSuccess).toHaveBeenCalledWith('Item eliminado correctamente.')
+  })
+
+  it('syncs store catalog from admin and refreshes status', async () => {
+    const wrapper = mount(InventoryPage, {
+      global: { stubs },
+    })
+
+    await flushPromises()
+    await wrapper.get('[data-testid="inventory-sync-catalog"]').trigger('click')
+    await flushPromises()
+
+    expect(apiMock.post).toHaveBeenCalledWith('/inventory/store-catalog/sync')
+    expect(storeMock.fetchItems).toHaveBeenCalledTimes(2)
+    expect(toastMock.showSuccess).toHaveBeenCalledWith('Catálogo sincronizado. 8 vinculados, 2 creados.')
+    expect(wrapper.get('[data-testid="inventory-catalog-pending"]').text()).toBe('0')
   })
 })
