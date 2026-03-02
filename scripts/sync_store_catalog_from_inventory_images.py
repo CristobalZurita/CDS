@@ -37,6 +37,22 @@ from app.models.stock import Stock  # type: ignore  # noqa: E402
 
 IMAGE_DIR = ROOT / "public" / "images" / "INVENTARIO"
 GENERIC_PRICE = 1000
+STEM_PREFIXES = (
+    "CONECTOR_",
+    "DIODO_",
+    "CAPACITOR_",
+    "SWITCH_",
+    "MICRO_",
+    "PANTALLA_",
+    "RESISTENCIA_",
+)
+STEM_EQUIVALENTS: dict[str, tuple[str, ...]] = {
+    "CAPACITOR_CERAMICO": ("CAP_C", "CAPACITOR"),
+    "CAPACITOR_ELECTROLITICO": ("CAP_E",),
+    "CONECTOR_MIDI_PCB": ("MIDI_CON",),
+    "CONECTOR_MIDI_VOLANTE": ("MIDI_CONECTOR_VOLANTE",),
+    "PANTALLA_OLED": ("OLED", "OLED2"),
+}
 
 
 @dataclass(frozen=True)
@@ -173,6 +189,20 @@ def infer_category_key(stem: str) -> str:
     rule = FILE_RULES.get(stem)
     if rule:
         return normalize_text(rule.category)
+    if stem == "CAPACITOR_ELECTROLITICO":
+        return normalize_text("Capacitores Electroliticos")
+    if stem == "CAPACITOR_CERAMICO":
+        return normalize_text("Capacitores")
+    if stem.startswith("CONECTOR"):
+        return normalize_text("conectores")
+    if stem.startswith("DIODO"):
+        return normalize_text("diodo led")
+    if stem.startswith("CAPACITOR"):
+        return normalize_text("capacitores")
+    if stem.startswith("MICRO") or stem.startswith("PANTALLA") or stem.startswith("DISPLAY"):
+        return normalize_text("Ic's")
+    if stem.startswith("SWITCH"):
+        return normalize_text("otros")
     if stem.startswith("CAP_E"):
         return normalize_text("Capacitores Electroliticos")
     if stem.startswith("CAP"):
@@ -197,6 +227,28 @@ def candidate_aliases(stem: str) -> tuple[str, ...]:
     return (pretty_name_from_stem(stem),)
 
 
+def stem_variants(stem: str) -> set[str]:
+    variants = {normalize_text(stem)}
+    changed = True
+    while changed:
+        changed = False
+        current = list(variants)
+        for value in current:
+            for prefix in STEM_PREFIXES:
+                if value.startswith(prefix):
+                    stripped = value[len(prefix):]
+                    if stripped and stripped not in variants:
+                        variants.add(stripped)
+                        changed = True
+        for value in current:
+            for alias in STEM_EQUIVALENTS.get(value, ()):
+                normalized_alias = normalize_text(alias)
+                if normalized_alias and normalized_alias not in variants:
+                    variants.add(normalized_alias)
+                    changed = True
+    return {value for value in variants if value}
+
+
 def _product_identity_variants(product: Product) -> set[str]:
     variants = set()
     normalized_sku = normalize_text(product.sku)
@@ -213,8 +265,9 @@ def _product_identity_variants(product: Product) -> set[str]:
 
 
 def exact_alias_match(stem: str, product: Product) -> bool:
-    aliases = tuple(normalize_text(alias) for alias in candidate_aliases(stem))
-    aliases = tuple(alias for alias in aliases if alias)
+    aliases = {normalize_text(alias) for alias in candidate_aliases(stem)}
+    aliases.update(stem_variants(stem))
+    aliases = {alias for alias in aliases if alias}
     product_variants = _product_identity_variants(product)
     return any(alias in product_variants for alias in aliases)
 
@@ -246,6 +299,19 @@ def ensure_stock_row(session, product: Product) -> Stock:
     session.add(stock)
     session.flush()
     return stock
+
+
+def _normalized_stem_from_filename(filename: str) -> str:
+    return normalize_text(Path(filename).stem.replace(".jpg", "").replace(".JPG", ""))
+
+
+def find_best_image_match(filename: str, images: list[Path]) -> Path | None:
+    missing_variants = stem_variants(_normalized_stem_from_filename(filename))
+    for image_path in images:
+        live_variants = stem_variants(_normalized_stem_from_filename(image_path.name))
+        if missing_variants & live_variants:
+            return image_path
+    return None
 
 
 def build_catalog_status() -> dict:
@@ -367,6 +433,8 @@ def sync_catalog(apply_changes: bool) -> dict:
 
         matched = []
         created = []
+        relinked = []
+        cleared = []
         used_product_ids: set[int] = set()
 
         for image_path in images:
@@ -406,6 +474,36 @@ def sync_catalog(apply_changes: bool) -> dict:
             )
             used_product_ids.add(int(product.id))
 
+        image_names = {path.name for path in images}
+        linked_products = session.query(Product).filter(Product.image_url.like("/images/INVENTARIO/%")).all()
+        for product in linked_products:
+            current_name = str(product.image_url or "").split("/images/INVENTARIO/", 1)[-1].strip()
+            if not current_name or current_name in image_names:
+                continue
+
+            replacement = find_best_image_match(current_name, images)
+            if replacement:
+                product.image_url = f"/images/INVENTARIO/{replacement.name}"
+                ensure_meta_flags(product)
+                relinked.append(
+                    {
+                        "product_id": product.id,
+                        "sku": product.sku,
+                        "from": current_name,
+                        "to": replacement.name,
+                    }
+                )
+                continue
+
+            product.image_url = None
+            cleared.append(
+                {
+                    "product_id": product.id,
+                    "sku": product.sku,
+                    "from": current_name,
+                }
+            )
+
         if apply_changes:
             session.commit()
         else:
@@ -415,8 +513,12 @@ def sync_catalog(apply_changes: bool) -> dict:
             "images": len(images),
             "matched": len(matched),
             "created": len(created),
+            "relinked": len(relinked),
+            "cleared": len(cleared),
             "matched_items": matched,
             "created_items": created,
+            "relinked_items": relinked,
+            "cleared_items": cleared,
         }
     finally:
         session.close()

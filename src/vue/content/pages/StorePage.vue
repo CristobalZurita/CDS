@@ -58,6 +58,21 @@
         </div>
 
         <div class="toolbar-field">
+          <label for="store-availability">Disponibilidad</label>
+          <select
+            id="store-availability"
+            v-model="selectedAvailability"
+            class="form-select"
+            data-testid="store-availability-filter"
+          >
+            <option value="all">Todo</option>
+            <option value="sellable">Vendibles ahora</option>
+            <option value="reserved">Reservados para taller</option>
+            <option value="out">Sin stock</option>
+          </select>
+        </div>
+
+        <div class="toolbar-field">
           <label for="store-shipping">Despacho</label>
           <select
             id="store-shipping"
@@ -75,6 +90,10 @@
           </select>
         </div>
       </section>
+
+      <div class="store-summary" data-testid="store-results-count">
+        Mostrando {{ filteredProducts.length }} de {{ catalog.length }} productos publicados.
+      </div>
 
       <div v-if="error" class="alert alert-warning" data-testid="store-error">
         {{ error }}
@@ -241,6 +260,7 @@ const loading = ref(false)
 const error = ref('')
 const searchTerm = ref('')
 const selectedCategory = ref('')
+const selectedAvailability = ref('all')
 const router = useRouter()
 const authStore = useAuthStore()
 const shopCart = useShopCartStore()
@@ -249,6 +269,31 @@ const shippingOptions = shopCart.shippingOptions
 const selectedShippingKey = computed({
   get: () => shopCart.selectedShippingKey,
   set: (value) => shopCart.setShippingKey(value),
+})
+
+function normalizeSearchText(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+const indexedCatalog = computed(() => {
+  return catalog.value.map((product) => ({
+    ...product,
+    _searchIndex: normalizeSearchText([
+      product.name,
+      product.sku,
+      product.family,
+      product.category,
+      describeProduct(product),
+    ]
+      .filter(Boolean)
+      .join(' ')),
+  }))
 })
 
 const availableCategories = computed(() => {
@@ -261,10 +306,20 @@ const availableCategories = computed(() => {
 })
 
 const filteredProducts = computed(() => {
-  const normalizedSearch = String(searchTerm.value || '').trim().toLowerCase()
+  const normalizedSearch = normalizeSearchText(searchTerm.value)
 
-  return catalog.value.filter((product) => {
+  return indexedCatalog.value.filter((product) => {
     if (selectedCategory.value && product.category !== selectedCategory.value) {
+      return false
+    }
+
+    if (selectedAvailability.value === 'sellable' && Number(product.sellable_stock || 0) <= 0) {
+      return false
+    }
+    if (selectedAvailability.value === 'reserved' && !(Number(product.available_stock || 0) > 0 && Number(product.sellable_stock || 0) <= 0)) {
+      return false
+    }
+    if (selectedAvailability.value === 'out' && Number(product.available_stock || 0) > 0) {
       return false
     }
 
@@ -272,18 +327,7 @@ const filteredProducts = computed(() => {
       return true
     }
 
-    const haystack = [
-      product.name,
-      product.sku,
-      product.family,
-      product.category,
-      describeProduct(product),
-    ]
-      .filter(Boolean)
-      .join(' ')
-      .toLowerCase()
-
-    return haystack.includes(normalizedSearch)
+    return product._searchIndex.includes(normalizedSearch)
   })
 })
 
@@ -410,7 +454,7 @@ async function loadCatalog() {
   try {
     const res = await api.get('/inventory/public/', {
       params: {
-        limit: 500,
+        limit: 5000,
         enabled_only: true,
         in_stock_only: false,
       },
