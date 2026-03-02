@@ -38,7 +38,23 @@
 					<label class="form-label mb-1">Precio</label>
 					<input v-model="bulk.price" type="number" min="0" class="form-control form-control-sm" data-testid="inventory-sheet-bulk-price" />
 				</div>
-				<div class="col-lg-6">
+				<div class="col-sm-6 col-lg-2">
+					<label class="form-label mb-1">Habilitado</label>
+					<select v-model="bulk.enabled" class="form-select form-select-sm" data-testid="inventory-sheet-bulk-enabled">
+						<option value="">Mantener</option>
+						<option value="true">Sí</option>
+						<option value="false">No</option>
+					</select>
+				</div>
+				<div class="col-sm-6 col-lg-2">
+					<label class="form-label mb-1">Visible tienda</label>
+					<select v-model="bulk.store_visible" class="form-select form-select-sm" data-testid="inventory-sheet-bulk-store-visible">
+						<option value="">Mantener</option>
+						<option value="true">Sí</option>
+						<option value="false">No</option>
+					</select>
+				</div>
+				<div class="col-lg-4">
 					<div class="d-flex flex-wrap gap-2">
 						<button class="btn btn-sm btn-outline-secondary" data-testid="inventory-sheet-select-visible" @click="selectVisible">
 							Seleccionar visibles
@@ -119,7 +135,9 @@ const rows = ref([])
 const bulk = ref({
 	stock: '',
 	min_stock: '',
-	price: ''
+	price: '',
+	enabled: '',
+	store_visible: '',
 })
 
 const normalizeRow = (item) => ({
@@ -130,6 +148,8 @@ const normalizeRow = (item) => ({
 	stock: Number(item.stock ?? item.quantity ?? 0),
 	min_stock: Number(item.min_stock ?? item.min_quantity ?? 0),
 	price: Number(item.price ?? 0),
+	enabled: item.enabled ?? true,
+	store_visible: item.store_visible ?? false,
 	selected: false,
 })
 
@@ -172,11 +192,15 @@ const applyBulkValues = () => {
 	const stockValue = bulk.value.stock === '' ? null : Number(bulk.value.stock)
 	const minValue = bulk.value.min_stock === '' ? null : Number(bulk.value.min_stock)
 	const priceValue = bulk.value.price === '' ? null : Number(bulk.value.price)
+	const enabledValue = bulk.value.enabled === '' ? null : bulk.value.enabled === 'true'
+	const storeVisibleValue = bulk.value.store_visible === '' ? null : bulk.value.store_visible === 'true'
 
 	selectedRows.value.forEach((row) => {
 		if (stockValue !== null && Number.isFinite(stockValue)) row.stock = stockValue
 		if (minValue !== null && Number.isFinite(minValue)) row.min_stock = minValue
 		if (priceValue !== null && Number.isFinite(priceValue)) row.price = priceValue
+		if (enabledValue !== null) row.enabled = enabledValue
+		if (storeVisibleValue !== null) row.store_visible = storeVisibleValue
 	})
 }
 
@@ -185,7 +209,9 @@ const saveRow = (row) => {
 		id: row.id,
 		stock: row.stock,
 		min_stock: row.min_stock,
-		price: row.price
+		price: row.price,
+		enabled: row.enabled,
+		store_visible: row.store_visible,
 	})
 }
 
@@ -195,7 +221,9 @@ const saveSelected = () => {
 		id: row.id,
 		stock: row.stock,
 		min_stock: row.min_stock,
-		price: row.price
+		price: row.price,
+		enabled: row.enabled,
+		store_visible: row.store_visible,
 	})))
 }
 </script>

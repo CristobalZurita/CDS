@@ -126,6 +126,32 @@
 				<div class="mt-2 small text-muted" data-testid="inventory-results-count">
 					Mostrando {{ filteredItems.length }} de {{ items.length }} items.
 				</div>
+				<div class="row g-2 mt-2" data-testid="inventory-scope-summary">
+					<div class="col-sm-6 col-xl-3">
+						<div class="border rounded p-2 h-100">
+							<div class="small text-muted">Interno sólo</div>
+							<div class="fw-semibold">{{ scopeSummary.internalOnly }}</div>
+						</div>
+					</div>
+					<div class="col-sm-6 col-xl-3">
+						<div class="border rounded p-2 h-100">
+							<div class="small text-muted">Publicado tienda</div>
+							<div class="fw-semibold">{{ scopeSummary.published }}</div>
+						</div>
+					</div>
+					<div class="col-sm-6 col-xl-3">
+						<div class="border rounded p-2 h-100">
+							<div class="small text-muted">Con stock 0</div>
+							<div class="fw-semibold">{{ scopeSummary.zeroStock }}</div>
+						</div>
+					</div>
+					<div class="col-sm-6 col-xl-3">
+						<div class="border rounded p-2 h-100">
+							<div class="small text-muted">Precio base 1000</div>
+							<div class="fw-semibold">{{ scopeSummary.basePrice }}</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -230,6 +256,16 @@ const filteredItems = computed(() => {
 	})
 })
 
+const scopeSummary = computed(() => {
+	return items.value.reduce((acc, item) => {
+		if (item.store_visible === true) acc.published += 1
+		else acc.internalOnly += 1
+		if (Number(item.stock || 0) <= 0) acc.zeroStock += 1
+		if (Number(item.price || 0) === 1000) acc.basePrice += 1
+		return acc
+	}, { internalOnly: 0, published: 0, zeroStock: 0, basePrice: 0 })
+})
+
 async function load() {
 	await store.fetchItems(1, 50)
 }
@@ -303,7 +339,9 @@ async function onQuickSave(payload) {
 		await store.updateItem(payload.id, {
 			stock: payload.stock ?? 0,
 			min_quantity: payload.min_stock ?? 0,
-			price: payload.price ?? 0
+			price: payload.price ?? 0,
+			enabled: payload.enabled,
+			store_visible: payload.store_visible,
 		})
 		await load()
 		await loadCatalogStatus()
@@ -321,7 +359,9 @@ async function onQuickSaveMany(payloads) {
 			await store.updateItem(payload.id, {
 				stock: payload.stock ?? 0,
 				min_quantity: payload.min_stock ?? 0,
-				price: payload.price ?? 0
+				price: payload.price ?? 0,
+				enabled: payload.enabled,
+				store_visible: payload.store_visible,
 			})
 		}
 		await load()
