@@ -4,6 +4,8 @@ Router de Inventario
 Endpoints para consultar productos disponibles en inventario.
 """
 import json
+import sys
+from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
@@ -22,6 +24,15 @@ _STORE_EXCLUDED_TERMS = (
     "herramient",
     "insumo",
 )
+
+
+def _load_store_catalog_sync_module():
+    repo_root = Path(__file__).resolve().parents[3]
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    import scripts.sync_store_catalog_from_inventory_images as sync_module
+
+    return sync_module
 
 
 def _parse_product_meta(description: Optional[str]) -> dict:
@@ -345,6 +356,28 @@ def list_public_catalog(
         })
 
     return result
+
+
+@router.get("/store-catalog/status")
+def get_store_catalog_status(
+    user: dict = Depends(require_permission("inventory", "read"))
+):
+    sync_module = _load_store_catalog_sync_module()
+    return sync_module.build_catalog_status()
+
+
+@router.post("/store-catalog/sync")
+def sync_store_catalog(
+    user: dict = Depends(require_permission("inventory", "update"))
+):
+    sync_module = _load_store_catalog_sync_module()
+    result = sync_module.sync_catalog(apply_changes=True)
+    status_payload = sync_module.build_catalog_status()
+    return {
+        "ok": True,
+        "result": result,
+        "status": status_payload,
+    }
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, include_in_schema=False)

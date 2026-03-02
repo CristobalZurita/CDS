@@ -248,6 +248,73 @@ def ensure_stock_row(session, product: Product) -> Stock:
     return stock
 
 
+def build_catalog_status() -> dict:
+    session = SessionLocal()
+    try:
+        files = sorted(path.name for path in IMAGE_DIR.iterdir() if path.is_file())
+        products = session.query(Product).filter(Product.image_url.like("/images/INVENTARIO/%")).all()
+
+        linked_images = []
+        explicit_store_visible = 0
+        sellable_now = 0
+        with_nonzero_stock = 0
+
+        for product in products:
+            image_url = str(product.image_url or "").strip()
+            if "/images/INVENTARIO/" in image_url:
+                linked_images.append(image_url.split("/images/INVENTARIO/", 1)[1])
+
+            meta, _ = parse_meta(product.description)
+            if meta.get("store_visible") is True:
+                explicit_store_visible += 1
+
+            stock = (
+                session.query(Stock)
+                .filter(
+                    Stock.component_table == "products",
+                    Stock.component_id == product.id,
+                )
+                .first()
+            )
+            quantity = int((stock.quantity if stock else product.quantity) or 0)
+            min_stock = int((stock.minimum_stock if stock else product.min_quantity) or 0)
+
+            available_stock = quantity
+            if stock:
+                available_stock = int(
+                    stock.quantity
+                    - stock.quantity_reserved
+                    - stock.quantity_in_transit
+                    - stock.quantity_damaged
+                    - stock.quantity_under_review
+                    - stock.quantity_internal_use
+                    - stock.quantity_in_work
+                )
+
+            sellable_stock = max(int(available_stock or 0) - int(min_stock or 0), 0)
+            if quantity > 0:
+                with_nonzero_stock += 1
+            if sellable_stock > 0:
+                sellable_now += 1
+
+        file_set = set(files)
+        linked_set = set(linked_images)
+
+        return {
+            "files_count": len(files),
+            "linked_products_count": len(products),
+            "explicit_store_visible_count": explicit_store_visible,
+            "with_nonzero_stock_count": with_nonzero_stock,
+            "sellable_now_count": sellable_now,
+            "pending_images_count": len(file_set - linked_set),
+            "orphan_rows_count": len(linked_set - file_set),
+            "pending_images": sorted(file_set - linked_set),
+            "orphan_rows": sorted(linked_set - file_set),
+        }
+    finally:
+        session.close()
+
+
 def match_existing_product(session, stem: str, used_product_ids: set[int]) -> Product | None:
     for product in session.query(Product).all():
         if int(product.id) in used_product_ids:
