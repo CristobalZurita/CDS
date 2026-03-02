@@ -27,13 +27,14 @@ export function useQuotation() {
    * @returns {Promise<Object>} - Cotización generada
    * @throws {Error} - Si hay error en la solicitud
    */
-  const estimate = async (instrumentId, faults, turnstileToken = null) => {
+  const estimate = async (instrumentId, payloadOrFaults, turnstileToken = null) => {
     if (!instrumentId) {
       error.value = 'Debe seleccionar un instrumento'
       throw new Error('Instrumento no seleccionado')
     }
-    
-    if (!faults || faults.length === 0) {
+
+    const isLegacyFaultList = Array.isArray(payloadOrFaults)
+    if (isLegacyFaultList && payloadOrFaults.length === 0) {
       error.value = 'Debe seleccionar al menos una falla'
       throw new Error('No hay fallas seleccionadas')
     }
@@ -43,10 +44,21 @@ export function useQuotation() {
     lastRequestTime.value = new Date()
     
     try {
+      const requestBody = isLegacyFaultList
+        ? {
+            instrument_id: instrumentId,
+            faults: payloadOrFaults,
+            turnstile_token: turnstileToken,
+          }
+        : {
+            instrument_id: instrumentId,
+            faults: [],
+            ...(payloadOrFaults || {}),
+            turnstile_token: turnstileToken,
+          }
+
       const response = await api.post('/quotations/estimate', {
-        instrument_id: instrumentId,
-        faults: faults,
-        turnstile_token: turnstileToken
+        ...requestBody
       })
       
       const data = response.data?.data || response.data

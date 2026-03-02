@@ -126,58 +126,177 @@
       </div>
     </div>
 
-    <!-- Step 2: Component Template (Checkbox Form) -->
+    <!-- Step 2: Guided Troubleshooting -->
     <div v-if="currentStep === 1" class="step-content">
       <div class="template-section">
-        <h2>Completa la planilla de componentes</h2>
-        <p class="subtitle">Marca todos los elementos que tiene tu instrumento</p>
+        <h2>Describe el problema principal</h2>
+        <p class="subtitle">
+          Responde en cascada sólo lo visible o lo que recuerdas del funcionamiento del equipo.
+        </p>
 
-        <div class="components-grid">
-          <div 
-            v-for="category in componentCategories"
-            :key="category.name"
-            class="component-category"
-          >
-            <h3>
-              <i :class="category.icon"></i>
-              {{ category.name }}
-            </h3>
-            
-            <div class="component-checkboxes">
-              <label 
-                v-for="comp in category.components"
-                :key="comp.id"
-                class="component-checkbox"
-              >
-                <input 
-                  type="checkbox"
-                  :value="comp.id"
-                  v-model="selectedComponents"
-                />
-                <span class="checkbox-custom"></span>
-                <span class="component-label">
-                  {{ comp.name }}
-                  <small v-if="comp.count">× {{ comp.count }}</small>
-                </span>
-                <input 
-                  v-if="comp.hasQuantity && selectedComponents.includes(comp.id)"
-                  type="number"
-                  v-model.number="componentQuantities[comp.id]"
-                  min="1"
-                  max="100"
-                  class="quantity-input"
-                  placeholder="Cantidad"
-                />
-              </label>
-            </div>
+        <div class="guided-form-grid">
+          <div class="guided-card">
+            <label for="diagnostic-power" class="guided-label">¿El equipo enciende?</label>
+            <select
+              id="diagnostic-power"
+              v-model="guidedAnswers.power"
+              class="form-select"
+              data-testid="diagnostic-power-select"
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="no_power">No enciende</option>
+              <option value="intermittent_power">Prende y se apaga / enciende intermitente</option>
+              <option value="powers_on">Sí, enciende</option>
+            </select>
+            <p class="guided-help">
+              Si no enciende, el sistema corta las ramas posteriores y prioriza esa falla como principal.
+            </p>
           </div>
+
+          <div class="guided-card" :class="{ 'guided-card--disabled': branchesBlockedByPower }">
+            <label for="diagnostic-audio" class="guided-label">¿Cómo responde el audio?</label>
+            <select
+              id="diagnostic-audio"
+              v-model="guidedAnswers.audio"
+              class="form-select"
+              data-testid="diagnostic-audio-select"
+              :disabled="branchesBlockedByPower"
+            >
+              <option value="none">Sin novedad</option>
+              <option value="no_audio">No suena</option>
+              <option value="one_side">Suena por un solo lado</option>
+              <option value="distorted">Suena distorsionado</option>
+              <option value="weak">Suena muy bajo</option>
+            </select>
+          </div>
+
+          <div
+            v-if="instrumentMetrics.hasKeyboard"
+            class="guided-card"
+            :class="{ 'guided-card--disabled': branchesBlockedByPower }"
+          >
+            <label for="diagnostic-keyboard" class="guided-label">¿Cómo responde el teclado?</label>
+            <select
+              id="diagnostic-keyboard"
+              v-model="guidedAnswers.keyboard"
+              class="form-select"
+              data-testid="diagnostic-keyboard-select"
+              :disabled="branchesBlockedByPower"
+            >
+              <option value="none">Sin novedad</option>
+              <option value="single_key">Una tecla no suena</option>
+              <option value="multiple_keys">Varias teclas fallan</option>
+              <option value="stuck_keys">Hay teclas pegadas o duras</option>
+            </select>
+          </div>
+
+          <div
+            v-if="instrumentMetrics.controlsCount > 0"
+            class="guided-card"
+            :class="{ 'guided-card--disabled': branchesBlockedByPower }"
+          >
+            <label for="diagnostic-controls" class="guided-label">¿Qué pasa con botones, sliders o perillas?</label>
+            <select
+              id="diagnostic-controls"
+              v-model="guidedAnswers.controls"
+              class="form-select"
+              data-testid="diagnostic-controls-select"
+              :disabled="branchesBlockedByPower"
+            >
+              <option value="none">Sin novedad</option>
+              <option value="single_button">Un botón falla</option>
+              <option value="single_slider">Un slider/fader falla</option>
+              <option value="single_knob">Una perilla/encoder falla</option>
+              <option value="multiple_controls">Hay varios controles con problemas</option>
+            </select>
+          </div>
+
+          <div
+            v-if="instrumentMetrics.hasDisplay"
+            class="guided-card"
+            :class="{ 'guided-card--disabled': branchesBlockedByPower }"
+          >
+            <label for="diagnostic-display" class="guided-label">¿Cómo está la pantalla o display?</label>
+            <select
+              id="diagnostic-display"
+              v-model="guidedAnswers.display"
+              class="form-select"
+              data-testid="diagnostic-display-select"
+              :disabled="branchesBlockedByPower"
+            >
+              <option value="none">Sin novedad</option>
+              <option value="no_display">No muestra nada</option>
+              <option value="low_contrast">Se ve muy tenue</option>
+              <option value="broken_display">Está dañada o quebrada</option>
+            </select>
+          </div>
+
+          <div
+            v-if="instrumentMetrics.hasConnectivity"
+            class="guided-card"
+            :class="{ 'guided-card--disabled': branchesBlockedByPower }"
+          >
+            <label for="diagnostic-connectivity" class="guided-label">¿Hay problemas de conexión?</label>
+            <select
+              id="diagnostic-connectivity"
+              v-model="guidedAnswers.connectivity"
+              class="form-select"
+              data-testid="diagnostic-connectivity-select"
+              :disabled="branchesBlockedByPower"
+            >
+              <option value="none">Sin novedad</option>
+              <option value="midi_issue">MIDI no responde</option>
+              <option value="usb_issue">USB no se conecta</option>
+              <option value="audio_jack_issue">Un conector o jack está fallando</option>
+            </select>
+          </div>
+
+          <div class="guided-card">
+            <label for="diagnostic-cosmetic" class="guided-label">¿Hay daños visibles?</label>
+            <select
+              id="diagnostic-cosmetic"
+              v-model="guidedAnswers.cosmetic"
+              class="form-select"
+              data-testid="diagnostic-cosmetic-select"
+            >
+              <option value="none">Sin daños visibles relevantes</option>
+              <option value="cosmetic_damage">Golpes, piezas sueltas o faltantes</option>
+              <option value="oxidation">Óxido o corrosión visible</option>
+              <option value="water_damage">Señales de humedad o derrame</option>
+              <option value="heavy_damage">Daño visible importante</option>
+            </select>
+          </div>
+        </div>
+
+        <div v-if="branchesBlockedByPower" class="guided-warning" data-testid="diagnostic-branch-warning">
+          El equipo quedó marcado como <strong>no enciende</strong>. Las ramas posteriores se consideran secundarias.
+          Si recuerdas fallas previas, descríbelas en el texto libre.
+        </div>
+
+        <div class="guided-notes">
+          <label for="diagnostic-customer-notes" class="guided-label">
+            Explica con tus palabras qué pasaba antes y qué problema te preocupa más
+          </label>
+          <textarea
+            id="diagnostic-customer-notes"
+            v-model.trim="customerNotes"
+            rows="5"
+            class="form-control"
+            data-testid="diagnostic-customer-notes"
+            placeholder="Ejemplo: antes de dejar de encender, el botón SHIFT fallaba y el audio sonaba por un solo lado."
+          ></textarea>
         </div>
 
         <div class="step-actions">
           <button class="btn-secondary" @click="previousStep">
             <i class="fas fa-arrow-left"></i> Atrás
           </button>
-          <button class="btn-primary btn-large" data-testid="diagnostic-step1-continue" @click="nextStep">
+          <button
+            class="btn-primary btn-large"
+            data-testid="diagnostic-step1-continue"
+            :disabled="!canProceedFromSymptoms"
+            @click="nextStep"
+          >
             Continuar <i class="fas fa-arrow-right"></i>
           </button>
         </div>
@@ -187,8 +306,8 @@
     <!-- Step 3: Interactive Photo Markup -->
     <div v-if="currentStep === 2" class="step-content">
       <div class="markup-section">
-        <h2>Marca las fallas en las fotos</h2>
-        <p class="subtitle">Haz doble clic sobre cada problema para marcarlo</p>
+        <h2>Marca daños visibles o zonas con problema</h2>
+        <p class="subtitle">Este paso es opcional, pero ayuda a orientar mejor la estimación visual</p>
 
         <div class="photo-tabs">
           <button 
@@ -292,9 +411,8 @@
           <button class="btn-secondary" @click="previousStep">
             <i class="fas fa-arrow-left"></i> Atrás
           </button>
-          <button 
+          <button
             class="btn-primary btn-large"
-            :disabled="totalMarkers === 0"
             data-testid="diagnostic-step2-continue"
             @click="nextStep"
           >
@@ -304,34 +422,10 @@
       </div>
     </div>
 
-    <!-- Step 4: Review & Quote -->
+    <!-- Step 4: Review & Range -->
     <div v-if="currentStep === 3" class="step-content">
       <div class="review-section">
-        <h2>Revisión y cotización</h2>
-        
-        <!-- Disclaimer Modal -->
-        <div class="disclaimer-box">
-          <div class="disclaimer-icon">
-            <i class="fas fa-exclamation-triangle"></i>
-          </div>
-          <div class="disclaimer-content">
-            <h3>⚠️ Importante: Cotización Preliminar</h3>
-            <p>
-              Esta es una <strong>estimación preliminar automatizada</strong> basada en 
-              el diagnóstico visual. El costo final puede variar después de la 
-              inspección física en taller.
-            </p>
-            <ul>
-              <li>La revisión física puede revelar fallas adicionales</li>
-              <li>Algunos componentes pueden requerir repuestos especiales</li>
-              <li>Los tiempos de reparación son aproximados</li>
-            </ul>
-            <label class="disclaimer-checkbox">
-              <input type="checkbox" v-model="disclaimerAccepted" />
-              <span>He leído y acepto que esta es una cotización preliminar</span>
-            </label>
-          </div>
-        </div>
+        <h2>Resumen previo a la estimación</h2>
 
         <!-- Summary -->
         <div class="diagnostic-summary">
@@ -350,130 +444,86 @@
             </div>
 
             <div class="summary-item">
-              <strong>Componentes identificados:</strong>
-              <span>{{ selectedComponents.length }}</span>
+              <strong>Perfil del equipo:</strong>
+              <span>{{ instrumentMetrics.sizeLabel }}</span>
             </div>
 
             <div class="summary-item">
-              <strong>Fallas detectadas:</strong>
+              <strong>Síntomas guiados:</strong>
+              <span>{{ effectiveSymptoms.length }}</span>
+            </div>
+
+            <div class="summary-item">
+              <strong>Daños visibles marcados:</strong>
               <span>{{ totalMarkers }}</span>
             </div>
 
             <div class="summary-item">
-              <strong>Fotos del diagnóstico:</strong>
-              <span>{{ uploadedPhotos.length }}</span>
+              <strong>Notas del cliente:</strong>
+              <span>{{ customerNotes ? 'Sí' : 'No' }}</span>
             </div>
           </div>
 
-          <!-- Fault Breakdown -->
+          <!-- Symptom Breakdown -->
           <div class="fault-breakdown">
             <h3>
-              <i class="fas fa-list-check"></i>
-              Desglose de fallas
+              <i class="fas fa-sitemap"></i>
+              Árbol de síntomas considerado
             </h3>
-            
-            <div 
-              v-for="(group, type) in groupedFaults"
-              :key="type"
-              class="fault-group"
-            >
+
+            <div class="fault-group">
               <div class="fault-group-header">
-                <i :class="getFaultIcon(type)"></i>
-                <span>{{ getFaultName(type) }}</span>
-                <span class="count-badge">{{ group.length }}</span>
+                <i class="fas fa-bolt"></i>
+                <span>{{ mainIssueLabel }}</span>
               </div>
               <ul class="fault-list">
-                <li v-for="(fault, idx) in group" :key="idx">
-                  Componente #{{ fault.markerIndex + 1 }} 
-                  ({{ getPhotoViewName(fault.photoIndex) }})
+                <li v-for="symptom in symptomSummaryItems" :key="symptom.id">
+                  {{ symptom.label }}
+                </li>
+                <li v-if="totalMarkers > 0">
+                  {{ totalMarkers }} marca(s) visibles agregadas en fotos
+                </li>
+                <li v-if="customerNotes">
+                  Observaciones del cliente incluidas para revisión
                 </li>
               </ul>
             </div>
-          </div>
 
-          <!-- Quote Result -->
-          <div class="quote-result">
-            <h3>
-              <i class="fas fa-calculator"></i>
-              Cotización estimada
-            </h3>
-            
-            <div v-if="quoteCalculation" class="quote-breakdown">
-              <div class="quote-row">
-                <span>Diagnóstico base:</span>
-                <span class="price">{{ formatPrice(quoteCalculation.baseDiagnostic) }}</span>
-              </div>
-              
-              <div class="quote-row">
-                <span>Reparaciones estimadas:</span>
-                <span class="price">{{ formatPrice(quoteCalculation.repairCost) }}</span>
-              </div>
-              
-              <div class="quote-row">
-                <span>Complejidad ({{ quoteCalculation.complexityFactor }}×):</span>
-                <span class="price">{{ formatPrice(quoteCalculation.complexityAdjustment) }}</span>
-              </div>
-              
-              <div class="quote-row subtotal">
-                <span>Subtotal:</span>
-                <span class="price">{{ formatPrice(quoteCalculation.subtotal) }}</span>
-              </div>
-              
-              <div class="quote-row total">
-                <span>Total estimado:</span>
-                <span class="price-large">{{ formatPrice(quoteCalculation.total) }}</span>
-              </div>
-              
-              <div class="time-estimate">
-                <i class="fas fa-clock"></i>
-                Tiempo estimado: {{ quoteCalculation.estimatedDays }} días hábiles
-              </div>
-            </div>
-
-            <div class="quote-actions">
-              <button 
-                class="btn-primary btn-large"
-                :disabled="!disclaimerAccepted"
-                @click="submitDiagnostic"
-              >
-                <i class="fas fa-paper-plane"></i>
-                Enviar diagnóstico
-              </button>
-              <button class="btn-secondary" @click="downloadReport">
-                <i class="fas fa-download"></i>
-                Descargar PDF
-              </button>
+            <div class="guided-warning guided-warning--soft">
+              Se mostrará un rango referencial entre <strong>{{ formatPrice(40000) }}</strong> y
+              <strong>{{ formatPrice(150000) }}</strong>, sujeto a aceptación previa del aviso legal.
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Success Modal -->
-    <div v-if="showSuccessModal" class="modal-overlay" @click="closeSuccessModal">
-      <div class="modal-content success-modal" @click.stop>
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
+        <div class="step-actions">
+          <button class="btn-secondary" @click="previousStep">
+            <i class="fas fa-arrow-left"></i> Atrás
+          </button>
+          <button
+            class="btn-primary btn-large"
+            data-testid="diagnostic-step3-continue"
+            @click="submitDiagnostic"
+          >
+            Ver estimación referencial <i class="fas fa-arrow-right"></i>
+          </button>
         </div>
-        <h2>¡Diagnóstico enviado!</h2>
-        <p>Hemos recibido tu solicitud de diagnóstico.</p>
-        <p>Te contactaremos pronto para coordinar la revisión en taller.</p>
-        <div class="reference-code">
-          <strong>Código de referencia:</strong>
-          <code>{{ referenceCode }}</code>
-        </div>
-        <button class="btn-primary" @click="closeSuccessModal">
-          Entendido
-        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, reactive } from 'vue'
 import { useInstrumentsCatalog } from '@/composables/useInstrumentsCatalog'
 import InstrumentCarousel from '@/components/InstrumentCarousel.vue'
+
+const props = defineProps({
+  initialInstrument: {
+    type: Object,
+    default: null,
+  },
+})
 
 const emit = defineEmits(['complete'])
 
@@ -487,21 +537,19 @@ type DiagnosticPhoto = {
 }
 
 // Steps
-const steps = ['Selección', 'Componentes', 'Marcado', 'Cotización']
+const steps = ['Selección', 'Síntomas', 'Marcado', 'Resumen']
 const currentStep = ref(0)
 
 // Step 1: Instrument Selection
 const catalog = useInstrumentsCatalog()
-const searchQuery = ref('')
 const selectedInstrument = ref(null)
 const uploadedPhotos = ref<DiagnosticPhoto[]>([])
 const fileInput = ref(null)
 
-// Brand/Model selection (NEW - ADITIVO)
+// Brand/Model selection
 const selectedBrandId = ref('')
 const selectedModelId = ref('')
-const selectedPhotoVariant = ref(0)
-const imageVariants = ref<string[]>([]) // Loaded dynamically
+const imageVariants = ref<string[]>([])
 const isLoadingVariants = ref(false)
 const availableBrands = computed(() => catalog.getAllBrands(true))
 const availableModels = computed(() => {
@@ -529,62 +577,43 @@ const selectedInstrumentForCarousel = computed(() => {
 
 const instrumentFoundInDB = computed(() => selectedInstrumentForCarousel.value !== null)
 
-const filteredInstruments = ref([])
-const allInstruments = computed(() => {
-  const brands = catalog.getAllBrands(true)
-  const list = []
-  brands.forEach(b => {
-    list.push(...catalog.getInstrumentsByBrand(b.id))
-  })
-  return list
+// Step 2: Guided troubleshooting
+const guidedAnswers = reactive({
+  power: '',
+  audio: 'none',
+  keyboard: 'none',
+  controls: 'none',
+  display: 'none',
+  connectivity: 'none',
+  cosmetic: 'none',
 })
+const customerNotes = ref('')
 
-// Step 2: Component Template
-const componentCategories = ref([
-  {
-    name: 'Teclas',
-    icon: 'fas fa-keyboard',
-    components: [
-      { id: 'keys', name: 'Teclas', hasQuantity: true },
-      { id: 'keybed', name: 'Lecho de teclas', hasQuantity: false },
-      { id: 'aftertouch', name: 'Aftertouch', hasQuantity: false },
-    ]
-  },
-  {
-    name: 'Controles',
-    icon: 'fas fa-sliders-h',
-    components: [
-      { id: 'knobs', name: 'Perillas rotatorias', hasQuantity: true },
-      { id: 'sliders', name: 'Deslizantes/Faders', hasQuantity: true },
-      { id: 'buttons', name: 'Botones', hasQuantity: true },
-      { id: 'switches', name: 'Interruptores', hasQuantity: true },
-    ]
-  },
-  {
-    name: 'Conectividad',
-    icon: 'fas fa-plug',
-    components: [
-      { id: 'audio_out', name: 'Salidas de audio', hasQuantity: true },
-      { id: 'audio_in', name: 'Entradas de audio', hasQuantity: true },
-      { id: 'midi', name: 'Puertos MIDI', hasQuantity: false },
-      { id: 'cv_gate', name: 'CV/Gate', hasQuantity: true },
-      { id: 'usb', name: 'USB', hasQuantity: false },
-    ]
-  },
-  {
-    name: 'Otros',
-    icon: 'fas fa-cog',
-    components: [
-      { id: 'display', name: 'Pantalla/Display', hasQuantity: false },
-      { id: 'power', name: 'Fuente de poder', hasQuantity: false },
-      { id: 'pedals', name: 'Pedales', hasQuantity: true },
-      { id: 'wheels', name: 'Ruedas (pitch/mod)', hasQuantity: false },
-    ]
-  }
-])
-
-const selectedComponents = ref([])
-const componentQuantities = ref({})
+const symptomCatalog = {
+  no_power: 'El equipo no enciende',
+  intermittent_power: 'El encendido es intermitente',
+  no_audio: 'No sale audio',
+  one_side: 'El audio sale por un solo lado',
+  distorted: 'El audio sale distorsionado',
+  weak: 'El audio sale débil',
+  single_key: 'Una tecla no responde',
+  multiple_keys: 'Varias teclas fallan',
+  stuck_keys: 'Hay teclas pegadas o duras',
+  single_button: 'Un botón falla',
+  single_slider: 'Un slider o fader falla',
+  single_knob: 'Una perilla o encoder falla',
+  multiple_controls: 'Hay varios controles con problemas',
+  no_display: 'La pantalla no muestra nada',
+  low_contrast: 'La pantalla se ve tenue',
+  broken_display: 'La pantalla está dañada',
+  midi_issue: 'La conexión MIDI falla',
+  usb_issue: 'La conexión USB falla',
+  audio_jack_issue: 'Hay un conector o jack fallando',
+  cosmetic_damage: 'Se observan golpes o piezas faltantes',
+  oxidation: 'Se ve óxido o corrosión',
+  water_damage: 'Hay señales de humedad o derrame',
+  heavy_damage: 'Hay daño visible importante',
+}
 
 // Step 3: Photo Markup
 const activePhotoIndex = ref(0)
@@ -592,33 +621,85 @@ const selectedFaultType = ref('broken')
 const markupCanvas = ref(null)
 const canvasContainer = ref(null)
 const canvasDimensions = ref({ width: 0, height: 0 })
-const photoMarkers = ref([]) // Array of arrays, one per photo
+const photoMarkers = ref([])
 
 const commonFaults = ref([
-  { id: 'broken', name: 'Roto', icon: 'fas fa-wrench', description: 'Componente roto o dañado', basePrice: 15000 },
-  { id: 'missing', name: 'Faltante', icon: 'fas fa-minus-circle', description: 'Componente faltante', basePrice: 20000 },
-  { id: 'loose', name: 'Suelto', icon: 'fas fa-compress-arrows-alt', description: 'Componente flojo o inestable', basePrice: 8000 },
-  { id: 'noisy', name: 'Ruidoso', icon: 'fas fa-volume-up', description: 'Ruido o estática', basePrice: 12000 },
-  { id: 'stuck', name: 'Atascado', icon: 'fas fa-lock', description: 'Componente atascado', basePrice: 10000 },
-  { id: 'oxidized', name: 'Oxidado', icon: 'fas fa-flask', description: 'Oxidación o corrosión', basePrice: 18000 },
+  { id: 'broken', name: 'Golpe o daño visible', icon: 'fas fa-triangle-exclamation', description: 'Zona quebrada, golpeada o rota' },
+  { id: 'missing', name: 'Pieza faltante', icon: 'fas fa-minus-circle', description: 'Falta un botón, tapa o parte visible' },
+  { id: 'button_damage', name: 'Tecla o botón dañado', icon: 'fas fa-keyboard', description: 'Elemento externo visible con desgaste o daño' },
+  { id: 'connector_damage', name: 'Conector dañado', icon: 'fas fa-plug-circle-exclamation', description: 'Jack, puerto o conector visible dañado' },
+  { id: 'display_damage', name: 'Pantalla dañada', icon: 'fas fa-display', description: 'Display quebrado o visible con daño' },
+  { id: 'oxidized', name: 'Óxido o corrosión', icon: 'fas fa-flask', description: 'Corrosión visible' },
 ])
-
-// Step 4: Review
-const disclaimerAccepted = ref(false)
-const showSuccessModal = ref(false)
-const referenceCode = ref('')
 
 // Computed
 const canProceed = computed(() => {
-  // If instrument found in DB, can proceed
   if (selectedInstrument.value !== null && instrumentFoundInDB.value) {
     return true
   }
-  // If instrument NOT in DB, need at least 2 uploaded photos
   if (selectedInstrument.value !== null && !instrumentFoundInDB.value && uploadedPhotos.value.length >= 2) {
     return true
   }
   return false
+})
+
+const instrumentMetrics = computed(() => {
+  const instrument = selectedInstrument.value || {}
+  const modelText = `${instrument.model || instrument.modelo || ''} ${instrument.type || ''}`.toLowerCase()
+  const components = instrument.components || {}
+  const keyboardless = ['rack', 'module', 'desktop', 'expander'].some((term) => modelText.includes(term))
+  const keyMatch = modelText.match(/\b(25|32|37|49|61|73|76|88)\b/)
+  const keyCount = keyboardless ? 0 : Number(keyMatch?.[1] || 61)
+  const controlsCount =
+    Number(components.botones || 0) +
+    Number(components.faders || 0) +
+    Number(components.encoders_rotativos || 0)
+
+  let sizeLabel = 'sin teclado'
+  if (!keyboardless && keyCount <= 37) sizeLabel = 'teclado chico'
+  else if (!keyboardless && keyCount <= 61) sizeLabel = 'teclado mediano'
+  else if (!keyboardless) sizeLabel = 'teclado grande'
+
+  return {
+    hasKeyboard: !keyboardless,
+    keyCount,
+    controlsCount,
+    hasDisplay: Boolean(components.lcd),
+    hasConnectivity: Boolean(components.usb || components.midi_din || components.salidas_audio),
+    sizeLabel,
+  }
+})
+
+const branchesBlockedByPower = computed(() => guidedAnswers.power === 'no_power')
+
+const effectiveSymptoms = computed(() => {
+  const symptoms = []
+
+  if (guidedAnswers.power === 'no_power') {
+    symptoms.push('no_power')
+  } else if (guidedAnswers.power === 'intermittent_power') {
+    symptoms.push('intermittent_power')
+  }
+
+  if (!branchesBlockedByPower.value) {
+    ;['audio', 'keyboard', 'controls', 'display', 'connectivity'].forEach((field) => {
+      const value = String(guidedAnswers[field] || '')
+      if (value && value !== 'none') {
+        symptoms.push(value)
+      }
+    })
+  }
+
+  if (guidedAnswers.cosmetic && guidedAnswers.cosmetic !== 'none') {
+    symptoms.push(guidedAnswers.cosmetic)
+  }
+
+  return symptoms
+})
+
+const canProceedFromSymptoms = computed(() => {
+  if (!guidedAnswers.power) return false
+  return effectiveSymptoms.value.length > 0 || Boolean(customerNotes.value.trim())
 })
 
 const currentPhotoMarkers = computed(() => {
@@ -640,50 +721,18 @@ const totalMarkers = computed(() => {
   return allMarkers.value.length
 })
 
-const groupedFaults = computed(() => {
-  const grouped = {}
-  allMarkers.value.forEach(marker => {
-    if (!grouped[marker.type]) {
-      grouped[marker.type] = []
-    }
-    grouped[marker.type].push(marker)
-  })
-  return grouped
+const mainIssueLabel = computed(() => {
+  if (!effectiveSymptoms.value.length) {
+    return 'Revisión general'
+  }
+  return symptomCatalog[effectiveSymptoms.value[0]] || 'Revisión general'
 })
 
-const quoteCalculation = computed(() => {
-  if (totalMarkers.value === 0) return null
-
-  const baseDiagnostic = 25000 // Base diagnostic fee
-  
-  // Calculate repair cost based on marked faults
-  let repairCost = 0
-  allMarkers.value.forEach(marker => {
-    const fault = commonFaults.value.find(f => f.id === marker.type)
-    if (fault) {
-      repairCost += fault.basePrice
-    }
-  })
-
-  // Complexity factor based on number of faults and components
-  const complexityFactor = 1 + (totalMarkers.value * 0.05) + (selectedComponents.value.length * 0.02)
-  const complexityAdjustment = repairCost * (complexityFactor - 1)
-  
-  const subtotal = baseDiagnostic + repairCost + complexityAdjustment
-  const total = Math.round(subtotal)
-
-  // Estimate days based on complexity
-  const estimatedDays = Math.max(3, Math.min(15, Math.ceil(totalMarkers.value * 0.5 + selectedComponents.value.length * 0.3)))
-
-  return {
-    baseDiagnostic,
-    repairCost,
-    complexityFactor: complexityFactor.toFixed(2),
-    complexityAdjustment,
-    subtotal,
-    total,
-    estimatedDays
-  }
+const symptomSummaryItems = computed(() => {
+  return effectiveSymptoms.value.map((symptomId) => ({
+    id: symptomId,
+    label: symptomCatalog[symptomId] || symptomId,
+  }))
 })
 
 const getPhotoViewByIndex = (index: number): DiagnosticPhotoView => {
@@ -710,56 +759,44 @@ const buildCatalogPhotos = (urls: string[]): DiagnosticPhoto[] =>
 
 // Methods
 const onBrandChange = () => {
-  // Reset model selection when brand changes
   selectedModelId.value = ''
   selectedInstrument.value = null
   imageVariants.value = []
-  selectedPhotoVariant.value = 0
   replaceDiagnosticPhotos([])
 }
 
+const applySelectedInstrument = async (model) => {
+  if (!model) return
+
+  selectedInstrument.value = model
+  selectedBrandId.value = model.brand || ''
+  selectedModelId.value = model.id || ''
+
+  isLoadingVariants.value = true
+  try {
+    imageVariants.value = await catalog.getInstrumentImageVariants(model)
+  } catch (error) {
+    console.warn('Error loading image variants:', error)
+    imageVariants.value = []
+  } finally {
+    isLoadingVariants.value = false
+  }
+
+  if (instrumentFoundInDB.value) {
+    const fallbackImage = catalog.getInstrumentImage(model)
+    const catalogPhotos = buildCatalogPhotos(
+      imageVariants.value.length > 0 ? imageVariants.value : [fallbackImage]
+    )
+    replaceDiagnosticPhotos(catalogPhotos)
+  }
+}
+
 const onModelChange = async () => {
-  // Select the instrument when model is chosen
-  if (selectedModelId.value && availableModels.value.length > 0) {
-    const model = availableModels.value.find(m => m.id === selectedModelId.value)
-    if (model) {
-      selectedInstrument.value = model
-      selectedPhotoVariant.value = 0
-      
-      // Load image variants asynchronously
-      isLoadingVariants.value = true
-      try {
-        imageVariants.value = await catalog.getInstrumentImageVariants(model)
-      } catch (error) {
-        console.warn('Error loading image variants:', error)
-        imageVariants.value = []
-      } finally {
-        isLoadingVariants.value = false
-      }
-      
-      // Reuse catalog photos directly when the instrument already exists.
-      if (instrumentFoundInDB.value) {
-        const fallbackImage = catalog.getInstrumentImage(model)
-        const catalogPhotos = buildCatalogPhotos(
-          imageVariants.value.length > 0 ? imageVariants.value : [fallbackImage]
-        )
-        replaceDiagnosticPhotos(catalogPhotos)
-      }
-    }
+  if (!selectedModelId.value || availableModels.value.length === 0) return
+  const model = availableModels.value.find(m => m.id === selectedModelId.value)
+  if (model) {
+    await applySelectedInstrument(model)
   }
-}
-
-const filterInstruments = () => {
-  const query = searchQuery.value.toLowerCase()
-  if (!query || query.trim() === '') {
-    filteredInstruments.value = allInstruments.value
-    return
-  }
-  filteredInstruments.value = catalog.searchInstruments(query)
-}
-
-const selectInstrument = (instrument) => {
-  selectedInstrument.value = instrument
 }
 
 const handleFileUpload = (event) => {
@@ -790,14 +827,6 @@ const processFiles = (files) => {
       reader.readAsDataURL(file)
     }
   })
-}
-
-const removePhoto = (index) => {
-  uploadedPhotos.value.splice(index, 1)
-  photoMarkers.value.splice(index, 1)
-  if (activePhotoIndex.value >= uploadedPhotos.value.length) {
-    activePhotoIndex.value = Math.max(0, uploadedPhotos.value.length - 1)
-  }
 }
 
 const initCanvas = () => {
@@ -869,7 +898,6 @@ const addMarker = (event) => {
 }
 
 const updateCursor = () => {
-  // Optional: Show preview of marker on hover
 }
 
 const removeMarker = (index) => {
@@ -888,9 +916,7 @@ const undoLastMarker = () => {
   }
 }
 
-const editMarker = () => {
-  // Optional: Open edit modal for marker
-}
+const editMarker = () => {}
 
 const focusMarker = (photoIndex) => {
   activePhotoIndex.value = photoIndex
@@ -942,44 +968,30 @@ const previousStep = () => {
 }
 
 const submitDiagnostic = async () => {
-  // Generate reference code
-  referenceCode.value = 'DIAG-' + Date.now().toString(36).toUpperCase()
-  
-  // Here you would send data to backend
   const diagnosticData = {
     instrument: selectedInstrument.value,
-    components: selectedComponents.value,
-    quantities: componentQuantities.value,
-    photos: uploadedPhotos.value.map(p => ({
-      view: p.view,
-      markers: photoMarkers.value[uploadedPhotos.value.indexOf(p)]
+    instrument_id: selectedInstrument.value?.id || '',
+    selected_symptoms: effectiveSymptoms.value,
+    guided_answers: { ...guidedAnswers },
+    customer_notes: customerNotes.value.trim(),
+    visual_issue_count: totalMarkers.value,
+    marked_faults: allMarkers.value.map((marker) => marker.type),
+    photos: uploadedPhotos.value.map((photo, index) => ({
+      view: photo.view,
+      markers: photoMarkers.value[index] || [],
     })),
-    quote: quoteCalculation.value,
-    referenceCode: referenceCode.value,
-    timestamp: new Date().toISOString()
+    summary: {
+      main_issue: mainIssueLabel.value,
+      size_label: instrumentMetrics.value.sizeLabel,
+      key_count: instrumentMetrics.value.keyCount,
+      controls_count: instrumentMetrics.value.controlsCount,
+      symptom_count: effectiveSymptoms.value.length,
+      notes_present: Boolean(customerNotes.value.trim()),
+    },
+    timestamp: new Date().toISOString(),
   }
-  
-  const faultTypes = Array.from(new Set(allMarkers.value.map(m => m.type)))
-  emit('complete', faultTypes)
-  console.log('Submitting diagnostic:', diagnosticData)
-  
-  // Show success modal
-  showSuccessModal.value = true
-}
 
-const downloadReport = () => {
-  // Generate PDF report (would use library like jsPDF)
-  alert('Descargando reporte PDF...')
-}
-
-const closeSuccessModal = () => {
-  showSuccessModal.value = false
-  // Reset form
-  currentStep.value = 0
-  selectedInstrument.value = null
-  replaceDiagnosticPhotos([])
-  selectedComponents.value = []
-  disclaimerAccepted.value = false
+  emit('complete', diagnosticData)
 }
 
 // Watch for photo changes to reinitialize canvas
@@ -989,5 +1001,26 @@ watch(activePhotoIndex, () => {
   }
 })
 
-filteredInstruments.value = allInstruments.value
+watch(
+  () => guidedAnswers.power,
+  (value) => {
+    if (value === 'no_power') {
+      guidedAnswers.audio = 'none'
+      guidedAnswers.keyboard = 'none'
+      guidedAnswers.controls = 'none'
+      guidedAnswers.display = 'none'
+      guidedAnswers.connectivity = 'none'
+    }
+  }
+)
+
+watch(
+  () => props.initialInstrument,
+  async (instrument) => {
+    if (!instrument) return
+    await applySelectedInstrument(instrument)
+    currentStep.value = 1
+  },
+  { immediate: true }
+)
 </script>

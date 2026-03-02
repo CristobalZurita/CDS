@@ -14,10 +14,11 @@
     <div v-if="step === 2" class="step-container">
       <div class="step-header">
         <h1>🔍 Diagnóstico Visual</h1>
-        <p>Paso 2 de 4 - Selecciona las fallas que observas</p>
+        <p>Paso 2 de 4 - Responde el flujo guiado y marca lo visible</p>
       </div>
 
       <InteractiveInstrumentDiagnostic
+        :initial-instrument="selectedInstrument"
         @complete="onDiagnosticComplete"
       />
     </div>
@@ -37,13 +38,14 @@
     <!-- Step 4: Quotation Result -->
     <div v-if="step === 4" class="step-container">
       <div class="step-header">
-        <h1>💰 Tu Cotización</h1>
-        <p>Paso 4 de 4 - Resultado de estimación</p>
+        <h1>💰 Tu Estimación Referencial</h1>
+        <p>Paso 4 de 4 - Resultado orientativo del cotizador</p>
       </div>
 
       <QuotationResult
         :quotation="quotation"
         :loading="loading"
+        :error="error"
         @new-quote="resetAll"
         @schedule="goToSchedule"
       />
@@ -66,12 +68,12 @@ import QuotationResult from '@/vue/components/quotation/QuotationResult.vue'
 
 const router = useRouter()
 const quotationStore = useQuotationStore()
-const { quotation, loading, estimate, reset } = useQuotation()
+const { quotation, loading, error, estimate, reset } = useQuotation()
 
 // State
 const step = ref(1)
 const selectedInstrument = ref(null)
-const selectedFaults = ref([])
+const diagnosticPayload = ref(null)
 const turnstileToken = ref('')
 
 /**
@@ -85,9 +87,9 @@ const onInstrumentSelected = (instrument) => {
 /**
  * Step 2: User selects faults via diagnostic wizard
  */
-const onDiagnosticComplete = (faults) => {
-  selectedFaults.value = faults
-  quotationStore.setFaults(faults)
+const onDiagnosticComplete = (payload) => {
+  diagnosticPayload.value = payload
+  quotationStore.setFaults(payload?.selected_symptoms || [])
   step.value = 3
 }
 
@@ -100,7 +102,7 @@ const onDisclaimerAccepted = async () => {
   }
   step.value = 4
   try {
-    await estimate(selectedInstrument.value.id, selectedFaults.value, turnstileToken.value)
+    await estimate(selectedInstrument.value.id, diagnosticPayload.value || [], turnstileToken.value)
   } catch (err) {
     // Error will be shown in QuotationResult component
     console.error('Error generating quotation:', err)
@@ -112,7 +114,8 @@ const onDisclaimerAccepted = async () => {
  */
 const resetAll = () => {
   selectedInstrument.value = null
-  selectedFaults.value = []
+  diagnosticPayload.value = null
+  turnstileToken.value = ''
   reset()
   step.value = 1
 }

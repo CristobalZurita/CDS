@@ -18,9 +18,9 @@
       <!-- Header -->
       <div class="result-header success-gradient">
         <div class="header-content">
-          <h2>✓ Cotización Generada</h2>
+          <h2>✓ Estimación Referencial Generada</h2>
           <p class="instrument-name">{{ quotation.instrument_name }}</p>
-          <p class="tier-badge">{{ quotation.tier_label }}</p>
+          <p class="tier-badge">{{ quotation.summary?.range_label || 'Rango referencial' }}</p>
         </div>
       </div>
 
@@ -31,53 +31,46 @@
           <h3>Rango de Precio Estimado</h3>
           <div class="price-range">
             <div class="price-box min-price">
-              <span class="label">Mínimo</span>
+              <span class="label">Desde</span>
               <span class="amount">${{ formatPrice(quotation.min_price) }}</span>
             </div>
             <div class="price-box max-price">
-              <span class="label">Máximo</span>
+              <span class="label">Hasta</span>
               <span class="amount">${{ formatPrice(quotation.max_price) }}</span>
             </div>
           </div>
           <p class="price-note">
-            Rango base calculado: -20% a +30% del valor estimado
+            Este rango es orientativo. El valor real sólo se define después de la revisión física del equipo.
           </p>
         </div>
 
-        <!-- Breakdown Section -->
         <div class="breakdown-section">
-          <h3>Desglose de Fallas</h3>
+          <h3>Factores considerados</h3>
           <div class="breakdown-list">
-            <div v-for="fault in quotation.breakdown" :key="fault.fault_id" class="breakdown-item">
+            <div class="breakdown-item">
               <div class="fault-info">
-                <span class="fault-name">{{ fault.name }}</span>
-                <span v-if="fault.is_precedence" class="precedence-badge">Bloqueador</span>
+                <span class="fault-name">Perfil del equipo</span>
               </div>
-              <span class="fault-price">${{ formatPrice(fault.base_price) }}</span>
+              <span class="fault-price">{{ quotation.summary?.size_label || 'Equipo a revisar' }}</span>
             </div>
-          </div>
-          <div class="breakdown-total">
-            <span>Subtotal (× {{ quotation.multiplier }} por tier)</span>
-            <span>${{ formatPrice(quotation.base_total * quotation.multiplier) }}</span>
-          </div>
-        </div>
-
-        <!-- 50% Rule Warning -->
-        <div
-          v-if="quotation.exceeds_recommendation"
-          class="warning-box"
-        >
-          <span class="warning-icon">⚠️</span>
-          <div>
-            <strong>Costo excede el 50% del valor del instrumento</strong>
-            <p>
-              El precio máximo (${{ formatPrice(quotation.max_price) }})
-              supera nuestro compromiso de máximo 50% del valor
-              (${{ formatPrice(quotation.max_recommended) }}).
-            </p>
-            <p>
-              Considere si es rentable reparar versus comprar otro equipo.
-            </p>
+            <div class="breakdown-item">
+              <div class="fault-info">
+                <span class="fault-name">Síntomas guiados</span>
+              </div>
+              <span class="fault-price">{{ quotation.summary?.selected_symptom_count || 0 }}</span>
+            </div>
+            <div class="breakdown-item">
+              <div class="fault-info">
+                <span class="fault-name">Daños visibles marcados</span>
+              </div>
+              <span class="fault-price">{{ quotation.summary?.visual_issue_count || 0 }}</span>
+            </div>
+            <div class="breakdown-item">
+              <div class="fault-info">
+                <span class="fault-name">Observaciones del cliente</span>
+              </div>
+              <span class="fault-price">{{ quotation.summary?.notes_present ? 'Sí' : 'No' }}</span>
+            </div>
           </div>
         </div>
 
@@ -86,27 +79,9 @@
           <p>{{ quotation.disclaimer }}</p>
         </div>
 
-        <!-- Budget Info -->
-        <div class="budget-info">
-          <h3>Presupuesto Formal</h3>
-          <div class="budget-details">
-            <p>
-              Costo: <strong>${{ formatPrice(quotation.budget_cost) }}</strong>
-            </p>
-            <ul>
-              <li>
-                <strong>ABONABLE:</strong> Se descuenta del total si procede con reparación
-              </li>
-              <li>
-                <strong>NO REEMBOLSABLE:</strong> Si rechaza la reparación, queda como pago
-              </li>
-            </ul>
-          </div>
-        </div>
-
         <!-- Timestamp -->
         <p class="timestamp">
-          Cotización generada: {{ formatDateTime(quotation.created_at) }}
+          Estimación generada: {{ formatDateTime(quotation.created_at) }}
         </p>
       </div>
 
@@ -124,8 +99,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-
 const props = defineProps({
   quotation: {
     type: Object,

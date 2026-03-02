@@ -16,7 +16,17 @@ interface QuotationResponse {
   min_price: number
   max_price: number
   exceeds_recommendation?: boolean
+  summary?: Record<string, any>
+  disclaimer?: string
   [key: string]: any
+}
+
+interface GuidedQuotationPayload {
+  selected_symptoms?: string[]
+  guided_answers?: Record<string, any>
+  customer_notes?: string
+  visual_issue_count?: number
+  marked_faults?: string[]
 }
 
 interface PriceRange {
@@ -36,7 +46,11 @@ export interface UseQuotationComposable {
   lastRequestTime: Ref<Date | null>
 
   // Methods
-  estimate: (instrumentId: string, faults: string[], turnstileToken?: string | null) => Promise<QuotationResponse>
+  estimate: (
+    instrumentId: string,
+    payloadOrFaults: string[] | GuidedQuotationPayload,
+    turnstileToken?: string | null
+  ) => Promise<QuotationResponse>
   reset: () => void
   copyPriceRange: () => boolean
 
@@ -72,7 +86,7 @@ export function useQuotation(): UseQuotationComposable {
    */
   const estimate = async (
     instrumentId: string,
-    faults: string[],
+    payloadOrFaults: string[] | GuidedQuotationPayload,
     turnstileToken: string | null = null
   ): Promise<QuotationResponse> => {
     if (!instrumentId) {
@@ -80,7 +94,8 @@ export function useQuotation(): UseQuotationComposable {
       throw new Error('Instrumento no seleccionado')
     }
 
-    if (!faults || faults.length === 0) {
+    const isLegacyFaultList = Array.isArray(payloadOrFaults)
+    if (isLegacyFaultList && payloadOrFaults.length === 0) {
       error.value = 'Debe seleccionar al menos una falla'
       throw new Error('No hay fallas seleccionadas')
     }
@@ -90,10 +105,21 @@ export function useQuotation(): UseQuotationComposable {
     lastRequestTime.value = new Date()
 
     try {
+      const requestBody = isLegacyFaultList
+        ? {
+            instrument_id: instrumentId,
+            faults: payloadOrFaults,
+            turnstile_token: turnstileToken,
+          }
+        : {
+            instrument_id: instrumentId,
+            faults: [],
+            ...payloadOrFaults,
+            turnstile_token: turnstileToken,
+          }
+
       const response = await post<QuotationResponse>('/quotations/estimate', {
-        instrument_id: instrumentId,
-        faults: faults,
-        turnstile_token: turnstileToken
+        ...requestBody,
       })
 
       const data = response.data.data || response.data

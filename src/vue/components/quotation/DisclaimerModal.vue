@@ -1,12 +1,11 @@
 <template>
   <Transition name="fade">
-    <div v-if="show" class="disclaimer-overlay">
+      <div v-if="show" class="disclaimer-overlay">
       <div class="disclaimer-modal" @click.stop>
         <!-- Header -->
         <div class="disclaimer-header">
           <span class="warning-icon">⚠️</span>
-          <h2>IMPORTANTE - LEA ANTES DE CONTINUAR</h2>
-          <button @click="$emit('cancel')" class="close-btn">&times;</button>
+          <h2>IMPORTANTE - ESTIMACIÓN REFERENCIAL</h2>
         </div>
 
         <!-- Content -->
@@ -17,22 +16,16 @@
 
           <ul class="disclaimer-list">
             <li>
-              El precio final se confirma tras revisión presencial del equipo en nuestro taller.
+              El valor mostrado es sólo una referencia preliminar obtenida desde información visible y respuestas del usuario.
             </li>
             <li>
-              El diagnóstico completo requiere abrir el instrumento, lo que puede revelar fallas
-              adicionales no detectables externamente.
+              El diagnóstico real requiere revisión física en taller y puede revelar fallas adicionales o causas distintas.
             </li>
             <li>
-              El presupuesto formal tiene un costo de <strong>$20.000 CLP</strong>, que es:
-              <ul class="sub-list">
-                <li><strong>ABONABLE:</strong> Se descuenta del total si decide reparar</li>
-                <li><strong>NO REEMBOLSABLE:</strong> Queda como pago por diagnóstico si rechaza</li>
-              </ul>
+              El rango puede cambiar según tamaño del equipo, controles, síntomas acumulados y daños no visibles externamente.
             </li>
             <li>
-              <strong>Compromiso CDS:</strong> Nunca cobramos más del 50% del valor de mercado
-              actual del instrumento.
+              Esta pantalla no representa una promesa comercial ni un presupuesto formal definitivo.
             </li>
           </ul>
 
@@ -45,7 +38,7 @@
                 class="checkbox-input"
               />
               <span class="checkbox-text">
-                He leído y acepto las condiciones anteriores
+                Entiendo que esta estimación es sólo referencial y no representa el valor final real
               </span>
             </label>
           </div>
@@ -62,7 +55,7 @@
             class="btn-accept"
             :class="{ 'btn-accept--disabled': !accepted }"
           >
-            Continuar y Ver Cotización →
+            Continuar y Ver Estimación →
           </button>
         </div>
       </div>
