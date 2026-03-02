@@ -67,7 +67,7 @@ def _store_visible_from_meta(meta: dict, product: Product, category_name: Option
         return False
     if "store_visible" in meta:
         return bool(meta.get("store_visible"))
-    return enabled
+    return False
 
 
 def _merge_product_meta(product: Product, payload: dict) -> Optional[str]:
