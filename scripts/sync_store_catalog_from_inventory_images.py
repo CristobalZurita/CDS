@@ -1,0 +1,404 @@
+#!/usr/bin/env python3
+"""
+Sincroniza el catalogo de tienda usando la carpeta public/images/INVENTARIO.
+
+- Reutiliza productos existentes cuando el nombre/SKU calza con la imagen.
+- Si no existe un producto razonable, crea uno derivado del nombre del archivo.
+- Publica el producto en tienda y asigna un precio base de 1000 CLP si aun no tiene precio.
+- No inventa stock: conserva cantidades reales o crea stock en 0 para items nuevos.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+import unicodedata
+from dataclasses import dataclass
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+BACKEND_ROOT = ROOT / "backend"
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
+
+from app.core.database import SessionLocal  # type: ignore  # noqa: E402
+from app.models.category import Category  # type: ignore  # noqa: E402
+from app.models.inventory import Product  # type: ignore  # noqa: E402
+from app.models.stock import Stock  # type: ignore  # noqa: E402
+
+
+IMAGE_DIR = ROOT / "public" / "images" / "INVENTARIO"
+GENERIC_PRICE = 1000
+SKIP_FILES = {"pngwing.com"}
+
+
+@dataclass(frozen=True)
+class ImageRule:
+    category: str
+    aliases: tuple[str, ...] = ()
+
+
+FILE_RULES: dict[str, ImageRule] = {
+    "3PDT": ImageRule("otros", ("3PDT", "SWITCH 3PDT")),
+    "AUDIO_ADAPTADOR_3_5_A_6_3": ImageRule("conectores", ("ADAPTADOR 3.5 A 6.3", "ADAPTADOR TS", "ADAPTADOR TRS")),
+    "AUDIO_JACK_CHASIS_MONO_6_3": ImageRule("conectores", ("JACK 1/4 MONO", "JACK 6.3 MONO")),
+    "AUDIO_JACK_CHASIS_ST_6_3": ImageRule("conectores", ("JACK 1/4 ESTEREO", "JACK 6.3 ESTEREO")),
+    "AUDIO_PLUG_ST_6_3": ImageRule("conectores", ("PLUG 6.3 ESTEREO", "JACK 1/4 ESTEREO")),
+    "ARDUINO-FIXED": ImageRule("ic's", ("ARDUINO",)),
+    "BOTON_CHICO_MPC": ImageRule("otros", ("BOTON PULSADOR", "PULSADOR 6X6")),
+    "BOTON_GRANDE_B_MPC": ImageRule("otros", ("BOTON PULSADOR", "PULSADOR 12X12")),
+    "BOTON_GRANDE_R_MICROKORG": ImageRule("otros", ("BOTON PULSADOR",)),
+    "BOTON_GRANDE_R_MPC": ImageRule("otros", ("BOTON PULSADOR",)),
+    "CAP_C": ImageRule("capacitores", ("CAPACITOR CERAMICO",)),
+    "CAP_E": ImageRule("capacitores electroliticos", ("CAPACITOR ELECTROLITICO",)),
+    "DESLIZANTE_NEGRO": ImageRule("otros", ("DESLIZANTE", "POTENCIOMETRO DESLIZANTE")),
+    "DESLIZANTE_VERDE": ImageRule("otros", ("DESLIZANTE", "POTENCIOMETRO DESLIZANTE")),
+    "DPDT": ImageRule("otros", ("DPDT", "SWITCH DPDT")),
+    "DISPLAY16X2": ImageRule("ic's", ("DISPLAY 16X2", "LCD 16X2")),
+    "ENCODER_EC11": ImageRule("otros", ("ENCODER", "EC11")),
+    "ESP32": ImageRule("ic's", ("ESP32", "ESP32 WROOM")),
+    "FUSIBLE": ImageRule("otros", ("FUSIBLE", "PORTAFUSIBLE")),
+    "INTEGRADO": ImageRule("ic's", ("IC", "INTEGRADO")),
+    "JACK_DC_2_1_PCB": ImageRule("conectores", ("JACK DC 2.1",)),
+    "JACK_DC_CHASIS_2_1_PCB": ImageRule("conectores", ("JACK DC 2.1", "PANEL")),
+    "KNOB_METAL": ImageRule("otros", ("KNOB", "PERILLA")),
+    "KNOB_PLASTICO": ImageRule("otros", ("KNOB", "PERILLA")),
+    "KNOB_REDONDO_ONDULADO": ImageRule("otros", ("KNOB", "PERILLA")),
+    "LED_3MM": ImageRule("diodo led", ("LED 3MM",)),
+    "LED_5MM": ImageRule("diodo led", ("LED 5MM",)),
+    "LED_BI_5MM_3_PIN": ImageRule("diodo led", ("LED BICOLOR 5MM", "LED BI 5MM")),
+    "LED_BLINK_5MM_AZUL": ImageRule("diodo led", ("LED BLINK 5MM", "LED AZUL 5MM")),
+    "LED_RGB_3MM_2PIN": ImageRule("diodo led", ("LED RGB 3MM", "LED RGB 5MM")),
+    "MIDI_CON": ImageRule("conectores", ("DIN5 MIDI HEMBRA", "MIDI HEMBRA")),
+    "MIDI_CONECTOR_VOLANTE": ImageRule("conectores", ("DIN5 MIDI MACHO", "MIDI MACHO")),
+    "OLED2": ImageRule("ic's", ("OLED",)),
+    "PCB_ANGOSTA": ImageRule("otros", ("PCB",)),
+    "PCB_KIT": ImageRule("otros", ("PCB",)),
+    "PCB_KIT_02": ImageRule("otros", ("PCB",)),
+    "PCB_KIT_03": ImageRule("otros", ("PCB",)),
+    "PIEZO_35": ImageRule("otros", ("PIEZO",)),
+    "PLUG_DC_TORNILLO": ImageRule("conectores", ("PLUG DC",)),
+    "PLUG_PLASTICO_AUDIO_3_5": ImageRule("conectores", ("JACK 3.5", "PLUG 3.5")),
+    "PLUG__METAL_AUDIO_3_5": ImageRule("conectores", ("JACK 3.5", "PLUG 3.5")),
+    "POTE_MONO_RK09": ImageRule("otros", ("POTENCIOMETRO", "RK09", "MONO")),
+    "POTE_MONO_WH148": ImageRule("otros", ("POTENCIOMETRO", "WH148", "MONO")),
+    "POTE_ST_WH148": ImageRule("otros", ("POTENCIOMETRO", "WH148", "ESTEREO")),
+    "PULSADOR_12X12_CUADRADO": ImageRule("otros", ("BOTON PULSADOR 12X12", "PULSADOR 12X12")),
+    "PULSADOR_12X12_REDONDO": ImageRule("otros", ("BOTON PULSADOR 12X12", "PULSADOR 12X12")),
+    "PULSADOR_6X6_2_PIN": ImageRule("otros", ("PULSADOR 6X6 2PIN", "BOTON PULSADOR 6X6")),
+    "PULSADOR_6X6_4_PIN": ImageRule("otros", ("PULSADOR 6X6 4PIN", "BOTON PULSADOR 6X6")),
+    "RCA_CHASIS": ImageRule("conectores", ("RCA HEMBRA",)),
+    "RCA_PLUG": ImageRule("conectores", ("RCA MACHO",)),
+    "RESISTENCIA": ImageRule("resistencias", ("RESISTENCIA",)),
+    "SPDT": ImageRule("otros", ("SPDT", "SWITCH SPDT")),
+    "SWITCH_ROTATORIO_LORNIN": ImageRule("otros", ("SWITCH ROTATORIO",)),
+    "TRANSISTOR_TO220": ImageRule("transistores", ("TRANSISTOR", "MOSFET", "TO220")),
+    "TRANSISTOR_TO92": ImageRule("transistores", ("TRANSISTOR", "TO92")),
+    "TRIMPOT": ImageRule("otros", ("TRIMPOT", "TRIM POT")),
+    "USB_B": ImageRule("conectores", ("USB TIPO B",)),
+    "USB_MICRO": ImageRule("conectores", ("MICRO USB", "USB MICRO")),
+    "USB_MINI_HORIZONTAL": ImageRule("conectores", ("MINI USB",)),
+    "USB_MINI_VERTICAL": ImageRule("conectores", ("MINI USB",)),
+    "BOBINA": ImageRule("otros", ("BOBINA", "INDUCTOR")),
+}
+
+REUSE_STEMS = {
+    "3PDT",
+    "DPDT",
+    "SPDT",
+    "AUDIO_JACK_CHASIS_MONO_6_3",
+    "AUDIO_JACK_CHASIS_ST_6_3",
+    "DISPLAY16X2",
+    "ESP32",
+    "MIDI_CON",
+    "MIDI_CONECTOR_VOLANTE",
+    "OLED2",
+    "RCA_CHASIS",
+    "RCA_PLUG",
+    "USB_B",
+}
+
+
+def normalize_text(value: str) -> str:
+    text = unicodedata.normalize("NFKD", str(value or ""))
+    text = "".join(char for char in text if not unicodedata.combining(char))
+    text = text.upper()
+    text = re.sub(r"[^A-Z0-9]+", "_", text)
+    return re.sub(r"_+", "_", text).strip("_")
+
+
+def pretty_name_from_stem(stem: str) -> str:
+    raw = stem.replace(".jpg", "")
+    raw = raw.replace("-", " ").replace("_", " ")
+    raw = re.sub(r"\s+", " ", raw).strip()
+    return raw.title()
+
+
+def preferred_name(stem: str) -> str:
+    aliases = candidate_aliases(stem)
+    label = ""
+    if aliases:
+        label = aliases[0].strip()
+        if len(label) <= 2 and len(aliases) > 1:
+            label = aliases[1].strip()
+        if label:
+            return label.title()
+    return pretty_name_from_stem(stem)
+
+
+def parse_meta(description: str | None) -> tuple[dict, str | None]:
+    text = str(description or "").strip()
+    if not text:
+        return {}, None
+    if not text.startswith("{"):
+        return {}, text
+    try:
+        payload = json.loads(text)
+    except Exception:
+        return {}, text
+    if not isinstance(payload, dict):
+        return {}, text
+    plain = str(payload.get("text") or "").strip() or None
+    return payload, plain
+
+
+def dump_meta(meta: dict, plain_text: str | None) -> str | None:
+    payload = dict(meta)
+    if plain_text:
+        payload["text"] = plain_text
+    if not payload:
+        return plain_text
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def category_name_map(session) -> dict[str, Category]:
+    rows = session.query(Category).all()
+    mapping: dict[str, Category] = {}
+    for row in rows:
+        mapping[normalize_text(row.name)] = row
+    return mapping
+
+
+def infer_category_key(stem: str) -> str:
+    rule = FILE_RULES.get(stem)
+    if rule:
+        return normalize_text(rule.category)
+    if stem.startswith("CAP_E"):
+        return normalize_text("Capacitores Electroliticos")
+    if stem.startswith("CAP"):
+        return normalize_text("Capacitores")
+    if stem.startswith("LED"):
+        return normalize_text("Diodo Led")
+    if stem.startswith("USB") or "JACK" in stem or "MIDI" in stem or "RCA" in stem or "PLUG" in stem:
+        return normalize_text("conectores")
+    if stem.startswith("TRANSISTOR"):
+        return normalize_text("Transistores")
+    if stem.startswith("RESISTENCIA"):
+        return normalize_text("Resistencias")
+    if stem.startswith("ARDUINO") or stem.startswith("ESP32") or stem.startswith("OLED") or stem.startswith("DISPLAY"):
+        return normalize_text("Ic's")
+    return normalize_text("otros")
+
+
+def candidate_aliases(stem: str) -> tuple[str, ...]:
+    rule = FILE_RULES.get(stem)
+    if rule and rule.aliases:
+        return rule.aliases
+    return (pretty_name_from_stem(stem),)
+
+
+def product_search_blob(product: Product, category: Category | None) -> str:
+    return " ".join(
+        [
+            normalize_text(product.sku),
+            normalize_text(product.name),
+            normalize_text(category.name if category else ""),
+        ]
+    ).strip()
+
+
+def score_product(stem: str, product: Product, category: Category | None) -> int:
+    blob = product_search_blob(product, category)
+    if not blob:
+        return 0
+
+    aliases = tuple(normalize_text(alias) for alias in candidate_aliases(stem))
+    score = 0
+
+    for alias in aliases:
+        if not alias:
+            continue
+        if alias == normalize_text(product.sku):
+            score += 150
+        if alias == normalize_text(product.name):
+            score += 140
+        if alias in blob:
+            score += 80
+        alias_tokens = [token for token in alias.split("_") if len(token) > 1]
+        score += sum(10 for token in alias_tokens if token in blob)
+
+    category_key = infer_category_key(stem)
+    if category and normalize_text(category.name) == category_key:
+        score += 20
+
+    return score
+
+
+def ensure_meta_flags(product: Product) -> None:
+    meta, plain_text = parse_meta(product.description)
+    meta["enabled"] = True
+    meta["store_visible"] = True
+    product.description = dump_meta(meta, plain_text)
+
+
+def ensure_stock_row(session, product: Product) -> Stock:
+    stock = (
+        session.query(Stock)
+        .filter(
+            Stock.component_table == "products",
+            Stock.component_id == product.id,
+        )
+        .first()
+    )
+    if stock:
+        return stock
+    stock = Stock(
+        component_table="products",
+        component_id=product.id,
+        quantity=int(product.quantity or 0),
+        minimum_stock=int(product.min_quantity or 0),
+    )
+    session.add(stock)
+    session.flush()
+    return stock
+
+
+def match_existing_product(session, stem: str, categories_by_id: dict[int, Category]) -> Product | None:
+    best_product = None
+    best_score = 0
+
+    for product in session.query(Product).all():
+        category = categories_by_id.get(int(product.category_id))
+        score = score_product(stem, product, category)
+        if score > best_score:
+            best_product = product
+            best_score = score
+
+    if best_score < 80:
+        return None
+    return best_product
+
+
+def create_product_from_image(session, stem: str, filename: str, categories_by_key: dict[str, Category]) -> Product:
+    category_key = infer_category_key(stem)
+    category = categories_by_key.get(category_key)
+    if not category:
+        category = categories_by_key[normalize_text("otros")]
+
+    sku = normalize_text(stem)
+    name = preferred_name(stem)
+    meta = {
+        "enabled": True,
+        "store_visible": True,
+        "text": name,
+    }
+
+    product = Product(
+        category_id=category.id,
+        name=name,
+        sku=sku,
+        description=json.dumps(meta, ensure_ascii=False),
+        price=GENERIC_PRICE,
+        quantity=0,
+        min_quantity=0,
+        image_url=f"/images/INVENTARIO/{filename}",
+    )
+    session.add(product)
+    session.flush()
+    ensure_stock_row(session, product)
+    return product
+
+
+def sync_catalog(apply_changes: bool) -> dict:
+    session = SessionLocal()
+    try:
+        categories = session.query(Category).all()
+        categories_by_id = {int(row.id): row for row in categories}
+        categories_by_key = category_name_map(session)
+
+        images = sorted(
+            path for path in IMAGE_DIR.iterdir()
+            if path.is_file() and path.stem not in SKIP_FILES
+        )
+
+        matched = []
+        created = []
+
+        for image_path in images:
+            stem = normalize_text(image_path.stem.replace(".jpg", "").replace(".JPG", ""))
+            product = None
+            if stem in REUSE_STEMS:
+                product = match_existing_product(session, stem, categories_by_id)
+
+            if product:
+                if not product.image_url:
+                    product.image_url = f"/images/INVENTARIO/{image_path.name}"
+                else:
+                    product.image_url = f"/images/INVENTARIO/{image_path.name}"
+                if int(product.price or 0) <= 0:
+                    product.price = GENERIC_PRICE
+                ensure_meta_flags(product)
+                stock = ensure_stock_row(session, product)
+                matched.append(
+                    {
+                        "image": image_path.name,
+                        "product_id": product.id,
+                        "sku": product.sku,
+                        "name": product.name,
+                        "stock": int(stock.quantity or 0),
+                        "min_stock": int(stock.minimum_stock or 0),
+                    }
+                )
+                continue
+
+            product = create_product_from_image(session, stem, image_path.name, categories_by_key)
+            created.append(
+                {
+                    "image": image_path.name,
+                    "product_id": product.id,
+                    "sku": product.sku,
+                    "name": product.name,
+                }
+            )
+
+        if apply_changes:
+            session.commit()
+        else:
+            session.rollback()
+
+        return {
+            "images": len(images),
+            "matched": len(matched),
+            "created": len(created),
+            "matched_items": matched,
+            "created_items": created,
+        }
+    finally:
+        session.close()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Sincroniza catalogo de tienda desde public/images/INVENTARIO")
+    parser.add_argument("--apply", action="store_true", help="Aplica cambios sobre la DB")
+    args = parser.parse_args()
+
+    result = sync_catalog(apply_changes=args.apply)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
