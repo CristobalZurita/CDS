@@ -9,14 +9,9 @@ async function advanceToDiagnosticMarkup(page: Page) {
   await page.getByTestId('quotation-instrument-card').first().click()
   await page.getByTestId('quotation-proceed').click()
 
-  const brandSelect = page.getByTestId('diagnostic-brand-select')
-  await brandSelect.selectOption({ index: 1 })
-
-  const modelSelect = page.getByTestId('diagnostic-model-select')
-  await expect.poll(async () => modelSelect.locator('option').count()).toBeGreaterThan(1)
-  await modelSelect.selectOption({ index: 1 })
-
-  await page.getByTestId('diagnostic-step0-continue').click()
+  await expect(page.getByTestId('diagnostic-power-select')).toBeVisible()
+  await page.getByTestId('diagnostic-power-select').selectOption('powers_on')
+  await page.getByTestId('diagnostic-audio-select').selectOption('one_side')
   await page.getByTestId('diagnostic-step1-continue').click()
 }
 
@@ -55,13 +50,11 @@ test('quotation flow reaches disclaimer step without captcha blocking in dev', a
   const tracker = trackBrowserErrors(page)
 
   await advanceToDiagnosticMarkup(page)
-  await addMarkerAtCanvasCenter(page)
 
   await page.getByTestId('diagnostic-step2-continue').click()
-  await page.getByLabel('He leído y acepto que esta es una cotización preliminar').check()
-  await page.getByRole('button', { name: 'Enviar diagnóstico' }).click()
+  await page.getByTestId('diagnostic-step3-continue').click()
 
-  await expect(page.getByText('IMPORTANTE - LEA ANTES DE CONTINUAR')).toBeVisible()
+  await expect(page.getByText('IMPORTANTE - ESTIMACIÓN REFERENCIAL')).toBeVisible()
   await expect(page.getByTestId('turnstile-bypass')).toBeVisible()
   await expectNoBrowserErrors(tracker)
 })
