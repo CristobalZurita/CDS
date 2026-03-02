@@ -109,7 +109,10 @@
                   {{ placeholderLabel(product) }}
                 </div>
 
-                <span v-if="Number(product.sellable_stock || 0) <= 0" class="stock-badge stock-badge--warning">
+                <span v-if="Number(product.available_stock || 0) <= 0" class="stock-badge stock-badge--warning">
+                  Sin stock
+                </span>
+                <span v-else-if="Number(product.sellable_stock || 0) <= 0" class="stock-badge stock-badge--warning">
                   Reservado para taller
                 </span>
                 <span v-else-if="product.is_low_stock" class="stock-badge stock-badge--warning">
@@ -362,6 +365,7 @@ function toApiPath(path) {
   const value = String(path || '').trim()
   if (!value) return ''
   if (value.startsWith('http')) return value
+  if (value.startsWith('/images/')) return value
   const base = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
   const host = base.includes('/api/') ? base.split('/api/')[0] : base
   return `${host}${value.startsWith('/') ? '' : '/'}${value}`
@@ -373,6 +377,9 @@ function canAddProduct(product) {
 
 function addButtonLabel(product) {
   if (!canAddProduct(product)) {
+    if (Number(product.available_stock || 0) <= 0) {
+      return 'Sin stock'
+    }
     return Number(product.sellable_stock || 0) <= 0 ? 'Reservado taller' : 'No disponible'
   }
   if (Number(product.sellable_stock || 0) > 0 && Number(product.price || 0) > 0) {

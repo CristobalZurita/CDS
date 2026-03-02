@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 import unicodedata
@@ -21,6 +22,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BACKEND_ROOT = ROOT / "backend"
+DEFAULT_DB_PATH = BACKEND_ROOT / "cirujano.db"
+
+os.environ.setdefault("DATABASE_URL", f"sqlite:///{DEFAULT_DB_PATH}")
+os.environ.setdefault("ENVIRONMENT", "development")
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
@@ -32,7 +37,6 @@ from app.models.stock import Stock  # type: ignore  # noqa: E402
 
 IMAGE_DIR = ROOT / "public" / "images" / "INVENTARIO"
 GENERIC_PRICE = 1000
-SKIP_FILES = {"pngwing.com"}
 
 
 @dataclass(frozen=True)
@@ -104,23 +108,6 @@ FILE_RULES: dict[str, ImageRule] = {
     "USB_MINI_VERTICAL": ImageRule("conectores", ("MINI USB",)),
     "BOBINA": ImageRule("otros", ("BOBINA", "INDUCTOR")),
 }
-
-REUSE_STEMS = {
-    "3PDT",
-    "DPDT",
-    "SPDT",
-    "AUDIO_JACK_CHASIS_MONO_6_3",
-    "AUDIO_JACK_CHASIS_ST_6_3",
-    "DISPLAY16X2",
-    "ESP32",
-    "MIDI_CON",
-    "MIDI_CONECTOR_VOLANTE",
-    "OLED2",
-    "RCA_CHASIS",
-    "RCA_PLUG",
-    "USB_B",
-}
-
 
 def normalize_text(value: str) -> str:
     text = unicodedata.normalize("NFKD", str(value or ""))
@@ -210,41 +197,26 @@ def candidate_aliases(stem: str) -> tuple[str, ...]:
     return (pretty_name_from_stem(stem),)
 
 
-def product_search_blob(product: Product, category: Category | None) -> str:
-    return " ".join(
-        [
-            normalize_text(product.sku),
-            normalize_text(product.name),
-            normalize_text(category.name if category else ""),
-        ]
-    ).strip()
+def _product_identity_variants(product: Product) -> set[str]:
+    variants = set()
+    normalized_sku = normalize_text(product.sku)
+    normalized_name = normalize_text(product.name)
+
+    if normalized_sku:
+        variants.add(normalized_sku)
+        sku_parts = normalized_sku.split("_")
+        if len(sku_parts) > 1:
+            variants.add("_".join(sku_parts[1:]))
+    if normalized_name:
+        variants.add(normalized_name)
+    return {value for value in variants if value}
 
 
-def score_product(stem: str, product: Product, category: Category | None) -> int:
-    blob = product_search_blob(product, category)
-    if not blob:
-        return 0
-
+def exact_alias_match(stem: str, product: Product) -> bool:
     aliases = tuple(normalize_text(alias) for alias in candidate_aliases(stem))
-    score = 0
-
-    for alias in aliases:
-        if not alias:
-            continue
-        if alias == normalize_text(product.sku):
-            score += 150
-        if alias == normalize_text(product.name):
-            score += 140
-        if alias in blob:
-            score += 80
-        alias_tokens = [token for token in alias.split("_") if len(token) > 1]
-        score += sum(10 for token in alias_tokens if token in blob)
-
-    category_key = infer_category_key(stem)
-    if category and normalize_text(category.name) == category_key:
-        score += 20
-
-    return score
+    aliases = tuple(alias for alias in aliases if alias)
+    product_variants = _product_identity_variants(product)
+    return any(alias in product_variants for alias in aliases)
 
 
 def ensure_meta_flags(product: Product) -> None:
@@ -276,20 +248,13 @@ def ensure_stock_row(session, product: Product) -> Stock:
     return stock
 
 
-def match_existing_product(session, stem: str, categories_by_id: dict[int, Category]) -> Product | None:
-    best_product = None
-    best_score = 0
-
+def match_existing_product(session, stem: str, used_product_ids: set[int]) -> Product | None:
     for product in session.query(Product).all():
-        category = categories_by_id.get(int(product.category_id))
-        score = score_product(stem, product, category)
-        if score > best_score:
-            best_product = product
-            best_score = score
-
-    if best_score < 80:
-        return None
-    return best_product
+        if int(product.id) in used_product_ids:
+            continue
+        if exact_alias_match(stem, product):
+            return product
+    return None
 
 
 def create_product_from_image(session, stem: str, filename: str, categories_by_key: dict[str, Category]) -> Product:
@@ -326,22 +291,20 @@ def sync_catalog(apply_changes: bool) -> dict:
     session = SessionLocal()
     try:
         categories = session.query(Category).all()
-        categories_by_id = {int(row.id): row for row in categories}
         categories_by_key = category_name_map(session)
 
         images = sorted(
             path for path in IMAGE_DIR.iterdir()
-            if path.is_file() and path.stem not in SKIP_FILES
+            if path.is_file()
         )
 
         matched = []
         created = []
+        used_product_ids: set[int] = set()
 
         for image_path in images:
             stem = normalize_text(image_path.stem.replace(".jpg", "").replace(".JPG", ""))
-            product = None
-            if stem in REUSE_STEMS:
-                product = match_existing_product(session, stem, categories_by_id)
+            product = match_existing_product(session, stem, used_product_ids)
 
             if product:
                 if not product.image_url:
@@ -362,6 +325,7 @@ def sync_catalog(apply_changes: bool) -> dict:
                         "min_stock": int(stock.minimum_stock or 0),
                     }
                 )
+                used_product_ids.add(int(product.id))
                 continue
 
             product = create_product_from_image(session, stem, image_path.name, categories_by_key)
@@ -373,6 +337,7 @@ def sync_catalog(apply_changes: bool) -> dict:
                     "name": product.name,
                 }
             )
+            used_product_ids.add(int(product.id))
 
         if apply_changes:
             session.commit()
@@ -393,7 +358,14 @@ def sync_catalog(apply_changes: bool) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Sincroniza catalogo de tienda desde public/images/INVENTARIO")
     parser.add_argument("--apply", action="store_true", help="Aplica cambios sobre la DB")
+    parser.add_argument(
+        "--database-url",
+        default=os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DB_PATH}"),
+        help="DATABASE_URL explícita para evitar apuntar a una DB equivocada",
+    )
     args = parser.parse_args()
+
+    os.environ["DATABASE_URL"] = args.database_url
 
     result = sync_catalog(apply_changes=args.apply)
     print(json.dumps(result, ensure_ascii=False, indent=2))

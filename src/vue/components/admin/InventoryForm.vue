@@ -62,6 +62,36 @@
         <label class="form-label">Imagen (URL)</label>
         <input v-model="form.image_url" class="form-control" data-testid="inventory-image-url" />
       </div>
+      <div class="mb-3">
+        <label class="form-label" for="inventory-image-file">Subir imagen inventario</label>
+        <input
+          id="inventory-image-file"
+          ref="imageInput"
+          class="form-control"
+          data-testid="inventory-image-file"
+          type="file"
+          accept="image/*"
+          @change="onFileSelected"
+        />
+        <div class="d-flex gap-2 mt-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            data-testid="inventory-image-upload"
+            :disabled="!selectedImageFile || isUploadingImage"
+            @click="uploadSelectedImage"
+          >
+            {{ isUploadingImage ? 'Subiendo...' : 'Subir imagen' }}
+          </button>
+          <span
+            v-if="uploadImageStatus"
+            class="small text-muted align-self-center"
+            data-testid="inventory-image-status"
+          >
+            {{ uploadImageStatus }}
+          </span>
+        </div>
+      </div>
 
       <div class="d-flex gap-2 justify-content-end">
         <button type="button" class="btn btn-secondary" data-testid="inventory-cancel" @click="$emit('cancel')">Cancelar</button>
@@ -72,8 +102,10 @@
 </template>
 
 <script setup>
-import { reactive, computed, onMounted, watch } from 'vue'
+import { reactive, computed, onMounted, ref, watch } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
+import { api } from '@/services/api'
+import { showError, showSuccess } from '@/services/toastService'
 
 const props = defineProps({
   item: {
@@ -87,6 +119,10 @@ const emits = defineEmits(['save', 'cancel'])
 const isNew = computed(() => !props.item)
 const categoriesStore = useCategoriesStore()
 const categories = computed(() => categoriesStore.categories || [])
+const imageInput = ref(null)
+const selectedImageFile = ref(null)
+const isUploadingImage = ref(false)
+const uploadImageStatus = ref('')
 
 const form = reactive({
   name: '',
@@ -114,6 +150,50 @@ function syncForm(item = props.item) {
   form.image_url = item?.image_url || ''
   form.enabled = item?.enabled ?? true
   form.store_visible = item?.store_visible ?? false
+  selectedImageFile.value = null
+  uploadImageStatus.value = ''
+  if (imageInput.value) {
+    imageInput.value.value = ''
+  }
+}
+
+function onFileSelected(event) {
+  const file = event?.target?.files?.[0] || null
+  selectedImageFile.value = file
+  uploadImageStatus.value = file ? `Archivo listo: ${file.name}` : ''
+}
+
+async function uploadSelectedImage() {
+  if (!selectedImageFile.value || isUploadingImage.value) {
+    return
+  }
+
+  const payload = new FormData()
+  payload.append('file', selectedImageFile.value)
+
+  isUploadingImage.value = true
+  uploadImageStatus.value = 'Subiendo imagen...'
+
+  try {
+    const response = await api.post('/uploads/images?destination=inventario', payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    const publicPath = response?.data?.public_path || response?.data?.path || ''
+    form.image_url = publicPath
+    uploadImageStatus.value = `Imagen vinculada: ${selectedImageFile.value.name}`
+    showSuccess('Imagen de inventario subida correctamente.')
+    selectedImageFile.value = null
+    if (imageInput.value) {
+      imageInput.value.value = ''
+    }
+  } catch (error) {
+    uploadImageStatus.value = 'No se pudo subir la imagen.'
+    showError(error?.response?.data?.detail || 'No se pudo subir la imagen del inventario.')
+  } finally {
+    isUploadingImage.value = false
+  }
 }
 
 function onSubmit() {
