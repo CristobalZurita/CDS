@@ -134,14 +134,13 @@ const onPhotoChange = (photoName: string) => {
 }
 </script>
 
-<style scoped>
+/* Estilos en la capa Sass global */
 .instrument-card {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
   max-width: 500px;
 }
-</style>
 ```
 
 ---

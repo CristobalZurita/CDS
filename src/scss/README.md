@@ -40,19 +40,16 @@ scss/
     └── ...
 ```
 
-## Cómo Usar en Componentes Vue
+## Cómo Usar en la Capa Sass
 
 ### CORRECTO - Heredar del sistema global
-```vue
-<style lang="scss" scoped>
+```scss
 @use "@/scss/_core.scss" as *;
 
 .mi-componente {
-    // Usar variables globales
     color: $color-primary;
     background: $color-light;
 
-    // Usar mixins para heredar tipografía
     p {
         @include text-body;
     }
@@ -61,28 +58,24 @@ scss/
         @include h2-style;
     }
 
-    // Usar mixins de layout
     .content {
         @include section-content;
     }
 }
-</style>
 ```
 
 ### INCORRECTO - Hardcodear valores
-```vue
-<style lang="scss" scoped>
+```scss
 .mi-componente {
     // ❌ NO hacer esto - pisa los estilos globales
     color: #ec6b00;
     font-size: 14px;
 
     p {
-        font-size: 0.9rem;  // ❌ Hardcodeado
-        line-height: 1.4;   // ❌ Hardcodeado
+        font-size: 0.9rem;
+        line-height: 1.4;
     }
 }
-</style>
 ```
 
 ## Variables Disponibles
@@ -212,8 +205,7 @@ Para limpiar un componente Vue que tiene estilos hardcodeados:
 ### Ejemplo de migración:
 
 **ANTES:**
-```vue
-<style scoped>
+```scss
 .section h2 {
     font-size: 28px;
     font-weight: bold;
@@ -225,12 +217,10 @@ Para limpiar un componente Vue que tiene estilos hardcodeados:
     line-height: 1.5;
     color: #5a5652;
 }
-</style>
 ```
 
 **DESPUÉS:**
-```vue
-<style lang="scss" scoped>
+```scss
 @use "@/scss/_core.scss" as *;
 
 .section {
@@ -243,7 +233,6 @@ Para limpiar un componente Vue que tiene estilos hardcodeados:
         color: $text-color-muted;
     }
 }
-</style>
 ```
 
 ## Rollback

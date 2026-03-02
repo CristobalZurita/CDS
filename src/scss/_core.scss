@@ -1,16 +1,14 @@
 // ============================================
-// CORE - Import para componentes Vue
+// CORE - Import central de Sass
 // ============================================
-// USO EN COMPONENTES VUE:
+// USO RECOMENDADO:
 //
-// <style lang="scss" scoped>
 // @use "@/scss/_core.scss" as *;
 //
 // .mi-componente {
 //     @include text-body;  // Hereda tipografía global
 //     color: $color-primary;
 // }
-// </style>
 // ============================================
 
 @forward "./abstracts/_variables.scss";
