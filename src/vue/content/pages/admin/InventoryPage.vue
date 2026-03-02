@@ -115,6 +115,10 @@
 							<option value="low-stock">Stock bajo</option>
 							<option value="zero-stock">Stock en 0</option>
 							<option value="base-price">Precio base 1000</option>
+							<option value="reserved">Reservados</option>
+							<option value="in-work">En trabajo</option>
+							<option value="internal-use">Consumo interno</option>
+							<option value="ot-active">Vinculados a OT</option>
 						</select>
 					</div>
 					<div class="col-lg-1 text-lg-end">
@@ -127,28 +131,40 @@
 					Mostrando {{ filteredItems.length }} de {{ items.length }} items.
 				</div>
 				<div class="row g-2 mt-2" data-testid="inventory-scope-summary">
-					<div class="col-sm-6 col-xl-3">
+					<div class="col-sm-6 col-xl-2">
 						<div class="border rounded p-2 h-100">
 							<div class="small text-muted">Interno sólo</div>
 							<div class="fw-semibold">{{ scopeSummary.internalOnly }}</div>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xl-3">
+					<div class="col-sm-6 col-xl-2">
 						<div class="border rounded p-2 h-100">
 							<div class="small text-muted">Publicado tienda</div>
 							<div class="fw-semibold">{{ scopeSummary.published }}</div>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xl-3">
+					<div class="col-sm-6 col-xl-2">
 						<div class="border rounded p-2 h-100">
 							<div class="small text-muted">Con stock 0</div>
 							<div class="fw-semibold">{{ scopeSummary.zeroStock }}</div>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xl-3">
+					<div class="col-sm-6 col-xl-2">
 						<div class="border rounded p-2 h-100">
 							<div class="small text-muted">Precio base 1000</div>
 							<div class="fw-semibold">{{ scopeSummary.basePrice }}</div>
+						</div>
+					</div>
+					<div class="col-sm-6 col-xl-2">
+						<div class="border rounded p-2 h-100">
+							<div class="small text-muted">Reservados / OT</div>
+							<div class="fw-semibold">{{ scopeSummary.otLinked }}</div>
+						</div>
+					</div>
+					<div class="col-sm-6 col-xl-2">
+						<div class="border rounded p-2 h-100">
+							<div class="small text-muted">Consumo interno</div>
+							<div class="fw-semibold">{{ scopeSummary.internalUse }}</div>
 						</div>
 					</div>
 				</div>
@@ -238,6 +254,18 @@ const filteredItems = computed(() => {
 		if (storeScope.value === 'base-price' && Number(item.price || 0) !== 1000) {
 			return false
 		}
+		if (storeScope.value === 'reserved' && Number(item.quantity_reserved || 0) <= 0) {
+			return false
+		}
+		if (storeScope.value === 'in-work' && Number(item.quantity_in_work || 0) <= 0) {
+			return false
+		}
+		if (storeScope.value === 'internal-use' && Number(item.quantity_internal_use || 0) <= 0) {
+			return false
+		}
+		if (storeScope.value === 'ot-active' && (Number(item.quantity_reserved || 0) + Number(item.quantity_in_work || 0)) <= 0) {
+			return false
+		}
 
 		if (!normalizedSearch) {
 			return true
@@ -262,8 +290,10 @@ const scopeSummary = computed(() => {
 		else acc.internalOnly += 1
 		if (Number(item.stock || 0) <= 0) acc.zeroStock += 1
 		if (Number(item.price || 0) === 1000) acc.basePrice += 1
+		if ((Number(item.quantity_reserved || 0) + Number(item.quantity_in_work || 0)) > 0) acc.otLinked += 1
+		if (Number(item.quantity_internal_use || 0) > 0) acc.internalUse += 1
 		return acc
-	}, { internalOnly: 0, published: 0, zeroStock: 0, basePrice: 0 })
+	}, { internalOnly: 0, published: 0, zeroStock: 0, basePrice: 0, otLinked: 0, internalUse: 0 })
 })
 
 async function load() {

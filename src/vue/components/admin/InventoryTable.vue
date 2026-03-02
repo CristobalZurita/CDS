@@ -7,6 +7,8 @@
 					<th>Nombre</th>
 					<th>Categoría</th>
 					<th>Cantidad</th>
+					<th>Disponible</th>
+					<th>Taller / OT</th>
 					<th>Tienda</th>
 					<th>Acciones</th>
 				</tr>
@@ -17,6 +19,26 @@
 					<td data-label="Nombre">{{ item.name || item.nombre || '-' }}</td>
 					<td data-label="Categoría">{{ item.category || '-' }}</td>
 					<td data-label="Cantidad">{{ item.stock ?? item.quantity ?? item.cantidad ?? 0 }}</td>
+					<td data-label="Disponible">{{ item.available_stock ?? item.stock ?? 0 }}</td>
+					<td data-label="Taller / OT">
+						<div class="d-flex flex-wrap gap-1">
+							<span v-if="Number(item.quantity_reserved || 0) > 0" class="badge bg-warning-subtle text-warning-emphasis">
+								Reservado {{ item.quantity_reserved }}
+							</span>
+							<span v-if="Number(item.quantity_in_work || 0) > 0" class="badge bg-info-subtle text-info-emphasis">
+								En trabajo {{ item.quantity_in_work }}
+							</span>
+							<span v-if="Number(item.quantity_internal_use || 0) > 0" class="badge bg-secondary-subtle text-secondary-emphasis">
+								Interno {{ item.quantity_internal_use }}
+							</span>
+							<span
+								v-if="Number(item.quantity_reserved || 0) <= 0 && Number(item.quantity_in_work || 0) <= 0 && Number(item.quantity_internal_use || 0) <= 0"
+								class="badge bg-light text-body-secondary"
+							>
+								Sin uso
+							</span>
+						</div>
+					</td>
 					<td data-label="Tienda">
 						<span v-if="item.store_visible" class="badge bg-success-subtle text-success-emphasis">
 							Sí · {{ item.sellable_stock ?? 0 }} vendible

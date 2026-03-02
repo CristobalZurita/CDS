@@ -77,8 +77,8 @@ describe('InventoryPage', () => {
     vi.clearAllMocks()
     routeState.query = {}
     storeMock.items = [
-      { id: 5, name: 'Resistencia 10K', sku: 'RES-10K', category: 'Resistencias', category_id: 9, store_visible: true, sellable_stock: 4, image_url: '/images/INVENTARIO/res.webp', is_low_stock: false },
-      { id: 7, name: 'Jack 6.3', sku: 'JACK-63', category: 'Conectores', category_id: 3, store_visible: false, sellable_stock: 0, image_url: '', is_low_stock: true },
+      { id: 5, name: 'Resistencia 10K', sku: 'RES-10K', category: 'Resistencias', category_id: 9, store_visible: true, sellable_stock: 4, image_url: '/images/INVENTARIO/res.webp', is_low_stock: false, stock: 10, quantity_reserved: 2, quantity_in_work: 0, quantity_internal_use: 0, price: 1000 },
+      { id: 7, name: 'Jack 6.3', sku: 'JACK-63', category: 'Conectores', category_id: 3, store_visible: false, sellable_stock: 0, image_url: '', is_low_stock: true, stock: 0, quantity_reserved: 0, quantity_in_work: 1, quantity_internal_use: 0, price: 1500 },
     ]
     storeMock.fetchItems.mockResolvedValue({})
     storeMock.deleteItem.mockResolvedValue(true)
@@ -137,6 +137,8 @@ describe('InventoryPage', () => {
     expect(wrapper.find('[data-testid="inventory-stock-sheet"]').exists()).toBe(true)
     expect(wrapper.get('[data-testid="inventory-catalog-pending"]').text()).toBe('2')
     expect(wrapper.get('[data-testid="inventory-results-count"]').text()).toContain('2 de 2')
+    expect(wrapper.get('[data-testid="inventory-scope-summary"]').text()).toContain('Interno sólo')
+    expect(wrapper.get('[data-testid="inventory-scope-summary"]').text()).toContain('Reservados / OT')
 
     await wrapper.get('[data-testid="inventory-new"]').trigger('click')
 
@@ -189,6 +191,12 @@ describe('InventoryPage', () => {
     await wrapper.get('[data-testid="inventory-filter-scope"]').setValue('published')
     await flushPromises()
     expect(wrapper.get('[data-testid="inventory-table-count"]').text()).toBe('0')
+
+    await wrapper.get('[data-testid="inventory-clear-filters"]').trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-testid="inventory-filter-scope"]').setValue('reserved')
+    await flushPromises()
+    expect(wrapper.get('[data-testid="inventory-table-count"]').text()).toBe('1')
 
     await wrapper.get('[data-testid="inventory-clear-filters"]').trigger('click')
     await flushPromises()
