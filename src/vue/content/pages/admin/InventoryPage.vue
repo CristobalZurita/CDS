@@ -113,6 +113,8 @@
 							<option value="without-image">Sin foto</option>
 							<option value="sellable">Vendibles ahora</option>
 							<option value="low-stock">Stock bajo</option>
+							<option value="zero-stock">Stock en 0</option>
+							<option value="base-price">Precio base 1000</option>
 						</select>
 					</div>
 					<div class="col-lg-1 text-lg-end">
@@ -129,7 +131,7 @@
 
 		<InventoryAlerts :items="filteredItems" />
 
-		<InventoryStockSheet v-if="activeView === 'sheet'" :items="filteredItems" @save="onQuickSave" />
+		<InventoryStockSheet v-if="activeView === 'sheet'" :items="filteredItems" @save="onQuickSave" @save-many="onQuickSaveMany" />
 		<InventoryStockStates v-else-if="activeView === 'states'" :items="filteredItems" @save="onStateSave" />
 
 		<InventoryTable v-else :items="filteredItems" @edit="onEdit" @delete="onDelete" />
@@ -202,6 +204,12 @@ const filteredItems = computed(() => {
 			return false
 		}
 		if (storeScope.value === 'low-stock' && item.is_low_stock !== true) {
+			return false
+		}
+		if (storeScope.value === 'zero-stock' && Number(item.stock || 0) > 0) {
+			return false
+		}
+		if (storeScope.value === 'base-price' && Number(item.price || 0) !== 1000) {
 			return false
 		}
 
@@ -302,6 +310,26 @@ async function onQuickSave(payload) {
 	} catch (e) {
 		console.error(e)
 		showError('No se pudo guardar el stock.')
+	}
+}
+
+async function onQuickSaveMany(payloads) {
+	if (!Array.isArray(payloads) || !payloads.length) return
+	try {
+		for (const payload of payloads) {
+			if (!payload?.id) continue
+			await store.updateItem(payload.id, {
+				stock: payload.stock ?? 0,
+				min_quantity: payload.min_stock ?? 0,
+				price: payload.price ?? 0
+			})
+		}
+		await load()
+		await loadCatalogStatus()
+		showSuccess(`${payloads.length} items actualizados correctamente.`)
+	} catch (e) {
+		console.error(e)
+		showError('No se pudo guardar la selección masiva.')
 	}
 }
 
