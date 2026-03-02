@@ -1,316 +1,334 @@
 /**
- * Composable useAuth.ts - Gestión de autenticación con TypeScript
- * MEJORADO: Usa authService con HttpOnly cookies en lugar de localStorage
- *
- * Proporciona:
- * - login() / register() / logout()
- * - 2FA verification
- * - Token refresh
- * - User info fetch
+ * Composable TypeScript alineado con el backend real `/auth/*`.
+ * Mantiene el mismo contrato operativo que la versión JavaScript.
  */
 
-import { ref, computed } from 'vue';
+import { ref, computed, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
 import type { User } from '@/types/common';
 import api from '@/services/api';
 
-// Global auth state
-const user = ref<User | null>(null);
+type AuthUser = User & {
+  username?: string;
+  fullName?: string;
+  full_name?: string;
+  phone?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  is_active?: boolean;
+};
+
+type RegisterPayload = {
+  email: string;
+  username?: string;
+  full_name?: string;
+  firstName?: string;
+  lastName?: string;
+  password: string;
+  phone?: string | null;
+  turnstile_token?: string | null;
+};
+
+const user = ref<AuthUser | null>(null);
+const token = ref<string | null>(localStorage.getItem('access_token'));
+const refreshToken = ref<string | null>(localStorage.getItem('refresh_token'));
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 const requires2FA = ref(false);
 const twoFAChallengeId = ref<string | null>(null);
 
-// Computed properties
-const isAuthenticated = computed(() => !!user.value);
+const isAuthenticated = computed(() => !!token.value && !!user.value);
 const isAdmin = computed(() => user.value?.role === 'admin');
 const isTechnician = computed(() => user.value?.role === 'technician');
 
-export function useAuth() {
-  const router = useRouter();
+function splitFullName(raw: string): { firstName: string; lastName: string } {
+  const parts = String(raw || '').trim().split(/\s+/).filter(Boolean);
+  return {
+    firstName: parts[0] || '',
+    lastName: parts.slice(1).join(' '),
+  };
+}
 
-  /**
-   * Registrar nuevo usuario
-   */
-  async function register(data: {
-    email: string;
-    firstName: string;
-    lastName: string;
-    password: string;
-    phone?: string;
-  }): Promise<User | null> {
+function normalizeUser(raw: any): AuthUser | null {
+  if (!raw) {
+    return null;
+  }
+
+  const fullName = String(
+    raw.full_name ||
+    raw.fullName ||
+    `${raw.first_name || raw.firstName || ''} ${raw.last_name || raw.lastName || ''}`
+  ).trim();
+  const { firstName, lastName } = splitFullName(fullName);
+
+  return {
+    ...raw,
+    id: String(raw.id ?? ''),
+    email: String(raw.email || ''),
+    firstName,
+    lastName,
+    fullName,
+    full_name: fullName,
+    role: String(raw.role || 'client') as AuthUser['role'],
+    permissions: Array.isArray(raw.permissions) ? raw.permissions : [],
+    createdAt: raw.createdAt || raw.created_at || '',
+    updatedAt: raw.updatedAt || raw.updated_at || '',
+    phone: raw.phone || null,
+  };
+}
+
+function setTokens(accessValue: string | null, refreshValue: string | null): void {
+  token.value = accessValue;
+  refreshToken.value = refreshValue;
+
+  if (accessValue) {
+    localStorage.setItem('access_token', accessValue);
+  } else {
+    localStorage.removeItem('access_token');
+  }
+
+  if (refreshValue) {
+    localStorage.setItem('refresh_token', refreshValue);
+  } else {
+    localStorage.removeItem('refresh_token');
+  }
+}
+
+function clearSession(): void {
+  user.value = null;
+  error.value = null;
+  requires2FA.value = false;
+  twoFAChallengeId.value = null;
+  setTokens(null, null);
+}
+
+function buildRegisterPayload(data: RegisterPayload) {
+  const email = String(data?.email || '').trim();
+  const username = String(data?.username || '').trim() || (email.split('@')[0] || 'usuario');
+  const providedFullName = String(data?.full_name || '').trim();
+  const composedFullName = `${String(data?.firstName || '').trim()} ${String(data?.lastName || '').trim()}`.trim();
+
+  return {
+    email,
+    username,
+    full_name: providedFullName || composedFullName || username,
+    password: String(data?.password || ''),
+    phone: data?.phone || null,
+    turnstile_token: data?.turnstile_token || null,
+  };
+}
+
+function buildAuthHeaders() {
+  if (!token.value) {
+    return {};
+  }
+  return {
+    Authorization: `Bearer ${token.value}`,
+  };
+}
+
+export function useAuth() {
+  const router = getCurrentInstance() ? useRouter() : null;
+
+  async function register(data: RegisterPayload): Promise<AuthUser | null> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await api.post('/users/register', {
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        password: data.password,
-        phone: data.phone || null,
-      });
-
-      if (response.data.success) {
-        user.value = response.data.data.user;
-        return user.value;
-      }
-      throw new Error(response.data.error?.message || 'Registration failed');
+      const response = await api.post('/auth/register', buildRegisterPayload(data));
+      user.value = normalizeUser(response.data);
+      return user.value;
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Error en el registro';
+      error.value = err.response?.data?.detail || 'Error en el registro';
       throw err;
     } finally {
       isLoading.value = false;
     }
   }
 
-  /**
-   * Login con email y password
-   * Si requiere 2FA, retorna challenge_id
-   */
   async function login(
     email: string,
     password: string,
-    turnstileToken?: string
-  ): Promise<{ user?: User; requires2FA?: boolean; challengeId?: string }> {
+    turnstileToken: string | null = null
+  ): Promise<AuthUser | { requires_2fa: true; challenge_id: string }> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await api.post('/users/login', {
+      const response = await api.post('/auth/login', {
         email,
         password,
-        turnstile_token: turnstileToken || null,
+        turnstile_token: turnstileToken,
       });
 
-      if (!response.data.success) {
-        throw new Error(response.data.error?.message || 'Login failed');
-      }
-
-      // Check if 2FA required
-      if (response.data.data?.requires_2fa) {
+      if (response.data?.requires_2fa) {
         requires2FA.value = true;
-        twoFAChallengeId.value = response.data.data.challenge_id;
+        twoFAChallengeId.value = String(response.data.challenge_id || '');
         return {
-          requires2FA: true,
-          challengeId: response.data.data.challenge_id,
+          requires_2fa: true,
+          challenge_id: twoFAChallengeId.value,
         };
       }
 
-      // Login exitoso - obtener info del usuario
-      user.value = response.data.data.user;
-      // Token se guarda automáticamente en HttpOnly cookie por backend
+      const { access_token, refresh_token } = response.data || {};
+      setTokens(access_token || null, refresh_token || null);
+      await fetchUserInfo();
 
-      return { user: user.value };
+      if (!user.value) {
+        throw new Error('No se pudo cargar el usuario autenticado');
+      }
+
+      return user.value;
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Email o contraseña incorrectos';
+      error.value = err.response?.data?.detail || 'Email o contraseña incorrectos';
       throw err;
     } finally {
       isLoading.value = false;
     }
   }
 
-  /**
-   * Verificar 2FA code
-   */
-  async function verifyTwoFactor(code: string): Promise<User | null> {
-    if (!twoFAChallengeId.value) {
-      error.value = 'No 2FA challenge in progress';
-      return null;
-    }
-
+  async function verifyTwoFactor(challengeId: string, code: string): Promise<AuthUser | null> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await api.post('/users/verify-2fa', {
-        challenge_id: twoFAChallengeId.value,
+      const response = await api.post('/auth/verify-2fa', {
+        challenge_id: challengeId,
         code,
       });
-
-      if (response.data.success) {
-        user.value = response.data.data.user;
-        requires2FA.value = false;
-        twoFAChallengeId.value = null;
-        return user.value;
-      }
-
-      throw new Error(response.data.error?.message || '2FA verification failed');
+      const { access_token, refresh_token } = response.data || {};
+      setTokens(access_token || null, refresh_token || null);
+      requires2FA.value = false;
+      twoFAChallengeId.value = null;
+      await fetchUserInfo();
+      return user.value;
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Código inválido';
+      error.value = err.response?.data?.detail || 'Código inválido';
       throw err;
     } finally {
       isLoading.value = false;
     }
   }
 
-  /**
-   * Obtener información del usuario actual
-   * Endpoint verifica HttpOnly cookie automáticamente
-   */
-  async function fetchUserInfo(): Promise<User | null> {
-    try {
-      const response = await api.get('/users/me');
-
-      if (response.data.success) {
-        user.value = response.data.data;
-        return user.value;
-      }
-
-      logout();
+  async function fetchUserInfo(): Promise<AuthUser | null> {
+    if (!token.value) {
+      clearSession();
       return null;
+    }
+
+    try {
+      const response = await api.get('/auth/me', {
+        headers: buildAuthHeaders(),
+      });
+      user.value = normalizeUser(response.data);
+      return user.value;
     } catch (err) {
-      // Token expirado o inválido
-      logout();
+      clearSession();
       throw err;
     }
   }
 
-  /**
-   * Refrescar access token
-   * Backend valida refresh_token en HttpOnly cookie
-   */
-  async function refreshAccessToken(): Promise<boolean> {
+  async function refreshAccessToken(): Promise<string | null> {
+    if (!refreshToken.value) {
+      clearSession();
+      return null;
+    }
+
     try {
-      const response = await api.post('/users/refresh-token', {});
-
-      if (response.data.success) {
-        // Token se actualiza automáticamente en HttpOnly cookie
-        return true;
-      }
-
-      logout();
-      return false;
+      const response = await api.post('/auth/refresh', {
+        refresh_token: refreshToken.value,
+      });
+      const { access_token, refresh_token } = response.data || {};
+      setTokens(access_token || null, refresh_token || null);
+      return access_token || null;
     } catch (err) {
-      logout();
-      return false;
+      clearSession();
+      throw err;
     }
   }
 
-  /**
-   * Logout - Limpiar sesión
-   */
-  async function logout(): Promise<void> {
-    try {
-      await api.post('/users/logout', {});
-    } catch (err) {
-      console.error('Logout error:', err);
-    } finally {
-      user.value = null;
-      error.value = null;
-      requires2FA.value = false;
-      twoFAChallengeId.value = null;
-      // Cookies se limpian automáticamente por backend
+  function logout(): void {
+    clearSession();
+    if (router) {
+      router.push('/login');
     }
   }
 
-  /**
-   * Solicitar password reset
-   */
   async function requestPasswordReset(email: string): Promise<boolean> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await api.post('/users/password-reset', { email });
-
-      if (response.data.success) {
-        return true;
-      }
-
-      throw new Error(response.data.error?.message || 'Password reset request failed');
+      await api.post('/auth/forgot-password', { email });
+      return true;
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Error enviando reset';
+      error.value = err.response?.data?.detail || 'Error enviando reset';
       throw err;
     } finally {
       isLoading.value = false;
     }
   }
 
-  /**
-   * Confirmar password reset con token
-   */
-  async function confirmPasswordReset(token: string, newPassword: string): Promise<boolean> {
+  async function confirmPasswordReset(tokenValue: string, newPassword: string): Promise<boolean> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await api.post('/users/confirm-reset', {
-        token,
-        newPassword,
+      await api.post('/auth/reset-password', {
+        token: tokenValue,
+        new_password: newPassword,
       });
-
-      if (response.data.success) {
-        return true;
-      }
-
-      throw new Error(response.data.error?.message || 'Password reset confirmation failed');
+      return true;
     } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Error confirmando reset';
+      error.value = err.response?.data?.detail || 'Error confirmando reset';
       throw err;
     } finally {
       isLoading.value = false;
     }
   }
 
-  /**
-   * Eliminar cuenta
-   */
   async function deleteAccount(password: string): Promise<boolean> {
-    isLoading.value = true;
-    error.value = null;
-
-    try {
-      const response = await api.delete('/users/me', {
-        data: { password },
-      });
-
-      if (response.data.success) {
-        await logout();
-        return true;
-      }
-
-      throw new Error(response.data.error?.message || 'Account deletion failed');
-    } catch (err: any) {
-      error.value = err.response?.data?.error?.message || 'Error eliminando cuenta';
-      throw err;
-    } finally {
-      isLoading.value = false;
-    }
+    void password;
+    error.value = 'deleteAccount endpoint not implemented in backend';
+    return false;
   }
 
-  /**
-   * Verificar si usuario tiene permiso
-   */
   function hasPermission(permission: string): boolean {
-    return user.value?.permissions.includes(permission) ?? false;
+    return user.value?.permissions?.includes(permission) ?? false;
   }
 
-  /**
-   * Inicializar autenticación desde sesión actual
-   */
-  async function initialize(): Promise<void> {
+  async function checkAuth(): Promise<void> {
+    if (!token.value) {
+      clearSession();
+      return;
+    }
+
     try {
       await fetchUserInfo();
-    } catch (err) {
+    } catch {
+      clearSession();
+    }
+  }
+
+  async function initialize(): Promise<void> {
+    try {
+      await checkAuth();
+    } catch {
       console.debug('No active session');
     }
   }
 
   return {
-    // State
     user,
+    token,
+    refreshToken,
     isLoading,
     error,
     requires2FA,
     twoFAChallengeId,
-
-    // Computed
     isAuthenticated,
     isAdmin,
     isTechnician,
-
-    // Methods
     register,
     login,
     verifyTwoFactor,
@@ -321,6 +339,7 @@ export function useAuth() {
     confirmPasswordReset,
     deleteAccount,
     hasPermission,
+    checkAuth,
     initialize,
   };
 }

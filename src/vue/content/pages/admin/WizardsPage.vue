@@ -55,8 +55,19 @@ import WizardTicket from '@/vue/components/admin/wizard/WizardTicket.vue'
 import WizardPurchaseRequest from '@/vue/components/admin/wizard/WizardPurchaseRequest.vue'
 import WizardManualUpload from '@/vue/components/admin/wizard/WizardManualUpload.vue'
 import WizardSignatureRequest from '@/vue/components/admin/wizard/WizardSignatureRequest.vue'
+import { showSuccess } from '@/services/toastService'
 
-const onCompleted = () => {
-  // Placeholder for future toast/feedback
+const buildCompletionMessage = (payload = {}) => {
+  if (payload?.repair_id) {
+    return `Wizard completado. OT ${payload.repair_id} creada correctamente.`
+  }
+  if (payload?.client_id && payload?.device_id) {
+    return 'Wizard completado. Cliente e instrumento registrados.'
+  }
+  return 'Wizard completado correctamente.'
+}
+
+const onCompleted = (payload) => {
+  showSuccess(buildCompletionMessage(payload))
 }
 </script>
