@@ -1,60 +1,120 @@
 # Cirujano de Sintetizadores
 
-Plataforma web para operacion de taller, seguimiento de reparaciones y relacion cliente-tecnico.
+Plataforma web para operación de taller, seguimiento de reparaciones, inventario técnico y catálogo público de repuestos.
 
-El proyecto hoy integra tres capas funcionales:
-- Portal publico para servicios, contacto, contenido y diagnostico/cotizacion.
-- Portal cliente para seguimiento de OT, perfil, pagos y documentos.
-- Portal administrador para clientes, reparaciones, inventario, citas, tickets, compras y manuales.
+El sistema hoy está compuesto por una sola base operativa y tres superficies principales:
+- portal público
+- portal cliente
+- portal administrador
 
-## Resumen Ejecutivo
+## Estado actual
 
-La aplicacion esta construida sobre:
-- Frontend: Vue 3 + Vite + Pinia + Vue Router
-- Backend: FastAPI + SQLAlchemy
-- Base de datos local por defecto: SQLite en `backend/cirujano.db`
-- Pruebas: Vitest para front unitario/integracion y Playwright para E2E
+La base del proyecto ya está integrada de extremo a extremo en estas capas:
+- `frontend SPA` con Vue 3, Vite, Pinia y Vue Router
+- `backend API` con FastAPI y SQLAlchemy
+- `base de datos` SQLite local por defecto en [backend/cirujano.db](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/backend/cirujano.db)
+- `testing` con Vitest para front y Playwright para E2E
 
-El frontend trabaja como SPA, pero el repo ya incorpora una capa de auditoria automatizada para validar navegacion, rutas protegidas, formularios y CRUD criticos sin revisar el sistema boton por boton.
+Capas funcionales activas:
+- `público`: landing, contacto, agenda, calculadoras, cotizador/diagnóstico, tienda
+- `cliente`: dashboard, reparaciones, perfil, pagos OT, documentos
+- `admin`: clientes, usuarios, reparaciones, inventario, categorías, citas, tickets, compras, manuales, estadísticas
 
-## Alcance Funcional
+## Arquitectura resumida
 
-### Publico
-- Home y contenido institucional
-- Formulario de contacto
-- Agenda de citas
-- Diagnostico/cotizador online
-- Carga de fotos y firma por token publico
+### Frontend
+- Vue 3
+- Vite
+- Pinia
+- Vue Router
+- Sass centralizado en [src/scss](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/scss)
 
-### Cliente
-- Dashboard
-- Estado e historial de reparaciones
-- Perfil
-- Pagos OT y comprobantes
-- Acceso a documentos y cierre
+### Backend
+- FastAPI
+- SQLAlchemy
+- SQLite por defecto
 
-### Administrador
-- Dashboard interno
-- Gestion de clientes y usuarios
-- Reparaciones y OT
-- Inventario y categorias
-- Citas
-- Tickets
-- Solicitudes de compra
-- Manuales
-- Magos de ingreso y operacion
+### Testing
+- Vitest
+- Playwright
+- pytest para backend
 
-## Estructura Relevante
+## Flujos importantes del sistema
 
-- Frontend: `src/`
-- Backend: `backend/app/`
-- Pruebas frontend: `tests/`
-- Pruebas backend: `backend/tests/`
-- Documentacion operativa: `docs/`
-- Documentacion complementaria/archivo: `DOCUMJENTOS_EXTRAS/`
-- Arquitectura Sass local: `src/scss/README.md`
+### Inventario y tienda
 
-## Ejecucion Local
+El inventario y la tienda comparten la misma fuente de verdad.
+
+Regla operativa:
+- un solo `product`
+- un solo stock real
+- mismo ítem para taller y tienda
+- separación por uso, no por duplicación
+
+La tienda pública lee desde el backend de inventario:
+- [backend/app/routers/inventory.py](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/backend/app/routers/inventory.py)
+- [src/vue/content/pages/StorePage.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/content/pages/StorePage.vue)
+
+El dashboard admin opera el inventario desde:
+- [src/vue/content/pages/admin/InventoryPage.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/content/pages/admin/InventoryPage.vue)
+- [src/vue/components/admin/InventoryForm.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/admin/InventoryForm.vue)
+- [src/vue/components/admin/InventoryStockSheet.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/admin/InventoryStockSheet.vue)
+- [src/vue/components/admin/InventoryStockStates.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/admin/InventoryStockStates.vue)
+
+### Sincronización de imágenes de inventario
+
+Flujo vigente:
+1. dejar imágenes en [public/images/INVENTARIO](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/public/images/INVENTARIO)
+2. usar `Sincronizar tienda` desde `/admin/inventory`
+3. el backend actualiza `products.image_url`, publicación y catálogo
+
+Script reutilizado por ese flujo:
+- [scripts/sync_store_catalog_from_inventory_images.py](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/scripts/sync_store_catalog_from_inventory_images.py)
+
+Ese flujo es aditivo:
+- no borra productos por defecto
+- no borra imágenes fuente
+- reutiliza filas existentes cuando encuentra match por nombre/SKU
+- crea filas sólo cuando no existe producto razonable
+
+### OT y taller
+
+Las OTs y reparaciones viven separadas del catálogo de venta, pero conectadas al mismo ecosistema:
+- `cliente + equipo`
+- `OT / reparación`
+- `consumo de materiales`
+- `stock interno`
+
+Referencias:
+- [backend/app/models/repair.py](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/backend/app/models/repair.py)
+- [backend/app/routers/repair.py](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/backend/app/routers/repair.py)
+- [src/vue/components/admin/repair/RepairComponentsManager.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/admin/repair/RepairComponentsManager.vue)
+
+### Cotizador inteligente
+
+El cotizador está orientado a diagnóstico referencial, no a precio final real.
+
+Base actual:
+- flujo guiado
+- ramas bloqueantes
+- observaciones libres del cliente
+- resultado referencial, no vinculante
+
+Referencias:
+- [src/vue/content/pages/CotizadorIAPage.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/content/pages/CotizadorIAPage.vue)
+- [src/vue/components/quotation/InteractiveInstrumentDiagnostic.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/quotation/InteractiveInstrumentDiagnostic.vue)
+- [backend/app/routers/quotation.py](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/backend/app/routers/quotation.py)
+
+## Estructura relevante
+
+- Frontend: [src](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src)
+- Backend: [backend/app](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/backend/app)
+- Tests frontend: [tests](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests)
+- Tests backend: [backend/tests](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/backend/tests)
+- Documentación activa: [docs](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/docs)
+- Documentación adicional/archivo: [DOCUMJENTOS_EXTRAS](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/DOCUMJENTOS_EXTRAS)
+
+## Ejecución local
 
 ### Frontend
 ```bash
@@ -72,100 +132,87 @@ Puertos habituales:
 - Frontend: `http://localhost:5173`
 - Backend: `http://localhost:8000`
 
-## Configuracion Base
+## Variables importantes
 
 ### Frontend
-Variable principal:
 ```bash
 VITE_API_URL=http://localhost:8000/api/v1
 ```
 
 ### Backend
-Configuracion por defecto:
-- entorno: `development`
-- base de datos: `sqlite:///./cirujano.db`
-- archivo operativo: `backend/cirujano.db`
+Por defecto:
+- `ENVIRONMENT=development`
+- `DATABASE_URL=sqlite:///./cirujano.db`
 
-Nota:
-- La configuracion efectiva sale de `backend/.env` y `backend/app/core/config.py`.
-- No exponer secretos del `.env` en documentacion publica.
+La configuración efectiva sale de:
+- [backend/.env](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/backend/.env)
+- [backend/app/core/config.py](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/backend/app/core/config.py)
 
-## Testing y Validacion
+## Scripts útiles
 
-Comandos principales:
+### Desarrollo
 ```bash
+npm run dev
 npm run build
-npx vitest run --config vitest.config.ts --environment jsdom
-npm run test:coverage
-npm run test:e2e
 ```
 
-Estado validado en esta revision:
-- `npm run build`: OK
-- `npx vitest run --config vitest.config.ts --environment jsdom`: `170/170` OK
-- `npm run test:e2e -- tests/e2e/auth.spec.ts`: `5/5` OK
-- `npm run test:coverage`: falla correctamente por umbrales globales no cumplidos
+### Testing
+```bash
+npm run test
+npm run test:coverage
+npm run test:e2e
+backend/.venv/bin/python -m pytest backend/tests -q
+```
 
-Coverage actual medido sobre `src`:
-- lines/statements: `39.6%`
-- branches: `62.44%`
-- functions: `41.22%`
+### Sincronización de instrumentos/catálogo técnico
+```bash
+npm run sync:instruments
+npm run sync:instruments:force
+npm run sync:instruments:once
+```
 
-El flujo E2E ya corre aislado de la base operativa:
-- frontend E2E: `127.0.0.1:5174`
-- backend E2E: `127.0.0.1:8001`
-- runtime E2E: `backend/tests/e2e_runtime/`
+## Validación reciente
 
-Mas detalle:
-- `docs/TESTING.md`
-- `docs/TESTING_STATUS_BRIEF.md`
-- `docs/TESTING_COVERAGE_MATRIX.md`
+Verificado en esta etapa:
+- `npx vitest run tests/unit/admin/InventoryStockSheet.test.ts tests/unit/admin/InventoryPage.test.ts` -> OK
+- `npm run build` -> OK
+- `npm run test:e2e -- tests/e2e/store.spec.ts tests/e2e/routes.spec.ts` -> OK
+- `backend/.venv/bin/python -m pytest backend/tests/test_inventory_store_catalog_sync.py -q` -> OK
 
-## Estado Sass
+Estado local del catálogo de tienda sobre la DB operativa al momento de esta actualización:
+- `101` archivos detectados en `public/images/INVENTARIO`
+- `111` productos vinculados y publicados
+- `111` con stock bruto
+- `111` vendibles ahora
+- `0` pendientes
+- `0` huérfanos
 
-La capa Sass del proyecto usa la estructura ya presente en `src/scss/`.
+## Sass
 
-Estado actual:
-- componentes Vue usando partials existentes con `_`
-- sin CSS inline detectado en `src/`, `public/` y `tests/`
-- sin `@extend`
-- imports legacy concentrados en archivos base existentes:
-  - `src/scss/_core.scss`
-  - `src/scss/_theming.scss`
-  - `src/scss/main.scss`
-  - `src/scss/style.scss`
+La capa visual del runtime útil está centralizada en Sass y no en estilos embebidos de componentes.
 
-La guia local de esta capa vive en:
-- `src/scss/README.md`
+Referencias:
+- [src/scss](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/scss)
+- [src/scss/README.md](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/scss/README.md)
 
-## Documentos Relacionados
+## Documentación recomendada
 
-- Testing operativo: `docs/TESTING.md`
-- Estado corto de testing: `docs/TESTING_STATUS_BRIEF.md`
-- Matriz de cobertura: `docs/TESTING_COVERAGE_MATRIX.md`
-- Documento de rapidez/referencia externa: `DOCUMJENTOS_EXTRAS/RAPIDEZ.md`
+- [docs/ARCHITECTURE.md](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/docs/ARCHITECTURE.md)
+- [docs/DEPLOYMENT.md](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/docs/DEPLOYMENT.md)
+- [docs/TESTING.md](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/docs/TESTING.md)
+- [docs/TESTING_COVERAGE_MATRIX.md](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/docs/TESTING_COVERAGE_MATRIX.md)
+- [docs/MODELOS_INVENTORY.md](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/docs/MODELOS_INVENTORY.md)
+- [docs/KICAD_CATALOG_WORKFLOW.md](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/docs/KICAD_CATALOG_WORKFLOW.md)
 
-## Nota Sobre RAPIDEZ.md
+## Criterio de trabajo del repo
 
-`DOCUMJENTOS_EXTRAS/RAPIDEZ.md` es una referencia de principios de performance, no la definicion de arquitectura del proyecto.
-
-En este repo esos principios aplican como criterio:
-- reducir trabajo innecesario
-- evitar bloqueos de carga
-- cargar solo lo necesario
-- mantener estructura simple y mantenible
-
-No obliga a cambiar el stack actual ni a salir de Vue/Vite/FastAPI.
-
-## Criterio de Trabajo Vigente
-
-Sobre este repo, la regla practica es:
+Regla práctica vigente sobre este proyecto:
 - trabajar sobre la estructura existente
 - preferir mejora aditiva
 - deconstruir antes de duplicar
-- reutilizar archivos, variables y capas ya presentes
-- evitar capas paralelas e inventario innecesario de archivos
+- reutilizar archivos, stores, rutas, modelos y flujos ya presentes
+- no inventar capas paralelas si el sistema actual ya tiene dónde integrarse
 
-## Licencia y Uso
+## Uso interno
 
-Proyecto de uso interno. Revisar antes de publicar o redistribuir.
+Proyecto de uso interno. Revisar datos, secretos y documentación antes de publicar o redistribuir.
