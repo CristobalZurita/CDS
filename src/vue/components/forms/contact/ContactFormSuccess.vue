@@ -29,32 +29,3 @@ const props = defineProps({
     email:String
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-div.foxy-contact-form-success {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    background-color: rgba($dark, 0.05);
-    border: 1px dashed rgba(black, 0.2);
-    padding: 40px 30px;
-    border-radius: 10px;
-}
-
-div.foxy-contact-form-success-content-wrapper {
-    text-align: center;
-
-    h3 {
-        color: $light-3;
-        font-family: $font-family-base;
-        font-weight: bold;
-    }
-
-    p {
-        color: $light-5;
-    }
-}
-</style>

@@ -21,18 +21,3 @@ defineProps({
 
 defineEmits(['update-status'])
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_core.scss" as *;
-
-.repair-manager {
-  display: grid;
-  gap: $spacer-md;
-}
-
-.repair {
-  border: 1px solid $color-gray-200-legacy;
-  border-radius: $border-radius-lg;
-  padding: $spacer-md;
-}
-</style>

@@ -137,15 +137,3 @@ const _resetScroll = () => {
     layout.scrollIntoView(element)
 }
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-#foxy-contact-form {
-    width: 100%;
-    @include media-breakpoint-down(lg) {
-        max-width: 680px;
-        margin: 0 auto;
-    }
-}
-</style>

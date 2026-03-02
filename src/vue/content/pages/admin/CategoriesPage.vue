@@ -49,6 +49,3 @@ function onEdit(category) {
 	showForm.value = true
 }
 </script>
-
-<style scoped lang="scss">
-</style>

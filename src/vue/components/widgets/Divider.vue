@@ -8,16 +8,3 @@ const props = defineProps({
     class: String
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-hr.solid-divider {
-    width: 60px;
-    color: black;
-    opacity: 1;
-    border: 2px solid black;
-    margin: 0 auto;
-    background-color: black;
-}
-</style>

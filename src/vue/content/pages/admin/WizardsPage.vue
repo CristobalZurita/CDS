@@ -60,20 +60,3 @@ const onCompleted = () => {
   // Placeholder for future toast/feedback
 }
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_core.scss" as *;
-
-.wizard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: $spacer-lg;
-}
-
-.wizard-card {
-  background: $color-white;
-  border: 1px solid $color-gray-200-legacy;
-  border-radius: $border-radius-lg;
-  padding: $spacer-lg;
-}
-</style>

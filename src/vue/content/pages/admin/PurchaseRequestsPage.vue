@@ -306,19 +306,3 @@ watch(
 
 onMounted(loadRequests)
 </script>
-
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.payment-box {
-  display: grid;
-  gap: 0.35rem;
-  min-width: 230px;
-}
-
-.actions-col {
-  display: grid;
-  gap: 0.35rem;
-  min-width: 170px;
-}
-</style>

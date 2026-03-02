@@ -108,7 +108,3 @@ const _onProjectModalClosed = () => {
     projectModalTarget.value = null
 }
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-</style>

@@ -62,6 +62,3 @@ async function load() {
 
 onMounted(load)
 </script>
-
-<style scoped lang="scss">
-</style>

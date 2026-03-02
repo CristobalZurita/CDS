@@ -27,6 +27,3 @@ const sections = [
     new SectionInfo('contact',      ContactSection,         'Contacto',         'fa-regular fa-envelope'),
 ]
 </script>
-
-<style lang="scss" scoped>
-</style>

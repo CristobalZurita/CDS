@@ -75,13 +75,3 @@ function onVerify(token) {
   form.turnstile_token = token
 }
 </script>
-
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.register-form { width: 100%; }
-.form-group { margin-bottom: 1rem; }
-.form-group input { width: 100%; padding: 0.6rem; border: 1px solid $color-gray-180-legacy; border-radius: 4px; }
-.password-field { display: flex; gap: 0.5rem; align-items: center; }
-.toggle-password { border: 1px solid $color-gray-180-legacy; background: $color-gray-100-legacy; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
-</style>

@@ -20,32 +20,3 @@ defineProps({
   stats: { type: Object, default: () => ({}) }
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_core.scss" as *;
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: $spacer-md;
-}
-
-.stat {
-  border: 1px solid $color-gray-200-legacy;
-  border-radius: $border-radius-lg;
-  padding: 0.75rem;
-  text-align: center;
-}
-
-.label {
-  margin: 0;
-  color: $color-gray-500-legacy;
-  font-size: $text-2xs;
-}
-
-.value {
-  margin: 0.3rem 0 0;
-  font-size: $text-xl;
-  font-weight: $fw-bold;
-}
-</style>

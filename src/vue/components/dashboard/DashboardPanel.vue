@@ -11,12 +11,3 @@
 <script setup>
 // Component placeholder - integrar datos reales desde stores
 </script>
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.card { padding: 12px; border-radius: 6px; }
-.card:first-child { background: $brand-primary; color: white; }
-.card:nth-child(2) { background: $brand-accent; color: white; }
-.card:nth-child(3) { background: $brand-paper; color: $brand-text; }
-</style>

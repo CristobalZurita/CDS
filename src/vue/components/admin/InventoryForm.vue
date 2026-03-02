@@ -99,7 +99,7 @@ const form = reactive({
   price: 0,
   image_url: '',
   enabled: true,
-  store_visible: false,
+  store_visible: true,
 })
 
 function syncForm(item = props.item) {
@@ -137,9 +137,3 @@ onMounted(() => {
 
 watch(() => props.item, (item) => syncForm(item))
 </script>
-
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.card { background: $color-white }
-</style>

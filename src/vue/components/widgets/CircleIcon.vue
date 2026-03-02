@@ -14,18 +14,3 @@ const props = defineProps({
     faIcon: String
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-span.icon-stack {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (font-size: 3rem),
-        xxl:  (font-size: 2.5rem),
-        xl:   (font-size: 2.25rem),
-        lg:   (font-size: 2rem),
-        md:   (font-size: 1.5rem),
-        sm:   (font-size: 1.25rem),
-    ));
-}
-</style>

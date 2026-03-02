@@ -31,19 +31,3 @@ onBeforeMount(() => {
     currentPageSections.value = props.sections
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-div.foxy-page-wrapper {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (padding-top:2rem),
-        xxl: (padding-top:2.75rem),
-        lg: (padding-top:3.5rem),
-    ));
-}
-
-div.foxy-page-wrapper-no-padding {
-    padding-top: 0!important;
-}
-</style>

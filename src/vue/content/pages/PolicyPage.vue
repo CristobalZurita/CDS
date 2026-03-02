@@ -13,6 +13,3 @@ const sections = [
     new SectionInfo('policy', PolicySection)
 ]
 </script>
-
-<style lang="scss" scoped>
-</style>

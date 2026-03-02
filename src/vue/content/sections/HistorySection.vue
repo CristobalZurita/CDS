@@ -70,7 +70,3 @@ const props = defineProps({
     id: String
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-</style>

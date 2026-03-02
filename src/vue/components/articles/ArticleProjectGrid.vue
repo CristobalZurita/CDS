@@ -62,18 +62,3 @@ const _onCategorySelected = (categoryId) => {
     selectedCategoryId.value = categoryId
 }
 </script>
-
-<style lang="scss">
-@use "@/scss/_theming.scss" as *;
-
-:root {
-    --project-logo-size: min(clamp(140px, 20vh, 170px), clamp(140px, 10.5vw, 170px));
-    @include media-breakpoint-down(lg) {
-        --project-logo-size: min(clamp(80px, 20vh, 110px), clamp(70px, 20.5vw, 110px));
-    }
-}
-
-div.foxy-project-grid {
-    min-height: calc(var(--project-logo-size) * 3.5);
-}
-</style>

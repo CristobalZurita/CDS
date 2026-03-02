@@ -99,19 +99,3 @@ const handlePrev = () => {
 
 onMounted(loadRepairs)
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_core.scss" as *;
-
-.wizard-section {
-  display: flex;
-  flex-direction: column;
-  gap: $spacer-md;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: $spacer-md;
-}
-</style>

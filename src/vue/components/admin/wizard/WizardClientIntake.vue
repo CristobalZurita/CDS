@@ -219,11 +219,3 @@ const submit = async () => {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_core.scss" as *;
-
-.wizard-step-body h4 {
-  margin-bottom: $spacer-md;
-}
-</style>

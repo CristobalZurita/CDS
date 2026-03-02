@@ -74,7 +74,3 @@ const parsedDescription = computed(() => {
     return utils.parseCustomText(props.description)
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-</style>

@@ -35,11 +35,3 @@ const lastSpanContent = computed(() => {
     return `${lastPart.value} <i class="fa-solid fa-quote-right text-primary ms-1"></i>`
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-span.last-span {
-    white-space: nowrap;
-}
-</style>

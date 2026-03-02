@@ -10,14 +10,3 @@
 
 <script setup>
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-.team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2rem;
-    align-items: stretch;
-}
-</style>

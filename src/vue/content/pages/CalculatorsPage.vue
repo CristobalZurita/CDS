@@ -13,6 +13,3 @@ const sections = [
     new SectionInfo('calculators', CalculatorsSection, 'Calculadoras', 'pi pi-calculator')
 ]
 </script>
-
-<style lang="scss" scoped>
-</style>

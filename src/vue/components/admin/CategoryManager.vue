@@ -15,25 +15,3 @@ defineProps({
   categories: { type: Array, default: () => [] }
 })
 </script>
-
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.category-manager ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 0.5rem;
-}
-.category-manager li {
-  border: 1px solid $color-gray-200-legacy;
-  border-radius: 10px;
-  padding: 0.75rem;
-}
-.category-manager span {
-  display: block;
-  color: $color-gray-500-legacy;
-  font-size: 0.85rem;
-}
-</style>
