@@ -645,7 +645,7 @@ src/vue/content/pages/
         v-for="fault in markedFaults"
         :key="fault.id"
         class="fault-marker"
-        :style="getFaultMarkerStyle(fault)"
+        :class="fault.markerClass"
         @click.stop="editFault(fault)"
       >
         <span class="marker-icon">✕</span>
@@ -656,7 +656,7 @@ src/vue/content/pages/
       <div
         v-if="isPlacingMarker"
         class="placement-cursor"
-        :style="cursorStyle"
+        :class="cursorClass"
       >
         <span>+ Click para marcar falla</span>
       </div>
@@ -904,8 +904,8 @@ const onImageLoad = () => {
 }
 </script>
 
-<style lang="scss" scoped>
-@import "@/scss/_core.scss";
+/* Estilos movidos a la capa Sass global del proyecto */
+@use "@/scss/_core.scss" as *;
 
 .diagnostic-canvas {
   display: grid;
@@ -1028,7 +1028,6 @@ const onImageLoad = () => {
     grid-template-columns: 1fr;
   }
 }
-</style>
 ```
 
 ---

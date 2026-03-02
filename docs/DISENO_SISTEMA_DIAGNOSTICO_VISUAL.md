@@ -241,7 +241,7 @@ y cotización estimada.
     <div class="canvas-container" v-if="currentInstrument">
       <div
         class="instrument-image-wrapper"
-        :style="{ width: canvasWidth + 'px', height: canvasHeight + 'px' }"
+        :class="canvas-size-class"
       >
         <!-- Imagen base del instrumento -->
         <img
