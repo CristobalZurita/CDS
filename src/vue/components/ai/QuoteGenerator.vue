@@ -60,24 +60,3 @@ async function generate() {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_core.scss" as *;
-
-.quote-generator {
-  padding: $spacer-md;
-}
-
-.controls {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-.result {
-  margin-top: $spacer-md;
-  padding: 0.75rem;
-  border-radius: $border-radius-sm;
-  background: rgba($color-black, 0.03);
-}
-</style>

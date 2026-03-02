@@ -16,6 +16,7 @@ from app.models.repair import Repair, RepairStatus
 from app.models.payment import Payment, PaymentStatus
 from app.models.purchase_request import PurchaseRequest, PurchaseRequestItem
 from app.models.inventory import Product
+from app.models.category import Category
 from app.models.stock import Stock
 from app.models.repair_component_usage import RepairComponentUsage
 from app.models.repair_intake_sheet import RepairIntakeSheet
@@ -25,6 +26,7 @@ from app.core.config import settings
 from app.services.logging_service import create_audit
 from app.services.pdf_generator import generate_repair_closure_pdf_bytes
 from app.services.ot_code_service import repair_code as _repair_code
+from app.routers.inventory import _store_visible_from_meta
 from app.routers.purchase_requests import _apply_request_stock_state
 
 router = APIRouter(prefix="/client", tags=["client"])
@@ -199,10 +201,10 @@ def _parse_product_meta(description: str | None) -> dict:
 
 def _product_store_enabled(product: Product) -> bool:
     meta = _parse_product_meta(product.description)
-    enabled = bool(meta.get("enabled")) if "enabled" in meta else False
-    if "store_visible" in meta:
-        return enabled and bool(meta.get("store_visible"))
-    return enabled
+    category_name = None
+    if getattr(product, "category", None):
+        category_name = product.category.name
+    return _store_visible_from_meta(meta, product, category_name)
 
 
 def _product_sellable_stock(db: Session, product: Product) -> int:
@@ -832,6 +834,8 @@ def create_store_purchase_request(
         product = db.query(Product).filter(Product.id == product_id).first()
         if not product:
             raise HTTPException(status_code=404, detail=f"Producto no encontrado: {product_id}")
+        if not getattr(product, "category", None):
+            product.category = db.query(Category).filter(Category.id == product.category_id).first()
         if not _product_store_enabled(product):
             raise HTTPException(status_code=400, detail=f"Producto no disponible para tienda: {product.sku}")
 

@@ -90,36 +90,3 @@ provide('currentPageSections', currentPageSections)
 provide('loaderAnimationStatus', loaderAnimationStatus)
 provide('LoaderAnimationStatus', LoaderAnimationStatus)
 </script>
-
-<style lang="scss">
-@use "@/scss/_theming.scss" as *;
-
-.site-body {
-  padding-top: var(--navbar-height, 120px);
-}
-
-.footer-legal-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  text-align: center;
-  font-size: 1.05rem;
-}
-
-.footer-legal-row a {
-  color: $color-gray-240-legacy;
-  text-decoration: none;
-  font-weight: $fw-semibold;
-  white-space: nowrap;
-}
-
-.footer-legal-row a:hover {
-  color: lighten($primary, 15%);
-}
-
-.footer-legal-sep {
-  color: $color-gray-240-legacy;
-}
-</style>

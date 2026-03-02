@@ -16,6 +16,13 @@ from app.models.category import Category
 
 router = APIRouter(prefix="/inventory", tags=["Inventory"])
 
+_STORE_EXCLUDED_TERMS = (
+    "teclado",
+    "keyboard",
+    "herramient",
+    "insumo",
+)
+
 
 def _parse_product_meta(description: Optional[str]) -> dict:
     if not description:
@@ -37,12 +44,30 @@ def _sku_family(sku: Optional[str]) -> Optional[str]:
     return prefix or None
 
 
-def _store_visible_from_meta(meta: dict) -> bool:
-    if "store_visible" in meta:
-        return bool(meta.get("store_visible"))
+def _product_store_default(product: Product, category_name: Optional[str] = None) -> bool:
+    haystack = " ".join(
+        [
+            str(product.sku or ""),
+            str(product.name or ""),
+            str(category_name or ""),
+        ]
+    ).lower()
+    return not any(term in haystack for term in _STORE_EXCLUDED_TERMS)
+
+
+def _enabled_from_meta(meta: dict, product: Product, category_name: Optional[str] = None) -> bool:
     if "enabled" in meta:
         return bool(meta.get("enabled"))
-    return False
+    return _product_store_default(product, category_name)
+
+
+def _store_visible_from_meta(meta: dict, product: Product, category_name: Optional[str] = None) -> bool:
+    enabled = _enabled_from_meta(meta, product, category_name)
+    if not enabled:
+        return False
+    if "store_visible" in meta:
+        return bool(meta.get("store_visible"))
+    return enabled
 
 
 def _merge_product_meta(product: Product, payload: dict) -> Optional[str]:
@@ -99,8 +124,10 @@ def _serialize_inventory_product(db: Session, product: Product) -> dict:
     meta = _parse_product_meta(product.description)
     product_family = _sku_family(product.sku)
     product_origin = str(meta.get("origin_status") or "").strip().upper() or None
-    product_enabled = bool(meta.get("enabled")) if "enabled" in meta else None
-    product_store_visible = _store_visible_from_meta(meta)
+    category = db.query(Category).filter(Category.id == product.category_id).first()
+    category_name = category.name if category else None
+    product_enabled = _enabled_from_meta(meta, product, category_name)
+    product_store_visible = _store_visible_from_meta(meta, product, category_name)
 
     stock = db.query(Stock).filter(
         Stock.component_table == "products",
@@ -112,7 +139,6 @@ def _serialize_inventory_product(db: Session, product: Product) -> dict:
     min_stock = stock.minimum_stock if stock else product.min_quantity
     sellable_stock = max(int(available_qty or 0) - int(min_stock or 0), 0)
     stock_alert_level = _stock_alert_level(int(available_qty or 0), int(min_stock or 0))
-    category = db.query(Category).filter(Category.id == product.category_id).first()
 
     return {
         "id": product.id,
@@ -120,7 +146,7 @@ def _serialize_inventory_product(db: Session, product: Product) -> dict:
         "sku": product.sku,
         "description": product.description,
         "family": product_family,
-        "category": category.name if category else None,
+        "category": category_name,
         "category_id": product.category_id,
         "origin_status": product_origin,
         "enabled": product_enabled,

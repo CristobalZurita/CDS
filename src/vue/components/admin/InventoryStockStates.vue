@@ -116,24 +116,3 @@ const saveRow = (row) => {
   emit('save', { ...row })
 }
 </script>
-
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.stock-states {
-  display: grid;
-  gap: 1rem;
-}
-
-.sheet-help {
-  background: $color-orange-25-legacy;
-  border: 1px solid rgba($color-primary, 0.35);
-  border-radius: 12px;
-  padding: 1rem 1.2rem;
-  color: $color-dark;
-}
-
-.sheet-controls {
-  max-width: 420px;
-}
-</style>

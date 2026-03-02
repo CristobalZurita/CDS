@@ -36,38 +36,3 @@ const parsedDescription = computed(() => {
     return utils.parseCustomText(props.description)
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-div.foxy-item-feature-content {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (flex-direction: column, padding: 0 1rem),
-        lg:   (flex-direction: row, text-align:left, padding: 0 0.5rem),
-        md:   (padding: 0)
-    ));
-
-    display: flex;
-}
-
-div.foxy-item-feature-content-wrapper {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (margin-top: 1rem),
-        lg:   (margin-top: 0, margin-left: 1rem),
-        md:   (margin-left: 0.75rem)
-    ));
-}
-
-h5.foxy-feature-title {
-    font-family: 'Cervo Neue', $headings-font-family;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    color: $dark;
-}
-
-p.foxy-feature-description {
-    font-family: 'Cervo Neue', $font-family-base;
-    font-weight: 400;
-    line-height: 1.6;
-}
-</style>

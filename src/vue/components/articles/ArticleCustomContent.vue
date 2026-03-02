@@ -10,19 +10,3 @@ const props = defineProps({
     class: String
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-article.foxy-custom-content-article {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (padding: 2rem 0),
-        lg:   (padding: 1rem 0),
-        md:   (padding: 0.5rem 0)
-    ));
-
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-</style>

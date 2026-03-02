@@ -70,31 +70,3 @@ const computedClass = computed(() => {
 })
 
 </script>
-
-<style scoped lang="scss">
-.optimized-image {
-  /* Prevent layout shift (Cumulative Layout Shift - CLS) */
-  display: block;
-  max-width: 100%;
-  height: auto;
-
-  /* Optimize rendering performance */
-  will-change: transform;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-
-  /* Smooth loading fade-in (optional, can be customized) */
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
-}
-
-/* Loading state (optional) */
-.optimized-image[loading='lazy'] {
-  opacity: 0.95;
-}
-
-/* Loaded state (optional) */
-.optimized-image[loading='eager'] {
-  opacity: 1;
-}
-</style>

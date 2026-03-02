@@ -77,7 +77,3 @@ onUnmounted(() => {
   window.removeEventListener('hashchange', _onUserInteraction)
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-</style>

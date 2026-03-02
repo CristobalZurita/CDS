@@ -28,9 +28,3 @@ onMounted(() => {
     })
 })
 </script>
-
-<style scoped lang="scss">
-#app-root {
-    min-height: 100vh;
-}
-</style>

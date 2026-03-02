@@ -106,6 +106,3 @@ function onEditUser(user) {
 	showUserForm.value = true
 }
 </script>
-
-<style scoped lang="scss">
-</style>

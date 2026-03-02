@@ -19,12 +19,12 @@ body {
 }
 
 .card,
-.admin-content :deep(.admin-section) {
+.admin-content .admin-section {
     padding: 1.5rem;
 }
 
 .btn,
-.admin-content :deep(.admin-btn) {
+.admin-content .admin-btn {
     min-height: 44px;
     font-size: 1rem;
 }
@@ -45,12 +45,12 @@ textarea {
     }
 
     .card,
-    .admin-content :deep(.admin-section) {
+    .admin-content .admin-section {
         padding: 1.25rem;
     }
 
     .btn,
-    .admin-content :deep(.admin-btn) {
+    .admin-content .admin-btn {
         min-height: 48px;
     }
 }

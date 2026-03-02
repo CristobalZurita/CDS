@@ -6,7 +6,3 @@
 
 <script setup>
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-</style>

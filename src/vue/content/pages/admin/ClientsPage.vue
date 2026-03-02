@@ -100,19 +100,3 @@ function onIntakeCompleted(payload) {
 
 onMounted(load)
 </script>
-
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.clients-page {
-	padding: 1rem;
-}
-.clients-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 1rem;
-}
-.clients-toolbar {
-	max-width: 420px;
-}
-</style>

@@ -30,28 +30,3 @@ const progressClass = computed(() => {
     return `progress-${Math.round(parsedPercentage.value)}`
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-div.progress {
-    height: 4px;
-    border-radius: 0;
-    background-color: lighten($light-3, 2%);
-}
-
-div.progress-bar {
-    background-color: $primary;
-    -webkit-transition: none;
-    -moz-transition: none;
-    -ms-transition: none;
-    -o-transition: none;
-    transition: none;
-
-    @for $i from 0 through 100 {
-        &.progress-#{$i} {
-            width: #{$i}%;
-        }
-    }
-}
-</style>

@@ -13,6 +13,3 @@ const sections = [
     new SectionInfo('license', LicenseSection)
 ]
 </script>
-
-<style lang="scss" scoped>
-</style>

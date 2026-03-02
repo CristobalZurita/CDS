@@ -58,7 +58,3 @@ const linkList = computed(() => {
     return base
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-</style>

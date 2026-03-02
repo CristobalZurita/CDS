@@ -86,20 +86,3 @@ async function onSubmit() {
   }
 }
 </script>
-<style lang="scss" scoped>
-@use "@/scss/_core.scss" as *;
-
-.password-field {
-  display: flex;
-  gap: $spacer-sm;
-  align-items: center;
-}
-
-.toggle-password {
-  border: 1px solid $color-gray-300-legacy;
-  background: $color-gray-100-legacy;
-  padding: 0.35rem 0.6rem;
-  border-radius: $border-radius-sm;
-  font-size: $text-sm;
-}
-</style>

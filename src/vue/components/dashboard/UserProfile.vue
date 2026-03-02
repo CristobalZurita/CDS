@@ -16,22 +16,3 @@ defineProps({
   user: { type: Object, default: () => ({}) }
 })
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_core.scss" as *;
-
-.profile {
-  border: 1px solid $color-gray-200-legacy;
-  border-radius: $border-radius-lg;
-  padding: $spacer-md;
-  display: grid;
-  gap: $spacer-sm;
-}
-
-.meta {
-  display: flex;
-  gap: $spacer-md;
-  color: $color-gray-500-legacy;
-  font-size: $text-sm;
-}
-</style>

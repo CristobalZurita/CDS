@@ -139,31 +139,3 @@ const handlePrev = () => {
 
 onMounted(loadData)
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_core.scss" as *;
-
-.wizard-section {
-  display: flex;
-  flex-direction: column;
-  gap: $spacer-md;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: $spacer-md;
-}
-
-.item-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: $spacer-sm;
-  align-items: center;
-}
-
-.summary-grid {
-  display: grid;
-  gap: $spacer-sm;
-}
-</style>

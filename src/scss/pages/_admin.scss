@@ -32,7 +32,7 @@
 // ---------------------------------------------
 // SECCIONES ADMIN (Cards internas)
 // ---------------------------------------------
-.admin-content :deep(.admin-section),
+.admin-content .admin-section,
 .admin-section {
     background: $color-white;
     border-radius: $border-radius-lg;
@@ -48,7 +48,7 @@
 // ---------------------------------------------
 // TÍTULOS ADMIN
 // ---------------------------------------------
-.admin-content :deep(.admin-section-title),
+.admin-content .admin-section-title,
 .admin-section-title {
     font-family: $font-family-heading;
     font-size: $h4-size;
@@ -66,7 +66,7 @@
 // ---------------------------------------------
 // BOTONES ADMIN
 // ---------------------------------------------
-.admin-content :deep(.admin-btn),
+.admin-content .admin-btn,
 .admin-btn {
     min-height: 44px;
     font-size: $font-size-base;
@@ -82,7 +82,7 @@
 // ---------------------------------------------
 // TABLAS ADMIN
 // ---------------------------------------------
-.admin-content :deep(table),
+.admin-content table,
 .admin-table {
     width: 100%;
     font-size: $font-size-base;
@@ -111,11 +111,11 @@
 // ---------------------------------------------
 // FORMULARIOS ADMIN
 // ---------------------------------------------
-.admin-content :deep(.form-control),
-.admin-content :deep(.form-select),
-.admin-content :deep(input),
-.admin-content :deep(select),
-.admin-content :deep(textarea) {
+.admin-content .form-control,
+.admin-content .form-select,
+.admin-content input,
+.admin-content select,
+.admin-content textarea {
     min-height: 44px;
     font-size: $font-size-base;
     padding: $spacer-sm $spacer-md;
@@ -130,7 +130,7 @@
     }
 }
 
-.admin-content :deep(label),
+.admin-content label,
 .admin-label {
     font-size: $font-size-sm;
     font-weight: 600;
@@ -255,12 +255,790 @@
 // RESPONSIVE ADMIN
 // ---------------------------------------------
 @include media-breakpoint-down(md) {
-    .admin-content :deep(.admin-section-title),
+    .admin-content .admin-section-title,
     .admin-section-title {
         font-size: 1.25rem;
     }
 
     .admin-stat-card .stat-value {
         font-size: 2rem;
+    }
+}
+
+// Source: src/vue/content/pages/admin/AppointmentsPage.vue
+.appointments-filters {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.appointments-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.appointment-card {
+	background: $vintage-beige;
+	border-radius: 12px;
+	padding: 1.25rem;
+	border-left: 4px solid $text-muted;
+	box-shadow: 0 2px 8px rgba($color-black, 0.08);
+	transition: all 0.2s;
+
+	&.status-pendiente {
+		border-left-color: $color-warning;
+	}
+
+	&.status-confirmado {
+		border-left-color: $color-green-700-legacy;
+	}
+
+	&.status-cancelado {
+		border-left-color: $color-secondary-legacy;
+		opacity: 0.7;
+	}
+
+	&:hover {
+		box-shadow: 0 4px 12px rgba($color-black, 0.12);
+	}
+}
+
+.appointment-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 1rem;
+}
+
+.appointment-info h5 {
+	color: $brand-text;
+	font-weight: 600;
+}
+
+.appointment-datetime {
+	font-size: 1rem;
+	color: $brand-text;
+}
+
+.appointment-message {
+	font-size: 0.9rem;
+	color: $text-muted;
+	font-style: italic;
+}
+
+.appointment-actions {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid rgba($color-black, 0.08);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+	.appointments-filters {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.btn-group {
+		width: 100%;
+	}
+
+	.appointment-header {
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+}
+
+// Source: src/vue/content/pages/admin/ClientsPage.vue
+.clients-page {
+	padding: 1rem;
+}
+.clients-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+}
+.clients-toolbar {
+	max-width: 420px;
+}
+
+// Source: src/vue/content/pages/admin/ContactMessagesPage.vue
+.admin-status {
+  margin: 0 0 1rem;
+  font-weight: 600;
+  color: $brand-text;
+}
+
+.admin-status-error {
+  color: $danger;
+}
+
+.admin-empty {
+  padding: 1rem 0;
+  font-weight: 600;
+  color: $brand-text;
+}
+
+@include media-breakpoint-down(md) {
+  .admin-table--stack,
+  .admin-table--stack thead,
+  .admin-table--stack tbody,
+  .admin-table--stack tr,
+  .admin-table--stack th,
+  .admin-table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table--stack thead {
+    display: none;
+  }
+
+  .admin-table--stack tr {
+    padding: $spacer-md;
+    margin-bottom: 0.75rem;
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 8px 16px rgba($color-dark, 0.12);
+  }
+
+  .admin-table--stack td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+  }
+
+  .admin-table--stack td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.8rem;
+  }
+}
+
+// Source: src/vue/content/pages/admin/NewsletterSubscriptionsPage.vue
+.admin-status {
+  margin: 0 0 1rem;
+  font-weight: 600;
+  color: $brand-text;
+}
+
+.admin-status-error {
+  color: $danger;
+}
+
+.admin-empty {
+  padding: 1rem 0;
+  font-weight: 600;
+  color: $brand-text;
+}
+
+@include media-breakpoint-down(md) {
+  .admin-table--stack,
+  .admin-table--stack thead,
+  .admin-table--stack tbody,
+  .admin-table--stack tr,
+  .admin-table--stack th,
+  .admin-table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table--stack thead {
+    display: none;
+  }
+
+  .admin-table--stack tr {
+    padding: $spacer-md;
+    margin-bottom: 0.75rem;
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 8px 16px rgba($color-dark, 0.12);
+  }
+
+  .admin-table--stack td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+  }
+
+  .admin-table--stack td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.8rem;
+  }
+}
+
+// Source: src/vue/content/pages/admin/PurchaseRequestsPage.vue
+.payment-box {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 230px;
+}
+
+.actions-col {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 170px;
+}
+
+// Source: src/vue/content/pages/admin/QuotesAdminPage.vue
+.quotes-board-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.board-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.toolbar-title {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.toolbar-subtitle {
+  margin: 0.25rem 0 0;
+  color: $color-gray-600-legacy;
+  font-size: 0.9rem;
+}
+
+.toolbar-right {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.board-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.summary-pill {
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.78rem;
+  background: $color-gray-100-legacy;
+  color: $color-gray-800-legacy;
+}
+
+.summary-pill.is-warning {
+  background: rgba($color-warning, 0.2);
+}
+
+.summary-pill.is-danger {
+  background: rgba($color-danger, 0.18);
+}
+
+.send-controls {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: 10px;
+  background: $color-gray-50-legacy;
+}
+
+.board-columns {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.board-column {
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: 12px;
+  background: $color-white;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid $color-gray-200-legacy;
+}
+
+.column-header h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.column-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.quote-card {
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: 10px;
+  padding: 0.65rem;
+  background: $color-gray-25-legacy;
+}
+
+.quote-card.highlighted {
+  border-color: $color-primary;
+  box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+}
+
+.quote-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.status-pill {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  background: $color-gray-200-legacy;
+  border-radius: 999px;
+  padding: 0.15rem 0.45rem;
+}
+
+.quote-meta {
+  margin-top: 0.45rem;
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.82rem;
+  color: $color-gray-700-legacy;
+}
+
+.quote-meta span {
+  font-weight: 600;
+}
+
+.quote-problem {
+  margin: 0.55rem 0;
+  font-size: 0.85rem;
+  color: $color-gray-800-legacy;
+}
+
+.quote-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.column-empty {
+  margin: 0.2rem 0;
+  font-size: 0.85rem;
+  color: $color-gray-500-legacy;
+}
+
+@include media-breakpoint-up(md) {
+  .board-toolbar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .toolbar-right {
+    width: min(460px, 100%);
+  }
+
+  .board-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .board-columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+// Source: src/vue/content/pages/admin/RepairDetailAdminPage.vue
+.detail-card {
+	background: $vintage-beige;
+	border-radius: 12px;
+	padding: 1.25rem;
+	box-shadow: 0 2px 8px rgba($color-black, 0.08);
+}
+
+.card-title {
+	color: $brand-text;
+	font-weight: 600;
+	margin-bottom: 1rem;
+}
+
+.photos-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 1rem;
+}
+
+.photo-item {
+	border-radius: 8px;
+	overflow: hidden;
+	background: $color-white;
+	box-shadow: 0 1px 4px rgba($color-black, 0.1);
+
+	img {
+		width: 100%;
+		height: 120px;
+		object-fit: cover;
+	}
+
+	.photo-info {
+		padding: 0.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+}
+
+.notes-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.note-item {
+	background: $color-white;
+	border-radius: 8px;
+	padding: 0.75rem 1rem;
+	border-left: 3px solid $orange-pastel;
+
+	.note-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.5rem;
+	}
+
+	.note-text {
+		margin: 0;
+		color: $brand-text;
+	}
+}
+
+.upload-form, .note-form {
+	background: rgba($color-white, 0.5);
+}
+
+// Source: src/vue/content/pages/admin/WizardsPage.vue
+.wizard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: $spacer-lg;
+}
+
+.wizard-card {
+  background: $color-white;
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: $border-radius-lg;
+  padding: $spacer-lg;
+}
+
+// Source: src/views/admin/ErrorDashboard.vue
+.error-dashboard {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+
+            button {
+                padding: 0.6rem 1.2rem;
+                border: none;
+                border-radius: 4px;
+                background: #f0f0f0;
+                cursor: pointer;
+                font-size: 0.9rem;
+                transition: all 0.2s;
+
+                &:hover {
+                    background: #e0e0e0;
+                }
+
+                &.btn-refresh {
+                    background: #2196F3;
+                    color: white;
+                    &:hover { background: #1976D2; }
+                }
+
+                &.btn-export {
+                    background: #4CAF50;
+                    color: white;
+                    &:hover { background: #388E3C; }
+                }
+
+                &.btn-clear {
+                    background: #f44336;
+                    color: white;
+                    &:hover { background: #d32f2f; }
+                }
+            }
+        }
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #2196F3;
+
+            &.error {
+                border-left-color: #FF9800;
+            }
+
+            &.critical {
+                border-left-color: #f44336;
+            }
+
+            .stat-label {
+                font-size: 0.85rem;
+                color: #666;
+                margin-bottom: 0.5rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .stat-trend {
+                font-size: 0.8rem;
+                margin-top: 0.5rem;
+                &.up { color: #f44336; }
+                &.down { color: #4CAF50; }
+            }
+        }
+    }
+
+    .filters {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            label {
+                font-weight: 600;
+                color: #666;
+                min-width: 60px;
+            }
+
+            select, input {
+                padding: 0.5rem;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 0.9rem;
+                min-width: 120px;
+
+                &:focus {
+                    outline: none;
+                    border-color: #2196F3;
+                    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+                }
+            }
+        }
+    }
+
+    .section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+
+        h2 {
+            margin: 0 0 1rem 0;
+            font-size: 1.3rem;
+            color: #333;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 2rem;
+            font-style: italic;
+        }
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+
+        thead {
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+
+            th {
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+                color: #666;
+            }
+        }
+
+        tbody {
+            tr {
+                border-bottom: 1px solid #eee;
+                transition: background 0.2s;
+
+                &:hover {
+                    background: #fafafa;
+                }
+
+                &.error {
+                    td:first-child { background: #fff3e0; }
+                }
+
+                &.critical {
+                    td:first-child { background: #ffebee; }
+                }
+            }
+        }
+
+        td {
+            padding: 0.8rem 1rem;
+
+            .badge {
+                display: inline-block;
+                padding: 0.3rem 0.6rem;
+                border-radius: 3px;
+                font-weight: 600;
+                font-size: 0.8rem;
+
+                &.debug { background: #E3F2FD; color: #1565C0; }
+                &.info { background: #E0F2F1; color: #00695C; }
+                &.warn { background: #FFF3E0; color: #E65100; }
+                &.error { background: #FFEBEE; color: #C62828; }
+                &.critical { background: #FCE4EC; color: #AD1457; }
+            }
+
+            &.message {
+                max-width: 300px;
+                word-break: break-word;
+                color: #333;
+            }
+
+            &.context {
+                max-width: 200px;
+                overflow: auto;
+                background: #f9f9f9;
+                padding: 0.5rem;
+                border-radius: 3px;
+                font-family: monospace;
+                font-size: 0.8rem;
+
+                code {
+                    color: #666;
+                }
+            }
+
+            &.metric {
+                font-weight: 600;
+                color: #2196F3;
+            }
+
+            &.time {
+                color: #999;
+                font-size: 0.85rem;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .logs-table {
+        tbody tr {
+            &.debug { border-left: 3px solid #64B5F6; }
+            &.info { border-left: 3px solid #4DB6AC; }
+            &.warn { border-left: 3px solid #FFB74D; }
+            &.error { border-left: 3px solid #EF5350; }
+            &.critical { border-left: 3px solid #EC407A; }
+        }
+    }
+
+    @media (max-width: 768px) {
+        padding: 1rem;
+
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filters {
+            flex-direction: column;
+        }
+
+        .data-table {
+            font-size: 0.8rem;
+
+            td {
+                padding: 0.5rem;
+            }
+
+            &.logs-table {
+                display: block;
+                overflow: auto;
+            }
+        }
     }
 }

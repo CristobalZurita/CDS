@@ -40,39 +40,3 @@ const _selectItem = (item) => {
     emit('selected', item)
 }
 </script>
-
-<style lang="scss" scoped>
-@use "@/scss/_theming.scss" as *;
-
-div.btn-group {
-    margin: 0 auto;
-    width: 50%;
-    @include media-breakpoint-down(lg) {
-        width: 100%;
-        max-width: 600px;
-    }
-}
-
-button.btn {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (padding: 0.3rem 2rem),
-        sm: (padding: 0.3rem 0)
-    ));
-
-    opacity: 0.8;
-    border-radius: 30px;
-    background-color: darken($light, 5%);
-
-    &.active, &:hover {
-        background-color: darken($light, 5%);
-        border-color: $light;
-        color: $primary;
-    }
-
-    &.active {
-        background-color: $primary;
-        color: $text-normal-contrast;
-        opacity: 1;
-    }
-}
-</style>

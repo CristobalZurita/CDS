@@ -59,7 +59,3 @@ provide("hasUserInteracted", hasUserInteracted)
 
 provide("setSpinnerEnabled", setSpinnerEnabled)
 </script>
-
-<style lang="scss" scoped>
-
-</style>

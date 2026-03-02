@@ -72,29 +72,3 @@ onMounted(async () => {
   }
 })
 </script>
-
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.turnstile-widget {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 1rem 0;
-}
-
-.turnstile-bypass {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.6rem 0.9rem;
-  border-radius: 999px;
-  background: rgba($color-success, 0.12);
-  border: 1px solid rgba($color-success, 0.35);
-  color: darken($color-success, 15%);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-</style>
