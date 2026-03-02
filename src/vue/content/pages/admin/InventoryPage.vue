@@ -70,12 +70,69 @@
 			</div>
 		</div>
 
-		<InventoryAlerts :items="items" />
+		<div class="card mb-3">
+			<div class="card-body">
+				<div class="row g-2 align-items-end">
+					<div class="col-lg-5">
+						<label class="form-label mb-1" for="inventory-search-input">Buscar</label>
+						<input
+							id="inventory-search-input"
+							v-model.trim="searchTerm"
+							class="form-control"
+							data-testid="inventory-search-input"
+							placeholder="SKU, nombre, familia o descripción"
+							type="text"
+						/>
+					</div>
+					<div class="col-sm-6 col-lg-3">
+						<label class="form-label mb-1" for="inventory-filter-category">Categoría</label>
+						<select
+							id="inventory-filter-category"
+							v-model="selectedCategoryId"
+							class="form-select"
+							data-testid="inventory-filter-category"
+						>
+							<option value="">Todas</option>
+							<option v-for="category in categories" :key="category.id" :value="String(category.id)">
+								{{ category.name }}
+							</option>
+						</select>
+					</div>
+					<div class="col-sm-6 col-lg-3">
+						<label class="form-label mb-1" for="inventory-filter-scope">Vista</label>
+						<select
+							id="inventory-filter-scope"
+							v-model="storeScope"
+							class="form-select"
+							data-testid="inventory-filter-scope"
+						>
+							<option value="all">Todo</option>
+							<option value="published">Publicados en tienda</option>
+							<option value="hidden">No publicados</option>
+							<option value="with-image">Con foto</option>
+							<option value="without-image">Sin foto</option>
+							<option value="sellable">Vendibles ahora</option>
+							<option value="low-stock">Stock bajo</option>
+						</select>
+					</div>
+					<div class="col-lg-1 text-lg-end">
+						<button class="btn btn-outline-secondary w-100" data-testid="inventory-clear-filters" @click="clearFilters">
+							Limpiar
+						</button>
+					</div>
+				</div>
+				<div class="mt-2 small text-muted" data-testid="inventory-results-count">
+					Mostrando {{ filteredItems.length }} de {{ items.length }} items.
+				</div>
+			</div>
+		</div>
 
-		<InventoryStockSheet v-if="activeView === 'sheet'" :items="items" @save="onQuickSave" />
-		<InventoryStockStates v-else-if="activeView === 'states'" :items="items" @save="onStateSave" />
+		<InventoryAlerts :items="filteredItems" />
 
-		<InventoryTable v-else :items="items" @edit="onEdit" @delete="onDelete" />
+		<InventoryStockSheet v-if="activeView === 'sheet'" :items="filteredItems" @save="onQuickSave" />
+		<InventoryStockStates v-else-if="activeView === 'states'" :items="filteredItems" @save="onStateSave" />
+
+		<InventoryTable v-else :items="filteredItems" @edit="onEdit" @delete="onDelete" />
 
 		<div v-if="showForm" class="mt-3">
 			<InventoryForm :item="selected" @save="onSave" @cancel="onCancel" />
@@ -92,20 +149,78 @@ import InventoryStockSheet from '@/vue/components/admin/InventoryStockSheet.vue'
 import InventoryStockStates from '@/vue/components/admin/InventoryStockStates.vue'
 import InventoryAlerts from '@/vue/components/admin/InventoryAlerts.vue'
 import { useInventoryStore } from '@/stores/inventory'
+import { useCategoriesStore } from '@/stores/categories'
 import { api } from '@/services/api'
 import { showError, showSuccess } from '@/services/toastService'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 
 const store = useInventoryStore()
+const categoriesStore = useCategoriesStore()
 const route = useRoute()
 const router = useRouter()
 
 const items = computed(() => store.items)
+const categories = computed(() => categoriesStore.categories || [])
 const showForm = ref(false)
 const selected = ref(null)
 const activeView = ref('sheet')
 const catalogStatus = ref(null)
 const syncingCatalog = ref(false)
+const searchTerm = ref('')
+const selectedCategoryId = ref('')
+const storeScope = ref('all')
+
+function normalizeSearchText(value) {
+	return String(value || '')
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLowerCase()
+		.replace(/[_-]+/g, ' ')
+		.trim()
+}
+
+const filteredItems = computed(() => {
+	const normalizedSearch = normalizeSearchText(searchTerm.value)
+	return items.value.filter((item) => {
+		if (selectedCategoryId.value && String(item.category_id ?? '') !== String(selectedCategoryId.value)) {
+			return false
+		}
+
+		if (storeScope.value === 'published' && item.store_visible !== true) {
+			return false
+		}
+		if (storeScope.value === 'hidden' && item.store_visible === true) {
+			return false
+		}
+		if (storeScope.value === 'with-image' && !item.image_url) {
+			return false
+		}
+		if (storeScope.value === 'without-image' && item.image_url) {
+			return false
+		}
+		if (storeScope.value === 'sellable' && Number(item.sellable_stock || 0) <= 0) {
+			return false
+		}
+		if (storeScope.value === 'low-stock' && item.is_low_stock !== true) {
+			return false
+		}
+
+		if (!normalizedSearch) {
+			return true
+		}
+
+		const haystack = normalizeSearchText([
+			item.name,
+			item.sku,
+			item.family,
+			item.category,
+			item.description,
+			item.origin_status,
+		].filter(Boolean).join(' '))
+
+		return haystack.includes(normalizedSearch)
+	})
+})
 
 async function load() {
 	await store.fetchItems(1, 50)
@@ -123,6 +238,12 @@ async function loadCatalogStatus() {
 
 function reload() {
 	Promise.all([load(), loadCatalogStatus()])
+}
+
+function clearFilters() {
+	searchTerm.value = ''
+	selectedCategoryId.value = ''
+	storeScope.value = 'all'
 }
 
 function onNew() {
@@ -230,7 +351,7 @@ function onCancel() {
 }
 
 onMounted(async () => {
-	await Promise.all([load(), loadCatalogStatus()])
+	await Promise.all([load(), loadCatalogStatus(), categoriesStore.fetchCategories()])
 })
 
 // react to ?edit= query param (e.g., when InventoryUnified navigates to admin page)

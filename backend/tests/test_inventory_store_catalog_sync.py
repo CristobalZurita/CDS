@@ -1,11 +1,15 @@
 import sys
 import os
+import json
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 from app.routers.inventory import get_store_catalog_status, sync_store_catalog
+from app.models.category import Category
+from app.models.inventory import Product
+from app.models.stock import Stock
 import scripts.sync_store_catalog_from_inventory_images as sync_module
 
 
@@ -57,3 +61,50 @@ def test_sync_store_catalog_returns_sync_result_and_status(monkeypatch):
     assert payload["ok"] is True
     assert payload["result"] == sync_result
     assert payload["status"] == status_payload
+
+
+def test_sync_catalog_matches_prefixed_image_to_existing_product(db, monkeypatch, tmp_path):
+    category = db.query(Category).filter(Category.name == "Conectores").first()
+    if not category:
+        category = Category(name="Conectores", description="Conectores E2E")
+        db.add(category)
+        db.commit()
+        db.refresh(category)
+
+    product = Product(
+        category_id=category.id,
+        name="Audio Jack Chasis Mono 6 3",
+        sku="TEST_AUDIO_JACK_CHASIS_MONO_6_3",
+        description=json.dumps({"enabled": True, "store_visible": True}, ensure_ascii=False),
+        price=1000,
+        quantity=4,
+        min_quantity=0,
+        image_url="/images/INVENTARIO/AUDIO_JACK_CHASIS_MONO_6_3.webp",
+    )
+    db.add(product)
+    db.commit()
+    db.refresh(product)
+
+    stock = Stock(
+        component_table="products",
+        component_id=product.id,
+        quantity=4,
+        minimum_stock=0,
+    )
+    db.add(stock)
+    db.commit()
+
+    image_dir = tmp_path / "INVENTARIO"
+    image_dir.mkdir(parents=True, exist_ok=True)
+    image_path = image_dir / "CONECTOR_AUDIO_JACK_CHASIS_MONO_6_3.webp"
+    image_path.write_bytes(b"fake-image")
+
+    monkeypatch.setattr(sync_module, "IMAGE_DIR", image_dir)
+
+    result = sync_module.sync_catalog(apply_changes=True)
+    db.refresh(product)
+    db.refresh(stock)
+
+    assert result["matched"] == 1
+    assert result["created"] == 0
+    assert product.image_url == f"/images/INVENTARIO/{image_path.name}"

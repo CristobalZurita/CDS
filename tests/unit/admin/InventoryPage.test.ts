@@ -20,6 +20,10 @@ const storeMock = vi.hoisted(() => ({
   updateItem: vi.fn(),
   createItem: vi.fn(),
 }))
+const categoriesStoreMock = vi.hoisted(() => ({
+  categories: [],
+  fetchCategories: vi.fn(),
+}))
 
 vi.mock('vue-router', () => ({
   useRoute: () => routeState,
@@ -36,6 +40,10 @@ vi.mock('@/stores/inventory', () => ({
   useInventoryStore: () => storeMock,
 }))
 
+vi.mock('@/stores/categories', () => ({
+  useCategoriesStore: () => categoriesStoreMock,
+}))
+
 import InventoryPage from '@/vue/content/pages/admin/InventoryPage.vue'
 
 const stubs = {
@@ -47,6 +55,7 @@ const stubs = {
     props: ['items'],
     template: `
       <div data-testid="inventory-table">
+        <div data-testid="inventory-table-count">{{ items.length }}</div>
         <button data-testid="inventory-table-edit" @click="$emit('edit', items[0])">edit</button>
         <button data-testid="inventory-table-delete" @click="$emit('delete', items[0])">delete</button>
       </div>
@@ -67,11 +76,19 @@ describe('InventoryPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     routeState.query = {}
-    storeMock.items = [{ id: 5, name: 'Resistencia 10K' }]
+    storeMock.items = [
+      { id: 5, name: 'Resistencia 10K', sku: 'RES-10K', category: 'Resistencias', category_id: 9, store_visible: true, sellable_stock: 4, image_url: '/images/INVENTARIO/res.webp', is_low_stock: false },
+      { id: 7, name: 'Jack 6.3', sku: 'JACK-63', category: 'Conectores', category_id: 3, store_visible: false, sellable_stock: 0, image_url: '', is_low_stock: true },
+    ]
     storeMock.fetchItems.mockResolvedValue({})
     storeMock.deleteItem.mockResolvedValue(true)
     storeMock.updateItem.mockResolvedValue({})
     storeMock.createItem.mockResolvedValue({})
+    categoriesStoreMock.categories = [
+      { id: 3, name: 'Conectores' },
+      { id: 9, name: 'Resistencias' },
+    ]
+    categoriesStoreMock.fetchCategories.mockResolvedValue({})
     apiMock.get.mockImplementation((url) => {
       if (url === '/inventory/store-catalog/status') {
         return Promise.resolve({
@@ -116,8 +133,10 @@ describe('InventoryPage', () => {
 
     await flushPromises()
     expect(storeMock.fetchItems).toHaveBeenCalledWith(1, 50)
+    expect(categoriesStoreMock.fetchCategories).toHaveBeenCalled()
     expect(wrapper.find('[data-testid="inventory-stock-sheet"]').exists()).toBe(true)
     expect(wrapper.get('[data-testid="inventory-catalog-pending"]').text()).toBe('2')
+    expect(wrapper.get('[data-testid="inventory-results-count"]').text()).toContain('2 de 2')
 
     await wrapper.get('[data-testid="inventory-new"]').trigger('click')
 
@@ -152,5 +171,27 @@ describe('InventoryPage', () => {
     expect(storeMock.fetchItems).toHaveBeenCalledTimes(2)
     expect(toastMock.showSuccess).toHaveBeenCalledWith('Catálogo sincronizado. 8 vinculados, 2 creados.')
     expect(wrapper.get('[data-testid="inventory-catalog-pending"]').text()).toBe('0')
+  })
+
+  it('filters loaded inventory items in admin', async () => {
+    const wrapper = mount(InventoryPage, {
+      global: { stubs },
+    })
+
+    await flushPromises()
+    await wrapper.get('[data-testid="inventory-view-manage"]').trigger('click')
+    expect(wrapper.get('[data-testid="inventory-table-count"]').text()).toBe('2')
+
+    await wrapper.get('[data-testid="inventory-search-input"]').setValue('jack')
+    await flushPromises()
+    expect(wrapper.get('[data-testid="inventory-table-count"]').text()).toBe('1')
+
+    await wrapper.get('[data-testid="inventory-filter-scope"]').setValue('published')
+    await flushPromises()
+    expect(wrapper.get('[data-testid="inventory-table-count"]').text()).toBe('0')
+
+    await wrapper.get('[data-testid="inventory-clear-filters"]').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-testid="inventory-table-count"]').text()).toBe('2')
   })
 })

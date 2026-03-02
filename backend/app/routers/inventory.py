@@ -295,7 +295,7 @@ def list_public_catalog(
     origin_status: Optional[str] = None,
     enabled_only: bool = Query(default=True),
     in_stock_only: bool = Query(default=True),
-    limit: int = Query(default=120, ge=1, le=500),
+    limit: int = Query(default=120, ge=1, le=5000),
     db: Session = Depends(get_db),
 ):
     """
