@@ -1,13 +1,14 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const apiMock = vi.hoisted(() => ({
-  get: vi.fn(),
-}))
-
-const mediaMock = vi.hoisted(() => ({
-  hydrateRepairPhotos: vi.fn(),
-  revokeHydratedRepairPhotos: vi.fn(),
+const repairsState = vi.hoisted(() => ({
+  currentRepair: { value: null },
+  currentRepairTimeline: { value: [] },
+  currentRepairPhotos: { value: [] },
+  currentRepairNotes: { value: [] },
+  fetchClientRepairDetail: vi.fn(),
+  downloadClientClosurePdf: vi.fn(),
+  clearCurrentRepairDetail: vi.fn(),
 }))
 
 vi.mock('vue-router', () => ({
@@ -16,43 +17,37 @@ vi.mock('vue-router', () => ({
   }),
 }))
 
-vi.mock('@/services/api', () => ({
-  api: apiMock,
+vi.mock('@/composables/useRepairs', () => ({
+  useRepairs: () => repairsState,
 }))
-
-vi.mock('@/services/secureMedia', () => mediaMock)
 
 import RepairDetailPage from '@/vue/content/pages/RepairDetailPage.vue'
 
 describe('RepairDetailPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    apiMock.get.mockImplementation((url: string) => {
-      if (url.includes('/closure-pdf')) {
-        return Promise.resolve({ data: new Uint8Array([1, 2, 3]) })
+    repairsState.currentRepair.value = {
+      instrument: 'Prophet-5',
+      repair_code: 'OT-123',
+      status: 'Diagnóstico',
+      problem_reported: 'No enciende',
+      diagnosis: 'Fuente dañada',
+      work_performed: 'Cambio de condensadores',
+      total_cost: 150000,
+    }
+    repairsState.currentRepairTimeline.value = [{ label: 'Ingreso', date: '2026-02-01T00:00:00Z' }]
+    repairsState.currentRepairPhotos.value = [{ id: 1, caption: 'Antes', resolved_photo_url: 'blob:photo-1' }]
+    repairsState.currentRepairNotes.value = [{ id: 2, note: 'Revisar voltajes', created_at: '2026-02-02T00:00:00Z' }]
+    repairsState.fetchClientRepairDetail.mockImplementation(async () => {
+      return {
+        repair: repairsState.currentRepair.value,
+        timeline: repairsState.currentRepairTimeline.value,
+        photos: repairsState.currentRepairPhotos.value,
+        notes: repairsState.currentRepairNotes.value,
       }
-
-      return Promise.resolve({
-        data: {
-          repair: {
-            instrument: 'Prophet-5',
-            repair_code: 'OT-123',
-            status: 'Diagnóstico',
-            problem_reported: 'No enciende',
-            diagnosis: 'Fuente dañada',
-            work_performed: 'Cambio de condensadores',
-            total_cost: 150000,
-          },
-          timeline: [{ label: 'Ingreso', date: '2026-02-01T00:00:00Z' }],
-          photos: [{ id: 1, caption: 'Antes' }],
-          notes: [{ id: 2, note: 'Revisar voltajes', created_at: '2026-02-02T00:00:00Z' }],
-        },
-      })
     })
-    mediaMock.hydrateRepairPhotos.mockResolvedValue([
-      { id: 1, caption: 'Antes', resolved_photo_url: 'blob:photo-1' },
-    ])
-    mediaMock.revokeHydratedRepairPhotos.mockImplementation(() => undefined)
+    repairsState.downloadClientClosurePdf.mockResolvedValue(new Uint8Array([1, 2, 3]))
+    repairsState.clearCurrentRepairDetail.mockImplementation(() => undefined)
     Object.defineProperty(window.URL, 'createObjectURL', {
       writable: true,
       value: vi.fn(() => 'blob:pdf-download'),
@@ -69,48 +64,41 @@ describe('RepairDetailPage', () => {
     const wrapper = mount(RepairDetailPage)
     await flushPromises()
 
-    expect(apiMock.get).toHaveBeenCalledWith('/client/repairs/123/details')
-    expect(mediaMock.hydrateRepairPhotos).toHaveBeenCalledWith([{ id: 1, caption: 'Antes' }])
+    expect(repairsState.fetchClientRepairDetail).toHaveBeenCalledWith('123')
     expect(wrapper.text()).toContain('Prophet-5')
     expect(wrapper.text()).toContain('Fuente dañada')
 
     await wrapper.get('[data-testid="repair-download"]').trigger('click')
     await flushPromises()
 
-    expect(apiMock.get).toHaveBeenCalledWith('/client/repairs/123/closure-pdf', {
-      responseType: 'blob',
-    })
+    expect(repairsState.downloadClientClosurePdf).toHaveBeenCalledWith('123')
     expect(window.URL.createObjectURL).toHaveBeenCalled()
     expect(HTMLAnchorElement.prototype.click).toHaveBeenCalled()
 
     wrapper.unmount()
-    expect(mediaMock.revokeHydratedRepairPhotos).toHaveBeenCalledWith([
-      { id: 1, caption: 'Antes', resolved_photo_url: 'blob:photo-1' },
-    ])
+    expect(repairsState.clearCurrentRepairDetail).toHaveBeenCalled()
   })
 
   it('alerts when the closure pdf download fails', async () => {
-    apiMock.get.mockImplementation((url: string) => {
-      if (url.includes('/closure-pdf')) {
-        return Promise.reject({
-          response: {
-            data: {
-              detail: 'PDF no disponible',
-            },
-          },
-        })
+    repairsState.fetchClientRepairDetail.mockImplementation(async () => {
+      repairsState.currentRepair.value = { instrument: 'Prophet-5' }
+      repairsState.currentRepairTimeline.value = []
+      repairsState.currentRepairPhotos.value = []
+      repairsState.currentRepairNotes.value = []
+      return {
+        repair: repairsState.currentRepair.value,
+        timeline: [],
+        photos: [],
+        notes: [],
       }
-
-      return Promise.resolve({
-        data: {
-          repair: { instrument: 'Prophet-5' },
-          timeline: [],
-          photos: [],
-          notes: [],
-        },
-      })
     })
-    mediaMock.hydrateRepairPhotos.mockResolvedValue([])
+    repairsState.downloadClientClosurePdf.mockRejectedValueOnce({
+      response: {
+        data: {
+          detail: 'PDF no disponible',
+        },
+      },
+    })
 
     const wrapper = mount(RepairDetailPage)
     await flushPromises()

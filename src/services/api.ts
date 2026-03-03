@@ -7,7 +7,7 @@ import type { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse } fro
 import type { ApiResponse, ApiErrorResponse } from '@/types/common';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL as string || 'http://localhost:8000/api/v1';
+export const API_URL = import.meta.env.VITE_API_URL as string || 'http://localhost:8000/api/v1';
 const API_TIMEOUT = 30000; // 30 segundos
 const MAX_RETRIES = 3;
 

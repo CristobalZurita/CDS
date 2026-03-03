@@ -111,6 +111,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
   return {
     // State
     instruments,
+    loading: isLoading,
     isLoading,
     error,
     // Actions

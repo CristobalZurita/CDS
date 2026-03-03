@@ -114,6 +114,7 @@ export const useQuotationStore = defineStore('quotation', () => {
     currentQuotation,
     quotationHistory,
     quotationItems,
+    loading: isLoading,
     isLoading,
     error,
     // Computed

@@ -7,13 +7,18 @@ export const useInstrumentsStore = defineStore('instruments', {
     loading: false,
     error: null
   }),
+  getters: {
+    isLoading: (state) => state.loading
+  },
   actions: {
     async fetchInstruments() {
+      this.error = null
       this.loading = true
       try {
         this.instruments = await useApi().get('/instruments')
       } catch (e) {
         this.error = e
+        this.instruments = []
       } finally {
         this.loading = false
       }
@@ -26,6 +31,9 @@ export const useInstrumentsStore = defineStore('instruments', {
     },
     async deleteInstrument(id) {
       return await useApi().delete(`/instruments/${id}`)
+    },
+    setError(message) {
+      this.error = message
     }
   }
 })

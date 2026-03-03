@@ -24,11 +24,23 @@ describe('store-backed composables', () => {
   it('exposes repairs refs and actions from the store', () => {
     const store = useRepairsStore()
     store.repairs = [{ id: 1, status: 'pending' }]
+    store.currentRepair = { id: 1, status: 'pending' }
+    store.currentRepairTimeline = [{ label: 'Ingreso' }]
+    store.currentRepairPhotos = [{ id: 2 }]
+    store.currentRepairNotes = [{ id: 3 }]
 
     const composable = useRepairs()
 
     expect(composable.repairs.value).toEqual([{ id: 1, status: 'pending' }])
+    expect(composable.currentRepair.value).toEqual({ id: 1, status: 'pending' })
+    expect(composable.currentRepairTimeline.value).toEqual([{ label: 'Ingreso' }])
+    expect(composable.currentRepairPhotos.value).toEqual([{ id: 2 }])
+    expect(composable.currentRepairNotes.value).toEqual([{ id: 3 }])
     expect(typeof composable.fetchRepairs).toBe('function')
+    expect(typeof composable.fetchClientRepairs).toBe('function')
+    expect(typeof composable.fetchClientRepairDetail).toBe('function')
+    expect(typeof composable.downloadClientClosurePdf).toBe('function')
+    expect(typeof composable.clearCurrentRepairDetail).toBe('function')
     expect(typeof composable.createRepair).toBe('function')
     expect(typeof composable.updateRepair).toBe('function')
     expect(typeof composable.deleteRepair).toBe('function')
@@ -39,16 +51,26 @@ describe('store-backed composables', () => {
     store.items = [{ id: 10, name: 'Capacitor' }]
     store.page = 2
     store.limit = 50
+    store.catalogStatus = { pending_images_count: 1 }
+    store.lastRunId = 'run-1'
+    store.runStatus = 'started'
 
     const composable = useInventory()
 
     expect(composable.items.value).toEqual([{ id: 10, name: 'Capacitor' }])
     expect(composable.page.value).toBe(2)
     expect(composable.limit.value).toBe(50)
+    expect(composable.catalogStatus.value).toEqual({ pending_images_count: 1 })
+    expect(composable.lastRunId.value).toBe('run-1')
+    expect(composable.runStatus.value).toBe('started')
     expect(typeof composable.refresh).toBe('function')
     expect(typeof composable.createItem).toBe('function')
     expect(typeof composable.updateItem).toBe('function')
     expect(typeof composable.deleteItem).toBe('function')
+    expect(typeof composable.fetchCatalogStatus).toBe('function')
+    expect(typeof composable.fetchItemById).toBe('function')
+    expect(typeof composable.syncCatalog).toBe('function')
+    expect(typeof composable.triggerImport).toBe('function')
   })
 
   it('exposes categories, users, diagnostics and instruments wrappers', () => {
@@ -64,8 +86,8 @@ describe('store-backed composables', () => {
 
     expect(categories.categories.value).toHaveLength(1)
     expect(users.users.value).toHaveLength(1)
-    expect(diagnostics.diagnostics).toHaveLength(1)
-    expect(instruments.instruments).toHaveLength(1)
+    expect(diagnostics.diagnostics.value).toHaveLength(1)
+    expect(instruments.instruments.value).toHaveLength(1)
     expect(typeof categories.fetchCategories).toBe('function')
     expect(typeof users.fetchUsers).toBe('function')
     expect(typeof diagnostics.fetchDiagnostics).toBe('function')

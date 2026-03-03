@@ -7,6 +7,9 @@ export const useCategoriesStore = defineStore('categories', {
     loading: false,
     error: null
   }),
+  getters: {
+    isLoading: (state) => state.loading
+  },
   actions: {
     async fetchCategories() {
       this.error = null
@@ -36,6 +39,9 @@ export const useCategoriesStore = defineStore('categories', {
       const result = await useApi().delete(`/categories/${id}`)
       this.categories = this.categories.filter((category) => String(category.id) !== String(id))
       return result
+    },
+    setError(message) {
+      this.error = message
     }
   }
 })

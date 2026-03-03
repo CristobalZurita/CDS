@@ -2,7 +2,10 @@ import { storeToRefs } from 'pinia'
 import { useCategoriesStore } from '@/stores/categories'
 export function useCategories() {
   const store = useCategoriesStore()
-  const { categories, loading, error } = storeToRefs(store)
+  const refs = storeToRefs(store)
+  const categories = refs.categories
+  const loading = refs.loading || refs.isLoading
+  const error = refs.error
   return {
     categories,
     loading,

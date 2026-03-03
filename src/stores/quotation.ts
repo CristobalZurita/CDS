@@ -229,6 +229,7 @@ export const useQuotationStore = defineStore('quotation', () => {
     selectedFaults,
     currentQuotation,
     quotationHistory,
+    loading: isLoading,
     isLoading,
     error,
     quotationItems,

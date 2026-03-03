@@ -7,13 +7,18 @@ export const useDiagnosticsStore = defineStore('diagnostics', {
     loading: false,
     error: null
   }),
+  getters: {
+    isLoading: (state) => state.loading
+  },
   actions: {
     async fetchDiagnostics() {
+      this.error = null
       this.loading = true
       try {
         this.diagnostics = await useApi().get('/diagnostic')
       } catch (e) {
         this.error = e
+        this.diagnostics = []
       } finally {
         this.loading = false
       }
@@ -26,6 +31,9 @@ export const useDiagnosticsStore = defineStore('diagnostics', {
     },
     async deleteDiagnostic(id) {
       return await useApi().delete(`/diagnostic/${id}`)
+    },
+    setError(message) {
+      this.error = message
     }
   }
 })

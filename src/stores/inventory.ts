@@ -6,7 +6,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { InventoryStoreState, InventoryItem, CreateInventoryItemData, UpdateInventoryItemData } from '@/types/stores';
-import { get, put, post, deleteRequest, handleApiError } from '@/services/api';
+import api, { get, put, post, deleteRequest, handleApiError } from '@/services/api';
 
 export const useInventoryStore = defineStore('inventory', () => {
   // State
@@ -16,6 +16,11 @@ export const useInventoryStore = defineStore('inventory', () => {
   const searchQuery = ref('');
   const page = ref(1);
   const limit = ref(20);
+  const catalogStatus = ref<Record<string, any> | null>(null);
+  const syncingCatalog = ref(false);
+  const importing = ref(false);
+  const lastRunId = ref<string | null>(null);
+  const runStatus = ref<string | null>(null);
 
   /**
    * Fetch inventory items with pagination and filters
@@ -25,7 +30,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     limitNum: number = 20,
     search: string | null = null,
     categoryId: string | null = null
-  ): Promise<void> {
+  ): Promise<InventoryItem[]> {
     isLoading.value = true;
     error.value = null;
     page.value = pageNum;
@@ -53,14 +58,15 @@ export const useInventoryStore = defineStore('inventory', () => {
     } finally {
       isLoading.value = false;
     }
+    return items.value;
   }
 
   /**
    * Search inventory items
    */
-  async function searchItems(query: string): Promise<void> {
+  async function searchItems(query: string): Promise<InventoryItem[]> {
     searchQuery.value = query;
-    await fetchItems(1, limit.value, query);
+    return fetchItems(1, limit.value, query);
   }
 
   /**
@@ -99,7 +105,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   /**
    * Create inventory item
    */
-  async function addItem(data: CreateInventoryItemData): Promise<void> {
+  async function addItem(data: CreateInventoryItemData): Promise<InventoryItem> {
     isLoading.value = true;
     error.value = null;
     try {
@@ -111,10 +117,12 @@ export const useInventoryStore = defineStore('inventory', () => {
       delete payload.quantity;
 
       const response = await post<InventoryItem>('/inventory', payload);
-      if (response.data.data) {
-        items.value.push(response.data.data);
+      const created = response.data.data;
+      if (created) {
+        items.value.push(created);
       }
       await fetchItems(page.value, limit.value);
+      return created;
     } catch (err: any) {
       const apiError = handleApiError(err);
       error.value = apiError.message;
@@ -127,7 +135,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   /**
    * Update inventory item
    */
-  async function updateItem(id: string, data: UpdateInventoryItemData): Promise<void> {
+  async function updateItem(id: string, data: UpdateInventoryItemData): Promise<InventoryItem> {
     isLoading.value = true;
     error.value = null;
     try {
@@ -138,8 +146,9 @@ export const useInventoryStore = defineStore('inventory', () => {
       }
       delete payload.quantity;
 
-      await put<InventoryItem>(`/inventory/${id}`, payload);
+      const response = await put<InventoryItem>(`/inventory/${id}`, payload);
       await fetchItems(page.value, limit.value);
+      return response.data.data;
     } catch (err: any) {
       const apiError = handleApiError(err);
       error.value = apiError.message;
@@ -152,19 +161,100 @@ export const useInventoryStore = defineStore('inventory', () => {
   /**
    * Delete inventory item
    */
-  async function deleteItem(itemId: string): Promise<void> {
+  async function deleteItem(itemId: string): Promise<boolean> {
     isLoading.value = true;
     error.value = null;
     try {
       await deleteRequest(`/inventory/${itemId}`);
       items.value = items.value.filter((item) => item.id !== itemId);
       await fetchItems(page.value, limit.value);
+      return true;
     } catch (err: any) {
       const apiError = handleApiError(err);
       error.value = apiError.message;
       throw err;
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  async function fetchCatalogStatus(): Promise<Record<string, any> | null> {
+    error.value = null;
+    try {
+      const response = await api.get('/inventory/store-catalog/status');
+      catalogStatus.value = response.data || null;
+      return catalogStatus.value;
+    } catch (err: any) {
+      const apiError = handleApiError(err);
+      error.value = apiError.message;
+      throw err;
+    }
+  }
+
+  async function fetchItemById(itemId: string): Promise<Record<string, any> | null> {
+    error.value = null;
+    try {
+      const response = await api.get(`/inventory/${itemId}`);
+      const item = response.data || null;
+      if (!item) {
+        return null;
+      }
+      const currentIndex = items.value.findIndex((existing) => String(existing.id) === String(itemId));
+      if (currentIndex >= 0) {
+        items.value.splice(currentIndex, 1, { ...items.value[currentIndex], ...item });
+      } else {
+        items.value.unshift(item);
+      }
+      return item;
+    } catch (err: any) {
+      const apiError = handleApiError(err);
+      error.value = apiError.message;
+      throw err;
+    }
+  }
+
+  async function syncCatalog(): Promise<Record<string, any> | null> {
+    if (syncingCatalog.value) {
+      return null;
+    }
+    error.value = null;
+    syncingCatalog.value = true;
+    try {
+      const response = await api.post('/inventory/store-catalog/sync');
+      const data = response.data || null;
+      catalogStatus.value = data?.status || null;
+      await fetchItems(page.value, limit.value);
+      return data;
+    } catch (err: any) {
+      const apiError = handleApiError(err);
+      error.value = apiError.message;
+      throw err;
+    } finally {
+      syncingCatalog.value = false;
+    }
+  }
+
+  async function triggerImport(): Promise<Record<string, any>> {
+    if (importing.value) {
+      return {
+        run_id: lastRunId.value,
+        status: runStatus.value,
+      };
+    }
+    error.value = null;
+    importing.value = true;
+    try {
+      const response = await api.post('/imports/run');
+      const data = response.data || {};
+      lastRunId.value = data.run_id || null;
+      runStatus.value = data.status || null;
+      return data;
+    } catch (err: any) {
+      const apiError = handleApiError(err);
+      error.value = apiError.message;
+      throw err;
+    } finally {
+      importing.value = false;
     }
   }
 
@@ -178,19 +268,30 @@ export const useInventoryStore = defineStore('inventory', () => {
   return {
     // State
     items,
+    loading: isLoading,
     isLoading,
     error,
     searchQuery,
     page,
     limit,
+    catalogStatus,
+    syncingCatalog,
+    importing,
+    lastRunId,
+    runStatus,
     // Actions
     fetchItems,
     searchItems,
     updateStock,
     getLowStockItems,
+    createItem: addItem,
     addItem,
     updateItem,
     deleteItem,
+    fetchCatalogStatus,
+    fetchItemById,
+    syncCatalog,
+    triggerImport,
     setError,
   };
 });

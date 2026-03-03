@@ -8,11 +8,11 @@
         <button @click="triggerImport" class="btn btn-secondary ml-4" :disabled="importing">{{ importing ? 'Importando...' : 'Iniciar importación' }}</button>
       </div>
 
-      <div v-if="store.loading">Cargando...</div>
+      <div v-if="loading">Cargando...</div>
       <div v-if="lastRunId" class="mt-4">Última importación: <strong>{{ lastRunId }}</strong> <em v-if="runStatus">({{ runStatus }})</em></div>
       <div v-else class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <InventoryCard
-          v-for="it in store.items"
+          v-for="it in items"
           :key="it.id"
           :item="it"
           @request-edit="onRequestEdit"
@@ -27,9 +27,8 @@
 import { useInventoryStore } from '@/stores/inventory'
 import InventoryCard from '@/components/prototypes/InventoryCard.vue'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { api } from '@/services/api'
 
 export default {
   name: 'InventoryUnified',
@@ -37,9 +36,11 @@ export default {
   setup() {
     const filter = ref('')
     const store = useInventoryStore()
-    const importing = ref(false)
-    const lastRunId = ref(null)
-    const runStatus = ref(null)
+    const items = computed(() => store.items || [])
+    const loading = computed(() => store.loading ?? store.isLoading)
+    const importing = computed(() => store.importing)
+    const lastRunId = computed(() => store.lastRunId)
+    const runStatus = computed(() => store.runStatus)
     const router = useRouter()
     const load = () => store.fetchItems(1, 20, filter.value || null, null)
 
@@ -61,13 +62,9 @@ export default {
     }
 
     async function triggerImport() {
-      importing.value = true
-      runStatus.value = null
       try {
-        const res = await api.post('/imports/run')
-        const data = res.data || {}
-        lastRunId.value = data.run_id || null
-        runStatus.value = data.status || 'started'
+        const data = await store.triggerImport()
+        runStatus.value = data?.status || 'started'
       } catch (e) {
         const detail = e?.response?.data?.detail || e?.message || e
         if (String(detail).includes('Not Found')) {
@@ -75,12 +72,10 @@ export default {
         } else {
           alert('Error iniciando importación: ' + detail)
         }
-      } finally {
-        importing.value = false
       }
     }
     onMounted(() => load())
-    return { filter, store, load, importing, triggerImport, lastRunId, runStatus, onRequestDelete, onRequestEdit }
+    return { filter, items, loading, load, importing, triggerImport, lastRunId, runStatus, onRequestDelete, onRequestEdit }
   }
 }
 </script>

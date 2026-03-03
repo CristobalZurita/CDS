@@ -111,6 +111,7 @@ export const useDiagnosticsStore = defineStore('diagnostics', () => {
   return {
     // State
     diagnostics,
+    loading: isLoading,
     isLoading,
     error,
     // Actions

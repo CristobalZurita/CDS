@@ -79,6 +79,7 @@ export const useStockMovementsStore = defineStore('stockMovements', () => {
   return {
     // State
     movements,
+    loading: isLoading,
     isLoading,
     error,
     // Actions

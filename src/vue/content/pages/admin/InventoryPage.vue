@@ -194,7 +194,6 @@ import InventoryStockStates from '@/vue/components/admin/InventoryStockStates.vu
 import InventoryAlerts from '@/vue/components/admin/InventoryAlerts.vue'
 import { useInventoryStore } from '@/stores/inventory'
 import { useCategoriesStore } from '@/stores/categories'
-import { api } from '@/services/api'
 import { showError, showSuccess } from '@/services/toastService'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 
@@ -203,13 +202,13 @@ const categoriesStore = useCategoriesStore()
 const route = useRoute()
 const router = useRouter()
 
-const items = computed(() => store.items)
+const items = computed(() => store.items || [])
+const catalogStatus = computed(() => store.catalogStatus)
+const syncingCatalog = computed(() => store.syncingCatalog)
 const categories = computed(() => categoriesStore.categories || [])
 const showForm = ref(false)
 const selected = ref(null)
 const activeView = ref('sheet')
-const catalogStatus = ref(null)
-const syncingCatalog = ref(false)
 const searchTerm = ref('')
 const selectedCategoryId = ref('')
 const storeScope = ref('all')
@@ -302,8 +301,7 @@ async function load() {
 
 async function loadCatalogStatus() {
 	try {
-		const res = await api.get('/inventory/store-catalog/status')
-		catalogStatus.value = res?.data || null
+		await store.fetchCatalogStatus()
 	} catch (e) {
 		console.error(e)
 		showError('No se pudo leer el estado del catálogo tienda.')
@@ -424,19 +422,13 @@ async function onStateSave(payload) {
 }
 
 async function syncCatalog() {
-	if (syncingCatalog.value) return
-	syncingCatalog.value = true
 	try {
-		const res = await api.post('/inventory/store-catalog/sync')
-		const result = res?.data?.result || {}
-		catalogStatus.value = res?.data?.status || null
-		await load()
+		const data = await store.syncCatalog()
+		const result = data?.result || {}
 		showSuccess(`Catálogo sincronizado. ${result.matched || 0} vinculados, ${result.created || 0} creados.`)
 	} catch (e) {
 		console.error(e)
 		showError('No se pudo sincronizar el catálogo tienda.')
-	} finally {
-		syncingCatalog.value = false
 	}
 }
 
@@ -464,10 +456,8 @@ watch(
 		// try find in loaded items
 		let it = store.items?.find((x) => String(x.id) === String(val))
 		if (!it) {
-			// fetch item detail from API
 			try {
-				const res = await api.get(`/inventory/${val}`)
-				if (res?.data) it = res.data
+				it = await store.fetchItemById(String(val))
 			} catch (e) {
 				console.error('Failed to fetch item detail', e)
 			}
