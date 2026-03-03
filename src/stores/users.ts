@@ -147,6 +147,7 @@ export const useUsersStore = defineStore('users', () => {
     // State
     users,
     currentUser,
+    loading: isLoading,
     isLoading,
     error,
     // Actions

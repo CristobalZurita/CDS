@@ -2,22 +2,23 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const routerPush = vi.hoisted(() => vi.fn())
-const apiMock = vi.hoisted(() => ({
-  get: vi.fn(),
-}))
 const toastMock = vi.hoisted(() => ({
   showError: vi.fn(),
+}))
+const repairsState = vi.hoisted(() => ({
+  repairs: { value: [] },
+  fetchClientRepairs: vi.fn(),
 }))
 
 vi.mock('vue-router', () => ({
   useRouter: () => ({ push: routerPush }),
 }))
 
-vi.mock('@/services/api', () => ({
-  api: apiMock,
-}))
-
 vi.mock('@/services/toastService', () => toastMock)
+
+vi.mock('@/composables/useRepairs', () => ({
+  useRepairs: () => repairsState,
+}))
 
 import RepairsPage from '@/vue/content/pages/RepairsPage.vue'
 
@@ -46,14 +47,17 @@ const repairsPayload = [
 describe('RepairsPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    apiMock.get.mockResolvedValue({ data: repairsPayload })
+    repairsState.repairs.value = repairsPayload
+    repairsState.fetchClientRepairs.mockImplementation(async () => {
+      return repairsPayload
+    })
   })
 
   it('loads repairs, filters by status bucket and navigates to the detail view', async () => {
     const wrapper = mount(RepairsPage)
     await flushPromises()
 
-    expect(apiMock.get).toHaveBeenCalledWith('/client/repairs')
+    expect(repairsState.fetchClientRepairs).toHaveBeenCalled()
     expect(wrapper.findAll('[data-testid="repairs-card"]')).toHaveLength(2)
     expect(wrapper.text()).toContain('Prophet-5')
     expect(wrapper.text()).toContain('Juno-106')
@@ -77,7 +81,8 @@ describe('RepairsPage', () => {
   })
 
   it('surfaces API failures through the toast service', async () => {
-    apiMock.get.mockRejectedValueOnce({
+    repairsState.repairs.value = []
+    repairsState.fetchClientRepairs.mockRejectedValueOnce({
       response: { data: { detail: 'No se pudo consultar reparaciones' } },
     })
 

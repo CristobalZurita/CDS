@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia'
 import { useStockMovementsStore } from '@/stores/stockMovements'
 import type { Ref } from 'vue'
 
@@ -21,11 +22,15 @@ export interface UseStockMovementsComposable {
 
 export function useStockMovements(): UseStockMovementsComposable {
   const store = useStockMovementsStore()
+  const refs = storeToRefs(store)
+  const movements = refs.movements
+  const loading = refs.loading || refs.isLoading
+  const error = refs.error
 
   return {
-    movements: store.movements,
-    loading: store.loading,
-    error: store.error,
+    movements,
+    loading,
+    error,
     fetchMovements: store.fetchMovements,
     createMovement: store.createMovement
   }

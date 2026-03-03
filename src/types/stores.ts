@@ -50,6 +50,9 @@ export interface RegisterFormData {
 export interface RepairsStoreState {
   repairs: Repair[];
   currentRepair: Repair | null;
+  currentRepairTimeline?: Record<string, any>[];
+  currentRepairPhotos?: Record<string, any>[];
+  currentRepairNotes?: Record<string, any>[];
   isLoading: boolean;
   error: string | null;
   filters: RepairFilters;
@@ -64,7 +67,11 @@ export interface RepairFilters {
 
 export interface RepairsStoreActions {
   fetchRepairs(filters?: RepairFilters): Promise<void>;
+  fetchClientRepairs?(): Promise<Repair[]>;
   getRepair(id: string): Promise<void>;
+  fetchClientRepairDetail?(id: string): Promise<Record<string, any> | null>;
+  downloadClientClosurePdf?(id: string): Promise<BlobPart>;
+  clearCurrentRepairDetail?(): void;
   createRepair(data: CreateRepairData): Promise<void>;
   updateRepair(id: string, data: UpdateRepairData): Promise<void>;
   deleteRepair(id: string): Promise<void>;
@@ -163,6 +170,13 @@ export interface InventoryStoreState {
   isLoading: boolean;
   error: string | null;
   searchQuery: string;
+  page?: number;
+  limit?: number;
+  catalogStatus?: Record<string, any> | null;
+  syncingCatalog?: boolean;
+  importing?: boolean;
+  lastRunId?: string | null;
+  runStatus?: string | null;
 }
 
 export interface InventoryItem {
@@ -179,12 +193,17 @@ export interface InventoryItem {
 
 export interface InventoryStoreActions {
   fetchInventory(): Promise<void>;
+  fetchItems?(page?: number, limit?: number, search?: string | null, categoryId?: string | null): Promise<InventoryItem[]>;
   searchItems(query: string): Promise<void>;
   updateStock(id: string, quantity: number): Promise<void>;
   getLowStockItems(): Promise<InventoryItem[]>;
   addItem(data: CreateInventoryItemData): Promise<void>;
   updateItem(id: string, data: UpdateInventoryItemData): Promise<void>;
   deleteItem(id: string): Promise<void>;
+  fetchCatalogStatus?(): Promise<Record<string, any> | null>;
+  fetchItemById?(id: string): Promise<Record<string, any> | null>;
+  syncCatalog?(): Promise<Record<string, any> | null>;
+  triggerImport?(): Promise<Record<string, any>>;
   setError(error: string): void;
 }
 

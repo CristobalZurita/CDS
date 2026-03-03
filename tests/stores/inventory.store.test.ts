@@ -28,6 +28,11 @@ describe('inventory store', () => {
     expect(store.loading).toBe(false)
     expect(store.page).toBe(1)
     expect(store.limit).toBe(20)
+    expect(store.catalogStatus).toBeNull()
+    expect(store.syncingCatalog).toBe(false)
+    expect(store.importing).toBe(false)
+    expect(store.lastRunId).toBeNull()
+    expect(store.runStatus).toBeNull()
   })
 
   it('fetches inventory items and tracks paging parameters', async () => {
@@ -43,6 +48,25 @@ describe('inventory store', () => {
     expect(store.page).toBe(3)
     expect(store.limit).toBe(50)
     expect(store.loading).toBe(false)
+  })
+
+  it('stores catalog status inside the inventory store', async () => {
+    apiMock.get.mockResolvedValueOnce({
+      data: {
+        files_count: 10,
+        pending_images_count: 2,
+      },
+    })
+
+    const store = useInventoryStore()
+    const status = await store.fetchCatalogStatus()
+
+    expect(apiMock.get).toHaveBeenCalledWith('/inventory/store-catalog/status')
+    expect(status).toEqual({
+      files_count: 10,
+      pending_images_count: 2,
+    })
+    expect(store.catalogStatus).toEqual(status)
   })
 
   it('clears items when fetch fails', async () => {
@@ -119,5 +143,66 @@ describe('inventory store', () => {
 
     await expect(store.deleteItem(1)).resolves.toBe(true)
     expect(store.items).toEqual([{ id: 2 }])
+  })
+
+  it('syncs the store catalog and refreshes the current page', async () => {
+    apiMock.post.mockResolvedValueOnce({
+      data: {
+        result: { matched: 4, created: 1 },
+        status: { pending_images_count: 0 },
+      },
+    })
+    apiMock.get.mockResolvedValueOnce({
+      data: [{ id: 3, name: 'Potenciometro' }],
+    })
+
+    const store = useInventoryStore()
+    const result = await store.syncCatalog()
+
+    expect(apiMock.post).toHaveBeenCalledWith('/inventory/store-catalog/sync')
+    expect(apiMock.get).toHaveBeenCalledWith('/inventory/?limit=20&page=1')
+    expect(result).toEqual({
+      result: { matched: 4, created: 1 },
+      status: { pending_images_count: 0 },
+    })
+    expect(store.catalogStatus).toEqual({ pending_images_count: 0 })
+    expect(store.items).toEqual([{ id: 3, name: 'Potenciometro' }])
+    expect(store.syncingCatalog).toBe(false)
+  })
+
+  it('tracks import runs in the inventory store', async () => {
+    apiMock.post.mockResolvedValueOnce({
+      data: {
+        run_id: 'run-123',
+        status: 'started',
+      },
+    })
+
+    const store = useInventoryStore()
+    const result = await store.triggerImport()
+
+    expect(apiMock.post).toHaveBeenCalledWith('/imports/run')
+    expect(result).toEqual({
+      run_id: 'run-123',
+      status: 'started',
+    })
+    expect(store.lastRunId).toBe('run-123')
+    expect(store.runStatus).toBe('started')
+    expect(store.importing).toBe(false)
+  })
+
+  it('merges an item fetched by id into the loaded inventory', async () => {
+    apiMock.get.mockResolvedValueOnce({
+      data: { id: 9, name: 'VCA chip', stock: 2 },
+    })
+
+    const store = useInventoryStore()
+    store.items = [{ id: 1, name: 'Capacitor' }]
+
+    const item = await store.fetchItemById(9)
+
+    expect(apiMock.get).toHaveBeenCalledWith('/inventory/9')
+    expect(item).toEqual({ id: 9, name: 'VCA chip', stock: 2 })
+    expect(store.items[0]).toEqual({ id: 9, name: 'VCA chip', stock: 2 })
   })
 })

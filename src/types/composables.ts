@@ -80,11 +80,19 @@ export interface ValidationError {
  */
 export interface UseRepairsComposable {
   repairs: import('vue').Ref<Repair[]>;
+  currentRepair?: import('vue').Ref<Record<string, any> | null>;
+  currentRepairTimeline?: import('vue').Ref<Record<string, any>[]>;
+  currentRepairPhotos?: import('vue').Ref<Record<string, any>[]>;
+  currentRepairNotes?: import('vue').Ref<Record<string, any>[]>;
   isLoading: import('vue').Ref<boolean>;
   error: import('vue').Ref<string | null>;
 
   fetchRepairs(): Promise<Repair[]>;
+  fetchClientRepairs?(): Promise<Repair[]>;
   getRepair(id: string): Promise<Repair>;
+  fetchClientRepairDetail?(id: string): Promise<Record<string, any> | null>;
+  downloadClientClosurePdf?(id: string): Promise<BlobPart>;
+  clearCurrentRepairDetail?(): void;
   createRepair(data: CreateRepairData): Promise<Repair>;
   updateRepair(id: string, data: UpdateRepairData): Promise<Repair>;
   deleteRepair(id: string): Promise<boolean>;
@@ -153,11 +161,20 @@ export interface UseInventoryComposable {
   items: import('vue').Ref<InventoryItem[]>;
   isLoading: import('vue').Ref<boolean>;
   error: import('vue').Ref<string | null>;
+  catalogStatus?: import('vue').Ref<Record<string, any> | null>;
+  syncingCatalog?: import('vue').Ref<boolean>;
+  importing?: import('vue').Ref<boolean>;
+  lastRunId?: import('vue').Ref<string | null>;
+  runStatus?: import('vue').Ref<string | null>;
 
   fetchInventory(): Promise<InventoryItem[]>;
   getItem(id: string): Promise<InventoryItem>;
   updateStock(id: string, quantity: number): Promise<InventoryItem>;
   getLowStockItems(): Promise<InventoryItem[]>;
+  fetchCatalogStatus?(): Promise<Record<string, any> | null>;
+  fetchItemById?(id: string): Promise<Record<string, any> | null>;
+  syncCatalog?(): Promise<Record<string, any> | null>;
+  triggerImport?(): Promise<Record<string, any>>;
 }
 
 export interface InventoryItem {

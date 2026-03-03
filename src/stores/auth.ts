@@ -325,6 +325,7 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     refreshToken,
     isAuthenticated,
+    loading: isLoading,
     isLoading,
     error,
     requires2FA,

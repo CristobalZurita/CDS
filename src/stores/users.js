@@ -7,6 +7,9 @@ export const useUsersStore = defineStore('users', {
     loading: false,
     error: null
   }),
+  getters: {
+    isLoading: (state) => state.loading
+  },
   actions: {
     async fetchUsers() {
       this.error = null
@@ -36,6 +39,9 @@ export const useUsersStore = defineStore('users', {
       const result = await useApi().delete(`/users/${id}`)
       this.users = this.users.filter((user) => String(user.id) !== String(id))
       return result
+    },
+    setError(message) {
+      this.error = message
     }
   }
 })

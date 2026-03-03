@@ -61,14 +61,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
-import { api } from '@/services/api'
-import { hydrateRepairPhotos, revokeHydratedRepairPhotos } from '@/services/secureMedia'
+import { useRepairs } from '@/composables/useRepairs'
 
 const route = useRoute()
-const detail = ref({ timeline: [], photos: [], notes: [] })
+const {
+  currentRepair,
+  currentRepairTimeline,
+  currentRepairPhotos,
+  currentRepairNotes,
+  fetchClientRepairDetail,
+  downloadClientClosurePdf,
+  clearCurrentRepairDetail,
+} = useRepairs()
 const downloadingPdf = ref(false)
+const detail = computed(() => ({
+  repair: currentRepair.value,
+  timeline: currentRepairTimeline.value || [],
+  photos: currentRepairPhotos.value || [],
+  notes: currentRepairNotes.value || [],
+}))
 
 const formatDate = (value) => {
   if (!value) return '—'
@@ -81,12 +94,7 @@ const formatPrice = (price) => {
 
 async function load() {
   const repairId = route.params.id
-  const res = await api.get(`/client/repairs/${repairId}/details`)
-  const resolvedPhotos = await hydrateRepairPhotos(res.data?.photos || [])
-  detail.value = {
-    ...res.data,
-    photos: resolvedPhotos,
-  }
+  await fetchClientRepairDetail(String(repairId))
 }
 
 const sanitizeFilePart = (value) => {
@@ -99,10 +107,8 @@ async function downloadClosurePdf() {
   downloadingPdf.value = true
   try {
     const repairId = route.params.id
-    const response = await api.get(`/client/repairs/${repairId}/closure-pdf`, {
-      responseType: 'blob'
-    })
-    const blob = new Blob([response.data], { type: 'application/pdf' })
+    const pdfBytes = await downloadClientClosurePdf(String(repairId))
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' })
     const blobUrl = window.URL.createObjectURL(blob)
     const preferredCode = detail.value?.repair?.repair_code || detail.value?.repair?.repair_number || detail.value?.repair?.id || `OT_${repairId}`
     const link = document.createElement('a')
@@ -121,6 +127,6 @@ async function downloadClosurePdf() {
 
 onMounted(load)
 onBeforeUnmount(() => {
-  revokeHydratedRepairPhotos(detail.value?.photos || [])
+  clearCurrentRepairDetail()
 })
 </script>

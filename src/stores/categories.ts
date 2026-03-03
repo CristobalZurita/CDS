@@ -117,6 +117,7 @@ export const useCategoriesStore = defineStore('categories', () => {
   return {
     // State
     categories,
+    loading: isLoading,
     isLoading,
     error,
     // Actions

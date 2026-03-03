@@ -95,7 +95,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { api } from '@/services/api'
+import { useRepairs } from '@/composables/useRepairs'
 import { showError } from '@/services/toastService'
 import {
   getRepairProgressByStatus,
@@ -107,8 +107,7 @@ import {
 
 const router = useRouter()
 const selectedStatus = ref('')
-const repairs = ref([])
-const isLoading = ref(false)
+const { repairs, fetchClientRepairs } = useRepairs()
 
 const decoratedRepairs = computed(() => {
   return (repairs.value || []).map((repair) => {
@@ -165,14 +164,10 @@ const getProgressClass = (progress) => {
 }
 
 const fetchRepairs = async () => {
-  isLoading.value = true
   try {
-    const { data } = await api.get('/client/repairs')
-    repairs.value = data || []
+    await fetchClientRepairs()
   } catch (err) {
     showError(err.response?.data?.detail || 'Error cargando reparaciones')
-  } finally {
-    isLoading.value = false
   }
 }
 
