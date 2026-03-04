@@ -219,3 +219,129 @@ const submit = async () => {
   }
 }
 </script>
+
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
+.wizard-step-body {
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.wizard-step-body h4 {
+  margin: 0;
+  color: var(--color-dark);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacer-sm);
+}
+
+.row > [class*="col-"] {
+  min-width: 0;
+}
+
+.col-12 {
+  flex: 1 1 100%;
+}
+
+.col-md-6 {
+  flex: 1 1 calc(50% - var(--spacer-sm));
+}
+
+.col-md-4 {
+  flex: 1 1 calc(33.333% - var(--spacer-sm));
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.form-control,
+.form-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+}
+
+textarea.form-control {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.alert {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 86%, var(--color-danger) 14%);
+  color: var(--color-dark);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.65rem 0.95rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+.mt-3 {
+  margin-top: var(--spacer-md);
+}
+
+@include media-breakpoint-down(md) {
+  .col-md-6,
+  .col-md-4 {
+    flex-basis: 100%;
+  }
+
+  .d-flex {
+    display: block;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+</style>

@@ -500,12 +500,12 @@ const fetchNextClientCode = async () => {
     const res = await api.get('/clients/code/next')
     const payload = res.data || res || {}
     nextClientId.value = payload.next_client_id || 1
-  } catch (e) {
+  } catch {
     try {
       const fallbackRes = await api.get('/clients/next-code')
       const fallbackPayload = fallbackRes.data || fallbackRes || {}
       nextClientId.value = fallbackPayload.next_client_id || 1
-    } catch (fallbackError) {
+    } catch {
       nextClientId.value = 1
     }
   }
@@ -515,7 +515,7 @@ const fetchClients = async () => {
   try {
     const res = await api.get('/clients')
     clients.value = res.data || res || []
-  } catch (e) {
+  } catch {
     clients.value = []
   }
 }
@@ -530,13 +530,13 @@ const fetchNextOtIndex = async (clientId) => {
       return
     }
     otBaseIndex.value = 1
-  } catch (e) {
+  } catch {
     otPreviewCode.value = ''
     try {
       const fallbackRes = await api.get(`/clients/${clientId}/repairs`)
       const count = (fallbackRes.data || fallbackRes || []).length
       otBaseIndex.value = count + 1
-    } catch (fallbackError) {
+    } catch {
       otBaseIndex.value = 1
     }
   }
@@ -801,3 +801,271 @@ onMounted(async () => {
   await Promise.all([fetchNextClientCode(), fetchClients()])
 })
 </script>
+
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
+.intake-sheet {
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.sheet-header,
+.sheet-actions,
+.sheet-footer,
+.instrument-header,
+.sheet-context,
+.d-flex {
+  display: flex;
+  gap: var(--spacer-sm);
+  flex-wrap: wrap;
+}
+
+.sheet-header,
+.sheet-actions,
+.sheet-footer,
+.instrument-header,
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.sheet-header,
+.instrument-header,
+.sheet-actions,
+.sheet-footer,
+.align-items-center {
+  align-items: center;
+}
+
+.sheet-title,
+.sheet-section h4,
+.instrument-header h5,
+.sheet-form-section h6,
+.materials-section h6 {
+  margin: 0;
+  color: var(--color-dark);
+  font-weight: 700;
+}
+
+.sheet-title {
+  font-size: var(--text-xl);
+}
+
+.sheet-subtitle,
+.sheet-context,
+.code-label,
+.code-small {
+  color: var(--color-dark);
+  opacity: 0.72;
+  font-size: var(--text-sm);
+}
+
+.sheet-context {
+  margin-top: 0.35rem;
+}
+
+.code-block,
+.sheet-section,
+.instrument-card,
+.sheet-form-section,
+.materials-section {
+  padding: var(--spacer-md);
+  background: var(--color-white);
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.code-block {
+  min-width: 220px;
+}
+
+.code-value {
+  color: var(--color-dark);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sheet-section,
+.instrument-card {
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.sheet-form-section,
+.materials-section {
+  display: grid;
+  gap: var(--spacer-sm);
+  background: color-mix(in srgb, var(--color-white) 90%, var(--color-light) 10%);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacer-sm);
+}
+
+.row > [class*="col-"] {
+  min-width: 0;
+}
+
+.col-12 {
+  flex: 1 1 100%;
+}
+
+.col-md-6 {
+  flex: 1 1 calc(50% - var(--spacer-sm));
+}
+
+.col-md-4 {
+  flex: 1 1 calc(33.333% - var(--spacer-sm));
+}
+
+.col-md-3 {
+  flex: 1 1 calc(25% - var(--spacer-sm));
+}
+
+.col-md-2 {
+  flex: 1 1 calc(16.666% - var(--spacer-sm));
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.form-control,
+.form-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+}
+
+textarea.form-control {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.form-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.form-check-input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+}
+
+.alert {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 86%, var(--color-danger) 14%);
+  color: var(--color-dark);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.65rem 0.95rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.btn-outline-primary {
+  border-color: var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+}
+
+.btn-outline-secondary {
+  border-color: var(--color-dark);
+  background: transparent;
+  color: var(--color-dark);
+}
+
+.btn-outline-danger {
+  border-color: var(--color-danger);
+  background: transparent;
+  color: var(--color-danger);
+}
+
+.btn-sm {
+  min-height: 38px;
+  padding: 0.55rem 0.8rem;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.is-invalid {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-danger) 16%, transparent);
+}
+
+.mt-2 {
+  margin-top: var(--spacer-sm);
+}
+
+.mt-3 {
+  margin-top: var(--spacer-md);
+}
+
+@include media-breakpoint-down(md) {
+  .sheet-header,
+  .sheet-actions,
+  .sheet-footer,
+  .instrument-header,
+  .d-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .col-md-6,
+  .col-md-4,
+  .col-md-3,
+  .col-md-2 {
+    flex-basis: 100%;
+  }
+
+  .btn,
+  .code-block {
+    width: 100%;
+  }
+}
+</style>
