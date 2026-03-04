@@ -10,6 +10,7 @@ const apiMock = vi.hoisted(() => ({
 
 vi.mock('@/services/api', () => ({
   api: apiMock,
+  default: apiMock,
 }))
 
 import { useInventoryStore } from '@stores/inventory'

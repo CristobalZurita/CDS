@@ -8,9 +8,26 @@ const { postMock } = vi.hoisted(() => ({
   postMock: vi.fn(),
 }))
 
+const { getMock, putMock, deleteRequestMock, handleApiErrorMock } = vi.hoisted(() => ({
+  getMock: vi.fn(),
+  putMock: vi.fn(),
+  deleteRequestMock: vi.fn(),
+  handleApiErrorMock: vi.fn((error) => ({
+    message: error?.message ?? 'Unknown error',
+  })),
+}))
+
 vi.mock('@/services/api', () => ({
+  get: getMock,
+  post: postMock,
+  put: putMock,
+  deleteRequest: deleteRequestMock,
+  handleApiError: handleApiErrorMock,
   api: {
+    get: getMock,
     post: postMock,
+    put: putMock,
+    delete: deleteRequestMock,
   },
 }))
 
@@ -23,6 +40,15 @@ describe('InventoryForm', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     postMock.mockReset()
+    getMock.mockReset()
+    putMock.mockReset()
+    deleteRequestMock.mockReset()
+    handleApiErrorMock.mockClear()
+    getMock.mockResolvedValue({
+      data: {
+        data: [],
+      },
+    })
   })
 
   it('emits save with form payload when submitted (new item)', async () => {

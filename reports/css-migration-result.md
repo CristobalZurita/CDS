@@ -12,7 +12,7 @@ Esta migracion se hizo de forma progresiva en tres frentes de bajo riesgo:
 En la pasada mas reciente se agrego ademas una consolidacion estructural de calculadoras:
 
 - extraccion del footer repetido de cuatro calculadoras grandes a [src/vue/components/footer/WorkshopFooter.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/footer/WorkshopFooter.vue)
-- cobertura nueva para `useCalculator`, modelos de calculadora y el footer compartido
+- cobertura nueva para `useCalculator`, modelos de calculadora, footer compartido y componentes de las cuatro calculadoras grandes
 
 ## Archivos modificados
 
@@ -56,10 +56,34 @@ En la pasada mas reciente se agrego ademas una consolidacion estructural de calc
 - [tests/unit/domain/calculatorModels.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/domain/calculatorModels.test.ts)
 - [tests/unit/footer/WorkshopFooter.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/footer/WorkshopFooter.test.ts)
 - [tests/unit/modules/CalculatorWrappers.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/CalculatorWrappers.test.ts)
+- [tests/unit/modules/ResistorColorView.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/ResistorColorView.test.ts)
+- [tests/unit/modules/SmdCapacitorView.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/SmdCapacitorView.test.ts)
+- [tests/unit/modules/SmdResistorView.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/SmdResistorView.test.ts)
+- [tests/unit/modules/Timer555View.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/Timer555View.test.ts)
 - [tests/unit/services/authService.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/authService.test.ts)
 - [tests/unit/services/security.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/security.test.ts)
 - [tests/unit/services/logging.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/logging.test.ts)
 - [tests/unit/services/alerts.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/alerts.test.ts)
+- [src/composables/useAuth.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useAuth.js) (wrapper JS -> TS)
+- [src/composables/useDiagnostic.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useDiagnostic.js) (wrapper JS -> TS)
+- [src/composables/useDiagnostics.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useDiagnostics.js) (wrapper JS -> TS)
+- [src/composables/useInstruments.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useInstruments.js) (wrapper JS -> TS)
+- [src/composables/useInstrumentsCatalog.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useInstrumentsCatalog.js) (wrapper JS -> TS)
+- [src/composables/useInventory.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useInventory.js) (wrapper JS -> TS)
+- [src/composables/useQuotation.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useQuotation.js) (wrapper JS -> TS)
+- [src/composables/useRepairs.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useRepairs.js) (wrapper JS -> TS)
+- [src/composables/useCategories.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useCategories.js) (wrapper JS -> TS)
+- [src/composables/useUsers.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useUsers.js) (wrapper JS -> TS)
+- [src/composables/useStockMovements.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useStockMovements.js) (wrapper JS -> TS)
+- [src/stores/auth.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/auth.js) (wrapper JS -> TS)
+- [src/stores/inventory.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/inventory.js) (wrapper JS -> TS)
+- [src/stores/quotation.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/quotation.js) (wrapper JS -> TS)
+- [src/stores/repairs.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/repairs.js) (wrapper JS -> TS)
+- [src/stores/categories.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/categories.js) (wrapper JS -> TS)
+- [src/stores/users.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/users.js) (wrapper JS -> TS)
+- [src/stores/instruments.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/instruments.js) (wrapper JS -> TS)
+- [src/stores/diagnostics.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/diagnostics.js) (wrapper JS -> TS)
+- [src/stores/stockMovements.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/stockMovements.js) (wrapper JS -> TS)
 
 ### Reportes
 
@@ -127,12 +151,12 @@ Resultados:
 
 - `npm run build` -> OK
 - `npm run test:coverage` -> ejecuta y genera reporte, pero falla por thresholds globales
-  - `49` test files
-  - `245 passed`
+  - `53` test files
+  - `261 passed`
   - coverage total:
-    - lines/statements: `48.8%`
-    - functions: `52.42%`
-    - branches: `64.05%`
+    - lines/statements: `61.09%`
+    - functions: `54.99%`
+    - branches: `65.68%`
 - `cd backend && .venv/bin/python -m pytest -q` -> OK
   - `64 passed`
   - `13 skipped`
@@ -146,6 +170,7 @@ Observacion real:
 - `scripts/run_tests.sh` cae a `pytest` sin coverage cuando `pytest-cov` no esta instalado en `backend/.venv`
 - el warning backend que sigue vivo hoy viene desde `passlib` importando `crypt`, no desde codigo CDS modificado en esta pasada
 - `npm run test:coverage` sigue siendo util para generar el informe, pero no puede considerarse verde mientras los thresholds globales sigan en `90/90/85/90`
+- `npm run test -- --run tests/unit/modules` ahora valida en verde el bloque completo de calculadoras (`26 passed`)
 
 ## Lo que no se movio todavia
 
@@ -159,5 +184,6 @@ Si se sigue esta misma estrategia, el siguiente paso de bajo riesgo es:
 
 - reauditar paginas publicas mas amplias fuera de auth
 - seguir consolidando solo duplicaciones comprobables
-- subir cobertura en modulos Vue grandes y en capas TS espejo que todavia sigan sin pruebas
+- subir cobertura en `src/views/*` y `src/vue/components/admin/*` que siguen como deuda mayor
+- converger `src/stores/shopCart.js` a capa TS equivalente, preservando su contrato de carrito persistente
 - recien despues marcar candidatos a SCSS muerto con evidencia

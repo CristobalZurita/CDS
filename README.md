@@ -57,6 +57,7 @@ Audited Vue surface in `src/`: 19 non-admin pages, 16 admin pages, 9 calculator 
 | Customer panel | ✅ WORKING | Routes exist for `/dashboard`, `/repairs`, `/repairs/:id`, `/profile`, `/ot-payments`, and `/agendar`. These pages all have active unit tests in `tests/unit/client/`. |
 | Admin panel | 🔄 IN PROGRESS | Admin routes exist for inventory, clients, repairs, quotes, categories, contact, newsletter, appointments, tickets, purchase requests, manuals, stats, wizards, and archive. Test coverage is partial: inventory, quotes, manuals, appointments, and some wizard flows are covered, but not the entire admin surface. |
 | Entry wizards | 🔄 IN PROGRESS | `WizardClientIntake`, `WizardInventoryItem`, `WizardManualUpload`, `WizardMaterialsUsage`, `WizardPurchaseRequest`, `WizardSignatureRequest`, and `WizardTicket` exist. Only `WizardPurchaseRequest` and `WizardTicket` are covered by active unit tests. |
+| Calculator modules | ✅ WORKING | The full `src/modules/*` surface is covered in unit tests (`CalculatorWrappers`, `ResistorColorView`, `SmdCapacitorView`, `SmdResistorView`, `Timer555View`). ⚠️ Coverage is strong for modules, but global frontend thresholds still fail due uncovered views/admin/articles areas. |
 | Digital signatures | ✅ WORKING | Backend request, lookup, submit, cancel, and SSE endpoints exist; public route `/signature/:token` exists; unit tests cover the page submission flow. ⚠️ Effective expiry is 1-5 minutes, not the schema default of 15. |
 | Token photo uploads | ✅ WORKING | Public route `/photo-upload/:token` exists; backend request lookup and upload submission endpoints exist; page unit tests cover success and failure states. |
 | Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. `StorePage` unit coverage, the full backend pytest run, and the current Playwright integration runner all pass in this workspace on 2026-03-04. ⚠️ `npm run test:coverage` now generates a valid report but exits non-zero because global thresholds remain far above real coverage. |
@@ -412,7 +413,7 @@ cd backend
 
 ### What is actually covered
 
-- `tests/unit/` currently contains 36 files:
+- `tests/unit/` currently contains 40 files:
   - admin pages/components: 8
   - auth UI: 2
   - client pages: 6
@@ -422,7 +423,7 @@ cd backend
   - footer: 1
   - layout helpers: 1
   - model helpers: 1
-  - calculator module wrappers: 1
+  - modules (wrappers + full calculator views): 5
   - public pages: 4
   - router guard: 1
   - services: 4
@@ -450,16 +451,20 @@ Observed in this workspace on 2026-03-04:
 
 - `npm run test:coverage`
   - Result: ⚠️ report generated, command exits non-zero because global thresholds fail
-  - Test files: `49`
-  - Tests: `245 passed`
+  - Test files: `53`
+  - Tests: `261 passed`
   - Coverage summary from `coverage/coverage-summary.json`:
-    - lines/statements: `48.8%`
-    - functions: `52.42%`
-    - branches: `64.05%`
+    - lines/statements: `61.09%`
+    - functions: `54.99%`
+    - branches: `65.68%`
   - Threshold failure:
     - lines/statements require `90%`
     - functions require `90%`
     - branches require `85%`
+
+- `npm run test -- --run tests/unit/modules`
+  - Result: passed
+  - Summary: `26 passed` (full calculator module surface)
 
 - `cd backend && .venv/bin/python -m pytest -q`
   - Result: passed
@@ -478,7 +483,7 @@ Observed in this workspace on 2026-03-04:
 | `.env.example` and `backend/.env.example` now cover the audited runtime keys, but they still mix active settings with legacy placeholders not wired into the current hot path (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`). | Medium | Open |
 | Repository hygiene is stronger after the 2026-03-04 history rewrite, but CI/test infrastructure still uses intentionally public low-entropy test defaults such as `test-secret` and `test-refresh-secret`. They are test-only values and must never be reused outside isolated test flows. | Medium | Open |
 | Frontend auth is internally mixed: `src/services/api.ts` is cookie/CSRF-ready, but the actual login flow stores JWTs in `localStorage`, and account deletion is not implemented in backend. | High | Open |
-| Frontend coverage report improves to `48.8%` line coverage, but `npm run test:coverage` still fails by design because global thresholds remain at `90/90/85/90`; the simple calculator wrappers and key TS services are now covered, but large calculator/admin/public surfaces still remain unexercised. | High | Open |
+| Frontend coverage report improves to `61.09%` line coverage (`54.99%` functions, `65.68%` branches), but `npm run test:coverage` still fails by design because global thresholds remain at `90/90/85/90`; calculator modules are covered end-to-end in `tests/unit/modules`, while major debt remains in admin/public/articles surfaces and residual JS/TS duplication (`shopCart` + utilitarios JS). | High | Open |
 | `bash scripts/run_tests.sh` cannot produce backend coverage today because `pytest-cov` is not installed in `backend/.venv`; it falls back to plain `pytest`. | Medium | Open |
 | Signature expiry contract is inconsistent: `SignatureRequestCreate.expires_minutes` defaults to `15`, but `backend/app/routers/signature.py` clamps the real expiry to `5` minutes maximum. | Medium | Open |
 | `src/vue/components/articles/DiagnosticWizard.vue` still has `TODO: Generate PDF`; current implementation only generates CSV. | Medium | Open |

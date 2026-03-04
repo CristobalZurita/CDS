@@ -19,8 +19,10 @@
  * - getInstrumentById(id): Instrumento | undefined
  */
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import localInstrumentsData from '@/data/instruments.json'
+import { useInstrumentsStore } from '@/stores/instruments'
 
 // ============================================================================
 // TIPOS
@@ -146,20 +148,22 @@ async function autoSync(force: boolean = false): Promise<boolean> {
 // ============================================================================
 
 export function useInstruments() {
-  // Auto-sincronizar al montar
-  onMounted(async () => {
-    await autoSync(false)
-  })
-  
+  const store = useInstrumentsStore()
+  const refs = storeToRefs(store)
+
   return {
-    // Refs computadas para reactividad
-    instruments: computed(() => instruments.value),
-    loading: computed(() => loading.value),
+    // Compatibilidad con contrato legacy del composable JS.
+    instruments: refs.instruments,
+    loading: refs.loading || refs.isLoading,
+    error: refs.error,
+    fetchInstruments: store.fetchInstruments,
+    createInstrument: store.createInstrument,
+    updateInstrument: store.updateInstrument,
+    deleteInstrument: store.deleteInstrument,
+
+    // API de sincronización existente en la versión TS.
     synced: computed(() => synced.value),
     lastSync: computed(() => lastSyncTime.value),
-    error: computed(() => error.value),
-    
-    // Métodos
     sync: (force?: boolean) => autoSync(force),
     syncViaAPI: (force?: boolean) => syncViaAPI(force),
     loadFromJSON

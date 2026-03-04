@@ -8,6 +8,7 @@ const apiMock = vi.hoisted(() => ({
 
 vi.mock('@/services/api', () => ({
   api: apiMock,
+  default: apiMock,
 }))
 
 import { useAuthStore } from '@stores/auth'
@@ -26,6 +27,7 @@ describe('auth store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
+    localStorage.clear()
     resetState()
   })
 

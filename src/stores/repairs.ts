@@ -135,7 +135,7 @@ export const useRepairsStore = defineStore('repairs', () => {
       const response = await post<Repair>('/repairs/', data);
       const created = response.data.data || null;
       if (created) {
-        repairs.value.push(created);
+        repairs.value.unshift(created);
       }
       return created;
     } catch (err: any) {
@@ -178,16 +178,16 @@ export const useRepairsStore = defineStore('repairs', () => {
   /**
    * Delete repair
    */
-  async function deleteRepair(id: string): Promise<boolean> {
+  async function deleteRepair(id: string): Promise<boolean | Record<string, any>> {
     isLoading.value = true;
     error.value = null;
     try {
-      await deleteRequest(`/repairs/${id}`);
+      const response = await deleteRequest(`/repairs/${id}`);
       repairs.value = repairs.value.filter((r) => r.id !== id);
       if (currentRepair.value?.id === id) {
         currentRepair.value = null;
       }
-      return true;
+      return response.data?.data || response.data || true;
     } catch (err: any) {
       const apiError = handleApiError(err);
       error.value = apiError.message;

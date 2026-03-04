@@ -4,11 +4,10 @@ import { createPinia, setActivePinia } from 'pinia'
 const apiMock = vi.hoisted(() => ({
   get: vi.fn(),
   post: vi.fn(),
+  handleApiError: vi.fn(),
 }))
 
-vi.mock('@/composables/useApi', () => ({
-  useApi: () => apiMock,
-}))
+vi.mock('@/services/api', () => apiMock)
 
 import { useStockMovementsStore } from '@stores/stockMovements'
 
@@ -16,6 +15,9 @@ describe('stock movements store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
+    apiMock.handleApiError.mockImplementation((error) => ({
+      message: error?.message ?? 'Unknown error',
+    }))
   })
 
   it('starts empty', () => {
@@ -27,7 +29,11 @@ describe('stock movements store', () => {
   })
 
   it('fetches movement history', async () => {
-    apiMock.get.mockResolvedValueOnce([{ id: 1, type: 'in' }])
+    apiMock.get.mockResolvedValueOnce({
+      data: {
+        data: [{ id: 1, type: 'in' }],
+      },
+    })
 
     const store = useStockMovementsStore()
     await store.fetchMovements()
@@ -38,17 +44,21 @@ describe('stock movements store', () => {
   })
 
   it('stores fetch errors', async () => {
-    const failure = { message: 'timeout' }
+    const failure = new Error('timeout')
     apiMock.get.mockRejectedValueOnce(failure)
 
     const store = useStockMovementsStore()
     await store.fetchMovements()
 
-    expect(store.error).toEqual(failure)
+    expect(store.error).toBe('timeout')
   })
 
   it('creates a stock movement via the API', async () => {
-    apiMock.post.mockResolvedValueOnce({ id: 3, type: 'out' })
+    apiMock.post.mockResolvedValueOnce({
+      data: {
+        data: { id: 3, type: 'out' },
+      },
+    })
 
     const store = useStockMovementsStore()
     await expect(store.createMovement({ item_id: 1, quantity: 2 })).resolves.toEqual({ id: 3, type: 'out' })

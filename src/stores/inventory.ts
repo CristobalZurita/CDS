@@ -5,14 +5,18 @@
 
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { InventoryStoreState, InventoryItem, CreateInventoryItemData, UpdateInventoryItemData } from '@/types/stores';
-import api, { get, put, post, deleteRequest, handleApiError } from '@/services/api';
+import type { InventoryItem, CreateInventoryItemData, UpdateInventoryItemData } from '@/types/stores';
+import api from '@/services/api';
+
+function extractApiData<T>(response: any, fallback: T): T {
+  return (response?.data?.data ?? response?.data ?? fallback) as T;
+}
 
 export const useInventoryStore = defineStore('inventory', () => {
   // State
   const items = ref<InventoryItem[]>([]);
   const isLoading = ref(false);
-  const error = ref<string | null>(null);
+  const error = ref<any | null>(null);
   const searchQuery = ref('');
   const page = ref(1);
   const limit = ref(20);
@@ -49,11 +53,10 @@ export const useInventoryStore = defineStore('inventory', () => {
         params.set('category_id', categoryId);
       }
 
-      const response = await get<InventoryItem[]>(`/inventory?${params.toString()}`);
-      items.value = response.data.data || [];
+      const response = await api.get(`/inventory/?${params.toString()}`);
+      items.value = extractApiData<InventoryItem[]>(response, []);
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
+      error.value = err;
       items.value = [];
     } finally {
       isLoading.value = false;
@@ -77,11 +80,10 @@ export const useInventoryStore = defineStore('inventory', () => {
     error.value = null;
     try {
       const payload = { stock: quantity };
-      await put<InventoryItem>(`/inventory/${id}`, payload);
+      await api.put(`/inventory/${id}`, payload);
       await fetchItems(page.value, limit.value);
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
+      error.value = err;
       throw err;
     } finally {
       isLoading.value = false;
@@ -93,11 +95,10 @@ export const useInventoryStore = defineStore('inventory', () => {
    */
   async function getLowStockItems(): Promise<InventoryItem[]> {
     try {
-      const response = await get<InventoryItem[]>('/inventory/low-stock');
-      return response.data.data || [];
+      const response = await api.get('/inventory/low-stock');
+      return extractApiData<InventoryItem[]>(response, []);
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
+      error.value = err;
       return [];
     }
   }
@@ -105,7 +106,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   /**
    * Create inventory item
    */
-  async function addItem(data: CreateInventoryItemData): Promise<InventoryItem> {
+  async function addItem(data: CreateInventoryItemData): Promise<InventoryItem | null> {
     isLoading.value = true;
     error.value = null;
     try {
@@ -116,16 +117,14 @@ export const useInventoryStore = defineStore('inventory', () => {
       }
       delete payload.quantity;
 
-      const response = await post<InventoryItem>('/inventory', payload);
-      const created = response.data.data;
+      const response = await api.post('/inventory/', payload);
+      const created = extractApiData<InventoryItem | null>(response, null);
       if (created) {
-        items.value.push(created);
+        items.value = [created, ...items.value.filter((item) => String(item.id) !== String(created.id))];
       }
-      await fetchItems(page.value, limit.value);
       return created;
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
+      error.value = err;
       throw err;
     } finally {
       isLoading.value = false;
@@ -135,7 +134,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   /**
    * Update inventory item
    */
-  async function updateItem(id: string, data: UpdateInventoryItemData): Promise<InventoryItem> {
+  async function updateItem(id: string, data: UpdateInventoryItemData): Promise<InventoryItem | null> {
     isLoading.value = true;
     error.value = null;
     try {
@@ -146,12 +145,16 @@ export const useInventoryStore = defineStore('inventory', () => {
       }
       delete payload.quantity;
 
-      const response = await put<InventoryItem>(`/inventory/${id}`, payload);
-      await fetchItems(page.value, limit.value);
-      return response.data.data;
+      const response = await api.put(`/inventory/${id}`, payload);
+      const updated = extractApiData<InventoryItem | null>(response, null);
+      if (updated) {
+        items.value = items.value.map((item) =>
+          String(item.id) === String(id) ? ({ ...item, ...updated } as InventoryItem) : item
+        );
+      }
+      return updated;
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
+      error.value = err;
       throw err;
     } finally {
       isLoading.value = false;
@@ -165,14 +168,13 @@ export const useInventoryStore = defineStore('inventory', () => {
     isLoading.value = true;
     error.value = null;
     try {
-      await deleteRequest(`/inventory/${itemId}`);
-      items.value = items.value.filter((item) => item.id !== itemId);
-      await fetchItems(page.value, limit.value);
+      await api.delete(`/inventory/${itemId}`);
+      items.value = items.value.filter((item) => String(item.id) !== String(itemId));
       return true;
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
-      throw err;
+      error.value = err;
+      console.error('Error deleting item', err);
+      return false;
     } finally {
       isLoading.value = false;
     }
@@ -182,11 +184,10 @@ export const useInventoryStore = defineStore('inventory', () => {
     error.value = null;
     try {
       const response = await api.get('/inventory/store-catalog/status');
-      catalogStatus.value = response.data || null;
+      catalogStatus.value = extractApiData<Record<string, any> | null>(response, null);
       return catalogStatus.value;
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
+      error.value = err;
       throw err;
     }
   }
@@ -195,7 +196,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     error.value = null;
     try {
       const response = await api.get(`/inventory/${itemId}`);
-      const item = response.data || null;
+      const item = extractApiData<Record<string, any> | null>(response, null);
       if (!item) {
         return null;
       }
@@ -207,8 +208,7 @@ export const useInventoryStore = defineStore('inventory', () => {
       }
       return item;
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
+      error.value = err;
       throw err;
     }
   }
@@ -221,13 +221,12 @@ export const useInventoryStore = defineStore('inventory', () => {
     syncingCatalog.value = true;
     try {
       const response = await api.post('/inventory/store-catalog/sync');
-      const data = response.data || null;
+      const data = extractApiData<Record<string, any> | null>(response, null);
       catalogStatus.value = data?.status || null;
       await fetchItems(page.value, limit.value);
       return data;
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
+      error.value = err;
       throw err;
     } finally {
       syncingCatalog.value = false;
@@ -245,13 +244,12 @@ export const useInventoryStore = defineStore('inventory', () => {
     importing.value = true;
     try {
       const response = await api.post('/imports/run');
-      const data = response.data || {};
+      const data = extractApiData<Record<string, any>>(response, {});
       lastRunId.value = data.run_id || null;
       runStatus.value = data.status || null;
       return data;
     } catch (err: any) {
-      const apiError = handleApiError(err);
-      error.value = apiError.message;
+      error.value = err;
       throw err;
     } finally {
       importing.value = false;
@@ -261,7 +259,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   /**
    * Set error message
    */
-  function setError(message: string): void {
+  function setError(message: any): void {
     error.value = message;
   }
 

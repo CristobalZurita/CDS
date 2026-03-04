@@ -5,7 +5,8 @@ const apiMock = vi.hoisted(() => ({
   get: vi.fn(),
   post: vi.fn(),
   put: vi.fn(),
-  delete: vi.fn(),
+  deleteRequest: vi.fn(),
+  handleApiError: vi.fn(),
 }))
 
 const mediaMock = vi.hoisted(() => ({
@@ -13,8 +14,24 @@ const mediaMock = vi.hoisted(() => ({
   revokeHydratedRepairPhotos: vi.fn(),
 }))
 
-vi.mock('@/composables/useApi', () => ({
-  useApi: () => apiMock,
+vi.mock('@/services/api', () => ({
+  api: {
+    get: apiMock.get,
+    post: apiMock.post,
+    put: apiMock.put,
+    delete: apiMock.deleteRequest,
+  },
+  default: {
+    get: apiMock.get,
+    post: apiMock.post,
+    put: apiMock.put,
+    delete: apiMock.deleteRequest,
+  },
+  get: apiMock.get,
+  post: apiMock.post,
+  put: apiMock.put,
+  deleteRequest: apiMock.deleteRequest,
+  handleApiError: apiMock.handleApiError,
 }))
 
 vi.mock('@/services/secureMedia', () => mediaMock)
@@ -25,6 +42,9 @@ describe('repairs store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
+    apiMock.handleApiError.mockImplementation((error) => ({
+      message: error?.message ?? 'Unknown error',
+    }))
     mediaMock.hydrateRepairPhotos.mockImplementation(async (photos) =>
       photos.map((photo) => ({
         ...photo,
@@ -43,7 +63,11 @@ describe('repairs store', () => {
   })
 
   it('fetches repairs successfully', async () => {
-    apiMock.get.mockResolvedValueOnce([{ id: 1 }, { id: 2 }])
+    apiMock.get.mockResolvedValueOnce({
+      data: {
+        data: [{ id: 1 }, { id: 2 }],
+      },
+    })
 
     const store = useRepairsStore()
     const result = await store.fetchRepairs()
@@ -56,7 +80,7 @@ describe('repairs store', () => {
   })
 
   it('captures fetch failures and clears stale repairs', async () => {
-    const failure = { message: 'backend down' }
+    const failure = new Error('backend down')
     apiMock.get.mockRejectedValueOnce(failure)
 
     const store = useRepairsStore()
@@ -64,11 +88,15 @@ describe('repairs store', () => {
 
     await expect(store.fetchRepairs()).resolves.toEqual([])
     expect(store.repairs).toEqual([])
-    expect(store.error).toEqual(failure)
+    expect(store.error).toBe('backend down')
   })
 
   it('prepends new repairs after create', async () => {
-    apiMock.post.mockResolvedValueOnce({ id: 3, status: 'pending' })
+    apiMock.post.mockResolvedValueOnce({
+      data: {
+        data: { id: 3, status: 'pending' },
+      },
+    })
 
     const store = useRepairsStore()
     store.repairs = [{ id: 1 }, { id: 2 }]
@@ -81,7 +109,11 @@ describe('repairs store', () => {
   })
 
   it('replaces an existing repair on update', async () => {
-    apiMock.put.mockResolvedValueOnce({ id: 2, status: 'done' })
+    apiMock.put.mockResolvedValueOnce({
+      data: {
+        data: { id: 2, status: 'done' },
+      },
+    })
 
     const store = useRepairsStore()
     store.repairs = [{ id: 1, status: 'pending' }, { id: 2, status: 'pending' }]
@@ -94,20 +126,26 @@ describe('repairs store', () => {
   })
 
   it('filters out the deleted repair', async () => {
-    apiMock.delete.mockResolvedValueOnce({ ok: true })
+    apiMock.deleteRequest.mockResolvedValueOnce({
+      data: {
+        data: { ok: true },
+      },
+    })
 
     const store = useRepairsStore()
     store.repairs = [{ id: 1 }, { id: 2 }]
 
     const result = await store.deleteRepair(1)
 
-    expect(apiMock.delete).toHaveBeenCalledWith('/repairs/1')
+    expect(apiMock.deleteRequest).toHaveBeenCalledWith('/repairs/1')
     expect(result).toEqual({ ok: true })
     expect(store.repairs).toEqual([{ id: 2 }])
   })
 
   it('loads client repairs into the shared repairs collection', async () => {
-    apiMock.get.mockResolvedValueOnce([{ id: 12 }, { id: 14 }])
+    apiMock.get.mockResolvedValueOnce({
+      data: [{ id: 12 }, { id: 14 }],
+    })
 
     const store = useRepairsStore()
     const result = await store.fetchClientRepairs()
@@ -119,10 +157,12 @@ describe('repairs store', () => {
 
   it('loads and hydrates client repair detail', async () => {
     apiMock.get.mockResolvedValueOnce({
-      repair: { id: 99, instrument: 'Juno-106' },
-      timeline: [{ label: 'Ingreso' }],
-      photos: [{ id: 7, caption: 'Antes' }],
-      notes: [{ id: 3, note: 'Nota visible' }],
+      data: {
+        repair: { id: 99, instrument: 'Juno-106' },
+        timeline: [{ label: 'Ingreso' }],
+        photos: [{ id: 7, caption: 'Antes' }],
+        notes: [{ id: 3, note: 'Nota visible' }],
+      },
     })
 
     const store = useRepairsStore()
@@ -137,7 +177,9 @@ describe('repairs store', () => {
 
   it('returns pdf bytes for client closure downloads', async () => {
     const pdfBytes = new Uint8Array([1, 2, 3])
-    apiMock.get.mockResolvedValueOnce(pdfBytes)
+    apiMock.get.mockResolvedValueOnce({
+      data: pdfBytes,
+    })
 
     const store = useRepairsStore()
     const result = await store.downloadClientClosurePdf(55)

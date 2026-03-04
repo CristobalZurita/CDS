@@ -18,6 +18,8 @@ type RegisterPayload = {
   turnstile_token?: string | null;
 };
 
+const DEFAULT_SESSION_MS = 60 * 60 * 1000;
+
 function buildAuthHeaders(token: string | null): Record<string, string> {
   if (!token) {
     return {};
@@ -52,10 +54,25 @@ export const useAuthStore = defineStore('auth', () => {
   const error = ref<string | null>(null);
   const requires2FA = ref(false);
   const twoFAChallengeId = ref<string | null>(null);
+  const mfaRequired = ref(false);
+  const mfaVerified = ref(false);
+  const sessionStart = ref<number | null>(null);
+  const sessionExpiry = ref<number | null>(null);
+  const allowConcurrentSessions = ref(true);
 
   // Computed
   const isAdmin = computed(() => user.value?.role === 'admin');
   const isTechnician = computed(() => user.value?.role === 'technician');
+
+  function setAuthenticatedSession(): void {
+    isAuthenticated.value = Boolean(token.value && user.value);
+    requires2FA.value = false;
+    twoFAChallengeId.value = null;
+    mfaRequired.value = false;
+    mfaVerified.value = true;
+    sessionStart.value = Date.now();
+    sessionExpiry.value = sessionStart.value + DEFAULT_SESSION_MS;
+  }
 
   function setTokens(access: string | null, refresh: string | null): void {
     token.value = access;
@@ -79,6 +96,10 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
     requires2FA.value = false;
     twoFAChallengeId.value = null;
+    mfaRequired.value = false;
+    mfaVerified.value = false;
+    sessionStart.value = null;
+    sessionExpiry.value = null;
   }
 
   /**
@@ -99,7 +120,7 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * Login
    */
-  async function login(email: string, password: string, turnstileToken?: string): Promise<{ requires_2fa?: boolean; challenge_id?: string | null }> {
+  async function login(email: string, password: string, turnstileToken?: string): Promise<{ requires_2fa?: boolean; challenge_id?: string | null } | User | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -114,6 +135,8 @@ export const useAuthStore = defineStore('auth', () => {
       if (payload?.requires_2fa) {
         requires2FA.value = true;
         twoFAChallengeId.value = String(payload.challenge_id || '');
+        mfaRequired.value = true;
+        mfaVerified.value = false;
         isAuthenticated.value = false;
         return { requires_2fa: true, challenge_id: twoFAChallengeId.value };
       }
@@ -125,8 +148,9 @@ export const useAuthStore = defineStore('auth', () => {
       setTokens(String(payload.access_token), String(payload.refresh_token));
       requires2FA.value = false;
       twoFAChallengeId.value = null;
-      await fetchUserInfo();
-      return {};
+      const currentUser = await fetchUserInfo();
+      setAuthenticatedSession();
+      return currentUser;
     } catch (err: any) {
       error.value = err?.response?.data?.detail || 'Login failed';
       throw err;
@@ -158,7 +182,7 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * Verify 2FA
    */
-  async function verifyTwoFactor(challengeId: string | null, code: string): Promise<void> {
+  async function verifyTwoFactor(challengeId: string | null, code: string): Promise<User | null> {
     const resolvedChallengeId = challengeId || twoFAChallengeId.value;
     if (!resolvedChallengeId) {
       throw new Error('No 2FA challenge in progress');
@@ -181,7 +205,9 @@ export const useAuthStore = defineStore('auth', () => {
       setTokens(String(payload.access_token), String(payload.refresh_token));
       requires2FA.value = false;
       twoFAChallengeId.value = null;
-      await fetchUserInfo();
+      const currentUser = await fetchUserInfo();
+      setAuthenticatedSession();
+      return currentUser;
     } catch (err: any) {
       error.value = err?.response?.data?.detail || 'Invalid code';
       throw err;
@@ -191,17 +217,17 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Alias aditivo para compatibilidad con nombre anterior.
-  async function verify2FA(code: string): Promise<void> {
-    await verifyTwoFactor(twoFAChallengeId.value, code);
+  async function verify2FA(code: string): Promise<User | null> {
+    return verifyTwoFactor(twoFAChallengeId.value, code);
   }
 
   /**
    * Fetch user info
    */
-  async function fetchUserInfo(): Promise<void> {
+  async function fetchUserInfo(): Promise<User | null> {
     if (!token.value) {
       clearSession();
-      return;
+      return null;
     }
     try {
       const response = await api.get('/auth/me', {
@@ -209,6 +235,7 @@ export const useAuthStore = defineStore('auth', () => {
       });
       user.value = response.data as User;
       isAuthenticated.value = true;
+      return user.value;
     } catch (err) {
       clearSession();
       throw err;
@@ -218,10 +245,10 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * Refresh access token
    */
-  async function refreshAccessToken(): Promise<boolean> {
+  async function refreshAccessToken(): Promise<string | null> {
     if (!refreshToken.value) {
       clearSession();
-      return false;
+      return null;
     }
     try {
       const response = await api.post('/auth/refresh', {
@@ -230,13 +257,18 @@ export const useAuthStore = defineStore('auth', () => {
       const payload = response.data || {};
       if (!payload?.access_token || !payload?.refresh_token) {
         clearSession();
-        return false;
+        return null;
       }
       setTokens(String(payload.access_token), String(payload.refresh_token));
-      return true;
+      isAuthenticated.value = Boolean(user.value && token.value);
+      if (isAuthenticated.value && !sessionExpiry.value) {
+        sessionStart.value = Date.now();
+        sessionExpiry.value = sessionStart.value + DEFAULT_SESSION_MS;
+      }
+      return token.value;
     } catch {
       clearSession();
-      return false;
+      return null;
     }
   }
 
@@ -309,7 +341,14 @@ export const useAuthStore = defineStore('auth', () => {
    * Check if user has role
    */
   function hasRole(role: string): boolean {
-    return user.value?.role === role;
+    return String(user.value?.role || '').trim().toLowerCase() === String(role || '').trim().toLowerCase();
+  }
+
+  function isTokenExpired(): boolean {
+    if (!sessionExpiry.value) {
+      return true;
+    }
+    return Date.now() >= Number(sessionExpiry.value);
   }
 
   /**
@@ -330,6 +369,11 @@ export const useAuthStore = defineStore('auth', () => {
     error,
     requires2FA,
     twoFAChallengeId,
+    mfaRequired,
+    mfaVerified,
+    sessionStart,
+    sessionExpiry,
+    allowConcurrentSessions,
 
     // Computed
     isAdmin,
@@ -349,6 +393,7 @@ export const useAuthStore = defineStore('auth', () => {
     deleteAccount,
     hasPermission,
     hasRole,
+    isTokenExpired,
     setError,
   };
 });

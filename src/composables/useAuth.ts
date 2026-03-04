@@ -6,7 +6,7 @@
 import { ref, computed, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
 import type { User } from '@/types/common';
-import api from '@/services/api';
+import { api } from '@/services/api';
 
 type AuthUser = User & {
   username?: string;
@@ -41,40 +41,11 @@ const isAuthenticated = computed(() => !!token.value && !!user.value);
 const isAdmin = computed(() => user.value?.role === 'admin');
 const isTechnician = computed(() => user.value?.role === 'technician');
 
-function splitFullName(raw: string): { firstName: string; lastName: string } {
-  const parts = String(raw || '').trim().split(/\s+/).filter(Boolean);
-  return {
-    firstName: parts[0] || '',
-    lastName: parts.slice(1).join(' '),
-  };
-}
-
 function normalizeUser(raw: any): AuthUser | null {
   if (!raw) {
     return null;
   }
-
-  const fullName = String(
-    raw.full_name ||
-    raw.fullName ||
-    `${raw.first_name || raw.firstName || ''} ${raw.last_name || raw.lastName || ''}`
-  ).trim();
-  const { firstName, lastName } = splitFullName(fullName);
-
-  return {
-    ...raw,
-    id: String(raw.id ?? ''),
-    email: String(raw.email || ''),
-    firstName,
-    lastName,
-    fullName,
-    full_name: fullName,
-    role: String(raw.role || 'client') as AuthUser['role'],
-    permissions: Array.isArray(raw.permissions) ? raw.permissions : [],
-    createdAt: raw.createdAt || raw.created_at || '',
-    updatedAt: raw.updatedAt || raw.updated_at || '',
-    phone: raw.phone || null,
-  };
+  return raw as AuthUser;
 }
 
 function setTokens(accessValue: string | null, refreshValue: string | null): void {

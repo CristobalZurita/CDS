@@ -22,6 +22,7 @@ interface Fault {
 
 export const useQuotationStore = defineStore('quotation', () => {
   // State
+  const quotations = ref<Quotation[]>([]);
   const selectedInstrument = ref<Instrument | null>(null);
   const selectedFaults = ref<Fault[]>([]);
   const currentQuotation = ref<Quotation | null>(null);
@@ -34,6 +35,17 @@ export const useQuotationStore = defineStore('quotation', () => {
   const hasSelected = computed(() => selectedInstrument.value !== null);
   const hasFaults = computed(() => selectedFaults.value.length > 0);
   const hasQuotation = computed(() => currentQuotation.value !== null);
+  const total = computed(() => {
+    if (currentQuotation.value && Number.isFinite(Number(currentQuotation.value.total))) {
+      return Number(currentQuotation.value.total);
+    }
+
+    return quotationItems.value.reduce((sum, item) => {
+      const quantity = Number(item?.quantity || 0);
+      const unitPrice = Number((item as any)?.unitPrice ?? (item as any)?.unit_price ?? 0);
+      return sum + quantity * unitPrice;
+    }, 0);
+  });
 
   /**
    * Set selected instrument
@@ -58,6 +70,19 @@ export const useQuotationStore = defineStore('quotation', () => {
       ...quotation,
       savedAt: new Date(),
     });
+
+    if (!quotation || (quotation as any).id == null) {
+      return;
+    }
+
+    const quoteId = Number((quotation as any).id);
+    const existingIndex = quotations.value.findIndex((item: any) => Number(item?.id) === quoteId);
+    if (existingIndex >= 0) {
+      quotations.value[existingIndex] = quotation;
+      return;
+    }
+
+    quotations.value.push(quotation);
   }
 
   /**
@@ -68,7 +93,7 @@ export const useQuotationStore = defineStore('quotation', () => {
     error.value = null;
     try {
       const response = await get<Quotation[]>('/quotations');
-      // Update quotation history from API if needed
+      quotations.value = response.data.data || [];
     } catch (err: any) {
       const apiError = handleApiError(err);
       error.value = apiError.message;
@@ -200,6 +225,8 @@ export const useQuotationStore = defineStore('quotation', () => {
     selectedFaults.value = [];
     currentQuotation.value = null;
     quotationItems.value = [];
+    error.value = null;
+    isLoading.value = false;
   }
 
   /**
@@ -225,6 +252,7 @@ export const useQuotationStore = defineStore('quotation', () => {
 
   return {
     // State
+    quotations,
     selectedInstrument,
     selectedFaults,
     currentQuotation,
@@ -237,6 +265,7 @@ export const useQuotationStore = defineStore('quotation', () => {
     hasSelected,
     hasFaults,
     hasQuotation,
+    total,
     // Actions
     setInstrument,
     setFaults,

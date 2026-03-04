@@ -1,19 +1,19 @@
 # Mapa de Estado Frontend
 
-Estado auditado despues de la pasada progresiva del 2026-03-04.
+Estado auditado despues de la pasada progresiva del 2026-03-04 (actualizado al cierre del dia).
 
 ## Resumen ejecutivo
 
 - CDS ya funciona como una SPA Vue real en router, auth, stores, cliente API y paneles cliente/admin.
 - La arquitectura de estilos sigue siendo hibrida y controlada: `src/scss/main.scss` sigue siendo el entry global real, con consolidacion progresiva de patrones repetidos.
-- El cuello de botella actual ya no es "migrar Sass a CSS variables", sino reducir duplicacion puntual y subir cobertura sobre las superficies grandes que todavia siguen fuera de prueba.
+- El cuello de botella actual ya no es "migrar Sass a CSS variables", sino reducir duplicacion puntual JS/TS y subir cobertura fuera del bloque de calculadoras.
 
 ## Capas reales del frontend
 
 ### Controlado en Vue
 
 - [src/router/index.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/router/index.ts)
-- stores/composables JS activos usados por la SPA
+- wrappers JS -> TS activos en composables y stores principales (`auth`, `inventory`, `quotation`, `repairs`, `categories`, `users`, `instruments`, `diagnostics`, `stockMovements`)
 - auth UI y guards ya cubiertos por tests
 - panel cliente base y varios flujos admin ya cubiertos
 - cliente API real en [src/services/api.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/services/api.ts)
@@ -30,8 +30,8 @@ Estado auditado despues de la pasada progresiva del 2026-03-04.
 
 ### Hibrido con deuda visible
 
-- cuatro modulos grandes en [src/modules](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/modules) siguen sin cobertura de componente: `ResistorColorView`, `SmdCapacitorView`, `SmdResistorView`, `Timer555View`
-- duplicidad paralela JS/TS en `stores/`, `composables/` y parte de `services/`
+- los modulos grandes en [src/modules](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/modules) ya tienen cobertura de componente, pero siguen con deuda de complejidad visual/canvas
+- duplicidad residual JS/TS en `shopCart` y composables utilitarios no tipados (`emails`, `layout`, `scheduler`, `utils`)
 - superficies grandes sin test en `src/views/`, parte de `src/vue/components/dashboard/*`, `src/vue/components/articles/*` y los modulos de calculadora con UI compleja
 
 ## Foto por cluster
@@ -43,7 +43,7 @@ Estado auditado despues de la pasada progresiva del 2026-03-04.
 | Cliente | Controlado | `tests/unit/client/*`, `integration-flows.spec.ts` | Panel cliente estable en lo validado. |
 | Admin base | Controlado parcial | inventario, citas, cotizaciones, manuales, algunos wizards | La superficie admin completa todavia no está cubierta. |
 | Public shell/legal | Hibrido controlado | `PageWrapper`, `_public.scss`, tests publicos | Ya no hay tanta duplicacion clara de estilos como en admin/auth. |
-| Calculadoras grandes | Hibrido con deuda | `ResistorColorView`, `SmdCapacitorView`, `SmdResistorView`, `Timer555View` | Esta pasada extrajo el footer repetido a [src/vue/components/footer/WorkshopFooter.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/footer/WorkshopFooter.vue). |
+| Calculadoras grandes | Controlado parcial | `tests/unit/modules/ResistorColorView.test.ts`, `SmdCapacitorView.test.ts`, `SmdResistorView.test.ts`, `Timer555View.test.ts` | El bloque completo de `src/modules/*` ya corre en verde, con deuda restante centrada en vistas/admin fuera de calculadoras. |
 | Calculadoras simples | Controlado parcial | `AwgView`, `LengthView`, `NumberSystemView`, `OhmsLawView`, `TemperatureView`, `tests/unit/modules/CalculatorWrappers.test.ts` | Son wrappers minimos con contrato/calculo y ahora ya tienen cobertura de componente. |
 | Dominio TS puro | Mejorando | `src/domain/*/model.ts` | Esta pasada dejo cobertura real para todos los modelos de calculadora. |
 | Servicios TS | Controlado parcial | `auth.ts`, `security.ts`, `logging.ts`, `alerts.ts`, `tests/unit/services/*` | Ya no estan en `0%`; la deuda pendiente se mueve a otras capas TS espejo y servicios mas amplios. |
@@ -62,33 +62,60 @@ Estado auditado despues de la pasada progresiva del 2026-03-04.
   - [tests/unit/footer/WorkshopFooter.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/footer/WorkshopFooter.test.ts)
 - Se agrego cobertura de componente para wrappers simples en:
   - [tests/unit/modules/CalculatorWrappers.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/CalculatorWrappers.test.ts)
+- Se agrego cobertura de componente para calculadoras grandes en:
+  - [tests/unit/modules/ResistorColorView.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/ResistorColorView.test.ts)
+  - [tests/unit/modules/SmdCapacitorView.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/SmdCapacitorView.test.ts)
+  - [tests/unit/modules/SmdResistorView.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/SmdResistorView.test.ts)
+  - [tests/unit/modules/Timer555View.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/Timer555View.test.ts)
 - Se agrego cobertura de servicios TS en:
   - [tests/unit/services/authService.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/authService.test.ts)
   - [tests/unit/services/security.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/security.test.ts)
   - [tests/unit/services/logging.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/logging.test.ts)
   - [tests/unit/services/alerts.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/alerts.test.ts)
+- Se extendio convergencia JS/TS en composables con wrappers aditivos JS -> TS:
+  - [src/composables/useAuth.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useAuth.js)
+  - [src/composables/useDiagnostic.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useDiagnostic.js)
+  - [src/composables/useDiagnostics.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useDiagnostics.js)
+  - [src/composables/useInstruments.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useInstruments.js)
+  - [src/composables/useInstrumentsCatalog.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useInstrumentsCatalog.js)
+  - [src/composables/useInventory.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useInventory.js)
+  - [src/composables/useQuotation.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useQuotation.js)
+  - [src/composables/useRepairs.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useRepairs.js)
+  - [src/composables/useCategories.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useCategories.js)
+  - [src/composables/useUsers.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useUsers.js)
+  - [src/composables/useStockMovements.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useStockMovements.js)
+- Se extendio convergencia JS/TS en stores con wrappers aditivos JS -> TS:
+  - [src/stores/auth.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/auth.js)
+  - [src/stores/inventory.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/inventory.js)
+  - [src/stores/quotation.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/quotation.js)
+  - [src/stores/repairs.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/repairs.js)
+  - [src/stores/categories.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/categories.js)
+  - [src/stores/users.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/users.js)
+  - [src/stores/instruments.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/instruments.js)
+  - [src/stores/diagnostics.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/diagnostics.js)
+  - [src/stores/stockMovements.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/stockMovements.js)
 
 ## Estado medible actual
 
 - `npm run build` -> OK
-- `npm run test -- --run tests/unit/modules/CalculatorWrappers.test.ts tests/unit/services/authService.test.ts tests/unit/services/security.test.ts tests/unit/services/logging.test.ts tests/unit/services/alerts.test.ts` -> `27 passed`
+- `npm run test -- --run tests/unit/modules` -> `26 passed`
 - `npm run test:coverage` -> ejecuta la suite y genera reporte, pero termina en `exit 1` por thresholds globales
-  - `49` archivos de test
-  - `245 passed`
-  - lines/statements: `48.8%`
-  - functions: `52.42%`
-  - branches: `64.05%`
+  - `53` archivos de test
+  - `261 passed`
+  - lines/statements: `61.09%`
+  - functions: `54.99%`
+  - branches: `65.68%`
 - `cd backend && .venv/bin/python -m pytest -q` -> `64 passed`, `13 skipped`, `1 warning`
 - `bash scripts/run_tests.sh` -> `backend: PASS`, `playwright: PASS`
 
 ## Riesgos reales que siguen abiertos
 
-- `npm run test:coverage` no puede considerarse verde mientras existan thresholds globales de `90/90/85/90` con cobertura real de `48.8/52.42/64.05/48.8`.
-- Los cuatro modulos Vue de calculadora con UI grande siguen sin cobertura de componente.
-- La duplicidad JS/TS sigue siendo una deuda estructural: hoy la app usa sobre todo la capa JS activa, mientras varias capas TS espejo siguen sin la misma profundidad de prueba.
+- `npm run test:coverage` no puede considerarse verde mientras existan thresholds globales de `90/90/85/90` con cobertura real de `61.09/54.99/65.68/61.09`.
+- La duplicidad JS/TS se redujo en stores/composables principales, pero sigue viva en `shopCart` y utilitarios JS no tipados.
 
 ## Siguiente corte natural
 
-- cubrir por componente uno de los cuatro modulos grandes de calculadora, empezando por el de menor acoplamiento a canvas o tablas complejas
-- seguir la capa TS espejo que todavia quede sin pruebas despues de `auth.ts`, `security.ts`, `logging.ts` y `alerts.ts`
+- converger `src/stores/shopCart.js` a capa TS equivalente sin romper su contrato de carrito persistente
+- cerrar convergencia en composables utilitarios JS (`emails`, `layout`, `scheduler`, `utils`) donde tenga sentido real
+- seguir cobertura en `src/views/*` y `src/vue/components/admin/*` que hoy siguen como mayor superficie sin prueba
 - recien despues decidir si conviene extraer mas shell comun de calculadoras, por ejemplo el bloque de retorno a `/calculadoras`
