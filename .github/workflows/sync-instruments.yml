@@ -8,6 +8,7 @@ on:
       - 'public/images/instrumentos/**/*.webp'
       - 'scripts/sync_instruments.py'
       - 'scripts/auto_sync.py'
+      - 'scripts/validate_instruments_sync.py'
   workflow_dispatch:  # Permite ejecución manual
 
 jobs:
@@ -27,21 +28,29 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Detectar cantidad actual de fotos
+        id: photo-count
+        shell: bash
+        run: |
+          count=$(find public/images/instrumentos -maxdepth 1 -type f -name '*.webp' | wc -l | xargs)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "Fotos detectadas: $count"
+
       - name: Ejecutar sincronizador
-        run: python3 scripts/auto_sync.py --once
+        run: python3 scripts/auto_sync.py --once --expected-fotos ${{ steps.photo-count.outputs.count }}
 
       - name: Validar consistencia de datasets
-        run: python3 scripts/validate_instruments_sync.py --expected-fotos 249
+        run: python3 scripts/validate_instruments_sync.py --expected-fotos ${{ steps.photo-count.outputs.count }}
 
       - name: Verificar cambios
         id: changes
         run: |
-          if git diff --quiet src/data/instruments.json src/data/.sync_metadata.json src/assets/data/instruments.json; then
+          if git diff --quiet src/data/instruments.json src/data/.sync_metadata.json src/assets/data/instruments.json src/assets/data/brands.json; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "---"
-            git diff src/data/instruments.json src/data/.sync_metadata.json src/assets/data/instruments.json | head -120
+            git diff src/data/instruments.json src/data/.sync_metadata.json src/assets/data/instruments.json src/assets/data/brands.json | head -120
             echo "---"
           fi
 
@@ -50,7 +59,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action - Sync Instruments"
-          git add src/data/instruments.json src/data/.sync_metadata.json src/assets/data/instruments.json
+          git add src/data/instruments.json src/data/.sync_metadata.json src/assets/data/instruments.json src/assets/data/brands.json
           git commit -m "refactor(data): Sync instruments - new photos detected [skip ci]"
           git push
 

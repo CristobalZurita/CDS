@@ -113,6 +113,20 @@
       }
     },
     {
+      "id": "kurzweil",
+      "name": "Kurzweil",
+      "tier": "standard",
+      "founded": null,
+      "country": null,
+      "description": "Marca habilitada por logo disponible (KURZWEIL)",
+      "logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "logo": {
+        "url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+        "path": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+        "status": "loaded"
+      }
+    },
+    {
       "id": "novation",
       "name": "Novation",
       "tier": "standard",
