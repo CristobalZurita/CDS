@@ -6,7 +6,7 @@ Estado auditado despues de la pasada progresiva del 2026-03-04.
 
 - CDS ya funciona como una SPA Vue real en router, auth, stores, cliente API y paneles cliente/admin.
 - La arquitectura de estilos sigue siendo hibrida y controlada: `src/scss/main.scss` sigue siendo el entry global real, con consolidacion progresiva de patrones repetidos.
-- El cuello de botella actual ya no es "migrar Sass a CSS variables", sino reducir duplicacion puntual y subir cobertura sobre superficies TS/Vue que siguen en `0%`.
+- El cuello de botella actual ya no es "migrar Sass a CSS variables", sino reducir duplicacion puntual y subir cobertura sobre las superficies grandes que todavia siguen fuera de prueba.
 
 ## Capas reales del frontend
 
@@ -30,9 +30,9 @@ Estado auditado despues de la pasada progresiva del 2026-03-04.
 
 ### Hibrido con deuda visible
 
-- nueve modulos en [src/modules](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/modules) con cobertura Vue aun en `0%`
+- cuatro modulos grandes en [src/modules](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/modules) siguen sin cobertura de componente: `ResistorColorView`, `SmdCapacitorView`, `SmdResistorView`, `Timer555View`
 - duplicidad paralela JS/TS en `stores/`, `composables/` y parte de `services/`
-- superficies grandes sin test en `src/views/`, `src/services/*.ts`, `src/vue/components/dashboard/*`, `src/vue/components/articles/*`
+- superficies grandes sin test en `src/views/`, parte de `src/vue/components/dashboard/*`, `src/vue/components/articles/*` y los modulos de calculadora con UI compleja
 
 ## Foto por cluster
 
@@ -44,9 +44,9 @@ Estado auditado despues de la pasada progresiva del 2026-03-04.
 | Admin base | Controlado parcial | inventario, citas, cotizaciones, manuales, algunos wizards | La superficie admin completa todavia no está cubierta. |
 | Public shell/legal | Hibrido controlado | `PageWrapper`, `_public.scss`, tests publicos | Ya no hay tanta duplicacion clara de estilos como en admin/auth. |
 | Calculadoras grandes | Hibrido con deuda | `ResistorColorView`, `SmdCapacitorView`, `SmdResistorView`, `Timer555View` | Esta pasada extrajo el footer repetido a [src/vue/components/footer/WorkshopFooter.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/footer/WorkshopFooter.vue). |
-| Calculadoras simples | Placeholder real | `AwgView`, `LengthView`, `NumberSystemView`, `OhmsLawView`, `TemperatureView` | Son wrappers minimos con contrato/calculo pero casi sin UI real. |
+| Calculadoras simples | Controlado parcial | `AwgView`, `LengthView`, `NumberSystemView`, `OhmsLawView`, `TemperatureView`, `tests/unit/modules/CalculatorWrappers.test.ts` | Son wrappers minimos con contrato/calculo y ahora ya tienen cobertura de componente. |
 | Dominio TS puro | Mejorando | `src/domain/*/model.ts` | Esta pasada dejo cobertura real para todos los modelos de calculadora. |
-| Servicios TS | Pendiente | `auth.ts`, `security.ts`, `logging.ts`, `alerts.ts` | Siguen en `0%`; son una de las deudas mas claras. |
+| Servicios TS | Controlado parcial | `auth.ts`, `security.ts`, `logging.ts`, `alerts.ts`, `tests/unit/services/*` | Ya no estan en `0%`; la deuda pendiente se mueve a otras capas TS espejo y servicios mas amplios. |
 
 ## Lo que se aplico en esta pasada
 
@@ -60,28 +60,35 @@ Estado auditado despues de la pasada progresiva del 2026-03-04.
   - [tests/unit/composables/useCalculator.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/composables/useCalculator.test.ts)
   - [tests/unit/domain/calculatorModels.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/domain/calculatorModels.test.ts)
   - [tests/unit/footer/WorkshopFooter.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/footer/WorkshopFooter.test.ts)
+- Se agrego cobertura de componente para wrappers simples en:
+  - [tests/unit/modules/CalculatorWrappers.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/CalculatorWrappers.test.ts)
+- Se agrego cobertura de servicios TS en:
+  - [tests/unit/services/authService.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/authService.test.ts)
+  - [tests/unit/services/security.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/security.test.ts)
+  - [tests/unit/services/logging.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/logging.test.ts)
+  - [tests/unit/services/alerts.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/alerts.test.ts)
 
 ## Estado medible actual
 
 - `npm run build` -> OK
-- `npm run test -- --run tests/unit/composables/useCalculator.test.ts tests/unit/domain/calculatorModels.test.ts tests/unit/footer/WorkshopFooter.test.ts` -> `13 passed`
+- `npm run test -- --run tests/unit/modules/CalculatorWrappers.test.ts tests/unit/services/authService.test.ts tests/unit/services/security.test.ts tests/unit/services/logging.test.ts tests/unit/services/alerts.test.ts` -> `27 passed`
 - `npm run test:coverage` -> ejecuta la suite y genera reporte, pero termina en `exit 1` por thresholds globales
-  - `44` archivos de test
-  - `218 passed`
-  - lines/statements: `45.63%`
-  - functions: `48.19%`
-  - branches: `62.47%`
+  - `49` archivos de test
+  - `245 passed`
+  - lines/statements: `48.8%`
+  - functions: `52.42%`
+  - branches: `64.05%`
 - `cd backend && .venv/bin/python -m pytest -q` -> `64 passed`, `13 skipped`, `1 warning`
 - `bash scripts/run_tests.sh` -> `backend: PASS`, `playwright: PASS`
 
 ## Riesgos reales que siguen abiertos
 
-- `npm run test:coverage` no puede considerarse verde mientras existan thresholds globales de `90/90/85/90` con cobertura real de `45.63/48.19/62.47/45.63`.
-- Los modulos Vue de calculadoras siguen sin cobertura de componente, aunque la logica pura ya este cubierta.
-- La duplicidad JS/TS sigue siendo una deuda estructural: hoy la app usa sobre todo la capa JS activa, mientras varias capas TS espejo siguen en `0%`.
+- `npm run test:coverage` no puede considerarse verde mientras existan thresholds globales de `90/90/85/90` con cobertura real de `48.8/52.42/64.05/48.8`.
+- Los cuatro modulos Vue de calculadora con UI grande siguen sin cobertura de componente.
+- La duplicidad JS/TS sigue siendo una deuda estructural: hoy la app usa sobre todo la capa JS activa, mientras varias capas TS espejo siguen sin la misma profundidad de prueba.
 
 ## Siguiente corte natural
 
-- cubrir por componente los modulos de calculadora, empezando por los wrappers simples o por uno grande con menor riesgo de canvas
-- atacar servicios TS en `0%` (`auth.ts`, `security.ts`, `logging.ts`, `alerts.ts`)
+- cubrir por componente uno de los cuatro modulos grandes de calculadora, empezando por el de menor acoplamiento a canvas o tablas complejas
+- seguir la capa TS espejo que todavia quede sin pruebas despues de `auth.ts`, `security.ts`, `logging.ts` y `alerts.ts`
 - recien despues decidir si conviene extraer mas shell comun de calculadoras, por ejemplo el bloque de retorno a `/calculadoras`

@@ -55,6 +55,11 @@ En la pasada mas reciente se agrego ademas una consolidacion estructural de calc
 - [tests/unit/composables/useCalculator.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/composables/useCalculator.test.ts)
 - [tests/unit/domain/calculatorModels.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/domain/calculatorModels.test.ts)
 - [tests/unit/footer/WorkshopFooter.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/footer/WorkshopFooter.test.ts)
+- [tests/unit/modules/CalculatorWrappers.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/modules/CalculatorWrappers.test.ts)
+- [tests/unit/services/authService.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/authService.test.ts)
+- [tests/unit/services/security.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/security.test.ts)
+- [tests/unit/services/logging.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/logging.test.ts)
+- [tests/unit/services/alerts.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/alerts.test.ts)
 
 ### Reportes
 
@@ -122,12 +127,12 @@ Resultados:
 
 - `npm run build` -> OK
 - `npm run test:coverage` -> ejecuta y genera reporte, pero falla por thresholds globales
-  - `44` test files
-  - `218 passed`
+  - `49` test files
+  - `245 passed`
   - coverage total:
-    - lines/statements: `45.63%`
-    - functions: `48.19%`
-    - branches: `62.47%`
+    - lines/statements: `48.8%`
+    - functions: `52.42%`
+    - branches: `64.05%`
 - `cd backend && .venv/bin/python -m pytest -q` -> OK
   - `64 passed`
   - `13 skipped`
@@ -154,5 +159,5 @@ Si se sigue esta misma estrategia, el siguiente paso de bajo riesgo es:
 
 - reauditar paginas publicas mas amplias fuera de auth
 - seguir consolidando solo duplicaciones comprobables
-- subir cobertura en wrappers `.ts`/dominios que hoy siguen en `0%`
+- subir cobertura en modulos Vue grandes y en capas TS espejo que todavia sigan sin pruebas
 - recien despues marcar candidatos a SCSS muerto con evidencia

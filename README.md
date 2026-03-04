@@ -404,24 +404,27 @@ cd backend
 
 ### What is actually covered
 
-- `tests/unit/` currently contains 31 files:
+- `tests/unit/` currently contains 36 files:
   - admin pages/components: 8
-  - client pages: 6
   - auth UI: 2
-  - public pages: 4
-  - store/cart: 2
-  - standalone store spec: 1
+  - client pages: 6
+  - generic component specs: 2
   - composables: 1
   - domain models: 1
   - footer: 1
+  - layout helpers: 1
+  - model helpers: 1
+  - calculator module wrappers: 1
+  - public pages: 4
   - router guard: 1
-  - layout/model helpers: 2
-  - generic component specs: 2
+  - services: 4
+  - store pages/widgets: 2
+  - Pinia store specs: 1
 - Frontend extra active suites also exist in:
   - `tests/integration/` with 2 files
   - `tests/stores/` with 10 files
   - `tests/composables/` with 3 files
-  - `tests/e2e/` with 14 spec/setup files plus auth state and helper files
+  - `tests/e2e/` with 19 files including specs, auth state, fixtures, and helpers
 - Backend active test files currently exist in `backend/tests/` with 23 `test*.py` files for auth, appointments, categories, health, imports, inventory/store sync, OT workflow, payments, uploads, rate limiting, audit logging, purchase requests, security hardening, and integration/auth-guard flows.
 
 ### Current observed results
@@ -439,12 +442,12 @@ Observed in this workspace on 2026-03-04:
 
 - `npm run test:coverage`
   - Result: ⚠️ report generated, command exits non-zero because global thresholds fail
-  - Test files: `44`
-  - Tests: `218 passed`
+  - Test files: `49`
+  - Tests: `245 passed`
   - Coverage summary from `coverage/coverage-summary.json`:
-    - lines/statements: `45.63%`
-    - functions: `48.19%`
-    - branches: `62.47%`
+    - lines/statements: `48.8%`
+    - functions: `52.42%`
+    - branches: `64.05%`
   - Threshold failure:
     - lines/statements require `90%`
     - functions require `90%`
@@ -466,7 +469,7 @@ Observed in this workspace on 2026-03-04:
 | App startup mutates schema outside Alembic via `Base.metadata.create_all()` and `_ensure_*_schema()` patchers in `backend/app/core/database.py`. | High | Open |
 | `.env.example` drifts from active code: it misses variables currently read by the app (`PUBLIC_BASE_URL`, auto-sync flags, `IMAGE_MAX_SIZE`, `REDIS_URL`, etc.) and also includes variables not wired into the active backend path (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`). | High | Open |
 | Frontend auth is internally mixed: `src/services/api.ts` is cookie/CSRF-ready, but the actual login flow stores JWTs in `localStorage`, and account deletion is not implemented in backend. | High | Open |
-| Frontend coverage report improves to `45.63%` line coverage, but `npm run test:coverage` still fails by design because global thresholds remain at `90/90/85/90`; many parallel `.ts` wrappers and entire public/calculator/admin surfaces remain unexercised. | High | Open |
+| Frontend coverage report improves to `48.8%` line coverage, but `npm run test:coverage` still fails by design because global thresholds remain at `90/90/85/90`; the simple calculator wrappers and key TS services are now covered, but large calculator/admin/public surfaces still remain unexercised. | High | Open |
 | `bash scripts/run_tests.sh` cannot produce backend coverage today because `pytest-cov` is not installed in `backend/.venv`; it falls back to plain `pytest`. | Medium | Open |
 | Signature expiry contract is inconsistent: `SignatureRequestCreate.expires_minutes` defaults to `15`, but `backend/app/routers/signature.py` clamps the real expiry to `5` minutes maximum. | Medium | Open |
 | `src/vue/components/articles/DiagnosticWizard.vue` still has `TODO: Generate PDF`; current implementation only generates CSV. | Medium | Open |
