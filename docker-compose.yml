@@ -6,7 +6,7 @@ services:
     container_name: cirujano_db
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-cirujano}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_in_production}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-REPLACE_WITH_STRONG_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-cirujano_db}
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -36,10 +36,10 @@ services:
       dockerfile: Dockerfile
     container_name: cirujano_backend
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-cirujano}:${POSTGRES_PASSWORD:-change_me_in_production}@postgres:5432/${POSTGRES_DB:-cirujano_db}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cirujano}:${POSTGRES_PASSWORD:-REPLACE_WITH_STRONG_PASSWORD}@postgres:5432/${POSTGRES_DB:-cirujano_db}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       ENVIRONMENT: ${ENVIRONMENT:-development}
-      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production}
+      SECRET_KEY: ${SECRET_KEY:-REPLACE_WITH_RANDOM_64_HEX}
       DEBUG: ${DEBUG:-true}
     ports:
       - "8000:8000"

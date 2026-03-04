@@ -1024,7 +1024,7 @@ def validate_password_strength(password: str) -> tuple[bool, str]:
         return False, "Password debe incluir caracteres especiales (!@#$%^&*)"
     
     # Verificar que no sea común
-    common_passwords = ['password123', 'REDACTED', '123456', 'qwerty']
+    common_passwords = ['password123', 'admin12', '123456', 'qwerty']
     if password.lower() in common_passwords:
         return False, "Password demasiado común, elige otro"
     

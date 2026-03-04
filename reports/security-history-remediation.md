@@ -2,15 +2,16 @@
 
 Estado al momento de esta preparación:
 
-- `REDACTED` sigue confirmado en historia (`git log --all -S'REDACTED' --oneline --source --all`) en `refs/heads/CZ_NUEVA_SANITIZED`.
+- El password seed admin legacy sigue confirmado en historia (`git log --all -S'<confirmed_legacy_seed_password>' --oneline --source --all`) en `refs/heads/CZ_NUEVA_SANITIZED`.
 - `backend/cirujano.db` sigue trackeado y en historia.
 - `backend/cirujano.log.1` sigue trackeado y en historia.
-- `REDACTED` aún aparece en archivos trackeados actuales como `TEXTO_SUGERENCIA-md` y `DOCUMJENTOS_EXTRAS/PLAN_TOTAL_1000_PORCIENTO.md`.
+- El árbol actual ya no debería mantener el valor legacy literal en archivos trackeados; si reaparece, hay que sanearlo antes del rewrite.
+- El árbol actual todavía conserva defaults de test de baja entropía en infraestructura de pruebas/CI (`test-secret`, `test-refresh-secret`). Eso no reemplaza el purge histórico ni debe confundirse con el valor legacy confirmado.
 
 ## Archivos preparados
 
 - `reports/replace-secrets.txt`
-  - Contiene solo el valor confirmado para reemplazo histórico: `REDACTED==>REDACTED`
+  - Quedó como plantilla local para completar con el valor confirmado justo antes del rewrite.
 
 ## Preflight obligatorio
 
@@ -22,10 +23,10 @@ Estado al momento de esta preparación:
 ## Verificación previa
 
 ```bash
-git grep -n "REDACTED" -- TEXTO_SUGERENCIA-md DOCUMJENTOS_EXTRAS/PLAN_TOTAL_1000_PORCIENTO.md backend/scripts/seed_admin.py
+git grep -n "<confirmed_legacy_seed_password>" -- TEXTO_SUGERENCIA-md DOCUMJENTOS_EXTRAS/PLAN_TOTAL_1000_PORCIENTO.md backend/scripts/seed_admin.py
 git log --all --oneline -- backend/cirujano.db
 git log --all --oneline -- backend/cirujano.log.1
-git log --all -S'REDACTED' --oneline --source --all
+git log --all -S'<confirmed_legacy_seed_password>' --oneline --source --all
 ```
 
 ## Reescritura de historia
@@ -36,7 +37,7 @@ Instalar `git-filter-repo` si aún no existe:
 python3 -m pip install git-filter-repo
 ```
 
-Reescribir historia removiendo la base SQLite y el log trackeado, y redactando `REDACTED`:
+Reescribir historia removiendo la base SQLite y el log trackeado, y redactando el password seed legacy confirmado:
 
 ```bash
 git filter-repo \
@@ -52,10 +53,10 @@ git filter-repo \
 Estos comandos deben quedar sin resultados para los secretos/artefactos purgados:
 
 ```bash
-git log --all -S'REDACTED' --oneline --source --all
+git log --all -S'<confirmed_legacy_seed_password>' --oneline --source --all
 git log --all --oneline -- backend/cirujano.db
 git log --all --oneline -- backend/cirujano.log.1
-git grep -n "REDACTED" $(git rev-list --all)
+git grep -n "<confirmed_legacy_seed_password>" $(git rev-list --all)
 ```
 
 ## Push forzado
@@ -69,6 +70,5 @@ git push origin --force --tags
 
 ## Pendientes manuales antes o después del rewrite
 
-- `TEXTO_SUGERENCIA-md` sigue conteniendo `REDACTED` en el árbol actual. Si no se limpia en una commit normal, el scanner seguirá marcándolo aunque la historia vieja sea purgada.
-- `DOCUMJENTOS_EXTRAS/PLAN_TOTAL_1000_PORCIENTO.md` también conserva `REDACTED` como texto actual.
+- Completar `reports/replace-secrets.txt` localmente con el valor confirmado del password seed legacy justo antes de correr `git filter-repo`.
 - Ignorar `backend/cirujano.db` y `backend/cirujano.log.1` no los saca del índice ni de la historia: el rewrite sigue siendo necesario si quieres eliminar el rastro histórico.

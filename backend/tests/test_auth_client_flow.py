@@ -203,7 +203,7 @@ def test_auth_and_client_flow():
             "email": email,
             "username": username,
             "full_name": "Test User",
-            "password": "testpass123",
+            "password": f"{unique}-test-secret",
             "phone": "+56911111111"
         }
         register = client.post("/api/v1/auth/register", json=register_payload)
@@ -212,7 +212,7 @@ def test_auth_and_client_flow():
         # Login
         login = client.post("/api/v1/auth/login", json={
             "email": email,
-            "password": "testpass123"
+            "password": register_payload["password"]
         })
         assert login.status_code == 200, login.text
         token = login.json()["access_token"]
