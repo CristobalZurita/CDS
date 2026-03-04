@@ -131,6 +131,16 @@ def _stock_alert_level(available_qty: int, min_stock: int) -> Optional[str]:
     return None
 
 
+def _public_stock_label(sellable_stock: int) -> str:
+    if sellable_stock <= 0:
+        return "agotado"
+    if sellable_stock <= 2:
+        return "ultimas_unidades"
+    if sellable_stock <= 5:
+        return "stock_bajo"
+    return "disponible"
+
+
 def _serialize_inventory_product(db: Session, product: Product) -> dict:
     meta = _parse_product_meta(product.description)
     product_family = _sku_family(product.sku)
@@ -322,6 +332,8 @@ def list_public_catalog(
     result = []
     for product in products:
         serialized = _serialize_inventory_product(db, product)
+        sellable_stock = int(serialized["sellable_stock"] or 0)
+        stock_label = _public_stock_label(sellable_stock)
 
         if family_filter and serialized["family"] != family_filter:
             continue
@@ -331,7 +343,7 @@ def list_public_catalog(
             continue
         if serialized.get("store_visible") is not True:
             continue
-        if in_stock_only and int(serialized["sellable_stock"] or 0) <= 0:
+        if in_stock_only and sellable_stock <= 0:
             continue
 
         result.append({
@@ -346,8 +358,9 @@ def list_public_catalog(
             "enabled": serialized["enabled"],
             "store_visible": serialized["store_visible"],
             "available_stock": serialized["available_stock"],
-            "sellable_stock": serialized["sellable_stock"],
+            "sellable_stock": sellable_stock,
             "stock_unit": serialized["stock_unit"],
+            "stock_label": stock_label,
             "image_url": serialized["image_url"],
             "price": serialized["price"],
             "is_low_stock": serialized["is_low_stock"],
