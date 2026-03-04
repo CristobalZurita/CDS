@@ -1,187 +1,235 @@
 <template>
-	<AdminLayout title="Inventario" subtitle="Gestión de stock y componentes">
-		<div class="d-flex justify-content-between align-items-center mb-3">
-			<h1 class="h4">Inventario</h1>
-			<div>
-				<button class="btn btn-sm btn-outline-primary me-2" data-testid="inventory-view-sheet" @click="activeView = 'sheet'">Planilla simple</button>
-				<button class="btn btn-sm btn-outline-primary me-2" data-testid="inventory-view-states" @click="activeView = 'states'">Estados stock</button>
-				<button class="btn btn-sm btn-outline-secondary me-2" data-testid="inventory-view-manage" @click="activeView = 'manage'">Administrar items</button>
-				<button class="btn btn-sm btn-success me-2" data-testid="inventory-new" @click="onNew">Nuevo item</button>
-				<button class="btn btn-sm btn-outline-success me-2" data-testid="inventory-sync-catalog" :disabled="syncingCatalog" @click="syncCatalog">
-					{{ syncingCatalog ? 'Sincronizando...' : 'Sincronizar tienda' }}
-				</button>
-				<button class="btn btn-sm btn-outline-secondary" data-testid="inventory-refresh" @click="reload">Refrescar</button>
-			</div>
-		</div>
+  <AdminLayout title="Inventario" subtitle="Gestión de stock y componentes">
+    <section class="inventory-page">
+      <header class="inventory-page__header">
+        <h1 class="inventory-page__title">Inventario</h1>
 
-		<div v-if="catalogStatus" class="card mb-3" data-testid="inventory-catalog-status">
-			<div class="card-body">
-				<div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
-					<div>
-						<h2 class="h6 mb-2">Estado catálogo tienda</h2>
-						<p class="text-muted mb-0">
-							Las fotos que agregas en <code>public/images/INVENTARIO</code> se publican en tienda mediante esta sincronización.
-						</p>
-					</div>
-					<div class="text-end">
-						<div><strong data-testid="inventory-catalog-files">{{ catalogStatus.files_count }}</strong> fotos detectadas</div>
-						<div><strong data-testid="inventory-catalog-linked">{{ catalogStatus.linked_products_count }}</strong> productos vinculados</div>
-						<div><strong data-testid="inventory-catalog-sellable">{{ catalogStatus.sellable_now_count }}</strong> vendibles ahora</div>
-					</div>
-				</div>
-				<div class="row mt-3 g-2">
-					<div class="col-sm-6 col-lg-3">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Publicados</div>
-							<div class="fw-semibold">{{ catalogStatus.explicit_store_visible_count }}</div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-lg-3">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Con stock bruto</div>
-							<div class="fw-semibold">{{ catalogStatus.with_nonzero_stock_count }}</div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-lg-3">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Pendientes por vincular</div>
-							<div class="fw-semibold" data-testid="inventory-catalog-pending">{{ catalogStatus.pending_images_count }}</div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-lg-3">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Registros huérfanos</div>
-							<div class="fw-semibold">{{ catalogStatus.orphan_rows_count }}</div>
-						</div>
-					</div>
-				</div>
-				<div v-if="catalogStatus.pending_images_count" class="mt-3">
-					<div class="small text-muted mb-1">Pendientes</div>
-					<div class="d-flex flex-wrap gap-2">
-						<span
-							v-for="imageName in catalogStatus.pending_images.slice(0, 8)"
-							:key="imageName"
-							class="badge text-bg-light"
-						>
-							{{ imageName }}
-						</span>
-					</div>
-				</div>
-			</div>
-		</div>
+        <div class="inventory-page__actions">
+          <button
+            type="button"
+            class="inventory-page__button"
+            :class="{ 'inventory-page__button--active': activeView === 'sheet' }"
+            data-testid="inventory-view-sheet"
+            @click="activeView = 'sheet'"
+          >
+            Planilla simple
+          </button>
+          <button
+            type="button"
+            class="inventory-page__button"
+            :class="{ 'inventory-page__button--active': activeView === 'states' }"
+            data-testid="inventory-view-states"
+            @click="activeView = 'states'"
+          >
+            Estados stock
+          </button>
+          <button
+            type="button"
+            class="inventory-page__button inventory-page__button--secondary"
+            :class="{ 'inventory-page__button--active inventory-page__button--secondary-active': activeView === 'manage' }"
+            data-testid="inventory-view-manage"
+            @click="activeView = 'manage'"
+          >
+            Administrar items
+          </button>
+          <button
+            type="button"
+            class="inventory-page__button inventory-page__button--success"
+            data-testid="inventory-new"
+            @click="onNew"
+          >
+            Nuevo item
+          </button>
+          <button
+            type="button"
+            class="inventory-page__button inventory-page__button--outline-success"
+            data-testid="inventory-sync-catalog"
+            :disabled="syncingCatalog"
+            @click="syncCatalog"
+          >
+            {{ syncingCatalog ? 'Sincronizando...' : 'Sincronizar tienda' }}
+          </button>
+          <button
+            type="button"
+            class="inventory-page__button inventory-page__button--secondary"
+            data-testid="inventory-refresh"
+            @click="reload"
+          >
+            Refrescar
+          </button>
+        </div>
+      </header>
 
-		<div class="card mb-3">
-			<div class="card-body">
-				<div class="row g-2 align-items-end">
-					<div class="col-lg-5">
-						<label class="form-label mb-1" for="inventory-search-input">Buscar</label>
-						<input
-							id="inventory-search-input"
-							v-model.trim="searchTerm"
-							class="form-control"
-							data-testid="inventory-search-input"
-							placeholder="SKU, nombre, familia o descripción"
-							type="text"
-						/>
-					</div>
-					<div class="col-sm-6 col-lg-3">
-						<label class="form-label mb-1" for="inventory-filter-category">Categoría</label>
-						<select
-							id="inventory-filter-category"
-							v-model="selectedCategoryId"
-							class="form-select"
-							data-testid="inventory-filter-category"
-						>
-							<option value="">Todas</option>
-							<option v-for="category in categories" :key="category.id" :value="String(category.id)">
-								{{ category.name }}
-							</option>
-						</select>
-					</div>
-					<div class="col-sm-6 col-lg-3">
-						<label class="form-label mb-1" for="inventory-filter-scope">Vista</label>
-						<select
-							id="inventory-filter-scope"
-							v-model="storeScope"
-							class="form-select"
-							data-testid="inventory-filter-scope"
-						>
-							<option value="all">Todo</option>
-							<option value="published">Publicados en tienda</option>
-							<option value="hidden">No publicados</option>
-							<option value="with-image">Con foto</option>
-							<option value="without-image">Sin foto</option>
-							<option value="sellable">Vendibles ahora</option>
-							<option value="low-stock">Stock bajo</option>
-							<option value="zero-stock">Stock en 0</option>
-							<option value="base-price">Precio base 1000</option>
-							<option value="reserved">Reservados</option>
-							<option value="in-work">En trabajo</option>
-							<option value="internal-use">Consumo interno</option>
-							<option value="ot-active">Vinculados a OT</option>
-						</select>
-					</div>
-					<div class="col-lg-1 text-lg-end">
-						<button class="btn btn-outline-secondary w-100" data-testid="inventory-clear-filters" @click="clearFilters">
-							Limpiar
-						</button>
-					</div>
-				</div>
-				<div class="mt-2 small text-muted" data-testid="inventory-results-count">
-					Mostrando {{ filteredItems.length }} de {{ items.length }} items.
-				</div>
-				<div class="row g-2 mt-2" data-testid="inventory-scope-summary">
-					<div class="col-sm-6 col-xl-2">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Interno sólo</div>
-							<div class="fw-semibold">{{ scopeSummary.internalOnly }}</div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-xl-2">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Publicado tienda</div>
-							<div class="fw-semibold">{{ scopeSummary.published }}</div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-xl-2">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Con stock 0</div>
-							<div class="fw-semibold">{{ scopeSummary.zeroStock }}</div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-xl-2">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Precio base 1000</div>
-							<div class="fw-semibold">{{ scopeSummary.basePrice }}</div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-xl-2">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Reservados / OT</div>
-							<div class="fw-semibold">{{ scopeSummary.otLinked }}</div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-xl-2">
-						<div class="border rounded p-2 h-100">
-							<div class="small text-muted">Consumo interno</div>
-							<div class="fw-semibold">{{ scopeSummary.internalUse }}</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+      <section v-if="catalogStatus" class="inventory-page__panel" data-testid="inventory-catalog-status">
+        <div class="inventory-page__panel-head">
+          <div class="inventory-page__panel-copy">
+            <h2 class="inventory-page__panel-title">Estado catálogo tienda</h2>
+            <p class="inventory-page__panel-text">
+              Las fotos que agregas en <code>public/images/INVENTARIO</code> se publican en tienda mediante esta sincronización.
+            </p>
+          </div>
 
-		<InventoryAlerts :items="filteredItems" />
+          <div class="inventory-page__headline-metrics">
+            <div>
+              <strong data-testid="inventory-catalog-files">{{ catalogStatus.files_count }}</strong> fotos detectadas
+            </div>
+            <div>
+              <strong data-testid="inventory-catalog-linked">{{ catalogStatus.linked_products_count }}</strong> productos vinculados
+            </div>
+            <div>
+              <strong data-testid="inventory-catalog-sellable">{{ catalogStatus.sellable_now_count }}</strong> vendibles ahora
+            </div>
+          </div>
+        </div>
 
-		<InventoryStockSheet v-if="activeView === 'sheet'" :items="filteredItems" @save="onQuickSave" @save-many="onQuickSaveMany" />
-		<InventoryStockStates v-else-if="activeView === 'states'" :items="filteredItems" @save="onStateSave" />
+        <div class="inventory-page__stats-grid">
+          <article class="inventory-page__stat-card">
+            <span class="inventory-page__stat-label">Publicados</span>
+            <strong class="inventory-page__stat-value">{{ catalogStatus.explicit_store_visible_count }}</strong>
+          </article>
+          <article class="inventory-page__stat-card">
+            <span class="inventory-page__stat-label">Con stock bruto</span>
+            <strong class="inventory-page__stat-value">{{ catalogStatus.with_nonzero_stock_count }}</strong>
+          </article>
+          <article class="inventory-page__stat-card">
+            <span class="inventory-page__stat-label">Pendientes por vincular</span>
+            <strong class="inventory-page__stat-value" data-testid="inventory-catalog-pending">
+              {{ catalogStatus.pending_images_count }}
+            </strong>
+          </article>
+          <article class="inventory-page__stat-card">
+            <span class="inventory-page__stat-label">Registros huérfanos</span>
+            <strong class="inventory-page__stat-value">{{ catalogStatus.orphan_rows_count }}</strong>
+          </article>
+        </div>
 
-		<InventoryTable v-else :items="filteredItems" @edit="onEdit" @delete="onDelete" />
+        <div v-if="catalogStatus.pending_images_count" class="inventory-page__pending">
+          <span class="inventory-page__pending-label">Pendientes</span>
+          <div class="inventory-page__chips">
+            <span
+              v-for="imageName in catalogStatus.pending_images.slice(0, 8)"
+              :key="imageName"
+              class="inventory-page__chip"
+            >
+              {{ imageName }}
+            </span>
+          </div>
+        </div>
+      </section>
 
-		<div v-if="showForm" class="mt-3">
-			<InventoryForm :item="selected" @save="onSave" @cancel="onCancel" />
-		</div>
-	</AdminLayout>
+      <section class="inventory-page__panel">
+        <div class="inventory-page__filters">
+          <label class="inventory-page__field inventory-page__field--wide" for="inventory-search-input">
+            <span class="inventory-page__label">Buscar</span>
+            <input
+              id="inventory-search-input"
+              v-model.trim="searchTerm"
+              class="inventory-page__input"
+              data-testid="inventory-search-input"
+              placeholder="SKU, nombre, familia o descripción"
+              type="text"
+            />
+          </label>
+
+          <label class="inventory-page__field" for="inventory-filter-category">
+            <span class="inventory-page__label">Categoría</span>
+            <select
+              id="inventory-filter-category"
+              v-model="selectedCategoryId"
+              class="inventory-page__select"
+              data-testid="inventory-filter-category"
+            >
+              <option value="">Todas</option>
+              <option v-for="category in categories" :key="category.id" :value="String(category.id)">
+                {{ category.name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="inventory-page__field" for="inventory-filter-scope">
+            <span class="inventory-page__label">Vista</span>
+            <select
+              id="inventory-filter-scope"
+              v-model="storeScope"
+              class="inventory-page__select"
+              data-testid="inventory-filter-scope"
+            >
+              <option value="all">Todo</option>
+              <option value="published">Publicados en tienda</option>
+              <option value="hidden">No publicados</option>
+              <option value="with-image">Con foto</option>
+              <option value="without-image">Sin foto</option>
+              <option value="sellable">Vendibles ahora</option>
+              <option value="low-stock">Stock bajo</option>
+              <option value="zero-stock">Stock en 0</option>
+              <option value="base-price">Precio base 1000</option>
+              <option value="reserved">Reservados</option>
+              <option value="in-work">En trabajo</option>
+              <option value="internal-use">Consumo interno</option>
+              <option value="ot-active">Vinculados a OT</option>
+            </select>
+          </label>
+
+          <div class="inventory-page__field inventory-page__field--action">
+            <button
+              type="button"
+              class="inventory-page__button inventory-page__button--secondary inventory-page__button--block"
+              data-testid="inventory-clear-filters"
+              @click="clearFilters"
+            >
+              Limpiar
+            </button>
+          </div>
+        </div>
+
+        <p class="inventory-page__results" data-testid="inventory-results-count">
+          Mostrando {{ filteredItems.length }} de {{ items.length }} items.
+        </p>
+
+        <div class="inventory-page__summary-grid" data-testid="inventory-scope-summary">
+          <article class="inventory-page__summary-card">
+            <span class="inventory-page__summary-label">Interno sólo</span>
+            <strong class="inventory-page__summary-value">{{ scopeSummary.internalOnly }}</strong>
+          </article>
+          <article class="inventory-page__summary-card">
+            <span class="inventory-page__summary-label">Publicado tienda</span>
+            <strong class="inventory-page__summary-value">{{ scopeSummary.published }}</strong>
+          </article>
+          <article class="inventory-page__summary-card">
+            <span class="inventory-page__summary-label">Con stock 0</span>
+            <strong class="inventory-page__summary-value">{{ scopeSummary.zeroStock }}</strong>
+          </article>
+          <article class="inventory-page__summary-card">
+            <span class="inventory-page__summary-label">Precio base 1000</span>
+            <strong class="inventory-page__summary-value">{{ scopeSummary.basePrice }}</strong>
+          </article>
+          <article class="inventory-page__summary-card">
+            <span class="inventory-page__summary-label">Reservados / OT</span>
+            <strong class="inventory-page__summary-value">{{ scopeSummary.otLinked }}</strong>
+          </article>
+          <article class="inventory-page__summary-card">
+            <span class="inventory-page__summary-label">Consumo interno</span>
+            <strong class="inventory-page__summary-value">{{ scopeSummary.internalUse }}</strong>
+          </article>
+        </div>
+      </section>
+
+      <InventoryAlerts :items="filteredItems" />
+
+      <InventoryStockSheet
+        v-if="activeView === 'sheet'"
+        :items="filteredItems"
+        @save="onQuickSave"
+        @save-many="onQuickSaveMany"
+      />
+      <InventoryStockStates v-else-if="activeView === 'states'" :items="filteredItems" @save="onStateSave" />
+      <InventoryTable v-else :items="filteredItems" @edit="onEdit" @delete="onDelete" />
+
+      <section v-if="showForm" class="inventory-page__form-panel">
+        <InventoryForm :item="selected" @save="onSave" @cancel="onCancel" />
+      </section>
+    </section>
+  </AdminLayout>
 </template>
 
 <script setup>
@@ -469,3 +517,249 @@ watch(
 	{ immediate: true }
 )
 </script>
+
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
+.inventory-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-md);
+}
+
+.inventory-page__header,
+.inventory-page__panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacer-md);
+  flex-wrap: wrap;
+}
+
+.inventory-page__title,
+.inventory-page__panel-title {
+  margin: 0;
+  color: var(--color-dark);
+  font-weight: 700;
+}
+
+.inventory-page__title {
+  font-size: var(--text-xl);
+}
+
+.inventory-page__panel-title {
+  font-size: var(--text-lg);
+}
+
+.inventory-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacer-sm);
+}
+
+.inventory-page__panel,
+.inventory-page__form-panel {
+  padding: var(--spacer-md);
+  background: var(--color-white);
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.inventory-page__panel-copy {
+  max-width: 44rem;
+}
+
+.inventory-page__panel-text,
+.inventory-page__results,
+.inventory-page__stat-label,
+.inventory-page__summary-label,
+.inventory-page__pending-label,
+.inventory-page__label {
+  color: var(--color-dark);
+  opacity: 0.72;
+}
+
+.inventory-page__panel-text,
+.inventory-page__results {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.inventory-page__headline-metrics {
+  display: grid;
+  gap: 0.35rem;
+  text-align: right;
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+}
+
+.inventory-page__stats-grid,
+.inventory-page__summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--spacer-sm);
+}
+
+.inventory-page__stats-grid {
+  margin-top: var(--spacer-md);
+}
+
+.inventory-page__summary-grid {
+  margin-top: var(--spacer-sm);
+}
+
+.inventory-page__stat-card,
+.inventory-page__summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: 100%;
+  padding: 0.85rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 88%, var(--color-light) 12%);
+}
+
+.inventory-page__stat-value,
+.inventory-page__summary-value {
+  color: var(--color-dark);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.inventory-page__pending {
+  margin-top: var(--spacer-md);
+}
+
+.inventory-page__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.inventory-page__chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-white) 80%, var(--color-light) 20%);
+  color: var(--color-dark);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.inventory-page__filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(180px, 1fr)) minmax(120px, auto);
+  gap: var(--spacer-sm);
+  align-items: end;
+}
+
+.inventory-page__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.inventory-page__field--action {
+  justify-content: flex-end;
+}
+
+.inventory-page__input,
+.inventory-page__select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+}
+
+.inventory-page__button {
+  min-height: 40px;
+  padding: 0.65rem 0.95rem;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.inventory-page__button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.inventory-page__button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.inventory-page__button--active,
+.inventory-page__button--success {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.inventory-page__button--secondary {
+  border-color: var(--color-dark);
+  color: var(--color-dark);
+}
+
+.inventory-page__button--secondary-active {
+  background: var(--color-dark);
+  color: var(--color-white);
+}
+
+.inventory-page__button--outline-success {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.inventory-page__button--block {
+  width: 100%;
+}
+
+.inventory-page code {
+  padding: 0.15rem 0.35rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 70%, var(--color-light) 30%);
+  color: var(--color-dark);
+  font-size: 0.9em;
+}
+
+@include media-breakpoint-down(lg) {
+  .inventory-page__filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .inventory-page__header,
+  .inventory-page__panel-head,
+  .inventory-page__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .inventory-page__headline-metrics {
+    text-align: left;
+  }
+
+  .inventory-page__filters {
+    grid-template-columns: 1fr;
+  }
+
+  .inventory-page__button {
+    width: 100%;
+  }
+}
+</style>
