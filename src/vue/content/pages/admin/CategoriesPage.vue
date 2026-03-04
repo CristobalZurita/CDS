@@ -1,21 +1,30 @@
 <template>
-	<AdminLayout title="Categorías" subtitle="Servicios y clasificaciones">
-		<div class="d-flex justify-content-between align-items-center mb-3">
-			<h1 class="h4">Categorías</h1>
-			<div>
-				<button class="btn btn-sm btn-success me-2" data-testid="categories-new" @click="toggleForm">
-					{{ showForm ? 'Cancelar' : 'Nueva Categoría' }}
-				</button>
-			</div>
-		</div>
+  <AdminLayout title="Categorías" subtitle="Servicios y clasificaciones">
+    <section class="admin-page">
+      <header class="admin-page__header">
+        <h1 class="admin-page__title">Categorías</h1>
+        <div class="admin-page__actions">
+          <button
+            type="button"
+            class="admin-page__button admin-page__button--success"
+            data-testid="categories-new"
+            @click="toggleForm"
+          >
+            {{ showForm ? 'Cancelar' : 'Nueva Categoría' }}
+          </button>
+        </div>
+      </header>
 
-		<div v-if="showForm" class="card p-3 mb-3">
-			<h5 class="mb-3">{{ selectedCategory ? 'Editar categoría' : 'Crear categoría' }}</h5>
-			<CategoryForm :category="selectedCategory" @saved="onSaved" />
-		</div>
+      <section v-if="showForm" class="admin-page__panel">
+        <h2 class="admin-page__panel-title">{{ selectedCategory ? 'Editar categoría' : 'Crear categoría' }}</h2>
+        <CategoryForm :category="selectedCategory" @saved="onSaved" />
+      </section>
 
-		<CategoryList :key="refreshKey" @edit="onEdit" />
-	</AdminLayout>
+      <section class="admin-page__content">
+        <CategoryList :key="refreshKey" @edit="onEdit" />
+      </section>
+    </section>
+  </AdminLayout>
 </template>
 
 <script setup>
@@ -45,7 +54,89 @@ function toggleForm() {
 }
 
 function onEdit(category) {
-	selectedCategory.value = category
-	showForm.value = true
+  selectedCategory.value = category
+  showForm.value = true
 }
 </script>
+
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
+.admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-md);
+}
+
+.admin-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacer-md);
+  flex-wrap: wrap;
+}
+
+.admin-page__title,
+.admin-page__panel-title {
+  margin: 0;
+  color: var(--color-dark);
+  font-weight: 700;
+}
+
+.admin-page__title {
+  font-size: var(--text-xl);
+}
+
+.admin-page__panel-title {
+  font-size: var(--text-lg);
+  margin-bottom: var(--spacer-md);
+}
+
+.admin-page__actions {
+  display: flex;
+  gap: var(--spacer-sm);
+  flex-wrap: wrap;
+}
+
+.admin-page__panel,
+.admin-page__content {
+  padding: var(--spacer-md);
+  background: var(--color-white);
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-page__button {
+  min-height: 40px;
+  padding: 0.65rem 0.9rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--color-white);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.admin-page__button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-page__button--success {
+  background: var(--color-primary);
+}
+
+@include media-breakpoint-down(md) {
+  .admin-page__header,
+  .admin-page__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-page__button {
+    width: 100%;
+  }
+}
+</style>
