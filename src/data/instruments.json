@@ -1,11 +1,11 @@
 {
   "version": "2.1.0",
-  "generated_at": "2026-02-19T19:13:49.115795",
-  "total_instruments": 214,
-  "total_bases": 214,
-  "total_variantes": 35,
-  "total_fotos": 249,
-  "total_fotos_json": 249,
+  "generated_at": "2026-03-03T21:20:29.685965",
+  "total_instruments": 231,
+  "total_bases": 231,
+  "total_variantes": 42,
+  "total_fotos": 273,
+  "total_fotos_json": 273,
   "marcas_detectadas": [
     "ACCESS",
     "AKAI",
@@ -16,6 +16,7 @@
     "CASIO",
     "KAWAI",
     "KORG",
+    "KURZWEIL",
     "NOVATION",
     "ROLAND",
     "STUDIOLOGIC",
@@ -30,6 +31,7 @@
     "CASIO",
     "KAWAI",
     "KORG",
+    "KURZWEIL",
     "NOVATION",
     "ROLAND",
     "YAMAHA"
@@ -47,6 +49,7 @@
     "CASIO",
     "KAWAI",
     "KORG",
+    "KURZWEIL",
     "NOVATION",
     "ROLAND",
     "YAMAHA"
@@ -56,10 +59,10 @@
     "STUDIOLOGIC"
   ],
   "validacion": {
-    "fotos_en_carpeta": 249,
-    "fotos_en_json": 249,
+    "fotos_en_carpeta": 273,
+    "fotos_en_json": 273,
     "coinciden": true,
-    "esperado_dataset_base": 249,
+    "esperado_dataset_base": 273,
     "coincide_con_esperado_dataset_base": true
   },
   "instruments": [
@@ -1142,6 +1145,80 @@
       "agregado_en": "2026-02-17T16:00:49.772637"
     },
     {
+      "id": "kawai_cn24",
+      "marca": "KAWAI",
+      "modelo": "CN24",
+      "foto_principal": "KAWAI_CN24",
+      "fotos_adicionales": [
+        "KAWAI_CN24_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675044"
+    },
+    {
+      "id": "kawai_cn24_panel01",
+      "marca": "KAWAI",
+      "modelo": "CN24_PANEL01",
+      "foto_principal": "KAWAI_CN24_PANEL01",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675077"
+    },
+    {
+      "id": "kawai_cn24_panel02",
+      "marca": "KAWAI",
+      "modelo": "CN24_PANEL02",
+      "foto_principal": "KAWAI_CN24_PANEL02",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675085"
+    },
+    {
+      "id": "kawai_cn37",
+      "marca": "KAWAI",
+      "modelo": "CN37",
+      "foto_principal": "KAWAI_CN37",
+      "fotos_adicionales": [
+        "KAWAI_CN37_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675094"
+    },
+    {
+      "id": "kawai_cn37_panel",
+      "marca": "KAWAI",
+      "modelo": "CN37_PANEL",
+      "foto_principal": "KAWAI_CN37_PANEL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675101"
+    },
+    {
       "id": "kawai_sx_210",
       "marca": "KAWAI",
       "modelo": "SX_210",
@@ -1384,6 +1461,20 @@
       "marca_habilitada": true,
       "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
       "agregado_en": "2026-02-17T16:00:49.772717"
+    },
+    {
+      "id": "korg_kaossilator_2s",
+      "marca": "KORG",
+      "modelo": "KAOSSILATOR_2S",
+      "foto_principal": "KORG_KAOSSILATOR_2S",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-03-03T21:17:38.675184"
     },
     {
       "id": "korg_kaossilator_pro",
@@ -2004,6 +2095,142 @@
       "marca_habilitada": true,
       "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
       "agregado_en": "2026-02-17T16:00:49.773138"
+    },
+    {
+      "id": "kurzweil_k1000_key",
+      "marca": "KURZWEIL",
+      "modelo": "K1000_KEY",
+      "foto_principal": "KURZWEIL_K1000_KEY",
+      "fotos_adicionales": [
+        "KURZWEIL_K1000_KEY_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675381"
+    },
+    {
+      "id": "kurzweil_k2000_key_back",
+      "marca": "KURZWEIL",
+      "modelo": "K2000_KEY_BACK",
+      "foto_principal": "KURZWEIL_K2000_KEY_BACK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675389"
+    },
+    {
+      "id": "kurzweil_k2500_rack",
+      "marca": "KURZWEIL",
+      "modelo": "K2500_RACK",
+      "foto_principal": "KURZWEIL_K2500_RACK",
+      "fotos_adicionales": [
+        "KURZWEIL_K2500_RACK_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675395"
+    },
+    {
+      "id": "kurzweil_k2600_key",
+      "marca": "KURZWEIL",
+      "modelo": "K2600_KEY",
+      "foto_principal": "KURZWEIL_K2600_KEY",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675401"
+    },
+    {
+      "id": "kurzweil_k2661_key",
+      "marca": "KURZWEIL",
+      "modelo": "K2661_KEY",
+      "foto_principal": "KURZWEIL_K2661_KEY",
+      "fotos_adicionales": [
+        "KURZWEIL_K2661_KEY_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675407"
+    },
+    {
+      "id": "kurzweil_k6000_key_back",
+      "marca": "KURZWEIL",
+      "modelo": "K6000_KEY_BACK",
+      "foto_principal": "KURZWEIL_K6000_KEY_BACK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675413"
+    },
+    {
+      "id": "kurzweil_mark-protwoi",
+      "marca": "KURZWEIL",
+      "modelo": "Mark-ProTWOi",
+      "foto_principal": "KURZWEIL_Mark-ProTWOi",
+      "fotos_adicionales": [
+        "KURZWEIL_Mark-ProTWOi_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675419"
+    },
+    {
+      "id": "kurzweil_mark-protwoi_panel",
+      "marca": "KURZWEIL",
+      "modelo": "Mark-ProTWOi_PANEL",
+      "foto_principal": "KURZWEIL_Mark-ProTWOi_PANEL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675425"
+    },
+    {
+      "id": "kurzweil_sp5-8",
+      "marca": "KURZWEIL",
+      "modelo": "SP5-8",
+      "foto_principal": "KURZWEIL_SP5-8",
+      "fotos_adicionales": [
+        "KURZWEIL_SP5-8_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675430"
     },
     {
       "id": "novation_launchpad_mini",
@@ -2900,6 +3127,34 @@
       "marca_habilitada": true,
       "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
       "agregado_en": "2026-02-17T16:00:49.773339"
+    },
+    {
+      "id": "yamaha_ps_20",
+      "marca": "YAMAHA",
+      "modelo": "PS_20",
+      "foto_principal": "YAMAHA_PS_20",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-03-03T21:17:38.675667"
+    },
+    {
+      "id": "yamaha_ps_20_panel",
+      "marca": "YAMAHA",
+      "modelo": "PS_20_PANEL",
+      "foto_principal": "YAMAHA_PS_20_PANEL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-03-03T21:17:38.675673"
     },
     {
       "id": "yamaha_p_125",

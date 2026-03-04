@@ -1,16 +1,16 @@
 {
   "version": "2.1.0",
   "sync_schema_version": "1.0.0",
-  "generated_at": "2026-02-19T19:13:49.115795",
+  "generated_at": "2026-03-03T21:20:29.685965",
   "source": "scripts/sync_instruments.py",
-  "total_instruments": 214,
-  "total_fotos": 249,
-  "total_fotos_json": 249,
+  "total_instruments": 231,
+  "total_fotos": 273,
+  "total_fotos_json": 273,
   "validacion": {
-    "fotos_en_carpeta": 249,
-    "fotos_en_json": 249,
+    "fotos_en_carpeta": 273,
+    "fotos_en_json": 273,
     "coinciden": true,
-    "esperado_dataset_base": 249,
+    "esperado_dataset_base": 273,
     "coincide_con_esperado_dataset_base": true
   },
   "marcas_habilitadas": [
@@ -22,6 +22,7 @@
     "CASIO",
     "KAWAI",
     "KORG",
+    "KURZWEIL",
     "NOVATION",
     "ROLAND",
     "YAMAHA"
@@ -4072,6 +4073,280 @@
       "agregado_en": "2026-02-17T16:00:49.772637"
     },
     {
+      "id": "kawai_cn24",
+      "brand": "kawai",
+      "model": "CN24",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador CN24",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KAWAI_CN24.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KAWAI_CN24",
+      "marca": "KAWAI",
+      "modelo": "CN24",
+      "foto_principal": "KAWAI_CN24",
+      "fotos_adicionales": [
+        "KAWAI_CN24_BACK"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675044"
+    },
+    {
+      "id": "kawai_cn24_panel01",
+      "brand": "kawai",
+      "model": "CN24 PANEL01",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador CN24 PANEL01",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KAWAI_CN24_PANEL01.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KAWAI_CN24_PANEL01",
+      "marca": "KAWAI",
+      "modelo": "CN24_PANEL01",
+      "foto_principal": "KAWAI_CN24_PANEL01",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675077"
+    },
+    {
+      "id": "kawai_cn24_panel02",
+      "brand": "kawai",
+      "model": "CN24 PANEL02",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador CN24 PANEL02",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KAWAI_CN24_PANEL02.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KAWAI_CN24_PANEL02",
+      "marca": "KAWAI",
+      "modelo": "CN24_PANEL02",
+      "foto_principal": "KAWAI_CN24_PANEL02",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675085"
+    },
+    {
+      "id": "kawai_cn37",
+      "brand": "kawai",
+      "model": "CN37",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador CN37",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KAWAI_CN37.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KAWAI_CN37",
+      "marca": "KAWAI",
+      "modelo": "CN37",
+      "foto_principal": "KAWAI_CN37",
+      "fotos_adicionales": [
+        "KAWAI_CN37_BACK"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675094"
+    },
+    {
+      "id": "kawai_cn37_panel",
+      "brand": "kawai",
+      "model": "CN37 PANEL",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador CN37 PANEL",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KAWAI_CN37_PANEL.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KAWAI_CN37_PANEL",
+      "marca": "KAWAI",
+      "modelo": "CN37_PANEL",
+      "foto_principal": "KAWAI_CN37_PANEL",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675101"
+    },
+    {
       "type": "Keyboard / Synthesizer",
       "year": 2024,
       "description": "Sintetizador",
@@ -4994,6 +5269,60 @@
         "sintetizador"
       ],
       "agregado_en": "2026-02-17T16:00:49.772717"
+    },
+    {
+      "id": "korg_kaossilator_2s",
+      "brand": "korg",
+      "model": "KAOSSILATOR 2S",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador KAOSSILATOR 2S",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KORG_KAOSSILATOR_2S.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KORG_KAOSSILATOR_2S",
+      "marca": "KORG",
+      "modelo": "KAOSSILATOR_2S",
+      "foto_principal": "KORG_KAOSSILATOR_2S",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675184"
     },
     {
       "id": "korg_kaossilator_pro",
@@ -7373,6 +7702,502 @@
         "sintetizador"
       ],
       "agregado_en": "2026-02-17T16:00:49.773138"
+    },
+    {
+      "id": "kurzweil_k1000_key",
+      "brand": "kurzweil",
+      "model": "K1000 KEY",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador K1000 KEY",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KURZWEIL_K1000_KEY.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KURZWEIL_K1000_KEY",
+      "marca": "KURZWEIL",
+      "modelo": "K1000_KEY",
+      "foto_principal": "KURZWEIL_K1000_KEY",
+      "fotos_adicionales": [
+        "KURZWEIL_K1000_KEY_BACK"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675381"
+    },
+    {
+      "id": "kurzweil_k2000_key_back",
+      "brand": "kurzweil",
+      "model": "K2000 KEY BACK",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador K2000 KEY BACK",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KURZWEIL_K2000_KEY_BACK.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KURZWEIL_K2000_KEY_BACK",
+      "marca": "KURZWEIL",
+      "modelo": "K2000_KEY_BACK",
+      "foto_principal": "KURZWEIL_K2000_KEY_BACK",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675389"
+    },
+    {
+      "id": "kurzweil_k2500_rack",
+      "brand": "kurzweil",
+      "model": "K2500 RACK",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador K2500 RACK",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KURZWEIL_K2500_RACK.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KURZWEIL_K2500_RACK",
+      "marca": "KURZWEIL",
+      "modelo": "K2500_RACK",
+      "foto_principal": "KURZWEIL_K2500_RACK",
+      "fotos_adicionales": [
+        "KURZWEIL_K2500_RACK_BACK"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675395"
+    },
+    {
+      "id": "kurzweil_k2600_key",
+      "brand": "kurzweil",
+      "model": "K2600 KEY",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador K2600 KEY",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KURZWEIL_K2600_KEY.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KURZWEIL_K2600_KEY",
+      "marca": "KURZWEIL",
+      "modelo": "K2600_KEY",
+      "foto_principal": "KURZWEIL_K2600_KEY",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675401"
+    },
+    {
+      "id": "kurzweil_k2661_key",
+      "brand": "kurzweil",
+      "model": "K2661 KEY",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador K2661 KEY",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KURZWEIL_K2661_KEY.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KURZWEIL_K2661_KEY",
+      "marca": "KURZWEIL",
+      "modelo": "K2661_KEY",
+      "foto_principal": "KURZWEIL_K2661_KEY",
+      "fotos_adicionales": [
+        "KURZWEIL_K2661_KEY_BACK"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675407"
+    },
+    {
+      "id": "kurzweil_k6000_key_back",
+      "brand": "kurzweil",
+      "model": "K6000 KEY BACK",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador K6000 KEY BACK",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KURZWEIL_K6000_KEY_BACK.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KURZWEIL_K6000_KEY_BACK",
+      "marca": "KURZWEIL",
+      "modelo": "K6000_KEY_BACK",
+      "foto_principal": "KURZWEIL_K6000_KEY_BACK",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675413"
+    },
+    {
+      "id": "kurzweil_mark-protwoi",
+      "brand": "kurzweil",
+      "model": "Mark-ProTWOi",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador Mark-ProTWOi",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KURZWEIL_Mark-ProTWOi.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KURZWEIL_Mark-ProTWOi",
+      "marca": "KURZWEIL",
+      "modelo": "Mark-ProTWOi",
+      "foto_principal": "KURZWEIL_Mark-ProTWOi",
+      "fotos_adicionales": [
+        "KURZWEIL_Mark-ProTWOi_BACK"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675419"
+    },
+    {
+      "id": "kurzweil_mark-protwoi_panel",
+      "brand": "kurzweil",
+      "model": "Mark-ProTWOi PANEL",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador Mark-ProTWOi PANEL",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KURZWEIL_Mark-ProTWOi_PANEL.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KURZWEIL_Mark-ProTWOi_PANEL",
+      "marca": "KURZWEIL",
+      "modelo": "Mark-ProTWOi_PANEL",
+      "foto_principal": "KURZWEIL_Mark-ProTWOi_PANEL",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675425"
+    },
+    {
+      "id": "kurzweil_sp5-8",
+      "brand": "kurzweil",
+      "model": "SP5-8",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador SP5-8",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/KURZWEIL_SP5-8.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "KURZWEIL_SP5-8",
+      "marca": "KURZWEIL",
+      "modelo": "SP5-8",
+      "foto_principal": "KURZWEIL_SP5-8",
+      "fotos_adicionales": [
+        "KURZWEIL_SP5-8_BACK"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675430"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10789,6 +11614,114 @@
         "sintetizador"
       ],
       "agregado_en": "2026-02-17T16:00:49.773339"
+    },
+    {
+      "id": "yamaha_ps_20",
+      "brand": "yamaha",
+      "model": "PS 20",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador PS 20",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/YAMAHA_PS_20.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "YAMAHA_PS_20",
+      "marca": "YAMAHA",
+      "modelo": "PS_20",
+      "foto_principal": "YAMAHA_PS_20",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675667"
+    },
+    {
+      "id": "yamaha_ps_20_panel",
+      "brand": "yamaha",
+      "model": "PS 20 PANEL",
+      "type": "Keyboard / Synthesizer",
+      "year": 1995,
+      "description": "Sintetizador PS 20 PANEL",
+      "components": {
+        "encoders_rotativos": null,
+        "botones": null,
+        "lcd": null,
+        "leds": null,
+        "usb": null,
+        "midi_din": true,
+        "salidas_audio": 2,
+        "faders": null,
+        "aftertouch": null,
+        "rueda_pitch": true,
+        "pedal": true
+      },
+      "valor_estimado": {
+        "min": 300000,
+        "max": 1500000,
+        "moneda": "CLP"
+      },
+      "fallas_comunes": [
+        "POWER",
+        "CONNECTOR_LOOSE",
+        "COSMETIC_DAMAGE",
+        "WATER_DAMAGE",
+        "KEYBOARD_DEAD_KEY",
+        "KEYBOARD_STUCK_KEY",
+        "ENCODER_INTERMITTENT",
+        "BUTTON_DEAD"
+      ],
+      "imagen_url": "/images/instrumentos/YAMAHA_PS_20_PANEL.webp",
+      "manual_url": null,
+      "image": {
+        "url": null,
+        "status": "pending"
+      },
+      "photo_key": "YAMAHA_PS_20_PANEL",
+      "marca": "YAMAHA",
+      "modelo": "PS_20_PANEL",
+      "foto_principal": "YAMAHA_PS_20_PANEL",
+      "fotos_adicionales": [],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-03-03T21:17:38.675673"
     },
     {
       "type": "Keyboard / Synthesizer",

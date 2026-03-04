@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: '0 0 * * 0'  # Weekly on Sunday
 
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
 jobs:
   frontend-security:
     name: Frontend Security Scan
@@ -43,7 +48,7 @@ jobs:
       
       - name: Upload results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-security-report
           path: dependency-check-report.json
@@ -78,7 +83,7 @@ jobs:
       
       - name: Upload results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-security-report
           path: backend/bandit-report.json
@@ -89,13 +94,31 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve TruffleHog diff range
+        id: trufflehog-range
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "base=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_OUTPUT"
+            echo "head=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_OUTPUT"
+          elif [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            echo "base=${{ github.event.before }}" >> "$GITHUB_OUTPUT"
+            echo "head=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "base=${{ github.event.repository.default_branch }}" >> "$GITHUB_OUTPUT"
+            echo "head=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
       
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
+          base: ${{ steps.trufflehog-range.outputs.base }}
+          head: ${{ steps.trufflehog-range.outputs.head }}
+          extra_args: --only-verified
       
       - name: GitLeaks Secret Scan
         uses: gitleaks/gitleaks-action@v2
@@ -106,6 +129,8 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -117,17 +142,11 @@ jobs:
         run: npm ci
       
       - name: SonarQube Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=cirujano-front
-            -Dsonar.organization=cirujano-org
-            -Dsonar.sources=src,backend/app
-            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/tests/**
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+          SONAR_HOST_URL: https://sonarcloud.io
 
   container-security:
     name: Container Image Security
@@ -147,15 +166,16 @@ jobs:
           output: 'trivy-results.sarif'
       
       - name: Upload Trivy results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v2
-        if: always()
+        if: always() && hashFiles('trivy-results.sarif') != ''
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'
 
   security-summary:
     name: Security Summary
     runs-on: ubuntu-latest
-    needs: [frontend-security, backend-security, secret-scanning, code-quality]
+    needs: [frontend-security, backend-security, secret-scanning, code-quality, container-security]
     if: always()
     
     steps:
