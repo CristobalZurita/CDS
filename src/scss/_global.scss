@@ -1,5 +1,30 @@
 @use "./_theming.scss" as *;
 
+:root {
+    --color-primary: #{$color-primary};
+    --color-dark: #{$color-dark};
+    --color-light: #{$color-light};
+    --color-white: #{$color-white};
+    --color-danger: #{$color-danger};
+
+    --text-sm: #{$text-sm};
+    --text-base: #{$text-base};
+    --text-lg: #{$text-lg};
+    --text-xl: #{$text-xl};
+
+    --spacer-sm: #{$spacer-sm};
+    --spacer-md: #{$spacer-md};
+    --spacer-lg: #{$spacer-lg};
+
+    --radius-sm: #{$border-radius-sm};
+    --radius-md: #{$border-radius-md};
+    --radius-lg: #{$border-radius-lg};
+
+    --shadow-sm: #{$shadow-sm};
+    --shadow-md: #{$shadow-md};
+    --transition-base: #{$transition-base};
+}
+
 body {
     font-size: 1rem;
     line-height: 1.6;
