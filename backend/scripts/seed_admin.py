@@ -9,6 +9,9 @@ Uso:
 """
 
 import sys
+import os
+import secrets
+import getpass
 from pathlib import Path
 
 # Add backend root to path
@@ -30,7 +33,8 @@ USERS = (
     {
         "email": "admin@test.com",
         "username": "admin",
-        "password": "REDACTED",
+        "password_env": "SEED_ADMIN_PASSWORD",
+        "password_label": "admin user",
         "role": "admin",
         "is_active": 1,
         "is_verified": 1,
@@ -39,13 +43,34 @@ USERS = (
     {
         "email": "cliente@test.com",
         "username": "cliente",
-        "password": "REDACTED",
+        "password_env": "SEED_TEST_PASSWORD",
+        "password_label": "client user",
         "role": "client",
         "is_active": 1,
         "is_verified": 1,
         "two_factor_enabled": 0,
     },
 )
+
+
+def _env_name() -> str:
+    return os.getenv("ENVIRONMENT", "development").lower()
+
+
+def _resolve_seed_password(label: str, env_var: str) -> str:
+    env_value = os.getenv(env_var)
+    if env_value:
+        return env_value
+
+    env_name = _env_name()
+    if env_name in ("production", "prod"):
+        if sys.stdin.isatty():
+            return getpass.getpass(f"{label} (env {env_var}): ")
+        raise RuntimeError(f"Missing {env_var} for production seed")
+
+    generated = secrets.token_urlsafe(16)
+    print(f"⚠️  {env_var} no definido; se genera password temporal para {label}: {generated}")
+    return generated
 
 
 def ensure_roles(db) -> None:
@@ -80,6 +105,13 @@ def resolve_username(db, email: str, username: str | None) -> str | None:
 def ensure_users(db) -> list[User]:
     print("👤 Verificando usuarios de prueba...")
     resolved_users: list[User] = []
+    resolved_passwords = {
+        user_data["email"]: _resolve_seed_password(
+            user_data["password_label"],
+            user_data["password_env"],
+        )
+        for user_data in USERS
+    }
 
     for user_data in USERS:
         existing = db.query(User).filter(User.email == user_data["email"]).first()
@@ -91,7 +123,7 @@ def ensure_users(db) -> list[User]:
         user = User(
             email=user_data["email"],
             username=resolve_username(db, user_data["email"], user_data["username"]),
-            hashed_password=hash_password(user_data["password"]),
+            hashed_password=hash_password(resolved_passwords[user_data["email"]]),
             role=user_data["role"],
             is_active=user_data["is_active"],
             is_verified=user_data["is_verified"],

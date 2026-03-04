@@ -13,6 +13,10 @@ from app.models.audit import AuditLog
 client = TestClient(app)
 
 
+def _auth_headers(token: str) -> dict[str, str]:
+    return {"Authorization": f"Bearer {token}"}
+
+
 def _latest_audit(event_type: str):
     db = SessionLocal()
     try:
@@ -67,18 +71,19 @@ def test_repair_crud_audit():
     assert rec is not None and rec.details.get("repair_id") == rid
 
 
-def test_upload_image_creates_audit(tmp_path):
+def test_upload_image_creates_audit(tmp_path, customer_token):
     importlib.reload(_main)
     client = TestClient(_main.app)
     img = io.BytesIO()
     img.write(b"\x89PNG\r\n\x1a\n")
     img.seek(0)
     files = {"file": ("audit.png", img, "image/png")}
-    res = client.post("/api/v1/uploads/images", files=files)
+    res = client.post("/api/v1/uploads/images", files=files, headers=_auth_headers(customer_token))
     assert res.status_code in (200, 201)
     rec = _latest_audit("upload.image")
     assert rec is not None
     assert rec.details and "filename" in rec.details or "path" in rec.details
+    assert rec.user_id is not None
 
 
 def test_diagnostic_calculate_creates_audit():

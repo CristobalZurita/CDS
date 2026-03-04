@@ -47,3 +47,17 @@ def test_expired_token_returns_401(api_client, admin_account):
 
     assert response.status_code == 401
     assert response.json()["detail"] == "Token expirado o inválido"
+
+
+def test_logging_dashboard_endpoints_require_admin(api_client, admin_token, customer_token):
+    unauthenticated = api_client.get("/api/logs/stats")
+    assert unauthenticated.status_code == 403
+    assert unauthenticated.json()["detail"] == "Not authenticated"
+
+    customer_response = api_client.get("/api/logs/stats", headers=_auth_headers(customer_token))
+    assert customer_response.status_code == 403
+    assert customer_response.json()["detail"] == "Acceso denegado. Solo administradores."
+
+    admin_response = api_client.get("/api/logs/stats", headers=_auth_headers(admin_token))
+    assert admin_response.status_code == 200
+    assert "total_logs" in admin_response.json()

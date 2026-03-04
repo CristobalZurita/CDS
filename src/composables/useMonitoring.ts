@@ -5,7 +5,7 @@
 
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { logger } from '@/services/logging'
+import { buildLoggingRequestHeaders, logger } from '@/services/logging'
 import { useAlerts } from '@/services/alerts'
 
 interface MonitoringStats {
@@ -133,7 +133,7 @@ export function useMonitoring() {
     try {
       await fetch('/api/metrics', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: buildLoggingRequestHeaders(true),
         body: JSON.stringify({
           name: 'app_stats',
           duration: stats.value.pageLoadTime,
@@ -174,7 +174,9 @@ export function useMonitoring() {
       
       // Fetch latest stats from backend and check alerts
       try {
-        const response = await fetch('/api/logs/stats')
+        const response = await fetch('/api/logs/stats', {
+          headers: buildLoggingRequestHeaders(false),
+        })
         if (response.ok) {
           const backendStats = await response.json()
           await alertService.checkAlerts(backendStats)

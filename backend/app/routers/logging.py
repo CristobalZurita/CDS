@@ -3,12 +3,14 @@ PHASE 8: Observability - Logging Endpoint
 Receive logs from frontend and store for analysis
 """
 
-from fastapi import APIRouter, Request, HTTPException, status
+from fastapi import APIRouter, Depends, Request, HTTPException, status
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional, List
 from enum import Enum
 import logging
+
+from app.core.dependencies import get_optional_user
 
 logger = logging.getLogger(__name__)
 
@@ -123,6 +125,21 @@ class LoggingService:
 router = APIRouter(prefix="/api", tags=["logging"])
 
 
+async def require_admin_logging_access(user: Optional[dict] = Depends(get_optional_user)) -> dict:
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    if user.get("role") != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acceso denegado. Solo administradores.",
+        )
+    return user
+
+
 @router.post("/logs")
 async def log_event(entry: LogEntry, request: Request):
     """Receive log event from frontend"""
@@ -154,34 +171,42 @@ async def log_metric(metric: PerformanceMetric):
 
 
 @router.get("/logs")
-async def get_logs(level: Optional[LogLevel] = None, limit: int = 100):
+async def get_logs(
+    level: Optional[LogLevel] = None,
+    limit: int = 100,
+    user: dict = Depends(require_admin_logging_access),
+):
     """Get logs from backend storage"""
     logs = LoggingService.get_logs(level, limit)
     return {"count": len(logs), "logs": logs}
 
 
 @router.get("/metrics")
-async def get_metrics(name: Optional[str] = None, limit: int = 100):
+async def get_metrics(
+    name: Optional[str] = None,
+    limit: int = 100,
+    user: dict = Depends(require_admin_logging_access),
+):
     """Get performance metrics"""
     metrics = LoggingService.get_metrics(name, limit)
     return {"count": len(metrics), "metrics": metrics}
 
 
 @router.get("/logs/stats")
-async def get_log_stats():
+async def get_log_stats(user: dict = Depends(require_admin_logging_access)):
     """Get logging statistics"""
     return LoggingService.get_stats()
 
 
 @router.delete("/logs")
-async def clear_logs():
+async def clear_logs(user: dict = Depends(require_admin_logging_access)):
     """Clear all logs"""
     LoggingService.clear_logs()
     return {"status": "cleared"}
 
 
 @router.delete("/metrics")
-async def clear_metrics():
+async def clear_metrics(user: dict = Depends(require_admin_logging_access)):
     """Clear all metrics"""
     LoggingService.clear_metrics()
     return {"status": "cleared"}

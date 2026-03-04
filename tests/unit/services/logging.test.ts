@@ -6,6 +6,7 @@ describe('logging service', () => {
   beforeEach(() => {
     logger.clearLogs()
     logger.clearMetrics()
+    localStorage.clear()
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }))
     vi.spyOn(console, 'log').mockImplementation(() => undefined)
     vi.spyOn(console, 'error').mockImplementation(() => undefined)
@@ -14,6 +15,7 @@ describe('logging service', () => {
   afterEach(() => {
     logger.clearLogs()
     logger.clearMetrics()
+    localStorage.clear()
     vi.unstubAllGlobals()
     vi.restoreAllMocks()
   })

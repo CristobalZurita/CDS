@@ -29,6 +29,25 @@ export interface PerformanceMetric {
   metadata?: Record<string, any>
 }
 
+export function buildLoggingRequestHeaders(includeContentType = true): Record<string, string> {
+  const headers: Record<string, string> = {}
+
+  if (includeContentType) {
+    headers['Content-Type'] = 'application/json'
+  }
+
+  try {
+    const accessToken = localStorage.getItem('access_token')
+    if (accessToken) {
+      headers.Authorization = `Bearer ${accessToken}`
+    }
+  } catch {
+    // Keep browserless/test runtimes non-fatal.
+  }
+
+  return headers
+}
+
 class LoggingService {
   private logs: LogEntry[] = []
   private metrics: PerformanceMetric[] = []
@@ -224,7 +243,7 @@ class LoggingService {
     try {
       const response = await fetch(this.remoteEndpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: buildLoggingRequestHeaders(true),
         body: JSON.stringify(entry)
       })
       if (!response.ok) {

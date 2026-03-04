@@ -124,8 +124,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { logger } from '@/services/logging'
+    import { ref, computed, onMounted, onUnmounted } from 'vue'
+    import { buildLoggingRequestHeaders, logger } from '@/services/logging'
 
 const stats = ref({
     totalLogs: 0,
@@ -154,9 +154,11 @@ const filteredLogs = computed(() => {
     })
 })
 
-async function refreshStats() {
-    try {
-        const response = await fetch('/api/logs/stats')
+    async function refreshStats() {
+        try {
+        const response = await fetch('/api/logs/stats', {
+            headers: buildLoggingRequestHeaders(false)
+        })
         if (response.ok) {
             stats.value = await response.json()
             
@@ -180,7 +182,9 @@ async function fetchLogs() {
         }
         url.searchParams.append('limit', limit.value)
 
-        const response = await fetch(url)
+        const response = await fetch(url, {
+            headers: buildLoggingRequestHeaders(false)
+        })
         if (response.ok) {
             logs.value = await response.json()
         }
@@ -219,7 +223,10 @@ async function clearLogs() {
     if (!confirm('Clear all logs? This cannot be undone.')) return
     
     try {
-        const response = await fetch('/api/logs', { method: 'DELETE' })
+        const response = await fetch('/api/logs', {
+            method: 'DELETE',
+            headers: buildLoggingRequestHeaders(false)
+        })
         if (response.ok) {
             logs.value = []
             await refreshStats()
