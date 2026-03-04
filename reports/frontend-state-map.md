@@ -31,8 +31,8 @@ Estado auditado despues de la pasada progresiva del 2026-03-04 (actualizado al c
 ### Hibrido con deuda visible
 
 - los modulos grandes en [src/modules](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/modules) ya tienen cobertura de componente, pero siguen con deuda de complejidad visual/canvas
-- duplicidad residual JS/TS en `shopCart` y composables utilitarios no tipados (`emails`, `layout`, `scheduler`, `utils`)
-- superficies grandes sin test en `src/views/`, parte de `src/vue/components/dashboard/*`, `src/vue/components/articles/*` y los modulos de calculadora con UI compleja
+- duplicidad residual JS/TS en parte de `services/*` y en pares JS/TS legacy no unificados por contrato
+- superficies grandes sin test en varias capas admin/articles/dashboard, aunque `src/views/*` ya tiene cobertura base
 
 ## Foto por cluster
 
@@ -73,6 +73,10 @@ Estado auditado despues de la pasada progresiva del 2026-03-04 (actualizado al c
   - [tests/unit/services/logging.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/logging.test.ts)
   - [tests/unit/services/alerts.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/alerts.test.ts)
 - Se extendio convergencia JS/TS en composables con wrappers aditivos JS -> TS:
+  - [src/composables/emails.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/emails.js)
+  - [src/composables/layout.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/layout.js)
+  - [src/composables/scheduler.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/scheduler.js)
+  - [src/composables/utils.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/utils.js)
   - [src/composables/useAuth.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useAuth.js)
   - [src/composables/useDiagnostic.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useDiagnostic.js)
   - [src/composables/useDiagnostics.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/composables/useDiagnostics.js)
@@ -94,28 +98,34 @@ Estado auditado despues de la pasada progresiva del 2026-03-04 (actualizado al c
   - [src/stores/instruments.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/instruments.js)
   - [src/stores/diagnostics.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/diagnostics.js)
   - [src/stores/stockMovements.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/stockMovements.js)
+  - [src/stores/shopCart.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/shopCart.js)
+- Se agrego cobertura nueva para `src/views/*` y admin base de bajo riesgo:
+  - [tests/unit/views/HomeView.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/views/HomeView.test.ts)
+  - [tests/unit/views/InstrumentDetail.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/views/InstrumentDetail.test.ts)
+  - [tests/unit/views/InventoryUnified.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/views/InventoryUnified.test.ts)
+  - [tests/unit/views/ErrorDashboard.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/views/ErrorDashboard.test.ts)
+  - [tests/unit/admin/BasicAdminComponents.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/admin/BasicAdminComponents.test.ts)
 
 ## Estado medible actual
 
 - `npm run build` -> OK
 - `npm run test -- --run tests/unit/modules` -> `26 passed`
 - `npm run test:coverage` -> ejecuta la suite y genera reporte, pero termina en `exit 1` por thresholds globales
-  - `53` archivos de test
-  - `261 passed`
-  - lines/statements: `61.09%`
-  - functions: `54.99%`
-  - branches: `65.68%`
-- `cd backend && .venv/bin/python -m pytest -q` -> `64 passed`, `13 skipped`, `1 warning`
+  - `58` archivos de test
+  - `273 passed`
+  - lines/statements: `64.07%`
+  - functions: `56.62%`
+  - branches: `66.59%`
+- `cd backend && .venv/bin/python -m pytest -q` -> `66 passed`, `14 skipped`, `1 warning`
 - `bash scripts/run_tests.sh` -> `backend: PASS`, `playwright: PASS`
 
 ## Riesgos reales que siguen abiertos
 
-- `npm run test:coverage` no puede considerarse verde mientras existan thresholds globales de `90/90/85/90` con cobertura real de `61.09/54.99/65.68/61.09`.
-- La duplicidad JS/TS se redujo en stores/composables principales, pero sigue viva en `shopCart` y utilitarios JS no tipados.
+- `npm run test:coverage` no puede considerarse verde mientras existan thresholds globales de `90/90/85/90` con cobertura real de `64.07/56.62/66.59/64.07`.
+- La duplicidad JS/TS se redujo en stores/composables principales incluyendo utilitarios (`emails/layout/scheduler/utils`), pero sigue deuda en capas de servicios y módulos admin/articles de gran superficie.
 
 ## Siguiente corte natural
 
-- converger `src/stores/shopCart.js` a capa TS equivalente sin romper su contrato de carrito persistente
-- cerrar convergencia en composables utilitarios JS (`emails`, `layout`, `scheduler`, `utils`) donde tenga sentido real
-- seguir cobertura en `src/views/*` y `src/vue/components/admin/*` que hoy siguen como mayor superficie sin prueba
+- revisar convergencia gradual de `services/*` donde siga habiendo doble capa JS/TS
+- seguir cobertura en `src/vue/components/admin/*`, `src/vue/components/articles/*` y `src/vue/components/dashboard/*` (los mayores bloques en 0%)
 - recien despues decidir si conviene extraer mas shell comun de calculadoras, por ejemplo el bloque de retorno a `/calculadoras`

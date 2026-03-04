@@ -84,6 +84,7 @@ En la pasada mas reciente se agrego ademas una consolidacion estructural de calc
 - [src/stores/instruments.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/instruments.js) (wrapper JS -> TS)
 - [src/stores/diagnostics.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/diagnostics.js) (wrapper JS -> TS)
 - [src/stores/stockMovements.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/stockMovements.js) (wrapper JS -> TS)
+- [src/stores/shopCart.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/shopCart.js) (wrapper JS -> TS)
 
 ### Reportes
 
@@ -151,15 +152,15 @@ Resultados:
 
 - `npm run build` -> OK
 - `npm run test:coverage` -> ejecuta y genera reporte, pero falla por thresholds globales
-  - `53` test files
-  - `261 passed`
+  - `58` test files
+  - `273 passed`
   - coverage total:
-    - lines/statements: `61.09%`
-    - functions: `54.99%`
-    - branches: `65.68%`
+    - lines/statements: `64.07%`
+    - functions: `56.62%`
+    - branches: `66.59%`
 - `cd backend && .venv/bin/python -m pytest -q` -> OK
-  - `64 passed`
-  - `13 skipped`
+  - `66 passed`
+  - `14 skipped`
   - `1 warning`
 - `bash scripts/run_tests.sh` -> OK
 - backend del runner -> `13 passed`
@@ -185,5 +186,5 @@ Si se sigue esta misma estrategia, el siguiente paso de bajo riesgo es:
 - reauditar paginas publicas mas amplias fuera de auth
 - seguir consolidando solo duplicaciones comprobables
 - subir cobertura en `src/views/*` y `src/vue/components/admin/*` que siguen como deuda mayor
-- converger `src/stores/shopCart.js` a capa TS equivalente, preservando su contrato de carrito persistente
+- revisar convergencia de capas de servicios JS/TS que siguen duplicadas
 - recien despues marcar candidatos a SCSS muerto con evidencia
