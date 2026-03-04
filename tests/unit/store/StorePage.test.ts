@@ -70,12 +70,14 @@ const catalogRows = [
     category: 'Capacitores',
     family: 'Capacitores',
     description: 'Electrolitico',
-    sellable_stock: 3,
+    sellable_stock: 2,
     available_stock: 5,
     min_stock: 2,
     store_visible: true,
     enabled: true,
     is_low_stock: false,
+    stock_unit: 'u',
+    stock_label: 'ultimas_unidades',
   },
 ]
 
@@ -118,6 +120,7 @@ describe('StorePage', () => {
       },
     })
     expect(shopCartMock.syncCatalog).toHaveBeenCalledWith(catalogRows)
+    expect(wrapper.text()).toContain('Ultimas 2 u')
 
     await wrapper.get('[data-testid="store-add-to-cart"]').trigger('click')
 

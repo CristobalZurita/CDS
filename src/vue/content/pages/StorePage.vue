@@ -134,7 +134,10 @@
                 <span v-else-if="Number(product.sellable_stock || 0) <= 0" class="stock-badge stock-badge--warning">
                   Reservado para taller
                 </span>
-                <span v-else-if="product.is_low_stock" class="stock-badge stock-badge--warning">
+                <span v-else-if="product.stock_label === 'ultimas_unidades'" class="stock-badge stock-badge--warning">
+                  Ultimas {{ product.sellable_stock }} {{ product.stock_unit || 'u' }}
+                </span>
+                <span v-else-if="product.stock_label === 'stock_bajo'" class="stock-badge stock-badge--info">
                   Stock bajo
                 </span>
                 <span v-else class="stock-badge">
@@ -446,7 +449,7 @@ async function loadCatalog() {
   try {
     const res = await api.get('/inventory/public/', {
       params: {
-        limit: 5000,
+        limit: 500,
         enabled_only: true,
         in_stock_only: false,
       },
@@ -741,6 +744,11 @@ onMounted(async () => {
 
 .stock-badge--warning {
   background: var(--color-warning);
+  color: var(--color-dark);
+}
+
+.stock-badge--info {
+  background: var(--color-info);
   color: var(--color-dark);
 }
 
