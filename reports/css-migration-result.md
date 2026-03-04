@@ -9,6 +9,11 @@ Esta migracion se hizo de forma progresiva en tres frentes de bajo riesgo:
 - extraccion de estilos repetidos de auth/public hacia la capa compartida ya existente
 - consolidacion del bloque legal publico dentro de la capa `_public.scss` ya existente
 
+En la pasada mas reciente se agrego ademas una consolidacion estructural de calculadoras:
+
+- extraccion del footer repetido de cuatro calculadoras grandes a [src/vue/components/footer/WorkshopFooter.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/footer/WorkshopFooter.vue)
+- cobertura nueva para `useCalculator`, modelos de calculadora y el footer compartido
+
 ## Archivos modificados
 
 ### Capa compartida
@@ -16,6 +21,7 @@ Esta migracion se hizo de forma progresiva en tres frentes de bajo riesgo:
 - [src/scss/components/_app.scss](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/scss/components/_app.scss)
 - [src/scss/pages/_admin.scss](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/scss/pages/_admin.scss)
 - [src/scss/_public.scss](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/scss/_public.scss)
+- [src/vue/components/footer/WorkshopFooter.vue](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/vue/components/footer/WorkshopFooter.vue)
 
 ### Paginas admin consolidadas
 
@@ -46,10 +52,14 @@ Esta migracion se hizo de forma progresiva en tres frentes de bajo riesgo:
 - [tests/unit/models/SectionInfo.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/models/SectionInfo.test.ts)
 - [tests/unit/public/StaticShellPages.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/public/StaticShellPages.test.ts)
 - [tests/unit/public/LegalPages.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/public/LegalPages.test.ts)
+- [tests/unit/composables/useCalculator.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/composables/useCalculator.test.ts)
+- [tests/unit/domain/calculatorModels.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/domain/calculatorModels.test.ts)
+- [tests/unit/footer/WorkshopFooter.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/footer/WorkshopFooter.test.ts)
 
 ### Reportes
 
 - [reports/css-audit.md](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/reports/css-audit.md)
+- [reports/frontend-state-map.md](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/reports/frontend-state-map.md)
 
 ## Patrones consolidados
 
@@ -111,16 +121,16 @@ Comandos ejecutados despues de la migracion:
 Resultados:
 
 - `npm run build` -> OK
-- `npm run test:coverage` -> OK
-  - `41` test files
-  - `205 passed`
+- `npm run test:coverage` -> ejecuta y genera reporte, pero falla por thresholds globales
+  - `44` test files
+  - `218 passed`
   - coverage total:
-    - lines/statements: `44.15%`
-    - functions: `45.93%`
-    - branches: `61.48%`
+    - lines/statements: `45.63%`
+    - functions: `48.19%`
+    - branches: `62.47%`
 - `cd backend && .venv/bin/python -m pytest -q` -> OK
-  - `63 passed`
-  - `14 skipped`
+  - `64 passed`
+  - `13 skipped`
   - `1 warning`
 - `bash scripts/run_tests.sh` -> OK
 - backend del runner -> `13 passed`
@@ -130,6 +140,7 @@ Observacion real:
 
 - `scripts/run_tests.sh` cae a `pytest` sin coverage cuando `pytest-cov` no esta instalado en `backend/.venv`
 - el warning backend que sigue vivo hoy viene desde `passlib` importando `crypt`, no desde codigo CDS modificado en esta pasada
+- `npm run test:coverage` sigue siendo util para generar el informe, pero no puede considerarse verde mientras los thresholds globales sigan en `90/90/85/90`
 
 ## Lo que no se movio todavia
 

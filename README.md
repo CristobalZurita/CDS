@@ -59,7 +59,7 @@ Audited Vue surface in `src/`: 19 non-admin pages, 16 admin pages, 9 calculator 
 | Entry wizards | 🔄 IN PROGRESS | `WizardClientIntake`, `WizardInventoryItem`, `WizardManualUpload`, `WizardMaterialsUsage`, `WizardPurchaseRequest`, `WizardSignatureRequest`, and `WizardTicket` exist. Only `WizardPurchaseRequest` and `WizardTicket` are covered by active unit tests. |
 | Digital signatures | ✅ WORKING | Backend request, lookup, submit, cancel, and SSE endpoints exist; public route `/signature/:token` exists; unit tests cover the page submission flow. ⚠️ Effective expiry is 1-5 minutes, not the schema default of 15. |
 | Token photo uploads | ✅ WORKING | Public route `/photo-upload/:token` exists; backend request lookup and upload submission endpoints exist; page unit tests cover success and failure states. |
-| Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. `StorePage` unit coverage, the full frontend coverage run, the full backend pytest run, and the current Playwright integration runner all pass in this workspace on 2026-03-04. |
+| Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. `StorePage` unit coverage, the full backend pytest run, and the current Playwright integration runner all pass in this workspace on 2026-03-04. ⚠️ `npm run test:coverage` now generates a valid report but exits non-zero because global thresholds remain far above real coverage. |
 
 ## 5. Environment Variables
 
@@ -404,15 +404,19 @@ cd backend
 
 ### What is actually covered
 
-- `tests/unit/` currently contains 26 files:
+- `tests/unit/` currently contains 31 files:
   - admin pages/components: 8
   - client pages: 6
   - auth UI: 2
   - public pages: 4
   - store/cart: 2
+  - standalone store spec: 1
+  - composables: 1
+  - domain models: 1
+  - footer: 1
   - router guard: 1
   - layout/model helpers: 2
-  - generic component spec: 1
+  - generic component specs: 2
 - Frontend extra active suites also exist in:
   - `tests/integration/` with 2 files
   - `tests/stores/` with 10 files
@@ -434,17 +438,21 @@ Observed in this workspace on 2026-03-04:
   - ⚠️ The script skips coverage automatically when `pytest-cov` is not installed in `backend/.venv`
 
 - `npm run test:coverage`
-  - Result: passed
-  - Test files: `41`
-  - Tests: `205 passed`
+  - Result: ⚠️ report generated, command exits non-zero because global thresholds fail
+  - Test files: `44`
+  - Tests: `218 passed`
   - Coverage summary from `coverage/coverage-summary.json`:
-    - lines/statements: `44.15%`
-    - functions: `45.93%`
-    - branches: `61.48%`
+    - lines/statements: `45.63%`
+    - functions: `48.19%`
+    - branches: `62.47%`
+  - Threshold failure:
+    - lines/statements require `90%`
+    - functions require `90%`
+    - branches require `85%`
 
 - `cd backend && .venv/bin/python -m pytest -q`
   - Result: passed
-  - Summary: `63 passed`, `14 skipped`, `1 warning`
+  - Summary: `64 passed`, `13 skipped`, `1 warning`
 
 ⚠️ The backend run still emits current warnings from:
 
@@ -458,7 +466,7 @@ Observed in this workspace on 2026-03-04:
 | App startup mutates schema outside Alembic via `Base.metadata.create_all()` and `_ensure_*_schema()` patchers in `backend/app/core/database.py`. | High | Open |
 | `.env.example` drifts from active code: it misses variables currently read by the app (`PUBLIC_BASE_URL`, auto-sync flags, `IMAGE_MAX_SIZE`, `REDIS_URL`, etc.) and also includes variables not wired into the active backend path (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`). | High | Open |
 | Frontend auth is internally mixed: `src/services/api.ts` is cookie/CSRF-ready, but the actual login flow stores JWTs in `localStorage`, and account deletion is not implemented in backend. | High | Open |
-| Frontend coverage is green but still low at `44.15%` line coverage; many parallel `.ts` wrappers and entire public/calculator/admin surfaces remain unexercised. | High | Open |
+| Frontend coverage report improves to `45.63%` line coverage, but `npm run test:coverage` still fails by design because global thresholds remain at `90/90/85/90`; many parallel `.ts` wrappers and entire public/calculator/admin surfaces remain unexercised. | High | Open |
 | `bash scripts/run_tests.sh` cannot produce backend coverage today because `pytest-cov` is not installed in `backend/.venv`; it falls back to plain `pytest`. | Medium | Open |
 | Signature expiry contract is inconsistent: `SignatureRequestCreate.expires_minutes` defaults to `15`, but `backend/app/routers/signature.py` clamps the real expiry to `5` minutes maximum. | Medium | Open |
 | `src/vue/components/articles/DiagnosticWizard.vue` still has `TODO: Generate PDF`; current implementation only generates CSV. | Medium | Open |
