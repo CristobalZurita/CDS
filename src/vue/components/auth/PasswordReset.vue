@@ -121,3 +121,123 @@ onMounted(() => {
   }
 })
 </script>
+
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
+.password-reset {
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.mode-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacer-sm);
+}
+
+.toggle-btn,
+.btn-primary,
+.toggle-password {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.toggle-btn {
+  border: 1px solid var(--color-light);
+  background: transparent;
+  color: var(--color-dark);
+}
+
+.toggle-btn.active,
+.btn-primary {
+  border: 0;
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.toggle-btn:hover,
+.btn-primary:hover:not(:disabled),
+.toggle-password:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.form {
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.form-group {
+  display: grid;
+  gap: 0.45rem;
+}
+
+label {
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+}
+
+.password-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.toggle-password {
+  border: 1px solid var(--color-light);
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+.btn-primary:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.back-link {
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+@include media-breakpoint-down(md) {
+  .mode-toggle,
+  .password-field {
+    grid-template-columns: 1fr;
+  }
+
+  .toggle-btn,
+  .btn-primary,
+  .toggle-password {
+    width: 100%;
+  }
+}
+</style>

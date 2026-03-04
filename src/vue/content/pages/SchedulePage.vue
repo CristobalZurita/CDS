@@ -66,7 +66,7 @@
           </div>
 
           <div class="step-actions">
-            <button class="btn-secondary" @click="$emit('cancel')">
+            <button class="btn-secondary" @click="emit('cancel')">
               Cancelar
             </button>
             <button
@@ -228,7 +228,7 @@
           </div>
 
           <div class="step-actions">
-            <button class="btn-secondary" @click="$emit('cancel')">
+            <button class="btn-secondary" @click="emit('cancel')">
               Volver al Inicio
             </button>
             <router-link to="/dashboard" class="btn-primary">
@@ -399,3 +399,333 @@ const onVerify = (token) => {
 // Emit
 const emit = defineEmits(['cancel'])
 </script>
+
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
+.schedule-page {
+  min-height: 100vh;
+  padding: clamp(1rem, 3vw, 2rem);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-primary) 18%, transparent) 0, transparent 30%),
+    linear-gradient(180deg, #f8f4ec 0%, #eee7db 100%);
+}
+
+.schedule-container {
+  width: min(100%, 1080px);
+  margin: 0 auto;
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.schedule-header,
+.schedule-content,
+.schedule-step,
+.confirmation-card,
+.timeslot-group,
+.calendar-container {
+  padding: var(--spacer-md);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(211, 208, 195, 0.8);
+  border-radius: 22px;
+  box-shadow: var(--shadow-sm);
+}
+
+.schedule-header {
+  text-align: center;
+}
+
+.schedule-header h1,
+.schedule-step h2,
+.timeslot-group h3,
+.calendar-header h3 {
+  margin: 0;
+  color: var(--color-dark);
+  font-weight: 700;
+}
+
+.schedule-header p,
+.step-description,
+.confirmation-info p,
+.small-text,
+.schedule-error {
+  margin: 0;
+  color: var(--color-dark);
+  opacity: 0.78;
+  font-size: var(--text-sm);
+}
+
+.progress-bar {
+  display: grid;
+  gap: var(--spacer-sm);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.progress-step {
+  display: grid;
+  justify-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--color-dark);
+}
+
+.progress-step.active {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-white) 88%);
+}
+
+.step-number {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--color-dark);
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.progress-step.active .step-number {
+  background: var(--color-primary);
+}
+
+.step-label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.schedule-content {
+  display: grid;
+}
+
+.schedule-step {
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.calendar-container {
+  display: grid;
+  gap: var(--spacer-sm);
+  padding: 1rem;
+  background: color-mix(in srgb, var(--color-white) 90%, var(--color-light) 10%);
+}
+
+.calendar-header,
+.step-actions,
+.confirmation-section,
+.timeslots {
+  display: flex;
+  gap: var(--spacer-sm);
+  flex-wrap: wrap;
+}
+
+.calendar-header,
+.step-actions,
+.confirmation-section {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-nav,
+.btn-primary,
+.btn-secondary,
+.timeslot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+  text-decoration: none;
+}
+
+.calendar-nav,
+.btn-secondary,
+.timeslot {
+  border: 1px solid var(--color-light);
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+.btn-primary {
+  border: 0;
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.calendar-nav:hover,
+.btn-primary:hover:not(:disabled),
+.btn-secondary:hover,
+.timeslot:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.calendar-weekdays,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.weekday,
+.calendar-day {
+  display: grid;
+  place-items: center;
+  min-height: 48px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.weekday {
+  color: var(--color-dark);
+  font-weight: 700;
+}
+
+.calendar-day {
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--color-dark);
+  cursor: pointer;
+}
+
+.calendar-day.empty,
+.calendar-day.disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.calendar-day.selected {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 18%, var(--color-white) 82%);
+  font-weight: 700;
+}
+
+.timeslots-container {
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.timeslot-group {
+  display: grid;
+  gap: var(--spacer-sm);
+}
+
+.timeslot.selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.confirmation-card {
+  display: grid;
+  gap: var(--spacer-sm);
+}
+
+.confirmation-section {
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--color-light);
+}
+
+.label {
+  color: var(--color-dark);
+  opacity: 0.72;
+  font-size: var(--text-sm);
+}
+
+.value {
+  color: var(--color-dark);
+  font-weight: 700;
+}
+
+.confirmation-info {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 90%, var(--color-light) 10%);
+}
+
+.checkbox-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.checkbox-container input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+}
+
+.schedule-error {
+  padding: 0.8rem 0.95rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 86%, var(--color-danger) 14%);
+}
+
+.success-step {
+  text-align: center;
+}
+
+.success-icon {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+.success-message {
+  margin: 0;
+  color: var(--color-dark);
+  font-size: var(--text-base);
+}
+
+.monospace {
+  font-family: monospace;
+}
+
+@include media-breakpoint-down(md) {
+  .progress-bar,
+  .calendar-weekdays,
+  .calendar-days {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .calendar-header,
+  .step-actions,
+  .confirmation-section,
+  .timeslots {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .calendar-nav,
+  .timeslot {
+    width: 100%;
+  }
+}
+</style>
