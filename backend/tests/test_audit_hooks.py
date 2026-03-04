@@ -1,4 +1,5 @@
 import io
+from pathlib import Path
 from fastapi.testclient import TestClient
 import importlib
 import app.main as _main
@@ -84,6 +85,7 @@ def test_upload_image_creates_audit(tmp_path, customer_token):
     assert rec is not None
     assert rec.details and "filename" in rec.details or "path" in rec.details
     assert rec.user_id is not None
+    Path("uploads/images/audit.png").unlink(missing_ok=True)
 
 
 def test_diagnostic_calculate_creates_audit():

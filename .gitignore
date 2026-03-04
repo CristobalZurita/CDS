@@ -70,6 +70,7 @@ env/
 *.sqlite3
 backend/cirujano.db
 backend/cirujano.log.1
+backend/cirujano.log*
 DOCUMJENTOS_EXTRAS/ARCHIVO_VIEJO_SOBRANTE/db/
 
 # IDE

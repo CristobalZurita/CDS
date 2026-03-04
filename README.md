@@ -106,7 +106,7 @@ Source audited for this section: root `.env.example`.
 - A separate `.env.production.example` file exists in the repo, but it is outside the audited input requested for this README section.
 - For real production use, the current code requires secure values at minimum for `ENVIRONMENT`, `DATABASE_URL`, `SECRET_KEY`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `SMTP_PASSWORD`, `TURNSTILE_SECRET_KEY`, `WHATSAPP_TOKEN`, and `WHATSAPP_PHONE_ID`.
 
-⚠️ `.env.example` is not complete relative to active code paths. The app also reads variables such as `PUBLIC_BASE_URL`, `ENABLE_INSTRUMENT_AUTO_SYNC`, `INSTRUMENT_SYNC_ON_STARTUP`, `INSTRUMENT_SYNC_INTERVAL_MINUTES`, `IMAGE_MAX_SIZE`, `REDIS_URL`, `RATE_LIMIT_STORAGE_URI`, and Google Calendar credentials, but they are not present in `.env.example`.
+⚠️ `.env.example` and `backend/.env.example` now cover the active runtime keys audited on 2026-03-04. They still include legacy placeholders such as `CLAUDE_API_KEY`, `MAX_FILE_SIZE`, and `UPLOAD_DIR`, which are not part of the current hot path.
 
 ## 6. Local Setup
 
@@ -166,6 +166,14 @@ npm run dev
 - Swagger: `http://localhost:8000/docs` only if `ENABLE_API_DOCS=true`
 
 ⚠️ Run backend commands from `backend/`. The default `DATABASE_URL=sqlite:///./cirujano.db` is relative, so running `uvicorn` or `alembic` from the repo root points at a different SQLite file.
+
+### Local-only artifacts and secret hygiene
+
+- `backend/cirujano.db` is a local SQLite development artifact. Keep it local; do not commit it.
+- `backend/cirujano.log*` are local operational logs. Keep them local; do not commit them.
+- `.env`, `backend/.env`, uploads, SQLite artifacts, and rotated logs are ignored by `.gitignore`.
+- The repo history was rewritten on 2026-03-04 to purge `backend/cirujano.db`, `backend/cirujano.log.1`, and the confirmed legacy seed password from Git history.
+- `.github/workflows/secret-scan.yml` now blocks tracked local env files, tracked DB/log/upload artifacts, and known legacy weak literals before they are merged again.
 
 ## 7. Authentication & Authorization
 
@@ -467,7 +475,8 @@ Observed in this workspace on 2026-03-04:
 | --- | --- | --- |
 | Duplicate API layers are mounted together in `backend/app/api/v1/router.py`, causing overlapping prefixes such as `/users`, `/categories`, `/instruments`, and `/repairs`. | High | Open |
 | App startup mutates schema outside Alembic via `Base.metadata.create_all()` and `_ensure_*_schema()` patchers in `backend/app/core/database.py`. | High | Open |
-| `.env.example` drifts from active code: it misses variables currently read by the app (`PUBLIC_BASE_URL`, auto-sync flags, `IMAGE_MAX_SIZE`, `REDIS_URL`, etc.) and also includes variables not wired into the active backend path (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`). | High | Open |
+| `.env.example` and `backend/.env.example` now cover the audited runtime keys, but they still mix active settings with legacy placeholders not wired into the current hot path (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`). | Medium | Open |
+| Repository hygiene is stronger after the 2026-03-04 history rewrite, but CI/test infrastructure still uses intentionally public low-entropy test defaults such as `test-secret` and `test-refresh-secret`. They are test-only values and must never be reused outside isolated test flows. | Medium | Open |
 | Frontend auth is internally mixed: `src/services/api.ts` is cookie/CSRF-ready, but the actual login flow stores JWTs in `localStorage`, and account deletion is not implemented in backend. | High | Open |
 | Frontend coverage report improves to `48.8%` line coverage, but `npm run test:coverage` still fails by design because global thresholds remain at `90/90/85/90`; the simple calculator wrappers and key TS services are now covered, but large calculator/admin/public surfaces still remain unexercised. | High | Open |
 | `bash scripts/run_tests.sh` cannot produce backend coverage today because `pytest-cov` is not installed in `backend/.venv`; it falls back to plain `pytest`. | Medium | Open |
