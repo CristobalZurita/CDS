@@ -60,10 +60,10 @@ def update_user(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("users", "update"))
 ):
-    db_user = db.query(User).get(user_id)
+    db_user = db.get(User, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
-    data = user_data.dict(exclude_unset=True)
+    data = user_data.model_dump(exclude_unset=True)
     if "full_name" in data:
         first_name, last_name = _split_full_name(data.pop("full_name") or "")
         db_user.first_name = first_name
@@ -89,7 +89,7 @@ def delete_user(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("users", "delete"))
 ):
-    db_user = db.query(User).get(user_id)
+    db_user = db.get(User, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     db.delete(db_user)

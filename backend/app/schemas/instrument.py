@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class InstrumentCreate(BaseModel):
@@ -36,6 +36,8 @@ class InstrumentUpdate(BaseModel):
 
 
 class InstrumentRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     brand_id: Optional[int] = None
     name: str
@@ -51,9 +53,6 @@ class InstrumentRead(BaseModel):
     family: Optional[str] = None
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class OkResponse(BaseModel):

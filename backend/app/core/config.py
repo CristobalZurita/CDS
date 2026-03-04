@@ -2,7 +2,7 @@
 Configuration settings for Cirujano de Sintetizadores API
 """
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from functools import lru_cache
 from typing import Optional
 import os
@@ -34,6 +34,7 @@ _IS_PROD_ENV = _ENVIRONMENT_NAME in ("production", "prod")
 
 class Settings(BaseModel):
     """Application settings"""
+    model_config = ConfigDict(case_sensitive=False)
 
     # API Configuration
     api_title: str = "Cirujano de Sintetizadores API"
@@ -117,8 +118,6 @@ class Settings(BaseModel):
         "high": 1.6,  # 2000000 - 5000000 CLP
         "premium": 2.0,  # > 5000000 CLP
     }
-    class Config:
-        case_sensitive = False
 
 
 # Instantiate settings with environment variables

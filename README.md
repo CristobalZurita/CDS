@@ -48,18 +48,18 @@ or PostgreSQL (same app, via DATABASE_URL=postgresql://...)
 
 ## 4. Module Status
 
-Audited Vue surface in `src/`: 19 non-admin pages, 16 admin pages, 9 calculator modules, 126 Vue components.
+Audited Vue surface in `src/`: 19 non-admin pages, 16 admin pages, 9 calculator modules, 196 Vue components.
 
 | Module | Status | Notes |
 | --- | --- | --- |
-| Public portal | 🔄 IN PROGRESS | Public pages exist for home/legal pages, calculators, store, quote flow, signature, and photo upload. Public landing content exists in `src/vue/content/sections/*`, but the landing page itself is not directly covered by the active unit suite. |
+| Public portal | 🔄 IN PROGRESS | Public pages exist for home/legal pages, calculators, store, quote flow, signature, and photo upload. The current unit suite now covers the public shells/legal/token pages, but most landing content sections in `src/vue/content/sections/*` remain untested. |
 | Auth & session | 🔄 IN PROGRESS | `/auth/login`, `/auth/register`, `/auth/me`, `/auth/refresh`, `/auth/logout`, password reset, and optional email 2FA exist. ⚠️ Current SPA stores JWTs in `localStorage`, and `deleteAccount()` is explicitly not implemented in backend. |
 | Customer panel | ✅ WORKING | Routes exist for `/dashboard`, `/repairs`, `/repairs/:id`, `/profile`, `/ot-payments`, and `/agendar`. These pages all have active unit tests in `tests/unit/client/`. |
 | Admin panel | 🔄 IN PROGRESS | Admin routes exist for inventory, clients, repairs, quotes, categories, contact, newsletter, appointments, tickets, purchase requests, manuals, stats, wizards, and archive. Test coverage is partial: inventory, quotes, manuals, appointments, and some wizard flows are covered, but not the entire admin surface. |
 | Entry wizards | 🔄 IN PROGRESS | `WizardClientIntake`, `WizardInventoryItem`, `WizardManualUpload`, `WizardMaterialsUsage`, `WizardPurchaseRequest`, `WizardSignatureRequest`, and `WizardTicket` exist. Only `WizardPurchaseRequest` and `WizardTicket` are covered by active unit tests. |
 | Digital signatures | ✅ WORKING | Backend request, lookup, submit, cancel, and SSE endpoints exist; public route `/signature/:token` exists; unit tests cover the page submission flow. ⚠️ Effective expiry is 1-5 minutes, not the schema default of 15. |
 | Token photo uploads | ✅ WORKING | Public route `/photo-upload/:token` exists; backend request lookup and upload submission endpoints exist; page unit tests cover success and failure states. |
-| Store / purchase requests | ⚠️ HAS BUGS | Public store page, cart widget, and purchase-request flow exist. On 2026-03-04, one active Vitest test fails because `StorePage.vue` now requests `/inventory/public/` with `limit: 5000` while the test still expects `500`. |
+| Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. `StorePage` unit coverage, the full frontend coverage run, the full backend pytest run, and the current Playwright integration runner all pass in this workspace on 2026-03-04. |
 
 ## 5. Environment Variables
 
@@ -389,6 +389,12 @@ Frontend end-to-end suite:
 npm run test:e2e
 ```
 
+Frontend/backend integration runner used by this repo:
+
+```bash
+bash scripts/run_tests.sh
+```
+
 Backend test suite:
 
 ```bash
@@ -398,44 +404,51 @@ cd backend
 
 ### What is actually covered
 
-- `tests/unit/` currently contains 24 files:
+- `tests/unit/` currently contains 26 files:
   - admin pages/components: 8
   - client pages: 6
   - auth UI: 2
-  - public token pages: 2
+  - public pages: 4
   - store/cart: 2
   - router guard: 1
-  - generic components: 2
-  - legacy inventory store spec: 1
+  - layout/model helpers: 2
+  - generic component spec: 1
 - Frontend extra active suites also exist in:
   - `tests/integration/` with 2 files
   - `tests/stores/` with 10 files
   - `tests/composables/` with 3 files
-  - `tests/e2e/` with 18 files
-- Backend active test files currently exist in `backend/tests/` for auth, appointments, categories, health, imports, inventory/store sync, OT workflow, payments, uploads, rate limiting, audit logging, and security hardening.
+  - `tests/e2e/` with 14 spec/setup files plus auth state and helper files
+- Backend active test files currently exist in `backend/tests/` with 23 `test*.py` files for auth, appointments, categories, health, imports, inventory/store sync, OT workflow, payments, uploads, rate limiting, audit logging, purchase requests, security hardening, and integration/auth-guard flows.
 
 ### Current observed results
 
 Observed in this workspace on 2026-03-04:
 
+- `npm run build`
+  - Result: passed
+
+- `bash scripts/run_tests.sh`
+  - Result: passed
+  - Backend stage: `13 passed`
+  - Playwright stage: `9 passed`
+  - ⚠️ The script skips coverage automatically when `pytest-cov` is not installed in `backend/.venv`
+
 - `npm run test:coverage`
-  - Result: failed
-  - Files: 37
-  - Tests: 195 total, 192 passed, 3 failed
-  - Current failing files:
-    - `tests/composables/useApi.test.ts` (2 failures)
-    - `tests/unit/store/StorePage.test.ts` (1 failure)
-  - Coverage percentage: not available from this run because the command exited without producing `coverage/coverage-summary.json`
+  - Result: passed
+  - Test files: `41`
+  - Tests: `205 passed`
+  - Coverage summary from `coverage/coverage-summary.json`:
+    - lines/statements: `44.15%`
+    - functions: `45.93%`
+    - branches: `61.48%`
 
 - `cd backend && .venv/bin/python -m pytest -q`
-  - Result: failed
-  - Summary: 59 passed, 2 failed, 1 skipped, 1 error, 29 warnings
-  - Current failing/error files:
-    - `tests/test_categories_router.py`
-    - `tests/test_inventory_store_catalog_sync.py`
-    - `backend/scripts/test_endpoints.py` was collected as a test and errors because fixture `client` is missing
+  - Result: passed
+  - Summary: `63 passed`, `14 skipped`, `1 warning`
 
-⚠️ The backend run also emits current Pydantic v2 deprecation warnings from class-based config and legacy `@validator` usage.
+⚠️ The backend run still emits current warnings from:
+
+- `passlib` importing deprecated `crypt`
 
 ## 12. Known Technical Debt
 
@@ -445,8 +458,8 @@ Observed in this workspace on 2026-03-04:
 | App startup mutates schema outside Alembic via `Base.metadata.create_all()` and `_ensure_*_schema()` patchers in `backend/app/core/database.py`. | High | Open |
 | `.env.example` drifts from active code: it misses variables currently read by the app (`PUBLIC_BASE_URL`, auto-sync flags, `IMAGE_MAX_SIZE`, `REDIS_URL`, etc.) and also includes variables not wired into the active backend path (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`). | High | Open |
 | Frontend auth is internally mixed: `src/services/api.ts` is cookie/CSRF-ready, but the actual login flow stores JWTs in `localStorage`, and account deletion is not implemented in backend. | High | Open |
-| Frontend automated verification is currently blocked by 3 failing Vitest tests observed on 2026-03-04. | High | Open |
-| Backend automated verification is currently blocked by 2 failing tests and 1 collection/runtime error observed on 2026-03-04. | High | Open |
+| Frontend coverage is green but still low at `44.15%` line coverage; many parallel `.ts` wrappers and entire public/calculator/admin surfaces remain unexercised. | High | Open |
+| `bash scripts/run_tests.sh` cannot produce backend coverage today because `pytest-cov` is not installed in `backend/.venv`; it falls back to plain `pytest`. | Medium | Open |
 | Signature expiry contract is inconsistent: `SignatureRequestCreate.expires_minutes` defaults to `15`, but `backend/app/routers/signature.py` clamps the real expiry to `5` minutes maximum. | Medium | Open |
 | `src/vue/components/articles/DiagnosticWizard.vue` still has `TODO: Generate PDF`; current implementation only generates CSV. | Medium | Open |
 | Confirm that roles/permissions have actually been seeded in the target database before relying on `require_permission(...)` outside test mode. | Medium | [PLACEHOLDER] |

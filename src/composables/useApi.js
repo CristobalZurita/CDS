@@ -15,10 +15,16 @@ import {
 
 function toLegacyError(error) {
   const normalized = handleApiError(error)
+  const responseData = error?.response?.data
+  const message =
+    typeof responseData?.detail === 'string'
+      ? responseData.detail
+      : normalized.message
+
   return {
-    ...normalized,
-    status: normalized.statusCode,
-    data: error?.response?.data || null
+    message,
+    status: error?.response?.status,
+    data: responseData
   }
 }
 

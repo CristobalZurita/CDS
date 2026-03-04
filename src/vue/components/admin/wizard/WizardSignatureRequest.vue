@@ -121,30 +121,6 @@ onMounted(loadRepairs)
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-label {
-  display: block;
-  margin-bottom: 0.35rem;
-  color: var(--color-dark);
-  font-size: var(--text-sm);
-  font-weight: 700;
-}
-
-.form-control,
-.form-select {
-  width: 100%;
-  min-height: 44px;
-  padding: 0.7rem 0.85rem;
-  border: 1px solid var(--color-light);
-  border-radius: var(--radius-sm);
-  background: var(--color-white);
-  color: var(--color-dark);
-  font-size: var(--text-sm);
-}
-
-.mt-2 {
-  margin-top: var(--spacer-sm);
-}
-
 @include media-breakpoint-down(md) {
   .form-grid {
     grid-template-columns: 1fr;

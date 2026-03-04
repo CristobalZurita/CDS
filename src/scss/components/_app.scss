@@ -1343,251 +1343,193 @@ div.foxy-timeline-panel {
 }
 
 // Source: src/vue/components/auth/LoginForm.vue
-/* ===========================================
-   LOGINFORM - Manual de Identidad Visual
-   Paleta: Vintage Black ($color-dark), Orange ($color-primary),
-           Vintage Orange ($vintage-orange), Vintage Beige ($color-light),
-           Black ($color-black), Fluor Green ($fluor-green)
-   Tipografía: Cervo Neue, Steelfish
-   =========================================== */
-
-.login-form-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 0;
-  background: transparent; /* Hereda de LoginPage */
-  border-radius: 8px;
-}
-
-.login-form {
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  .form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-family: 'Cervo Neue Semibold', 'Cervo Neue', sans-serif;
-    font-weight: 600;
-    color: $brand-text; /* Vintage Black */
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-  }
-
-  .form-control {
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid $brand-text; /* Vintage Black */
-    border-radius: 4px;
-    font-family: 'Cervo Neue', sans-serif;
-    font-size: 1rem;
-    background: $white;
-    color: $brand-text; /* Vintage Black */
-    transition: border-color 0.2s, box-shadow 0.2s;
-
-    &::placeholder {
-      color: $vintage-orange; /* Vintage Orange */
-      opacity: 0.6;
-    }
-
-    &:focus {
-      outline: none;
-      border-color: $brand-primary; /* Orange - Paleta Web */
-      box-shadow: 0 0 0 3px rgba($brand-primary, 0.2);
-    }
-
-    &:disabled {
-      background-color: $vintage-beige; /* Vintage Beige */
-      cursor: not-allowed;
-      opacity: 0.7;
-    }
-  }
-
-  .password-field {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .toggle-password {
-    border: 2px solid $brand-text;
-    background: $brand-paper;
-    color: $brand-text;
-    padding: 0 0.8rem;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-  }
-
-  .error-text {
-    display: block;
-    color: $brand-primary; /* Orange - Paleta Web */
-    font-family: 'Cervo Neue', sans-serif;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-  }
-
-  .btn-block {
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  /* Botón principal - estilo de marca */
-  .btn-primary {
-    background-color: $brand-primary; /* Orange - Paleta Web */
-    border: 2px solid $brand-primary;
-    color: $black; /* Black */
-    font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:hover {
-      background-color: $vintage-orange; /* Vintage Orange */
-      border-color: $vintage-orange;
-    }
-
-    &:disabled {
-      background-color: $vintage-beige; /* Vintage Beige */
-      border-color: $brand-text;
-      color: $brand-text;
-      cursor: not-allowed;
-    }
-  }
-
-  .link {
-    color: $brand-primary; /* Orange - Paleta Web */
-    text-decoration: none;
-    font-family: 'Cervo Neue Semibold', 'Cervo Neue', sans-serif;
-    font-weight: 600;
-
-    &:hover {
-      color: $vintage-orange; /* Vintage Orange */
-      text-decoration: underline;
-    }
-  }
-}
-
-.text-center {
-  color: $brand-text; /* Vintage Black */
-  font-family: 'Cervo Neue', sans-serif;
-}
-
-.alert {
-  padding: 0.75rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-  font-family: 'Cervo Neue', sans-serif;
-
-  &.alert-danger {
-    background-color: rgba($brand-primary, 0.15); /* Orange con transparencia */
-    color: $brand-text; /* Vintage Black */
-    border: 2px solid $brand-primary; /* Orange */
-  }
-}
-
-/* Spinner con colores de marca */
-.spinner-border {
-  border-color: $brand-text;
-  border-right-color: transparent;
-}
-
 // Source: src/vue/components/auth/PasswordReset.vue
-.password-reset {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+// Source: src/vue/components/auth/RegisterForm.vue
+// Source: src/vue/content/pages/RegisterPage.vue
+.login-form-container {
+  width: 100%;
 }
 
-.mode-toggle {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+.login-form,
+.password-reset,
+.password-reset .form,
+.register-form {
+  display: grid;
+  gap: var(--spacer-md);
 }
 
-.password-field {
-  display: flex;
-  gap: 0.5rem;
+.login-form .form-group,
+.password-reset .form-group,
+.register-form .form-group {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.login-form .form-label,
+.password-reset label,
+.register-form label {
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.login-form .form-control,
+.password-reset input,
+.register-form input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+}
+
+.login-form .password-field,
+.password-reset .password-field,
+.register-form .password-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem;
   align-items: center;
 }
 
-.toggle-password {
-  border: 1px solid $color-gray-300-legacy;
-  background: $color-gray-100-legacy;
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
+.password-reset .mode-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacer-sm);
 }
 
-.toggle-btn {
-  background: $color-gray-150-legacy;
-  border: 1px solid $color-gray-180-legacy;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.toggle-btn.active {
-  background: $color-primary;
-  color: $color-black;
-  border-color: $color-primary;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 600;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid $color-gray-180-legacy;
-  border-radius: 4px;
-}
-
-.btn-primary {
-  background: $color-primary;
-  color: $color-black;
-  border: none;
+.login-form .toggle-password,
+.login-form .btn,
+.password-reset .toggle-btn,
+.password-reset .btn-primary,
+.password-reset .toggle-password,
+.register-form .toggle-password,
+.register-form .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
   padding: 0.7rem 1rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
+  transition: var(--transition-base);
 }
 
-.btn-primary:disabled {
-  background: $color-light;
-  cursor: not-allowed;
+.login-form .toggle-password,
+.password-reset .toggle-password,
+.register-form .toggle-password {
+  border: 1px solid var(--color-light);
+  background: var(--color-white);
+  color: var(--color-dark);
 }
 
-.back-link {
-  color: $color-gray-600-legacy;
-  font-size: 0.9rem;
+.password-reset .toggle-btn {
+  border: 1px solid var(--color-light);
+  background: transparent;
+  color: var(--color-dark);
+}
+
+.login-form .btn,
+.register-form .btn,
+.password-reset .btn-primary {
+  border: 0;
+}
+
+.login-form .btn,
+.register-form .btn {
+  width: 100%;
+}
+
+.login-form .btn-primary,
+.password-reset .toggle-btn.active,
+.password-reset .btn-primary,
+.register-form .btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.login-form .toggle-password:hover,
+.login-form .btn:hover:not(:disabled),
+.password-reset .toggle-btn:hover,
+.password-reset .btn-primary:hover:not(:disabled),
+.password-reset .toggle-password:hover,
+.register-form .toggle-password:hover,
+.register-form .btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.login-form .btn:disabled,
+.login-form .toggle-password:disabled,
+.password-reset .btn-primary:disabled,
+.register-form .btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.login-form .error-text {
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+}
+
+.login-form .link,
+.password-reset .back-link {
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  font-weight: 700;
   text-decoration: none;
-  text-align: center;
 }
 
-.back-link:hover {
-  color: $color-gray-800-legacy;
+.login-form .link:hover,
+.password-reset .back-link:hover {
+  text-decoration: underline;
 }
 
-// Source: src/vue/components/auth/RegisterForm.vue
-.register-form { width: 100%; }
-.form-group { margin-bottom: 1rem; }
-.form-group input { width: 100%; padding: 0.6rem; border: 1px solid $color-gray-180-legacy; border-radius: 4px; }
-.password-field { display: flex; gap: 0.5rem; align-items: center; }
-.toggle-password { border: 1px solid $color-gray-180-legacy; background: $color-gray-100-legacy; padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
+.login-form .alert,
+.register-form .alert {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 86%, var(--color-danger) 14%);
+  color: var(--color-dark);
+}
+
+.login-form .spinner-border {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: login-spin 0.8s linear infinite;
+}
+
+@keyframes login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .login-form .password-field,
+  .password-reset .mode-toggle,
+  .password-reset .password-field,
+  .register-form .password-field {
+    grid-template-columns: 1fr;
+  }
+
+  .password-reset .toggle-btn,
+  .password-reset .btn-primary,
+  .password-reset .toggle-password,
+  .register-form .toggle-password,
+  .register-form .btn {
+    width: 100%;
+  }
+}
 
 // Source: src/vue/components/common/OptimizedImage.vue
 .optimized-image {

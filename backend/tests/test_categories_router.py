@@ -1,41 +1,54 @@
-from fastapi.testclient import TestClient
-import importlib
+import pytest
 import uuid
 
-import app.main as _main
+from fastapi import HTTPException
+
+from app.api.v1.endpoints.categories import (
+    create_category_endpoint,
+    delete_category_endpoint,
+    get_category_endpoint,
+    list_categories_endpoint,
+    update_category_endpoint,
+)
+from app.models.category import Category
+from app.schemas.category import CategoryCreate, CategoryUpdate
 
 
-def test_categories_router_crud_flow():
-    importlib.reload(_main)
-    client = TestClient(_main.app)
-
+def test_categories_router_crud_flow(db):
     unique = uuid.uuid4().hex[:8]
-    create_payload = {
-        "name": f"Category Test {unique}",
-        "description": "Category created from router CRUD test",
-    }
+    category_name = f"Category Test {unique}"
 
-    created_res = client.post("/api/v1/categories/", json=create_payload)
-    assert created_res.status_code in (200, 201)
-    created = created_res.json()
-    assert created.get("id") is not None
-    category_id = int(created["id"])
+    existing = db.query(Category).filter(Category.name == category_name).all()
+    for category in existing:
+        db.delete(category)
+    db.commit()
 
-    listed_res = client.get("/api/v1/categories/")
-    assert listed_res.status_code == 200
-    listed = listed_res.json()
-    assert any(int(item.get("id", -1)) == category_id for item in listed)
+    created = create_category_endpoint(
+        CategoryCreate(
+            name=category_name,
+            description="Category created from router CRUD test",
+        ),
+        db,
+    )
+    assert created.id is not None
+    category_id = int(created.id)
+
+    listed = list_categories_endpoint(db)
+    assert any(int(item.id) == category_id for item in listed)
+
+    loaded = get_category_endpoint(category_id, db)
+    assert int(loaded.id) == category_id
 
     update_payload = {"description": "Updated from categories router test"}
-    updated_res = client.put(f"/api/v1/categories/{category_id}", json=update_payload)
-    assert updated_res.status_code == 200
-    updated = updated_res.json()
-    assert updated.get("description") == update_payload["description"]
+    updated = update_category_endpoint(category_id, CategoryUpdate(**update_payload), db)
+    assert updated.description == update_payload["description"]
 
-    delete_res = client.delete(f"/api/v1/categories/{category_id}")
-    assert delete_res.status_code == 200
-    assert delete_res.json().get("ok") is True
+    deleted = delete_category_endpoint(category_id, db)
+    assert deleted.get("ok") is True
 
-    listed_after_delete = client.get("/api/v1/categories/")
-    assert listed_after_delete.status_code == 200
-    assert not any(int(item.get("id", -1)) == category_id for item in listed_after_delete.json())
+    listed_after_delete = list_categories_endpoint(db)
+    assert not any(int(item.id) == category_id for item in listed_after_delete)
+
+    with pytest.raises(HTTPException) as exc_info:
+        get_category_endpoint(category_id, db)
+    assert exc_info.value.status_code == 404

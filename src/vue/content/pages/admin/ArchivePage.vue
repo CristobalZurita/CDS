@@ -43,7 +43,7 @@
                 <td>{{ item.status || '—' }}</td>
                 <td>{{ formatDate(item.archived_at) }}</td>
                 <td>
-                  <div class="admin-page__actions">
+                  <div class="admin-page__cell-actions">
                     <button
                       type="button"
                       class="admin-page__button admin-page__button--ghost"
@@ -121,125 +121,11 @@ const formatDate = (val) => {
 onMounted(load)
 </script>
 
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.admin-page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacer-md);
-}
-
-.admin-page__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacer-md);
-  flex-wrap: wrap;
-}
-
-.admin-page__title {
-  margin: 0;
-  color: var(--color-dark);
-  font-size: var(--text-xl);
-  font-weight: 700;
-}
-
-.admin-page__search-panel,
-.admin-page__panel {
-  padding: var(--spacer-md);
-  background: var(--color-white);
-  border: 1px solid var(--color-light);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-}
-
+<style scoped>
 .admin-page__input {
-  width: 100%;
   min-height: 44px;
   padding: 0.75rem 0.875rem;
-  border: 1px solid var(--color-light);
   border-radius: var(--radius-md);
-  background: var(--color-white);
-  color: var(--color-dark);
   font-size: var(--text-base);
-}
-
-.admin-page__table-wrap {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.admin-page__table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.admin-page__table th,
-.admin-page__table td {
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--color-light);
-  text-align: left;
-  vertical-align: middle;
-  color: var(--color-dark);
-  font-size: var(--text-sm);
-}
-
-.admin-page__table th {
-  font-weight: 700;
-}
-
-.admin-page__empty {
-  color: var(--color-dark);
-  opacity: 0.7;
-}
-
-.admin-page__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--spacer-sm);
-  flex-wrap: wrap;
-}
-
-.admin-page__button {
-  min-height: 40px;
-  padding: 0.65rem 0.9rem;
-  border: 0;
-  border-radius: var(--radius-sm);
-  color: var(--color-white);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  cursor: pointer;
-  transition: var(--transition-base);
-}
-
-.admin-page__button:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-
-.admin-page__button--secondary {
-  background: var(--color-dark);
-}
-
-.admin-page__button--primary {
-  background: var(--color-primary);
-}
-
-.admin-page__button--ghost {
-  background: var(--color-light);
-  color: var(--color-dark);
-}
-
-@include media-breakpoint-down(md) {
-  .admin-page__header,
-  .admin-page__actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .admin-page__button {
-    width: 100%;
-  }
 }
 </style>

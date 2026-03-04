@@ -6,7 +6,7 @@ from app.schemas.inventory import ProductCreate, ProductUpdate
 
 
 def create_product(db: Session, payload: ProductCreate) -> Product:
-    product = Product(**payload.dict())
+    product = Product(**payload.model_dump())
     db.add(product)
     db.commit()
     db.refresh(product)
@@ -25,7 +25,7 @@ def update_product(db: Session, product_id: int, payload: ProductUpdate) -> Opti
     product = get_product(db, product_id)
     if not product:
         return None
-    data = payload.dict(exclude_unset=True)
+    data = payload.model_dump(exclude_unset=True)
     for key, value in data.items():
         setattr(product, key, value)
     db.commit()

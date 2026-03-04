@@ -6,7 +6,7 @@ from app.schemas.repair import RepairCreate, RepairUpdate
 
 
 def create_repair(db: Session, payload: RepairCreate) -> Repair:
-    data = payload.dict()
+    data = payload.model_dump()
     repair = Repair(**data)
     db.add(repair)
     db.commit()
@@ -26,7 +26,7 @@ def update_repair(db: Session, repair_id: int, payload: RepairUpdate) -> Optiona
     repair = get_repair(db, repair_id)
     if not repair:
         return None
-    data = payload.dict(exclude_unset=True)
+    data = payload.model_dump(exclude_unset=True)
     for key, value in data.items():
         setattr(repair, key, value)
     db.commit()

@@ -161,7 +161,7 @@ def update_item(item_id: int, data: ProductUpdate, db: Session = Depends(get_db)
 			)
 
 	# Actualizar solo campos proporcionados
-	update_data = data.dict(exclude_unset=True)
+	update_data = data.model_dump(exclude_unset=True)
 	for field, value in update_data.items():
 		if value is not None:
 			setattr(product, field, value)

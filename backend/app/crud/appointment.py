@@ -76,7 +76,7 @@ async def update_appointment(
     if not db_appointment:
         return None
     
-    update_data = appointment_update.dict(exclude_unset=True)
+    update_data = appointment_update.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(db_appointment, field, value)
     

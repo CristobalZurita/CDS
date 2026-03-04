@@ -1020,14 +1020,16 @@ header.foxy-header .btn-hero {
   color: $color-success;
 }
 
-// Source: src/vue/content/pages/PrivacyPage.vue
-.privacy-page {
+// Source: src/vue/content/pages/PrivacyPage.vue + src/vue/content/pages/TermsPage.vue
+.privacy-page,
+.terms-page {
   min-height: 100vh;
   background: linear-gradient(135deg, $legacy-slate-50 0%, $legacy-slate-200 100%);
   padding: 2rem 1rem;
 }
 
-.privacy-container {
+.privacy-container,
+.terms-container {
   max-width: 900px;
   margin: 0 auto;
   background: $white;
@@ -1036,75 +1038,89 @@ header.foxy-header .btn-hero {
   box-shadow: 0 8px 32px rgba($black, 0.1);
 }
 
-.privacy-header {
+.privacy-header,
+.terms-header {
   margin-bottom: 3rem;
   padding-bottom: 2rem;
   border-bottom: 2px solid $legacy-bluegray-200;
 }
 
-.privacy-header h1 {
+.privacy-header h1,
+.terms-header h1 {
   margin: 0 0 0.5rem 0;
   color: $legacy-slate-700;
 }
 
-.last-updated {
+.privacy-page .last-updated,
+.terms-page .last-updated {
   margin: 0;
   color: $legacy-slate-500;
   font-size: 0.9rem;
 }
 
-.privacy-content {
+.privacy-content,
+.terms-content {
   margin-bottom: 2rem;
 }
 
-.privacy-section {
+.privacy-section,
+.terms-section {
   margin-bottom: 2.5rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid $legacy-bluegray-200;
 }
 
-.privacy-section.last-section {
+.privacy-section.last-section,
+.terms-section.last-section {
   border-bottom: none;
 }
 
-.privacy-section h2 {
+.privacy-section h2,
+.terms-section h2 {
   margin: 0 0 1rem 0;
   color: $legacy-slate-700;
   font-size: 1.3rem;
 }
 
-.privacy-section h3 {
+.privacy-section h3,
+.terms-section h3 {
   margin: 1.5rem 0 0.75rem 0;
   color: $legacy-slate-600;
   font-size: 1.05rem;
 }
 
-.privacy-section p {
+.privacy-section p,
+.terms-section p {
   margin: 0 0 1rem 0;
   color: $legacy-slate-600;
   line-height: 1.7;
 }
 
-.privacy-section ul {
+.privacy-section ul,
+.terms-section ul {
   margin: 1rem 0;
   padding-left: 2rem;
 }
 
-.privacy-section li {
+.privacy-section li,
+.terms-section li {
   margin-bottom: 0.75rem;
   color: $legacy-slate-600;
   line-height: 1.6;
 }
 
 /* Actions */
-.actions {
+.privacy-page .actions,
+.terms-page .actions {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
 }
 
-.btn-back,
-.btn-next {
+.privacy-page .btn-back,
+.privacy-page .btn-next,
+.terms-page .btn-back,
+.terms-page .btn-next {
   padding: 0.875rem 1.75rem;
   border-radius: 8px;
   font-size: 1rem;
@@ -1118,44 +1134,50 @@ header.foxy-header .btn-hero {
   transition: all 0.2s;
 }
 
-.btn-back {
+.privacy-page .btn-back {
   background: $legacy-slate-100;
   color: $legacy-slate-600;
   border: 2px solid $legacy-bluegray-300;
 }
 
-.btn-back:hover {
+.privacy-page .btn-back:hover {
   background: $legacy-bluegray-200;
   border-color: $legacy-bluegray-400;
 }
 
-.btn-next {
+.privacy-page .btn-next,
+.terms-page .btn-next {
   background: linear-gradient(135deg, $legacy-green-primary, $legacy-green-dark);
   color: $white;
   box-shadow: 0 4px 12px rgba($legacy-green-primary, 0.3);
 }
 
-.btn-next:hover {
+.privacy-page .btn-next:hover {
   background: linear-gradient(135deg, $legacy-green-dark, $legacy-green-darker);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba($legacy-green-primary, 0.4);
 }
 
 @media (max-width: 768px) {
-  .privacy-container {
+  .privacy-container,
+  .terms-container {
     padding: 1.5rem;
   }
 
-  .privacy-header {
+  .privacy-header,
+  .terms-header {
     margin-bottom: 2rem;
   }
 
-  .actions {
+  .privacy-page .actions,
+  .terms-page .actions {
     flex-direction: column;
   }
 
-  .btn-back,
-  .btn-next {
+  .privacy-page .btn-back,
+  .privacy-page .btn-next,
+  .terms-page .btn-back,
+  .terms-page .btn-next {
     width: 100%;
     justify-content: center;
   }
@@ -2741,82 +2763,6 @@ canvas {
 }
 
 // Source: src/vue/content/pages/TermsPage.vue
-.terms-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, $legacy-slate-50 0%, $legacy-slate-200 100%);
-  padding: 2rem 1rem;
-}
-
-.terms-container {
-  max-width: 900px;
-  margin: 0 auto;
-  background: $white;
-  border-radius: 12px;
-  padding: 3rem 2rem;
-  box-shadow: 0 8px 32px rgba($black, 0.1);
-}
-
-.terms-header {
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid $legacy-bluegray-200;
-}
-
-.terms-header h1 {
-  margin: 0 0 0.5rem 0;
-  color: $legacy-slate-700;
-}
-
-.last-updated {
-  margin: 0;
-  color: $legacy-slate-500;
-  font-size: 0.9rem;
-}
-
-.terms-content {
-  margin-bottom: 2rem;
-}
-
-.terms-section {
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid $legacy-bluegray-200;
-}
-
-.terms-section.last-section {
-  border-bottom: none;
-}
-
-.terms-section h2 {
-  margin: 0 0 1rem 0;
-  color: $legacy-slate-700;
-  font-size: 1.3rem;
-}
-
-.terms-section h3 {
-  margin: 1.5rem 0 0.75rem 0;
-  color: $legacy-slate-600;
-  font-size: 1.05rem;
-}
-
-.terms-section p {
-  margin: 0 0 1rem 0;
-  color: $legacy-slate-600;
-  line-height: 1.7;
-}
-
-.terms-section ul {
-  margin: 1rem 0;
-  padding-left: 2rem;
-}
-
-.terms-section li {
-  margin-bottom: 0.75rem;
-  color: $legacy-slate-600;
-  line-height: 1.6;
-}
-
-/* Acceptance */
 .acceptance-box {
   padding: 1.5rem;
   background: $legacy-bg-light;
@@ -2840,74 +2786,26 @@ canvas {
   accent-color: $legacy-green-primary;
 }
 
-/* Actions */
-.actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-}
-
-.btn-back,
-.btn-next {
-  padding: 0.875rem 1.75rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s;
-}
-
-.btn-back {
+.terms-page .btn-back {
   background: $white;
   color: $legacy-slate-600;
   border: 2px solid $legacy-bluegray-300;
 }
 
-.btn-back:hover {
+.terms-page .btn-back:hover {
   background: $legacy-slate-100;
   border-color: $legacy-bluegray-400;
 }
 
-.btn-next {
-  background: linear-gradient(135deg, $legacy-green-primary, $legacy-green-dark);
-  color: $white;
-  box-shadow: 0 4px 12px rgba($legacy-green-primary, 0.3);
-}
-
-.btn-next:hover:not(:disabled) {
+.terms-page .btn-next:hover:not(:disabled) {
   background: linear-gradient(135deg, $legacy-green-dark, $legacy-green-darker);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba($legacy-green-primary, 0.4);
 }
 
-.btn-next:disabled {
+.terms-page .btn-next:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
-  .terms-container {
-    padding: 1.5rem;
-  }
-
-  .terms-header {
-    margin-bottom: 2rem;
-  }
-
-  .actions {
-    flex-direction: column;
-  }
-
-  .btn-back,
-  .btn-next {
-    width: 100%;
-    justify-content: center;
-  }
 }
 
 // Source: src/vue/content/sections/AboutSection.vue

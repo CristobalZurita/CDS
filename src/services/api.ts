@@ -39,8 +39,10 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
-  // Agregar User-Agent para tracking
-  config.headers['User-Agent'] = `CirujanoFront/${import.meta.env.VITE_APP_VERSION as string || '1.0.0'}`;
+  // Los navegadores bloquean sobrescribir User-Agent; solo adjuntarlo fuera del runtime web.
+  if (typeof window === 'undefined') {
+    config.headers['User-Agent'] = `CirujanoFront/${import.meta.env.VITE_APP_VERSION as string || '1.0.0'}`;
+  }
 
   return config;
 });

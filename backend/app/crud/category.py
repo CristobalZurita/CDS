@@ -25,7 +25,7 @@ def update_category(db: Session, category_id: int, payload: CategoryUpdate) -> O
     category = get_category(db, category_id)
     if not category:
         return None
-    data = payload.dict(exclude_unset=True)
+    data = payload.model_dump(exclude_unset=True)
     for key, value in data.items():
         setattr(category, key, value)
     db.commit()

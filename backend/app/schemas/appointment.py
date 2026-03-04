@@ -3,7 +3,7 @@ Pydantic schemas for Appointment API
 Request/Response validation and serialization
 """
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from typing import Optional
 from datetime import datetime
 import re
@@ -32,7 +32,8 @@ class AppointmentCreate(BaseModel):
     mensaje: Optional[str] = Field(None, max_length=1000)
     turnstile_token: Optional[str] = None
 
-    @validator('nombre')
+    @field_validator('nombre')
+    @classmethod
     def validate_nombre(cls, v):
         """Validate that nombre contains only letters, accents, and Ñ"""
         # Allow letters, accents, spaces, and Ñ
@@ -40,14 +41,16 @@ class AppointmentCreate(BaseModel):
             raise ValueError('El nombre solo puede contener letras, acentos y espacios')
         return v.strip()
 
-    @validator('telefono')
+    @field_validator('telefono')
+    @classmethod
     def validate_telefono(cls, v):
         """Validate that telefono starts with + and contains only numbers"""
         if not re.match(r"^\+\d+$", v):
             raise ValueError('El teléfono debe comenzar con + y solo contener números')
         return v.strip()
 
-    @validator('fecha')
+    @field_validator('fecha')
+    @classmethod
     def validate_fecha(cls, v):
         """Validate that fecha is in the future"""
         normalized = to_utc(v)
@@ -55,7 +58,8 @@ class AppointmentCreate(BaseModel):
             raise ValueError('La fecha debe ser en el futuro')
         return normalized
 
-    @validator('mensaje')
+    @field_validator('mensaje')
+    @classmethod
     def validate_mensaje(cls, v):
         """Clean up mensaje if provided"""
         if v:

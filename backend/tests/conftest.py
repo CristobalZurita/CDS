@@ -2,9 +2,11 @@ import os
 import asyncio
 import inspect
 import functools
+import uuid
 from pathlib import Path
 import logging
 import pytest
+import httpx
 from alembic.config import Config
 from alembic import command
 import sqlalchemy
@@ -315,3 +317,157 @@ def db():
         yield session
     finally:
         session.close()
+
+
+@pytest.fixture
+def test_client(app):
+    from fastapi.testclient import TestClient
+
+    with TestClient(app) as client:
+        yield client
+
+
+@pytest.fixture(scope="session")
+def live_api_url():
+    return os.getenv("BACKEND_TEST_BASE_URL", "http://127.0.0.1:8002")
+
+
+@pytest.fixture(scope="session")
+def live_api_available(live_api_url):
+    try:
+        response = httpx.get(f"{live_api_url}/health", timeout=5.0)
+        response.raise_for_status()
+    except Exception as exc:
+        pytest.skip(f"Live backend not available at {live_api_url}: {exc}")
+    return live_api_url
+
+
+@pytest.fixture
+def api_client(live_api_available):
+    with httpx.Client(base_url=live_api_available, timeout=20.0, follow_redirects=True) as client:
+        yield client
+
+
+@pytest.fixture
+def disable_turnstile(monkeypatch):
+    monkeypatch.setenv("TURNSTILE_DISABLE", "true")
+
+
+def _build_user_payload(role_id: int) -> dict:
+    slug = uuid.uuid4().hex[:10]
+    role_name = "admin" if role_id == 1 else "client"
+    return {
+        "email": f"{role_name}.{slug}@example.com",
+        "username": f"{role_name}_{slug}",
+        "password": f"{role_name}pass123",
+        "first_name": role_name.title(),
+        "last_name": f"Fixture {slug[:4]}",
+        "phone": f"+569{slug[:8]}",
+    }
+
+
+def _create_user(db, *, role_id: int):
+    from app.core.security import hash_password
+    from app.models.client import Client
+    from app.models.user import User
+
+    payload = _build_user_payload(role_id)
+    user = User(
+        email=payload["email"],
+        username=payload["username"],
+        hashed_password=hash_password(payload["password"]),
+        first_name=payload["first_name"],
+        last_name=payload["last_name"],
+        phone=payload["phone"],
+        role_id=role_id,
+        is_active=1,
+        is_verified=1,
+        two_factor_enabled=0,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    client = None
+    if role_id == 3:
+        client = Client(
+            user_id=user.id,
+            name=user.full_name,
+            email=user.email,
+            phone=user.phone,
+        )
+        db.add(client)
+        db.commit()
+        db.refresh(client)
+
+    return {
+        "user": user,
+        "client": client,
+        "password": payload["password"],
+        "email": payload["email"],
+        "username": payload["username"],
+    }
+
+
+@pytest.fixture
+def admin_account(db):
+    return _create_user(db, role_id=1)
+
+
+@pytest.fixture
+def customer_account(db):
+    return _create_user(db, role_id=3)
+
+
+@pytest.fixture
+def admin_token(admin_account):
+    from app.core.security import create_access_token
+
+    user = admin_account["user"]
+    return create_access_token(
+        data={
+            "sub": str(user.id),
+            "username": user.username,
+            "email": user.email,
+            "role": user.role,
+        }
+    )
+
+
+@pytest.fixture
+def customer_token(customer_account):
+    from app.core.security import create_access_token
+
+    user = customer_account["user"]
+    return create_access_token(
+        data={
+            "sub": str(user.id),
+            "username": user.username,
+            "email": user.email,
+            "role": user.role,
+        }
+    )
+
+
+@pytest.fixture
+def sample_ot(db, customer_account):
+    from app.services.repair_write_service import RepairWriteService
+
+    slug = uuid.uuid4().hex[:8]
+    client = customer_account["client"]
+    repair = RepairWriteService(db).create_repair(
+        {
+            "client_id": client.id,
+            "title": f"OT fixture {slug}",
+            "description": f"Problema fixture {slug}",
+            "payment_method": "transfer",
+            "paid_amount": 15000,
+        }
+    )
+    db.refresh(repair)
+    return {
+        "repair": repair,
+        "repair_id": repair.id,
+        "client": client,
+        "user": customer_account["user"],
+    }

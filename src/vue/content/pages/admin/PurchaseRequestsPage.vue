@@ -338,47 +338,7 @@ watch(
 onMounted(loadRequests)
 </script>
 
-<style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
-.purchase-page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacer-md);
-}
-
-.purchase-page__header,
-.purchase-page__actions,
-.purchase-page__notice,
-.purchase-page__row-actions {
-  display: flex;
-  gap: var(--spacer-sm);
-  flex-wrap: wrap;
-}
-
-.purchase-page__header,
-.purchase-page__notice {
-  align-items: center;
-  justify-content: space-between;
-}
-
-.purchase-page__title {
-  margin: 0;
-  color: var(--color-dark);
-  font-size: var(--text-xl);
-  font-weight: 700;
-}
-
-.purchase-page__panel,
-.purchase-page__notice,
-.purchase-page__alert {
-  padding: var(--spacer-md);
-  background: var(--color-white);
-  border: 1px solid var(--color-light);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-}
-
+<style scoped>
 .purchase-page__notice {
   background: color-mix(in srgb, var(--color-white) 85%, var(--color-info) 15%);
 }
@@ -386,30 +346,6 @@ onMounted(loadRequests)
 .purchase-page__alert {
   color: var(--color-dark);
   background: color-mix(in srgb, var(--color-white) 86%, var(--color-warning) 14%);
-}
-
-.purchase-page__table-wrap {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.purchase-page__table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.purchase-page__table th,
-.purchase-page__table td {
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--color-light);
-  text-align: left;
-  vertical-align: top;
-  color: var(--color-dark);
-  font-size: var(--text-sm);
-}
-
-.purchase-page__table th {
-  font-weight: 700;
 }
 
 .purchase-page__client-name {
@@ -444,53 +380,6 @@ onMounted(loadRequests)
   gap: 0.45rem;
 }
 
-.purchase-page__input,
-.purchase-page__select {
-  width: 100%;
-  min-height: 40px;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--color-light);
-  border-radius: var(--radius-sm);
-  background: var(--color-white);
-  color: var(--color-dark);
-  font-size: var(--text-sm);
-}
-
-.purchase-page__button {
-  min-height: 40px;
-  padding: 0.65rem 0.95rem;
-  border: 0;
-  border-radius: var(--radius-sm);
-  color: var(--color-white);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  cursor: pointer;
-  transition: var(--transition-base);
-}
-
-.purchase-page__button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-
-.purchase-page__button:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
-
-.purchase-page__button--primary,
-.purchase-page__button--success {
-  background: var(--color-primary);
-}
-
-.purchase-page__button--secondary {
-  background: var(--color-dark);
-}
-
-.purchase-page__button--danger {
-  background: var(--color-danger);
-}
-
 .purchase-page__link {
   color: var(--color-primary);
   font-weight: 600;
@@ -499,19 +388,5 @@ onMounted(loadRequests)
 
 .purchase-page__link:hover {
   text-decoration: underline;
-}
-
-@include media-breakpoint-down(md) {
-  .purchase-page__header,
-  .purchase-page__actions,
-  .purchase-page__notice,
-  .purchase-page__row-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .purchase-page__button {
-    width: 100%;
-  }
 }
 </style>

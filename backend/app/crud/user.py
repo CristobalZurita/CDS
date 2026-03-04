@@ -50,7 +50,7 @@ def update_user(db: Session, user_id: int, payload: UserUpdate) -> Optional[User
     user = get_user(db, user_id)
     if not user:
         return None
-    data = payload.dict(exclude_unset=True)
+    data = payload.model_dump(exclude_unset=True)
     if "full_name" in data:
         first_name, last_name = _split_full_name(data.pop("full_name"))
         user.first_name = first_name

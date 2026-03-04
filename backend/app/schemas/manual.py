@@ -1,7 +1,7 @@
 """
 Pydantic schemas for manual documents.
 """
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 from datetime import datetime
 
@@ -15,6 +15,8 @@ class ManualCreate(BaseModel):
 
 
 class ManualOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     instrument_id: int
     title: str
@@ -23,6 +25,3 @@ class ManualOut(BaseModel):
     file_path: Optional[str]
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True

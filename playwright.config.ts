@@ -58,6 +58,7 @@ export default defineConfig({
         ...webServerEnv,
         PLAYWRIGHT_API_PORT: apiPort,
         PLAYWRIGHT_FRONTEND_PORT: frontendPort,
+        LOG_LEVEL: 'WARNING',
       },
     },
     {

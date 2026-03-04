@@ -85,8 +85,6 @@ function onVerify(token) {
 </script>
 
 <style scoped lang="scss">
-@use "@/scss/_core.scss" as *;
-
 .register-page {
   min-height: 100vh;
   padding: clamp(1.5rem, 4vw, 3rem);
@@ -125,103 +123,11 @@ h1 {
   font-weight: 700;
 }
 
-.register-form {
-  display: grid;
-  gap: var(--spacer-md);
-}
-
-.form-group {
-  display: grid;
-  gap: 0.4rem;
-}
-
-label {
-  color: var(--color-dark);
-  font-size: var(--text-sm);
-  font-weight: 700;
-}
-
-input {
-  width: 100%;
-  min-height: 46px;
-  padding: 0.75rem 0.9rem;
-  border: 1px solid var(--color-light);
-  border-radius: var(--radius-sm);
-  background: var(--color-white);
-  color: var(--color-dark);
-  font-size: var(--text-sm);
-}
-
-.password-field {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.55rem;
-  align-items: center;
-}
-
-.toggle-password,
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  padding: 0.7rem 1rem;
-  border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  cursor: pointer;
-  transition: var(--transition-base);
-}
-
-.toggle-password {
-  border: 1px solid var(--color-light);
-  background: var(--color-white);
-  color: var(--color-dark);
-}
-
-.btn {
-  border: 0;
-}
-
-.toggle-password:hover,
-.btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-
-.btn:disabled {
-  opacity: 0.65;
-  cursor: wait;
-}
-
-.btn-primary {
-  background: var(--color-primary);
-  color: var(--color-white);
-}
-
-.alert {
-  padding: 0.85rem 1rem;
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--color-white) 86%, var(--color-danger) 14%);
-  color: var(--color-dark);
-}
-
 .muted {
   margin: 1.5rem 0 0;
   color: var(--color-dark);
   opacity: 0.8;
   font-size: var(--text-sm);
   text-align: center;
-}
-
-@include media-breakpoint-down(md) {
-  .password-field {
-    grid-template-columns: 1fr;
-  }
-
-  .toggle-password,
-  .btn {
-    width: 100%;
-  }
 }
 </style>

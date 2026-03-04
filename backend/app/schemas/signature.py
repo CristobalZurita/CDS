@@ -1,7 +1,7 @@
 """
 Pydantic schemas for signature requests.
 """
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 from datetime import datetime
 
@@ -18,6 +18,8 @@ class SignatureSubmit(BaseModel):
 
 
 class SignatureRequestOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     repair_id: int
     request_type: str
@@ -26,6 +28,3 @@ class SignatureRequestOut(BaseModel):
     created_at: datetime
     signed_at: Optional[datetime]
     expires_at: Optional[datetime]
-
-    class Config:
-        from_attributes = True

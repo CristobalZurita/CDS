@@ -1,7 +1,7 @@
 """
 Pydantic schemas para usuarios
 """
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from typing import Optional
 from datetime import datetime
 
@@ -28,18 +28,17 @@ class UserUpdate(BaseModel):
 
 class UserResponse(BaseModel):
     """Schema para respuesta de usuario (sin contraseña)"""
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     email: str
-    username: str
+    username: Optional[str] = None
     full_name: str
     phone: Optional[str]
     role: str
     is_active: bool
     created_at: datetime
     
-    class Config:
-        from_attributes = True
-
 
 class UserDetailResponse(UserResponse):
     """Detalle completo del usuario"""

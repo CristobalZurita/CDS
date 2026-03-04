@@ -1,7 +1,7 @@
 """
 Pydantic schemas for purchase requests (cart/suggestions).
 """
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional, List
 from datetime import datetime
 
@@ -23,6 +23,8 @@ class PurchaseRequestCreate(BaseModel):
 
 
 class PurchaseRequestItemOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     request_id: int
     product_id: Optional[int]
@@ -34,11 +36,10 @@ class PurchaseRequestItemOut(BaseModel):
     external_url: Optional[str]
     status: str
 
-    class Config:
-        from_attributes = True
-
 
 class PurchaseRequestOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     client_id: Optional[int]
     repair_id: Optional[int]
@@ -48,6 +49,3 @@ class PurchaseRequestOut(BaseModel):
     created_at: datetime
     updated_at: datetime
     items: List[PurchaseRequestItemOut] = []
-
-    class Config:
-        from_attributes = True

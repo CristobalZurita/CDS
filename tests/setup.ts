@@ -44,6 +44,11 @@ vi.mock('dompurify', () => ({
 // Mock axios
 vi.mock('axios', () => ({
   default: {
+    isAxiosError: vi.fn((error) => Boolean(
+      error &&
+      typeof error === 'object' &&
+      ('isAxiosError' in error || 'response' in error || 'config' in error)
+    )),
     create: vi.fn().mockReturnValue({
       get: vi.fn(),
       post: vi.fn(),
