@@ -393,8 +393,9 @@ const submitQuote = () => {
 
 const downloadQuote = () => {
   const data = diagnostic.getQuoteData()
+  const quote = data?.diagnostics?.quote
   
-  if (!data || !data.client) {
+  if (!data || !data.client || !quote) {
     alert('Error: No hay datos de cotización para descargar')
     return
   }
@@ -405,22 +406,22 @@ COTIZACIÓN - CIRUJANO DE SINTETIZADORES
 ========================================
 
 CLIENTE:
-Nombre: ${data.client.clientName}
-Email: ${data.client.clientEmail}
-Teléfono: ${data.client.clientPhone || 'No proporcionado'}
+Nombre: ${data.client.name}
+Email: ${data.client.email}
+Teléfono: ${data.client.phone || 'No proporcionado'}
 
 EQUIPO:
-Marca: ${data.quote.brand.name}
-Modelo: ${data.quote.instrument.model}
+Marca: ${quote.brand?.name || data.equipment.brand}
+Modelo: ${quote.instrument?.model || data.equipment.model}
 
 PROBLEMAS DETECTADOS:
-${data.quote.faults.map(f => `- ${f.name}: $${f.basePrice}`).join('\n')}
+${quote.faults.map(f => `- ${f.name}: $${f.basePrice}`).join('\n')}
 
 COTIZACIÓN:
-Subtotal: $${data.quote.baseCost}
-Factor complejidad (${data.quote.brand.tier}): ${data.quote.complexityFactor}x
-Factor valor equipo: ${data.quote.valueFactor}x
-TOTAL: $${data.quote.finalCost}
+Subtotal: $${quote.baseCost}
+Factor complejidad (${quote.brand?.tier || 'standard'}): ${quote.complexityFactor}x
+Factor valor equipo: ${quote.valueFactor}x
+TOTAL: $${quote.finalCost}
 
 Válida por: 30 días
 Fecha: ${new Date().toLocaleDateString('es-CL')}
@@ -431,7 +432,7 @@ Fecha: ${new Date().toLocaleDateString('es-CL')}
   const url = window.URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
-  link.download = `cotizacion-${data.client.clientName.replace(/\\s+/g, '-')}.txt`
+  link.download = `cotizacion-${data.client.name.replace(/\s+/g, '-')}.txt`
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
