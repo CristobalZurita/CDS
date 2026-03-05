@@ -57,6 +57,7 @@ venv/
 ENV/
 env/
 .venv
+backend/.venv/
 
 # Database
 *.db
@@ -72,4 +73,3 @@ env/
 # OS
 .DS_Store
 Thumbs.db
-
