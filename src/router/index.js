@@ -42,6 +42,7 @@ import PurchaseRequestsPage from '@/vue/content/pages/admin/PurchaseRequestsPage
 import ArchivePage from '@/vue/content/pages/admin/ArchivePage.vue'
 import SignaturePage from '@/vue/content/pages/SignaturePage.vue'
 import PhotoUploadPage from '@/vue/content/pages/PhotoUploadPage.vue'
+import NotFoundPage from '@/vue/content/pages/NotFoundPage.vue'
 
 const routes = [
   // Public routes
@@ -290,7 +291,8 @@ const routes = [
   // 404 - Ruta no encontrada
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/'
+    name: 'not-found',
+    component: NotFoundPage
   }
 ]
 
