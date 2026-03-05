@@ -85,6 +85,12 @@ En la pasada mas reciente se agrego ademas una consolidacion estructural de calc
 - [src/stores/diagnostics.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/diagnostics.js) (wrapper JS -> TS)
 - [src/stores/stockMovements.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/stockMovements.js) (wrapper JS -> TS)
 - [src/stores/shopCart.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/shopCart.js) (wrapper JS -> TS)
+- [src/services/secureMedia.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/services/secureMedia.js) (wrapper JS -> TS)
+- [src/services/toastService.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/services/toastService.js) (wrapper JS -> TS)
+- [tests/unit/services/secureMedia.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/secureMedia.test.ts)
+- [tests/unit/services/toastService.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/toastService.test.ts)
+- [tests/unit/dashboard/DashboardComponents.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/dashboard/DashboardComponents.test.ts)
+- [tests/unit/articles/ArticleBlocks.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/articles/ArticleBlocks.test.ts)
 
 ### Reportes
 
@@ -152,12 +158,12 @@ Resultados:
 
 - `npm run build` -> OK
 - `npm run test:coverage` -> ejecuta y genera reporte, pero falla por thresholds globales
-  - `58` test files
-  - `273 passed`
+  - `62` test files
+  - `291 passed`
   - coverage total:
-    - lines/statements: `64.07%`
-    - functions: `56.62%`
-    - branches: `66.59%`
+    - lines/statements: `66.08%`
+    - functions: `59.45%`
+    - branches: `67.24%`
 - `cd backend && .venv/bin/python -m pytest -q` -> OK
   - `66 passed`
   - `14 skipped`
@@ -186,5 +192,5 @@ Si se sigue esta misma estrategia, el siguiente paso de bajo riesgo es:
 - reauditar paginas publicas mas amplias fuera de auth
 - seguir consolidando solo duplicaciones comprobables
 - subir cobertura en `src/views/*` y `src/vue/components/admin/*` que siguen como deuda mayor
-- revisar convergencia de capas de servicios JS/TS que siguen duplicadas
+- profundizar cobertura en bloques admin/articles/dashboard que siguen con mayor superficie en cero
 - recien despues marcar candidatos a SCSS muerto con evidencia

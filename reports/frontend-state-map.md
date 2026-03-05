@@ -31,7 +31,7 @@ Estado auditado despues de la pasada progresiva del 2026-03-04 (actualizado al c
 ### Hibrido con deuda visible
 
 - los modulos grandes en [src/modules](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/modules) ya tienen cobertura de componente, pero siguen con deuda de complejidad visual/canvas
-- duplicidad residual JS/TS en parte de `services/*` y en pares JS/TS legacy no unificados por contrato
+- duplicidad residual JS/TS concentrada en wrappers legacy intencionales; `services/secureMedia` y `services/toastService` ya convergidos a capa TS
 - superficies grandes sin test en varias capas admin/articles/dashboard, aunque `src/views/*` ya tiene cobertura base
 
 ## Foto por cluster
@@ -99,33 +99,41 @@ Estado auditado despues de la pasada progresiva del 2026-03-04 (actualizado al c
   - [src/stores/diagnostics.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/diagnostics.js)
   - [src/stores/stockMovements.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/stockMovements.js)
   - [src/stores/shopCart.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/stores/shopCart.js)
+- Se extendio convergencia JS/TS en services con wrappers aditivos JS -> TS:
+  - [src/services/secureMedia.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/services/secureMedia.js)
+  - [src/services/toastService.js](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src/services/toastService.js)
 - Se agrego cobertura nueva para `src/views/*` y admin base de bajo riesgo:
   - [tests/unit/views/HomeView.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/views/HomeView.test.ts)
   - [tests/unit/views/InstrumentDetail.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/views/InstrumentDetail.test.ts)
   - [tests/unit/views/InventoryUnified.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/views/InventoryUnified.test.ts)
   - [tests/unit/views/ErrorDashboard.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/views/ErrorDashboard.test.ts)
   - [tests/unit/admin/BasicAdminComponents.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/admin/BasicAdminComponents.test.ts)
+- Se agrego cobertura nueva para services convergidos y bloques UI sin cobertura:
+  - [tests/unit/services/secureMedia.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/secureMedia.test.ts)
+  - [tests/unit/services/toastService.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/services/toastService.test.ts)
+  - [tests/unit/dashboard/DashboardComponents.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/dashboard/DashboardComponents.test.ts)
+  - [tests/unit/articles/ArticleBlocks.test.ts](/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/tests/unit/articles/ArticleBlocks.test.ts)
 
 ## Estado medible actual
 
 - `npm run build` -> OK
 - `npm run test -- --run tests/unit/modules` -> `26 passed`
 - `npm run test:coverage` -> ejecuta la suite y genera reporte, pero termina en `exit 1` por thresholds globales
-  - `58` archivos de test
-  - `273 passed`
-  - lines/statements: `64.07%`
-  - functions: `56.62%`
-  - branches: `66.59%`
+  - `62` archivos de test
+  - `291 passed`
+  - lines/statements: `66.08%`
+  - functions: `59.45%`
+  - branches: `67.24%`
 - `cd backend && .venv/bin/python -m pytest -q` -> `66 passed`, `14 skipped`, `1 warning`
 - `bash scripts/run_tests.sh` -> `backend: PASS`, `playwright: PASS`
 
 ## Riesgos reales que siguen abiertos
 
-- `npm run test:coverage` no puede considerarse verde mientras existan thresholds globales de `90/90/85/90` con cobertura real de `64.07/56.62/66.59/64.07`.
-- La duplicidad JS/TS se redujo en stores/composables principales incluyendo utilitarios (`emails/layout/scheduler/utils`), pero sigue deuda en capas de servicios y módulos admin/articles de gran superficie.
+- `npm run test:coverage` no puede considerarse verde mientras existan thresholds globales de `90/90/85/90` con cobertura real de `66.08/59.45/67.24/66.08`.
+- La duplicidad JS/TS se redujo en stores/composables principales y en services (`secureMedia`/`toastService`), pero sigue deuda fuerte de cobertura en superficies admin/articles amplias.
 
 ## Siguiente corte natural
 
-- revisar convergencia gradual de `services/*` donde siga habiendo doble capa JS/TS
-- seguir cobertura en `src/vue/components/admin/*`, `src/vue/components/articles/*` y `src/vue/components/dashboard/*` (los mayores bloques en 0%)
+- profundizar cobertura de `src/vue/components/admin/*` y `src/vue/content/pages/admin/*` (la mayor superficie en 0%)
+- extender cobertura en `src/vue/components/articles/*` remanentes (`ArticleQuotes`, `DiagnosticWizard`, `ItemQuote`)
 - recien despues decidir si conviene extraer mas shell comun de calculadoras, por ejemplo el bloque de retorno a `/calculadoras`

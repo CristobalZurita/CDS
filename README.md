@@ -413,12 +413,14 @@ cd backend
 
 ### What is actually covered
 
-- `tests/unit/` currently contains 45 files:
+- `tests/unit/` currently contains 49 files:
   - admin pages/components: 9
+  - articles: 1
   - auth UI: 2
   - client pages: 6
   - generic component specs: 2
   - composables: 1
+  - dashboard: 1
   - domain models: 1
   - footer: 1
   - layout helpers: 1
@@ -426,7 +428,7 @@ cd backend
   - modules (wrappers + full calculator views): 5
   - public pages: 4
   - router guard: 1
-  - services: 4
+  - services: 6
   - store pages/widgets: 2
   - Pinia store specs: 1
   - views: 4
@@ -452,12 +454,12 @@ Observed in this workspace on 2026-03-04:
 
 - `npm run test:coverage`
   - Result: ⚠️ report generated, command exits non-zero because global thresholds fail
-  - Test files: `58`
-  - Tests: `273 passed`
+  - Test files: `62`
+  - Tests: `291 passed`
   - Coverage summary from `coverage/coverage-summary.json`:
-    - lines/statements: `64.07%`
-    - functions: `56.62%`
-    - branches: `66.59%`
+    - lines/statements: `66.08%`
+    - functions: `59.45%`
+    - branches: `67.24%`
   - Threshold failure:
     - lines/statements require `90%`
     - functions require `90%`
@@ -484,7 +486,7 @@ Observed in this workspace on 2026-03-04:
 | `.env.example` and `backend/.env.example` now cover the audited runtime keys, but they still mix active settings with legacy placeholders not wired into the current hot path (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`). | Medium | Open |
 | Repository hygiene is stronger after the 2026-03-04 history rewrite, but CI/test infrastructure still uses intentionally public low-entropy test defaults such as `test-secret` and `test-refresh-secret`. They are test-only values and must never be reused outside isolated test flows. | Medium | Open |
 | Frontend auth is internally mixed: `src/services/api.ts` is cookie/CSRF-ready, but the actual login flow stores JWTs in `localStorage`, and account deletion is not implemented in backend. | High | Open |
-| Frontend coverage report improves to `64.07%` line coverage (`56.62%` functions, `66.59%` branches), but `npm run test:coverage` still fails by design because global thresholds remain at `90/90/85/90`; calculator modules are covered end-to-end in `tests/unit/modules`, while major debt remains in admin/public/articles surfaces and residual JS/TS duplication in services/capas legacy. | High | Open |
+| Frontend coverage report improves to `66.08%` line coverage (`59.45%` functions, `67.24%` branches), but `npm run test:coverage` still fails by design because global thresholds remain at `90/90/85/90`; calculator modules are covered end-to-end in `tests/unit/modules`, while major debt remains in admin/public/articles surfaces and in non-covered utility/composable layers. | High | Open |
 | `bash scripts/run_tests.sh` cannot produce backend coverage today because `pytest-cov` is not installed in `backend/.venv`; it falls back to plain `pytest`. | Medium | Open |
 | Signature expiry contract is inconsistent: `SignatureRequestCreate.expires_minutes` defaults to `15`, but `backend/app/routers/signature.py` clamps the real expiry to `5` minutes maximum. | Medium | Open |
 | `src/vue/components/articles/DiagnosticWizard.vue` still has `TODO: Generate PDF`; current implementation only generates CSV. | Medium | Open |
