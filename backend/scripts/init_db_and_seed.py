@@ -82,13 +82,13 @@ async def main(allow_default_credentials: bool):
             label="test user",
             env_var="SEED_TEST_PASSWORD",
             allow_default=allow_default_credentials,
-            default_value="test12",
+            default_value=None,
         )
         admin_password = _require_password(
             label="admin user",
             env_var="SEED_ADMIN_PASSWORD",
             allow_default=allow_default_credentials,
-            default_value="admin12",
+            default_value=None,
         )
 
         existing_user = db.query(User).filter(User.email == "test@example.com").first()
