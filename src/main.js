@@ -1,6 +1,7 @@
 // SASS Architecture - main.scss es el nuevo entry point
 // Si hay problemas, cambiar a: import "./scss/style.scss"
 import "./scss/main.scss"
+import "./assets/styles/tokens.css"
 import { createApp } from "vue"
 import { createPinia } from "pinia"
 import App from "/src/vue/stack/App.vue"

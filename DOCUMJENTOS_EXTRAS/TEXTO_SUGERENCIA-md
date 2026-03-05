@@ -1,0 +1,162 @@
+# PROMPT COMPLETO PARA CODEX - CIRUJANO DE SINTETIZADORES
+# Pegar directo en VSC Codex terminal
+
+## CONTEXTO DEL PROYECTO
+Aplicación web fullstack para taller de reparación de sintetizadores.
+Root: /mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN
+Venv: ./venv (SIEMPRE activar desde root, nunca usar backend/.venv)
+Backend: FastAPI + SQLAlchemy + SQLite
+Frontend: Vue 3 + Vite + Pinia
+
+## ARQUITECTURA CONFIRMADA (no tocar)
+- backend/app/api/v1/endpoints/auth.py → 8 endpoints completos ✓
+- backend/app/api/v1/router.py → registra auth.router ✓
+- backend/app/core/security.py → JWT + bcrypt funcionando ✓
+- backend/app/schemas/auth.py → LoginRequest, RegisterRequest, Token ✓
+- backend/app/models/user.py → role es @property via FK a user_roles (1=admin, 2=technician, 3=client)
+- src/stores/auth.ts → store Pinia completo ✓
+- src/services/api.ts → axios con interceptors ✓
+
+## PROBLEMA RAÍZ CONFIRMADO
+dependencies.py tiene un fallback hardcodeado que devuelve usuario falso
+cuando el token falla, en lugar de lanzar 401. Esto enmascara todos los
+errores de autenticación en el frontend.
+
+---
+
+## TAREA 1 — ARREGLO CRÍTICO (confirmado, hacer primero)
+
+Archivo: backend/app/core/dependencies.py
+Buscar el bloque que contiene:
+  return {"user_id": "1", "role": "client"}
+Reemplazar por:
+  raise HTTPException(status_code=401, detail="Token inválido o expirado")
+
+Asegurarse de que HTTPException esté importado arriba del archivo.
+No tocar nada más en ese archivo.
+
+---
+
+## TAREA 2 — SEED DE BASE DE DATOS (confirmado necesario)
+
+Crear: backend/scripts/seed_admin.py
+
+El script debe:
+1. Verificar/crear tabla user_roles con registros base:
+   - id=1, name="admin"
+   - id=2, name="technician"  
+   - id=3, name="client"
+   Usar patrón check-before-insert (no INSERT OR IGNORE, usar SQLAlchemy ORM)
+
+2. Crear usuarios de prueba si no existen:
+   Admin:
+     email=admin@test.com, username=admin
+     password=$SEED_ADMIN_PASSWORD, role="admin"
+     is_active=1, is_verified=1
+   Cliente:
+     email=cliente@test.com, username=cliente
+     password=$SEED_TEST_PASSWORD, role="client"
+     is_active=1, is_verified=1
+   Técnico (SUGERIDO — el sistema tiene rol technician):
+     email=tecnico@test.com, username=tecnico
+     password=$SEED_TEST_PASSWORD, role="technician"
+     is_active=1, is_verified=1
+
+3. Imprimir resultado con id, email y role de cada usuario creado
+
+Importar desde: app.core.database.SessionLocal, app.core.security.hash_password,
+app.models.user.User, app.models.user.UserRole
+
+---
+
+## TAREA 3 — ARCHIVOS .ENV (verificar y crear si faltan)
+
+backend/.env:
+  SECRET_KEY=REPLACE_WITH_RANDOM_64_HEX
+  ENVIRONMENT=development
+  TURNSTILE_DISABLE=true
+  VITE_TURNSTILE_DISABLE=true
+  DATABASE_URL=sqlite:///./cirujano.db
+  ALLOW_TOKEN_IN_RESPONSE=true
+  ENFORCE_CSRF=false
+  ENABLE_API_DOCS=true
+  ALLOWED_ORIGINS=["http://localhost:5173","http://localhost:5174","http://127.0.0.1:5173","http://127.0.0.1:5174"]
+
+.env (root del proyecto):
+  VITE_API_URL=http://localhost:8000/api/v1
+  VITE_TURNSTILE_DISABLE=true
+  VITE_APP_VERSION=1.0.0
+
+---
+
+## TAREA 4 — VERIFICACIÓN END TO END
+
+Ejecutar en orden después de las tareas anteriores:
+
+# Paso 1: seed
+cd backend && python scripts/seed_admin.py
+
+# Paso 2: test login
+curl -s -X POST http://localhost:8000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d "{\"email\":\"admin@test.com\",\"password\":\"$SEED_ADMIN_PASSWORD\"}" | python3 -m json.tool
+
+# Paso 3: guardar token y testear /me
+TOKEN=$(curl -s -X POST http://localhost:8000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d "{\"email\":\"admin@test.com\",\"password\":\"$SEED_ADMIN_PASSWORD\"}" | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
+
+curl -s http://localhost:8000/api/v1/auth/me \
+  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
+
+# Resultado esperado /me:
+# { "id": 1, "email": "admin@test.com", "username": "admin", "role": "admin", ... }
+
+---
+
+## TAREA 5 — SUGERIDA (proyección lógica del sistema)
+
+El sistema tiene UserResponse schema y el frontend espera estos campos en /me:
+  id, email, username, full_name, role, is_active, permissions (array)
+
+VERIFICAR que backend/app/schemas/user.py → UserResponse incluye campo "permissions"
+Si no existe, agregar:
+  permissions: list[str] = []
+
+Y en /me endpoint de auth.py, si user_obj no tiene .permissions, devolver lista vacía.
+Esto previene que src/stores/auth.ts crashee en hasPermission().
+
+---
+
+## TAREA 6 — SUGERIDA (proyección: CORS en producción futura)
+
+En backend/app/core/config.py verificar que settings.allowed_origins
+acepta string JSON o lista Python. Si solo acepta uno de los dos formatos,
+puede romper al cambiar entornos. Agregar validator Pydantic si es necesario.
+
+---
+
+## ORDEN DE EJECUCIÓN FINAL
+
+Terminal 1 (backend):
+  cd /mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN
+  source venv/bin/activate
+  cd backend
+  python scripts/seed_admin.py
+  uvicorn app.main:app --port 8000 --reload
+
+Terminal 2 (frontend):
+  cd /mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN
+  source venv/bin/activate
+  npm run dev
+
+Browser: http://localhost:5173
+Login con: admin@test.com / $SEED_ADMIN_PASSWORD
+
+## LO QUE NO TOCAR BAJO NINGUNA CIRCUNSTANCIA
+- backend/app/api/v1/endpoints/auth.py
+- backend/app/api/v1/router.py
+- backend/app/schemas/auth.py
+- src/stores/auth.ts
+- src/services/api.ts
+- backend/app/core/security.py
