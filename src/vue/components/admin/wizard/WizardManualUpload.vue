@@ -12,7 +12,7 @@
         <div class="form-grid">
           <div>
             <label>Instrumento</label>
-            <select v-model="form.instrument_id" class="form-select">
+            <select v-model="form.instrument_id" class="form-select" data-testid="manual-instrument">
               <option :value="null">Selecciona</option>
               <option v-for="inst in instruments" :key="inst.id" :value="inst.id">
                 {{ inst.brand?.name || '' }} {{ inst.model }}
@@ -21,7 +21,7 @@
           </div>
           <div>
             <label>Título</label>
-            <input v-model="form.title" class="form-control" placeholder="Manual de servicio" />
+            <input v-model="form.title" class="form-control" data-testid="manual-title" placeholder="Manual de servicio" />
           </div>
         </div>
       </div>
@@ -31,11 +31,11 @@
         <div class="form-grid">
           <div>
             <label>URL externa (opcional)</label>
-            <input v-model="form.url" class="form-control" placeholder="https://..." />
+            <input v-model="form.url" class="form-control" data-testid="manual-url" placeholder="https://..." />
           </div>
           <div>
             <label>Archivo (PDF/Imagen)</label>
-            <input type="file" class="form-control" @change="onFileChange" />
+            <input type="file" class="form-control" data-testid="manual-file" @change="onFileChange" />
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
           <div><strong>Título:</strong> {{ form.title }}</div>
           <div><strong>Fuente:</strong> {{ form.url ? 'URL' : file ? 'Archivo' : 'Sin fuente' }}</div>
         </div>
-        <div v-if="result" class="alert alert-success mt-3">Manual creado: #{{ result.id }}</div>
+        <div v-if="result" class="alert alert-success mt-3" data-testid="manual-result">Manual creado: #{{ result.id }}</div>
       </div>
     </template>
   </WizardShell>
@@ -130,20 +130,3 @@ const handlePrev = () => {
 
 onMounted(loadInstruments)
 </script>
-
-<style scoped>
-.wizard-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-}
-.summary-grid {
-  display: grid;
-  gap: 0.5rem;
-}
-</style>

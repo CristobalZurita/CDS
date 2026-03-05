@@ -1,7 +1,7 @@
 """
 Modelo Repair para gestionar reparaciones - Alineado con schema real de cirujano.db
 """
-from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Text, Date
+from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Text, Date, UniqueConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.core.database import Base
@@ -25,6 +25,9 @@ class Repair(Base):
     """Modelo de reparación - coincide con schema real de cirujano.db"""
 
     __tablename__ = "repairs"
+    __table_args__ = (
+        UniqueConstraint("ot_parent_id", "ot_sequence", name="uq_repairs_ot_parent_sequence"),
+    )
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     repair_number = Column(String, unique=True, nullable=False)
@@ -32,6 +35,8 @@ class Repair(Base):
     quote_id = Column(Integer, ForeignKey("quotes.id"), nullable=True)
     status_id = Column(Integer, ForeignKey("repair_statuses.id"), nullable=False, default=1, index=True)
     assigned_to = Column(Integer, ForeignKey("users.id"), nullable=True)
+    ot_parent_id = Column(Integer, ForeignKey("repairs.id"), nullable=True, index=True)
+    ot_sequence = Column(Integer, nullable=True)
 
     # Fechas del proceso
     intake_date = Column(DateTime, default=datetime.utcnow)
@@ -84,6 +89,9 @@ class Repair(Base):
     invoices = relationship("Invoice", back_populates="repair")  # ADITIVO
     warranty = relationship("Warranty", back_populates="repair", uselist=False)  # ADITIVO
     signature_requests = relationship("SignatureRequest", back_populates="repair", cascade="all, delete-orphan")
+    intake_sheet = relationship("RepairIntakeSheet", back_populates="repair", uselist=False, cascade="all, delete-orphan")
+    ot_parent = relationship("Repair", remote_side=[id], back_populates="ot_children", foreign_keys=[ot_parent_id])
+    ot_children = relationship("Repair", back_populates="ot_parent", foreign_keys=[ot_parent_id])
 
     @property
     def status(self):

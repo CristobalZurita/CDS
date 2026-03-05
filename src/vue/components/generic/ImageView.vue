@@ -67,7 +67,7 @@ const _onImageLoadError = () => {
         const currentSrc = img.value?.getAttribute('src') || props.src
         if (currentSrc && currentSrc.includes('/images/instrumentos/') && !currentSrc.includes('-fallback')) {
             // Attempt a single fallback to an agency logo
-            const fallback = '/images/logo/agency-logo.png'
+            const fallback = '/images/logo/agency-logo.webp'
             if (img.value) img.value.setAttribute('src', fallback)
             loadStatus.value = LoadStatus.LOADING
             return
@@ -88,40 +88,3 @@ defineExpose({
     isLoading
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-div.image-view {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-img.image {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain;
-    max-height: 100%;
-}
-
-img.spinner {
-    position: absolute;
-}
-
-div.image-not-found-fallback {
-    background-color: rgba(black, 0.2);
-    border-radius: 20px;
-
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    color: $light-2;
-}
-</style>

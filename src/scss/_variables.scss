@@ -1,3 +1,4 @@
+@use "sass:color";
 /** Font Awesome webfonts path **/
 $fa-font-path:"@fortawesome/fontawesome-free/webfonts";
 
@@ -23,14 +24,138 @@ $vintage-black: #3e3c38;     // Textos oscuros
 $orange-primary: #ec6b00;    // Naranja principal
 $orange-pastel: #e8935a;     // Naranja pastel suave (como logo)
 
+/** Legacy Status Tones (para migrar hardcoded) **/
+$status-info-legacy: #17a2b8;
+$status-success-legacy: #28a745;
+$status-teal-legacy: #20c997;
+$status-secondary-legacy: #6c757d;
+$status-danger-legacy: #dc3545;
+$legacy-indigo: #667eea;
+$legacy-purple: #764ba2;
+$legacy-blue-500: #3b82f6;
+$legacy-blue-900: #1e40af;
+$legacy-blue-100: #f0f4ff;
+$legacy-blue-50: #eff6ff;
+$legacy-indigo-50: #eef2ff;
+$legacy-blue-200: #dbeafe;
+$legacy-blue-150: #bee3f8;
+$legacy-blue-400: #4299e1;
+$legacy-blue-600: #4d77ff;
+$legacy-blue-700: #1e40af;
+$legacy-blue-800: #2c5282;
+$legacy-gold: #ffd700;
+$legacy-silver: #c0c0c0;
+$legacy-bronze: #cd7f32;
+$legacy-gray-666: #666666;
+$legacy-gray-333: #333333;
+$legacy-gray-900: #111827;
+$legacy-warning-bg: #fff3cd;
+$legacy-warning-text: #856404;
+$legacy-warning-accent: #ff9800;
+$legacy-orange-500: #fd7e14;
+$legacy-orange-400: #ff8c42;
+$legacy-orange-100: #feebc8;
+$legacy-orange-50: #fff6eb;
+$legacy-orange-25: #fff3e6;
+$legacy-orange-450: #ff7f1f;
+$legacy-orange-700: #c95800;
+$legacy-orange-800: #c2410c;
+$legacy-orange-900: #7c2d12;
+$legacy-green-primary: #2f855a;
+$legacy-green-dark: #276749;
+$legacy-green-darker: #22543d;
+$legacy-green-text: #166534;
+$legacy-green-light-bg: #f0fdf4;
+$legacy-green-border: #86efac;
+$legacy-green-200: #c6f6d5;
+$legacy-green-400: #48bb78;
+$legacy-green-100: #d1fae5;
+$legacy-green-800: #065f46;
+$legacy-green-700: #198754;
+$legacy-border-light: #e2e8f0;
+$legacy-border-hover: #cbd5e0;
+$legacy-text-dark: #2d3748;
+$legacy-text-medium: #718096;
+$legacy-text-light: #a0aec0;
+$legacy-text-gray: #4a5568;
+$legacy-bg-light: #f7fafc;
+$legacy-gray-30: #1e1e1e;
+$legacy-gray-200: #e5e7eb;
+$legacy-gray-100: #f3f4f6;
+$legacy-gray-300: #d1d5db;
+$legacy-gray-150: #f1f1f1;
+$legacy-gray-220: #e0e0e0;
+$legacy-gray-180: #dddddd;
+$legacy-gray-190: #eeeeee;
+$legacy-gray-230: #e6e6e6;
+$legacy-gray-240: #eaeaea;
+$legacy-gray-500: #6b7280;
+$legacy-gray-700: #374151;
+$legacy-gray-600: #4b5563;
+$legacy-gray-400: #9ca3af;
+$legacy-gray-50: #fafafa;
+$legacy-gray-800: #1f2937;
+$legacy-gray-25: #f9fafb;
+$legacy-cream: #fffaf3;
+$legacy-sand-100: #f6f2ea;
+$legacy-sand-200: #e6dfd1;
+$legacy-sand-300: #d9d2c3;
+$legacy-slate-25: #f8fafc;
+$legacy-signature-ink: #222222;
+$legacy-panel-fill: rgba(250, 247, 240, 0.9);
+$legacy-ink-dark: #2f2b28;
+$legacy-chip-dark: #1b1b1b;
+$legacy-chip-light: #f4efe6;
+$legacy-led-on: #ff3b30;
+$legacy-led-off: #3b1d1b;
+$legacy-led-glow: rgba(255, 59, 48, 0.45);
+$legacy-resistor-black: #111111;
+$legacy-resistor-brown: #6d4c41;
+$legacy-resistor-red: #c62828;
+$legacy-resistor-orange: #ef6c00;
+$legacy-resistor-yellow: #f9a825;
+$legacy-resistor-green: #2e7d32;
+$legacy-resistor-blue: #1565c0;
+$legacy-resistor-violet: #6a1b9a;
+$legacy-resistor-gray: #757575;
+$legacy-resistor-white: #f6f3ec;
+$legacy-resistor-gold: #d4af37;
+$legacy-resistor-silver: #bdbdbd;
+$legacy-resistor-darktext: #1a1a1a;
+$legacy-white-ice: #fcfcfc;
+$legacy-slate-50: #f5f7fa;
+$legacy-slate-200: #c3cfe2;
+$legacy-slate-100: #edf2f7;
+$legacy-bluegray-200: #e2e8f0;
+$legacy-bluegray-300: #cbd5e0;
+$legacy-bluegray-400: #a0aec0;
+$legacy-slate-700: #2d3748;
+$legacy-slate-600: #4a5568;
+$legacy-slate-500: #718096;
+$legacy-red-50: #fff5f5;
+$legacy-red-25: #fff1f2;
+$legacy-red-100: #fee2e2;
+$legacy-red-150: #fecaca;
+$legacy-red-200: #fed7d7;
+$legacy-red-400: #f56565;
+$legacy-red-500: #fc8181;
+$legacy-red-600: #dc2626;
+$legacy-red-800: #991b1b;
+$legacy-red-900: #742a2a;
+$legacy-amber-100: #fef3c7;
+$legacy-amber-300: #fcd34d;
+$legacy-amber-700: #92400e;
+$legacy-amber-800: #7b341e;
+$legacy-purple-600: #6f42c1;
+
 /** General **/
 $background-color: #d3d0c3;
 $nav-background-color: $dark;
 $footer-bg-color: $dark;
-$footer-bg-highlight-color: darken($dark, 1%);
+$footer-bg-highlight-color: color.adjust($dark, $lightness: -1%);
 
 /** Dimensions **/
-$navbar-height: 71px;
+$navbar-height: 86px;
 
 /** Texts **/
 $headings-color: $dark;
@@ -58,11 +183,11 @@ $light-shades-palette: (
 );
 
 /** Typography - Base Text Sizes (Optimized for readability) **/
-$text-1: 1.05rem;   // Small text - increased from 1.0rem
-$text-2: 1.1rem;    // Captions - increased from 1.05rem
-$text-3: 1.15rem;   // Body text - increased from 1.1rem
-$text-4: 1.2rem;    // Normal paragraph - increased from 1.15rem
-$text-5: 1.3rem;    // Lead text - increased from 1.2rem
+$text-1: 1rem;
+$text-2: 1.05rem;
+$text-3: 1.1rem;
+$text-4: 1.2rem;
+$text-5: 1.3rem;
 
 /** Typography - Texts Breakpoints (MOBILE-FIRST: larger base on small screens) **/
 $texts-breakpoint-multipliers: (

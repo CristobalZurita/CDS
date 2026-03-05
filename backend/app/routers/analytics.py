@@ -98,7 +98,7 @@ def get_repairs_report(
 @router.get("/repairs/timeline")
 def get_repairs_timeline(
     days: int = Query(30, ge=1, le=365),
-    group_by: str = Query("day", regex="^(day|week|month)$"),
+    group_by: str = Query("day", pattern="^(day|week|month)$"),
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("reports", "read"))
 ):

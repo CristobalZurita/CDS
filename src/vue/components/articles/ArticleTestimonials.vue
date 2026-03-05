@@ -31,16 +31,3 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import { Pagination } from 'swiper/modules'
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-.swiper {
-    height: 100%;
-
-    .swiper-slide {
-        margin-bottom: 40px;
-        height: auto!important;
-    }
-}
-</style>

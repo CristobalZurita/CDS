@@ -11,19 +11,3 @@ const props = defineProps({
     class: String
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-img.foxy-spinner-widget {
-    @include generate-dynamic-styles-with-hash((
-        xxxl:   (max-width: 200px,  max-height:200px),
-        md:     (max-width: 130px,  max-height:130px),
-        sm:     (max-width: 90px,   max-height:90px),
-    ));
-
-    margin: 0 auto;
-    width: 50%;
-    height: 50%;
-}
-</style>

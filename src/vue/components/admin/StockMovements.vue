@@ -27,15 +27,3 @@ const formatDate = (value) => {
   return new Intl.DateTimeFormat('es-CL').format(new Date(value))
 }
 </script>
-
-<style scoped>
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th, td {
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0.5rem;
-  text-align: left;
-}
-</style>

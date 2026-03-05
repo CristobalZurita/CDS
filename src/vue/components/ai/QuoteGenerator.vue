@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import { api } from '@/services/api'
 import { useInstrumentsCatalog } from '@/composables/useInstrumentsCatalog'
 
 const brand = ref('')
@@ -44,25 +44,19 @@ function onChange() {
   result.value = null
 }
 
-function generate() {
+async function generate() {
   const m = models.value.find(x => x.id === model.value)
   if (!m) return
 
-  // Call backend estimate endpoint
   result.value = null
-  axios.post('http://127.0.0.1:8000/api/v1/quotations/estimate', {
-    instrument_id: m.id,
-    faults: []
-  }).then(res => {
+  try {
+    const res = await api.post('/quotations/estimate', {
+      instrument_id: m.id,
+      faults: []
+    })
     result.value = JSON.stringify(res.data, null, 2)
-  }).catch(err => {
+  } catch (err) {
     result.value = 'Error al generar estimación: ' + (err.response?.data?.detail || err.message)
-  })
+  }
 }
 </script>
-
-<style scoped>
-.quote-generator { padding: 1rem; }
-.controls { display:flex; gap: 0.75rem; align-items:center; }
-.result { margin-top: 1rem; padding: 0.75rem; border-radius:6px; background: rgba(0,0,0,0.03) }
-</style>

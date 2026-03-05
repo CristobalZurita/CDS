@@ -65,17 +65,17 @@
 				<div class="d-flex justify-content-between align-items-center mb-2">
 					<h5 class="card-title mb-0"><i class="fa-solid fa-signature me-2"></i>Firmas</h5>
 					<div class="d-flex gap-2">
-						<button class="btn btn-sm btn-outline-primary" @click="requestSignature('ingreso')">
+						<button class="btn btn-sm btn-outline-primary" data-testid="signature-request-ingreso" @click="requestSignature('ingreso')">
 							Solicitar firma ingreso
 						</button>
-						<button class="btn btn-sm btn-outline-primary" @click="requestSignature('retiro')">
+						<button class="btn btn-sm btn-outline-primary" data-testid="signature-request-retiro" @click="requestSignature('retiro')">
 							Solicitar firma retiro
 						</button>
 					</div>
 				</div>
 				<div v-if="signatureLink" class="alert alert-info">
 					<strong>Link firma:</strong>
-					<input class="form-control mt-2" :value="signatureLink" readonly />
+					<input class="form-control mt-2" data-testid="signature-link" :value="signatureLink" readonly />
 				</div>
 				<div class="row">
 					<div class="col-md-6">
@@ -91,13 +91,13 @@
 			<div class="detail-card mb-4">
 				<div class="d-flex justify-content-between align-items-center mb-2">
 					<h5 class="card-title mb-0"><i class="fa-solid fa-image me-2"></i>Fotos cliente</h5>
-					<button class="btn btn-sm btn-outline-primary" @click="requestPhotoUpload">
+					<button class="btn btn-sm btn-outline-primary" data-testid="photo-request" @click="requestPhotoUpload">
 						Solicitar foto
 					</button>
 				</div>
 				<div v-if="photoUploadLink" class="alert alert-info">
 					<strong>Link foto:</strong>
-					<input class="form-control mt-2" :value="photoUploadLink" readonly />
+					<input class="form-control mt-2" data-testid="photo-upload-link" :value="photoUploadLink" readonly />
 				</div>
 			</div>
 
@@ -151,7 +151,7 @@
 				<!-- Photos Grid -->
 				<div v-if="photos.length > 0" class="photos-grid">
 					<div v-for="photo in photos" :key="photo.id" class="photo-item">
-						<img :src="getPhotoUrl(photo.photo_url)" :alt="photo.caption || 'Foto'" />
+						<img :src="photo.resolved_photo_url" :alt="photo.caption || 'Foto'" />
 						<div class="photo-info">
 							<span class="badge bg-secondary">{{ photo.photo_type }}</span>
 							<small v-if="photo.caption">{{ photo.caption }}</small>
@@ -210,6 +210,20 @@
 					<i class="fa-solid fa-paper-plane me-1"></i> Enviar al cliente
 				</button>
 				<button
+					class="btn btn-outline-dark"
+					:disabled="downloadingClosurePdf"
+					@click="downloadClosurePdf"
+				>
+					<i class="fa-solid fa-file-pdf me-1"></i>
+					{{ downloadingClosurePdf ? 'Generando PDF...' : 'Descargar Cierre OT' }}
+				</button>
+				<router-link
+					:to="{ name: 'admin-purchase-requests', query: { repair_id: repairId } }"
+					class="btn btn-outline-info"
+				>
+					<i class="fa-solid fa-cart-shopping me-1"></i> Compras OT
+				</router-link>
+				<button
 					class="btn btn-outline-warning"
 					:disabled="isArchived"
 					@click="archiveRepair"
@@ -232,9 +246,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { api } from '@/services/api'
+import { hydrateRepairPhotos, revokeHydratedRepairPhotos } from '@/services/secureMedia'
 import AdminLayout from '@/vue/components/admin/layout/AdminLayout.vue'
 import RepairStatusChanger from '@/vue/components/admin/repair/RepairStatusChanger.vue'
 import RepairComponentsManager from '@/vue/components/admin/repair/RepairComponentsManager.vue'
@@ -283,6 +298,7 @@ const newNoteType = ref('internal')
 const savingNote = ref(false)
 const signatureLink = ref('')
 const photoUploadLink = ref('')
+const downloadingClosurePdf = ref(false)
 
 const archiveRepair = async () => {
 	if (isArchived.value) return
@@ -305,6 +321,35 @@ const notifyClient = async () => {
 	}
 }
 
+const sanitizeFilePart = (value) => {
+	const text = String(value || '').trim()
+	if (!text) return 'OT'
+	return text.replace(/[^a-zA-Z0-9._-]+/g, '_')
+}
+
+const downloadClosurePdf = async () => {
+	downloadingClosurePdf.value = true
+	try {
+		const response = await api.get(`/repairs/${repairId}/closure-pdf`, {
+			responseType: 'blob'
+		})
+		const blob = new Blob([response.data], { type: 'application/pdf' })
+		const blobUrl = window.URL.createObjectURL(blob)
+		const preferredCode = repair.value?.repair_code || repair.value?.repair_number || `OT_${repairId}`
+		const link = document.createElement('a')
+		link.href = blobUrl
+		link.download = `CIERRE_${sanitizeFilePart(preferredCode)}.pdf`
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
+		window.URL.revokeObjectURL(blobUrl)
+	} catch (e) {
+		window.alert(e?.response?.data?.detail || 'No se pudo generar el PDF de cierre OT.')
+	} finally {
+		downloadingClosurePdf.value = false
+	}
+}
+
 const loadRepair = async () => {
 	loading.value = true
 	try {
@@ -323,7 +368,9 @@ const loadRepair = async () => {
 			repair.value = found || null
 		}
 
-		photos.value = photosRes?.data || photosRes || []
+		const nextPhotos = await hydrateRepairPhotos(photosRes?.data || photosRes || [])
+		revokeHydratedRepairPhotos(photos.value)
+		photos.value = nextPhotos
 		notes.value = notesRes?.data || notesRes || []
 	} catch (error) {
 		console.error('Error cargando reparación:', error)
@@ -338,7 +385,7 @@ const requestSignature = async (type) => {
 		const res = await api.post('/signatures/requests', {
 			repair_id: Number(repairId),
 			request_type: type,
-			expires_minutes: 30
+			expires_minutes: 5
 		})
 		const token = res.data?.token || res.token
 		if (token) {
@@ -353,7 +400,7 @@ const requestPhotoUpload = async () => {
 	photoUploadLink.value = ''
 	try {
 		const res = await api.post('/photo-requests/', null, {
-			params: { repair_id: Number(repairId), photo_type: 'client', expires_minutes: 60 }
+			params: { repair_id: Number(repairId), photo_type: 'client', expires_minutes: 10 }
 		})
 		const token = res.data?.token || res.token
 		if (token) {
@@ -390,7 +437,9 @@ const uploadPhoto = async () => {
 
 		// 3. Reload photos
 		const photosRes = await api.get(`/repairs/${repairId}/photos`)
-		photos.value = photosRes?.data || photosRes || []
+		const nextPhotos = await hydrateRepairPhotos(photosRes?.data || photosRes || [])
+		revokeHydratedRepairPhotos(photos.value)
+		photos.value = nextPhotos
 
 		// Reset form
 		selectedFile.value = null
@@ -429,13 +478,6 @@ const addNote = async () => {
 	} finally {
 		savingNote.value = false
 	}
-}
-
-const getPhotoUrl = (path) => {
-	if (!path) return ''
-	if (path.startsWith('http')) return path
-	const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-	return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`
 }
 
 const getPriorityLabel = (p) => {
@@ -485,76 +527,7 @@ const formatDate = (dateStr) => {
 onMounted(() => {
 	loadRepair()
 })
+onBeforeUnmount(() => {
+	revokeHydratedRepairPhotos(photos.value)
+})
 </script>
-
-<style scoped lang="scss">
-@import "/src/scss/_theming.scss";
-
-.detail-card {
-	background: $vintage-beige;
-	border-radius: 12px;
-	padding: 1.25rem;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.card-title {
-	color: $brand-text;
-	font-weight: 600;
-	margin-bottom: 1rem;
-}
-
-.photos-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-	gap: 1rem;
-}
-
-.photo-item {
-	border-radius: 8px;
-	overflow: hidden;
-	background: white;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-
-	img {
-		width: 100%;
-		height: 120px;
-		object-fit: cover;
-	}
-
-	.photo-info {
-		padding: 0.5rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-	}
-}
-
-.notes-list {
-	display: flex;
-	flex-direction: column;
-	gap: 0.75rem;
-}
-
-.note-item {
-	background: white;
-	border-radius: 8px;
-	padding: 0.75rem 1rem;
-	border-left: 3px solid $orange-pastel;
-
-	.note-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 0.5rem;
-	}
-
-	.note-text {
-		margin: 0;
-		color: $brand-text;
-	}
-}
-
-.upload-form, .note-form {
-	background: rgba(255, 255, 255, 0.5);
-}
-</style>

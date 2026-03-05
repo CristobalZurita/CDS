@@ -4,7 +4,7 @@
       <div class="login-header">
         <!-- Logo oficial desde /public/images/logo/ -->
         <img
-          src="/images/logo/NUEVO_cirujano.png"
+          src="/images/logo/NUEVO_cirujano.webp"
           alt="Cirujano de Sintetizadores"
           class="login-logo"
         />
@@ -25,83 +25,61 @@ import LoginForm from '@/vue/components/auth/LoginForm.vue'
 </script>
 
 <style scoped lang="scss">
-/* ===========================================
-   LOGINPAGE - Manual de Identidad Visual
-   Paleta: Vintage Black #3e3c38, Orange #ec6b00,
-           Vintage Beige #d3d0c3, Black #000000
-   Tipografía: Cervo Neue, Cervo Extrabold
-   =========================================== */
+@use "@/scss/_core.scss" as *;
 
 .login-page {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000000; /* Black - Paleta Secundaria Web */
-  padding: 2rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-primary) 18%, transparent) 0, transparent 32%),
+    linear-gradient(160deg, #201d1a 0%, #2f2b27 45%, #3e3c38 100%);
 }
 
 .login-container {
-  background: #d3d0c3; /* Vintage Beige - Paleta Primaria */
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  padding: 3rem 2rem;
-  max-width: 500px;
-  width: 100%;
-  border: 2px solid #3e3c38; /* Vintage Black */
+  width: min(100%, 520px);
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(211, 208, 195, 0.75);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
 }
 
 .login-header {
+  display: grid;
+  justify-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
   text-align: center;
-  margin-bottom: 2rem;
+}
 
-  .login-logo {
-    max-width: 280px;
-    width: 100%;
-    height: auto;
-    margin-bottom: 1.5rem;
-  }
+.login-logo {
+  width: min(220px, 55vw);
+  height: auto;
+}
 
-  h1 {
-    font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #3e3c38; /* Vintage Black */
-    margin-bottom: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
+.login-header h1 {
+  margin: 0;
+  color: var(--color-dark);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 700;
 }
 
 .login-back {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   text-align: center;
 }
 
 .login-back-link {
-  font-family: 'Cervo Neue', 'Cervo Extrabold', sans-serif;
+  color: var(--color-primary);
+  font-size: var(--text-sm);
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #ec6b00; /* Orange */
+  letter-spacing: 0.08em;
   text-decoration: none;
 }
 
 .login-back-link:hover {
-  color: #c95800;
-}
-
-@media (max-width: 768px) {
-  .login-page {
-    padding: 1rem;
-  }
-
-  .login-container {
-    padding: 2rem 1.5rem;
-  }
-
-  .login-header h1 {
-    font-size: 1.5rem;
-  }
+  text-decoration: underline;
 }
 </style>

@@ -1,4 +1,5 @@
 import io
+from pathlib import Path
 from fastapi.testclient import TestClient
 import importlib
 import app.main as _main
@@ -11,6 +12,10 @@ from app.core.database import SessionLocal
 from app.models.audit import AuditLog
 
 client = TestClient(app)
+
+
+def _auth_headers(token: str) -> dict[str, str]:
+    return {"Authorization": f"Bearer {token}"}
 
 
 def _latest_audit(event_type: str):
@@ -67,18 +72,20 @@ def test_repair_crud_audit():
     assert rec is not None and rec.details.get("repair_id") == rid
 
 
-def test_upload_image_creates_audit(tmp_path):
+def test_upload_image_creates_audit(tmp_path, customer_token):
     importlib.reload(_main)
     client = TestClient(_main.app)
     img = io.BytesIO()
     img.write(b"\x89PNG\r\n\x1a\n")
     img.seek(0)
     files = {"file": ("audit.png", img, "image/png")}
-    res = client.post("/api/v1/uploads/images", files=files)
+    res = client.post("/api/v1/uploads/images", files=files, headers=_auth_headers(customer_token))
     assert res.status_code in (200, 201)
     rec = _latest_audit("upload.image")
     assert rec is not None
     assert rec.details and "filename" in rec.details or "path" in rec.details
+    assert rec.user_id is not None
+    Path("uploads/images/audit.png").unlink(missing_ok=True)
 
 
 def test_diagnostic_calculate_creates_audit():
@@ -86,14 +93,14 @@ def test_diagnostic_calculate_creates_audit():
     client = TestClient(_main.app)
 
     payload = {
-        "equipment": {"brand": "access", "model": "access-virus-c-desktop"},
+        "equipment": {"brand": "access", "model": "access_virus_c"},
         "faults": ["CONNECTOR_LOOSE"],
     }
     res = client.post("/api/v1/diagnostic/calculate", json=payload)
     assert res.status_code == 200
     rec = _latest_audit("diagnostic.calculate")
     assert rec is not None
-    assert rec.details and rec.details.get("model") == "access-virus-c-desktop"
+    assert rec.details and rec.details.get("model") == "access_virus_c"
 
 
 def test_payment_create_emits_audit():

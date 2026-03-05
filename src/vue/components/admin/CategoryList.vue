@@ -2,9 +2,9 @@
   <section class="admin-section">
     <div class="admin-section-header">
       <h2 class="admin-section-title">Categorías</h2>
-      <button class="admin-btn admin-btn-outline" @click="fetchCategories">Actualizar</button>
+      <button class="admin-btn admin-btn-outline" data-testid="categories-refresh" @click="fetchCategories">Actualizar</button>
     </div>
-    <table class="admin-table">
+    <table class="admin-table admin-table--stack">
       <thead>
         <tr>
           <th>Nombre</th>
@@ -13,12 +13,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="cat in categories" :key="cat.id">
-          <td>{{ cat.name }}</td>
-          <td>{{ cat.description }}</td>
-          <td>
-            <button class="admin-btn admin-btn-outline" @click="editCategory(cat)">Editar</button>
-            <button class="admin-btn admin-btn-primary" @click="deleteCategory(cat.id)">Borrar</button>
+        <tr v-for="cat in categories" :key="cat.id" data-testid="category-row">
+          <td data-label="Nombre">{{ cat.name }}</td>
+          <td data-label="Descripción">{{ cat.description }}</td>
+          <td data-label="Acciones">
+            <button class="admin-btn admin-btn-outline" data-testid="category-edit" @click="editCategory(cat)">Editar</button>
+            <button class="admin-btn admin-btn-primary" data-testid="category-delete" @click="removeCategory(cat)">Borrar</button>
           </td>
         </tr>
       </tbody>
@@ -29,8 +29,14 @@
 import { useCategories } from '@/composables/useCategories'
 import { onMounted } from 'vue'
 const { categories, fetchCategories, deleteCategory } = useCategories()
+const emit = defineEmits(['edit'])
 function editCategory(cat) {
-  // Implementar edición
+  emit('edit', cat)
+}
+
+async function removeCategory(cat) {
+  if (!window.confirm(`Eliminar categoría "${cat.name}"?`)) return
+  await deleteCategory(cat.id)
 }
 
 onMounted(() => {

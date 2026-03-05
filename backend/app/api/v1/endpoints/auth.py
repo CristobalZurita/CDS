@@ -5,9 +5,9 @@ from fastapi import APIRouter, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from fastapi.params import Depends
 from datetime import datetime, timedelta
+import os
 import secrets
 from app.core.database import get_db
-from app.core.config import settings
 from app.core.config import settings
 from app.core.security import (
     hash_password, verify_password, create_access_token, create_refresh_token
@@ -34,6 +34,12 @@ def _split_full_name(full_name: str) -> tuple[str | None, str | None]:
     if len(parts) == 1:
         return parts[0], None
     return parts[0], " ".join(parts[1:])
+
+
+def _should_skip_turnstile() -> bool:
+    if settings.environment and settings.environment.lower() in ("development", "dev", "test", "testing"):
+        return True
+    return os.getenv("TURNSTILE_DISABLE", "false").lower() == "true"
 
 
 def _maybe_create_client(db: Session, user: User) -> None:
@@ -67,9 +73,10 @@ async def register(
     """
     
     # Turnstile verification (public endpoint)
-    from app.services.turnstile_service import verify_turnstile
-    if not request.turnstile_token or not verify_turnstile(request.turnstile_token, http_request.client.host if http_request.client else None):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Captcha inválido")
+    if not _should_skip_turnstile():
+        from app.services.turnstile_service import verify_turnstile
+        if not request.turnstile_token or not verify_turnstile(request.turnstile_token, http_request.client.host if http_request.client else None):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Captcha inválido")
 
     # Verificar si el email ya existe
     existing_email = db.query(User).filter(User.email == request.email).first()
@@ -99,7 +106,8 @@ async def register(
         phone=request.phone,
         is_active=True,
         is_verified=0,
-        verification_token=verification_token
+        verification_token=verification_token,
+        two_factor_enabled=0,
     )
     
     db.add(new_user)
@@ -134,7 +142,7 @@ async def login(
     """
     
     # Turnstile verification (skip in non-production/dev when explicitly disabled)
-    if not (settings.environment and settings.environment.lower() in ("development", "dev")):
+    if not _should_skip_turnstile():
         from app.services.turnstile_service import verify_turnstile
         if not payload.turnstile_token or not verify_turnstile(payload.turnstile_token, request.client.host if request.client else None):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Captcha inválido")
@@ -375,7 +383,10 @@ async def forgot_password(
             pass
 
     response = {"message": "Si el email existe, enviaremos instrucciones para recuperar la contraseña."}
-    if token and settings.environment.lower() not in ("production", "prod"):
+    allow_token_in_response = settings.allow_token_in_response
+    if settings.environment.lower() in ("testing", "test"):
+        allow_token_in_response = True
+    if token and allow_token_in_response and settings.environment.lower() in ("development", "dev", "testing", "test"):
         response["reset_token"] = token
     return response
 

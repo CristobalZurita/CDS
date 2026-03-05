@@ -3,9 +3,14 @@
     <div class="header">
       <div>
         <h1>{{ detail.repair?.instrument || 'Reparación' }}</h1>
-        <p class="muted">Ticket {{ detail.repair?.repair_number || detail.repair?.id }}</p>
+        <p class="muted">OT {{ detail.repair?.repair_code || detail.repair?.repair_number || detail.repair?.id }}</p>
       </div>
-      <span class="status">{{ detail.repair?.status }}</span>
+      <div class="header-actions">
+        <span class="status">{{ detail.repair?.status }}</span>
+        <button class="btn-download" data-testid="repair-download" :disabled="downloadingPdf" @click="downloadClosurePdf">
+          {{ downloadingPdf ? 'Generando PDF...' : 'Descargar Cierre OT' }}
+        </button>
+      </div>
     </div>
 
     <section class="card">
@@ -30,7 +35,13 @@
       <h3>Fotos</h3>
       <div class="photos">
         <figure v-for="photo in detail.photos" :key="photo.id">
-          <img :src="photo.photo_url" :alt="photo.caption || 'foto'" />
+          <img 
+            :src="photo.resolved_photo_url" 
+            :alt="photo.caption || 'foto'"
+            loading="lazy"
+            width="400"
+            height="300"
+          />
           <figcaption>{{ photo.caption || 'Foto del proceso' }}</figcaption>
         </figure>
       </div>
@@ -50,12 +61,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
-import { api } from '@/services/api'
+import { useRepairs } from '@/composables/useRepairs'
 
 const route = useRoute()
-const detail = ref({ timeline: [], photos: [], notes: [] })
+const {
+  currentRepair,
+  currentRepairTimeline,
+  currentRepairPhotos,
+  currentRepairNotes,
+  fetchClientRepairDetail,
+  downloadClientClosurePdf,
+  clearCurrentRepairDetail,
+} = useRepairs()
+const downloadingPdf = ref(false)
+const detail = computed(() => ({
+  repair: currentRepair.value,
+  timeline: currentRepairTimeline.value || [],
+  photos: currentRepairPhotos.value || [],
+  notes: currentRepairNotes.value || [],
+}))
 
 const formatDate = (value) => {
   if (!value) return '—'
@@ -68,46 +94,39 @@ const formatPrice = (price) => {
 
 async function load() {
   const repairId = route.params.id
-  const res = await api.get(`/client/repairs/${repairId}/details`)
-  detail.value = res.data
+  await fetchClientRepairDetail(String(repairId))
+}
+
+const sanitizeFilePart = (value) => {
+  const text = String(value || '').trim()
+  if (!text) return 'OT'
+  return text.replace(/[^a-zA-Z0-9._-]+/g, '_')
+}
+
+async function downloadClosurePdf() {
+  downloadingPdf.value = true
+  try {
+    const repairId = route.params.id
+    const pdfBytes = await downloadClientClosurePdf(String(repairId))
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+    const blobUrl = window.URL.createObjectURL(blob)
+    const preferredCode = detail.value?.repair?.repair_code || detail.value?.repair?.repair_number || detail.value?.repair?.id || `OT_${repairId}`
+    const link = document.createElement('a')
+    link.href = blobUrl
+    link.download = `CIERRE_CLIENTE_${sanitizeFilePart(preferredCode)}.pdf`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(blobUrl)
+  } catch (error) {
+    window.alert(error?.response?.data?.detail || 'No se pudo descargar el PDF de cierre.')
+  } finally {
+    downloadingPdf.value = false
+  }
 }
 
 onMounted(load)
+onBeforeUnmount(() => {
+  clearCurrentRepairDetail()
+})
 </script>
-
-<style scoped>
-.repair-detail {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.muted {
-  color: #6b7280;
-}
-.status {
-  padding: 0.3rem 0.75rem;
-  border-radius: 999px;
-  background: #eef2ff;
-}
-.card {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background: #fff;
-}
-.photos {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-}
-img {
-  width: 100%;
-  border-radius: 10px;
-}
-</style>

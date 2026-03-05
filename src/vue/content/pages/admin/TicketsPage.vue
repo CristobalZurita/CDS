@@ -1,44 +1,84 @@
 <template>
   <AdminLayout title="Tickets" subtitle="Consultas internas y seguimiento">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h1 class="h4">Tickets</h1>
-      <div>
-        <button class="btn btn-sm btn-success me-2" @click="showWizard = !showWizard">
-          {{ showWizard ? 'Cerrar' : 'Nuevo ticket' }}
-        </button>
-        <button class="btn btn-sm btn-outline-secondary" @click="loadTickets">Actualizar</button>
-      </div>
-    </div>
+    <section class="admin-page">
+      <header class="admin-page__header">
+        <h1 class="admin-page__title">Tickets</h1>
 
-    <div v-if="showWizard" class="card p-3 mb-3">
-      <WizardTicket @completed="onCompleted" />
-    </div>
+        <div class="admin-page__actions">
+          <button
+            type="button"
+            class="admin-page__button admin-page__button--success"
+            data-testid="tickets-new"
+            @click="showWizard = !showWizard"
+          >
+            {{ showWizard ? 'Cerrar' : 'Nuevo ticket' }}
+          </button>
+          <button
+            type="button"
+            class="admin-page__button admin-page__button--secondary"
+            data-testid="tickets-refresh"
+            @click="loadTickets"
+          >
+            Actualizar
+          </button>
+        </div>
+      </header>
 
-    <div class="card p-3">
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Asunto</th>
-            <th>Estado</th>
-            <th>Prioridad</th>
-            <th>Mensajes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="ticket in tickets" :key="ticket.id">
-            <td>#{{ ticket.id }}</td>
-            <td>{{ ticket.subject }}</td>
-            <td>{{ ticket.status }}</td>
-            <td>{{ ticket.priority }}</td>
-            <td>{{ ticket.messages?.length || 0 }}</td>
-          </tr>
-          <tr v-if="tickets.length === 0">
-            <td colspan="5" class="text-muted">Sin tickets registrados.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <section v-if="showWizard" class="admin-page__panel" data-testid="tickets-wizard">
+        <WizardTicket @completed="onCompleted" />
+      </section>
+
+      <section class="admin-page__panel">
+        <div class="admin-page__table-wrap">
+          <table class="admin-page__table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Asunto</th>
+                <th>Estado</th>
+                <th>Prioridad</th>
+                <th>Mensajes</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="ticket in tickets" :key="ticket.id" data-testid="ticket-row">
+                <td>#{{ ticket.id }}</td>
+                <td>{{ ticket.subject }}</td>
+                <td>{{ ticket.status }}</td>
+                <td>{{ ticket.priority }}</td>
+                <td data-testid="ticket-message-count">{{ ticket.messages?.length || 0 }}</td>
+                <td>
+                  <div class="admin-page__cell-actions">
+                    <select
+                      class="admin-page__select"
+                      data-testid="ticket-status-select"
+                      :value="ticket.status"
+                      @change="updateTicketStatus(ticket, $event.target.value)"
+                    >
+                      <option value="open">open</option>
+                      <option value="in_progress">in_progress</option>
+                      <option value="closed">closed</option>
+                    </select>
+                    <button
+                      type="button"
+                      class="admin-page__button admin-page__button--danger"
+                      data-testid="ticket-delete"
+                      @click="deleteTicket(ticket)"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="tickets.length === 0">
+                <td colspan="6" class="admin-page__empty">Sin tickets registrados.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
   </AdminLayout>
 </template>
 
@@ -56,6 +96,17 @@ const loadTickets = async () => {
   tickets.value = res.data || res || []
 }
 
+const updateTicketStatus = async (ticket, status) => {
+  await api.patch(`/tickets/${ticket.id}?status=${encodeURIComponent(status)}`).catch(() => null)
+  loadTickets()
+}
+
+const deleteTicket = async (ticket) => {
+  if (!confirm(`¿Eliminar ticket #${ticket.id}?`)) return
+  await api.delete(`/tickets/${ticket.id}`).catch(() => null)
+  loadTickets()
+}
+
 const onCompleted = () => {
   showWizard.value = false
   loadTickets()
@@ -63,3 +114,17 @@ const onCompleted = () => {
 
 onMounted(loadTickets)
 </script>
+
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
+.admin-page__select {
+  min-width: 160px;
+}
+
+@include media-breakpoint-down(md) {
+  .admin-page__select {
+    width: 100%;
+  }
+}
+</style>

@@ -14,27 +14,3 @@
 <script setup>
 const props = defineProps({})
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-div.faq-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 40px;
-    row-gap: 30px;
-
-    @include media-breakpoint-down(xxl) {
-        grid-template-columns: repeat(1, 1fr);
-        row-gap: 20px;
-    }
-
-    @include media-breakpoint-down(md) {
-        row-gap: 10px;
-    }
-}
-
-hr.foxy-info-block-faq-divider {
-    opacity: 0.1;
-}
-</style>

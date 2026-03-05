@@ -1,0 +1,10 @@
+**/node_modules/**
+**/dist/**
+**/venv/**
+**/.venv/**
+**/backend/.venv/**
+**/uploads/**
+**/reports/**
+**/MODELOS/**
+**/DOCUMJENTOS_EXTRAS/**
+**/*.db

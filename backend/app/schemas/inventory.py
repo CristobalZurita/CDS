@@ -1,17 +1,16 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 from datetime import datetime
 
 
 class ItemSummary(BaseModel):
+	model_config = ConfigDict(from_attributes=True)
+
 	id: int
 	sku: Optional[str]
 	name: str
 	category: str
 	stock: int = 0
-
-	class Config:
-		orm_mode = True
 
 
 class ProductCreate(BaseModel):
@@ -38,6 +37,8 @@ class ProductUpdate(BaseModel):
 
 class ProductResponse(BaseModel):
 	"""Schema de respuesta de producto"""
+	model_config = ConfigDict(from_attributes=True)
+
 	id: int
 	category_id: int
 	name: str
@@ -49,6 +50,3 @@ class ProductResponse(BaseModel):
 	is_low_stock: bool
 	created_at: datetime
 	updated_at: datetime
-
-	class Config:
-		orm_mode = True

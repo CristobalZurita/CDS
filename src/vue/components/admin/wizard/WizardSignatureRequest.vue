@@ -28,7 +28,7 @@
           </div>
           <div>
             <label>Expira (min)</label>
-            <input v-model.number="form.expires_minutes" type="number" min="5" class="form-control" />
+            <input v-model.number="form.expires_minutes" type="number" min="1" max="5" class="form-control" />
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@ const result = ref(null)
 const form = ref({
   repair_id: null,
   request_type: 'ingreso',
-  expires_minutes: 15
+  expires_minutes: 5
 })
 
 const canContinue = computed(() => {
@@ -100,15 +100,30 @@ const handlePrev = () => {
 onMounted(loadRepairs)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
 .wizard-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  gap: var(--spacer-md);
 }
+
+.wizard-section h4 {
+  margin: 0;
+  color: var(--color-dark);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  gap: var(--spacer-sm);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@include media-breakpoint-down(md) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

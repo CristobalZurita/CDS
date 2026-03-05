@@ -10,28 +10,3 @@
 
 <script setup>
 </script>
-
-<style scoped>
-.home-view {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 1.5rem;
-}
-.home-card {
-  max-width: 520px;
-  padding: 2rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  background: #fff;
-}
-.btn {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.6rem 1rem;
-  background: #111827;
-  color: #fff;
-  border-radius: 8px;
-  text-decoration: none;
-}
-</style>

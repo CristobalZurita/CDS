@@ -33,6 +33,7 @@ class Payment(Base):
 
     # === CAMPOS ADICIONALES (ADITIVOS) ===
     invoice_id = Column(Integer, ForeignKey("invoices.id"), nullable=True, index=True)
+    purchase_request_id = Column(Integer, ForeignKey("purchase_requests.id"), nullable=True, index=True)
     payment_date = Column(DateTime, nullable=True)  # Fecha efectiva del pago
     payment_due_date = Column(DateTime, nullable=True)  # Fecha de vencimiento
     refund_of_id = Column(Integer, ForeignKey("payments.id"), nullable=True)  # Si es reembolso
@@ -45,6 +46,7 @@ class Payment(Base):
     user = relationship("User")
     repair = relationship("Repair")
     invoice = relationship("Invoice", back_populates="payments")  # ADITIVO
+    purchase_request = relationship("PurchaseRequest", back_populates="payments")
     refund_of = relationship("Payment", remote_side=[id], foreign_keys=[refund_of_id])
 
     def __repr__(self):

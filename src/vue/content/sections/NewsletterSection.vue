@@ -9,6 +9,7 @@
                 <div class="newsletter-input-group">
                     <input
                         v-model.trim="email"
+                        data-testid="newsletter-email"
                         class="newsletter-input"
                         type="email"
                         name="newsletter-email"
@@ -26,6 +27,7 @@
                 <TurnstileWidget @verify="onVerify" />
 
                 <p v-if="statusMessage"
+                   data-testid="newsletter-status"
                    class="newsletter-status"
                    :class="statusClass">
                     {{ statusMessage }}
@@ -94,59 +96,3 @@ const onVerify = (token) => {
     turnstileToken.value = token
 }
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-.newsletter-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.newsletter-input-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: stretch;
-}
-
-.newsletter-input {
-    flex: 1 1 320px;
-    border-radius: 999px;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    padding: 0.95rem 1.4rem;
-    font-size: 1rem;
-    color: $text-normal;
-    background: $white;
-}
-
-.newsletter-button {
-    white-space: nowrap;
-}
-
-.newsletter-status {
-    margin: 0;
-    font-weight: 600;
-    font-size: 0.98rem;
-}
-
-.newsletter-status.is-success {
-    color: $success;
-}
-
-.newsletter-status.is-error {
-    color: $danger;
-}
-
-@media (max-width: 640px) {
-    .newsletter-input-group {
-        flex-direction: column;
-    }
-
-    .newsletter-button {
-        width: 100%;
-        justify-content: center;
-    }
-}
-</style>

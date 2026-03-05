@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from .endpoints import brands, instruments, auth, inventory, imports, stats, ai, users
 from app.routers import uploads as uploads_router
+from app.routers import files as files_router
+from app.api import sync as sync_router
 
 # Routers adicionales (creados por copilot) - si existen, se incluyen
 try:
@@ -45,7 +47,6 @@ except Exception:
 	warranty_router = None
 	analytics_router = None
 	search_router = None
-	search_router = None
 	signature_router = None
 	tickets_router = None
 	purchase_requests_router = None
@@ -55,7 +56,13 @@ except Exception:
 # If any router failed to import previously (e.g., due to transient import errors),
 # attempt a second import pass so that fixes applied at runtime are picked up.
 import importlib
-for name in ("repair", "user", "instrument", "category", "stock_movement", "contact", "quotation", "appointment", "client", "newsletter", "tools", "signature", "tickets", "purchase_requests", "manuals", "photo_requests", "inventory", "repair_status"):
+for name in (
+	"repair", "user", "instrument", "category", "stock_movement", "contact",
+	"quotation", "appointment", "client", "clients", "device",
+	"newsletter", "tools", "signature", "tickets", "purchase_requests",
+	"manuals", "photo_requests", "inventory", "repair_status",
+	"invoice", "warranty", "analytics", "search",
+):
 	var_name = f"{name}_router"
 	if globals().get(var_name) is None:
 		try:
@@ -80,17 +87,28 @@ if globals().get("diagnostic_router") is None:
 	except Exception:
 		globals()["diagnostic_router"] = None
 
+# inventory uses a custom variable name, so recover it explicitly if the broad
+# import block failed earlier.
+if globals().get("inventory_products_router") is None:
+	try:
+		mod = importlib.import_module("app.routers.inventory")
+		globals()["inventory_products_router"] = mod
+	except Exception:
+		globals()["inventory_products_router"] = None
+
 api_router = APIRouter(prefix="/api/v1")
 
 api_router.include_router(brands.router)
 api_router.include_router(instruments.router)
 api_router.include_router(auth.router)
 api_router.include_router(uploads_router.router)
+api_router.include_router(files_router.router)
 api_router.include_router(inventory.router)
 api_router.include_router(imports.router)
 api_router.include_router(stats.router)
 api_router.include_router(ai.router)
 api_router.include_router(users.router)
+api_router.include_router(sync_router.router)
 
 # Incluir routers adicionales si están disponibles
 if user_router:
@@ -133,8 +151,6 @@ if globals().get("warranty_router"):
 	api_router.include_router(globals()["warranty_router"].router)
 if globals().get("analytics_router"):
 	api_router.include_router(globals()["analytics_router"].router)
-if globals().get("search_router"):
-	api_router.include_router(globals()["search_router"].router)
 if globals().get("search_router"):
 	api_router.include_router(globals()["search_router"].router)
 if globals().get("signature_router"):

@@ -17,6 +17,7 @@
           v-for="brand in filteredBrands"
           :key="brand.id"
           @click="selectBrand(brand)"
+          data-testid="quotation-brand-card"
           :class="['brand-card', { active: selectedBrand?.id === brand.id }]"
         >
           <div class="brand-name">{{ brand.name }}</div>
@@ -43,6 +44,7 @@
           v-for="instrument in filteredInstruments"
           :key="instrument.id"
           @click="selectInstrument(instrument)"
+          data-testid="quotation-instrument-card"
           :class="['instrument-card', { active: selectedInstrument?.id === instrument.id }]"
         >
           <div class="instrument-image">
@@ -92,7 +94,7 @@
         </div>
       </div>
 
-      <button @click="proceed" class="btn-proceed">
+      <button @click="proceed" class="btn-proceed" data-testid="quotation-proceed">
         Continuar al Diagnóstico →
       </button>
     </div>
@@ -173,7 +175,7 @@ const formatPrice = (price) => {
 }
 
 const onImageError = (event) => {
-  event.target.style.display = 'none'
+  event.target.classList.add('img-broken')
 }
 
 const proceed = () => {
@@ -183,242 +185,3 @@ const proceed = () => {
   }
 }
 </script>
-
-<style scoped>
-.instrument-selector {
-  padding: 1rem;
-}
-
-.selection-section {
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #e2e8f0;
-}
-
-.selection-section h3 {
-  margin: 0 0 1.5rem 0;
-  color: #2d3748;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.search-box {
-  margin-bottom: 2rem;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.875rem 1rem;
-  font-size: 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #2f855a;
-  box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.1);
-}
-
-/* Brands Grid */
-.brands-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
-}
-
-.brand-card {
-  padding: 1.5rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  background: white;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.brand-card:hover {
-  border-color: #cbd5e0;
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-}
-
-.brand-card.active {
-  border-color: #2f855a;
-  background: #f0fdf4;
-  box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.1);
-}
-
-.brand-name {
-  font-weight: 600;
-  color: #2d3748;
-  font-size: 1.1rem;
-}
-
-.brand-tier {
-  font-size: 0.85rem;
-  color: #718096;
-}
-
-.brand-year {
-  font-size: 0.8rem;
-  color: #a0aec0;
-}
-
-/* Instruments Grid */
-.instruments-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.instrument-card {
-  padding: 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  background: white;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.instrument-card:hover {
-  border-color: #cbd5e0;
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-}
-
-.instrument-card.active {
-  border-color: #2f855a;
-  background: #f0fdf4;
-  box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.1);
-}
-
-.instrument-image {
-  width: 100%;
-  height: 150px;
-  background: #f7fafc;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.instrument-image img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.no-image {
-  font-size: 3rem;
-  color: #cbd5e0;
-}
-
-.instrument-info {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.instrument-model {
-  font-weight: 600;
-  color: #2d3748;
-}
-
-.instrument-year {
-  font-size: 0.85rem;
-  color: #718096;
-}
-
-.instrument-value {
-  font-size: 0.9rem;
-  color: #2f855a;
-  font-weight: 500;
-}
-
-/* Confirmation Section */
-.confirmation-section {
-  margin-top: 2rem;
-  padding: 2rem;
-  background: #f0fdf4;
-  border: 2px solid #86efac;
-  border-radius: 12px;
-}
-
-.confirmation-section h3 {
-  margin: 0 0 1.5rem 0;
-  color: #166534;
-}
-
-.summary-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #f0fdf4;
-}
-
-.summary-row:last-child {
-  border-bottom: none;
-}
-
-.summary-row .label {
-  font-weight: 600;
-  color: #2d3748;
-}
-
-.summary-row .value {
-  color: #4a5568;
-  text-align: right;
-}
-
-.btn-proceed {
-  width: 100%;
-  padding: 1rem;
-  background: linear-gradient(135deg, #2f855a, #276749);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(47, 133, 90, 0.3);
-}
-
-.btn-proceed:hover {
-  background: linear-gradient(135deg, #276749, #22543d);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(47, 133, 90, 0.4);
-}
-
-@media (max-width: 768px) {
-  .brands-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
-  .instruments-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-
-  .confirmation-section {
-    padding: 1.5rem;
-  }
-}
-</style>

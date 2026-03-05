@@ -1,13 +1,6 @@
-import { useRepairsStore } from '@/stores/repairs'
-export function useRepairs() {
-  const store = useRepairsStore()
-  return {
-    repairs: store.repairs,
-    loading: store.loading,
-    error: store.error,
-    fetchRepairs: store.fetchRepairs,
-    createRepair: store.createRepair,
-    updateRepair: store.updateRepair,
-    deleteRepair: store.deleteRepair
-  }
-}
+/**
+ * Wrapper de compatibilidad para imports legacy en JavaScript.
+ * La implementacion autoritativa vive en `useRepairs.ts`.
+ */
+
+export { useRepairs } from './useRepairs.ts'

@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import date, datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_admin, require_permission
@@ -66,13 +66,12 @@ class ToolUpdate(BaseModel):
 
 
 class ToolRead(ToolBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     is_active: int
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
 
 
 class CalibrationRecord(BaseModel):

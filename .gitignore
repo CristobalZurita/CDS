@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+node_modules/
 dist-ssr
 *.local
 dist/
@@ -25,12 +26,19 @@ dist/
 
 # Environment variables - NEVER commit secrets
 .env
+*.env
 .env.local
+.env.production
+.env.*.local
 backend/.env
 backend/.env.local
 
 # Python
 __pycache__/
+*.pyc
+.venv/
+backend/.venv/
+venv/
 *.py[cod]
 *$py.class
 *.so
@@ -57,12 +65,16 @@ venv/
 ENV/
 env/
 .venv
-backend/.venv/
 
 # Database
 *.db
 *.sqlite
 *.sqlite3
+backend/cirujano.db
+backend/cirujano.log.1
+backend/cirujano.log*
+DOCUMJENTOS_EXTRAS/ARCHIVO_VIEJO_SOBRANTE/db/
+DOCUMJENTOS_EXTRAS/
 
 # IDE
 .vscode/
@@ -73,3 +85,29 @@ backend/.venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# Playwright artifacts
+test-results/
+playwright-report/
+tests/e2e/.auth/
+coverage/
+backend/tests/e2e_runtime/
+
+# Production - SSL certificates (NEVER commit real certs)
+certs/
+certbot/
+
+# Database backups (contain sensitive data)
+backups/
+
+# Uploads (user content)
+uploads/
+uploads/signatures/
+uploads/images/
+
+# Docker volumes
+postgres_data/
+
+# Security scan cache
+.cache_ggshield
+.ggshield-ignore

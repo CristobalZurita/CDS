@@ -191,6 +191,102 @@
           </div>
         </div>
 
+        <div class="sheet-form-section mt-3">
+          <h6>Planilla de operación y mantenimiento</h6>
+          <div class="row g-2">
+            <div class="col-md-4">
+              <label class="form-label">Nombre del dispositivo *</label>
+              <input v-model="instrument.equipment_name" class="form-control" :class="invalidClass(`instrument.${idx}.equipment_name`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Modelo del dispositivo *</label>
+              <input v-model="instrument.equipment_model" class="form-control" :class="invalidClass(`instrument.${idx}.equipment_model`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tipo de equipo *</label>
+              <select v-model="instrument.equipment_type" class="form-select" :class="invalidClass(`instrument.${idx}.equipment_type`)">
+                <option value="general">Equipo general</option>
+                <option value="precision">Equipo de precisión</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tipo de solicitud *</label>
+              <select v-model="instrument.requested_service_type" class="form-select" :class="invalidClass(`instrument.${idx}.requested_service_type`)">
+                <option value="emergency">Reparación de emergencia</option>
+                <option value="maintenance">Mantenimiento general</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Falta de tiempo / disponibilidad *</label>
+              <input v-model="instrument.downtime_description" class="form-control" :class="invalidClass(`instrument.${idx}.downtime_description`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tiempo esperado de reparación *</label>
+              <input v-model="instrument.estimated_repair_time" class="form-control" :class="invalidClass(`instrument.${idx}.estimated_repair_time`)" placeholder="Ej: 7 días hábiles" />
+            </div>
+            <div class="col-md-8">
+              <label class="form-label">Causa del problema *</label>
+              <textarea v-model="instrument.failure_cause" class="form-control" rows="2" :class="invalidClass(`instrument.${idx}.failure_cause`)"></textarea>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Tarifa reparación *</label>
+              <input v-model.number="instrument.repair_tariff" type="number" class="form-control" :class="invalidClass(`instrument.${idx}.repair_tariff`)" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Tarifa material *</label>
+              <input v-model.number="instrument.material_tariff" type="number" class="form-control" :class="invalidClass(`instrument.${idx}.material_tariff`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Fecha estimada de finalización *</label>
+              <input v-model="instrument.estimated_completion_date" type="date" class="form-control" :class="invalidClass(`instrument.${idx}.estimated_completion_date`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Depto. Tecnología (firma) *</label>
+              <input v-model="instrument.operation_department_signed_by" class="form-control" :class="invalidClass(`instrument.${idx}.operation_department_signed_by`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Fecha Depto. Tecnología *</label>
+              <input v-model="instrument.operation_department_signed_at" type="date" class="form-control" :class="invalidClass(`instrument.${idx}.operation_department_signed_at`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Depto. Finanzas (firma) *</label>
+              <input v-model="instrument.finance_department_signed_by" class="form-control" :class="invalidClass(`instrument.${idx}.finance_department_signed_by`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Fecha Depto. Finanzas *</label>
+              <input v-model="instrument.finance_department_signed_at" type="date" class="form-control" :class="invalidClass(`instrument.${idx}.finance_department_signed_at`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Director fábrica (firma) *</label>
+              <input v-model="instrument.factory_director_signed_by" class="form-control" :class="invalidClass(`instrument.${idx}.factory_director_signed_by`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Fecha Director fábrica *</label>
+              <input v-model="instrument.factory_director_signed_at" type="date" class="form-control" :class="invalidClass(`instrument.${idx}.factory_director_signed_at`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Gerente general (firma) *</label>
+              <input v-model="instrument.general_manager_signed_by" class="form-control" :class="invalidClass(`instrument.${idx}.general_manager_signed_by`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Fecha Gerente general *</label>
+              <input v-model="instrument.general_manager_signed_at" type="date" class="form-control" :class="invalidClass(`instrument.${idx}.general_manager_signed_at`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tabulador *</label>
+              <input v-model="instrument.tabulator_name" class="form-control" :class="invalidClass(`instrument.${idx}.tabulator_name`)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Fecha formulario *</label>
+              <input v-model="instrument.form_date" type="date" class="form-control" :class="invalidClass(`instrument.${idx}.form_date`)" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Anotaciones operativas *</label>
+              <textarea v-model="instrument.annotations" class="form-control" rows="2" :class="invalidClass(`instrument.${idx}.annotations`)"></textarea>
+            </div>
+          </div>
+        </div>
+
         <div class="row g-2 mt-2">
           <div class="col-md-6">
             <label class="form-label">Foto inicial *</label>
@@ -252,11 +348,13 @@ const existingClientId = ref(null)
 const clients = ref([])
 const nextClientId = ref(1)
 const otBaseIndex = ref(1)
+const otPreviewCode = ref('')
 
 const client = ref({
   name: '',
   email: '',
   phone: '',
+  phone_alt: '',
   address: '',
   city: '',
   region: '',
@@ -267,7 +365,8 @@ const client = ref({
   company_name: '',
   billing_address: '',
   customer_segment: 'regular',
-  language_preference: 'es'
+  language_preference: 'es',
+  service_preference: 'whatsapp'
 })
 
 const instruments = ref([createInstrument()])
@@ -289,6 +388,27 @@ function createInstrument() {
     paid_amount: 20000,
     payment_method: 'cash',
     warranty_days: 90,
+    equipment_name: '',
+    equipment_model: '',
+    equipment_type: 'general',
+    requested_service_type: 'maintenance',
+    downtime_description: '',
+    failure_cause: '',
+    repair_tariff: 0,
+    material_tariff: 0,
+    estimated_repair_time: '',
+    estimated_completion_date: '',
+    operation_department_signed_by: '',
+    operation_department_signed_at: '',
+    finance_department_signed_by: '',
+    finance_department_signed_at: '',
+    factory_director_signed_by: '',
+    factory_director_signed_at: '',
+    general_manager_signed_by: '',
+    general_manager_signed_at: '',
+    tabulator_name: '',
+    form_date: '',
+    annotations: '',
     photo_file: null,
     photo_caption: '',
     materials: []
@@ -296,9 +416,14 @@ function createInstrument() {
 }
 
 const clientCode = computed(() => `CDS-${String(nextClientId.value).padStart(3, '0')}`)
-const otBaseCode = computed(() => `${clientCode.value}-OT-${String(otBaseIndex.value).padStart(3, '0')}`)
+const otBaseCode = computed(() => otPreviewCode.value || `${clientCode.value}-OT-${String(otBaseIndex.value).padStart(3, '0')}`)
 
-const instrumentCode = (idx) => `${otBaseCode.value}-${String(idx + 1).padStart(2, '0')}`
+const instrumentCode = (idx) => {
+  if (idx === 0 && instruments.value.length === 1) {
+    return otBaseCode.value
+  }
+  return `${otBaseCode.value}-${String(idx + 1).padStart(2, '0')}`
+}
 
 const invalidClass = (key) => invalidFields.value.has(key) ? 'is-invalid' : ''
 
@@ -329,9 +454,9 @@ const applyDefaults = () => {
   }
 
   const clientTextFields = [
-    'name', 'email', 'phone', 'address', 'city', 'region', 'country',
+    'name', 'email', 'phone', 'phone_alt', 'address', 'city', 'region', 'country',
     'notes', 'internal_notes', 'tax_id', 'company_name', 'billing_address',
-    'customer_segment', 'language_preference'
+    'customer_segment', 'language_preference', 'service_preference'
   ]
   clientTextFields.forEach((field) => ensureText(client.value, field))
 
@@ -339,10 +464,19 @@ const applyDefaults = () => {
     const instTextFields = [
       'brand_other', 'model', 'serial_number', 'description', 'condition_notes',
       'accessories', 'problem_reported', 'diagnosis', 'work_performed',
-      'payment_method', 'photo_caption'
+      'payment_method', 'photo_caption',
+      'equipment_name', 'equipment_model', 'equipment_type', 'requested_service_type',
+      'downtime_description', 'failure_cause', 'estimated_repair_time',
+      'estimated_completion_date', 'operation_department_signed_by', 'operation_department_signed_at',
+      'finance_department_signed_by', 'finance_department_signed_at', 'factory_director_signed_by',
+      'factory_director_signed_at', 'general_manager_signed_by', 'general_manager_signed_at',
+      'tabulator_name', 'form_date', 'annotations'
     ]
     instTextFields.forEach((field) => ensureText(inst, field))
-    const instNumberFields = ['year_manufactured', 'priority', 'paid_amount', 'warranty_days']
+    const instNumberFields = [
+      'year_manufactured', 'priority', 'paid_amount', 'warranty_days',
+      'repair_tariff', 'material_tariff'
+    ]
     instNumberFields.forEach((field) => ensureNumber(inst, field))
     inst.materials.forEach((mat) => {
       ensureText(mat, 'sku')
@@ -363,10 +497,17 @@ const reloadCodes = async () => {
 
 const fetchNextClientCode = async () => {
   try {
-    const res = await api.get('/clients/next-code')
-    nextClientId.value = res.data?.next_client_id || res.next_client_id || 1
-  } catch (e) {
-    nextClientId.value = 1
+    const res = await api.get('/clients/code/next')
+    const payload = res.data || res || {}
+    nextClientId.value = payload.next_client_id || 1
+  } catch {
+    try {
+      const fallbackRes = await api.get('/clients/next-code')
+      const fallbackPayload = fallbackRes.data || fallbackRes || {}
+      nextClientId.value = fallbackPayload.next_client_id || 1
+    } catch {
+      nextClientId.value = 1
+    }
   }
 }
 
@@ -374,18 +515,30 @@ const fetchClients = async () => {
   try {
     const res = await api.get('/clients')
     clients.value = res.data || res || []
-  } catch (e) {
+  } catch {
     clients.value = []
   }
 }
 
 const fetchNextOtIndex = async (clientId) => {
   try {
-    const res = await api.get(`/clients/${clientId}/repairs`)
-    const count = (res.data || res || []).length
-    otBaseIndex.value = count + 1
-  } catch (e) {
+    const res = await api.get('/repairs/next-code', { params: { client_id: clientId } })
+    const payload = res.data || res || {}
+    otPreviewCode.value = payload.repair_code || payload.ot_base_code || ''
+    if (payload.next_repair_id) {
+      otBaseIndex.value = Number(payload.next_repair_id) || 1
+      return
+    }
     otBaseIndex.value = 1
+  } catch {
+    otPreviewCode.value = ''
+    try {
+      const fallbackRes = await api.get(`/clients/${clientId}/repairs`)
+      const count = (fallbackRes.data || fallbackRes || []).length
+      otBaseIndex.value = count + 1
+    } catch {
+      otBaseIndex.value = 1
+    }
   }
 }
 
@@ -395,7 +548,19 @@ const onClientSelected = async () => {
   client.value.name = selected.name || client.value.name
   client.value.email = selected.email || client.value.email
   client.value.phone = selected.phone || client.value.phone
+  client.value.phone_alt = selected.phone_alt || client.value.phone_alt
   client.value.address = selected.address || client.value.address
+  client.value.city = selected.city || client.value.city
+  client.value.region = selected.region || client.value.region
+  client.value.country = selected.country || client.value.country
+  client.value.notes = selected.notes || client.value.notes
+  client.value.internal_notes = selected.internal_notes || client.value.internal_notes
+  client.value.tax_id = selected.tax_id || client.value.tax_id
+  client.value.company_name = selected.company_name || client.value.company_name
+  client.value.billing_address = selected.billing_address || client.value.billing_address
+  client.value.customer_segment = selected.customer_segment || client.value.customer_segment
+  client.value.language_preference = selected.language_preference || client.value.language_preference
+  client.value.service_preference = selected.service_preference || client.value.service_preference
   nextClientId.value = selected.id
   await fetchNextOtIndex(selected.id)
 }
@@ -403,9 +568,9 @@ const onClientSelected = async () => {
 const validate = () => {
   invalidFields.value = new Set()
   const requiredClientFields = [
-    'name', 'email', 'phone', 'address', 'city', 'region', 'country',
+    'name', 'email', 'phone', 'phone_alt', 'address', 'city', 'region', 'country',
     'notes', 'internal_notes', 'tax_id', 'company_name', 'billing_address',
-    'customer_segment', 'language_preference'
+    'customer_segment', 'language_preference', 'service_preference'
   ]
   requiredClientFields.forEach((field) => {
     if (!client.value[field]) invalidFields.value.add(`client.${field}`)
@@ -416,7 +581,15 @@ const validate = () => {
       'description', 'condition_notes', 'accessories',
       'problem_reported', 'diagnosis', 'work_performed',
       'priority', 'paid_amount', 'payment_method', 'warranty_days',
-      'photo_caption'
+      'photo_caption',
+      'equipment_name', 'equipment_model', 'equipment_type', 'requested_service_type',
+      'downtime_description', 'failure_cause', 'repair_tariff', 'material_tariff',
+      'estimated_repair_time', 'estimated_completion_date',
+      'operation_department_signed_by', 'operation_department_signed_at',
+      'finance_department_signed_by', 'finance_department_signed_at',
+      'factory_director_signed_by', 'factory_director_signed_at',
+      'general_manager_signed_by', 'general_manager_signed_at',
+      'tabulator_name', 'form_date', 'annotations'
     ]
     requiredInstFields.forEach((field) => {
       if (!inst[field]) invalidFields.value.add(`instrument.${idx}.${field}`)
@@ -436,11 +609,11 @@ const validate = () => {
 
 const submit = async () => {
   errorMessage.value = ''
-  const defaultsApplied = applyDefaults()
   if (!validate()) {
     errorMessage.value = 'Completa todos los campos obligatorios.'
     return
   }
+  const defaultsApplied = applyDefaults()
 
   saving.value = true
   try {
@@ -450,6 +623,7 @@ const submit = async () => {
         name: client.value.name,
         email: client.value.email,
         phone: client.value.phone,
+        phone_alt: client.value.phone_alt,
         address: client.value.address,
         city: client.value.city,
         region: client.value.region,
@@ -460,13 +634,18 @@ const submit = async () => {
         company_name: client.value.company_name,
         billing_address: client.value.billing_address,
         customer_segment: client.value.customer_segment,
-        language_preference: client.value.language_preference
+        language_preference: client.value.language_preference,
+        service_preference: client.value.service_preference,
+        preferred_contact: client.value.service_preference
       })
       clientId = clientRes.data?.id || clientRes.id
       nextClientId.value = clientId
     }
 
     await fetchNextOtIndex(clientId)
+
+    const createdRepairs = []
+    let otParentRepairId = null
 
     for (let idx = 0; idx < instruments.value.length; idx += 1) {
       const inst = instruments.value[idx]
@@ -477,15 +656,13 @@ const submit = async () => {
         serial_number: inst.serial_number,
         description: inst.description,
         condition_notes: inst.condition_notes,
-        year_manufactured: inst.year_manufactured
+        year_manufactured: inst.year_manufactured,
+        accessories: inst.accessories
       })
       const deviceId = deviceRes.data?.id || deviceRes.id
 
-      const repairCode = instruments.value.length > 1 ? instrumentCode(idx) : otBaseCode.value
-
-      const repairRes = await api.post('/repairs', {
+      const repairPayload = {
         device_id: deviceId,
-        repair_number: repairCode,
         problem_reported: inst.problem_reported,
         diagnosis: inst.diagnosis,
         work_performed: inst.work_performed,
@@ -494,8 +671,24 @@ const submit = async () => {
         payment_method: inst.payment_method,
         payment_status: 'deposit',
         warranty_days: inst.warranty_days
-      })
+      }
+
+      // Nomenclatura OT backend-first:
+      // - 1er instrumento: OT base
+      // - siguientes: agrupados al OT base (el backend asigna sufijo correlativo)
+      if (otParentRepairId && idx > 0) {
+        repairPayload.ot_parent_id = otParentRepairId
+      }
+
+      const repairRes = await api.post('/repairs', repairPayload)
       const repairId = repairRes.data?.id || repairRes.id
+      if (!repairId) {
+        throw new Error('No se pudo crear OT')
+      }
+      if (!otParentRepairId) {
+        otParentRepairId = repairId
+      }
+      createdRepairs.push({ idx, repairId, inst })
 
       if (inst.photo_file) {
         const formData = new FormData()
@@ -528,6 +721,42 @@ const submit = async () => {
       }
     }
 
+    // Guardar intake sheets al final para usar códigos OT definitivos
+    // (el backend puede reasignar el OT base a -01 al agrupar).
+    for (const created of createdRepairs) {
+      const repairInfoRes = await api.get(`/repairs/${created.repairId}`)
+      const repairInfo = repairInfoRes.data || repairInfoRes || {}
+      const finalClientCode = repairInfo.client?.client_code || clientCode.value
+      const finalOtCode = repairInfo.repair_code || repairInfo.repair_number || otBaseCode.value
+
+      await api.post(`/repairs/${created.repairId}/intake-sheet`, {
+        client_code: finalClientCode,
+        ot_code: finalOtCode,
+        instrument_code: finalOtCode,
+        equipment_name: created.inst.equipment_name,
+        equipment_model: created.inst.equipment_model,
+        equipment_type: created.inst.equipment_type,
+        requested_service_type: created.inst.requested_service_type,
+        downtime_description: created.inst.downtime_description,
+        failure_cause: created.inst.failure_cause,
+        repair_tariff: created.inst.repair_tariff,
+        material_tariff: created.inst.material_tariff,
+        estimated_repair_time: created.inst.estimated_repair_time,
+        estimated_completion_date: created.inst.estimated_completion_date,
+        operation_department_signed_by: created.inst.operation_department_signed_by,
+        operation_department_signed_at: created.inst.operation_department_signed_at,
+        finance_department_signed_by: created.inst.finance_department_signed_by,
+        finance_department_signed_at: created.inst.finance_department_signed_at,
+        factory_director_signed_by: created.inst.factory_director_signed_by,
+        factory_director_signed_at: created.inst.factory_director_signed_at,
+        general_manager_signed_by: created.inst.general_manager_signed_by,
+        general_manager_signed_at: created.inst.general_manager_signed_at,
+        tabulator_name: created.inst.tabulator_name,
+        form_date: created.inst.form_date,
+        annotations: created.inst.annotations
+      })
+    }
+
     emit('completed', { client_id: clientId })
     resetForm()
     if (defaultsApplied) {
@@ -545,6 +774,7 @@ const resetForm = () => {
     name: '',
     email: '',
     phone: '',
+    phone_alt: '',
     address: '',
     city: '',
     region: '',
@@ -555,12 +785,15 @@ const resetForm = () => {
     company_name: '',
     billing_address: '',
     customer_segment: 'regular',
-    language_preference: 'es'
+    language_preference: 'es',
+    service_preference: 'whatsapp'
   }
   instruments.value = [createInstrument()]
   invalidFields.value = new Set()
   existingClientId.value = null
   useExistingClient.value = false
+  otPreviewCode.value = ''
+  otBaseIndex.value = 1
   reloadCodes()
 }
 
@@ -569,103 +802,217 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.sheet-header {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: #f6f2ea;
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(62, 60, 56, 0.2);
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
+.intake-sheet {
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.sheet-header,
+.sheet-actions,
+.sheet-footer,
+.instrument-header,
+.sheet-context {
+  display: flex;
+  gap: var(--spacer-sm);
+  flex-wrap: wrap;
+}
+
+.sheet-header,
+.sheet-actions,
+.sheet-footer,
+.instrument-header {
+  justify-content: space-between;
+}
+
+.sheet-header,
+.instrument-header,
+.sheet-actions,
+.sheet-footer {
+  align-items: center;
+}
+
+.sheet-title,
+.sheet-section h4,
+.instrument-header h5,
+.sheet-form-section h6,
+.materials-section h6 {
+  margin: 0;
+  color: var(--color-dark);
+  font-weight: 700;
+}
+
+.sheet-title {
+  font-size: var(--text-xl);
+}
+
+.sheet-subtitle,
+.sheet-context,
+.code-label,
+.code-small {
+  color: var(--color-dark);
+  opacity: 0.72;
+  font-size: var(--text-sm);
 }
 
 .sheet-context {
-  display: flex;
-  gap: 1.5rem;
-  font-size: 0.95rem;
-  color: #5a5652;
   margin-top: 0.35rem;
 }
-</style>
 
-<style scoped>
-.intake-sheet {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid #e5e7eb;
+.code-block,
+.sheet-section,
+.instrument-card,
+.sheet-form-section,
+.materials-section {
+  padding: var(--spacer-md);
+  background: var(--color-white);
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
-.sheet-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1.5rem;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-.sheet-title {
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin: 0;
-}
-.sheet-subtitle {
-  color: #6b7280;
-}
+
 .code-block {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  text-align: right;
   min-width: 220px;
 }
-.code-label {
-  font-size: 0.75rem;
-  color: #6b7280;
-  text-transform: uppercase;
+
+.code-value {
+  color: var(--color-dark);
+  font-size: var(--text-lg);
+  font-weight: 700;
   letter-spacing: 0.04em;
 }
-.code-value {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #c2410c;
-}
-.sheet-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-.sheet-section {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
-}
+
+.sheet-section,
 .instrument-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 1rem;
-  margin-top: 1rem;
-  background: #fcfcfc;
+  display: grid;
+  gap: var(--spacer-md);
 }
-.instrument-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-.code-small {
-  font-size: 0.85rem;
-  color: #6b7280;
-}
+
+.sheet-form-section,
 .materials-section {
-  margin-top: 1rem;
-  padding-top: 0.5rem;
-  border-top: 1px dashed #e5e7eb;
+  display: grid;
+  gap: var(--spacer-sm);
+  background: color-mix(in srgb, var(--color-white) 90%, var(--color-light) 10%);
 }
-.sheet-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+
+.form-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.form-control,
+.form-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+}
+
+textarea.form-control {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.form-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.form-check-input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+}
+
+.alert {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 86%, var(--color-danger) 14%);
+  color: var(--color-dark);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.65rem 0.95rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.btn-outline-primary {
+  border-color: var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+}
+
+.btn-outline-secondary {
+  border-color: var(--color-dark);
+  background: transparent;
+  color: var(--color-dark);
+}
+
+.btn-outline-danger {
+  border-color: var(--color-danger);
+  background: transparent;
+  color: var(--color-danger);
+}
+
+.btn-sm {
+  min-height: 38px;
+  padding: 0.55rem 0.8rem;
+}
+
+.is-invalid {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-danger) 16%, transparent);
+}
+
+@include media-breakpoint-down(md) {
+  .sheet-header,
+  .sheet-actions,
+  .sheet-footer,
+  .instrument-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .intake-sheet .btn,
+  .code-block {
+    width: 100%;
+  }
 }
 </style>

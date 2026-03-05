@@ -12,7 +12,7 @@
         <div class="form-grid">
           <div>
             <label>Cliente (opcional)</label>
-            <select v-model="form.client_id" class="form-select">
+            <select v-model="form.client_id" class="form-select" data-testid="ticket-client">
               <option :value="null">Sin cliente</option>
               <option v-for="client in clients" :key="client.id" :value="client.id">
                 {{ client.client_code || `CDS-${client.id}` }} - {{ client.name }}
@@ -21,7 +21,7 @@
           </div>
           <div>
             <label>OT (opcional)</label>
-            <select v-model="form.repair_id" class="form-select">
+            <select v-model="form.repair_id" class="form-select" data-testid="ticket-repair">
               <option :value="null">Sin OT</option>
               <option v-for="repair in repairs" :key="repair.id" :value="repair.id">
                 {{ repair.repair_code || repair.repair_number }}
@@ -36,11 +36,11 @@
         <div class="form-grid">
           <div>
             <label>Asunto</label>
-            <input v-model="form.subject" class="form-control" placeholder="Ej: Consulta de reparación" />
+            <input v-model="form.subject" class="form-control" data-testid="ticket-subject" placeholder="Ej: Consulta de reparación" />
           </div>
           <div>
             <label>Prioridad</label>
-            <select v-model="form.priority" class="form-select">
+            <select v-model="form.priority" class="form-select" data-testid="ticket-priority">
               <option value="low">Baja</option>
               <option value="normal">Normal</option>
               <option value="high">Alta</option>
@@ -49,7 +49,7 @@
         </div>
         <div class="mt-3">
           <label>Mensaje</label>
-          <textarea v-model="form.message" rows="5" class="form-control" />
+          <textarea v-model="form.message" rows="5" class="form-control" data-testid="ticket-message" />
         </div>
       </div>
 
@@ -62,7 +62,7 @@
           <div><strong>Prioridad:</strong> {{ form.priority }}</div>
         </div>
         <p class="mt-3">{{ form.message }}</p>
-        <div v-if="result" class="alert alert-success">Ticket creado: #{{ result.id }}</div>
+        <div v-if="result" class="alert alert-success" data-testid="ticket-result">Ticket creado: #{{ result.id }}</div>
       </div>
     </template>
   </WizardShell>
@@ -139,20 +139,3 @@ const handlePrev = () => {
 
 onMounted(loadData)
 </script>
-
-<style scoped>
-.wizard-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-}
-.summary-grid {
-  display: grid;
-  gap: 0.5rem;
-}
-</style>

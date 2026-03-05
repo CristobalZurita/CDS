@@ -1,5 +1,12 @@
 <template>
   <div class="turnstile-widget">
+    <div
+      v-if="isTurnstileBypassed"
+      class="turnstile-bypass"
+      data-testid="turnstile-bypass"
+    >
+      Captcha desactivado para pruebas
+    </div>
     <div ref="containerRef"></div>
   </div>
 </template>
@@ -12,6 +19,9 @@ const containerRef = ref(null)
 let widgetId = null
 
 const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
+const rawDisableFlag = String(import.meta.env.VITE_TURNSTILE_DISABLE || '').toLowerCase()
+const isTurnstileBypassed = rawDisableFlag === 'true'
+const turnstileBypassToken = 'dev-turnstile-bypass'
 
 const loadScript = () => {
   return new Promise((resolve, reject) => {
@@ -48,15 +58,17 @@ const renderWidget = () => {
 }
 
 onMounted(async () => {
-  await loadScript()
-  renderWidget()
+  if (isTurnstileBypassed) {
+    emit('verify', turnstileBypassToken)
+    return
+  }
+
+  try {
+    await loadScript()
+    renderWidget()
+  } catch (error) {
+    console.warn('[turnstile] Failed to initialize widget', error)
+    emit('verify', '')
+  }
 })
 </script>
-
-<style scoped>
-.turnstile-widget {
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0;
-}
-</style>

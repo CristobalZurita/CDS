@@ -26,7 +26,3 @@ const faIcon = computed(() => {
         || "fa-solid fa-info-circle"
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-</style>

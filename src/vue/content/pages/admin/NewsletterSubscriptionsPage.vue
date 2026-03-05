@@ -3,7 +3,7 @@
     <section class="admin-section">
       <div class="admin-section-header">
         <h2 class="admin-section-title">Suscripciones</h2>
-        <button class="admin-btn admin-btn-outline" @click="fetchSubscriptions">
+        <button class="admin-btn admin-btn-outline" data-testid="newsletter-refresh" @click="fetchSubscriptions">
           <i class="fa-solid fa-rotate" />
           Actualizar
         </button>
@@ -16,7 +16,7 @@
         No hay suscripciones registradas.
       </div>
 
-      <table v-else class="admin-table">
+      <table v-else class="admin-table admin-table--stack" data-testid="newsletter-table">
         <thead>
           <tr>
             <th>Email</th>
@@ -27,10 +27,10 @@
         </thead>
         <tbody>
           <tr v-for="subscription in subscriptions" :key="subscription.id">
-            <td>{{ subscription.email }}</td>
-            <td>{{ subscription.is_active ? 'Activa' : 'Inactiva' }}</td>
-            <td>{{ subscription.source_url || '-' }}</td>
-            <td>{{ formatDate(subscription.created_at) }}</td>
+            <td data-label="Email">{{ subscription.email }}</td>
+            <td data-label="Estado">{{ subscription.is_active ? 'Activa' : 'Inactiva' }}</td>
+            <td data-label="Origen">{{ subscription.source_url || '-' }}</td>
+            <td data-label="Fecha">{{ formatDate(subscription.created_at) }}</td>
           </tr>
         </tbody>
       </table>
@@ -72,23 +72,3 @@ const formatDate = (value) => {
 
 onMounted(fetchSubscriptions)
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-.admin-status {
-  margin: 0 0 1rem;
-  font-weight: 600;
-  color: $brand-text;
-}
-
-.admin-status-error {
-  color: $danger;
-}
-
-.admin-empty {
-  padding: 1rem 0;
-  font-weight: 600;
-  color: $brand-text;
-}
-</style>

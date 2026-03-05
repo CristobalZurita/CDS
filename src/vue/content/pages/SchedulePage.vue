@@ -34,9 +34,9 @@
 
           <div class="calendar-container">
             <div class="calendar-header">
-              <button class="calendar-nav" @click="previousMonth">←</button>
+              <button class="calendar-nav" data-testid="schedule-prev-month" @click="previousMonth">←</button>
               <h3>{{ monthYearString }}</h3>
-              <button class="calendar-nav" @click="nextMonth">→</button>
+              <button class="calendar-nav" data-testid="schedule-next-month" @click="nextMonth">→</button>
             </div>
 
             <div class="calendar-weekdays">
@@ -55,6 +55,9 @@
                   disabled: isDateDisabled(day),
                   selected: isSameDate(selectedDate, day)
                 }"
+                data-testid="schedule-day"
+                :data-day="day || ''"
+                :data-disabled="isDateDisabled(day) ? 'true' : 'false'"
                 @click="selectDate(day)"
               >
                 {{ day }}
@@ -63,11 +66,12 @@
           </div>
 
           <div class="step-actions">
-            <button class="btn-secondary" @click="$emit('cancel')">
+            <button class="btn-secondary" @click="emit('cancel')">
               Cancelar
             </button>
             <button
               class="btn-primary"
+              data-testid="schedule-date-next"
               :disabled="!dateSelected"
               @click="step = 2"
             >
@@ -92,6 +96,8 @@
                   :key="time"
                   class="timeslot"
                   :class="{ selected: selectedTime === time }"
+                  data-testid="schedule-time-slot"
+                  :data-time="time"
                   @click="selectedTime = time"
                 >
                   {{ time }}
@@ -107,6 +113,8 @@
                   :key="time"
                   class="timeslot"
                   :class="{ selected: selectedTime === time }"
+                  data-testid="schedule-time-slot"
+                  :data-time="time"
                   @click="selectedTime = time"
                 >
                   {{ time }}
@@ -116,11 +124,12 @@
           </div>
 
           <div class="step-actions">
-            <button class="btn-secondary" @click="step = 1">
+            <button class="btn-secondary" data-testid="schedule-time-back" @click="step = 1">
               ← Atrás
             </button>
             <button
               class="btn-primary"
+              data-testid="schedule-time-next"
               :disabled="!timeSelected"
               @click="step = 3"
             >
@@ -172,22 +181,27 @@
 
           <TurnstileWidget @verify="onVerify" />
 
+          <p v-if="submissionError" class="schedule-error" data-testid="schedule-error">
+            {{ submissionError }}
+          </p>
+
           <div class="step-actions">
             <button class="btn-secondary" @click="step = 2">
               ← Atrás
             </button>
             <button
               class="btn-primary"
-              :disabled="!agreeConditions || !turnstileToken"
+              data-testid="schedule-confirm"
+              :disabled="isSubmitting || !agreeConditions || !turnstileToken"
               @click="confirmAppointment"
             >
-              Confirmar Cita
+              {{ isSubmitting ? 'Confirmando...' : 'Confirmar Cita' }}
             </button>
           </div>
         </div>
 
         <!-- Step 4: Success -->
-        <div v-if="step === 4" class="schedule-step success-step">
+        <div v-if="step === 4" class="schedule-step success-step" data-testid="schedule-success">
           <div class="success-icon">✓</div>
           <h2>¡Cita Confirmada!</h2>
           <p class="success-message">
@@ -197,7 +211,7 @@
           <div class="confirmation-card">
             <div class="confirmation-section">
               <span class="label">Número de cita:</span>
-              <span class="value monospace">{{ appointmentNumber }}</span>
+              <span class="value monospace" data-testid="schedule-appointment-number">{{ appointmentNumber }}</span>
             </div>
 
             <div class="confirmation-section">
@@ -214,7 +228,7 @@
           </div>
 
           <div class="step-actions">
-            <button class="btn-secondary" @click="$emit('cancel')">
+            <button class="btn-secondary" @click="emit('cancel')">
               Volver al Inicio
             </button>
             <router-link to="/dashboard" class="btn-primary">
@@ -244,6 +258,8 @@ const selectedTime = ref(null)
 const agreeConditions = ref(false)
 const appointmentNumber = ref('')
 const turnstileToken = ref('')
+const submissionError = ref('')
+const isSubmitting = ref(false)
 
 // Calendar
 const currentMonth = ref(new Date().getMonth())
@@ -326,41 +342,54 @@ const formatDate = (date) => {
   return new Intl.DateTimeFormat('es-CL', options).format(date)
 }
 
-const confirmAppointment = () => {
+const normalizeAppointmentName = (value) => {
+  const cleaned = String(value || '')
+    .replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  return cleaned || 'Cliente'
+}
+
+const confirmAppointment = async () => {
   if (!turnstileToken.value) {
     return
   }
-  // Generar número de cita
+  submissionError.value = ''
+  isSubmitting.value = true
   appointmentNumber.value = 'CIT-' + Date.now().toString().slice(-8)
-  step.value = 4
 
-  // Log original mantenido
-  console.log('Cita confirmada:', {
-    number: appointmentNumber.value,
-    date: selectedDate.value,
-    time: selectedTime.value,
-    instrument: quotationStore.selectedInstrument
-  })
+  try {
+    console.log('Cita confirmada:', {
+      number: appointmentNumber.value,
+      date: selectedDate.value,
+      time: selectedTime.value,
+      instrument: quotationStore.selectedInstrument
+    })
 
-  // Persistir en backend (en segundo plano, no bloquea UI)
-  const appointmentDate = new Date(selectedDate.value)
-  const [hours, minutes] = selectedTime.value.split(':')
-  appointmentDate.setHours(parseInt(hours), parseInt(minutes), 0, 0)
+    const appointmentDate = new Date(selectedDate.value)
+    const [hours, minutes] = selectedTime.value.split(':')
+    appointmentDate.setHours(parseInt(hours), parseInt(minutes), 0, 0)
 
-  api.post('/appointments/', {
-    nombre: authStore.user?.full_name || 'Cliente',
-    email: authStore.user?.email || '',
-    telefono: authStore.user?.phone || '+56900000000',
-    fecha: appointmentDate.toISOString(),
-    mensaje: quotationStore.selectedInstrument?.name
-      ? `Instrumento: ${quotationStore.selectedInstrument.name}`
-      : 'Cita de diagnóstico',
-    turnstile_token: turnstileToken.value
-  }).then(response => {
+    const response = await api.post('/appointments/', {
+      nombre: normalizeAppointmentName(authStore.user?.full_name),
+      email: authStore.user?.email || '',
+      telefono: authStore.user?.phone || '+56900000000',
+      fecha: appointmentDate.toISOString(),
+      mensaje: quotationStore.selectedInstrument?.name
+        ? `Instrumento: ${quotationStore.selectedInstrument.name}`
+        : 'Cita de diagnóstico',
+      turnstile_token: turnstileToken.value
+    })
+
     console.log('Cita guardada en backend:', response.data)
-  }).catch(error => {
+    step.value = 4
+  } catch (error) {
     console.warn('Error guardando cita en backend:', error)
-  })
+    submissionError.value = error?.response?.data?.detail || 'No se pudo agendar la cita. Intenta nuevamente.'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
 const onVerify = (token) => {
@@ -371,447 +400,332 @@ const onVerify = (token) => {
 const emit = defineEmits(['cancel'])
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
 .schedule-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem 1rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-primary) 18%, transparent) 0, transparent 30%),
+    linear-gradient(180deg, #f8f4ec 0%, #eee7db 100%);
 }
 
 .schedule-container {
-  max-width: 900px;
+  width: min(100%, 1080px);
   margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  padding: 3rem 2rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: grid;
+  gap: var(--spacer-md);
+}
+
+.schedule-header,
+.schedule-content,
+.schedule-step,
+.confirmation-card,
+.timeslot-group,
+.calendar-container {
+  padding: var(--spacer-md);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(211, 208, 195, 0.8);
+  border-radius: 22px;
+  box-shadow: var(--shadow-sm);
 }
 
 .schedule-header {
   text-align: center;
-  margin-bottom: 2.5rem;
 }
 
-.schedule-header h1 {
-  margin: 0 0 0.5rem 0;
-  color: #2d3748;
-  font-size: 2rem;
-}
-
-.schedule-header p {
+.schedule-header h1,
+.schedule-step h2,
+.timeslot-group h3,
+.calendar-header h3 {
   margin: 0;
-  color: #718096;
-  font-size: 1.1rem;
+  color: var(--color-dark);
+  font-weight: 700;
 }
 
-/* Progress Bar */
+.schedule-header p,
+.step-description,
+.confirmation-info p,
+.small-text,
+.schedule-error {
+  margin: 0;
+  color: var(--color-dark);
+  opacity: 0.78;
+  font-size: var(--text-sm);
+}
+
 .progress-bar {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 2rem;
-  gap: 1rem;
+  display: grid;
+  gap: var(--spacer-sm);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .progress-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  opacity: 0.5;
-  transition: opacity 0.2s;
+  display: grid;
+  justify-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--color-dark);
 }
 
 .progress-step.active {
-  opacity: 1;
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-white) 88%);
 }
 
 .step-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background: #edf2f7;
-  color: #4a5568;
-  font-weight: 600;
-  font-size: 1.1rem;
+  border-radius: 999px;
+  background: var(--color-dark);
+  color: var(--color-white);
+  font-weight: 700;
 }
 
 .progress-step.active .step-number {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  background: var(--color-primary);
 }
 
 .step-label {
-  font-size: 0.9rem;
-  color: #718096;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: 700;
 }
 
-.progress-step.active .step-label {
-  color: #2d3748;
-  font-weight: 600;
-}
-
-/* Schedule Content */
 .schedule-content {
-  min-height: 500px;
+  display: grid;
 }
 
 .schedule-step {
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.schedule-step h2 {
-  margin: 0 0 0.5rem 0;
-  color: #2d3748;
-  font-size: 1.5rem;
-}
-
-.step-description {
-  margin: 0 0 2rem 0;
-  color: #718096;
-  font-size: 1rem;
-}
-
-/* Calendar */
-.calendar-container {
-  background: #f7fafc;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.calendar-header h3 {
-  margin: 0;
-  color: #2d3748;
-  font-size: 1.2rem;
-}
-
-.calendar-nav {
-  background: white;
-  border: 1px solid #cbd5e0;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  color: #4a5568;
-  transition: all 0.2s;
-}
-
-.calendar-nav:hover {
-  background: #edf2f7;
-  border-color: #a0aec0;
-}
-
-.calendar-weekdays {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: var(--spacer-md);
+}
+
+.calendar-container {
+  display: grid;
+  gap: var(--spacer-sm);
+  padding: 1rem;
+  background: color-mix(in srgb, var(--color-white) 90%, var(--color-light) 10%);
+}
+
+.calendar-header,
+.step-actions,
+.confirmation-section,
+.timeslots {
+  display: flex;
+  gap: var(--spacer-sm);
+  flex-wrap: wrap;
+}
+
+.calendar-header,
+.step-actions,
+.confirmation-section {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-nav,
+.btn-primary,
+.btn-secondary,
+.timeslot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+  text-decoration: none;
+}
+
+.calendar-nav,
+.btn-secondary,
+.timeslot {
+  border: 1px solid var(--color-light);
+  background: var(--color-white);
+  color: var(--color-dark);
+}
+
+.btn-primary {
+  border: 0;
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.calendar-nav:hover,
+.btn-primary:hover:not(:disabled),
+.btn-secondary:hover,
+.timeslot:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.calendar-weekdays,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.weekday,
+.calendar-day {
+  display: grid;
+  place-items: center;
+  min-height: 48px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
 }
 
 .weekday {
-  text-align: center;
-  font-weight: 600;
-  color: #718096;
-  font-size: 0.9rem;
-  padding: 0.5rem;
-}
-
-.calendar-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
+  color: var(--color-dark);
+  font-weight: 700;
 }
 
 .calendar-day {
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--color-dark);
   cursor: pointer;
-  font-weight: 500;
-  color: #4a5568;
-  background: white;
-  transition: all 0.2s;
 }
 
-.calendar-day:not(.empty):not(.disabled):hover {
-  border-color: #667eea;
-  background: #f0f4ff;
-}
-
-.calendar-day.empty {
-  background: transparent;
-  border: none;
+.calendar-day.empty,
+.calendar-day.disabled {
+  opacity: 0.35;
   cursor: default;
 }
 
-.calendar-day.disabled {
-  background: #edf2f7;
-  color: #cbd5e0;
-  cursor: not-allowed;
-}
-
 .calendar-day.selected {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border-color: #667eea;
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 18%, var(--color-white) 82%);
+  font-weight: 700;
 }
 
-/* Time Slots */
 .timeslots-container {
-  margin-bottom: 2rem;
+  display: grid;
+  gap: var(--spacer-md);
 }
 
 .timeslot-group {
-  margin-bottom: 2rem;
-}
-
-.timeslot-group h3 {
-  margin: 0 0 1rem 0;
-  color: #4a5568;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.timeslots {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 1rem;
-}
-
-.timeslot {
-  padding: 0.75rem;
-  border: 2px solid #cbd5e0;
-  border-radius: 8px;
-  background: white;
-  color: #4a5568;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.timeslot:hover {
-  border-color: #667eea;
-  background: #f0f4ff;
+  gap: var(--spacer-sm);
 }
 
 .timeslot.selected {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border-color: #667eea;
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
-/* Confirmation Card */
 .confirmation-card {
-  background: #f7fafc;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  border-left: 4px solid #667eea;
+  display: grid;
+  gap: var(--spacer-sm);
 }
 
 .confirmation-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--color-light);
 }
 
-.confirmation-section:last-of-type {
-  border-bottom: none;
+.label {
+  color: var(--color-dark);
+  opacity: 0.72;
+  font-size: var(--text-sm);
 }
 
-.confirmation-section .label {
-  font-weight: 600;
-  color: #4a5568;
-}
-
-.confirmation-section .value {
-  color: #2d3748;
-  font-size: 1rem;
-}
-
-.confirmation-section .value.monospace {
-  font-family: 'Courier New', monospace;
-  background: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
+.value {
+  color: var(--color-dark);
+  font-weight: 700;
 }
 
 .confirmation-info {
-  background: #eff6ff;
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1.5rem 0;
-  border-left: 4px solid #3b82f6;
-}
-
-.confirmation-info p {
-  margin: 0.5rem 0;
-  color: #1e40af;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 90%, var(--color-light) 10%);
 }
 
 .checkbox-container {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-  cursor: pointer;
+  gap: 0.65rem;
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .checkbox-container input {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
 }
 
-.checkbox-container span {
-  color: #4a5568;
-  font-size: 0.95rem;
+.schedule-error {
+  padding: 0.8rem 0.95rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 86%, var(--color-danger) 14%);
 }
 
-/* Success Step */
 .success-step {
   text-align: center;
 }
 
 .success-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, #48bb78, #38a169);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  color: white;
-  animation: scaleIn 0.5s ease;
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(0);
-  }
-  to {
-    transform: scale(1);
-  }
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-size: 2.25rem;
+  font-weight: 700;
 }
 
 .success-message {
-  color: #718096;
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+  margin: 0;
+  color: var(--color-dark);
+  font-size: var(--text-base);
 }
 
-.small-text {
-  font-size: 0.9rem;
-  color: #718096;
-  margin-top: 1rem;
+.monospace {
+  font-family: monospace;
 }
 
-/* Actions */
-.step-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-}
-
-.btn-primary,
-.btn-secondary {
-  padding: 0.875rem 1.75rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: #edf2f7;
-  color: #4a5568;
-  border: 2px solid #cbd5e0;
-}
-
-.btn-secondary:hover {
-  background: #e2e8f0;
-  border-color: #a0aec0;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .schedule-container {
-    padding: 1.5rem;
+@include media-breakpoint-down(md) {
+  .progress-bar,
+  .calendar-weekdays,
+  .calendar-days {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 
-  .progress-bar {
+  .calendar-header,
+  .step-actions,
+  .confirmation-section,
+  .timeslots {
     flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .step-actions {
-    flex-direction: column;
+    align-items: stretch;
   }
 
   .btn-primary,
-  .btn-secondary {
+  .btn-secondary,
+  .calendar-nav,
+  .timeslot {
     width: 100%;
-    justify-content: center;
-  }
-
-  .confirmation-section {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
   }
 }
 </style>

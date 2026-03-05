@@ -1,5 +1,5 @@
 """Schemas for Repair."""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 from datetime import datetime, date
 
@@ -49,9 +49,8 @@ class RepairUpdate(BaseModel):
 
 
 class RepairRead(RepairBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True

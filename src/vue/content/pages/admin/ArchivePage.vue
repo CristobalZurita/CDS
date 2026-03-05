@@ -1,44 +1,74 @@
 <template>
   <AdminLayout title="Archivo" subtitle="OT archivadas y cerradas">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h1 class="h4">Archivo</h1>
-      <button class="btn btn-sm btn-outline-secondary" @click="load">Actualizar</button>
-    </div>
+    <section class="admin-page">
+      <header class="admin-page__header">
+        <h1 class="admin-page__title">Archivo</h1>
+        <button
+          type="button"
+          class="admin-page__button admin-page__button--secondary"
+          data-testid="archive-refresh"
+          @click="load"
+        >
+          Actualizar
+        </button>
+      </header>
 
-    <div class="mb-3">
-      <input v-model="searchQuery" class="form-control" placeholder="Buscar por cliente, OT, instrumento..." />
-    </div>
+      <section class="admin-page__search-panel">
+        <input
+          v-model="searchQuery"
+          class="admin-page__input"
+          data-testid="archive-search"
+          placeholder="Buscar por cliente, OT, instrumento..."
+        />
+      </section>
 
-    <div class="card p-3">
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th>OT</th>
-            <th>Cliente</th>
-            <th>Instrumento</th>
-            <th>Estado</th>
-            <th>Archivado</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in filtered" :key="item.id">
-            <td>{{ item.repair_code || item.repair_number }}</td>
-            <td>{{ item.client_name || '—' }}</td>
-            <td>{{ item.device_model || '—' }}</td>
-            <td>{{ item.status || '—' }}</td>
-            <td>{{ formatDate(item.archived_at) }}</td>
-            <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2" @click="reactivate(item)">Reactivar</button>
-              <button class="btn btn-sm btn-outline-primary" @click="goToRepair(item)">Ver</button>
-            </td>
-          </tr>
-          <tr v-if="filtered.length === 0">
-            <td colspan="6" class="text-muted">Sin OT archivadas.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <section class="admin-page__panel" data-testid="archive-table">
+        <div class="admin-page__table-wrap">
+          <table class="admin-page__table">
+            <thead>
+              <tr>
+                <th>OT</th>
+                <th>Cliente</th>
+                <th>Instrumento</th>
+                <th>Estado</th>
+                <th>Archivado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in filtered" :key="item.id">
+                <td>{{ item.repair_code || item.repair_number }}</td>
+                <td>{{ item.client_name || '—' }}</td>
+                <td>{{ item.device_model || '—' }}</td>
+                <td>{{ item.status || '—' }}</td>
+                <td>{{ formatDate(item.archived_at) }}</td>
+                <td>
+                  <div class="admin-page__cell-actions">
+                    <button
+                      type="button"
+                      class="admin-page__button admin-page__button--ghost"
+                      @click="reactivate(item)"
+                    >
+                      Reactivar
+                    </button>
+                    <button
+                      type="button"
+                      class="admin-page__button admin-page__button--primary"
+                      @click="goToRepair(item)"
+                    >
+                      Ver
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="filtered.length === 0">
+                <td colspan="6" class="admin-page__empty">Sin OT archivadas.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
   </AdminLayout>
 </template>
 
@@ -90,3 +120,12 @@ const formatDate = (val) => {
 
 onMounted(load)
 </script>
+
+<style scoped>
+.admin-page__input {
+  min-height: 44px;
+  padding: 0.75rem 0.875rem;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+}
+</style>

@@ -3,7 +3,7 @@ Pydantic schemas for request/response validation
 Define DTOs (Data Transfer Objects) for API endpoints
 """
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from typing import List, Optional, Dict, ClassVar
 from datetime import datetime
 
@@ -19,10 +19,7 @@ class BrandBase(BaseModel):
 
 
 class BrandRead(BrandBase):
-    pass
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============= INSTRUMENT =============
@@ -42,10 +39,9 @@ class InstrumentBase(BaseModel):
 
 
 class InstrumentRead(InstrumentBase):
-    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    created_at: datetime
 
 
 # ============= FAULT =============
@@ -58,10 +54,9 @@ class FaultBase(BaseModel):
 
 
 class FaultRead(FaultBase):
-    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    created_at: datetime
 
 
 # ============= DIAGNOSTIC =============
@@ -77,6 +72,8 @@ class DiagnosticCreate(BaseModel):
 
 
 class DiagnosticRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     client_name: str
     client_email: str
@@ -90,21 +87,17 @@ class DiagnosticRead(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
-
 
 # ============= REPAIR =============
 class RepairDetailRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     repair_id: int
     fault_id: str
     description: Optional[str]
     parts_used: Optional[Dict]
     created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class RepairCreate(BaseModel):
@@ -120,6 +113,8 @@ class RepairCreate(BaseModel):
 
 
 class RepairRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     diagnostic_id: Optional[int]
     instrument_id: str
@@ -132,9 +127,6 @@ class RepairRead(BaseModel):
     completed_at: Optional[datetime]
     created_at: datetime
     details: List[RepairDetailRead] = []
-
-    class Config:
-        from_attributes = True
 
 
 # ============= API RESPONSE =============
@@ -162,6 +154,7 @@ class PaymentCreate(BaseModel):
     payment_method: str
     transaction_id: Optional[str] = None
     user_id: Optional[int] = None
+    purchase_request_id: Optional[int] = None
     status: Optional[str] = None
     notes: Optional[str] = None
 
@@ -175,9 +168,12 @@ class PaymentCreate(BaseModel):
 
 
 class PaymentRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     user_id: Optional[int]
     repair_id: Optional[int]
+    purchase_request_id: Optional[int]
     amount: int
     payment_method: str
     transaction_id: Optional[str]
@@ -185,6 +181,3 @@ class PaymentRead(BaseModel):
     notes: Optional[str]
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True

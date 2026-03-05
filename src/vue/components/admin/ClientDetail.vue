@@ -133,7 +133,7 @@
                 <select v-model.number="selectedParentRepairId" class="form-select">
                   <option :value="null">Selecciona OT base</option>
                   <option v-for="r in clientRepairs" :key="r.id" :value="r.id">
-                    {{ r.repair_number || ('OT #' + r.id) }} - {{ r.problem_reported }}
+                    {{ r.repair_code || r.repair_number || ('OT #' + r.id) }} - {{ r.problem_reported }}
                   </option>
                 </select>
               </div>
@@ -277,104 +277,3 @@ watch(() => props.client?.id, () => {
   loadClientRepairs()
 }, { immediate: true })
 </script>
-
-<style scoped lang="scss">
-.client-detail {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
-  background: #fff;
-}
-.client-code {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #ec6b00;
-}
-
-.info-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #4b5563;
-  margin-bottom: 0.25rem;
-
-  i {
-    width: 18px;
-    color: #9ca3af;
-  }
-}
-
-.stats-row {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.stat-badge {
-  background: #f3f4f6;
-  padding: 0.35rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  color: #374151;
-
-  i {
-    color: #ec6b00;
-    margin-right: 0.35rem;
-  }
-}
-
-.devices-section {
-  border-top: 1px solid #e5e7eb;
-  padding-top: 1rem;
-}
-
-.devices-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.device-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: #fafafa;
-}
-
-.device-icon {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ec6b00;
-  color: white;
-  border-radius: 8px;
-}
-
-.device-info {
-  flex: 1;
-
-  strong {
-    color: #1f2937;
-    font-size: 0.95rem;
-  }
-}
-.device-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.add-device-form {
-  background: #f9fafb;
-}
-.repair-intake-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 1rem;
-  background: #fffaf3;
-}
-</style>

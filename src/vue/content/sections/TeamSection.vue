@@ -11,7 +11,7 @@
             <ArticleTeamMembers>
                 <ItemTeamMember name="Cristóbal Zurita"
                                 role="Fundador y Técnico"
-                                image="/images/logo/Logo%20Nuevo.jpg"
+                                image="/images/logo/Logo%20Nuevo.webp"
                                 :links="[
                                     {faIcon:`fa-brands fa-instagram`, href:`https://www.instagram.com/cirujanodesintetizadores/`},
                                     {faIcon:`fa-brands fa-facebook`, href:`https://www.facebook.com/Cirujanodesintetizadores/`},
@@ -32,7 +32,3 @@ const props = defineProps({
     id: String
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-</style>

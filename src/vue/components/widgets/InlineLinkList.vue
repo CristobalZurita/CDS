@@ -2,14 +2,6 @@
     <!-- Inline Link List -->
     <ul
         class="inline-link-list"
-        :style="{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '0.45rem 0.75rem'
-        }"
     >
         <!-- List Header (for small screens) -->
         <li class="inline-link-list-item inline-link-list-header">
@@ -20,7 +12,6 @@
         <li
             v-for="link in parsedLinks"
             class="inline-link-list-item"
-            :style="{ display: 'inline-flex', alignItems: 'center', width: 'auto' }"
         >
             <a v-if="link.isRouterLink"
                :href="link.href"
@@ -67,77 +58,3 @@ const parsedLinks = computed(() => {
     }))
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-ul.inline-link-list {
-    position: relative;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    color: $light-5;
-    display: flex;
-flex-wrap: wrap;
-justify-content: center;
-align-items: center;
-
-}
-
-li.inline-link-list-item {
-display: inline-flex;
-align-items: center;
-
-    padding-bottom: 0.1rem;
-    padding-left: 0.3rem;
-    padding-right: 0.3rem;
-
-    &:not(:last-child)::after {
-        content: "·";
-        color: $light-5;
-        margin-left: 0.6rem;
-    }
-
-    @include media-breakpoint-down(sm) {
-        display: block;
-        padding-bottom: 0.05rem;
-        &:after {
-            display: none;
-        }
-    }
-}
-
-li.inline-link-list-header {
-    margin-top: 0.2rem;
-    margin-bottom: 0.2rem;
-    color: $light-5;
-    font-size: 0.5rem;
-    @include media-breakpoint-up(sm) {
-        display: none;
-    }
-}
-
-.inline-link-list-link {
-    text-decoration: none;
-    color: $light-6;
-
-    i.inline-link-list-icon {
-        min-width: 22px;
-        color: $light-5;
-        @include media-breakpoint-down(md) {
-            min-width: 20px;
-        }
-    }
-}
-
-.inline-link-list-link:hover {
-    color: lighten($primary, 15%);
-    i.inline-link-list-icon {
-        color: $light-2;
-    }
-}
-
-.inline-link-list-link-active {
-    color: lighten($primary, 20%);
-}
-</style>

@@ -12,12 +12,14 @@ from app.core.database import get_db
 from app.core.dependencies import get_current_user
 
 router = APIRouter(prefix="/items", tags=["items"])
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', '..'))
+MASTER_EXCEL_PATH = os.path.join(REPO_ROOT, 'Inventario_Cirujanosintetizadores.xlsx')
 
 
 @lru_cache(maxsize=1)
 def _load_excel(path: Optional[str] = None):
 	if path is None:
-		path = os.path.abspath(os.path.join(os.getcwd(), 'Inventario_Cirujanosintetizadores.xlsx'))
+		path = os.getenv("INVENTORY_EXCEL_PATH") or MASTER_EXCEL_PATH
 	if not os.path.exists(path):
 		raise FileNotFoundError(f'Excel file not found: {path}')
 	df = pd.read_excel(path, sheet_name=0, dtype=object, engine='openpyxl')
@@ -159,7 +161,7 @@ def update_item(item_id: int, data: ProductUpdate, db: Session = Depends(get_db)
 			)
 
 	# Actualizar solo campos proporcionados
-	update_data = data.dict(exclude_unset=True)
+	update_data = data.model_dump(exclude_unset=True)
 	for field, value in update_data.items():
 		if value is not None:
 			setattr(product, field, value)

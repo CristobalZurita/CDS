@@ -24,7 +24,7 @@ def get_diagnostic(diagnostic_id: int, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=DiagnosticRead, status_code=status.HTTP_201_CREATED)
 def create_diagnostic(payload: DiagnosticCreate, db: Session = Depends(get_db)):
-    diagnostic = Diagnostic(**payload.dict())
+    diagnostic = Diagnostic(**payload.model_dump())
     db.add(diagnostic)
     db.commit()
     db.refresh(diagnostic)
@@ -36,7 +36,7 @@ def update_diagnostic(diagnostic_id: int, payload: DiagnosticUpdate, db: Session
     diagnostic = db.query(Diagnostic).filter(Diagnostic.id == diagnostic_id).first()
     if not diagnostic:
         raise HTTPException(status_code=404, detail="Diagnostic not found")
-    data = payload.dict(exclude_unset=True)
+    data = payload.model_dump(exclude_unset=True)
     for key, value in data.items():
         setattr(diagnostic, key, value)
     db.commit()

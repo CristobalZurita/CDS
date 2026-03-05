@@ -1,31 +1,6 @@
-import { defineStore } from 'pinia'
-import { useApi } from '@/composables/useApi'
+/**
+ * Wrapper de compatibilidad para imports legacy en JavaScript.
+ * La implementacion autoritativa vive en `repairs.ts`.
+ */
 
-export const useRepairsStore = defineStore('repairs', {
-  state: () => ({
-    repairs: [],
-    loading: false,
-    error: null
-  }),
-  actions: {
-    async fetchRepairs() {
-      this.loading = true
-      try {
-        this.repairs = await useApi().get('/repairs')
-      } catch (e) {
-        this.error = e
-      } finally {
-        this.loading = false
-      }
-    },
-    async createRepair(data) {
-      return await useApi().post('/repairs', data)
-    },
-    async updateRepair(id, data) {
-      return await useApi().put(`/repairs/${id}`, data)
-    },
-    async deleteRepair(id) {
-      return await useApi().delete(`/repairs/${id}`)
-    }
-  }
-})
+export { useRepairsStore } from './repairs.ts'

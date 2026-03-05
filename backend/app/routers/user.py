@@ -30,6 +30,7 @@ def list_users(
 ):
     return db.query(User).all()
 
+@router.post("", response_model=UserRead, include_in_schema=False)
 @router.post("/", response_model=UserRead)
 def create_user(
     user_data: UserCreate,
@@ -44,6 +45,7 @@ def create_user(
         last_name=last_name,
         hashed_password=hash_password(user_data.password),
         phone=user_data.phone,
+        role=user_data.role,
         is_active=True
     )
     db.add(db_user)
@@ -58,14 +60,23 @@ def update_user(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("users", "update"))
 ):
-    db_user = db.query(User).get(user_id)
+    db_user = db.get(User, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
-    data = user_data.dict(exclude_unset=True)
+    data = user_data.model_dump(exclude_unset=True)
     if "full_name" in data:
         first_name, last_name = _split_full_name(data.pop("full_name") or "")
         db_user.first_name = first_name
         db_user.last_name = last_name
+    if "role" in data:
+        role_value = str(data.pop("role") or "").strip().lower()
+        role_map = {"admin": 1, "technician": 2, "client": 3}
+        if role_value in role_map:
+            db_user.role_id = role_map[role_value]
+    if "password" in data:
+        password = data.pop("password")
+        if password:
+            db_user.hashed_password = hash_password(password)
     for key, value in data.items():
         setattr(db_user, key, value)
     db.commit()
@@ -78,7 +89,7 @@ def delete_user(
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("users", "delete"))
 ):
-    db_user = db.query(User).get(user_id)
+    db_user = db.get(User, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     db.delete(db_user)

@@ -19,13 +19,3 @@ defineProps({
 
 defineEmits(['open'])
 </script>
-
-<style scoped>
-.repairs-list {
-  display: grid;
-  gap: 1rem;
-}
-.empty {
-  color: #6b7280;
-}
-</style>

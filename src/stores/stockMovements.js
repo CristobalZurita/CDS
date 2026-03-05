@@ -1,25 +1,6 @@
-import { defineStore } from 'pinia'
-import { useApi } from '@/composables/useApi'
+/**
+ * Wrapper de compatibilidad para imports legacy en JavaScript.
+ * La implementacion autoritativa vive en `stockMovements.ts`.
+ */
 
-export const useStockMovementsStore = defineStore('stockMovements', {
-  state: () => ({
-    movements: [],
-    loading: false,
-    error: null
-  }),
-  actions: {
-    async fetchMovements() {
-      this.loading = true
-      try {
-        this.movements = await useApi().get('/stock-movements')
-      } catch (e) {
-        this.error = e
-      } finally {
-        this.loading = false
-      }
-    },
-    async createMovement(data) {
-      return await useApi().post('/stock-movements', data)
-    }
-  }
-})
+export { useStockMovementsStore } from './stockMovements.ts'

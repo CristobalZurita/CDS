@@ -2,12 +2,12 @@
 	<div class="status-changer">
 		<div class="current-status">
 			<span class="status-label">Estado actual:</span>
-			<span class="status-badge" :style="{ backgroundColor: currentStatusColor }">
+			<span class="status-badge" :class="currentStatusClass" data-testid="repair-current-status">
 				{{ currentStatusName }}
 			</span>
 			<span class="status-progress">
 				<div class="progress-bar">
-					<div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
+					<div class="progress-fill" :class="getProgressClass(progressPercent)"></div>
 				</div>
 				<span class="progress-text">{{ progressPercent }}%</span>
 			</span>
@@ -20,6 +20,7 @@
 					v-for="transition in allowedTransitions"
 					:key="transition.id"
 					class="transition-btn"
+					:data-testid="`repair-transition-${transition.id}`"
 					:class="{ 'btn-danger': transition.id === 10 }"
 					:disabled="changing"
 					@click="confirmTransition(transition)"
@@ -48,8 +49,8 @@
 					<textarea v-model="transitionNote" class="form-control" rows="2" placeholder="Agregar comentario sobre el cambio..."></textarea>
 				</div>
 				<div class="d-flex gap-2 justify-content-end">
-					<button class="btn btn-secondary" @click="showConfirmModal = false">Cancelar</button>
-					<button class="btn btn-primary" :disabled="changing" @click="executeTransition">
+					<button class="btn btn-secondary" data-testid="repair-status-cancel" @click="showConfirmModal = false">Cancelar</button>
+					<button class="btn btn-primary" data-testid="repair-status-confirm" :disabled="changing" @click="executeTransition">
 						{{ changing ? 'Cambiando...' : 'Confirmar' }}
 					</button>
 				</div>
@@ -72,16 +73,16 @@ const emit = defineEmits(['statusChanged'])
 
 // Estado de la máquina de estados (mismo que backend)
 const STATE_CONFIG = {
-	1: { name: 'Ingreso', color: '#6c757d', progress: 0, icon: 'fa-solid fa-door-open', transitions: [2, 10] },
-	2: { name: 'Diagnóstico', color: '#17a2b8', progress: 15, icon: 'fa-solid fa-stethoscope', transitions: [3, 10] },
-	3: { name: 'Presupuesto', color: '#fd7e14', progress: 30, icon: 'fa-solid fa-file-invoice-dollar', transitions: [4, 10] },
-	4: { name: 'Aprobado', color: '#28a745', progress: 40, icon: 'fa-solid fa-thumbs-up', transitions: [5, 10] },
-	5: { name: 'En trabajo', color: '#ff8c42', progress: 60, icon: 'fa-solid fa-wrench', transitions: [6, 10] },
-	6: { name: 'Listo', color: '#20c997', progress: 80, icon: 'fa-solid fa-check-circle', transitions: [7, 10] },
-	7: { name: 'Entregado', color: '#198754', progress: 90, icon: 'fa-solid fa-hand-holding', transitions: [8] },
-	8: { name: 'Noventena', color: '#4d77ff', progress: 95, icon: 'fa-solid fa-hourglass-half', transitions: [9] },
-	9: { name: 'Archivado', color: '#6f42c1', progress: 100, icon: 'fa-solid fa-box-archive', transitions: [] },
-	10: { name: 'Rechazado', color: '#dc3545', progress: 0, icon: 'fa-solid fa-ban', transitions: [9] }
+	1: { name: 'Ingreso', color: 'var(--status-color-1)', progress: 0, icon: 'fa-solid fa-door-open', transitions: [2, 10] },
+	2: { name: 'Diagnóstico', color: 'var(--status-color-2)', progress: 15, icon: 'fa-solid fa-stethoscope', transitions: [3, 10] },
+	3: { name: 'Presupuesto', color: 'var(--status-color-3)', progress: 30, icon: 'fa-solid fa-file-invoice-dollar', transitions: [4, 10] },
+	4: { name: 'Aprobado', color: 'var(--status-color-4)', progress: 40, icon: 'fa-solid fa-thumbs-up', transitions: [5, 10] },
+	5: { name: 'En trabajo', color: 'var(--status-color-5)', progress: 60, icon: 'fa-solid fa-wrench', transitions: [6, 10] },
+	6: { name: 'Listo', color: 'var(--status-color-6)', progress: 80, icon: 'fa-solid fa-check-circle', transitions: [7, 10] },
+	7: { name: 'Entregado', color: 'var(--status-color-7)', progress: 90, icon: 'fa-solid fa-hand-holding', transitions: [8] },
+	8: { name: 'Noventena', color: 'var(--status-color-8)', progress: 95, icon: 'fa-solid fa-hourglass-half', transitions: [9] },
+	9: { name: 'Archivado', color: 'var(--status-color-9)', progress: 100, icon: 'fa-solid fa-box-archive', transitions: [] },
+	10: { name: 'Rechazado', color: 'var(--status-color-10)', progress: 0, icon: 'fa-solid fa-ban', transitions: [9] }
 }
 
 // State
@@ -93,7 +94,7 @@ const changing = ref(false)
 // Computed
 const currentConfig = computed(() => STATE_CONFIG[props.currentStatusId] || STATE_CONFIG[1])
 const currentStatusName = computed(() => currentConfig.value.name)
-const currentStatusColor = computed(() => currentConfig.value.color)
+const currentStatusClass = computed(() => `status-${props.currentStatusId}`)
 const progressPercent = computed(() => currentConfig.value.progress)
 const isTerminal = computed(() => props.currentStatusId === 9)
 
@@ -111,6 +112,11 @@ const confirmTransition = (transition) => {
 	pendingTransition.value = transition
 	transitionNote.value = ''
 	showConfirmModal.value = true
+}
+
+const getProgressClass = (progress) => {
+	const normalized = Math.max(0, Math.min(100, Math.round(Number(progress) || 0)))
+	return `progress-${normalized}`
 }
 
 const executeTransition = async () => {
@@ -139,140 +145,3 @@ const executeTransition = async () => {
 	}
 }
 </script>
-
-<style scoped lang="scss">
-@import "/src/scss/_theming.scss";
-
-.status-changer {
-	background: $vintage-beige;
-	border-radius: 12px;
-	padding: 1.25rem;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.current-status {
-	display: flex;
-	align-items: center;
-	gap: 1rem;
-	flex-wrap: wrap;
-	margin-bottom: 1rem;
-}
-
-.status-label {
-	font-weight: 500;
-	color: $brand-text;
-}
-
-.status-badge {
-	padding: 0.5rem 1rem;
-	border-radius: 20px;
-	color: white;
-	font-weight: 600;
-	font-size: 0.9em;
-}
-
-.status-progress {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	flex: 1;
-	min-width: 150px;
-
-	.progress-bar {
-		flex: 1;
-		height: 8px;
-		background: #e0e0e0;
-		border-radius: 4px;
-		overflow: hidden;
-	}
-
-	.progress-fill {
-		height: 100%;
-		background: linear-gradient(90deg, $brand-primary, lighten($brand-primary, 10%));
-		transition: width 0.3s ease;
-	}
-
-	.progress-text {
-		font-weight: 600;
-		color: $brand-primary;
-		min-width: 40px;
-	}
-}
-
-.status-actions {
-	border-top: 1px solid rgba(0, 0, 0, 0.1);
-	padding-top: 1rem;
-}
-
-.transitions-grid {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem;
-}
-
-.transition-btn {
-	padding: 0.5rem 1rem;
-	border: 2px solid $brand-primary;
-	background: white;
-	color: $brand-primary;
-	border-radius: 8px;
-	font-weight: 500;
-	cursor: pointer;
-	transition: all 0.2s ease;
-
-	&:hover {
-		background: $brand-primary;
-		color: white;
-	}
-
-	&.btn-danger {
-		border-color: #dc3545;
-		color: #dc3545;
-
-		&:hover {
-			background: #dc3545;
-			color: white;
-		}
-	}
-
-	&:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-}
-
-.terminal-notice {
-	padding: 1rem;
-	background: rgba(0, 0, 0, 0.05);
-	border-radius: 8px;
-	color: #666;
-	text-align: center;
-}
-
-.confirm-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: rgba(0, 0, 0, 0.5);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	z-index: 1000;
-}
-
-.confirm-modal {
-	background: white;
-	padding: 1.5rem;
-	border-radius: 12px;
-	max-width: 400px;
-	width: 90%;
-	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-
-	h5 {
-		margin-bottom: 1rem;
-		color: $brand-text;
-	}
-}
-</style>

@@ -93,3 +93,17 @@ def update_ticket_status(
     ticket.status = status
     db.commit()
     return {"ok": True}
+
+
+@router.delete("/{ticket_id}", status_code=204)
+def delete_ticket(
+    ticket_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("tickets", "delete")),
+):
+    ticket = db.query(Ticket).filter(Ticket.id == ticket_id).first()
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    db.delete(ticket)
+    db.commit()
+    return None

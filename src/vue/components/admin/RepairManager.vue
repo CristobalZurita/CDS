@@ -21,15 +21,3 @@ defineProps({
 
 defineEmits(['update-status'])
 </script>
-
-<style scoped>
-.repair-manager {
-  display: grid;
-  gap: 1rem;
-}
-.repair {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
-}
-</style>

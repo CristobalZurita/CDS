@@ -32,7 +32,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def create(self, db: Session, obj_in: CreateSchemaType) -> ModelType:
         """Create new record"""
-        obj_data = obj_in.dict()
+        obj_data = obj_in.model_dump()
         db_obj = self.model(**obj_data)
         db.add(db_obj)
         db.commit()
@@ -41,7 +41,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def update(self, db: Session, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
         """Update existing record"""
-        obj_data = obj_in.dict(exclude_unset=True)
+        obj_data = obj_in.model_dump(exclude_unset=True)
         for field, value in obj_data.items():
             setattr(db_obj, field, value)
         db.add(db_obj)

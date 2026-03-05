@@ -27,15 +27,3 @@ const toggle = (code) => {
   emit('update:modelValue', next)
 }
 </script>
-
-<style scoped>
-.fault-detector {
-  display: grid;
-  gap: 0.5rem;
-}
-.fault {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-</style>

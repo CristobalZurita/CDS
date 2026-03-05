@@ -3,52 +3,18 @@ Pydantic schemas for Appointment API
 Request/Response validation and serialization
 """
 
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from typing import Optional
 from datetime import datetime
 import re
 
+from app.core.timezone import now_utc, to_utc
+
 
 class AppointmentCreate(BaseModel):
     """Schema for creating a new appointment"""
-    nombre: str = Field(..., min_length=2, max_length=255)
-    email: EmailStr
-    telefono: str = Field(..., min_length=10, max_length=20)
-    fecha: datetime
-    mensaje: Optional[str] = Field(None, max_length=1000)
-    turnstile_token: Optional[str] = None
-
-    @validator('nombre')
-    def validate_nombre(cls, v):
-        """Validate that nombre contains only letters, accents, and Ñ"""
-        # Allow letters, accents, spaces, and Ñ
-        if not re.match(r"^[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+$", v):
-            raise ValueError('El nombre solo puede contener letras, acentos y espacios')
-        return v.strip()
-
-    @validator('telefono')
-    def validate_telefono(cls, v):
-        """Validate that telefono starts with + and contains only numbers"""
-        if not re.match(r"^\+\d+$", v):
-            raise ValueError('El teléfono debe comenzar con + y solo contener números')
-        return v.strip()
-
-    @validator('fecha')
-    def validate_fecha(cls, v):
-        """Validate that fecha is in the future"""
-        if v <= datetime.now():
-            raise ValueError('La fecha debe ser en el futuro')
-        return v
-
-    @validator('mensaje')
-    def validate_mensaje(cls, v):
-        """Clean up mensaje if provided"""
-        if v:
-            return v.strip()
-        return v
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "nombre": "Juan García Pérez",
                 "email": "juan@ejemplo.com",
@@ -57,41 +23,72 @@ class AppointmentCreate(BaseModel):
                 "mensaje": "Consulta sobre reparación de sintetizador"
             }
         }
+    )
+
+    nombre: str = Field(..., min_length=2, max_length=255)
+    email: EmailStr
+    telefono: str = Field(..., min_length=10, max_length=20)
+    fecha: datetime
+    mensaje: Optional[str] = Field(None, max_length=1000)
+    turnstile_token: Optional[str] = None
+
+    @field_validator('nombre')
+    @classmethod
+    def validate_nombre(cls, v):
+        """Validate that nombre contains only letters, accents, and Ñ"""
+        # Allow letters, accents, spaces, and Ñ
+        if not re.match(r"^[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+$", v):
+            raise ValueError('El nombre solo puede contener letras, acentos y espacios')
+        return v.strip()
+
+    @field_validator('telefono')
+    @classmethod
+    def validate_telefono(cls, v):
+        """Validate that telefono starts with + and contains only numbers"""
+        if not re.match(r"^\+\d+$", v):
+            raise ValueError('El teléfono debe comenzar con + y solo contener números')
+        return v.strip()
+
+    @field_validator('fecha')
+    @classmethod
+    def validate_fecha(cls, v):
+        """Validate that fecha is in the future"""
+        normalized = to_utc(v)
+        if normalized <= now_utc():
+            raise ValueError('La fecha debe ser en el futuro')
+        return normalized
+
+    @field_validator('mensaje')
+    @classmethod
+    def validate_mensaje(cls, v):
+        """Clean up mensaje if provided"""
+        if v:
+            return v.strip()
+        return v
 
 
 class AppointmentUpdate(BaseModel):
     """Schema for updating an appointment"""
-    estado: Optional[str] = None
-    google_calendar_id: Optional[str] = None
-    notificacion_enviada: Optional[bool] = None
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "estado": "confirmado",
                 "google_calendar_id": "abc123def456",
                 "notificacion_enviada": True
             }
         }
+    )
+
+    estado: Optional[str] = None
+    google_calendar_id: Optional[str] = None
+    notificacion_enviada: Optional[bool] = None
 
 
 class AppointmentResponse(BaseModel):
     """Schema for appointment response"""
-    id: int
-    nombre: str
-    email: str
-    telefono: str
-    fecha: datetime
-    mensaje: Optional[str]
-    estado: str
-    google_calendar_id: Optional[str]
-    notificacion_enviada: bool
-    created_at: datetime
-    updated_at: Optional[datetime]
-
-    class Config:
-        from_attributes = True
-        schema_extra = {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "example": {
                 "id": 1,
                 "nombre": "Juan García Pérez",
@@ -106,3 +103,16 @@ class AppointmentResponse(BaseModel):
                 "updated_at": None
             }
         }
+    )
+
+    id: int
+    nombre: str
+    email: str
+    telefono: str
+    fecha: datetime
+    mensaje: Optional[str]
+    estado: str
+    google_calendar_id: Optional[str]
+    notificacion_enviada: bool
+    created_at: datetime
+    updated_at: Optional[datetime]

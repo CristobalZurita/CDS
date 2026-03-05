@@ -104,8 +104,7 @@
                 <span
                   v-for="(color, index) in previewBands"
                   :key="`${color}-${index}`"
-                  class="band"
-                  :style="{ background: colorMap[color]?.bg || '#d9d2c3' }"
+                  :class="['band', bandClass(color)]"
                 ></span>
               </div>
             </div>
@@ -197,65 +196,7 @@
     </PageSectionContent>
   </PageSection>
 
-  <Footer>
-    <FooterBlock :darken="false" :row="true">
-      <FooterColumn
-        title="Sobre el taller"
-        faIcon="pi pi-lightbulb me-2"
-        :description="[
-          `Cirujano de Sintetizadores es un taller especializado en reparación, restauración y modificación de sintetizadores, teclados y equipos de audio profesionales.`,
-          `Trabajamos con diagnóstico detallado, repuestos de calidad y un enfoque orientado a conservar y realzar el carácter sonoro original de cada instrumento.`
-        ]"
-        :links="[]"
-        :displayLinksAsButtons="false"
-      />
-
-      <FooterColumn
-        title="Redes y presencia"
-        faIcon=""
-        :description="[]"
-        :links="[
-          { label: `Instagram`, href: `https://www.instagram.com/cirujanodesintetizadores/`, faIcon: `fa-brands fa-instagram` },
-          { label: `Facebook`, href: `https://www.facebook.com/Cirujanodesintetizadores/`, faIcon: `fa-brands fa-facebook` }
-        ]"
-        :displayLinksAsButtons="true"
-      />
-
-      <FooterColumn
-        title="Información de contacto"
-        faIcon="pi pi-envelope me-2 pe-1"
-        :description="[
-          `Valparaíso – Chile`,
-          `Atención con coordinación previa.`
-        ]"
-        :links="[
-          { label: `+56 9 8295 7538`, href: `tel:+56982957538`, faIcon: 'pi pi-phone' },
-          { label: `contacto@cirujanodesintetizadores.com`, href: `mailto:contacto@cirujanodesintetizadores.com`, faIcon: 'fa-regular fa-envelope' }
-        ]"
-        :displayLinksAsButtons="false"
-      />
-    </FooterBlock>
-
-    <FooterBlock :darken="false" :row="false">
-      <div class="footer-legal-row">
-        <router-link to="/privacidad">Política de privacidad</router-link>
-        <span class="footer-legal-sep">·</span>
-        <router-link to="/terminos">Términos y condiciones</router-link>
-        <span class="footer-legal-sep">·</span>
-        <a href="https://github.com/CristobalZurita/cirujano-front" target="_blank" rel="noopener noreferrer">
-          Repositorio del proyecto
-        </a>
-      </div>
-    </FooterBlock>
-
-    <FooterBlock :darken="true" :row="false">
-      <FooterCopyright
-        holder="Cirujano de Sintetizadores"
-        url="https://www.cirujanodesintetizadores.cl"
-        license="Todos los derechos reservados"
-      />
-    </FooterBlock>
-  </Footer>
+  <WorkshopFooter />
 </template>
 
 <script setup lang="ts">
@@ -270,10 +211,7 @@ import PageSection from '/src/vue/components/layout/PageSection.vue'
 import PageSectionHeader from '/src/vue/components/layout/PageSectionHeader.vue'
 import PageSectionContent from '/src/vue/components/layout/PageSectionContent.vue'
 import Link from '/src/vue/components/generic/Link.vue'
-import Footer from '/src/vue/components/footer/Footer.vue'
-import FooterBlock from '/src/vue/components/footer/FooterBlock.vue'
-import FooterColumn from '/src/vue/components/footer/FooterColumn.vue'
-import FooterCopyright from '/src/vue/components/footer/FooterCopyright.vue'
+import WorkshopFooter from '/src/vue/components/footer/WorkshopFooter.vue'
 
 type ColorOption = {
   value: string
@@ -282,19 +220,26 @@ type ColorOption = {
   fg: string
 }
 
+const getBandColor = (name: string) => {
+  if (typeof window === 'undefined') return 'transparent'
+  const root = document.getElementById('resistor-color-calculator')
+  const styles = root ? getComputedStyle(root) : null
+  return styles?.getPropertyValue(name).trim() || 'transparent'
+}
+
 const colorMap: Record<string, { bg: string; fg: string }> = {
-  black: { bg: '#111111', fg: '#f6f3ec' },
-  brown: { bg: '#6d4c41', fg: '#f6f3ec' },
-  red: { bg: '#c62828', fg: '#f6f3ec' },
-  orange: { bg: '#ef6c00', fg: '#1a1a1a' },
-  yellow: { bg: '#f9a825', fg: '#1a1a1a' },
-  green: { bg: '#2e7d32', fg: '#f6f3ec' },
-  blue: { bg: '#1565c0', fg: '#f6f3ec' },
-  violet: { bg: '#6a1b9a', fg: '#f6f3ec' },
-  gray: { bg: '#757575', fg: '#f6f3ec' },
-  white: { bg: '#f6f3ec', fg: '#1a1a1a' },
-  gold: { bg: '#d4af37', fg: '#1a1a1a' },
-  silver: { bg: '#bdbdbd', fg: '#1a1a1a' }
+  black: { bg: getBandColor('--resistor-black-bg'), fg: getBandColor('--resistor-black-fg') },
+  brown: { bg: getBandColor('--resistor-brown-bg'), fg: getBandColor('--resistor-brown-fg') },
+  red: { bg: getBandColor('--resistor-red-bg'), fg: getBandColor('--resistor-red-fg') },
+  orange: { bg: getBandColor('--resistor-orange-bg'), fg: getBandColor('--resistor-orange-fg') },
+  yellow: { bg: getBandColor('--resistor-yellow-bg'), fg: getBandColor('--resistor-yellow-fg') },
+  green: { bg: getBandColor('--resistor-green-bg'), fg: getBandColor('--resistor-green-fg') },
+  blue: { bg: getBandColor('--resistor-blue-bg'), fg: getBandColor('--resistor-blue-fg') },
+  violet: { bg: getBandColor('--resistor-violet-bg'), fg: getBandColor('--resistor-violet-fg') },
+  gray: { bg: getBandColor('--resistor-gray-bg'), fg: getBandColor('--resistor-gray-fg') },
+  white: { bg: getBandColor('--resistor-white-bg'), fg: getBandColor('--resistor-white-fg') },
+  gold: { bg: getBandColor('--resistor-gold-bg'), fg: getBandColor('--resistor-gold-fg') },
+  silver: { bg: getBandColor('--resistor-silver-bg'), fg: getBandColor('--resistor-silver-fg') }
 }
 
 const digitColors: ColorOption[] = [
@@ -447,6 +392,12 @@ function resetSmd() {
   smdResult.value = null
 }
 
+function bandClass(color: string) {
+  const normalized = String(color || '').toLowerCase()
+  if (!normalized) return 'band-default'
+  return `band-${normalized}`
+}
+
 function formatOhms(value: number) {
   if (value >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(2)} GΩ`
   if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(2)} MΩ`
@@ -454,242 +405,3 @@ function formatOhms(value: number) {
   return `${value.toFixed(2)} Ω`
 }
 </script>
-
-<style scoped lang="scss">
-@import "/src/scss/_theming.scss";
-
-#resistor-color-calculator {
-  .resistor-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: 1.6rem;
-
-    @include media-breakpoint-down(lg) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .resistor-panel {
-    background: rgba($light-1, 0.8);
-    border: 1px solid rgba($dark, 0.1);
-    border-radius: 22px;
-    padding: 1.8rem;
-    box-shadow: 0 20px 40px rgba($dark, 0.08);
-  }
-
-  .panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .panel-title {
-    font-family: 'Cervo Neue', $headings-font-family;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: $dark;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .panel-tabs {
-    display: flex;
-    gap: 0.5rem;
-    background: rgba($dark, 0.05);
-    padding: 0.35rem;
-    border-radius: 999px;
-  }
-
-  .panel-tab {
-    border: none;
-    background: transparent;
-    padding: 0.35rem 0.95rem;
-    border-radius: 999px;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-size: 0.75rem;
-    color: $dark;
-    cursor: pointer;
-  }
-
-  .panel-tab.active {
-    background: $primary;
-    color: $light-1;
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-
-    @include media-breakpoint-down(sm) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .form-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    color: $dark;
-  }
-
-  .form-field label {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
-  }
-
-  .form-field select {
-    border: 1px solid rgba($dark, 0.2);
-    border-radius: 12px;
-    padding: 0.65rem 0.75rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.95rem;
-    background: $light-1;
-    color: $dark;
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 0.8rem;
-    margin-top: 1.5rem;
-  }
-
-  .btn-primary-action,
-  .btn-secondary-action {
-    border: none;
-    border-radius: 999px;
-    padding: 0.65rem 1.6rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-  }
-
-  .btn-primary-action {
-    background: $primary;
-    color: $light-1;
-  }
-
-  .btn-secondary-action {
-    background: transparent;
-    border: 1px solid rgba($dark, 0.3);
-    color: $dark;
-  }
-
-  .output-panel {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .output-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1.4rem;
-    align-items: center;
-    text-align: center;
-  }
-
-  .resistor-visual {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  .resistor-body {
-    position: relative;
-    width: min(100%, 320px);
-    height: 70px;
-    background: #e6dfd1;
-    border-radius: 40px;
-    box-shadow: inset 0 0 0 6px rgba(0, 0, 0, 0.05);
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    padding: 0 1.2rem;
-  }
-
-  .band {
-    width: 12px;
-    height: 60%;
-    border-radius: 6px;
-    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.1);
-  }
-
-  .output-value {
-    font-family: 'Cervo Neue', $headings-font-family;
-    color: $dark;
-  }
-
-  .value-label {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.75rem;
-    color: $text-muted;
-  }
-
-  .value-main {
-    font-size: 2.1rem;
-    font-weight: 800;
-    margin-top: 0.3rem;
-  }
-
-  .value-range,
-  .value-meta {
-    font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.9rem;
-    color: $text-muted;
-  }
-
-  .output-hint {
-    font-size: 0.85rem;
-    color: $text-muted;
-    max-width: 260px;
-  }
-
-  .resistor-divider {
-    margin: 2.8rem 0 1.6rem;
-    text-align: center;
-    font-family: 'Cervo Neue', $headings-font-family;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: $primary;
-  }
-
-  .smd-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: 1.6rem;
-
-    @include media-breakpoint-down(lg) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .resistor-back {
-    display: flex;
-    justify-content: center;
-    margin-top: 2.5rem;
-  }
-
-  .resistor-back-link {
-    font-family: 'Cervo Neue', $headings-font-family;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: $primary;
-  }
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-    <form id="foxy-contact-form" @submit="_onFormSubmit">
+    <form id="foxy-contact-form" data-testid="contact-form" @submit="_onFormSubmit">
         <ContactFormFields v-if="shouldDisplayFormFields"
                            :error-message="errorMessage"
                            @input="_onInput"/>
@@ -114,7 +114,7 @@ const _submit = async () => {
 
 const _submitToApi = async () => {
     try {
-        await api.post("/contact", {
+        await api.post("/contact/", {
             name: name.value,
             email: email.value,
             subject: subject.value,
@@ -137,15 +137,3 @@ const _resetScroll = () => {
     layout.scrollIntoView(element)
 }
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-#foxy-contact-form {
-    width: 100%;
-    @include media-breakpoint-down(lg) {
-        max-width: 680px;
-        margin: 0 auto;
-    }
-}
-</style>

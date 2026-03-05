@@ -9,6 +9,7 @@ from app.crud.repair import create_repair, list_repairs, get_repair, update_repa
 router = APIRouter(prefix="/repairs", tags=["repairs"])
 
 
+@router.get("", response_model=List[RepairRead], include_in_schema=False)
 @router.get("/", response_model=List[RepairRead])
 def list_repairs_endpoint(db: Session = Depends(get_db)):
     return list_repairs(db)
@@ -22,6 +23,7 @@ def get_repair_endpoint(repair_id: int, db: Session = Depends(get_db)):
     return repair
 
 
+@router.post("", response_model=RepairRead, status_code=status.HTTP_201_CREATED, include_in_schema=False)
 @router.post("/", response_model=RepairRead, status_code=status.HTTP_201_CREATED)
 def create_repair_endpoint(payload: RepairCreate, db: Session = Depends(get_db)):
     return create_repair(db, payload)

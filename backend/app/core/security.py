@@ -5,24 +5,12 @@ from datetime import datetime, timedelta
 from typing import Optional
 from passlib.context import CryptContext
 
-# Import jose (python-jose) if available; otherwise provide a minimal fallback
 try:
     from jose import JWTError, jwt  # type: ignore
-except Exception:
-    # Minimal fallback for environments where `python-jose` isn't installed (tests, minimal CI)
-    class JWTError(Exception):
-        pass
-
-    class _FallbackJWT:
-        def encode(self, payload, key, algorithm=None):
-            # Return a deterministic placeholder token for non-production use
-            return "__fallback_token__"
-
-        def decode(self, token, key, algorithms=None):
-            # In fallback mode decoding isn't supported; raise JWTError for clarity
-            raise JWTError("python-jose not installed: token decode unavailable in fallback mode")
-
-    jwt = _FallbackJWT()
+except Exception as exc:
+    raise RuntimeError(
+        "python-jose is required for JWT operations. Install 'python-jose' to run the API."
+    ) from exc
 from app.core.config import settings
 
 # Contexto para hashing de contraseñas
@@ -33,7 +21,7 @@ try:
 except ImportError:
     _bcrypt_available = False
 
-pwd_context = CryptContext(schemes=["bcrypt", "pbkdf2_sha256"], deprecated="auto")
+pbkdf2_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 # Configuración JWT
 ALGORITHM = "HS256"
@@ -43,30 +31,21 @@ REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 def hash_password(password: str) -> str:
     """Hash una contraseña usando bcrypt"""
-    # Bcrypt has a 72-byte input limit. Truncate the UTF-8 encoded
-    # password to avoid ValueError being raised by the backend hashing
-    # implementation when a too-long password is supplied.
     try:
         pw_bytes = password.encode("utf-8")
     except Exception:
-        # Fallback: coerce to str then encode
-        pw_bytes = str(password).encode("utf-8")
+        safe_password = str(password)
+        pw_bytes = safe_password.encode("utf-8")
+    else:
+        safe_password = password
 
-    if len(pw_bytes) > 72:
-        pw_bytes = pw_bytes[:72]
+    if _bcrypt_available:
+        try:
+            return bcrypt.hashpw(pw_bytes[:72], bcrypt.gensalt()).decode("utf-8")
+        except ValueError:
+            pass
 
-    # Pass the (possibly truncated) bytes back as string to passlib
-    safe_password = pw_bytes.decode("utf-8", errors="ignore")
-
-    try:
-        return pwd_context.hash(safe_password)
-    except ValueError:
-        # bcrypt backend may raise ValueError for unusually long inputs or
-        # if the native bcrypt implementation is problematic in this
-        # environment. Fall back to pbkdf2_sha256 to avoid crashing the
-        # registration flow (acceptable for development/test environments).
-        fallback_ctx = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
-        return fallback_ctx.hash(safe_password)
+    return pbkdf2_context.hash(safe_password)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -74,7 +53,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     # Intentar con bcrypt directamente primero (evita bugs de passlib)
     if _bcrypt_available and hashed_password.startswith("$2"):
         try:
-            password_bytes = plain_password.encode("utf-8")
+            password_bytes = plain_password.encode("utf-8")[:72]
             hash_bytes = hashed_password.encode("utf-8")
             return bcrypt.checkpw(password_bytes, hash_bytes)
         except Exception:
@@ -82,7 +61,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
     # Fallback a passlib para otros esquemas
     try:
-        return pwd_context.verify(plain_password, hashed_password)
+        return pbkdf2_context.verify(plain_password, hashed_password)
     except Exception:
         return False
 
@@ -145,3 +124,9 @@ def verify_refresh_token(token: str) -> dict:
         return payload
     except JWTError:
         raise JWTError("Refresh token inválido o expirado")
+
+
+def verify_crypto_dependencies() -> None:
+    """Fail fast if crypto dependencies are missing or misconfigured."""
+    if jwt is None:
+        raise RuntimeError("JWT provider unavailable (python-jose missing)")

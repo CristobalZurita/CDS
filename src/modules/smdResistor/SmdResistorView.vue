@@ -1,5 +1,5 @@
 <template>
-  <PageSection variant="default" id="cd40106-calculator">
+  <PageSection variant="default" id="smd-40106-calculator-root">
     <PageSectionHeader
       title="*Oscilador* CD40106"
       subtitle="Schmitt trigger con R y C para sintetizadores digitales"
@@ -56,7 +56,7 @@
 
             <div class="pinout-card">
               <img
-                src="/images/calculadoras/CD40106.png"
+                src="/images/calculadoras/CD40106.webp"
                 alt="Pinout CD40106"
                 class="pinout-image"
               />
@@ -109,65 +109,7 @@
     </PageSectionContent>
   </PageSection>
 
-  <Footer>
-    <FooterBlock :darken="false" :row="true">
-      <FooterColumn
-        title="Sobre el taller"
-        faIcon="pi pi-lightbulb me-2"
-        :description="[
-          `Cirujano de Sintetizadores es un taller especializado en reparación, restauración y modificación de sintetizadores, teclados y equipos de audio profesionales.`,
-          `Trabajamos con diagnóstico detallado, repuestos de calidad y un enfoque orientado a conservar y realzar el carácter sonoro original de cada instrumento.`
-        ]"
-        :links="[]"
-        :displayLinksAsButtons="false"
-      />
-
-      <FooterColumn
-        title="Redes y presencia"
-        faIcon=""
-        :description="[]"
-        :links="[
-          { label: `Instagram`, href: `https://www.instagram.com/cirujanodesintetizadores/`, faIcon: `fa-brands fa-instagram` },
-          { label: `Facebook`, href: `https://www.facebook.com/Cirujanodesintetizadores/`, faIcon: `fa-brands fa-facebook` }
-        ]"
-        :displayLinksAsButtons="true"
-      />
-
-      <FooterColumn
-        title="Información de contacto"
-        faIcon="pi pi-envelope me-2 pe-1"
-        :description="[
-          `Valparaíso – Chile`,
-          `Atención con coordinación previa.`
-        ]"
-        :links="[
-          { label: `+56 9 8295 7538`, href: `tel:+56982957538`, faIcon: 'pi pi-phone' },
-          { label: `contacto@cirujanodesintetizadores.com`, href: `mailto:contacto@cirujanodesintetizadores.com`, faIcon: 'fa-regular fa-envelope' }
-        ]"
-        :displayLinksAsButtons="false"
-      />
-    </FooterBlock>
-
-    <FooterBlock :darken="false" :row="false">
-      <div class="footer-legal-row">
-        <router-link to="/privacidad">Política de privacidad</router-link>
-        <span class="footer-legal-sep">·</span>
-        <router-link to="/terminos">Términos y condiciones</router-link>
-        <span class="footer-legal-sep">·</span>
-        <a href="https://github.com/CristobalZurita/cirujano-front" target="_blank" rel="noopener noreferrer">
-          Repositorio del proyecto
-        </a>
-      </div>
-    </FooterBlock>
-
-    <FooterBlock :darken="true" :row="false">
-      <FooterCopyright
-        holder="Cirujano de Sintetizadores"
-        url="https://www.cirujanodesintetizadores.cl"
-        license="Todos los derechos reservados"
-      />
-    </FooterBlock>
-  </Footer>
+  <WorkshopFooter />
 </template>
 
 <script setup lang="ts">
@@ -176,10 +118,7 @@ import PageSection from '/src/vue/components/layout/PageSection.vue'
 import PageSectionHeader from '/src/vue/components/layout/PageSectionHeader.vue'
 import PageSectionContent from '/src/vue/components/layout/PageSectionContent.vue'
 import Link from '/src/vue/components/generic/Link.vue'
-import Footer from '/src/vue/components/footer/Footer.vue'
-import FooterBlock from '/src/vue/components/footer/FooterBlock.vue'
-import FooterColumn from '/src/vue/components/footer/FooterColumn.vue'
-import FooterCopyright from '/src/vue/components/footer/FooterCopyright.vue'
+import WorkshopFooter from '/src/vue/components/footer/WorkshopFooter.vue'
 
 const form = reactive({
   r_value: 100,
@@ -251,15 +190,42 @@ const capacitanceFactor = (unit: string) => {
   return 1e-6
 }
 
+const getCanvasPalette = () => {
+  if (typeof window === 'undefined') {
+    return {
+      panelFill: 'transparent',
+      stroke: 'transparent',
+      chipFill: 'transparent',
+      chipText: 'transparent',
+      ledOn: 'transparent',
+      ledOff: 'transparent',
+      ledGlow: 'transparent'
+    }
+  }
+  const root = document.getElementById('smd-40106-calculator-root')
+  const styles = root ? getComputedStyle(root) : null
+  const read = (name: string) => (styles?.getPropertyValue(name).trim() || 'transparent')
+  return {
+    panelFill: read('--smd-panel-fill'),
+    stroke: read('--smd-stroke'),
+    chipFill: read('--smd-chip-fill'),
+    chipText: read('--smd-chip-text'),
+    ledOn: read('--smd-led-on'),
+    ledOff: read('--smd-led-off'),
+    ledGlow: read('--smd-led-glow')
+  }
+}
+
 const drawCircuit = () => {
   const canvas = canvasRef.value
   if (!canvas) return
   const ctx = canvas.getContext('2d')
   if (!ctx) return
+  const palette = getCanvasPalette()
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
-  ctx.fillStyle = 'rgba(250, 247, 240, 0.9)'
-  ctx.strokeStyle = '#2f2b28'
+  ctx.fillStyle = palette.panelFill
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   roundRect(ctx, 8, 8, canvas.width - 16, canvas.height - 16, 18)
   ctx.fill()
@@ -267,7 +233,7 @@ const drawCircuit = () => {
 
   const topY = 40
   const bottomY = 220
-  ctx.strokeStyle = '#2f2b28'
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   ctx.moveTo(40, topY)
@@ -277,14 +243,14 @@ const drawCircuit = () => {
   ctx.stroke()
 
   ctx.font = '14px "Cervo Neue", sans-serif'
-  ctx.fillStyle = '#2f2b28'
+  ctx.fillStyle = palette.stroke
   ctx.fillText('Vcc', 48, topY - 12)
   ctx.fillText('Gnd', 48, bottomY + 10)
 
-  drawGate(ctx, 200, 90, 70, 70)
-  drawResistor(ctx, 130, 60, 50, true)
+  drawGate(ctx, 200, 90, 70, 70, palette)
+  drawResistor(ctx, 130, 60, 50, true, palette)
   ctx.fillText('R', 118, 85)
-  drawCap(ctx, 130, 180)
+  drawCap(ctx, 130, 180, palette)
   ctx.fillText('C', 118, 195)
 
   ctx.beginPath()
@@ -294,7 +260,7 @@ const drawCircuit = () => {
   ctx.lineTo(130, bottomY)
   ctx.stroke()
 
-  drawLed(ctx, 320, 150, ledOn)
+  drawLed(ctx, 320, 150, ledOn, palette)
   ctx.beginPath()
   ctx.moveTo(270, 125)
   ctx.lineTo(320, 125)
@@ -314,9 +280,9 @@ const roundRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.closePath()
 }
 
-const drawGate = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) => {
-  ctx.fillStyle = '#1b1b1b'
-  ctx.strokeStyle = '#2f2b28'
+const drawGate = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, palette: ReturnType<typeof getCanvasPalette>) => {
+  ctx.fillStyle = palette.chipFill
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   ctx.moveTo(x, y)
@@ -326,16 +292,16 @@ const drawGate = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number
   ctx.fill()
   ctx.stroke()
 
-  ctx.fillStyle = '#f4efe6'
+  ctx.fillStyle = palette.chipText
   ctx.beginPath()
   ctx.arc(x + w + 6, y + h / 2, 6, 0, Math.PI * 2)
   ctx.fill()
 }
 
-const drawResistor = (ctx: CanvasRenderingContext2D, x: number, y: number, length: number, vertical: boolean) => {
+const drawResistor = (ctx: CanvasRenderingContext2D, x: number, y: number, length: number, vertical: boolean, palette: ReturnType<typeof getCanvasPalette>) => {
   const steps = 6
   const amplitude = 6
-  ctx.strokeStyle = '#2f2b28'
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   if (vertical) {
@@ -354,8 +320,8 @@ const drawResistor = (ctx: CanvasRenderingContext2D, x: number, y: number, lengt
   ctx.stroke()
 }
 
-const drawCap = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-  ctx.strokeStyle = '#2f2b28'
+const drawCap = (ctx: CanvasRenderingContext2D, x: number, y: number, palette: ReturnType<typeof getCanvasPalette>) => {
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   ctx.moveTo(x - 10, y)
@@ -365,16 +331,16 @@ const drawCap = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
   ctx.stroke()
 }
 
-const drawLed = (ctx: CanvasRenderingContext2D, x: number, y: number, on: boolean) => {
-  ctx.fillStyle = on ? '#ff3b30' : '#3b1d1b'
-  ctx.strokeStyle = '#2f2b28'
+const drawLed = (ctx: CanvasRenderingContext2D, x: number, y: number, on: boolean, palette: ReturnType<typeof getCanvasPalette>) => {
+  ctx.fillStyle = on ? palette.ledOn : palette.ledOff
+  ctx.strokeStyle = palette.stroke
   ctx.lineWidth = 2
   ctx.beginPath()
   ctx.arc(x, y, 8, 0, Math.PI * 2)
   ctx.fill()
   ctx.stroke()
   if (on) {
-    ctx.strokeStyle = 'rgba(255, 59, 48, 0.45)'
+    ctx.strokeStyle = palette.ledGlow
     ctx.lineWidth = 4
     ctx.beginPath()
     ctx.arc(x, y, 14, 0, Math.PI * 2)
@@ -414,230 +380,3 @@ watch([frequencyHz, () => form.r_kohm, () => form.c_uf], () => {
   startBlink()
 })
 </script>
-
-<style scoped lang="scss">
-@import "/src/scss/_theming.scss";
-
-#cd40106-calculator {
-  .cd40106-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    gap: 1.6rem;
-
-    @include media-breakpoint-down(lg) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .cd40106-panel {
-    background: rgba($light-1, 0.8);
-    border: 1px solid rgba($dark, 0.1);
-    border-radius: 22px;
-    padding: 1.8rem;
-    box-shadow: 0 20px 40px rgba($dark, 0.08);
-  }
-
-  .panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .panel-title {
-    font-family: 'Cervo Neue', $headings-font-family;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: $dark;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-
-    @include media-breakpoint-down(sm) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .form-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    color: $dark;
-  }
-
-  .form-field label {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
-  }
-
-  .form-field input {
-    border: 1px solid rgba($dark, 0.2);
-    border-radius: 12px;
-    padding: 0.65rem 0.75rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.95rem;
-    background: $light-1;
-    color: $dark;
-  }
-
-  .unit-input {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.5rem;
-    align-items: center;
-  }
-
-  .unit-input input {
-    width: 100%;
-  }
-
-  .unit-select {
-    border: 1px solid rgba($dark, 0.2);
-    border-radius: 12px;
-    padding: 0.65rem 0.75rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.9rem;
-    background: $light-1;
-    color: $dark;
-    min-width: 74px;
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 0.8rem;
-    margin-top: 1.5rem;
-  }
-
-  .btn-primary-action,
-  .btn-secondary-action {
-    border: none;
-    border-radius: 999px;
-    padding: 0.65rem 1.6rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-  }
-
-  .btn-primary-action {
-    background: $primary;
-    color: $light-1;
-  }
-
-  .btn-secondary-action {
-    background: transparent;
-    border: 1px solid rgba($dark, 0.3);
-    color: $dark;
-  }
-
-  .pinout-card {
-    margin-top: 2.2rem;
-    background: transparent;
-    border: 0;
-    padding: 0;
-    display: flex;
-  justify-content: flex-start;
-  padding-left: 3rem;
-  }
-
-  .pinout-image {
-    width: min(100%, 380px);
-    height: auto;
-    display: block;
-  }
-
-  .output-panel {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .output-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1.4rem;
-    align-items: center;
-    text-align: center;
-  }
-
-  .circuit-card {
-    width: 100%;
-    border-radius: 18px;
-    border: 1px solid rgba($dark, 0.12);
-    padding: 1rem 1.2rem;
-    background: linear-gradient(135deg, rgba($light-2, 0.7), rgba($light-1, 0.2));
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    align-items: center;
-  }
-
-  .circuit-canvas {
-    width: min(100%, 420px);
-    height: auto;
-    display: block;
-  }
-
-  .circuit-label {
-    font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: $text-muted;
-  }
-
-  .output-values {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    font-family: 'Cervo Neue', $font-family-base;
-    color: $dark;
-  }
-
-  .value-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.45rem 0.75rem;
-    border-radius: 12px;
-    background: rgba($dark, 0.04);
-  }
-
-  .value-row strong {
-    font-weight: 800;
-  }
-
-  .output-hint {
-    font-size: 0.85rem;
-    color: $text-muted;
-    max-width: 260px;
-  }
-
-  .cd40106-back {
-    display: flex;
-    justify-content: center;
-    margin-top: 2.5rem;
-  }
-
-  .cd40106-back-link {
-    font-family: 'Cervo Neue', $headings-font-family;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: $primary;
-  }
-}
-</style>

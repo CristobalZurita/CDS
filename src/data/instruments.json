@@ -1,0 +1,3386 @@
+{
+  "version": "2.1.0",
+  "generated_at": "2026-03-03T21:20:29.685965",
+  "total_instruments": 231,
+  "total_bases": 231,
+  "total_variantes": 42,
+  "total_fotos": 273,
+  "total_fotos_json": 273,
+  "marcas_detectadas": [
+    "ACCESS",
+    "AKAI",
+    "ALESIS",
+    "ARTURIA",
+    "ASM",
+    "BEHERINGER",
+    "CASIO",
+    "KAWAI",
+    "KORG",
+    "KURZWEIL",
+    "NOVATION",
+    "ROLAND",
+    "STUDIOLOGIC",
+    "YAMAHA"
+  ],
+  "marcas_con_logo": [
+    "ACCESS",
+    "AKAI",
+    "ALESIS",
+    "ARTURIA",
+    "BEHERINGER",
+    "CASIO",
+    "KAWAI",
+    "KORG",
+    "KURZWEIL",
+    "NOVATION",
+    "ROLAND",
+    "YAMAHA"
+  ],
+  "marcas_sin_logo": [
+    "ASM",
+    "STUDIOLOGIC"
+  ],
+  "marcas_habilitadas": [
+    "ACCESS",
+    "AKAI",
+    "ALESIS",
+    "ARTURIA",
+    "BEHERINGER",
+    "CASIO",
+    "KAWAI",
+    "KORG",
+    "KURZWEIL",
+    "NOVATION",
+    "ROLAND",
+    "YAMAHA"
+  ],
+  "marcas_no_habilitadas": [
+    "ASM",
+    "STUDIOLOGIC"
+  ],
+  "validacion": {
+    "fotos_en_carpeta": 273,
+    "fotos_en_json": 273,
+    "coinciden": true,
+    "esperado_dataset_base": 273,
+    "coincide_con_esperado_dataset_base": true
+  },
+  "instruments": [
+    {
+      "id": "access_virus_a",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_A",
+      "foto_principal": "ACCESS_VIRUS_A",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772318"
+    },
+    {
+      "id": "access_virus_b",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_B",
+      "foto_principal": "ACCESS_VIRUS_B",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772336"
+    },
+    {
+      "id": "access_virus_b_rack",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_B_RACK",
+      "foto_principal": "ACCESS_VIRUS_B_RACK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772343"
+    },
+    {
+      "id": "access_virus_c",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_C",
+      "foto_principal": "ACCESS_VIRUS_C",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772347"
+    },
+    {
+      "id": "access_virus_indigo",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_INDIGO",
+      "foto_principal": "ACCESS_VIRUS_INDIGO",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772351"
+    },
+    {
+      "id": "access_virus_kb",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_KB",
+      "foto_principal": "ACCESS_VIRUS_KB",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772355"
+    },
+    {
+      "id": "acces_virus_ti",
+      "marca": "ACCESS",
+      "modelo": "VIRUS_TI",
+      "foto_principal": "ACCES_VIRUS_TI",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-02-17T15:48:58.829371",
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ACCESS.webp"
+    },
+    {
+      "id": "akai_apc_64",
+      "marca": "AKAI",
+      "modelo": "APC_64",
+      "foto_principal": "AKAI_APC_64",
+      "fotos_adicionales": [
+        "AKAI_APC_64_BACK",
+        "AKAI_APC_64_FRONT"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772362"
+    },
+    {
+      "id": "akai_midimix",
+      "marca": "AKAI",
+      "modelo": "MIDIMIX",
+      "foto_principal": "AKAI_MIDIMIX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772365"
+    },
+    {
+      "id": "akai_mpc_1000",
+      "marca": "AKAI",
+      "modelo": "MPC_1000",
+      "foto_principal": "AKAI_MPC_1000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772369"
+    },
+    {
+      "id": "akai_mpc_2000",
+      "marca": "AKAI",
+      "modelo": "MPC_2000",
+      "foto_principal": "AKAI_MPC_2000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772372"
+    },
+    {
+      "id": "akai_mpc_2000xl",
+      "marca": "AKAI",
+      "modelo": "MPC_2000XL",
+      "foto_principal": "AKAI_MPC_2000XL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772379"
+    },
+    {
+      "id": "akai_mpc_2500",
+      "marca": "AKAI",
+      "modelo": "MPC_2500",
+      "foto_principal": "AKAI_MPC_2500",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772382"
+    },
+    {
+      "id": "akai_mpc_3000",
+      "marca": "AKAI",
+      "modelo": "MPC_3000",
+      "foto_principal": "AKAI_MPC_3000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772385"
+    },
+    {
+      "id": "akai_mpc_4000",
+      "marca": "AKAI",
+      "modelo": "MPC_4000",
+      "foto_principal": "AKAI_MPC_4000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772388"
+    },
+    {
+      "id": "akai_mpc_500",
+      "marca": "AKAI",
+      "modelo": "MPC_500",
+      "foto_principal": "AKAI_MPC_500",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772392"
+    },
+    {
+      "id": "akai_mpc_5000",
+      "marca": "AKAI",
+      "modelo": "MPC_5000",
+      "foto_principal": "AKAI_MPC_5000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772395"
+    },
+    {
+      "id": "akai_mpc_60",
+      "marca": "AKAI",
+      "modelo": "MPC_60",
+      "foto_principal": "AKAI_MPC_60",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772398"
+    },
+    {
+      "id": "akai_mpc_keys37",
+      "marca": "AKAI",
+      "modelo": "MPC_KEYS37",
+      "foto_principal": "AKAI_MPC_KEYS37",
+      "fotos_adicionales": [
+        "AKAI_MPC_KEYS37_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772401"
+    },
+    {
+      "id": "akai_mpc_live",
+      "marca": "AKAI",
+      "modelo": "MPC_LIVE",
+      "foto_principal": "AKAI_MPC_LIVE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772405"
+    },
+    {
+      "id": "akai_mpc_renaissance",
+      "marca": "AKAI",
+      "modelo": "MPC_RENAISSANCE",
+      "foto_principal": "AKAI_MPC_RENAISSANCE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772408"
+    },
+    {
+      "id": "akai_mpc_studio",
+      "marca": "AKAI",
+      "modelo": "MPC_STUDIO",
+      "foto_principal": "AKAI_MPC_STUDIO",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772411"
+    },
+    {
+      "id": "akai_mpd_18",
+      "marca": "AKAI",
+      "modelo": "MPD_18",
+      "foto_principal": "AKAI_MPD_18",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772415"
+    },
+    {
+      "id": "akai_mpd_218",
+      "marca": "AKAI",
+      "modelo": "MPD_218",
+      "foto_principal": "AKAI_MPD_218",
+      "fotos_adicionales": [
+        "AKAI_MPD_218_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772418"
+    },
+    {
+      "id": "akai_mpd_24",
+      "marca": "AKAI",
+      "modelo": "MPD_24",
+      "foto_principal": "AKAI_MPD_24",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772421"
+    },
+    {
+      "id": "akai_mpd_26",
+      "marca": "AKAI",
+      "modelo": "MPD_26",
+      "foto_principal": "AKAI_MPD_26",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772424"
+    },
+    {
+      "id": "akai_mpk_225",
+      "marca": "AKAI",
+      "modelo": "MPK_225",
+      "foto_principal": "AKAI_MPK_225",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772428"
+    },
+    {
+      "id": "akai_mpk_249",
+      "marca": "AKAI",
+      "modelo": "MPK_249",
+      "foto_principal": "AKAI_MPK_249",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772431"
+    },
+    {
+      "id": "akai_mpk_49",
+      "marca": "AKAI",
+      "modelo": "MPK_49",
+      "foto_principal": "AKAI_MPK_49",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772434"
+    },
+    {
+      "id": "akai_mpk_61",
+      "marca": "AKAI",
+      "modelo": "MPK_61",
+      "foto_principal": "AKAI_MPK_61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772438"
+    },
+    {
+      "id": "akai_mpk_mini",
+      "marca": "AKAI",
+      "modelo": "MPK_MINI",
+      "foto_principal": "AKAI_MPK_MINI",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772441"
+    },
+    {
+      "id": "akai_mpk_mini4",
+      "marca": "AKAI",
+      "modelo": "MPK_MINI4",
+      "foto_principal": "AKAI_MPK_MINI4",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772446"
+    },
+    {
+      "id": "akai_mpk_miniplay",
+      "marca": "AKAI",
+      "modelo": "MPK_MINIPLAY",
+      "foto_principal": "AKAI_MPK_MINIPLAY",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772449"
+    },
+    {
+      "id": "akai_mpk_mini_plus",
+      "marca": "AKAI",
+      "modelo": "MPK_MINI_PLUS",
+      "foto_principal": "AKAI_MPK_MINI_PLUS",
+      "fotos_adicionales": [
+        "AKAI_MPK_MINI_PLUS_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_AKAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772453"
+    },
+    {
+      "id": "alesis_compreso_3060",
+      "marca": "ALESIS",
+      "modelo": "COMPRESO_3060",
+      "foto_principal": "ALESIS_COMPRESO_3060",
+      "fotos_adicionales": [
+        "ALESIS_COMPRESO_3060_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772457"
+    },
+    {
+      "id": "alesis_micron",
+      "marca": "ALESIS",
+      "modelo": "MICRON",
+      "foto_principal": "ALESIS_MICRON",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772460"
+    },
+    {
+      "id": "alesis_microverb2",
+      "marca": "ALESIS",
+      "modelo": "MICROVERB2",
+      "foto_principal": "ALESIS_MICROVERB2",
+      "fotos_adicionales": [
+        "ALESIS_MICROVERB2_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772464"
+    },
+    {
+      "id": "alesis_midiverb",
+      "marca": "ALESIS",
+      "modelo": "MIDIVERB",
+      "foto_principal": "ALESIS_MIDIVERB",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772467"
+    },
+    {
+      "id": "alesis_midiverb2",
+      "marca": "ALESIS",
+      "modelo": "MIDIVERB2",
+      "foto_principal": "ALESIS_MIDIVERB2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772471"
+    },
+    {
+      "id": "alesis_midiverb3",
+      "marca": "ALESIS",
+      "modelo": "MIDIVERB3",
+      "foto_principal": "ALESIS_MIDIVERB3",
+      "fotos_adicionales": [
+        "ALESIS_MIDIVERB3_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772474"
+    },
+    {
+      "id": "alesis_nano_piano",
+      "marca": "ALESIS",
+      "modelo": "NANO_PIANO",
+      "foto_principal": "ALESIS_NANO_PIANO",
+      "fotos_adicionales": [
+        "ALESIS_NANO_PIANO_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772477"
+    },
+    {
+      "id": "alesis_quadraverb",
+      "marca": "ALESIS",
+      "modelo": "QUADRAVERB",
+      "foto_principal": "ALESIS_QUADRAVERB",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ALESIS.webp",
+      "agregado_en": "2026-02-17T16:00:49.772480"
+    },
+    {
+      "id": "arturia_beatstep_pro",
+      "marca": "ARTURIA",
+      "modelo": "BEATSTEP_PRO",
+      "foto_principal": "ARTURIA_BEATSTEP_PRO",
+      "fotos_adicionales": [
+        "ARTURIA_BEATSTEP_PRO_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ARTURIA.webp",
+      "agregado_en": "2026-02-17T16:00:49.772484"
+    },
+    {
+      "id": "arturia_drumbrute_impact",
+      "marca": "ARTURIA",
+      "modelo": "DRUMBRUTE_IMPACT",
+      "foto_principal": "ARTURIA_DRUMBRUTE_IMPACT",
+      "fotos_adicionales": [
+        "ARTURIA_DRUMBRUTE_IMPACT_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ARTURIA.webp",
+      "agregado_en": "2026-02-17T16:00:49.772487"
+    },
+    {
+      "id": "arturia_keylab_88",
+      "marca": "ARTURIA",
+      "modelo": "KEYLAB_88",
+      "foto_principal": "ARTURIA_KEYLAB_88",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ARTURIA.webp",
+      "agregado_en": "2026-02-17T16:00:49.772493"
+    },
+    {
+      "id": "arturia_microfreak",
+      "marca": "ARTURIA",
+      "modelo": "MICROFREAK",
+      "foto_principal": "ARTURIA_MICROFREAK",
+      "fotos_adicionales": [
+        "ARTURIA_MICROFREAK_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ARTURIA.webp",
+      "agregado_en": "2026-02-17T16:00:49.772496"
+    },
+    {
+      "id": "arturia_minilab_3",
+      "marca": "ARTURIA",
+      "modelo": "MINILAB_3",
+      "foto_principal": "ARTURIA_MINILAB_3",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ARTURIA.webp",
+      "agregado_en": "2026-02-17T16:00:49.772499"
+    },
+    {
+      "id": "asm_hydrasynth",
+      "marca": "ASM",
+      "modelo": "HYDRASYNTH",
+      "foto_principal": "ASM_HYDRASYNTH",
+      "fotos_adicionales": [
+        "ASM_HYDRASYNTH_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-02-17T15:48:58.829394",
+      "marca_logo_disponible": false,
+      "marca_habilitada": false,
+      "marca_logo_url": null
+    },
+    {
+      "id": "beheringer_deepmind",
+      "marca": "BEHERINGER",
+      "modelo": "DEEPMIND",
+      "foto_principal": "BEHERINGER_DEEPMIND",
+      "fotos_adicionales": [
+        "BEHERINGER_DEEPMIND_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_BEHERINGER.webp",
+      "agregado_en": "2026-02-17T16:00:49.772506"
+    },
+    {
+      "id": "beheringer_monopoly",
+      "marca": "BEHERINGER",
+      "modelo": "MONOPOLY",
+      "foto_principal": "BEHERINGER_MONOPOLY",
+      "fotos_adicionales": [
+        "BEHERINGER_MONOPOLY_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_BEHERINGER.webp",
+      "agregado_en": "2026-02-17T16:00:49.772509"
+    },
+    {
+      "id": "beheringer_neutron",
+      "marca": "BEHERINGER",
+      "modelo": "NEUTRON",
+      "foto_principal": "BEHERINGER_NEUTRON",
+      "fotos_adicionales": [
+        "BEHERINGER_NEUTRON_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_BEHERINGER.webp",
+      "agregado_en": "2026-02-17T16:00:49.772514"
+    },
+    {
+      "id": "beheringer_odyssey",
+      "marca": "BEHERINGER",
+      "modelo": "ODYSSEY",
+      "foto_principal": "BEHERINGER_ODYSSEY",
+      "fotos_adicionales": [
+        "BEHERINGER_ODYSSEY_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_BEHERINGER.webp",
+      "agregado_en": "2026-02-17T16:00:49.772518"
+    },
+    {
+      "id": "beheringer_proton",
+      "marca": "BEHERINGER",
+      "modelo": "PROTON",
+      "foto_principal": "BEHERINGER_PROTON",
+      "fotos_adicionales": [
+        "BEHERINGER_PROTON_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_BEHERINGER.webp",
+      "agregado_en": "2026-02-17T16:00:49.772521"
+    },
+    {
+      "id": "casio_ckt_671",
+      "marca": "CASIO",
+      "modelo": "CKT_671",
+      "foto_principal": "CASIO_CKT_671",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772525"
+    },
+    {
+      "id": "casio_ctk_1100",
+      "marca": "CASIO",
+      "modelo": "CTK_1100",
+      "foto_principal": "CASIO_CTK_1100",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772528"
+    },
+    {
+      "id": "casio_ctk_541",
+      "marca": "CASIO",
+      "modelo": "CTK_541",
+      "foto_principal": "CASIO_CTK_541",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772531"
+    },
+    {
+      "id": "casio_ct_202",
+      "marca": "CASIO",
+      "modelo": "CT_202",
+      "foto_principal": "CASIO_CT_202",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772535"
+    },
+    {
+      "id": "casio_ct_650",
+      "marca": "CASIO",
+      "modelo": "CT_650",
+      "foto_principal": "CASIO_CT_650",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772538"
+    },
+    {
+      "id": "casio_cz_101",
+      "marca": "CASIO",
+      "modelo": "CZ_101",
+      "foto_principal": "CASIO_CZ_101",
+      "fotos_adicionales": [
+        "CASIO_CZ_101_BACK",
+        "CASIO_CZ_101_LATERAL"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772541"
+    },
+    {
+      "id": "casio_mt_70",
+      "marca": "CASIO",
+      "modelo": "MT_70",
+      "foto_principal": "CASIO_MT_70",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772545"
+    },
+    {
+      "id": "casio_wk_110",
+      "marca": "CASIO",
+      "modelo": "WK_110",
+      "foto_principal": "CASIO_WK_110",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772548"
+    },
+    {
+      "id": "casio_wk_1300",
+      "marca": "CASIO",
+      "modelo": "WK_1300",
+      "foto_principal": "CASIO_WK_1300",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772551"
+    },
+    {
+      "id": "casio_wk_1350",
+      "marca": "CASIO",
+      "modelo": "WK_1350",
+      "foto_principal": "CASIO_WK_1350",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772554"
+    },
+    {
+      "id": "casio_wk_1600",
+      "marca": "CASIO",
+      "modelo": "WK_1600",
+      "foto_principal": "CASIO_WK_1600",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772558"
+    },
+    {
+      "id": "casio_wk_1800",
+      "marca": "CASIO",
+      "modelo": "WK_1800",
+      "foto_principal": "CASIO_WK_1800",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772561"
+    },
+    {
+      "id": "casio_wk_200",
+      "marca": "CASIO",
+      "modelo": "WK_200",
+      "foto_principal": "CASIO_WK_200",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772564"
+    },
+    {
+      "id": "casio_wk_3000",
+      "marca": "CASIO",
+      "modelo": "WK_3000",
+      "foto_principal": "CASIO_WK_3000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772568"
+    },
+    {
+      "id": "casio_wk_3200",
+      "marca": "CASIO",
+      "modelo": "WK_3200",
+      "foto_principal": "CASIO_WK_3200",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772571"
+    },
+    {
+      "id": "casio_wk_3300",
+      "marca": "CASIO",
+      "modelo": "WK_3300",
+      "foto_principal": "CASIO_WK_3300",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772602"
+    },
+    {
+      "id": "casio_wk_3500",
+      "marca": "CASIO",
+      "modelo": "WK_3500",
+      "foto_principal": "CASIO_WK_3500",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772607"
+    },
+    {
+      "id": "casio_wk_3700",
+      "marca": "CASIO",
+      "modelo": "WK_3700",
+      "foto_principal": "CASIO_WK_3700",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772611"
+    },
+    {
+      "id": "casio_wk_3800",
+      "marca": "CASIO",
+      "modelo": "WK_3800",
+      "foto_principal": "CASIO_WK_3800",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772615"
+    },
+    {
+      "id": "casio_xw_p1",
+      "marca": "CASIO",
+      "modelo": "XW_P1",
+      "foto_principal": "CASIO_XW_P1",
+      "fotos_adicionales": [
+        "CASIO_XW_P1_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_CASIO.webp",
+      "agregado_en": "2026-02-17T16:00:49.772633"
+    },
+    {
+      "id": "kawai_100f",
+      "marca": "KAWAI",
+      "modelo": "100F",
+      "foto_principal": "KAWAI_100F",
+      "fotos_adicionales": [
+        "KAWAI_100F_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772637"
+    },
+    {
+      "id": "kawai_cn24",
+      "marca": "KAWAI",
+      "modelo": "CN24",
+      "foto_principal": "KAWAI_CN24",
+      "fotos_adicionales": [
+        "KAWAI_CN24_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675044"
+    },
+    {
+      "id": "kawai_cn24_panel01",
+      "marca": "KAWAI",
+      "modelo": "CN24_PANEL01",
+      "foto_principal": "KAWAI_CN24_PANEL01",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675077"
+    },
+    {
+      "id": "kawai_cn24_panel02",
+      "marca": "KAWAI",
+      "modelo": "CN24_PANEL02",
+      "foto_principal": "KAWAI_CN24_PANEL02",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675085"
+    },
+    {
+      "id": "kawai_cn37",
+      "marca": "KAWAI",
+      "modelo": "CN37",
+      "foto_principal": "KAWAI_CN37",
+      "fotos_adicionales": [
+        "KAWAI_CN37_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675094"
+    },
+    {
+      "id": "kawai_cn37_panel",
+      "marca": "KAWAI",
+      "modelo": "CN37_PANEL",
+      "foto_principal": "KAWAI_CN37_PANEL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-03-03T21:17:38.675101"
+    },
+    {
+      "id": "kawai_sx_210",
+      "marca": "KAWAI",
+      "modelo": "SX_210",
+      "foto_principal": "KAWAI_SX_210",
+      "fotos_adicionales": [
+        "KAWAI_SX_210_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772641"
+    },
+    {
+      "id": "kawai_sx_240",
+      "marca": "KAWAI",
+      "modelo": "SX_240",
+      "foto_principal": "KAWAI_SX_240",
+      "fotos_adicionales": [
+        "KAWAI_SX_240_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KAWAI.webp",
+      "agregado_en": "2026-02-17T16:00:49.772644"
+    },
+    {
+      "id": "korg_01wfd",
+      "marca": "KORG",
+      "modelo": "01WFD",
+      "foto_principal": "KORG_01WFD",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772648"
+    },
+    {
+      "id": "korg_707",
+      "marca": "KORG",
+      "modelo": "707",
+      "foto_principal": "KORG_707",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772652"
+    },
+    {
+      "id": "korg_dw8000",
+      "marca": "KORG",
+      "modelo": "DW8000",
+      "foto_principal": "KORG_DW8000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772656"
+    },
+    {
+      "id": "korg_electribe_2a",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_2A",
+      "foto_principal": "KORG_ELECTRIBE_2A",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772660"
+    },
+    {
+      "id": "korg_electribe_2r",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_2R",
+      "foto_principal": "KORG_ELECTRIBE_2R",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772664"
+    },
+    {
+      "id": "korg_electribe_amk2",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_AMK2",
+      "foto_principal": "KORG_ELECTRIBE_AMK2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772667"
+    },
+    {
+      "id": "korg_electribe_ea1",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_EA1",
+      "foto_principal": "KORG_ELECTRIBE_EA1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772671"
+    },
+    {
+      "id": "korg_electribe_em1",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_EM1",
+      "foto_principal": "KORG_ELECTRIBE_EM1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772677"
+    },
+    {
+      "id": "korg_electribe_emx",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_EMX",
+      "foto_principal": "KORG_ELECTRIBE_EMX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772681"
+    },
+    {
+      "id": "korg_electribe_esx",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_ESX",
+      "foto_principal": "KORG_ELECTRIBE_ESX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772685"
+    },
+    {
+      "id": "korg_electribe_r",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_R",
+      "foto_principal": "KORG_ELECTRIBE_R",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772689"
+    },
+    {
+      "id": "korg_electribe_rmk2",
+      "marca": "KORG",
+      "modelo": "ELECTRIBE_RMK2",
+      "foto_principal": "KORG_ELECTRIBE_RMK2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772692"
+    },
+    {
+      "id": "korg_kaospad3plus",
+      "marca": "KORG",
+      "modelo": "KAOSPAD3PLUS",
+      "foto_principal": "KORG_KAOSPAD3PLUS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772696"
+    },
+    {
+      "id": "korg_kaospad_1",
+      "marca": "KORG",
+      "modelo": "KAOSPAD_1",
+      "foto_principal": "KORG_KAOSPAD_1",
+      "fotos_adicionales": [
+        "KORG_KAOSPAD_1_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772713"
+    },
+    {
+      "id": "korg_kaospad_2s",
+      "marca": "KORG",
+      "modelo": "KAOSPAD_2S",
+      "foto_principal": "KORG_KAOSPAD_2S",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772717"
+    },
+    {
+      "id": "korg_kaossilator_2s",
+      "marca": "KORG",
+      "modelo": "KAOSSILATOR_2S",
+      "foto_principal": "KORG_KAOSSILATOR_2S",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-03-03T21:17:38.675184"
+    },
+    {
+      "id": "korg_kaossilator_pro",
+      "marca": "KORG",
+      "modelo": "KAOSSILATOR_PRO",
+      "foto_principal": "KORG_KAOSSILATOR_PRO",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772720"
+    },
+    {
+      "id": "korg_kaos_quad",
+      "marca": "KORG",
+      "modelo": "KAOS_QUAD",
+      "foto_principal": "KORG_KAOS_QUAD",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772723"
+    },
+    {
+      "id": "korg_karma",
+      "marca": "KORG",
+      "modelo": "KARMA",
+      "foto_principal": "KORG_KARMA",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772726"
+    },
+    {
+      "id": "korg_kingkorg",
+      "marca": "KORG",
+      "modelo": "KINGKORG",
+      "foto_principal": "KORG_KINGKORG",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772730"
+    },
+    {
+      "id": "korg_kontrol",
+      "marca": "KORG",
+      "modelo": "KONTROL",
+      "foto_principal": "KORG_KONTROL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772733"
+    },
+    {
+      "id": "korg_korme",
+      "marca": "KORG",
+      "modelo": "KORME",
+      "foto_principal": "KORG_KORME",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772738"
+    },
+    {
+      "id": "korg_m1",
+      "marca": "KORG",
+      "modelo": "M1",
+      "foto_principal": "KORG_M1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772741"
+    },
+    {
+      "id": "korg_microarranger",
+      "marca": "KORG",
+      "modelo": "MICROARRANGER",
+      "foto_principal": "KORG_MICROARRANGER",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772744"
+    },
+    {
+      "id": "korg_microkorg_mk1",
+      "marca": "KORG",
+      "modelo": "MICROKORG_MK1",
+      "foto_principal": "KORG_MICROKORG_MK1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772747"
+    },
+    {
+      "id": "korg_microkorg_xl",
+      "marca": "KORG",
+      "modelo": "MICROKORG_XL",
+      "foto_principal": "KORG_MICROKORG_XL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772750"
+    },
+    {
+      "id": "korg_microsampler",
+      "marca": "KORG",
+      "modelo": "MICROSAMPLER",
+      "foto_principal": "KORG_MICROSAMPLER",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772753"
+    },
+    {
+      "id": "korg_microstation",
+      "marca": "KORG",
+      "modelo": "MICROSTATION",
+      "foto_principal": "KORG_MICROSTATION",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772756"
+    },
+    {
+      "id": "korg_microx",
+      "marca": "KORG",
+      "modelo": "MICROX",
+      "foto_principal": "KORG_MICROX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772761"
+    },
+    {
+      "id": "korg_minilogue",
+      "marca": "KORG",
+      "modelo": "MINILOGUE",
+      "foto_principal": "KORG_MINILOGUE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772766"
+    },
+    {
+      "id": "korg_monologue",
+      "marca": "KORG",
+      "modelo": "MONOLOGUE",
+      "foto_principal": "KORG_MONOLOGUE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772769"
+    },
+    {
+      "id": "korg_monotron_delay",
+      "marca": "KORG",
+      "modelo": "MONOTRON_DELAY",
+      "foto_principal": "KORG_MONOTRON_DELAY",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772772"
+    },
+    {
+      "id": "korg_ms2000",
+      "marca": "KORG",
+      "modelo": "MS2000",
+      "foto_principal": "KORG_MS2000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772775"
+    },
+    {
+      "id": "korg_ms2000r",
+      "marca": "KORG",
+      "modelo": "MS2000R",
+      "foto_principal": "KORG_MS2000R",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772779"
+    },
+    {
+      "id": "korg_ms20mini",
+      "marca": "KORG",
+      "modelo": "MS20MINI",
+      "foto_principal": "KORG_MS20MINI",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772784"
+    },
+    {
+      "id": "korg_multi_poly",
+      "marca": "KORG",
+      "modelo": "MULTI_POLY",
+      "foto_principal": "KORG_MULTI_POLY",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772789"
+    },
+    {
+      "id": "korg_n364",
+      "marca": "KORG",
+      "modelo": "N364",
+      "foto_principal": "KORG_N364",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772792"
+    },
+    {
+      "id": "korg_nanokey2",
+      "marca": "KORG",
+      "modelo": "NANOKEY2",
+      "foto_principal": "KORG_NANOKEY2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.772795"
+    },
+    {
+      "id": "korg_pa1000",
+      "marca": "KORG",
+      "modelo": "PA1000",
+      "foto_principal": "KORG_PA1000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773070"
+    },
+    {
+      "id": "korg_pa700",
+      "marca": "KORG",
+      "modelo": "PA700",
+      "foto_principal": "KORG_PA700",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773076"
+    },
+    {
+      "id": "korg_poly61",
+      "marca": "KORG",
+      "modelo": "POLY61",
+      "foto_principal": "KORG_POLY61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773079"
+    },
+    {
+      "id": "korg_poly800",
+      "marca": "KORG",
+      "modelo": "POLY800",
+      "foto_principal": "KORG_POLY800",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773082"
+    },
+    {
+      "id": "korg_sp_170",
+      "marca": "KORG",
+      "modelo": "SP_170",
+      "foto_principal": "KORG_SP_170",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773085"
+    },
+    {
+      "id": "korg_sp_170s",
+      "marca": "KORG",
+      "modelo": "SP_170S",
+      "foto_principal": "KORG_SP_170S",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773088"
+    },
+    {
+      "id": "korg_sp_280",
+      "marca": "KORG",
+      "modelo": "SP_280",
+      "foto_principal": "KORG_SP_280",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773090"
+    },
+    {
+      "id": "korg_triton",
+      "marca": "KORG",
+      "modelo": "TRITON",
+      "foto_principal": "KORG_TRITON",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773093"
+    },
+    {
+      "id": "korg_triton_le",
+      "marca": "KORG",
+      "modelo": "TRITON_LE",
+      "foto_principal": "KORG_TRITON_LE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773096"
+    },
+    {
+      "id": "korg_triton_taktile",
+      "marca": "KORG",
+      "modelo": "TRITON_TAKTILE",
+      "foto_principal": "KORG_TRITON_TAKTILE",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773099"
+    },
+    {
+      "id": "korg_volca_bass",
+      "marca": "KORG",
+      "modelo": "VOLCA_BASS",
+      "foto_principal": "KORG_VOLCA_BASS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773102"
+    },
+    {
+      "id": "korg_volca_drum",
+      "marca": "KORG",
+      "modelo": "VOLCA_DRUM",
+      "foto_principal": "KORG_VOLCA_DRUM",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773105"
+    },
+    {
+      "id": "korg_volca_fm",
+      "marca": "KORG",
+      "modelo": "VOLCA_FM",
+      "foto_principal": "KORG_VOLCA_FM",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773110"
+    },
+    {
+      "id": "korg_volca_fm2",
+      "marca": "KORG",
+      "modelo": "VOLCA_FM2",
+      "foto_principal": "KORG_VOLCA_FM2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773113"
+    },
+    {
+      "id": "korg_volca_kick",
+      "marca": "KORG",
+      "modelo": "VOLCA_KICK",
+      "foto_principal": "KORG_VOLCA_KICK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773116"
+    },
+    {
+      "id": "korg_volca_mix",
+      "marca": "KORG",
+      "modelo": "VOLCA_MIX",
+      "foto_principal": "KORG_VOLCA_MIX",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773120"
+    },
+    {
+      "id": "korg_volca_nubass",
+      "marca": "KORG",
+      "modelo": "VOLCA_NUBASS",
+      "foto_principal": "KORG_VOLCA_NUBASS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773124"
+    },
+    {
+      "id": "korg_volca_sample_1",
+      "marca": "KORG",
+      "modelo": "VOLCA_SAMPLE_1",
+      "foto_principal": "KORG_VOLCA_SAMPLE_1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773127"
+    },
+    {
+      "id": "korg_wavestate",
+      "marca": "KORG",
+      "modelo": "WAVESTATE",
+      "foto_principal": "KORG_WAVESTATE",
+      "fotos_adicionales": [
+        "KORG_WAVESTATE_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773130"
+    },
+    {
+      "id": "korg_wavestation",
+      "marca": "KORG",
+      "modelo": "WAVESTATION",
+      "foto_principal": "KORG_WAVESTATION",
+      "fotos_adicionales": [
+        "KORG_WAVESTATION_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773133"
+    },
+    {
+      "id": "korg_x50",
+      "marca": "KORG",
+      "modelo": "X50",
+      "foto_principal": "KORG_X50",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773136"
+    },
+    {
+      "id": "korg_x5d",
+      "marca": "KORG",
+      "modelo": "X5D",
+      "foto_principal": "KORG_X5D",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KORG.webp",
+      "agregado_en": "2026-02-17T16:00:49.773138"
+    },
+    {
+      "id": "kurzweil_k1000_key",
+      "marca": "KURZWEIL",
+      "modelo": "K1000_KEY",
+      "foto_principal": "KURZWEIL_K1000_KEY",
+      "fotos_adicionales": [
+        "KURZWEIL_K1000_KEY_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675381"
+    },
+    {
+      "id": "kurzweil_k2000_key_back",
+      "marca": "KURZWEIL",
+      "modelo": "K2000_KEY_BACK",
+      "foto_principal": "KURZWEIL_K2000_KEY_BACK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675389"
+    },
+    {
+      "id": "kurzweil_k2500_rack",
+      "marca": "KURZWEIL",
+      "modelo": "K2500_RACK",
+      "foto_principal": "KURZWEIL_K2500_RACK",
+      "fotos_adicionales": [
+        "KURZWEIL_K2500_RACK_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675395"
+    },
+    {
+      "id": "kurzweil_k2600_key",
+      "marca": "KURZWEIL",
+      "modelo": "K2600_KEY",
+      "foto_principal": "KURZWEIL_K2600_KEY",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675401"
+    },
+    {
+      "id": "kurzweil_k2661_key",
+      "marca": "KURZWEIL",
+      "modelo": "K2661_KEY",
+      "foto_principal": "KURZWEIL_K2661_KEY",
+      "fotos_adicionales": [
+        "KURZWEIL_K2661_KEY_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675407"
+    },
+    {
+      "id": "kurzweil_k6000_key_back",
+      "marca": "KURZWEIL",
+      "modelo": "K6000_KEY_BACK",
+      "foto_principal": "KURZWEIL_K6000_KEY_BACK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675413"
+    },
+    {
+      "id": "kurzweil_mark-protwoi",
+      "marca": "KURZWEIL",
+      "modelo": "Mark-ProTWOi",
+      "foto_principal": "KURZWEIL_Mark-ProTWOi",
+      "fotos_adicionales": [
+        "KURZWEIL_Mark-ProTWOi_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675419"
+    },
+    {
+      "id": "kurzweil_mark-protwoi_panel",
+      "marca": "KURZWEIL",
+      "modelo": "Mark-ProTWOi_PANEL",
+      "foto_principal": "KURZWEIL_Mark-ProTWOi_PANEL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675425"
+    },
+    {
+      "id": "kurzweil_sp5-8",
+      "marca": "KURZWEIL",
+      "modelo": "SP5-8",
+      "foto_principal": "KURZWEIL_SP5-8",
+      "fotos_adicionales": [
+        "KURZWEIL_SP5-8_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_KURZWEIL.webp",
+      "agregado_en": "2026-03-03T21:17:38.675430"
+    },
+    {
+      "id": "novation_launchpad_mini",
+      "marca": "NOVATION",
+      "modelo": "LAUNCHPAD_MINI",
+      "foto_principal": "NOVATION_LAUNCHPAD_MINI",
+      "fotos_adicionales": [
+        "NOVATION_LAUNCHPAD_MINI_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_NOVATION.webp",
+      "agregado_en": "2026-02-17T16:00:49.773141"
+    },
+    {
+      "id": "roland_a01",
+      "marca": "ROLAND",
+      "modelo": "A01",
+      "foto_principal": "ROLAND_A01",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773144"
+    },
+    {
+      "id": "roland_ax09_lucina",
+      "marca": "ROLAND",
+      "modelo": "AX09_LUCINA",
+      "foto_principal": "ROLAND_AX09_LUCINA",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773147"
+    },
+    {
+      "id": "roland_d05",
+      "marca": "ROLAND",
+      "modelo": "D05",
+      "foto_principal": "ROLAND_D05",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773152"
+    },
+    {
+      "id": "roland_d10",
+      "marca": "ROLAND",
+      "modelo": "D10",
+      "foto_principal": "ROLAND_D10",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773154"
+    },
+    {
+      "id": "roland_d50",
+      "marca": "ROLAND",
+      "modelo": "D50",
+      "foto_principal": "ROLAND_D50",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773157"
+    },
+    {
+      "id": "roland_d550",
+      "marca": "ROLAND",
+      "modelo": "D550",
+      "foto_principal": "ROLAND_D550",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773160"
+    },
+    {
+      "id": "roland_gw7",
+      "marca": "ROLAND",
+      "modelo": "GW7",
+      "foto_principal": "ROLAND_GW7",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773163"
+    },
+    {
+      "id": "roland_jd800",
+      "marca": "ROLAND",
+      "modelo": "JD800",
+      "foto_principal": "ROLAND_JD800",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773165"
+    },
+    {
+      "id": "roland_jdxa",
+      "marca": "ROLAND",
+      "modelo": "JDXA",
+      "foto_principal": "ROLAND_JDXA",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773168"
+    },
+    {
+      "id": "roland_jdxi",
+      "marca": "ROLAND",
+      "modelo": "JDXI",
+      "foto_principal": "ROLAND_JDXI",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773171"
+    },
+    {
+      "id": "roland_jp08",
+      "marca": "ROLAND",
+      "modelo": "JP08",
+      "foto_principal": "ROLAND_JP08",
+      "fotos_adicionales": [
+        "ROLAND_JP08_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773174"
+    },
+    {
+      "id": "roland_ju06",
+      "marca": "ROLAND",
+      "modelo": "JU06",
+      "foto_principal": "ROLAND_JU06",
+      "fotos_adicionales": [
+        "ROLAND_JU06_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773176"
+    },
+    {
+      "id": "roland_jx03",
+      "marca": "ROLAND",
+      "modelo": "JX03",
+      "foto_principal": "ROLAND_JX03",
+      "fotos_adicionales": [
+        "ROLAND_JX03_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_ROLAND.webp",
+      "agregado_en": "2026-02-17T16:00:49.773181"
+    },
+    {
+      "id": "studiologic_sl88",
+      "marca": "STUDIOLOGIC",
+      "modelo": "SL88",
+      "foto_principal": "STUDIOLOGIC_SL88",
+      "fotos_adicionales": [
+        "STUDIOLOGIC_SL88_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "agregado_en": "2026-02-17T15:48:58.829417",
+      "marca_logo_disponible": false,
+      "marca_habilitada": false,
+      "marca_logo_url": null
+    },
+    {
+      "id": "yamaha_cp_1",
+      "marca": "YAMAHA",
+      "modelo": "CP_1",
+      "foto_principal": "YAMAHA_CP_1",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773187"
+    },
+    {
+      "id": "yamaha_cp_300",
+      "marca": "YAMAHA",
+      "modelo": "CP_300",
+      "foto_principal": "YAMAHA_CP_300",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773191"
+    },
+    {
+      "id": "yamaha_cp_40",
+      "marca": "YAMAHA",
+      "modelo": "CP_40",
+      "foto_principal": "YAMAHA_CP_40",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773193"
+    },
+    {
+      "id": "yamaha_cp_73",
+      "marca": "YAMAHA",
+      "modelo": "CP_73",
+      "foto_principal": "YAMAHA_CP_73",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773196"
+    },
+    {
+      "id": "yamaha_cp_88",
+      "marca": "YAMAHA",
+      "modelo": "CP_88",
+      "foto_principal": "YAMAHA_CP_88",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773200"
+    },
+    {
+      "id": "yamaha_dx11",
+      "marca": "YAMAHA",
+      "modelo": "DX11",
+      "foto_principal": "YAMAHA_DX11",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773203"
+    },
+    {
+      "id": "yamaha_dx7_mk1",
+      "marca": "YAMAHA",
+      "modelo": "DX7_MK1",
+      "foto_principal": "YAMAHA_DX7_MK1",
+      "fotos_adicionales": [
+        "YAMAHA_DX7_MK1_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773218"
+    },
+    {
+      "id": "yamaha_dx7_mk2",
+      "marca": "YAMAHA",
+      "modelo": "DX7_MK2",
+      "foto_principal": "YAMAHA_DX7_MK2",
+      "fotos_adicionales": [
+        "YAMAHA_DX7_MK2_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773221"
+    },
+    {
+      "id": "yamaha_dx9",
+      "marca": "YAMAHA",
+      "modelo": "DX9",
+      "foto_principal": "YAMAHA_DX9",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773224"
+    },
+    {
+      "id": "yamaha_ez_220",
+      "marca": "YAMAHA",
+      "modelo": "EZ_220",
+      "foto_principal": "YAMAHA_EZ_220",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773227"
+    },
+    {
+      "id": "yamaha_ez_300",
+      "marca": "YAMAHA",
+      "modelo": "EZ_300",
+      "foto_principal": "YAMAHA_EZ_300",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773229"
+    },
+    {
+      "id": "yamaha_genos",
+      "marca": "YAMAHA",
+      "modelo": "GENOS",
+      "foto_principal": "YAMAHA_GENOS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773232"
+    },
+    {
+      "id": "yamaha_kx_61",
+      "marca": "YAMAHA",
+      "modelo": "KX_61",
+      "foto_principal": "YAMAHA_KX_61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773235"
+    },
+    {
+      "id": "yamaha_mcs2",
+      "marca": "YAMAHA",
+      "modelo": "MCS2",
+      "foto_principal": "YAMAHA_MCS2",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773238"
+    },
+    {
+      "id": "yamaha_mm8",
+      "marca": "YAMAHA",
+      "modelo": "MM8",
+      "foto_principal": "YAMAHA_MM8",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773241"
+    },
+    {
+      "id": "yamaha_modx6",
+      "marca": "YAMAHA",
+      "modelo": "MODX6",
+      "foto_principal": "YAMAHA_MODX6",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773243"
+    },
+    {
+      "id": "yamaha_modx7",
+      "marca": "YAMAHA",
+      "modelo": "MODX7",
+      "foto_principal": "YAMAHA_MODX7",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773246"
+    },
+    {
+      "id": "yamaha_modx8",
+      "marca": "YAMAHA",
+      "modelo": "MODX8",
+      "foto_principal": "YAMAHA_MODX8",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773250"
+    },
+    {
+      "id": "yamaha_moiif_rack",
+      "marca": "YAMAHA",
+      "modelo": "MOIIF_RACK",
+      "foto_principal": "YAMAHA_MOIIF_RACK",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773253"
+    },
+    {
+      "id": "yamaha_montage_6",
+      "marca": "YAMAHA",
+      "modelo": "MONTAGE_6",
+      "foto_principal": "YAMAHA_MONTAGE_6",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773257"
+    },
+    {
+      "id": "yamaha_montage_7",
+      "marca": "YAMAHA",
+      "modelo": "MONTAGE_7",
+      "foto_principal": "YAMAHA_MONTAGE_7",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773260"
+    },
+    {
+      "id": "yamaha_montage_8",
+      "marca": "YAMAHA",
+      "modelo": "MONTAGE_8",
+      "foto_principal": "YAMAHA_MONTAGE_8",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773263"
+    },
+    {
+      "id": "yamaha_montaje_m8x",
+      "marca": "YAMAHA",
+      "modelo": "MONTAJE_M8X",
+      "foto_principal": "YAMAHA_MONTAJE_M8X",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773266"
+    },
+    {
+      "id": "yamaha_motif_xf7",
+      "marca": "YAMAHA",
+      "modelo": "MOTIF_XF7",
+      "foto_principal": "YAMAHA_MOTIF_XF7",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773269"
+    },
+    {
+      "id": "yamaha_motif_xs6",
+      "marca": "YAMAHA",
+      "modelo": "MOTIF_XS6",
+      "foto_principal": "YAMAHA_MOTIF_XS6",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773271"
+    },
+    {
+      "id": "yamaha_mr_10",
+      "marca": "YAMAHA",
+      "modelo": "MR_10",
+      "foto_principal": "YAMAHA_MR_10",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773274"
+    },
+    {
+      "id": "yamaha_mx_49",
+      "marca": "YAMAHA",
+      "modelo": "MX_49",
+      "foto_principal": "YAMAHA_MX_49",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773277"
+    },
+    {
+      "id": "yamaha_mx_61",
+      "marca": "YAMAHA",
+      "modelo": "MX_61",
+      "foto_principal": "YAMAHA_MX_61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773280"
+    },
+    {
+      "id": "yamaha_mx_88",
+      "marca": "YAMAHA",
+      "modelo": "MX_88",
+      "foto_principal": "YAMAHA_MX_88",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773282"
+    },
+    {
+      "id": "yamaha_psr_540",
+      "marca": "YAMAHA",
+      "modelo": "PSR_540",
+      "foto_principal": "YAMAHA_PSR_540",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773285"
+    },
+    {
+      "id": "yamaha_psr_a350",
+      "marca": "YAMAHA",
+      "modelo": "PSR_A350",
+      "foto_principal": "YAMAHA_PSR_A350",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773288"
+    },
+    {
+      "id": "yamaha_psr_a5000",
+      "marca": "YAMAHA",
+      "modelo": "PSR_A5000",
+      "foto_principal": "YAMAHA_PSR_A5000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773290"
+    },
+    {
+      "id": "yamaha_psr_e273",
+      "marca": "YAMAHA",
+      "modelo": "PSR_E273",
+      "foto_principal": "YAMAHA_PSR_E273",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773293"
+    },
+    {
+      "id": "yamaha_psr_e360",
+      "marca": "YAMAHA",
+      "modelo": "PSR_E360",
+      "foto_principal": "YAMAHA_PSR_E360",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773297"
+    },
+    {
+      "id": "yamaha_psr_e463",
+      "marca": "YAMAHA",
+      "modelo": "PSR_E463",
+      "foto_principal": "YAMAHA_PSR_E463",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773300"
+    },
+    {
+      "id": "yamaha_psr_e473",
+      "marca": "YAMAHA",
+      "modelo": "PSR_E473",
+      "foto_principal": "YAMAHA_PSR_E473",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773303"
+    },
+    {
+      "id": "yamaha_psr_ew410",
+      "marca": "YAMAHA",
+      "modelo": "PSR_EW410",
+      "foto_principal": "YAMAHA_PSR_EW410",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773306"
+    },
+    {
+      "id": "yamaha_psr_ew425",
+      "marca": "YAMAHA",
+      "modelo": "PSR_EW425",
+      "foto_principal": "YAMAHA_PSR_EW425",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773310"
+    },
+    {
+      "id": "yamaha_psr_gx76",
+      "marca": "YAMAHA",
+      "modelo": "PSR_GX76",
+      "foto_principal": "YAMAHA_PSR_GX76",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773313"
+    },
+    {
+      "id": "yamaha_psr_i500",
+      "marca": "YAMAHA",
+      "modelo": "PSR_I500",
+      "foto_principal": "YAMAHA_PSR_I500",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773315"
+    },
+    {
+      "id": "yamaha_psr_s950",
+      "marca": "YAMAHA",
+      "modelo": "PSR_S950",
+      "foto_principal": "YAMAHA_PSR_S950",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773318"
+    },
+    {
+      "id": "yamaha_psr_sx600",
+      "marca": "YAMAHA",
+      "modelo": "PSR_SX600",
+      "foto_principal": "YAMAHA_PSR_SX600",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773321"
+    },
+    {
+      "id": "yamaha_psr_sx700",
+      "marca": "YAMAHA",
+      "modelo": "PSR_SX700",
+      "foto_principal": "YAMAHA_PSR_SX700",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773323"
+    },
+    {
+      "id": "yamaha_psr_sx900",
+      "marca": "YAMAHA",
+      "modelo": "PSR_SX900",
+      "foto_principal": "YAMAHA_PSR_SX900",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773326"
+    },
+    {
+      "id": "yamaha_pss_47",
+      "marca": "YAMAHA",
+      "modelo": "PSS_47",
+      "foto_principal": "YAMAHA_PSS_47",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773329"
+    },
+    {
+      "id": "yamaha_pss_a50",
+      "marca": "YAMAHA",
+      "modelo": "PSS_A50",
+      "foto_principal": "YAMAHA_PSS_A50",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773332"
+    },
+    {
+      "id": "yamaha_pss_e30",
+      "marca": "YAMAHA",
+      "modelo": "PSS_E30",
+      "foto_principal": "YAMAHA_PSS_E30",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773336"
+    },
+    {
+      "id": "yamaha_pss_f30",
+      "marca": "YAMAHA",
+      "modelo": "PSS_F30",
+      "foto_principal": "YAMAHA_PSS_F30",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773339"
+    },
+    {
+      "id": "yamaha_ps_20",
+      "marca": "YAMAHA",
+      "modelo": "PS_20",
+      "foto_principal": "YAMAHA_PS_20",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-03-03T21:17:38.675667"
+    },
+    {
+      "id": "yamaha_ps_20_panel",
+      "marca": "YAMAHA",
+      "modelo": "PS_20_PANEL",
+      "foto_principal": "YAMAHA_PS_20_PANEL",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-03-03T21:17:38.675673"
+    },
+    {
+      "id": "yamaha_p_125",
+      "marca": "YAMAHA",
+      "modelo": "P_125",
+      "foto_principal": "YAMAHA_P_125",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773342"
+    },
+    {
+      "id": "yamaha_p_45",
+      "marca": "YAMAHA",
+      "modelo": "P_45",
+      "foto_principal": "YAMAHA_P_45",
+      "fotos_adicionales": [
+        "YAMAHA_P_45_BACK"
+      ],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773345"
+    },
+    {
+      "id": "yamaha_reface_cp",
+      "marca": "YAMAHA",
+      "modelo": "REFACE_CP",
+      "foto_principal": "YAMAHA_REFACE_CP",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773348"
+    },
+    {
+      "id": "yamaha_reface_yc",
+      "marca": "YAMAHA",
+      "modelo": "REFACE_YC",
+      "foto_principal": "YAMAHA_REFACE_YC",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773351"
+    },
+    {
+      "id": "yamaha_rm1x",
+      "marca": "YAMAHA",
+      "modelo": "RM1X",
+      "foto_principal": "YAMAHA_RM1X",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773353"
+    },
+    {
+      "id": "yamaha_rs_7000",
+      "marca": "YAMAHA",
+      "modelo": "RS_7000",
+      "foto_principal": "YAMAHA_RS_7000",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773356"
+    },
+    {
+      "id": "yamaha_rx_5",
+      "marca": "YAMAHA",
+      "modelo": "RX_5",
+      "foto_principal": "YAMAHA_RX_5",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773359"
+    },
+    {
+      "id": "yamaha_s70_xs",
+      "marca": "YAMAHA",
+      "modelo": "S70_XS",
+      "foto_principal": "YAMAHA_S70_XS",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773362"
+    },
+    {
+      "id": "yamaha_sy_77",
+      "marca": "YAMAHA",
+      "modelo": "SY_77",
+      "foto_principal": "YAMAHA_SY_77",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773366"
+    },
+    {
+      "id": "yamaha_tx_81z",
+      "marca": "YAMAHA",
+      "modelo": "TX_81Z",
+      "foto_principal": "YAMAHA_TX_81Z",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773369"
+    },
+    {
+      "id": "yamaha_v50",
+      "marca": "YAMAHA",
+      "modelo": "V50",
+      "foto_principal": "YAMAHA_V50",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773372"
+    },
+    {
+      "id": "yamaha_yc_61",
+      "marca": "YAMAHA",
+      "modelo": "YC_61",
+      "foto_principal": "YAMAHA_YC_61",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773374"
+    },
+    {
+      "id": "yamaha_ypt_360",
+      "marca": "YAMAHA",
+      "modelo": "YPT_360",
+      "foto_principal": "YAMAHA_YPT_360",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773379"
+    },
+    {
+      "id": "yamaha_ys_200",
+      "marca": "YAMAHA",
+      "modelo": "YS_200",
+      "foto_principal": "YAMAHA_YS_200",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773382"
+    },
+    {
+      "id": "yamaha__np_12",
+      "marca": "YAMAHA",
+      "modelo": "_NP_12",
+      "foto_principal": "YAMAHA__NP_12",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773386"
+    },
+    {
+      "id": "yamaha__p_105",
+      "marca": "YAMAHA",
+      "modelo": "_P_105",
+      "foto_principal": "YAMAHA__P_105",
+      "fotos_adicionales": [],
+      "tipos": [
+        "sintetizador"
+      ],
+      "marca_logo_disponible": true,
+      "marca_habilitada": true,
+      "marca_logo_url": "/images/instrumentos/LOGOS/LOGO_YAMAHA.webp",
+      "agregado_en": "2026-02-17T16:00:49.773389"
+    }
+  ]
+}

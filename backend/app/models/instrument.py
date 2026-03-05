@@ -27,12 +27,17 @@ class Instrument(Base):
     
     # Imagen
     image = Column(JSON, nullable=True)  # {"url": "...", "status": "pending|loaded|failed"}
+    photo_base_url = Column(String(512), nullable=True)
+    template_json = Column(JSON, nullable=True)
+    mapping_status = Column(String(50), nullable=True)  # pending_map|mapped|verified
+    family = Column(String(50), nullable=True)  # 49|61|76|88|module|other
     
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     # Relaciones
     brand = relationship("Brand", back_populates="instruments")
+    photos = relationship("InstrumentPhoto", back_populates="instrument")
     
     def __repr__(self):
         return f"<Instrument(id={self.id}, model={self.model})>"

@@ -18,35 +18,3 @@ const props = defineProps({
     message: String
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-#foxy-activity-spinner {
-    position: fixed;
-    z-index: 99;
-
-    background-color: rgba(0, 0, 0, 0.90);
-    width: 100%;
-    height: 100vh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    user-select: none;
-}
-
-img.foxy-spinner {
-    @include generate-dynamic-styles-with-hash((
-        xxxl:   (max-width: 200px,  max-height:200px),
-        md:     (max-width: 150px,  max-height:150px),
-        sm:     (max-width: 120px,  max-height:120px),
-    ));
-}
-
-h5 {
-    color: $light-5;
-    text-transform: uppercase;
-}
-</style>

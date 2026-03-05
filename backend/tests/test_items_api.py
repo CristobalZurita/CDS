@@ -3,6 +3,8 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 
+pytest.importorskip("openpyxl")
+
 # Ensure repository root is on sys.path so 'backend' package imports work in test runner
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 if ROOT not in sys.path:

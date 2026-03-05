@@ -3,7 +3,7 @@ Data models for Cirujano de Sintetizadores
 Pydantic models for request/response validation
 """
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from typing import Optional, List, Dict
 from datetime import datetime
 from enum import Enum
@@ -65,11 +65,10 @@ class ClientCreate(ClientBase):
 
 class ClientResponse(ClientBase):
     """Client response model"""
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 # Equipment/Instrument Models
@@ -116,10 +115,9 @@ class InstrumentCreate(InstrumentBase):
 
 class InstrumentResponse(InstrumentBase):
     """Instrument response model"""
-    id: int
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    id: int
 
 
 # Fault/Diagnostic Models
@@ -162,6 +160,8 @@ class QuoteCreate(BaseModel):
 
 class QuoteResponse(BaseModel):
     """Quote response model"""
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     client_id: int
     equipment_info: Dict
@@ -171,9 +171,6 @@ class QuoteResponse(BaseModel):
     status: str = "pending"
     created_at: datetime
     notes: Optional[str] = None
-
-    class Config:
-        from_attributes = True
 
 
 # Repair/Case Models
@@ -194,6 +191,8 @@ class RepairUpdate(BaseModel):
 
 class RepairResponse(BaseModel):
     """Repair case response model"""
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     client_id: int
     quote_id: int
@@ -204,9 +203,6 @@ class RepairResponse(BaseModel):
     technical_notes: Optional[str]
     estimated_cost: int
     final_cost: Optional[int]
-
-    class Config:
-        from_attributes = True
 
 
 # Inventory Models
@@ -220,6 +216,7 @@ class InventoryItemBase(BaseModel):
     supplier: Optional[str] = None
     unit_cost: int = Field(..., gt=0)
     location: Optional[str] = None
+    image_url: Optional[str] = None  # URL to product image
 
 
 class InventoryItemCreate(InventoryItemBase):
@@ -229,10 +226,9 @@ class InventoryItemCreate(InventoryItemBase):
 
 class InventoryItemResponse(InventoryItemBase):
     """Inventory item response"""
-    id: int
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    id: int
 
 
 # Statistics Models

@@ -17,15 +17,3 @@ defineProps({
 
 defineEmits(['update:modelValue'])
 </script>
-
-<style scoped>
-.status-editor {
-  display: grid;
-  gap: 0.35rem;
-}
-select {
-  padding: 0.4rem 0.6rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-</style>

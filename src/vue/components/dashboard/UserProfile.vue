@@ -16,19 +16,3 @@ defineProps({
   user: { type: Object, default: () => ({}) }
 })
 </script>
-
-<style scoped>
-.profile {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
-  display: grid;
-  gap: 0.5rem;
-}
-.meta {
-  display: flex;
-  gap: 1rem;
-  color: #6b7280;
-  font-size: 0.85rem;
-}
-</style>

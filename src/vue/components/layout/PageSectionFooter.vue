@@ -52,38 +52,3 @@ const parsedDescription = computed(() => {
     return utils.parseCustomText(props.description)
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-div.foxy-section-footer {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (margin-top: 2rem),
-        xxl:  (margin-top: 1.5rem),
-        lg:   (margin-top: 1.1rem),
-        md:   (margin-top: 1.05rem),
-        sm:   (margin-top: 0.75rem),
-    ));
-
-    text-align: center;
-}
-
-div.foxy-section-footer-content {
-    text-align: center;
-    margin: 0 auto;
-}
-
-h3.foxy-footer-title {
-    font-family: 'Cervo Neue', $headings-font-family;
-    font-weight: 800;
-    letter-spacing: 0.03em;
-    color: $dark;
-    text-transform: uppercase;
-}
-
-p.foxy-footer-description {
-    font-family: 'Cervo Neue', $font-family-base;
-    font-weight: 400;
-    line-height: 1.6;
-}
-</style>

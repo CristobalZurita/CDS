@@ -20,6 +20,7 @@ class Product(Base):
     price = Column(Integer, nullable=False)  # Precio en centavos
     quantity = Column(Integer, default=0, nullable=False)
     min_quantity = Column(Integer, default=5, nullable=False)  # Para alertas de stock bajo
+    image_url = Column(String(500), nullable=True)  # URL relativa a imagen del producto
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     

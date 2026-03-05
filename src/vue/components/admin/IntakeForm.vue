@@ -191,10 +191,3 @@ const submit = async () => {
   }
 }
 </script>
-
-<style scoped>
-.section-title {
-  font-weight: 600;
-  margin-top: 0.5rem;
-}
-</style>

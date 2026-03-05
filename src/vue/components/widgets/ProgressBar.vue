@@ -3,7 +3,7 @@
         <div class="progress">
             <div class="progress-bar"
                  role="progressbar"
-                 :style="style"
+                 :class="progressClass"
                  :aria-valuenow="parsedPercentage"
                  aria-valuemin="0"
                  aria-valuemax="100"/>
@@ -26,27 +26,7 @@ const parsedPercentage = computed(() => {
     return utils.clamp(props.percentage, 0, 100)
 })
 
-const style = computed(() => {
-    const percentageValue = parsedPercentage.value
-    return `width: ${percentageValue}%;`
+const progressClass = computed(() => {
+    return `progress-${Math.round(parsedPercentage.value)}`
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-div.progress {
-    height: 4px;
-    border-radius: 0;
-    background-color: lighten($light-3, 2%);
-}
-
-div.progress-bar {
-    background-color: $primary;
-    -webkit-transition: none;
-    -moz-transition: none;
-    -ms-transition: none;
-    -o-transition: none;
-    transition: none;
-}
-</style>

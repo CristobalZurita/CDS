@@ -73,38 +73,3 @@ const _onHidden = () => {
     emit("close")
 }
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-div.modal-content {
-    background-color: $light-1;
-}
-
-.modal-xl {
-    @include media-breakpoint-down(xl) {
-        .modal-dialog {
-            min-width: 90vw !important;
-        }
-    }
-}
-
-button.close-button {
-    position: absolute;
-    z-index: 99;
-    right: 20px;
-    top: 10px;
-
-    padding: 0;
-    margin: 0;
-    font-size: 1.7rem;
-
-    background-color: transparent;
-    border-color: transparent;
-    color:$light-4;
-
-    &:hover {
-        color: $primary;
-    }
-}
-</style>

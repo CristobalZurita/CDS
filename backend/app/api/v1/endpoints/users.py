@@ -24,6 +24,7 @@ def get_user_endpoint(user_id: int, db: Session = Depends(get_db), admin: dict =
     return user
 
 
+@router.post("", response_model=UserRead, status_code=status.HTTP_201_CREATED, include_in_schema=False)
 @router.post("/", response_model=UserRead, status_code=status.HTTP_201_CREATED)
 def create_user_endpoint(payload: UserCreate, db: Session = Depends(get_db), admin: dict = Depends(get_current_admin)):
     return create_user(db, payload)

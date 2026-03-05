@@ -11,7 +11,7 @@
           <router-link to="/cotizador-ia" class="btn-primary">
             + Nueva Cotización
           </router-link>
-          <button class="btn-logout" type="button" @click="handleLogout">
+          <button class="btn-logout" type="button" data-testid="dashboard-logout" @click="handleLogout">
             Cerrar sesión
           </button>
         </div>
@@ -50,6 +50,14 @@
             <div class="stat-label">Total Invertido</div>
           </div>
         </div>
+
+        <div class="stat-card">
+          <div class="stat-icon pending">💳</div>
+          <div class="stat-content">
+            <div class="stat-value">{{ pendingOtPayments }}</div>
+            <div class="stat-label">Pagos OT Pendientes</div>
+          </div>
+        </div>
       </div>
 
       <!-- Main Content -->
@@ -63,14 +71,15 @@
               v-for="repair in activeRepairsList"
               :key="repair.id"
               class="repair-card"
+              data-testid="dashboard-repair-card"
             >
               <div class="repair-header">
                 <div class="repair-info">
                   <h3>{{ repair.instrument }}</h3>
-                  <p class="repair-id">Ticket: {{ repair.id }}</p>
+                  <p class="repair-id">OT: {{ repair.repair_code || repair.repair_number || repair.id }}</p>
                 </div>
-                <div class="repair-status" :class="repair.status">
-                  {{ getStatusLabel(repair.status) }}
+                <div class="repair-status" :class="getStatusClass(repair.status_normalized || repair.status)">
+                  {{ getStatusLabel(repair.status_normalized || repair.status) }}
                 </div>
               </div>
 
@@ -84,18 +93,18 @@
 
               <div class="repair-progress">
                 <div class="progress-bar">
-                  <div class="progress-fill" :style="{ width: repair.progress + '%' }"></div>
+                  <div class="progress-fill" :class="getProgressClass(repair.progress)"></div>
                 </div>
                 <span class="progress-text">{{ repair.progress }}% completado</span>
               </div>
 
               <div class="repair-actions">
-                <button @click="viewRepair(repair)" class="btn-link">Ver detalles →</button>
+                <button @click="viewRepair(repair)" class="btn-link" data-testid="dashboard-repair-view">Ver detalles →</button>
               </div>
             </div>
           </div>
 
-          <div v-else class="empty-state">
+          <div v-else class="empty-state" data-testid="dashboard-empty-repairs">
             <p>No tienes reparaciones activas</p>
             <router-link to="/cotizador-ia" class="btn-secondary">
               Solicitar cotización
@@ -124,6 +133,14 @@
               </div>
             </router-link>
 
+            <router-link to="/ot-payments" class="action-card">
+              <div class="action-icon">💳</div>
+              <div class="action-text">
+                <h4>Pagos OT</h4>
+                <p>Sube comprobantes y revisa cobros de repuestos</p>
+              </div>
+            </router-link>
+
             <router-link to="/repairs" class="action-card">
               <div class="action-icon">📋</div>
               <div class="action-text">
@@ -142,7 +159,7 @@
           </div>
 
           <!-- Notifications -->
-          <h2 style="margin-top: 2rem">Notificaciones</h2>
+          <h2 class="notifications-title">Notificaciones</h2>
 
           <div v-if="notifications.length > 0" class="notifications-list">
             <div
@@ -150,6 +167,7 @@
               :key="notification.id"
               class="notification-card"
               :class="notification.type"
+              data-testid="dashboard-notification"
             >
               <div class="notification-icon">{{ getNotificationIcon(notification.type) }}</div>
               <div class="notification-content">
@@ -159,13 +177,14 @@
               <button
                 @click="dismissNotification(notification.id)"
                 class="notification-close"
+                data-testid="dashboard-notification-dismiss"
               >
                 ✕
               </button>
             </div>
           </div>
 
-          <div v-else class="empty-state">
+          <div v-else class="empty-state" data-testid="dashboard-empty-notifications">
             <p>No hay notificaciones nuevas</p>
           </div>
         </div>
@@ -180,6 +199,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { api } from '@/services/api'
 import { showError } from '@/services/toastService'
+import { getRepairStatusLabel, normalizeRepairStatus } from '@/utils/repairStatus'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -200,21 +220,15 @@ const pendingRepairs = computed(() => stats.value.pending_repairs)
 const activeRepairs = computed(() => stats.value.active_repairs)
 const completedRepairs = computed(() => stats.value.completed_repairs)
 const totalSpent = computed(() => stats.value.total_spent)
+const pendingOtPayments = computed(() => stats.value.pending_ot_payments || 0)
 
 // Methods
 const getStatusLabel = (status) => {
-  const labels = {
-    pending_quote: '⏳ Pendiente',
-    quoted: '💬 Cotizado',
-    approved: '✅ Aprobado',
-    in_progress: '🔧 En Proceso',
-    waiting_parts: '⌛ En Espera',
-    testing: '🧪 En Pruebas',
-    completed: '✓ Completada',
-    delivered: '📦 Entregado',
-    cancelled: '✕ Cancelada'
-  }
-  return labels[status] || status
+  return getRepairStatusLabel(status)
+}
+
+const getStatusClass = (status) => {
+  return normalizeRepairStatus(status)
 }
 
 const getNotificationIcon = (type) => {
@@ -252,6 +266,11 @@ const viewRepair = (repair) => {
   router.push(`/repairs/${repair.id}`)
 }
 
+const getProgressClass = (progress) => {
+  const normalized = Math.max(0, Math.min(100, Math.round(Number(progress) || 0)))
+  return `progress-${normalized}`
+}
+
 const handleLogout = () => {
   authStore.logout()
 }
@@ -278,487 +297,3 @@ onMounted(() => {
   fetchDashboard()
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-.dashboard-page {
-  min-height: 100vh;
-  background: radial-gradient(circle at 20% 10%, rgba($brand-secondary, 0.25) 0%, rgba($dark, 0.95) 45%, rgba(0, 0, 0, 0.98) 100%);
-  padding: 2rem 1rem;
-}
-
-.dashboard-container {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Header */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  background: $vintage-beige;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(62, 60, 56, 0.2);
-}
-
-.dashboard-header h1 {
-  margin: 0 0 0.5rem 0;
-  color: $brand-text;
-  font-size: 2rem;
-}
-
-.welcome-text {
-  margin: 0;
-  color: $text-muted;
-}
-
-.header-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-.btn-primary {
-  padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, $orange-primary, $brand-secondary);
-  color: $vintage-beige;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4);
-}
-
-/* Stats Grid */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.stat-card {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 1.5rem;
-  display: flex;
-  gap: 1rem;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s;
-  border: 1px solid rgba(62, 60, 56, 0.18);
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-}
-
-.stat-icon {
-  font-size: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-}
-
-.stat-icon.pending {
-  background: rgba(204, 125, 67, 0.25);
-}
-
-.stat-icon.active {
-  background: rgba(236, 107, 0, 0.25);
-}
-
-.stat-icon.completed {
-  background: rgba(3, 134, 0, 0.2);
-}
-
-.stat-icon.total {
-  background: rgba(232, 147, 90, 0.25);
-}
-
-.stat-content {
-  flex: 1;
-}
-
-.stat-value {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: $brand-text;
-  margin-bottom: 0.25rem;
-}
-
-.stat-label {
-  font-size: 0.9rem;
-  color: $text-muted;
-}
-
-/* Dashboard Content */
-.dashboard-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.column h2 {
-  margin: 0 0 1.5rem 0;
-  color: $brand-text;
-  font-size: 1.3rem;
-}
-
-/* Repairs List */
-.repairs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.repair-card {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  border-left: 4px solid $orange-primary;
-  transition: all 0.2s;
-}
-
-.repair-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-  transform: translateX(4px);
-}
-
-.repair-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(62, 60, 56, 0.12);
-}
-
-.repair-info h3 {
-  margin: 0 0 0.25rem 0;
-  color: $brand-text;
-  font-size: 1.1rem;
-}
-
-.repair-id {
-  margin: 0;
-  color: $text-muted;
-  font-size: 0.85rem;
-}
-
-.repair-status {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.repair-status.waiting,
-.repair-status.waiting_parts {
-  background: rgba(172, 97, 42, 0.18);
-  color: $brand-text;
-}
-
-.repair-status.in-progress,
-.repair-status.in_progress {
-  background: rgba(236, 107, 0, 0.2);
-  color: $brand-text;
-}
-
-.repair-status.pending_quote,
-.repair-status.quoted,
-.repair-status.approved,
-.repair-status.testing {
-  background: rgba(232, 147, 90, 0.25);
-  color: $brand-text;
-}
-
-.repair-status.completed,
-.repair-status.delivered {
-  background: rgba(3, 134, 0, 0.18);
-  color: $brand-text;
-}
-
-.repair-details {
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-}
-
-.repair-details p {
-  margin: 0.5rem 0;
-  color: $text-muted;
-}
-
-.repair-progress {
-  margin-bottom: 1rem;
-}
-
-.progress-bar {
-  height: 8px;
-  background: rgba(62, 60, 56, 0.15);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, $orange-pastel, $brand-secondary);
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  font-size: 0.85rem;
-  color: $text-muted;
-}
-
-.repair-actions {
-  text-align: right;
-}
-
-.btn-link {
-  background: none;
-  border: none;
-  color: $orange-primary;
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: 600;
-  padding: 0;
-  transition: all 0.2s;
-}
-
-.btn-link:hover {
-  color: $brand-secondary;
-}
-
-/* Quick Actions */
-.quick-actions {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.action-card {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 1.25rem;
-  display: flex;
-  gap: 1rem;
-  text-decoration: none;
-  color: $brand-text;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s;
-  border-left: 4px solid transparent;
-  border: 1px solid rgba(62, 60, 56, 0.18);
-}
-
-.action-card:hover {
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
-  transform: translateX(4px);
-  border-left-color: $orange-primary;
-}
-
-.action-icon {
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 50px;
-}
-
-.action-text h4 {
-  margin: 0 0 0.25rem 0;
-  color: $brand-text;
-  font-size: 0.95rem;
-}
-
-.action-text p {
-  margin: 0;
-  color: $text-muted;
-  font-size: 0.85rem;
-}
-
-/* Notifications */
-.notifications-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.notification-card {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 1rem;
-  display: flex;
-  gap: 1rem;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  border-left: 4px solid rgba(62, 60, 56, 0.3);
-}
-
-.notification-card.update {
-  border-left-color: $orange-pastel;
-  background: rgba(232, 147, 90, 0.12);
-}
-
-.notification-card.info {
-  border-left-color: $brand-secondary;
-  background: rgba(172, 97, 42, 0.12);
-}
-
-.notification-card.warning {
-  border-left-color: $orange-primary;
-  background: rgba(236, 107, 0, 0.12);
-}
-
-.notification-card.error {
-  border-left-color: #b45309;
-  background: rgba(180, 83, 9, 0.12);
-}
-
-.notification-card.success {
-  border-left-color: #166534;
-  background: rgba(22, 101, 52, 0.12);
-}
-
-.notification-icon {
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-}
-
-.notification-content {
-  flex: 1;
-}
-
-.notification-message {
-  margin: 0 0 0.25rem 0;
-  color: $brand-text;
-  font-size: 0.95rem;
-}
-
-.notification-time {
-  margin: 0;
-  color: $text-muted;
-  font-size: 0.8rem;
-}
-
-.notification-close {
-  background: none;
-  border: none;
-  color: $text-muted;
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 0;
-  transition: color 0.2s;
-}
-
-.notification-close:hover {
-  color: $brand-text;
-}
-
-/* Empty State */
-.empty-state {
-  background: $vintage-beige;
-  border-radius: 12px;
-  padding: 3rem;
-  text-align: center;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(62, 60, 56, 0.18);
-}
-
-.empty-state p {
-  margin: 0 0 1.5rem 0;
-  color: $text-muted;
-  font-size: 1rem;
-}
-
-.btn-secondary {
-  padding: 0.75rem 1.5rem;
-  background: rgba(236, 107, 0, 0.15);
-  color: $brand-text;
-  border: 2px solid rgba(236, 107, 0, 0.6);
-  border-radius: 8px;
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: 600;
-  display: inline-block;
-  transition: all 0.2s;
-}
-
-.btn-secondary:hover {
-  background: rgba(236, 107, 0, 0.3);
-  border-color: rgba(236, 107, 0, 0.75);
-}
-
-.btn-logout {
-  padding: 0.875rem 1.4rem;
-  background: rgba(236, 107, 0, 0.12);
-  color: $brand-text;
-  border: 2px solid rgba(236, 107, 0, 0.55);
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-logout:hover {
-  background: rgba(236, 107, 0, 0.28);
-  border-color: rgba(236, 107, 0, 0.75);
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .dashboard-content {
-    grid-template-columns: 1fr;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard-page {
-    padding: 1rem;
-  }
-
-  .dashboard-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .repair-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-}
-</style>

@@ -1,0 +1,1871 @@
+@use "./_theming.scss" as *;
+
+.admin-shell {
+    font-size: 1.05rem;
+}
+
+.admin-content {
+    padding: 2.5rem 2.75rem 3.25rem;
+}
+
+.admin-content .admin-section {
+    padding: 1.5rem;
+}
+
+@include media-breakpoint-down(lg) {
+    .admin-content {
+        padding: 1.5rem 1.75rem 2.25rem;
+    }
+
+    .admin-content .admin-section {
+        padding: 1.25rem;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .admin-content {
+        padding: 1.25rem 1.25rem 2rem;
+    }
+
+    .admin-content .admin-section-title {
+        font-size: 1.25rem;
+    }
+}
+
+// Source: src/vue/components/admin/AdminToolbar.vue
+.admin-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacer-lg;
+  background: $vintage-beige;
+  border-radius: $border-radius-lg;
+  padding: 1.25rem $spacer-lg;
+  border: 1px solid rgba($color-dark, 0.2);
+  box-shadow: 0 10px 22px rgba($color-black, 0.2);
+  margin-bottom: $spacer-lg;
+}
+
+.title {
+  margin: 0;
+  color: $brand-text;
+}
+
+.subtitle {
+  margin: 0.35rem 0 0;
+  color: $text-muted;
+  font-size: 0.9rem;
+}
+
+.btn-logout {
+  padding: 0.65rem 1.2rem;
+  background: rgba($color-primary, 0.18);
+  color: $brand-text;
+  border: 2px solid rgba($color-primary, 0.6);
+  border-radius: $border-radius-md;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  transition: $transition-fast;
+}
+
+.btn-logout:hover {
+  background: rgba($color-primary, 0.3);
+  border-color: rgba($color-primary, 0.75);
+}
+
+// Source: src/vue/components/admin/CategoryList.vue
+@include media-breakpoint-down(md) {
+  .admin-table--stack,
+  .admin-table--stack thead,
+  .admin-table--stack tbody,
+  .admin-table--stack tr,
+  .admin-table--stack th,
+  .admin-table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table--stack thead {
+    display: none;
+  }
+
+  .admin-table--stack tr {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: $color-white;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba($color-dark, 0.12);
+  }
+
+  .admin-table--stack td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+  }
+
+  .admin-table--stack td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.8rem;
+  }
+}
+
+// Source: src/vue/components/admin/CategoryManager.vue
+.category-manager ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.category-manager li {
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+.category-manager span {
+  display: block;
+  color: $color-gray-500-legacy;
+  font-size: 0.85rem;
+}
+
+// Source: src/vue/components/admin/ClientDetail.vue
+.client-detail {
+  border: 1px solid $legacy-gray-200;
+  border-radius: 12px;
+  padding: 1rem;
+  background: $white;
+}
+.client-code {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: $brand-primary;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: $legacy-gray-600;
+  margin-bottom: 0.25rem;
+
+  i {
+    width: 18px;
+    color: $legacy-gray-400;
+  }
+}
+
+.stats-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  background: $legacy-gray-100;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: $legacy-gray-700;
+
+  i {
+    color: $brand-primary;
+    margin-right: 0.35rem;
+  }
+}
+
+.devices-section {
+  border-top: 1px solid $legacy-gray-200;
+  padding-top: 1rem;
+}
+
+.devices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.device-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border: 1px solid $legacy-gray-200;
+  border-radius: 8px;
+  background: $legacy-gray-50;
+}
+
+.device-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $brand-primary;
+  color: $white;
+  border-radius: 8px;
+}
+
+.device-info {
+  flex: 1;
+
+  strong {
+    color: $legacy-gray-800;
+    font-size: 0.95rem;
+  }
+}
+.device-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.add-device-form {
+  background: $legacy-gray-25;
+}
+.repair-intake-card {
+  border: 1px solid $legacy-gray-200;
+  border-radius: 10px;
+  padding: 1rem;
+  background: $legacy-cream;
+}
+
+// Source: src/vue/components/admin/ClientList.vue
+.client-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: $spacer-sm;
+}
+
+.client-list li {
+  padding: 0.75rem;
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+}
+
+.client-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.client-code {
+  font-size: $text-sm;
+  font-weight: $fw-bold;
+  color: $color-primary;
+}
+
+.client-list span {
+  display: block;
+  color: $color-gray-500-legacy;
+  font-size: $text-base;
+}
+
+// Source: src/vue/components/admin/IntakeForm.vue
+.section-title {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+// Source: src/vue/components/admin/InventoryAlerts.vue
+.inventory-alerts {
+  margin-bottom: 1rem;
+  border: 1px solid rgba($color-black, 0.08);
+  border-radius: 16px;
+  padding: 1rem;
+  background: rgba($color-white, 0.95);
+  box-shadow: $shadow-sm;
+}
+
+.inventory-alerts__header,
+.inventory-alerts__group header,
+.inventory-alerts__group li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.inventory-alerts__header {
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: $fw-bold;
+  color: $primary;
+}
+
+.inventory-alerts__header h4 {
+  margin: 0;
+}
+
+.inventory-alerts__empty {
+  margin: 0;
+  color: $light-7;
+}
+
+.inventory-alerts__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.inventory-alerts__group {
+  border-radius: 14px;
+  padding: 0.85rem;
+  border: 1px solid rgba($color-black, 0.05);
+}
+
+.inventory-alerts__group--critical_5 {
+  background: rgba($color-red-500-legacy, 0.12);
+}
+
+.inventory-alerts__group--high_20 {
+  background: rgba($primary, 0.1);
+}
+
+.inventory-alerts__group--medium_50 {
+  background: rgba($color-warning, 0.14);
+}
+
+.inventory-alerts__group--low_min {
+  background: rgba($color-info, 0.1);
+}
+
+.inventory-alerts__group ul {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inventory-alerts__group li {
+  flex-direction: column;
+  padding: 0.55rem 0;
+  border-top: 1px solid rgba($color-black, 0.06);
+}
+
+.inventory-alerts__group li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.inventory-alerts__group small,
+.inventory-alerts__group span:last-child {
+  color: $light-7;
+}
+
+@media (max-width: 768px) {
+  .inventory-alerts__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+// Source: src/vue/components/admin/InventoryForm.vue
+.card { background: $color-white }
+
+// Source: src/vue/components/admin/InventoryStockSheet.vue
+.stock-sheet {
+	display: grid;
+	gap: 1rem;
+}
+
+.sheet-help {
+	background: $color-orange-25-legacy;
+	border: 1px solid rgba($color-primary, 0.35);
+	border-radius: 12px;
+	padding: 1rem 1.2rem;
+	color: $color-dark;
+}
+
+.sheet-controls {
+	max-width: 420px;
+}
+
+.name-cell {
+	min-width: 200px;
+}
+
+// Source: src/vue/components/admin/InventoryStockStates.vue
+.stock-states {
+  display: grid;
+  gap: 1rem;
+}
+
+.sheet-help {
+  background: $color-orange-25-legacy;
+  border: 1px solid rgba($color-primary, 0.35);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  color: $color-dark;
+}
+
+.sheet-controls {
+  max-width: 420px;
+}
+
+// Source: src/vue/components/admin/InventoryTable.vue
+.inventory-table .table {
+	width: 100%;
+	border-collapse: collapse;
+}
+.inventory-table th,
+.inventory-table td {
+	border: 1px solid $color-gray-200-legacy;
+	padding: 8px 12px;
+	text-align: left;
+}
+.inventory-table .empty {
+	color: $color-gray-500-legacy;
+	padding: 12px 0;
+}
+
+@include media-breakpoint-down(md) {
+	.inventory-table .table,
+	.inventory-table .table thead,
+	.inventory-table .table tbody,
+	.inventory-table .table tr,
+	.inventory-table .table th,
+	.inventory-table .table td {
+		display: block;
+		width: 100%;
+	}
+
+	.inventory-table .table thead {
+		display: none;
+	}
+
+	.inventory-table .table tr {
+		padding: 1rem;
+		margin-bottom: 0.75rem;
+		background: $color-white;
+		border-radius: 12px;
+		box-shadow: 0 8px 16px rgba($color-dark, 0.12);
+	}
+
+	.inventory-table .table td {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0.35rem 0;
+		font-size: 1rem;
+	}
+
+	.inventory-table .table td::before {
+		content: attr(data-label);
+		font-weight: 600;
+		color: $text-muted;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		font-size: 0.8rem;
+	}
+}
+
+// Source: src/vue/components/admin/KpiZones.vue
+.kpi-zones {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.kpi-zone {
+  background: $color-white;
+  border: 1px solid rgba($color-dark, 0.16);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 8px 18px rgba($color-dark, 0.08);
+}
+
+.zone-header h3 {
+  margin: 0;
+  color: $brand-text;
+  font-size: 1rem;
+}
+
+.zone-header p {
+  margin: 0.25rem 0 0;
+  color: $text-muted;
+  font-size: 0.82rem;
+}
+
+.zone-grid {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.kpi-card {
+  border-radius: 10px;
+  border: 1px solid rgba($color-dark, 0.1);
+  padding: 0.65rem;
+  background: rgba($color-light, 0.75);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.kpi-card.warning {
+  border-color: rgba($color-warning, 0.4);
+  background: rgba($color-warning, 0.12);
+}
+
+.kpi-card.danger {
+  border-color: rgba($color-danger, 0.4);
+  background: rgba($color-danger, 0.12);
+}
+
+.kpi-label {
+  color: $text-muted;
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+.kpi-value {
+  color: $brand-text;
+  font-size: 1.1rem;
+  line-height: 1.1;
+}
+
+.alerts-empty {
+  margin-top: 0.75rem;
+  color: $text-muted;
+  font-size: 0.86rem;
+}
+
+.alerts-list {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.alert-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  border: 1px solid rgba($color-dark, 0.12);
+  padding: 0.5rem 0.65rem;
+}
+
+.alert-message {
+  font-size: 0.83rem;
+  color: $brand-text;
+}
+
+.alert-count {
+  font-size: 0.8rem;
+  min-width: 1.8rem;
+  text-align: center;
+  border-radius: 999px;
+  background: rgba($color-dark, 0.08);
+  padding: 0.1rem 0.35rem;
+}
+
+.severity-danger {
+  border-color: rgba($color-danger, 0.4);
+  background: rgba($color-danger, 0.1);
+}
+
+.severity-warning {
+  border-color: rgba($color-warning, 0.4);
+  background: rgba($color-warning, 0.12);
+}
+
+.severity-info {
+  border-color: rgba($color-primary, 0.3);
+  background: rgba($color-primary, 0.08);
+}
+
+@media (min-width: 768px) {
+  .zone-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+// Source: src/vue/components/admin/RepairManager.vue
+.repair-manager {
+  display: grid;
+  gap: $spacer-md;
+}
+
+.repair {
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: $border-radius-lg;
+  padding: $spacer-md;
+}
+
+// Source: src/vue/components/admin/RepairStatusEditor.vue
+.status-editor {
+  display: grid;
+  gap: 0.35rem;
+}
+
+select {
+  padding: 0.4rem 0.6rem;
+  border-radius: $border-radius-md;
+  border: 1px solid $color-gray-200-legacy;
+}
+
+// Source: src/vue/components/admin/RepairsList.vue
+.cell-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+@include media-breakpoint-down(md) {
+  .admin-table--stack,
+  .admin-table--stack thead,
+  .admin-table--stack tbody,
+  .admin-table--stack tr,
+  .admin-table--stack th,
+  .admin-table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table--stack thead {
+    display: none;
+  }
+
+  .admin-table--stack tr {
+    padding: $spacer-md;
+    margin-bottom: 0.75rem;
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 8px 16px rgba($color-dark, 0.12);
+  }
+
+  .admin-table--stack td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+  }
+
+  .admin-table--stack td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.8rem;
+  }
+}
+
+// Source: src/vue/components/admin/StatsCards.vue
+.stats {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 1.5rem;
+}
+.card {
+  background: $color-white;
+  border: 1px solid rgba($color-dark, 0.18);
+  border-radius: 14px;
+  padding: 1.35rem;
+  text-align: center;
+  box-shadow: 0 8px 18px rgba($color-dark, 0.12);
+}
+
+.label {
+  margin: 0 0 0.5rem;
+  color: $text-muted;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.value {
+  font-size: 1.8rem;
+  color: $brand-text;
+}
+
+// Source: src/vue/components/admin/StockMovements.vue
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid $color-gray-200-legacy;
+  padding: $spacer-sm;
+  text-align: left;
+}
+
+// Source: src/vue/components/admin/UnifiedIntakeForm.vue
+.sheet-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: $color-sand-100-legacy;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba($color-dark, 0.2);
+}
+
+.sheet-context {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.95rem;
+  color: $text-color-muted;
+  margin-top: 0.35rem;
+}
+
+.intake-sheet {
+  background: $color-white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid $color-gray-200-legacy;
+}
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.sheet-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+}
+.sheet-subtitle {
+  color: $color-gray-500-legacy;
+}
+.code-block {
+  background: $color-slate-25-legacy;
+  border: 1px solid $color-border-light-legacy;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-align: right;
+  min-width: 220px;
+}
+.code-label {
+  font-size: 0.75rem;
+  color: $color-gray-500-legacy;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.code-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $color-orange-800-legacy;
+}
+.sheet-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.sheet-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid $color-gray-200-legacy;
+}
+.instrument-card {
+  border: 1px solid $color-gray-200-legacy;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+  background: $color-white-ice-legacy;
+}
+.instrument-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.code-small {
+  font-size: 0.85rem;
+  color: $color-gray-500-legacy;
+}
+.materials-section {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed $color-gray-200-legacy;
+}
+.sheet-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+// Source: src/vue/components/admin/UserForm.vue
+.password-field {
+  display: flex;
+  gap: $spacer-sm;
+  align-items: center;
+}
+
+.toggle-password {
+  border: 1px solid $color-gray-300-legacy;
+  background: $color-gray-100-legacy;
+  padding: 0.35rem 0.6rem;
+  border-radius: $border-radius-sm;
+  font-size: $text-sm;
+}
+
+// Source: src/vue/components/admin/UserList.vue
+@include media-breakpoint-down(md) {
+  .admin-table--stack,
+  .admin-table--stack thead,
+  .admin-table--stack tbody,
+  .admin-table--stack tr,
+  .admin-table--stack th,
+  .admin-table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table--stack thead {
+    display: none;
+  }
+
+  .admin-table--stack tr {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: $color-white;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba($color-dark, 0.12);
+  }
+
+  .admin-table--stack td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+  }
+
+  .admin-table--stack td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.8rem;
+  }
+}
+
+// Source: src/vue/components/admin/layout/AdminLayout.vue
+.admin-shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: linear-gradient(180deg, lighten($vintage-beige, 4%) 0%, $vintage-beige 70%, lighten($vintage-beige, 2%) 100%);
+  font-size: $text-md;
+  line-height: $lh-relaxed;
+}
+
+.admin-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.admin-context {
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: $spacer-md;
+  padding: $spacer-md 2.5rem;
+  background: $vintage-beige;
+  border-bottom: 1px solid rgba($color-dark, 0.2);
+}
+
+.context-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: $text-base;
+}
+
+.context-item .label {
+  text-transform: uppercase;
+  letter-spacing: $ls-wide;
+  font-size: $text-2xs;
+  color: $text-muted;
+}
+
+.context-item .value {
+  font-weight: $fw-bold;
+  color: $color-dark;
+}
+
+.admin-content {
+  padding: 2.5rem 2.75rem 3.25rem;
+  font-size: $text-md;
+}
+
+.admin-content .admin-section {
+  background: $vintage-beige;
+  border-radius: $border-radius-lg;
+  border: 1px solid rgba($color-dark, 0.18);
+  padding: $spacer-lg;
+  box-shadow: 0 12px 26px rgba($color-dark, 0.15);
+  margin-bottom: 1.75rem;
+}
+
+.admin-content .admin-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacer-md;
+  margin-bottom: $spacer-md;
+}
+
+.admin-content .admin-section-title {
+  margin: 0;
+  font-size: $h4-size;
+  color: $color-dark;
+  font-family: $font-family-heading;
+}
+
+.admin-content .admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba($color-dark, 0.12);
+}
+
+.admin-content .admin-table th,
+.admin-content .admin-table td {
+  padding: $spacer-md $spacer-md;
+  text-align: left;
+  font-size: $text-base;
+  color: $color-dark;
+}
+
+.admin-content .admin-table thead {
+  background: rgba($color-primary, 0.12);
+}
+
+.admin-content .admin-table tbody tr + tr {
+  border-top: 1px solid rgba($color-dark, 0.12);
+}
+
+.admin-content .admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: $border-radius-md;
+  border: 2px solid transparent;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  transition: $transition-fast;
+}
+
+.admin-content .admin-btn-primary {
+  background: rgba($color-primary, 0.18);
+  border-color: rgba($color-primary, 0.6);
+  color: $color-dark;
+}
+
+.admin-content .admin-btn-primary:hover {
+  background: rgba($color-primary, 0.32);
+  border-color: rgba($color-primary, 0.8);
+}
+
+.admin-content .admin-btn-outline {
+  background: transparent;
+  border-color: rgba($color-dark, 0.3);
+  color: $color-dark;
+}
+
+.admin-content .admin-btn-outline:hover {
+  background: rgba($color-dark, 0.08);
+}
+
+@include media-breakpoint-down(lg) {
+  .admin-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Source: src/vue/components/admin/layout/AdminSidebar.vue
+.admin-sidebar {
+  background: lighten($vintage-beige, 4%);
+  color: $color-dark;
+  padding: $spacer-lg $spacer-md;
+  border-right: 1px solid rgba($color-dark, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: $spacer-lg;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: $spacer-sm;
+  font-family: $font-family-heading;
+  text-transform: uppercase;
+  letter-spacing: $ls-wide;
+  color: $color-dark;
+  font-size: $text-md;
+}
+
+.brand img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: $border-radius-md;
+  border: 2px solid rgba($color-primary, 0.6);
+  background: $vintage-beige;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: $spacer-xs;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: $spacer-sm;
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-lg;
+  text-decoration: none;
+  color: $color-dark;
+  font-weight: $fw-semibold;
+  font-size: $text-md;
+  transition: $transition-fast;
+  border: 1px solid transparent;
+}
+
+.menu-item i {
+  color: $orange-pastel;
+  width: 20px;
+  text-align: center;
+}
+
+.menu-item:hover {
+  background: rgba($color-primary, 0.12);
+  border-color: rgba($color-primary, 0.4);
+  color: $color-dark;
+}
+
+.menu-item.active {
+  background: rgba($color-primary, 0.22);
+  border-color: rgba($color-primary, 0.6);
+  color: $color-dark;
+}
+
+@include media-breakpoint-down(lg) {
+  .admin-sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .menu {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: $spacer-sm;
+  }
+
+  .menu-item {
+    white-space: nowrap;
+  }
+}
+
+// Source: src/vue/components/admin/layout/AdminTopbar.vue
+.admin-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacer-lg;
+  background: lighten($vintage-beige, 5%);
+  border-radius: $border-radius-lg;
+  padding: $spacer-lg $spacer-xl;
+  margin: $spacer-lg $spacer-xxl 0;
+  border: 1px solid rgba($color-dark, 0.2);
+  box-shadow: 0 8px 18px rgba($color-dark, 0.18);
+}
+
+.title-block {
+  position: relative;
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+  color: $color-dark;
+  font-size: $h3-size;
+}
+
+.subtitle {
+  margin: $spacer-xs 0 0;
+  color: $text-muted;
+  font-size: $text-base;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: $spacer-md;
+}
+
+.global-search {
+  margin-top: $spacer-md;
+  max-width: 480px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: $spacer-sm $spacer-md;
+  border-radius: $border-radius-md;
+  border: 1px solid rgba($color-dark, 0.25);
+  font-size: $text-base;
+  background: $color-white;
+}
+
+.search-results {
+  position: absolute;
+  top: calc(100% + #{$spacer-sm});
+  left: 0;
+  right: 0;
+  background: $color-white;
+  border: 1px solid rgba($color-dark, 0.2);
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-lg;
+  z-index: $z-index-dropdown;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.search-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: $spacer-sm $spacer-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacer-xs;
+  cursor: pointer;
+  transition: $transition-fast;
+}
+
+.search-item:hover {
+  background: rgba($color-primary, 0.12);
+}
+
+.search-label {
+  font-weight: $fw-semibold;
+  color: $color-dark;
+}
+
+.search-subtitle {
+  font-size: $text-sm;
+  color: $text-muted;
+}
+
+.search-empty {
+  padding: $spacer-sm $spacer-md;
+  color: $text-muted;
+}
+
+.btn-link {
+  color: $color-dark;
+  text-decoration: none;
+  font-weight: $fw-semibold;
+  border-bottom: 1px solid rgba($color-dark, 0.35);
+  padding-bottom: 2px;
+  transition: $transition-fast;
+}
+
+.btn-logout {
+  padding: $spacer-sm $spacer-md;
+  background: rgba($color-primary, 0.15);
+  color: $color-dark;
+  border: 2px solid rgba($color-primary, 0.6);
+  border-radius: $border-radius-md;
+  font-weight: $fw-semibold;
+  cursor: pointer;
+  transition: $transition-fast;
+}
+
+.btn-logout:hover {
+  background: rgba($color-primary, 0.3);
+  border-color: rgba($color-primary, 0.75);
+}
+
+@include media-breakpoint-down(md) {
+  .admin-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+// Source: src/vue/components/admin/repair/RepairComponentsManager.vue
+.components-manager {
+	background: $vintage-beige;
+	border-radius: 12px;
+	padding: 1.25rem;
+	box-shadow: 0 2px 8px rgba($color-black, 0.08);
+}
+
+.section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+}
+
+.section-title {
+	color: $brand-text;
+	font-weight: 600;
+	margin: 0;
+}
+
+.add-form {
+	background: rgba($color-white, 0.7);
+	border-radius: 8px;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	border: 1px solid rgba($brand-primary, 0.2);
+}
+
+.filters-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.5rem;
+}
+
+.search-results {
+	position: absolute;
+	z-index: 100;
+	background: $color-white;
+	border: 1px solid $color-gray-180-legacy;
+	border-radius: 8px;
+	max-height: 200px;
+	overflow-y: auto;
+	width: calc(100% - 1rem);
+	box-shadow: 0 4px 12px rgba($color-black, 0.15);
+}
+
+.search-item {
+	padding: 0.5rem 0.75rem;
+	cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid $color-gray-190-legacy;
+	gap: 0.5rem;
+
+	&:hover {
+		background: lighten($brand-primary, 45%);
+	}
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	.item-name {
+		font-weight: 500;
+		flex: 1;
+	}
+
+	.search-item-main {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.item-meta {
+		margin-top: 0.25rem;
+	}
+
+	.item-stock {
+		color: $color-gray-666-legacy;
+		font-size: 0.85em;
+		margin: 0 0.5rem;
+	}
+
+	.item-price {
+		color: $brand-primary;
+		font-weight: 600;
+	}
+}
+
+.selected-preview {
+	margin-top: 0.75rem;
+	padding: 0.5rem;
+	background: rgba($brand-primary, 0.1);
+	border-radius: 6px;
+	font-size: 0.9em;
+}
+
+.components-table-wrapper {
+	overflow-x: auto;
+}
+
+.components-table {
+	width: 100%;
+	border-collapse: collapse;
+	background: $color-white;
+	border-radius: 8px;
+	overflow: hidden;
+
+	th, td {
+		padding: 0.75rem;
+		border-bottom: 1px solid $color-gray-190-legacy;
+	}
+
+	th {
+		background: $brand-text;
+		color: $color-white;
+		font-weight: 600;
+		font-size: 0.85em;
+		text-transform: uppercase;
+	}
+
+	tbody tr:hover {
+		background: rgba($brand-primary, 0.05);
+	}
+
+	.component-name {
+		font-weight: 500;
+	}
+
+	.total-row {
+		background: lighten($brand-primary, 40%);
+
+		td {
+			border-bottom: none;
+			padding: 1rem 0.75rem;
+		}
+
+		.total-amount {
+			font-size: 1.1em;
+			color: $brand-primary;
+		}
+	}
+}
+
+.empty-state {
+	text-align: center;
+	padding: 2rem;
+	background: $color-white;
+	border-radius: 8px;
+}
+
+// Source: src/vue/components/admin/repair/RepairCostSummary.vue
+.cost-summary {
+	background: $vintage-beige;
+	border-radius: 12px;
+	padding: 1.25rem;
+	box-shadow: 0 2px 8px rgba($black, 0.08);
+}
+
+.section-header {
+	margin-bottom: 1rem;
+}
+
+.section-title {
+	color: $brand-text;
+	font-weight: 600;
+	margin: 0;
+}
+
+.cost-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.cost-item {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.75rem;
+	background: $white;
+	border-radius: 8px;
+	transition: all 0.2s ease;
+
+	&:hover {
+		box-shadow: 0 2px 8px rgba($black, 0.1);
+	}
+}
+
+.cost-icon {
+	width: 40px;
+	height: 40px;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba($brand-primary, 0.1);
+	color: $brand-primary;
+	font-size: 1.1em;
+
+	&.materials {
+		background: rgba($status-info-legacy, 0.1);
+		color: $status-info-legacy;
+	}
+
+	&.other {
+		background: rgba($status-secondary-legacy, 0.1);
+		color: $status-secondary-legacy;
+	}
+
+	&.total {
+		background: $brand-primary;
+		color: $white;
+	}
+
+	&.quoted {
+		background: rgba($status-teal-legacy, 0.1);
+		color: $status-teal-legacy;
+	}
+
+	&.positive {
+		background: rgba($status-success-legacy, 0.1);
+		color: $status-success-legacy;
+	}
+
+	&.negative {
+		background: rgba($status-danger-legacy, 0.1);
+		color: $status-danger-legacy;
+	}
+
+	&.neutral {
+		background: rgba($status-secondary-legacy, 0.1);
+		color: $status-secondary-legacy;
+	}
+}
+
+.cost-details {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.cost-label {
+	font-size: 0.85em;
+	color: $text-muted;
+}
+
+.cost-value {
+	font-weight: 600;
+	font-size: 1.1em;
+	color: $brand-text;
+
+	&.total-value {
+		color: $brand-primary;
+		font-size: 1.25em;
+	}
+
+	&.positive {
+		color: $status-success-legacy;
+	}
+
+	&.negative {
+		color: $status-danger-legacy;
+	}
+}
+
+.cost-note {
+	font-size: 0.8em;
+	color: $text-muted;
+	background: $light-2;
+	padding: 0.25rem 0.5rem;
+	border-radius: 4px;
+}
+
+.edit-btn {
+	opacity: 0.6;
+	transition: opacity 0.2s;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.cost-divider {
+	height: 1px;
+	background: linear-gradient(90deg, transparent, rgba($black, 0.1), transparent);
+	margin: 0.5rem 0;
+}
+
+.total-row {
+	background: lighten($brand-primary, 42%);
+	border: 2px solid rgba($brand-primary, 0.2);
+}
+
+.quoted-row {
+	background: rgba($status-teal-legacy, 0.05);
+}
+
+.margin-row {
+	background: rgba($light-1, 0.8);
+}
+
+.margin-warning {
+	margin-top: 1rem;
+	padding: 0.75rem;
+	background: rgba($status-danger-legacy, 0.1);
+	border: 1px solid rgba($status-danger-legacy, 0.3);
+	border-radius: 8px;
+	color: $status-danger-legacy;
+	font-weight: 500;
+	text-align: center;
+}
+
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba($black, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.modal-content {
+	background: $white;
+	padding: 1.5rem;
+	border-radius: 12px;
+	max-width: 400px;
+	width: 90%;
+	box-shadow: 0 10px 40px rgba($black, 0.2);
+
+	h5 {
+		margin-bottom: 1rem;
+		color: $brand-text;
+	}
+}
+
+// Source: src/vue/components/admin/repair/RepairStatusChanger.vue
+.status-changer {
+	background: $vintage-beige;
+	border-radius: 12px;
+	padding: 1.25rem;
+	box-shadow: 0 2px 8px rgba($color-black, 0.08);
+	--status-color-1: #{$color-secondary-legacy};
+	--status-color-2: #{$color-info-legacy};
+	--status-color-3: #{$color-orange-500-legacy};
+	--status-color-4: #{$color-success-legacy};
+	--status-color-5: #{$color-orange-400-legacy};
+	--status-color-6: #{$color-teal-legacy};
+	--status-color-7: #{$color-green-700-legacy};
+	--status-color-8: #{$color-blue-600-legacy};
+	--status-color-9: #{$color-purple-600-legacy};
+	--status-color-10: #{$color-danger};
+}
+
+.current-status {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+
+.status-label {
+	font-weight: 500;
+	color: $text-color;
+}
+
+.status-badge {
+	padding: 0.5rem 1rem;
+	border-radius: 20px;
+	color: white;
+	font-weight: 600;
+	font-size: 0.9em;
+}
+
+@for $i from 1 through 10 {
+	.status-badge.status-#{$i} {
+		background-color: var(--status-color-#{$i});
+	}
+}
+
+.status-progress {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex: 1;
+	min-width: 150px;
+
+	.progress-bar {
+		flex: 1;
+		height: 8px;
+		background: $color-gray-220-legacy;
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background: linear-gradient(90deg, $color-primary, lighten($color-primary, 10%));
+		transition: width 0.3s ease;
+
+		@for $i from 0 through 100 {
+			&.progress-#{$i} {
+				width: #{$i}%;
+			}
+		}
+	}
+
+	.progress-text {
+		font-weight: 600;
+		color: $color-primary;
+		min-width: 40px;
+	}
+}
+
+.status-actions {
+	border-top: 1px solid rgba($color-black, 0.1);
+	padding-top: 1rem;
+}
+
+.transitions-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.transition-btn {
+	padding: 0.5rem 1rem;
+	border: 2px solid $color-primary;
+	background: $color-white;
+	color: $color-primary;
+	border-radius: 8px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: $color-primary;
+		color: $color-white;
+	}
+
+	&.btn-danger {
+		border-color: $color-danger;
+		color: $color-danger;
+
+		&:hover {
+			background: $color-danger;
+			color: $color-white;
+		}
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+.terminal-notice {
+	padding: 1rem;
+	background: rgba($color-black, 0.05);
+	border-radius: 8px;
+	color: $color-gray-666-legacy;
+	text-align: center;
+}
+
+.confirm-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba($color-black, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.confirm-modal {
+	background: $color-white;
+	padding: 1.5rem;
+	border-radius: 12px;
+	max-width: 400px;
+	width: 90%;
+	box-shadow: 0 10px 40px rgba($color-black, 0.2);
+
+	h5 {
+		margin-bottom: 1rem;
+		color: $text-color;
+	}
+}
+
+// Source: src/vue/components/admin/wizard/WizardClientIntake.vue
+.wizard-step-body h4 {
+  margin-bottom: $spacer-md;
+}
+
+// Source: src/vue/components/admin/wizard/WizardManualUpload.vue
+.wizard-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacer-md;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $spacer-md;
+}
+
+.summary-grid {
+  display: grid;
+  gap: $spacer-sm;
+}
+
+// Source: src/vue/components/admin/wizard/WizardPurchaseRequest.vue
+.wizard-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacer-md;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $spacer-md;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: $spacer-sm;
+  align-items: center;
+}
+
+.summary-grid {
+  display: grid;
+  gap: $spacer-sm;
+}
+
+// Source: src/vue/components/admin/wizard/WizardShell.vue
+.wizard-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.wizard-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.wizard-steps {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.wizard-step {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid $color-gray-200-legacy;
+  background: $color-white;
+  font-weight: 600;
+  color: $color-gray-500-legacy;
+}
+
+.wizard-step.active {
+  border-color: $color-primary;
+  color: $color-gray-800-legacy;
+  background: $color-orange-50-legacy;
+}
+
+.wizard-step.done {
+  color: $color-gray-800-legacy;
+}
+
+.wizard-step-index {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: $color-primary;
+  color: $color-white;
+  font-size: 0.85rem;
+  display: grid;
+  place-items: center;
+}
+
+.wizard-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.wizard-body {
+  background: $color-white;
+  border-radius: 12px;
+  border: 1px solid $color-gray-200-legacy;
+  padding: 1.5rem;
+}
+
+// Source: src/vue/components/admin/wizard/WizardSignatureRequest.vue
+.wizard-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacer-md;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $spacer-md;
+}
+
+// Source: src/vue/components/admin/wizard/WizardTicket.vue
+.wizard-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacer-md;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $spacer-md;
+}
+
+.summary-grid {
+  display: grid;
+  gap: $spacer-sm;
+}

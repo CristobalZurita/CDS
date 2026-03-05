@@ -16,6 +16,7 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 import sqlite3
+import logging
 from datetime import datetime
 from typing import Optional
 from passlib.context import CryptContext
@@ -64,20 +65,26 @@ def find_db_path(explicit: Optional[str] = None) -> str:
 # default used when not specified; resolved at runtime via find_db_path()
 DB_PATH = None
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+logger = logging.getLogger(__name__)
 
 
 def hash_password(password: str) -> str:
     try:
-        return pwd_context.hash(password)
+        hashed = pwd_context.hash(password)
+        if not pwd_context.verify(password, hashed):
+            raise ValueError("Hash verification failed")
+        return hashed
     except Exception:
         # Fallback: some environments have broken bcrypt builds; use pbkdf2_sha256 instead
         try:
             from passlib.hash import pbkdf2_sha256
-            return pbkdf2_sha256.hash(password)
-        except Exception:
-            # As last resort, return the plain password (not ideal) but print a warning
-            print("Warning: password hashing failed, storing plain password (development only)")
-            return password
+            hashed = pbkdf2_sha256.hash(password)
+            if not pbkdf2_sha256.verify(password, hashed):
+                raise ValueError("Fallback hash verification failed")
+            return hashed
+        except Exception as exc:
+            logger.error("Password hashing failed; aborting admin creation", exc_info=True)
+            raise RuntimeError("Password hashing failed; refusing to store cleartext") from exc
 
 
 def create_admin(email, username, password, db_path: Optional[str] = None):

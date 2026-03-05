@@ -14,17 +14,3 @@ const props = defineProps({
 
 const formatted = computed(() => JSON.stringify(props.result, null, 2))
 </script>
-
-<style scoped>
-.analysis {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
-  background: #f9fafb;
-}
-pre {
-  margin: 0.5rem 0 0;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-</style>

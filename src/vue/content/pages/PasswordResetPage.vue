@@ -3,7 +3,7 @@
     <div class="reset-container">
       <div class="reset-header">
         <img
-          src="/images/logo/NUEVO_cirujano.png"
+          src="/images/logo/NUEVO_cirujano.webp"
           alt="Cirujano de Sintetizadores"
           class="reset-logo"
         />
@@ -21,55 +21,59 @@
 import PasswordReset from '@/vue/components/auth/PasswordReset.vue'
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
 .password-reset-page {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-  padding: 2rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top center, color-mix(in srgb, var(--color-primary) 18%, transparent) 0, transparent 36%),
+    linear-gradient(180deg, #23201c 0%, #3e3c38 100%);
 }
 
 .reset-container {
-  background: #d3d0c3;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  padding: 3rem 2rem;
-  max-width: 520px;
-  width: 100%;
-  border: 2px solid #3e3c38;
+  width: min(100%, 560px);
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(211, 208, 195, 0.8);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
 }
 
 .reset-header {
+  display: grid;
+  justify-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
   text-align: center;
-  margin-bottom: 2rem;
 }
 
 .reset-logo {
-  max-width: 260px;
-  width: 100%;
-  margin-bottom: 1rem;
+  width: min(220px, 55vw);
+  height: auto;
 }
 
 .reset-header h1 {
-  font-family: 'Cervo Extrabold', 'Cervo Neue', sans-serif;
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #3e3c38;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  margin: 0;
+  color: var(--color-dark);
+  font-size: clamp(1.75rem, 3vw, 2.2rem);
+  font-weight: 700;
 }
 
 .muted {
-  margin-top: 1.5rem;
+  margin: 1.5rem 0 0;
+  color: var(--color-dark);
+  opacity: 0.8;
+  font-size: var(--text-sm);
   text-align: center;
-  color: #3e3c38;
 }
 
 .muted a {
-  color: #ec6b00;
-  font-weight: 600;
+  color: var(--color-primary);
+  font-weight: 700;
   text-decoration: none;
 }
 

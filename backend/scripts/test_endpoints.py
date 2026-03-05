@@ -17,6 +17,8 @@ Uso:
     python scripts/test_endpoints.py --url http://localhost:8000
 """
 
+__test__ = False
+
 import sys
 import argparse
 from datetime import datetime

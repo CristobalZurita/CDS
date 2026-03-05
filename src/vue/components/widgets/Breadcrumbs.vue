@@ -52,29 +52,3 @@ const breadcrumbItems = computed(() => {
     }).filter(item => item !== undefined && item !== null)
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-ul.breadcrumbs-link-list {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    padding: 0;
-
-    @include media-breakpoint-down(md) {
-        justify-content: center;
-    }
-}
-
-li.breadcrumb-link-item {
-    margin-right: 0.3rem;
-
-    color: $light-6;
-    &:not(:last-child)::after {
-        content: "›";
-        color: $light-6;
-        margin-left: 0.2rem;
-    }
-}
-</style>

@@ -1,35 +1,52 @@
 
 <template>
-	<AdminLayout title="Clientes" subtitle="Gestión de clientes y perfil" :context="contextHeader">
-		<div class="d-flex justify-content-between align-items-center mb-3">
-			<h1 class="h4">Clientes</h1>
-			<div>
-				<button class="btn btn-sm btn-primary me-2" @click="showIntake = !showIntake">
-					{{ showIntake ? 'Cerrar ingreso' : 'Ingreso completo' }}
-				</button>
-				<button class="btn btn-sm btn-outline-secondary" @click="load">Actualizar</button>
-			</div>
-		</div>
+  <AdminLayout title="Clientes" subtitle="Gestión de clientes y perfil" :context="contextHeader">
+    <section class="clients-page">
+      <header class="clients-page__header">
+        <h1 class="clients-page__title">Clientes</h1>
 
-		<div v-if="showIntake" class="mb-3">
-			<UnifiedIntakeForm @completed="onIntakeCompleted" />
-		</div>
+        <div class="clients-page__actions">
+          <button
+            type="button"
+            class="clients-page__button clients-page__button--primary"
+            data-testid="clients-intake-toggle"
+            @click="showIntake = !showIntake"
+          >
+            {{ showIntake ? 'Cerrar ingreso' : 'Ingreso completo' }}
+          </button>
+          <button
+            type="button"
+            class="clients-page__button clients-page__button--secondary"
+            data-testid="clients-refresh"
+            @click="load"
+          >
+            Actualizar
+          </button>
+        </div>
+      </header>
 
-		<div class="clients-page">
-			<div class="clients-toolbar mb-3">
-				<input
-					v-model="searchQuery"
-					type="search"
-					class="form-control"
-					placeholder="Buscar por nombre, email, código o teléfono..."
-				/>
-			</div>
-			<div class="clients-grid">
-				<ClientList :clients="filteredClients" @select="onSelect" />
-				<ClientDetail :client="selected || {}" />
-			</div>
-		</div>
-	</AdminLayout>
+      <section v-if="showIntake" class="clients-page__panel" data-testid="clients-intake">
+        <UnifiedIntakeForm @completed="onIntakeCompleted" />
+      </section>
+
+      <section class="clients-page__panel">
+        <div class="clients-page__toolbar">
+          <input
+            v-model="searchQuery"
+            type="search"
+            class="clients-page__input"
+            data-testid="clients-search"
+            placeholder="Buscar por nombre, email, código o teléfono..."
+          />
+        </div>
+
+        <div class="clients-page__grid">
+          <ClientList :clients="filteredClients" @select="onSelect" />
+          <ClientDetail :client="selected || {}" />
+        </div>
+      </section>
+    </section>
+  </AdminLayout>
 </template>
 
 <script setup>
@@ -79,7 +96,7 @@ async function load() {
 		} else {
 			selected.value = clients.value[0] || null
 		}
-	} catch (e) {
+	} catch {
 		clients.value = []
 	}
 }
@@ -100,16 +117,102 @@ function onIntakeCompleted(payload) {
 onMounted(load)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
 .clients-page {
-	padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-md);
 }
-.clients-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 1rem;
+
+.clients-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacer-md);
+  flex-wrap: wrap;
 }
-.clients-toolbar {
-	max-width: 420px;
+
+.clients-page__title {
+  margin: 0;
+  color: var(--color-dark);
+  font-size: var(--text-xl);
+  font-weight: 700;
+}
+
+.clients-page__actions {
+  display: flex;
+  gap: var(--spacer-sm);
+  flex-wrap: wrap;
+}
+
+.clients-page__panel {
+  padding: var(--spacer-md);
+  background: var(--color-white);
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.clients-page__toolbar {
+  margin-bottom: var(--spacer-md);
+}
+
+.clients-page__input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--color-light);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-dark);
+  font-size: var(--text-sm);
+}
+
+.clients-page__grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(0, 1.35fr);
+  gap: var(--spacer-md);
+  align-items: start;
+}
+
+.clients-page__button {
+  min-height: 40px;
+  padding: 0.65rem 0.95rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--color-white);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.clients-page__button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.clients-page__button--primary {
+  background: var(--color-primary);
+}
+
+.clients-page__button--secondary {
+  background: var(--color-dark);
+}
+
+@include media-breakpoint-down(md) {
+  .clients-page__header,
+  .clients-page__actions,
+  .clients-page__grid {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .clients-page__button {
+    width: 100%;
+  }
 }
 </style>

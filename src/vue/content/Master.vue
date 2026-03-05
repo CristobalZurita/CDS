@@ -8,8 +8,8 @@
             <router-view/>
         </main>
 
-    <!-- Toast Notifications -->
-    <ToastNotification ref="toastComponent" />
+    <FloatingWhatsAppButton />
+    <FloatingQuoteButton />
 
     <!-- Footer -->
     <Footer>
@@ -31,6 +31,7 @@
                           :links="[
                               {label: `Instagram`, href: `https://www.instagram.com/cirujanodesintetizadores/`, faIcon: `fa-brands fa-instagram`},
                               {label: `Facebook`, href: `https://www.facebook.com/Cirujanodesintetizadores/`, faIcon: `fa-brands fa-facebook`},
+                              {label: `WhatsApp`, href: `https://wa.me/56982957538`, faIcon: `fa-brands fa-whatsapp`},
                           ]"
                           :displayLinksAsButtons="true"/>
 
@@ -70,54 +71,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, provide } from 'vue'
 import Navigation from "/src/vue/components/nav/Navigation.vue"
 import Footer from "/src/vue/components/footer/Footer.vue"
 import FooterBlock from "/src/vue/components/footer/FooterBlock.vue"
 import FooterCopyright from "/src/vue/components/footer/FooterCopyright.vue"
 import FooterColumn from "/src/vue/components/footer/FooterColumn.vue"
-import ToastNotification from "/src/vue/components/system/ToastNotification.vue"
-import { setToastComponent } from '/src/services/toastService.js'
+import FloatingQuoteButton from "/src/vue/components/widgets/FloatingQuoteButton.vue"
+import FloatingWhatsAppButton from "/src/vue/components/widgets/FloatingWhatsAppButton.vue"
+const brandLogo = `${import.meta.env.BASE_URL}images/logo/logo_square_002.webp`
 
-const toastComponent = ref(null)
-const brandLogo = `${import.meta.env.BASE_URL}images/logo/logo_square_002.png`
+// Provide global injections for child components
+const currentPageSections = ref([])
+const loaderAnimationStatus = ref('IDLE')
+const LoaderAnimationStatus = { IDLE: 'IDLE', LOADING: 'LOADING', LEAVING: 'LEAVING' }
 
-onMounted(() => {
-  // Initialize toast service with component reference
-  if (toastComponent.value) {
-    setToastComponent(toastComponent.value)
-  }
-})
+provide('currentPageSections', currentPageSections)
+provide('loaderAnimationStatus', loaderAnimationStatus)
+provide('LoaderAnimationStatus', LoaderAnimationStatus)
 </script>
-
-<style lang="scss">
-@import "/src/scss/_theming.scss";
-
-.site-body {
-  padding-top: var(--navbar-height, 120px);
-}
-
-.footer-legal-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.9rem;
-  flex-wrap: nowrap;
-  text-align: center;
-}
-
-.footer-legal-row a {
-  color: #eaeaea;
-  text-decoration: none;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.footer-legal-row a:hover {
-  color: lighten($primary, 15%);
-}
-
-.footer-legal-sep {
-  color: #eaeaea;
-}
-</style>

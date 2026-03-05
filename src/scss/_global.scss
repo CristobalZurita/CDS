@@ -1,0 +1,84 @@
+@use "./_theming.scss" as *;
+
+:root {
+    --color-primary: #{$color-primary};
+    --color-dark: #{$color-dark};
+    --color-light: #{$color-light};
+    --color-white: #{$color-white};
+    --color-danger: #{$color-danger};
+    --color-warning: #{$color-warning};
+    --color-info: #{$color-info};
+
+    --text-xs: #{$text-xs};
+    --text-sm: #{$text-sm};
+    --text-base: #{$text-base};
+    --text-lg: #{$text-lg};
+    --text-xl: #{$text-xl};
+
+    --spacer-sm: #{$spacer-sm};
+    --spacer-md: #{$spacer-md};
+    --spacer-lg: #{$spacer-lg};
+
+    --radius-sm: #{$border-radius-sm};
+    --radius-md: #{$border-radius-md};
+    --radius-lg: #{$border-radius-lg};
+
+    --shadow-sm: #{$shadow-sm};
+    --shadow-md: #{$shadow-md};
+    --transition-base: #{$transition-base};
+}
+
+body {
+    font-size: 1rem;
+    line-height: 1.6;
+    background-color: #3e3c38;
+}
+
+.gtm-noscript-frame {
+    display: none;
+    visibility: hidden;
+}
+
+.container,
+.container-fluid,
+.container-xxl {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+.card,
+.admin-content .admin-section {
+    padding: 1.5rem;
+}
+
+.btn,
+.admin-content .admin-btn {
+    min-height: 44px;
+    font-size: 1rem;
+}
+
+.form-control,
+.form-select,
+.form-check-input,
+input,
+select,
+textarea {
+    min-height: 44px;
+    font-size: 1rem;
+}
+
+@include media-breakpoint-down(md) {
+    body {
+        font-size: 1rem;
+    }
+
+    .card,
+    .admin-content .admin-section {
+        padding: 1.25rem;
+    }
+
+    .btn,
+    .admin-content .admin-btn {
+        min-height: 48px;
+    }
+}

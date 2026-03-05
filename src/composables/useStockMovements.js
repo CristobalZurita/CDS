@@ -1,11 +1,6 @@
-import { useStockMovementsStore } from '@/stores/stockMovements'
-export function useStockMovements() {
-  const store = useStockMovementsStore()
-  return {
-    movements: store.movements,
-    loading: store.loading,
-    error: store.error,
-    fetchMovements: store.fetchMovements,
-    createMovement: store.createMovement
-  }
-}
+/**
+ * Wrapper de compatibilidad para imports legacy en JavaScript.
+ * La implementacion autoritativa vive en `useStockMovements.ts`.
+ */
+
+export { useStockMovements } from './useStockMovements.ts'

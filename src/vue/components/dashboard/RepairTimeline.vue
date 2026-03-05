@@ -21,37 +21,3 @@ const formatDate = (value) => {
   return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value))
 }
 </script>
-
-<style scoped>
-.timeline {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 0.75rem;
-}
-.event {
-  display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
-}
-.dot {
-  width: 10px;
-  height: 10px;
-  background: #2563eb;
-  border-radius: 50%;
-  margin-top: 0.35rem;
-}
-.event-title {
-  margin: 0;
-  font-weight: 600;
-}
-.event-time {
-  margin: 0.15rem 0 0;
-  color: #6b7280;
-  font-size: 0.85rem;
-}
-.empty {
-  color: #6b7280;
-}
-</style>

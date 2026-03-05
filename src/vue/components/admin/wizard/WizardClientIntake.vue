@@ -220,8 +220,24 @@ const submit = async () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/scss/_core.scss" as *;
+
+.wizard-step-body {
+  display: grid;
+  gap: var(--spacer-md);
+}
+
 .wizard-step-body h4 {
-  margin-bottom: 1rem;
+  margin: 0;
+  color: var(--color-dark);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+@include media-breakpoint-down(md) {
+  .wizard-step-body .btn {
+    width: 100%;
+  }
 }
 </style>

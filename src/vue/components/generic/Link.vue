@@ -59,16 +59,3 @@ const _onHashLinkClicked = () => {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-button.btn-link-wrapper {
-    padding: 0;
-    margin: 0;
-    background: transparent;
-    border: 0;
-    outline: none;
-    box-shadow: none;
-}
-</style>

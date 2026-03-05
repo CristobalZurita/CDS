@@ -24,21 +24,3 @@ const className = computed(() => {
         ""
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-div.foxy-footer-block {
-    min-height: 40px;
-    background-color: $footer-bg-color;
-    padding: 1rem 0;
-    text-align: center;
-    &-darken {
-        background-color: $footer-bg-highlight-color;
-    }
-}
-
-div.foxy-footer-row {
-    padding: 1rem 0;
-}
-</style>

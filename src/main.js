@@ -1,6 +1,7 @@
-import "./scss/style.scss"
+// SASS Architecture - main.scss es el nuevo entry point
+// Si hay problemas, cambiar a: import "./scss/style.scss"
+import "./scss/main.scss"
 import "./assets/styles/tokens.css"
-import "@fortawesome/fontawesome-free/css/all.css"
 import { createApp } from "vue"
 import { createPinia } from "pinia"
 import App from "/src/vue/stack/App.vue"
@@ -47,6 +48,34 @@ router.afterEach((to) => {
 
 // Mount app
 app.mount("#app")
+
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {
+      // Keep silent: no hard failure for SW registration
+    })
+  })
+}
+
+if ("serviceWorker" in navigator && import.meta.env.DEV) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => {
+      registration.unregister().catch(() => {
+        // Keep silent in dev cleanup
+      })
+    })
+  })
+
+  if ("caches" in window) {
+    caches.keys().then((keys) => {
+      keys
+        .filter((key) => key.startsWith("cds-"))
+        .forEach((key) => caches.delete(key).catch(() => {
+          // Keep silent in dev cleanup
+        }))
+    })
+  }
+}
 
 // Allow mouse wheel to increment/decrement number inputs when hovered.
 document.addEventListener(

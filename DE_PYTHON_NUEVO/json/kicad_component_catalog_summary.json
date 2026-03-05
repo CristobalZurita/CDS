@@ -1,0 +1,98 @@
+{
+  "generated_at": "2026-02-22T11:43:25.665744+00:00",
+  "mode": "aditivo_no_destructivo",
+  "targets": {
+    "resistors": 250,
+    "capacitors_ceramic": 200,
+    "capacitors_electrolytic": 160,
+    "diodes": 120,
+    "transistors": 180,
+    "integrated_circuits": 220
+  },
+  "manual_extensions": {
+    "requested": 591,
+    "added": 521,
+    "skipped_existing": 70
+  },
+  "families": {
+    "resistors": {
+      "total": 296,
+      "real": 214,
+      "catalog_only": 82,
+      "enabled": 214
+    },
+    "capacitors_ceramic": {
+      "total": 200,
+      "real": 74,
+      "catalog_only": 126,
+      "enabled": 74
+    },
+    "capacitors_electrolytic": {
+      "total": 160,
+      "real": 19,
+      "catalog_only": 141,
+      "enabled": 19
+    },
+    "diodes": {
+      "total": 172,
+      "real": 80,
+      "catalog_only": 92,
+      "enabled": 80
+    },
+    "transistors": {
+      "total": 214,
+      "real": 146,
+      "catalog_only": 68,
+      "enabled": 146
+    },
+    "integrated_circuits": {
+      "total": 295,
+      "real": 248,
+      "catalog_only": 47,
+      "enabled": 248
+    },
+    "capacitors_misc": {
+      "total": 48,
+      "real": 48,
+      "catalog_only": 0,
+      "enabled": 48
+    },
+    "manual_inventory": {
+      "total": 155,
+      "real": 155,
+      "catalog_only": 0,
+      "enabled": 155
+    },
+    "sensors": {
+      "total": 17,
+      "real": 17,
+      "catalog_only": 0,
+      "enabled": 17
+    },
+    "connectors": {
+      "total": 31,
+      "real": 31,
+      "catalog_only": 0,
+      "enabled": 31
+    },
+    "power_control": {
+      "total": 15,
+      "real": 15,
+      "catalog_only": 0,
+      "enabled": 15
+    },
+    "magnetics_protection": {
+      "total": 20,
+      "real": 20,
+      "catalog_only": 0,
+      "enabled": 20
+    },
+    "workshop_misc": {
+      "total": 28,
+      "real": 28,
+      "catalog_only": 0,
+      "enabled": 28
+    }
+  },
+  "total_items": 1651
+}

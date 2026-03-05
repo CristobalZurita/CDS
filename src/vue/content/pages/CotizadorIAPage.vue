@@ -14,13 +14,12 @@
     <div v-if="step === 2" class="step-container">
       <div class="step-header">
         <h1>🔍 Diagnóstico Visual</h1>
-        <p>Paso 2 de 4 - Selecciona las fallas que observas</p>
+        <p>Paso 2 de 4 - Responde el flujo guiado y marca lo visible</p>
       </div>
 
-      <DiagnosticWizard
-        :instrument="selectedInstrument"
+      <InteractiveInstrumentDiagnostic
+        :initial-instrument="selectedInstrument"
         @complete="onDiagnosticComplete"
-        @back="step = 1"
       />
     </div>
 
@@ -39,13 +38,14 @@
     <!-- Step 4: Quotation Result -->
     <div v-if="step === 4" class="step-container">
       <div class="step-header">
-        <h1>💰 Tu Cotización</h1>
-        <p>Paso 4 de 4 - Resultado de estimación</p>
+        <h1>💰 Tu Estimación Referencial</h1>
+        <p>Paso 4 de 4 - Resultado orientativo del cotizador</p>
       </div>
 
       <QuotationResult
         :quotation="quotation"
         :loading="loading"
+        :error="error"
         @new-quote="resetAll"
         @schedule="goToSchedule"
       />
@@ -57,24 +57,23 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotation } from '@/composables/useQuotation'
-import { useDiagnostic } from '@/composables/useDiagnostic'
 import { useQuotationStore } from '@/stores/quotation'
 import TurnstileWidget from '@/vue/components/widgets/TurnstileWidget.vue'
 
 // Components
 import InstrumentSelector from '@/vue/components/quotation/InstrumentSelector.vue'
-import DiagnosticWizard from '@/vue/components/articles/DiagnosticWizard.vue'
+import InteractiveInstrumentDiagnostic from '@/vue/components/quotation/InteractiveInstrumentDiagnostic.vue'
 import DisclaimerModal from '@/vue/components/quotation/DisclaimerModal.vue'
 import QuotationResult from '@/vue/components/quotation/QuotationResult.vue'
 
 const router = useRouter()
 const quotationStore = useQuotationStore()
-const { quotation, loading, estimate, reset } = useQuotation()
+const { quotation, loading, error, estimate, reset } = useQuotation()
 
 // State
 const step = ref(1)
 const selectedInstrument = ref(null)
-const selectedFaults = ref([])
+const diagnosticPayload = ref(null)
 const turnstileToken = ref('')
 
 /**
@@ -88,9 +87,9 @@ const onInstrumentSelected = (instrument) => {
 /**
  * Step 2: User selects faults via diagnostic wizard
  */
-const onDiagnosticComplete = (faults) => {
-  selectedFaults.value = faults
-  quotationStore.setFaults(faults)
+const onDiagnosticComplete = (payload) => {
+  diagnosticPayload.value = payload
+  quotationStore.setFaults(payload?.selected_symptoms || [])
   step.value = 3
 }
 
@@ -103,7 +102,7 @@ const onDisclaimerAccepted = async () => {
   }
   step.value = 4
   try {
-    await estimate(selectedInstrument.value.id, selectedFaults.value, turnstileToken.value)
+    await estimate(selectedInstrument.value.id, diagnosticPayload.value || [], turnstileToken.value)
   } catch (err) {
     // Error will be shown in QuotationResult component
     console.error('Error generating quotation:', err)
@@ -115,7 +114,8 @@ const onDisclaimerAccepted = async () => {
  */
 const resetAll = () => {
   selectedInstrument.value = null
-  selectedFaults.value = []
+  diagnosticPayload.value = null
+  turnstileToken.value = ''
   reset()
   step.value = 1
 }
@@ -131,70 +131,3 @@ const onVerify = (token) => {
   turnstileToken.value = token
 }
 </script>
-
-<style scoped>
-.cotizador-ia-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem 1rem;
-}
-
-.step-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  animation: slideUp 0.4s ease-out;
-}
-
-.captcha-wrap {
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.step-header {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #e2e8f0;
-}
-
-.step-header h1 {
-  margin: 0 0 0.5rem 0;
-  color: #2d3748;
-  font-size: 2rem;
-}
-
-.step-header p {
-  margin: 0;
-  color: #718096;
-  font-size: 1rem;
-}
-
-@media (max-width: 768px) {
-  .cotizador-ia-page {
-    padding: 1rem;
-  }
-
-  .step-container {
-    padding: 1.5rem;
-  }
-
-  .step-header h1 {
-    font-size: 1.5rem;
-  }
-}
-</style>

@@ -1,0 +1,452 @@
+@use "./_variables.scss" as *;
+
+// ============================================
+// MIXINS - Cirujano de Sintetizadores
+// Usar estos mixins en componentes Vue para heredar estilos globales
+// ============================================
+
+// ---------------------------------------------
+// 1. NORMALIZE BREAKPOINT (Bootstrap compat)
+// ---------------------------------------------
+@function normalize-breakpoint($bp) {
+    $normalized: "#{$bp}";
+
+    @if $normalized == 'xxxl' or $normalized == 'xxxxl' { @return 'xxl'; }
+    @return $normalized;
+}
+
+@function breakpoint-min-value($bp) {
+    $normalized: normalize-breakpoint($bp);
+
+    @if $normalized == 'xs' { @return 0; }
+    @if $normalized == 'sm' { @return 576px; }
+    @if $normalized == 'md' { @return 768px; }
+    @if $normalized == 'lg' { @return 992px; }
+    @if $normalized == 'xl' { @return 1200px; }
+    @if $normalized == 'xxl' { @return 1400px; }
+
+    @error "Breakpoint `#{$bp}` no soportado.";
+}
+
+@function breakpoint-max-value($bp) {
+    $normalized: normalize-breakpoint($bp);
+
+    @if $normalized == 'xs' { @return null; }
+    @if $normalized == 'sm' { @return 575.98px; }
+    @if $normalized == 'md' { @return 767.98px; }
+    @if $normalized == 'lg' { @return 991.98px; }
+    @if $normalized == 'xl' { @return 1199.98px; }
+    @if $normalized == 'xxl' { @return 1399.98px; }
+
+    @error "Breakpoint `#{$bp}` no soportado.";
+}
+
+@mixin media-breakpoint-down($bp) {
+    $max: breakpoint-max-value($bp);
+
+    @if $max == null {
+        @content;
+    } @else {
+        @media (max-width: $max) {
+            @content;
+        }
+    }
+}
+
+@mixin media-breakpoint-up($bp) {
+    $min: breakpoint-min-value($bp);
+
+    @if $min == 0 {
+        @content;
+    } @else {
+        @media (min-width: $min) {
+            @content;
+        }
+    }
+}
+
+// ---------------------------------------------
+// 2. RESPONSIVE HELPERS
+// ---------------------------------------------
+@mixin dynamic-styles-hash($styles-hash) {
+    @each $breakpoint, $styles in $styles-hash {
+        $bp: normalize-breakpoint($breakpoint);
+        @include media-breakpoint-down($bp) {
+            @each $property, $value in $styles {
+                #{$property}: $value;
+            }
+        }
+    }
+}
+
+@mixin dynamic-styles-multipliers($base-sizes, $multipliers) {
+    @each $breakpoint, $multiplier in $multipliers {
+        $bp: normalize-breakpoint($breakpoint);
+        @include media-breakpoint-down($bp) {
+            @each $property, $value in $base-sizes {
+                #{$property}: $value * $multiplier;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------
+// 3. TIPOGRAFÍA GLOBAL - ESCALA UNIFICADA
+// Usar estos mixins para que los componentes hereden
+// ---------------------------------------------
+
+// === TEXTOS ===
+
+// Texto 2XS (12px) - badges, etiquetas mínimas
+@mixin text-2xs {
+    font-family: $font-family-base;
+    font-size: $text-2xs;
+    line-height: $lh-normal;
+    color: $text-color;
+}
+
+// Texto XS (13px) - captions pequeños
+@mixin text-xs {
+    font-family: $font-family-base;
+    font-size: $text-xs;
+    line-height: $lh-normal;
+    color: $text-color;
+}
+
+// Texto pequeño (14px) - captions, metadata
+@mixin text-small {
+    font-family: $font-family-base;
+    font-size: $text-sm;
+    line-height: $lh-normal;
+    color: $text-color;
+}
+
+// Texto base (16px) - texto normal UI
+@mixin text-base {
+    font-family: $font-family-base;
+    font-size: $text-base;
+    line-height: $lh-normal;
+    color: $text-color;
+}
+
+// Texto body/párrafo - PARA TEXTO CORRIDO
+@mixin text-body {
+    font-family: $font-family-base;
+    font-size: $paragraph-size;
+    line-height: $lh-relaxed;
+    color: $text-color;
+}
+
+// Texto medio (17px)
+@mixin text-md {
+    font-family: $font-family-base;
+    font-size: $text-md;
+    line-height: $lh-relaxed;
+    color: $text-color;
+}
+
+// Texto grande (18px)
+@mixin text-large {
+    font-family: $font-family-base;
+    font-size: $text-lg;
+    line-height: $lh-relaxed;
+    color: $text-color;
+}
+
+// Texto XL (20px)
+@mixin text-xl {
+    font-family: $font-family-base;
+    font-size: $text-xl;
+    line-height: $lh-relaxed;
+    color: $text-color;
+}
+
+// Lead text (24px) - introducciones
+@mixin text-lead {
+    font-family: $font-family-base;
+    font-size: $text-2xl;
+    line-height: $lh-relaxed;
+    color: $text-color;
+    font-weight: $fw-normal;
+}
+
+// === HEADINGS ===
+
+// Heading base style
+@mixin heading-style {
+    font-family: $font-family-heading;
+    font-weight: $fw-bold;
+    line-height: $lh-tight;
+    letter-spacing: $ls-wide;
+    color: $headings-color;
+    margin-top: 0;
+}
+
+// Display (Hero, mayor que H1)
+@mixin display-style {
+    @include heading-style;
+    font-size: $display-size;
+    font-weight: $fw-extrabold;
+    letter-spacing: $ls-wider;
+}
+
+// H1 (40-56px responsive)
+@mixin h1-style {
+    @include heading-style;
+    font-size: $h1-size;
+    font-weight: $fw-extrabold;
+}
+
+// H2 (32-44px responsive)
+@mixin h2-style {
+    @include heading-style;
+    font-size: $h2-size;
+}
+
+// H3 (28-36px responsive)
+@mixin h3-style {
+    @include heading-style;
+    font-size: $h3-size;
+}
+
+// H4 (24px)
+@mixin h4-style {
+    @include heading-style;
+    font-size: $h4-size;
+}
+
+// H5 (20px)
+@mixin h5-style {
+    @include heading-style;
+    font-size: $h5-size;
+    font-weight: $fw-semibold;
+}
+
+// H6 (18px)
+@mixin h6-style {
+    @include heading-style;
+    font-size: $h6-size;
+    font-weight: $fw-semibold;
+}
+
+// === UTILIDADES DE TEXTO ===
+
+// Texto muted (gris)
+@mixin text-muted {
+    color: $text-color-muted;
+}
+
+// Texto uppercase para labels
+@mixin text-label {
+    font-size: $text-xs;
+    font-weight: $fw-semibold;
+    letter-spacing: $ls-wider;
+    text-transform: uppercase;
+    color: $text-color-muted;
+}
+
+// ---------------------------------------------
+// 4. CONTENIDO LEGIBLE
+// Para secciones de texto largo
+// ---------------------------------------------
+@mixin readable-content {
+    max-width: $content-max-width;
+    margin-left: auto;
+    margin-right: auto;
+
+    p, li, span {
+        @include text-body;
+        margin-bottom: $paragraph-margin-bottom;
+    }
+
+    h1 { @include h1-style; margin-bottom: $spacer-lg; }
+    h2 { @include h2-style; margin-bottom: $spacer-lg; }
+    h3 { @include h3-style; margin-bottom: $spacer-md; }
+    h4 { @include h4-style; margin-bottom: $spacer-md; }
+    h5 { @include h5-style; margin-bottom: $spacer-sm; }
+    h6 { @include h6-style; margin-bottom: $spacer-sm; }
+}
+
+// ---------------------------------------------
+// 5. SECCIÓN PÚBLICA (Landing)
+// ---------------------------------------------
+@mixin section-content {
+    max-width: min(1600px, 96vw);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 $spacer-lg;
+
+    @include media-breakpoint-down(md) {
+        max-width: 92vw;
+        padding: 0 $spacer-md;
+    }
+
+    p, li, span {
+        @include text-body;
+    }
+}
+
+// ---------------------------------------------
+// 6. FLEXBOX SHORTCUTS
+// ---------------------------------------------
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin flex-column-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+// ---------------------------------------------
+// 7. TEXT UTILITIES
+// ---------------------------------------------
+@mixin text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@mixin text-clamp($lines: 2) {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+// ---------------------------------------------
+// 8. INTERACTIVE STATES
+// ---------------------------------------------
+@mixin hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+    }
+}
+
+@mixin focus-ring($color: $color-primary) {
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($color, 0.25);
+    }
+}
+
+@mixin button-reset {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font: inherit;
+}
+
+// ---------------------------------------------
+// 9. SCROLLBAR CUSTOM
+// ---------------------------------------------
+@mixin custom-scrollbar($width: 8px, $thumb-color: $light-6) {
+    &::-webkit-scrollbar {
+        width: $width;
+        height: $width;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $thumb-color;
+        border-radius: $width / 2;
+
+        &:hover {
+            background: darken($thumb-color, 10%);
+        }
+    }
+}
+
+// ---------------------------------------------
+// 10. CARD BASE
+// ---------------------------------------------
+@mixin card-base {
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    padding: $spacer-lg;
+    box-shadow: $shadow-sm;
+}
+
+// ---------------------------------------------
+// 11. FORM ELEMENTS
+// ---------------------------------------------
+@mixin form-input {
+    min-height: 44px;
+    font-size: $font-size-base;
+    padding: $spacer-sm $spacer-md;
+    border: 1px solid $light-4;
+    border-radius: $border-radius-md;
+    transition: $transition-fast;
+
+    &:focus {
+        outline: none;
+        border-color: $color-primary;
+        box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    }
+}
+
+@mixin form-label {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-color;
+    margin-bottom: $spacer-xs;
+}
+
+// ---------------------------------------------
+// 12. VISUALLY HIDDEN (Accessibility)
+// ---------------------------------------------
+@mixin visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+// ---------------------------------------------
+// 13. ADMIN PANEL ESPECÍFICOS
+// ---------------------------------------------
+@mixin admin-section {
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    padding: $spacer-lg;
+    margin-bottom: $spacer-lg;
+
+    @include media-breakpoint-down(md) {
+        padding: $spacer-md;
+    }
+}
+
+@mixin admin-title {
+    font-size: $h4-size;
+    font-weight: 700;
+    color: $text-color;
+    margin-bottom: $spacer-md;
+}

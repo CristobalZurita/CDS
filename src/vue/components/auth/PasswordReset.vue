@@ -5,6 +5,7 @@
         type="button"
         class="toggle-btn"
         :class="{ active: mode === 'request' }"
+        data-testid="password-reset-mode-request"
         @click="mode = 'request'"
       >
         Solicitar reset
@@ -13,6 +14,7 @@
         type="button"
         class="toggle-btn"
         :class="{ active: mode === 'reset' }"
+        data-testid="password-reset-mode-reset"
         @click="mode = 'reset'"
       >
         Cambiar contraseña
@@ -22,9 +24,9 @@
     <form v-if="mode === 'request'" @submit.prevent="requestReset" class="form">
       <div class="form-group">
         <label>Email</label>
-        <input v-model="email" type="email" required :disabled="isLoading" />
+        <input v-model="email" type="email" required :disabled="isLoading" data-testid="password-reset-email" />
       </div>
-      <button type="submit" class="btn-primary" :disabled="isLoading">
+      <button type="submit" class="btn-primary" :disabled="isLoading" data-testid="password-reset-request-submit">
         {{ isLoading ? 'Enviando...' : 'Enviar instrucciones' }}
       </button>
     </form>
@@ -32,12 +34,12 @@
     <form v-else @submit.prevent="confirmReset" class="form">
       <div class="form-group">
         <label>Token</label>
-        <input v-model="token" type="text" required :disabled="isLoading" />
+        <input v-model="token" type="text" required :disabled="isLoading" data-testid="password-reset-token" />
       </div>
       <div class="form-group">
         <label>Nueva contraseña</label>
         <div class="password-field">
-          <input v-model="newPassword" :type="showPassword ? 'text' : 'password'" required minlength="8" :disabled="isLoading" />
+          <input v-model="newPassword" :type="showPassword ? 'text' : 'password'" required minlength="8" :disabled="isLoading" data-testid="password-reset-new" />
           <button type="button" class="toggle-password" @click="showPassword = !showPassword">
             {{ showPassword ? 'Ocultar' : 'Mostrar' }}
           </button>
@@ -46,13 +48,13 @@
       <div class="form-group">
         <label>Confirmar contraseña</label>
         <div class="password-field">
-          <input v-model="confirmPassword" :type="showPassword ? 'text' : 'password'" required minlength="8" :disabled="isLoading" />
+          <input v-model="confirmPassword" :type="showPassword ? 'text' : 'password'" required minlength="8" :disabled="isLoading" data-testid="password-reset-confirm" />
           <button type="button" class="toggle-password" @click="showPassword = !showPassword">
             {{ showPassword ? 'Ocultar' : 'Mostrar' }}
           </button>
         </div>
       </div>
-      <button type="submit" class="btn-primary" :disabled="isLoading">
+      <button type="submit" class="btn-primary" :disabled="isLoading" data-testid="password-reset-confirm-submit">
         {{ isLoading ? 'Actualizando...' : 'Actualizar contraseña' }}
       </button>
     </form>
@@ -119,90 +121,3 @@ onMounted(() => {
   }
 })
 </script>
-
-<style scoped>
-.password-reset {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.mode-toggle {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.password-field {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.toggle-password {
-  border: 1px solid #d1d5db;
-  background: #f3f4f6;
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-}
-
-.toggle-btn {
-  background: #f1f1f1;
-  border: 1px solid #ccc;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.toggle-btn.active {
-  background: #ec6b00;
-  color: #000;
-  border-color: #ec6b00;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 600;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.btn-primary {
-  background: #ec6b00;
-  color: #000;
-  border: none;
-  padding: 0.7rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn-primary:disabled {
-  background: #d3d0c3;
-  cursor: not-allowed;
-}
-
-.back-link {
-  color: #4b5563;
-  font-size: 0.9rem;
-  text-decoration: none;
-  text-align: center;
-}
-
-.back-link:hover {
-  color: #1f2937;
-}
-</style>

@@ -1,3 +1,5 @@
+@use "./_theming.scss" as *;
+
 /** ------------ BODY ----------------- **/
 html {
     scroll-padding-top: $navbar-height;
@@ -134,4 +136,779 @@ header.foxy-header {
 /* Mobile adjustments */
 @media (max-width: 768px) {
     body { font-size: 15px; }
+}
+
+// Source: src/vue/components/footer/Footer.vue
+.foxy-footer {
+    background-color: $footer-bg-color;
+}
+
+// Source: src/vue/components/footer/FooterBlock.vue
+div.foxy-footer-block {
+    min-height: 40px;
+    background-color: $footer-bg-color;
+    padding: 2.25rem 0;
+    text-align: center;
+    &-darken {
+        background-color: $footer-bg-highlight-color;
+    }
+}
+
+div.foxy-footer-row {
+    padding: 1.5rem 0;
+    row-gap: 2rem;
+    align-items: flex-start;
+
+    @include media-breakpoint-up(lg) {
+        padding: 2.5rem 0 3rem;
+        text-align: left;
+    }
+}
+
+// Source: src/vue/components/footer/FooterColumn.vue
+p, span {
+    color: $color-gray-240-legacy; /* increase contrast for footer text */
+    font-size: 1.25rem;
+    line-height: 1.7;
+}
+
+div.foxy-footer-col {
+    @include media-breakpoint-down(lg) {
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+
+        &:first-child {
+            padding-top: 0;
+        }
+
+        &:not(:first-child) {
+            border-top: 1px solid lighten($dark, 3%);
+        }
+
+        &:last-child {
+            padding-bottom: 0;
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        text-align: left;
+    }
+}
+
+h5.foxy-footer-col-title {
+    i, span {
+        color: $light-1;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+    }
+}
+
+div.foxy-footer-col-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include generate-dynamic-styles-with-hash((
+        xxxl: (padding-top:0.5rem),
+        lg: (padding-top:0.3rem),
+    ));
+
+    margin: 0 auto;
+    max-width: 520px;
+
+    @include media-breakpoint-up(lg) {
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin: 0;
+        max-width: 620px;
+    }
+}
+
+div.foxy-footer-col-description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+
+    @include media-breakpoint-up(lg) {
+        align-items: flex-start;
+    }
+}
+
+ul.footer-inline-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.1rem;
+    white-space: normal;
+}
+
+li.footer-inline-link-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+li.footer-inline-link-item:not(:last-child)::after {
+    content: "·";
+    color: $color-gray-240-legacy;
+    margin-left: 0.6rem;
+}
+
+.footer-inline-link {
+    text-decoration: none;
+    color: $color-gray-240-legacy;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.footer-inline-link:hover {
+    color: lighten($primary, 15%);
+}
+
+// Source: src/vue/components/footer/FooterCopyright.vue
+p {
+    color: $color-gray-230-legacy; /* slightly off-white for better contrast */
+    padding: 0;
+    margin: 0;
+    font-size: 0.98rem;
+}
+
+// Source: src/vue/components/layout/BackgroundPromo.vue
+div.foxy-promo-background {
+    position: absolute;
+    height: calc(100% + 4rem);
+    width: 100%;
+    z-index: -1;
+
+    background-image: url('/src/assets/header-bg.webp');
+    background-position: center;
+    background-size: cover;
+}
+
+div.foxy-promo-background-overlay-default {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba($color-gray-30-legacy, 0.73)), color-stop(70%, rgba($color-gray-30-legacy, 0.86)), color-stop(80%, rgba($color-gray-30-legacy, 0.99)), to(rgba($color-gray-30-legacy, 1)));
+    background-image: linear-gradient(180deg, rgba($color-gray-30-legacy, 0.73) 0%, rgba($color-gray-30-legacy, 0.86) 30%, rgba($color-gray-30-legacy, 0.99) 60%, rgba($color-gray-30-legacy, 1) 100%);
+}
+
+div.foxy-promo-background-overlay-faded {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba($color-gray-30-legacy, 0.83)), color-stop(70%, rgba($color-gray-30-legacy, 0.93)), color-stop(80%, rgba($color-gray-30-legacy, 1)), to(rgba($color-gray-30-legacy, 1)));
+    background-image: linear-gradient(180deg, rgba($color-gray-30-legacy, 0.83) 0%, rgba($color-gray-30-legacy, 0.93) 30%, rgba($color-gray-30-legacy, 0.99) 60%, rgba($color-gray-30-legacy, 1) 100%);
+}
+
+// Source: src/vue/components/layout/PageHeader.vue
+header.foxy-header {
+    /* expanded hero height to match reference - black box extends lower for buttons */
+    --height: clamp(600px, 90vh, 1100px);
+    --content-margin-top: 64px;
+    --max-logo-proportion: 45vw;
+    --max-logo-height: 60vh; /* allow much taller hero on large viewports */
+    @include media-breakpoint-down(xl) { --max-logo-height: 45vh; }
+    @include media-breakpoint-down(lg) { --max-logo-height: 38vh; }
+    @include media-breakpoint-down(md) { --content-margin-top: 65px; }
+
+    --content-height: calc(var(--height) - var(--content-margin-top));
+    --logo-proportion: clamp(190px, 45vw, min(37.5vh, 35vw, 350px));
+
+    position: relative;
+    height: var(--height);
+
+    div.container-xxl {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        /* allow the hero container to span wide viewports without being overly constrained */
+        max-width: $container-max-width;
+        width: 100%;
+        height: var(--height);
+        padding-left: $spacer-md;
+        padding-right: $spacer-md;
+        padding-bottom: $spacer-xl;
+    }
+
+    article.foxy-hero-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding-top: calc(var(--content-margin-top));
+
+        position: relative;
+        z-index: 3;
+    }
+
+    div.foxy-hero-header-logo {
+        /* allow rectangular logos on desktop while keeping a sensible max height */
+        width: clamp(750px, 96vw, 1700px); /* make the banner start wider on large screens */
+        max-width: 98%;
+        /* Fix hero to a landscape presentation on desktop by using a fixed display height
+           and covering the area. This crops tall uploads to appear apaisado as requested. */
+        height: min(50vh, 420px);
+        max-height: var(--max-logo-height);
+        margin: 0 auto;
+
+        img.image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    }
+
+    h1.heading {
+        color: $orange-pastel;
+        text-transform: uppercase;
+        text-align: center;
+        font-family: inherit;
+        font-weight: $fw-extrabold;
+        font-size: clamp(2.4rem, 5.2vw, 4.4rem);
+        padding: 1.25rem 0 $spacer-lg;
+        letter-spacing: $ls-wide;
+        line-height: 1.1;
+        position: relative;
+        z-index: 5;
+        margin: 0;
+    }
+
+    .hero-title-sep {
+        color: $primary;
+        margin: 0 0.6rem;
+        font-size: 0.32em;
+        vertical-align: middle;
+        display: inline-block;
+    }
+
+    h4.subheading {
+        font-family: inherit;
+        color: $light-5;
+        font-weight: $fw-medium;
+        font-size: clamp($text-base, 1.2vw, 1.4rem);
+        padding: 0.8rem 0 1.1rem;
+        line-height: $lh-normal;
+        text-align: center;
+    }
+
+    .hero-cta-buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2.5rem;
+        margin-top: 2.5rem;
+        position: relative;
+        z-index: 6; /* Ensure CTAs sit above decorative background */
+
+        @include media-breakpoint-down(md) {
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+    }
+
+    .btn-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: $spacer-sm + $spacer-xs;
+        padding: $spacer-md 2.4rem;
+        border-radius: $border-radius-pill;
+        border: 2px solid $orange-pastel;
+        background-color: $orange-pastel;
+        color: $color-white;
+        font-family: inherit;
+        font-weight: $fw-semibold;
+        text-transform: uppercase;
+        font-size: 1.05rem;
+        cursor: pointer;
+        transition: $transition-base;
+        text-decoration: none;
+        letter-spacing: $ls-wider;
+
+        i {
+            font-size: 1.3rem;
+        }
+
+        &:hover {
+            background-color: $color-orange-450-legacy;
+            border-color: $color-orange-450-legacy;
+            color: $color-white;
+            transform: scale(1.08);
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+
+        &.btn-hero-primary {
+            background-color: $orange-pastel;
+            color: $color-white;
+            border-color: $orange-pastel;
+
+            &:hover {
+                background-color: $color-orange-450-legacy;
+                border-color: $color-orange-450-legacy;
+            }
+        }
+
+        &.btn-hero-outline {
+            background-color: transparent;
+            color: $orange-pastel;
+            border-color: $orange-pastel;
+
+            &:hover {
+                background-color: $orange-pastel;
+                color: $vintage-black;
+            }
+        }
+    }
+
+    @include media-breakpoint-down(md) {
+        h1.heading {
+            transform: none;
+            font-size: clamp(28px, 8vw, 46px);
+            line-height: 1.1;
+        }
+
+        .btn-hero {
+            width: 100%;
+            justify-content: center;
+            padding: 0.9rem 1.4rem;
+            font-size: $text-base;
+        }
+    }
+}
+
+// Source: src/vue/components/layout/PageSection.vue
+section.foxy-section {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+
+    &.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @include generate-dynamic-styles-with-hash((
+        xxxl: (padding: 5rem 0em 5.5rem),  // Increased for large screens
+        xxl:  (padding: 4rem 0rem 4.5rem),  // Increased for consistency
+        lg:   (padding: 3rem 0rem 3.5rem),  // Laptop
+        md:   (padding: 3rem 0rem 3.5rem),  // Tablet portrait - INCREASED from 2.25/3.25
+        sm:   (padding: 2.5rem 0rem 3rem),  // Mobile - INCREASED from 2/3
+    ));
+
+    background-color: $background-color;
+    position: relative;
+
+    .section-content {
+        /* Allow full-width section content for grid/columns -- keep readable class for long-form text */
+        max-width: 1200px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+
+        /* Use .readable on text-only blocks to limit to optimal line length */
+        &.readable {
+            max-width: 75ch;
+        }
+    }
+
+    .foxy-promo-background {
+        display: block;
+        margin-top: -4rem;
+    }
+}
+
+section.foxy-section-primary {
+    background-color: lighten($primary, 42%);
+}
+
+section.foxy-section-dark {
+    background-color: lighten($dark, 10%);
+    color: $text-normal-contrast;
+
+    h5.foxy-section-header-subtitle {
+        color: $light-5;
+    }
+}
+
+section.foxy-section-promo {
+    background-color: transparent;
+}
+
+// Source: src/vue/components/layout/PageSectionFooter.vue
+div.foxy-section-footer {
+    @include generate-dynamic-styles-with-hash((
+        xxxl: (margin-top: 2rem),
+        xxl:  (margin-top: 1.5rem),
+        lg:   (margin-top: 1.1rem),
+        md:   (margin-top: 1.05rem),
+        sm:   (margin-top: 0.75rem),
+    ));
+
+    text-align: center;
+}
+
+div.foxy-section-footer-content {
+    text-align: center;
+    margin: 0 auto;
+}
+
+h3.foxy-footer-title {
+    font-family: 'Cervo Neue', $headings-font-family;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: $dark;
+    text-transform: uppercase;
+}
+
+p.foxy-footer-description {
+    font-family: 'Cervo Neue', $font-family-base;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+// Source: src/vue/components/layout/PageSectionHeader.vue
+div.foxy-section-header {
+    @include generate-dynamic-styles-with-hash((
+        xxxl: (margin-bottom: 4rem),
+        xxl:  (margin-bottom: 3rem),
+        lg:   (margin-bottom: 3rem),
+        md:   (margin-bottom: 2.75rem),
+        sm:   (margin-bottom: 2.5rem),
+    ));
+
+    text-align: center;
+    
+}
+.foxy-section-header-title span {
+  font-size: inherit;
+}
+
+h1 {
+    text-transform: uppercase;
+    color: inherit;
+    font-family: inherit;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    font-size: inherit;
+}
+
+
+
+h5 {
+    font-family: inherit;
+    color: $text-muted;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-top: 1rem;   // SUBE el texto
+    font-size: inherit;
+}
+
+// Source: src/vue/components/layout/PageWrapper.vue
+div.foxy-page-wrapper {
+    @include generate-dynamic-styles-with-hash((
+        xxxl: (padding-top:2rem),
+        xxl: (padding-top:2.75rem),
+        lg: (padding-top:3.5rem),
+    ));
+}
+
+div.foxy-page-wrapper-no-padding {
+    padding-top: 0!important;
+}
+
+// Source: src/vue/components/nav/navbar/Navbar.vue
+nav.foxy-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    min-height: $navbar-height;
+    z-index: 10;
+    background-color: $nav-background-color;
+    transition: 0.3s ease-in-out padding;
+
+    @include media-breakpoint-down(lg) {
+        transition: none;
+    }
+
+    @media (max-height: 400px) {
+        min-height: calc($navbar-height - 20px);
+    }
+}
+
+nav.foxy-navbar-expanded {
+    @include media-breakpoint-up(lg) {
+        background-color: rgba(black, 0.01);
+        padding: 15px 0;
+    }
+    @include media-breakpoint-up(xl) {
+        padding: 15px;
+    }
+}
+
+div.foxy-navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: $navbar-height;
+    height: 100%;
+
+    @include media-breakpoint-down(lg) {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    @media (max-height: 400px) {
+        min-height: calc($navbar-height - 20px);
+    }
+}
+
+// Source: src/vue/components/nav/navbar/NavbarBrand.vue
+div.foxy-navbar-brand {
+    @include generate-dynamic-styles-with-hash((
+        xxxl: (font-size: 1.4rem),
+        lg:   (font-size: 1.25rem)
+    ));
+
+    img.foxy-navbar-brand-img {
+        height: 3rem;
+        width: 3rem;
+    }
+
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-weight: $headings-font-weight;
+    color: $text-normal-contrast;
+    margin-top: 5px;
+    margin-left: 0;
+    transition: font-size 0.3s ease-in-out;
+    padding: 5px 0 5px;
+
+    @include media-breakpoint-down(lg) {
+        margin-left: 0;
+        padding-top: 8px;
+        transition: none;
+    }
+
+    @media (max-height: 400px) {
+        font-size: 1.2rem;
+    }
+}
+
+img.foxy-navbar-brand-img {
+    @include generate-dynamic-styles-with-hash((
+        xxxl: (height: 3.4rem, width: 3.4rem),
+        lg:   (height: 3rem, width: 3rem)
+    ));
+
+    position: relative;
+    top: -0.1rem;
+    margin-right: 0.5rem;
+    transition: height 0.3s ease-in-out, width 0.3s ease-in-out;
+    @include media-breakpoint-down(lg) {
+        transition: none;
+    }
+
+    @media (max-height: 400px) {
+        height: 2.5rem!important;
+        width: 2.5rem!important;
+    }
+}
+
+div.foxy-navbar-brand-expand {
+    font-size: 1.5rem;
+    img.foxy-navbar-brand-img {
+        width: 3.4rem;
+        height: 3.4rem;
+    }
+
+    @include media-breakpoint-down(xl) {
+        font-size: 1.45rem;
+        img.foxy-navbar-brand-img {
+            width: 3.2rem;
+            height: 3.2rem;
+        }
+    }
+}
+
+// Source: src/vue/components/nav/navbar/NavbarLinks.vue
+ul.foxy-navbar-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
+
+    @include media-breakpoint-down(lg) {
+        flex-direction: column;
+        margin: 2px 0 15px;
+    }
+}
+
+ul.foxy-navbar-links.collapsed {
+    @include media-breakpoint-down(lg) {
+        display: none;
+    }
+}
+
+button.foxy-nav-link {
+    background-color: transparent;
+    border: 0;
+    padding: 0 0 0 1.2rem;
+    white-space: nowrap;
+
+    font-family: inherit;
+    color: $light-3;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    font-size: 1.1rem;
+
+    @include media-breakpoint-down(xl) {
+        padding: 0 0 0 0.9rem;
+    }
+
+    @include media-breakpoint-down(lg) {
+        padding: 0!important;
+        min-width: 160px;
+        text-align: left;
+        margin-left: 12px;
+        margin-bottom: 8px;
+        font-size: 1rem;
+
+        transition: 0.2s ease-in margin-left, 0.2s ease-in opacity;
+    }
+
+    @media (max-height: 400px) {
+        margin-bottom: 4px;
+    }
+}
+
+i.foxy-nav-link-icon {
+    display: none;
+
+    min-width: 1.4rem;
+    margin-right: 10px;
+    color: $light-6;
+    transition: color 0.4s;
+
+    @include media-breakpoint-down(lg) {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+button.foxy-nav-link.hidden {
+   @include media-breakpoint-down(lg) {
+       opacity: 0;
+       margin-left: 80px;
+   }
+}
+
+button.foxy-nav-link:hover, button.foxy-nav-link.active {
+    color: lighten($primary, 5%);
+    i.foxy-nav-link-icon {
+        color: lighten($primary, 25%);
+    }
+}
+
+div.foxy-navbar-links-wrapper {
+    margin-left: 2rem;
+
+    @include media-breakpoint-down(lg) {
+        margin-left: 0;
+    }
+}
+
+// Source: src/vue/components/nav/navbar/NavbarToggleButton.vue
+button.foxy-navbar-toggle {
+    $button-size: 40px;
+
+    position: absolute;
+    top:calc($navbar-height/2 - $button-size/2);
+    right: 25px;
+
+    width: $button-size;
+    height: $button-size;
+    background-color: $nav-background-color;
+
+    font-size: 0.75rem;
+    font-family: $headings-font-family;
+    font-weight: $font-weight-bold;
+
+    border: 2px solid lighten($nav-background-color, 5%);
+    border-radius: 10px;
+    color: $light-4;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    outline: none !important;
+    box-shadow: none !important;
+
+    @include media-breakpoint-up(lg) {
+        display: none;
+    }
+
+    @media (max-height: 400px) {
+        top:calc($navbar-height/2 - $button-size/2 - 5px);
+    }
+}
+
+button.foxy-navbar-toggle.open {
+    background-color: lighten($nav-background-color, 5%);
+    border-color: lighten($nav-background-color, 10%);
+    color:$white;
+}
+
+// Source: src/vue/content/Master.vue
+.site-body {
+  padding-top: var(--navbar-height, 120px);
+}
+
+.footer-legal-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.footer-legal-row a {
+  color: $color-gray-240-legacy;
+  text-decoration: none;
+  font-weight: $fw-semibold;
+  white-space: nowrap;
+}
+
+.footer-legal-row a:hover {
+  color: lighten($primary, 15%);
+}
+
+.footer-legal-sep {
+  color: $color-gray-240-legacy;
+}
+
+// Source: src/vue/stack/App.vue
+#app-root {
+    min-height: 100vh;
 }

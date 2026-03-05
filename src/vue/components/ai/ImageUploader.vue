@@ -18,14 +18,3 @@ const onSelect = (event) => {
   emit('select', file)
 }
 </script>
-
-<style scoped>
-.uploader {
-  display: grid;
-  gap: 0.75rem;
-}
-img {
-  max-width: 100%;
-  border-radius: 12px;
-}
-</style>

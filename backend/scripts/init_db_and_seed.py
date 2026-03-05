@@ -5,6 +5,11 @@ Uso: python backend/scripts/init_db_and_seed.py
 """
 
 import sys
+import os
+import argparse
+import logging
+import secrets
+import getpass
 from pathlib import Path
 
 # Add project root to path
@@ -18,19 +23,46 @@ from passlib.context import CryptContext
 
 # Simple bcrypt context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=12)
+logger = logging.getLogger(__name__)
 
 def hash_pwd(password: str) -> str:
     """Hash password using bcrypt"""
     try:
         return pwd_context.hash(password[:72])  # Bcrypt limit
-    except Exception as e:
-        # Fallback: Just return the password with a simple prefix for testing
-        print(f"⚠️  Bcrypt error: {e}, using plaintext for testing")
-        return f"$2b$12$dummy{password[:48]}"
+    except Exception as exc:
+        logger.error("Password hashing failed; aborting seed", exc_info=True)
+        raise RuntimeError("Password hashing failed") from exc
+
+
+def _env_name() -> str:
+    return os.getenv("ENVIRONMENT", "development").lower()
+
+
+def _require_password(label: str, env_var: str, allow_default: bool, default_value: str | None) -> str:
+    env = _env_name()
+    env_value = os.getenv(env_var)
+    if env_value:
+        return env_value
+
+    if env in ("production", "prod"):
+        if allow_default:
+            raise RuntimeError("Default credentials are not allowed in production")
+        if sys.stdin.isatty():
+            return getpass.getpass(f"{label} (env {env_var}): ")
+        raise RuntimeError(f"Missing {env_var} for production seed")
+
+    if allow_default and default_value:
+        print(f"⚠️  Using default {label} credentials (development only)")
+        return default_value
+
+    # Non-prod: generate a secure random password by default
+    generated = secrets.token_urlsafe(16)
+    print(f"✅ Generated {label} password for development: {generated}")
+    return generated
 
 
 
-async def main():
+async def main(allow_default_credentials: bool):
     print("🔧 Inicializando base de datos...")
     
     try:
@@ -46,6 +78,19 @@ async def main():
     
     try:
         # Check if test user already exists
+        test_password = _require_password(
+            label="test user",
+            env_var="SEED_TEST_PASSWORD",
+            allow_default=allow_default_credentials,
+            default_value=None,
+        )
+        admin_password = _require_password(
+            label="admin user",
+            env_var="SEED_ADMIN_PASSWORD",
+            allow_default=allow_default_credentials,
+            default_value=None,
+        )
+
         existing_user = db.query(User).filter(User.email == "test@example.com").first()
         if existing_user:
             print(f"ℹ️  Usuario test ya existe (ID: {existing_user.id})")
@@ -55,7 +100,7 @@ async def main():
                 email="test@example.com",
                 username="testuser",
                 full_name="Test User",
-                hashed_password=hash_pwd("test12"),  # Shorter password for bcrypt compat
+                hashed_password=hash_pwd(test_password),
                 phone="+56982957538",
                 is_active=True,
                 role=UserRole.CLIENT
@@ -65,7 +110,8 @@ async def main():
             db.refresh(test_user)
             print(f"✅ Usuario test creado (ID: {test_user.id})")
             print(f"   Email: test@example.com")
-            print(f"   Password: test12")
+            if _env_name() not in ("production", "prod"):
+                print(f"   Password: {test_password}")
         
         # Create admin user
         existing_admin = db.query(User).filter(User.email == "admin@example.com").first()
@@ -76,7 +122,7 @@ async def main():
                 email="admin@example.com",
                 username="admin",
                 full_name="Admin User",
-                hashed_password=hash_pwd("admin12"),  # Shorter password for bcrypt compat
+                hashed_password=hash_pwd(admin_password),
                 phone="+56982957538",
                 is_active=True,
                 role=UserRole.ADMIN
@@ -86,7 +132,8 @@ async def main():
             db.refresh(admin_user)
             print(f"✅ Usuario admin creado (ID: {admin_user.id})")
             print(f"   Email: admin@example.com")
-            print(f"   Password: admin12")
+            if _env_name() not in ("production", "prod"):
+                print(f"   Password: {admin_password}")
         
         # === SEED PERMISOS Y ROLES (ADITIVO) ===
         print("\n🔐 Inicializando permisos y roles...")
@@ -111,14 +158,15 @@ async def main():
             print(f"   ⚠️  Permisos no inicializados: {perm_error}")
 
         print("\n✅ Base de datos lista para usar")
-        print("\n📝 Para testear login:")
-        print("   curl -X POST http://127.0.0.1:8000/api/v1/auth/login \\")
-        print("     -H 'Content-Type: application/json' \\")
-        print("     -d '{\"email\":\"test@example.com\",\"password\":\"test12\"}'")
-        print("\n   O con admin:")
-        print("   curl -X POST http://127.0.0.1:8000/api/v1/auth/login \\")
-        print("     -H 'Content-Type: application/json' \\")
-        print("     -d '{\"email\":\"admin@example.com\",\"password\":\"admin12\"}'")
+        if _env_name() not in ("production", "prod"):
+            print("\n📝 Para testear login:")
+            print("   curl -X POST http://127.0.0.1:8000/api/v1/auth/login \\")
+            print("     -H 'Content-Type: application/json' \\")
+            print(f"     -d '{{\"email\":\"test@example.com\",\"password\":\"{test_password}\"}}'")
+            print("\n   O con admin:")
+            print("   curl -X POST http://127.0.0.1:8000/api/v1/auth/login \\")
+            print("     -H 'Content-Type: application/json' \\")
+            print(f"     -d '{{\"email\":\"admin@example.com\",\"password\":\"{admin_password}\"}}'")
 
     except Exception as e:
         print(f"❌ Error: {e}")
@@ -129,4 +177,11 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--allow-default-credentials",
+        action="store_true",
+        help="Permite usar credenciales por defecto (solo desarrollo)",
+    )
+    args = parser.parse_args()
+    asyncio.run(main(args.allow_default_credentials))

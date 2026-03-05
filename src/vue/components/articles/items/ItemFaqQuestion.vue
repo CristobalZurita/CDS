@@ -35,23 +35,3 @@ const parsedAnswer = computed(() => {
     return utils.parseCustomText(props.answer)
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-div.foxy-item-faq-question {
-    display: flex;
-}
-
-p.foxy-item-faq-question-answer {
-    text-align: justify;
-}
-
-div.foxy-item-faq-question-content {
-    margin-top: -2px;
-    margin-left: 10px;
-    @include media-breakpoint-down(sm) {
-        margin-top: -1px;
-    }
-}
-</style>

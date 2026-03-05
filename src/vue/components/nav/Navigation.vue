@@ -38,7 +38,3 @@ const shouldDisplayInPageNavBar = computed(() => {
 
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-</style>

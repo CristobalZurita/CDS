@@ -79,6 +79,10 @@ const goToResult = (item) => {
     router.push(`/admin/repairs/${item.repair_id || item.id}`)
     return
   }
+  if (item.type === 'quote') {
+    router.push(`/admin/quotes?quote_id=${item.quote_id || item.id}`)
+    return
+  }
   if (item.type === 'inventory') {
     router.push(`/admin/inventory?edit=${item.product_id || item.id}`)
     return
@@ -92,7 +96,7 @@ const goToResult = (item) => {
     return
   }
   if (item.type === 'manual') {
-    router.push('/admin/archive')
+    router.push('/admin/manuals')
     return
   }
   if (item.type === 'purchase_request') {
@@ -106,139 +110,3 @@ const handleLogout = () => {
   authStore.logout()
 }
 </script>
-
-<style scoped lang="scss">
-@import "/src/scss/_theming.scss";
-
-.admin-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  background: lighten($vintage-beige, 5%);
-  border-radius: 12px;
-  padding: 1.6rem 2rem;
-  margin: 1.75rem 2.5rem 0;
-  border: 1px solid rgba(62, 60, 56, 0.2);
-  box-shadow: 0 8px 18px rgba(62, 60, 56, 0.18);
-}
-.title-block {
-  position: relative;
-  flex: 1;
-}
-
-.title {
-  margin: 0;
-  color: $brand-text;
-  font-size: 1.8rem;
-}
-
-.subtitle {
-  margin: 0.35rem 0 0;
-  color: $text-muted;
-  font-size: 1rem;
-}
-
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.global-search {
-  margin-top: 0.9rem;
-  max-width: 480px;
-  position: relative;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.7rem 0.9rem;
-  border-radius: 10px;
-  border: 1px solid rgba(62, 60, 56, 0.25);
-  font-size: 0.98rem;
-  background: #fff;
-}
-
-.search-results {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  right: 0;
-  background: #fff;
-  border: 1px solid rgba(62, 60, 56, 0.2);
-  border-radius: 10px;
-  box-shadow: 0 10px 24px rgba(62, 60, 56, 0.2);
-  z-index: 20;
-  max-height: 320px;
-  overflow-y: auto;
-}
-
-.search-item {
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: none;
-  padding: 0.75rem 0.9rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  cursor: pointer;
-}
-
-.search-item:hover {
-  background: rgba(236, 107, 0, 0.12);
-}
-
-.search-label {
-  font-weight: 600;
-  color: $brand-text;
-}
-
-.search-subtitle {
-  font-size: 0.85rem;
-  color: $text-muted;
-}
-
-.search-empty {
-  padding: 0.85rem 0.9rem;
-  color: $text-muted;
-}
-
-.btn-link {
-  color: $brand-text;
-  text-decoration: none;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(62, 60, 56, 0.35);
-  padding-bottom: 2px;
-}
-
-.btn-logout {
-  padding: 0.65rem 1.2rem;
-  background: rgba(236, 107, 0, 0.15);
-  color: $brand-text;
-  border: 2px solid rgba(236, 107, 0, 0.6);
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-logout:hover {
-  background: rgba(236, 107, 0, 0.3);
-  border-color: rgba(236, 107, 0, 0.75);
-}
-
-@include media-breakpoint-down(md) {
-  .admin-topbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .actions {
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>

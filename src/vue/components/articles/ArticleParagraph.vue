@@ -37,23 +37,3 @@ const parsedTitle = computed(() => {
     return utils.parseCustomText(props.title)
 })
 </script>
-
-<style lang="scss" scoped>
-@import "/src/scss/_theming.scss";
-
-article.foxy-paragraph-article {
-    &:not(:last-child) {
-        margin-bottom: 2.0rem;
-    }
-}
-
-div.article-heading {
-    color: $dark;
-}
-
-p {
-    color: $light-7;
-    text-align: justify;
-    margin-bottom: 1rem;
-}
-</style>

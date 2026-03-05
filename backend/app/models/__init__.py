@@ -9,6 +9,7 @@ from app.models.category import Category
 from app.models.inventory import Product
 from app.models.brand import Brand
 from app.models.instrument import Instrument
+from app.models.instrument_photo import InstrumentPhoto
 from app.models.stock import Stock
 from app.models.stock_movement import StockMovement
 from app.models.payment import Payment, PaymentStatus
@@ -17,7 +18,7 @@ from app.models.audit import AuditLog
 from app.models.storage_location import StorageLocation
 from app.models.client import Client
 from app.models.device import Device
-from app.models.quote import Quote
+from app.models.quote import Quote, QuoteItem, QuoteRecipient, QuoteStatus
 from app.models.tool import Tool
 from app.models.tool_lookup import ToolBrand, ToolCategory
 from app.models.device_lookup import DeviceBrand, DeviceType
@@ -32,6 +33,7 @@ from app.models.purchase_request import PurchaseRequest, PurchaseRequestItem
 from app.models.manual_document import ManualDocument
 from app.models.two_factor_code import TwoFactorCode
 from app.models.photo_upload_request import PhotoUploadRequest
+from app.models.repair_intake_sheet import RepairIntakeSheet
 
 # === MODELOS ADICIONALES (ADITIVOS) ===
 from app.models.permission import Permission, Role, role_permissions, user_role_assignments
@@ -46,6 +48,7 @@ __all__ = [
     "Product",
     "Brand",
     "Instrument",
+    "InstrumentPhoto",
     "Stock",
     "StockMovement",
     "Payment", "PaymentStatus",
@@ -55,6 +58,9 @@ __all__ = [
     "Client",
     "Device",
     "Quote",
+    "QuoteItem",
+    "QuoteRecipient",
+    "QuoteStatus",
     "Tool",
     "ToolBrand",
     "ToolCategory",
@@ -73,6 +79,7 @@ __all__ = [
     "ManualDocument",
     "TwoFactorCode",
     "PhotoUploadRequest",
+    "RepairIntakeSheet",
     # Modelos adicionales (ADITIVOS)
     "Permission", "Role",
     "Invoice", "InvoiceItem", "InvoiceSequence", "InvoiceStatus", "InvoiceType",

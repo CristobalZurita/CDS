@@ -194,52 +194,51 @@ def _ensure_min_schema():
 
 def test_auth_and_client_flow():
     _ensure_min_schema()
-    client = TestClient(app)
+    with TestClient(app) as client:
+        # Register
+        unique = uuid.uuid4().hex[:8]
+        email = f"testuser_{unique}@example.com"
+        username = f"testuser_{unique}"
+        register_payload = {
+            "email": email,
+            "username": username,
+            "full_name": "Test User",
+            "password": f"{unique}-test-secret",
+            "phone": "+56911111111"
+        }
+        register = client.post("/api/v1/auth/register", json=register_payload)
+        assert register.status_code == 201, register.text
 
-    # Register
-    unique = uuid.uuid4().hex[:8]
-    email = f"testuser_{unique}@example.com"
-    username = f"testuser_{unique}"
-    register_payload = {
-        "email": email,
-        "username": username,
-        "full_name": "Test User",
-        "password": "testpass123",
-        "phone": "+56911111111"
-    }
-    register = client.post("/api/v1/auth/register", json=register_payload)
-    assert register.status_code == 201, register.text
+        # Login
+        login = client.post("/api/v1/auth/login", json={
+            "email": email,
+            "password": register_payload["password"]
+        })
+        assert login.status_code == 200, login.text
+        token = login.json()["access_token"]
+        refresh_token = login.json()["refresh_token"]
 
-    # Login
-    login = client.post("/api/v1/auth/login", json={
-        "email": email,
-        "password": "testpass123"
-    })
-    assert login.status_code == 200, login.text
-    token = login.json()["access_token"]
-    refresh_token = login.json()["refresh_token"]
+        # Refresh token
+        refresh = client.post("/api/v1/auth/refresh", json={"refresh_token": refresh_token})
+        assert refresh.status_code == 200, refresh.text
+        new_token = refresh.json()["access_token"]
+        assert new_token
 
-    # Refresh token
-    refresh = client.post("/api/v1/auth/refresh", json={"refresh_token": refresh_token})
-    assert refresh.status_code == 200, refresh.text
-    new_token = refresh.json()["access_token"]
-    assert new_token
+        # Client dashboard + repairs
+        dashboard = client.get("/api/v1/client/dashboard", headers=_auth_headers(token))
+        assert dashboard.status_code == 200, dashboard.text
 
-    # Client dashboard + repairs
-    dashboard = client.get("/api/v1/client/dashboard", headers=_auth_headers(token))
-    assert dashboard.status_code == 200, dashboard.text
+        repairs = client.get("/api/v1/client/repairs", headers=_auth_headers(token))
+        assert repairs.status_code == 200, repairs.text
 
-    repairs = client.get("/api/v1/client/repairs", headers=_auth_headers(token))
-    assert repairs.status_code == 200, repairs.text
+        # Forgot/reset password
+        forgot = client.post("/api/v1/auth/forgot-password", json={"email": email})
+        assert forgot.status_code == 200, forgot.text
+        reset_token = forgot.json().get("reset_token")
+        assert reset_token
 
-    # Forgot/reset password
-    forgot = client.post("/api/v1/auth/forgot-password", json={"email": email})
-    assert forgot.status_code == 200, forgot.text
-    reset_token = forgot.json().get("reset_token")
-    assert reset_token
-
-    reset = client.post("/api/v1/auth/reset-password", json={
-        "token": reset_token,
-        "new_password": "newpass123"
-    })
-    assert reset.status_code == 200, reset.text
+        reset = client.post("/api/v1/auth/reset-password", json={
+            "token": reset_token,
+            "new_password": "newpass123"
+        })
+        assert reset.status_code == 200, reset.text

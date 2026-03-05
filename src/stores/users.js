@@ -1,31 +1,6 @@
-import { defineStore } from 'pinia'
-import { useApi } from '@/composables/useApi'
+/**
+ * Wrapper de compatibilidad para imports legacy en JavaScript.
+ * La implementacion autoritativa vive en `users.ts`.
+ */
 
-export const useUsersStore = defineStore('users', {
-  state: () => ({
-    users: [],
-    loading: false,
-    error: null
-  }),
-  actions: {
-    async fetchUsers() {
-      this.loading = true
-      try {
-        this.users = await useApi().get('/users')
-      } catch (e) {
-        this.error = e
-      } finally {
-        this.loading = false
-      }
-    },
-    async createUser(data) {
-      return await useApi().post('/users', data)
-    },
-    async updateUser(id, data) {
-      return await useApi().put(`/users/${id}`, data)
-    },
-    async deleteUser(id) {
-      return await useApi().delete(`/users/${id}`)
-    }
-  }
-})
+export { useUsersStore } from './users.ts'

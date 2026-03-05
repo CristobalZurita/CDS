@@ -4,6 +4,7 @@ Router de búsqueda global (Admin)
 Busca clientes, instrumentos, OT y productos desde un solo endpoint.
 """
 from fastapi import APIRouter, Depends, Query
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.dependencies import require_permission
@@ -14,6 +15,7 @@ from app.models.inventory import Product
 from app.models.ticket import Ticket
 from app.models.manual_document import ManualDocument
 from app.models.purchase_request import PurchaseRequest
+from app.models.quote import Quote
 
 router = APIRouter(prefix="/search", tags=["search"])
 
@@ -68,6 +70,34 @@ def search_all(
             "label": repair.repair_number,
             "subtitle": repair.problem_reported,
             "repair_id": repair.id
+        })
+
+    quotes = (
+        db.query(Quote, Client)
+        .outerjoin(Client, Client.id == Quote.client_id)
+        .filter(
+            or_(
+                Quote.quote_number.ilike(q),
+                Quote.problem_description.ilike(q),
+                Quote.status.ilike(q),
+                Client.name.ilike(q),
+                Client.email.ilike(q),
+            )
+        )
+        .limit(limit)
+        .all()
+    )
+    for quote, quote_client in quotes:
+        quote_number = quote.quote_number or f"COT-{quote.id}"
+        total_label = f"${int(quote.estimated_total or 0):,}"
+        client_label = quote_client.name if quote_client else "SIN_CLIENTE"
+        subtitle = f"{quote.status} · {client_label} · {total_label}"
+        results.append({
+            "type": "quote",
+            "id": quote.id,
+            "label": quote_number,
+            "subtitle": subtitle,
+            "quote_id": quote.id
         })
 
     products = db.query(Product).filter(
