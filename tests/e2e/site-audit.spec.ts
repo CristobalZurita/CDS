@@ -376,6 +376,72 @@ const adminActionAudits: ActionAudit[] = [
   },
 ]
 
+const publicActionAudits: ActionAudit[] = [
+  {
+    route: '/tienda',
+    actions: [
+      {
+        name: 'refresh store catalog',
+        run: async (page) => {
+          await page.getByTestId('store-refresh').click()
+          await expect(page.getByTestId('store-results-count')).toBeVisible()
+        },
+      },
+    ],
+  },
+]
+
+const clientActionAudits: ActionAudit[] = [
+  {
+    route: '/profile',
+    actions: [
+      {
+        name: 'open profile edit mode',
+        run: async (page) => {
+          await page.getByTestId('profile-edit-toggle').click()
+          await expect(page.getByTestId('profile-save')).toBeVisible()
+        },
+      },
+      {
+        name: 'close profile edit mode',
+        run: async (page) => {
+          await page.getByTestId('profile-edit-toggle').click()
+          await expect(page.getByTestId('profile-save')).toHaveCount(0)
+        },
+      },
+    ],
+  },
+  {
+    route: '/ot-payments',
+    actions: [
+      {
+        name: 'refresh ot payments',
+        run: async (page) => {
+          await page.getByTestId('ot-payments-refresh').click()
+          await expect(page.locator('body')).toBeVisible()
+        },
+      },
+    ],
+  },
+  {
+    route: '/repairs',
+    actions: [
+      {
+        name: 'filter repairs by in progress',
+        run: async (page) => {
+          await page.getByTestId('repairs-status-filter').selectOption('in_progress')
+        },
+      },
+      {
+        name: 'reset repairs filter',
+        run: async (page) => {
+          await page.getByTestId('repairs-status-filter').selectOption('')
+        },
+      },
+    ],
+  },
+]
+
 function normalizePath(rawPath: string) {
   const url = new URL(rawPath, process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:5174')
   const normalized = url.pathname.replace(/\/+$/, '')
@@ -503,11 +569,31 @@ test.describe('site audit link graph', () => {
 })
 
 test.describe('site audit safe actions', () => {
-  test.use({ storageState: resolveAuthState('admin') })
+  test.describe('public scope', () => {
+    for (const audit of publicActionAudits) {
+      test(`public actions work on ${audit.route}`, async ({ page }) => {
+        await runActionAudit(page, audit)
+      })
+    }
+  })
 
-  for (const audit of adminActionAudits) {
-    test(`admin actions work on ${audit.route}`, async ({ page }) => {
-      await runActionAudit(page, audit)
-    })
-  }
+  test.describe('client scope', () => {
+    test.use({ storageState: resolveAuthState('client') })
+
+    for (const audit of clientActionAudits) {
+      test(`client actions work on ${audit.route}`, async ({ page }) => {
+        await runActionAudit(page, audit)
+      })
+    }
+  })
+
+  test.describe('admin scope', () => {
+    test.use({ storageState: resolveAuthState('admin') })
+
+    for (const audit of adminActionAudits) {
+      test(`admin actions work on ${audit.route}`, async ({ page }) => {
+        await runActionAudit(page, audit)
+      })
+    }
+  })
 })
