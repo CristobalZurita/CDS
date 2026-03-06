@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+*.log.*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -70,6 +71,9 @@ env/
 *.db
 *.sqlite
 *.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
 backend/cirujano.db
 backend/cirujano.log.1
 backend/cirujano.log*
@@ -92,6 +96,12 @@ playwright-report/
 tests/e2e/.auth/
 coverage/
 backend/tests/e2e_runtime/
+backend/test-results*.xml
+
+# Local backup/temp artifacts
+*.old
+*.orig
+*.rej
 
 # Production - SSL certificates (NEVER commit real certs)
 certs/
@@ -111,3 +121,6 @@ postgres_data/
 # Security scan cache
 .cache_ggshield
 .ggshield-ignore
+
+# Local screenshots/scratch workspace
+/image/
