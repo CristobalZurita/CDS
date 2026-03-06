@@ -7,11 +7,17 @@ const routeState = vi.hoisted(() => ({
 
 const modalShowMock = vi.hoisted(() => vi.fn())
 const modalHideMock = vi.hoisted(() => vi.fn())
-const bootstrapModalCtorMock = vi.hoisted(() =>
-  vi.fn().mockImplementation(() => ({
-    show: modalShowMock,
-    hide: modalHideMock,
-  }))
+const bootstrapModalCtorMock = vi.hoisted(() => vi.fn())
+const BootstrapModalMock = vi.hoisted(
+  () =>
+    class BootstrapModalMock {
+      constructor(...args: unknown[]) {
+        bootstrapModalCtorMock(...args)
+      }
+
+      show = modalShowMock
+      hide = modalHideMock
+    }
 )
 
 vi.mock('vue-router', () => ({
@@ -19,7 +25,7 @@ vi.mock('vue-router', () => ({
 }))
 
 vi.mock('/node_modules/bootstrap/js/src/modal', () => ({
-  default: bootstrapModalCtorMock,
+  default: BootstrapModalMock,
 }))
 
 vi.mock('/src/composables/layout.js', () => ({
