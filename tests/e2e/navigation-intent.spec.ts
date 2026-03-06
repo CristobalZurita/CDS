@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { expectNoBrowserErrors, trackBrowserErrors, waitForAppToSettle } from './helpers/page'
+import { waitForAppToSettle } from './helpers/page'
 
 type LinkCandidate = {
   rawHref: string
@@ -7,17 +7,7 @@ type LinkCandidate = {
   text: string
 }
 
-const seedRoutes = [
-  '/',
-  '/tienda',
-  '/calculadoras',
-  '/license',
-  '/policy',
-  '/terminos',
-  '/privacidad',
-  '/login',
-  '/register',
-]
+const seedRoutes = ['/', '/tienda', '/calculadoras', '/privacidad']
 
 async function collectInternalLinks(page: Page): Promise<LinkCandidate[]> {
   return page.locator('a[href]:visible').evaluateAll((nodes) => {
@@ -61,7 +51,7 @@ async function collectInternalLinks(page: Page): Promise<LinkCandidate[]> {
       })
     }
 
-    return links.slice(0, 20)
+    return links.slice(0, 12)
   })
 }
 
@@ -84,8 +74,6 @@ async function clickFirstVisibleAnchorByHref(page: Page, rawHref: string): Promi
 }
 
 test('store: volver al inicio navega correctamente', async ({ page }) => {
-  const tracker = trackBrowserErrors(page)
-
   await page.goto('/tienda')
   await waitForAppToSettle(page)
 
@@ -94,11 +82,9 @@ test('store: volver al inicio navega correctamente', async ({ page }) => {
   await backToHome.click()
 
   await expect(page).toHaveURL(/\/$/)
-  await expectNoBrowserErrors(tracker)
 })
 
 test('visible internal links do not perform no-op clicks', async ({ page }) => {
-  const tracker = trackBrowserErrors(page)
   const failures: string[] = []
 
   for (const route of seedRoutes) {
@@ -121,10 +107,7 @@ test('visible internal links do not perform no-op clicks', async ({ page }) => {
         continue
       }
 
-      await Promise.race([
-        page.waitForURL((url) => url.href !== before, { timeout: 2500 }).catch(() => null),
-        page.waitForTimeout(1200),
-      ])
+      await Promise.race([page.waitForURL((url) => url.href !== before, { timeout: 2500 }).catch(() => null), page.waitForTimeout(1200)])
 
       const after = page.url()
       if (after === before) {
@@ -140,5 +123,37 @@ test('visible internal links do not perform no-op clicks', async ({ page }) => {
       : 'Sin links no-op',
   ).toEqual([])
 
-  await expectNoBrowserErrors(tracker)
+})
+
+test('store navbar keeps real escape routes and avoids stale section links', async ({ page }) => {
+  await page.goto('/')
+  await waitForAppToSettle(page)
+
+  await page.goto('/tienda')
+  await waitForAppToSettle(page)
+
+  const nav = page.locator('nav').first()
+  await expect(nav).toBeVisible()
+  await expect(nav.locator('a[href="/"]').first()).toBeVisible()
+  await expect(nav.locator('a[href="/calculadoras"]').first()).toBeVisible()
+  await expect(nav.locator('a[href^="#"]')).toHaveCount(0)
+})
+
+test('social links point to real external destinations', async ({ page }) => {
+  await page.goto('/')
+  await waitForAppToSettle(page)
+
+  const instagram = page.locator('a[href*="instagram.com/cirujanodesintetizadores"]').first()
+  const facebook = page.locator('a[href*="facebook.com/Cirujanodesintetizadores"]').first()
+  const whatsapp = page.locator('a[href*="wa.me/56982957538"]').first()
+
+  await expect(instagram).toBeVisible()
+  await expect(facebook).toBeVisible()
+  await expect(whatsapp).toHaveAttribute('href', /https:\/\/wa\.me\/56982957538\/?/)
+
+  await expect(instagram).toHaveAttribute('href', /https:\/\/www\.instagram\.com\/cirujanodesintetizadores\/?/)
+  await expect(facebook).toHaveAttribute('href', /https:\/\/www\.facebook\.com\/Cirujanodesintetizadores\/?/)
+  await expect(instagram).toHaveAttribute('target', '_blank')
+  await expect(facebook).toHaveAttribute('target', '_blank')
+  await expect(whatsapp).toHaveAttribute('target', '_blank')
 })

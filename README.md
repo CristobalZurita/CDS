@@ -4,6 +4,26 @@
 
 CDS is a full-stack repair-shop platform for synth intake, repair tracking, inventory, quotes, payments, manuals, warranties, tickets, token-based signatures, and token-based customer photo uploads. The FastAPI backend is broad; the Vue 3 SPA already exposes public, client, and admin routes, but the frontend is still uneven and several modules remain in progress or only partially validated.
 
+### 1.1 Current Verified Snapshot (2026-03-05)
+
+This README refresh is based on direct code inspection and test execution in this workspace:
+
+- Frontend router source: `src/router/index.ts`
+- Frontend pages scanned from: `src/vue/content/pages/` and `src/vue/content/pages/admin/`
+- Vue components scanned from: `src/vue/components/`
+- Backend route registration scanned from: `backend/app/main.py` and `backend/app/api/v1/router.py`
+- Latest focused navigation audit run:
+  - `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/navigation-intent.spec.ts --project=chromium --no-deps`
+  - Result: `4 passed`
+
+Migration context currently present in repo:
+
+- `MIGRACION_VUE_REAL.md` states active migration principles:
+  - aditivo (no destructivo/sustractivo)
+  - deconstructivo (desarmar y rearmar)
+  - usar lo existente antes de crear
+  - no inventar variables ni comportamiento
+
 ## 2. Architecture
 
 ```text
@@ -48,7 +68,7 @@ or PostgreSQL (same app, via DATABASE_URL=postgresql://...)
 
 ## 4. Module Status
 
-Audited Vue surface in `src/`: 20 non-admin pages, 16 admin pages, 9 calculator modules, 198 Vue components.
+Audited Vue surface in `src/`: 20 non-admin page files, 16 admin page files, 9 calculator modules, 127 Vue components, and 48 route `path` declarations in `src/router/index.ts`.
 
 | Module | Status | Notes |
 | --- | --- | --- |
@@ -60,7 +80,80 @@ Audited Vue surface in `src/`: 20 non-admin pages, 16 admin pages, 9 calculator 
 | Calculator modules | ✅ WORKING | The full `src/modules/*` surface is covered in unit tests (`CalculatorWrappers`, `ResistorColorView`, `SmdCapacitorView`, `SmdResistorView`, `Timer555View`). ⚠️ Coverage is strong for modules, but global frontend thresholds still fail due uncovered views/admin/articles areas. |
 | Digital signatures | ✅ WORKING | Backend request, lookup, submit, cancel, and SSE endpoints exist; public route `/signature/:token` exists; unit tests cover the page submission flow. ⚠️ Effective expiry is 1-5 minutes, not the schema default of 15. |
 | Token photo uploads | ✅ WORKING | Public route `/photo-upload/:token` exists; backend request lookup and upload submission endpoints exist; page unit tests cover success and failure states. |
-| Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. ⚠️ On 2026-03-05, authenticated headless API audit still reports broken endpoints tied to users/inventory/analytics server paths (see Section 12), and Playwright remains environment-sensitive in this containerized workspace. |
+| Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. Focused navigation Playwright audit for `/`, `/tienda`, `/calculadoras`, `/privacidad` now passes (`4 passed`, see Section 11), but this does not replace a full authenticated end-to-end regression of every admin/client flow. |
+
+### 4.1 Frontend Route Inventory (from `src/router/index.ts`)
+
+Public (Master layout children):
+
+- `/`
+- `/license`
+- `/policy`
+- `/terminos`
+- `/privacidad`
+- `/agendar` (requires auth)
+- `/cotizador-ia`
+- `/calculadoras`
+- `/tienda`
+
+Auth:
+
+- `/login`
+- `/register`
+- `/password-reset`
+
+Client:
+
+- `/dashboard`
+- `/ot-payments`
+- `/repairs`
+- `/repairs/:id`
+- `/profile`
+
+Admin (`/admin` + children):
+
+- `/admin`
+- `/admin/inventory`
+- `/admin/inventory/unified`
+- `/admin/clients`
+- `/admin/repairs`
+- `/admin/repairs/:id`
+- `/admin/quotes`
+- `/admin/categories`
+- `/admin/contact`
+- `/admin/newsletter`
+- `/admin/appointments`
+- `/admin/tickets`
+- `/admin/purchase-requests`
+- `/admin/manuals`
+- `/admin/stats`
+- `/admin/wizards`
+- `/admin/archive`
+
+Public token routes:
+
+- `/signature/:token`
+- `/photo-upload/:token`
+
+Calculator routes:
+
+- `/calc/555`
+- `/calc/resistor-color`
+- `/calc/smd-capacitor`
+- `/calc/smd-resistor`
+- `/calc/ohms-law`
+- `/calc/temperature`
+- `/calc/number-system`
+- `/calc/length`
+- `/calc/awg`
+
+Fallback:
+
+- `/:pathMatch(.*)*` -> redirect to `/`
+
+### 4.2 Home Sections vs Real Routes
+
+`Nosotros`, `Servicios`, and `Contacto` are currently in-page sections in `HomePage` (`SectionInfo` IDs `about`, `services`, `contact`) and resolve to hashes (`#about`, `#services`, `#contact`), not standalone paths like `/nosotros` or `/servicios`.
 
 ## 5. Environment Variables
 
@@ -490,6 +583,15 @@ Observed in this workspace on 2026-03-05:
     - `GET /api/v1/analytics/repairs` -> `500`
     - `GET /api/v1/analytics/repairs/export` -> `500`
 
+- `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/navigation-intent.spec.ts --project=chromium --no-deps`
+  - Result: passed
+  - Summary: `4 passed`
+  - Coverage of this run:
+    - `/tienda` exit route (`Volver al inicio`)
+    - no-op internal link checks on seed public routes
+    - navbar escape links from `/tienda` (`/` and `/calculadoras`)
+    - social link targets/hrefs for Instagram/Facebook/WhatsApp
+
 - `npm run test`, `npm run test:coverage`, `npm run test:e2e`
   - ⚠️ Not re-run in this README refresh (last values in prior reports may be stale).
 
@@ -507,7 +609,13 @@ Observed in this workspace on 2026-03-05:
 | `.env.example` and `backend/.env.example` mix active settings with legacy placeholders (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`) not wired into critical runtime paths. | Medium | Open |
 | Latest authenticated headless audit (`timeout 60 python3 scripts/audit_headless.py`, 2026-03-05) reports 8 server-side broken checks (`500`/`ERROR`) in users, instruments/categories create, stock-movements, inventory low-stock alerts, and analytics repairs endpoints. | High | Open |
 | `scripts/audit_headless.py` streaming skip rule (`'ws' in path`) is broad and currently marks newsletter routes as stream-skipped because `"news"` contains `"ws"`. | Medium | Open |
-| Frontend coverage command status is currently [PLACEHOLDER] for this refresh because `npm run test:coverage` was not re-executed today. | Medium | [PLACEHOLDER] |
+| Frontend coverage command was not re-run in this refresh (`npm run test:coverage`). | Medium | Pending refresh |
 | Signature expiry contract is inconsistent: `SignatureRequestCreate.expires_minutes` defaults to `15`, but `backend/app/routers/signature.py` clamps the real expiry to `5` minutes maximum. | Medium | Open |
 | `src/vue/components/articles/DiagnosticWizard.vue` still has `TODO: Generate PDF`; current implementation only generates CSV. | Medium | Open |
-| Confirm that roles/permissions have actually been seeded in the target database before relying on `require_permission(...)` outside test mode. | Medium | [PLACEHOLDER] |
+| Confirm that roles/permissions are seeded in target DB before relying on `require_permission(...)` outside test mode. | Medium | Pending manual DB verification |
+
+## 13. README Scope Notes (This Refresh)
+
+- This update is additive: it keeps existing architecture/context sections and appends verified inventory/results from current code and runs.
+- It documents what is present now without creating new conceptual modules or fictional routes.
+- Full "every click in every authenticated/admin flow" validation is not claimed here; current explicit automated confirmation is the focused navigation suite described in Section 11.

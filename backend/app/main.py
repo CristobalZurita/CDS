@@ -91,25 +91,30 @@ async def lifespan(app: FastAPI):
     elif is_test_env:
         logger.info("ℹ️ Instrument auto-sync deshabilitado en entorno de testing")
 
-    # Attempt to import and register any routers that may have failed to import at module load
-    try:
-        import importlib
-        from app.api.v1 import router as v1router
-        for mod_name in ("backend.app.routers.diagnostic", "backend.app.routers.payments"):
-            try:
-                mod = importlib.import_module(mod_name)
-                if hasattr(mod, "router"):
-                    # Avoid double-registration by checking for an existing path
-                    prefix = getattr(mod.router, "prefix", "")
-                    exists = any(r.path.startswith(f"{v1router.api_router.prefix}{prefix}") for r in app.routes)
-                    if not exists:
-                        v1router.api_router.include_router(mod.router)
-                        logger.info(f"Included router from {mod_name}")
-            except Exception:
-                # Non-fatal: continue if router import fails in trimmed test envs
-                logger.debug(f"Router {mod_name} not available at startup")
-    except Exception:
-        logger.debug("Dynamic router registration skipped")
+    # DEDUPE FASE 3:
+    # Se desactiva el segundo registro dinámico de routers en startup.
+    # Fuente canónica activa para inclusión de routers: app.api.v1.router
+    # (evita doble capa de auto-registro y comportamiento no determinista).
+    #
+    # Código anterior conservado como referencia de migración:
+    # try:
+    #     import importlib
+    #     from app.api.v1 import router as v1router
+    #     for mod_name in ("backend.app.routers.diagnostic", "backend.app.routers.payments"):
+    #         try:
+    #             mod = importlib.import_module(mod_name)
+    #             if hasattr(mod, "router"):
+    #                 # Avoid double-registration by checking for an existing path
+    #                 prefix = getattr(mod.router, "prefix", "")
+    #                 exists = any(r.path.startswith(f"{v1router.api_router.prefix}{prefix}") for r in app.routes)
+    #                 if not exists:
+    #                     v1router.api_router.include_router(mod.router)
+    #                     logger.info(f"Included router from {mod_name}")
+    #         except Exception:
+    #             # Non-fatal: continue if router import fails in trimmed test envs
+    #             logger.debug(f"Router {mod_name} not available at startup")
+    # except Exception:
+    #     logger.debug("Dynamic router registration skipped")
     
     yield
     
