@@ -33,7 +33,15 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          for attempt in 1 2 3; do
+            npm ci && break
+            if [ "$attempt" -eq 3 ]; then
+              echo "npm ci failed after 3 attempts" >&2
+              exit 1
+            fi
+            sleep 10
+          done
 
       - name: Lint
         run: npm run lint
@@ -78,8 +86,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
+          for attempt in 1 2 3; do
+            pip install --upgrade pip \
+              && pip install -r requirements.txt \
+              && break
+            if [ "$attempt" -eq 3 ]; then
+              echo "pip install failed after 3 attempts" >&2
+              exit 1
+            fi
+            sleep 10
+          done
 
       - name: Run security scan
         run: |
