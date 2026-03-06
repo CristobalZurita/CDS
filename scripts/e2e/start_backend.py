@@ -41,6 +41,7 @@ def main() -> None:
         "DATABASE_URL": f"sqlite:///{DB_PATH}",
         "ENVIRONMENT": "testing",
         "DEBUG": "false",
+        "LOG_FILE": f"/tmp/cds_e2e_backend_{api_port}.log",
         "TURNSTILE_DISABLE": "true",
         "ENABLE_FULL_STARTUP_IN_TESTS": "true",
         "ENABLE_INSTRUMENT_AUTO_SYNC": "false",

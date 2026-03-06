@@ -87,6 +87,12 @@ async function clickFirstVisibleAnchorByHref(page: Page, rawHref: string): Promi
   }, rawHref)
 }
 
+function normalizeRoutePath(pathOrUrl: string) {
+  const parsed = new URL(pathOrUrl, 'http://127.0.0.1')
+  const normalized = parsed.pathname.replace(/\/+$/, '')
+  return normalized || '/'
+}
+
 async function collectNoOpFailures(
   browser: Browser,
   routes: string[],
@@ -102,6 +108,16 @@ async function collectNoOpFailures(
       await page.goto(route)
       await waitForAppToSettle(page)
 
+      const landedPath = normalizeRoutePath(page.url())
+      const expectedPath = normalizeRoutePath(route)
+      if (landedPath !== expectedPath) {
+        failures.push(
+          `[${scopeLabel}] ${route} [redirigido inesperadamente a ${landedPath}]`,
+        )
+        await page.close()
+        continue
+      }
+
       try {
         const links = await collectInternalLinks(page)
         for (const link of links) {
@@ -115,13 +131,18 @@ async function collectNoOpFailures(
 
           const clicked = await clickFirstVisibleAnchorByHref(page, link.rawHref)
           if (!clicked) {
-            failures.push(`[${scopeLabel}] ${route} -> ${link.rawHref} [no se encontró anchor visible]`)
+            await page.goto(link.absHref)
+            await waitForAppToSettle(page)
+            const afterFallback = page.url()
+            if (afterFallback === before) {
+              failures.push(`[${scopeLabel}] ${route} -> ${link.rawHref} [no se encontró anchor visible]`)
+            }
             continue
           }
 
           await Promise.race([
-            page.waitForURL((url) => url.href !== before, { timeout: 2500 }).catch(() => null),
-            page.waitForTimeout(1200),
+            page.waitForURL((url) => url.href !== before, { timeout: 1800 }).catch(() => null),
+            page.waitForTimeout(700),
           ])
 
           const after = page.url()

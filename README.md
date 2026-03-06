@@ -4,7 +4,7 @@
 
 CDS is a full-stack repair-shop platform for synth intake, repair tracking, inventory, quotes, payments, manuals, warranties, tickets, token-based signatures, and token-based customer photo uploads. The FastAPI backend is broad; the Vue 3 SPA already exposes public, client, and admin routes, but the frontend is still uneven and several modules remain in progress or only partially validated.
 
-### 1.1 Current Verified Snapshot (2026-03-05)
+### 1.1 Current Verified Snapshot (2026-03-06)
 
 This README refresh is based on direct code inspection and test execution in this workspace:
 
@@ -13,8 +13,11 @@ This README refresh is based on direct code inspection and test execution in thi
 - Vue components scanned from: `src/vue/components/`
 - Backend route registration scanned from: `backend/app/main.py` and `backend/app/api/v1/router.py`
 - Latest focused navigation audit run:
-  - `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/navigation-intent.spec.ts --project=chromium --no-deps`
-  - Result: `4 passed`
+  - `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/navigation-intent.spec.ts --project=chromium`
+  - Result: `8 passed`
+- Latest full site audit run:
+  - `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/site-audit.spec.ts --project=chromium`
+  - Result: `24 passed`
 
 Migration context currently present in repo:
 
@@ -80,7 +83,7 @@ Audited Vue surface in `src/`: 20 non-admin page files, 16 admin page files, 9 c
 | Calculator modules | ✅ WORKING | The full `src/modules/*` surface is covered in unit tests (`CalculatorWrappers`, `ResistorColorView`, `SmdCapacitorView`, `SmdResistorView`, `Timer555View`). ⚠️ Coverage is strong for modules, but global frontend thresholds still fail due uncovered views/admin/articles areas. |
 | Digital signatures | ✅ WORKING | Backend request, lookup, submit, cancel, and SSE endpoints exist; public route `/signature/:token` exists; unit tests cover the page submission flow. ⚠️ Effective expiry is 1-5 minutes, not the schema default of 15. |
 | Token photo uploads | ✅ WORKING | Public route `/photo-upload/:token` exists; backend request lookup and upload submission endpoints exist; page unit tests cover success and failure states. |
-| Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. Focused navigation Playwright audit for `/`, `/tienda`, `/calculadoras`, `/privacidad` now passes (`4 passed`, see Section 11), but this does not replace a full authenticated end-to-end regression of every admin/client flow. |
+| Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. Full Playwright site audit now passes (`24 passed`) across link graph + safe actions for public/client/admin (see Section 11). This still does not replace business-level assertions for every mutation path (create/update/delete side effects). |
 
 ### 4.1 Frontend Route Inventory (from `src/router/index.ts`)
 
@@ -311,6 +314,8 @@ npm run dev
 
 - `backend/cirujano.db` is a local SQLite development artifact. Keep it local; do not commit it.
 - `backend/cirujano.log*` are local operational logs. Keep them local; do not commit them.
+- `backend/tests/e2e_runtime/cirujano.log*` are legacy tracked artifacts from previous E2E runs; current E2E backend bootstrap now writes `LOG_FILE` to `/tmp/cds_e2e_backend_<port>.log` to avoid dirtying tracked runtime files.
+- Playwright auth `storageState` now defaults to `/tmp/cds_playwright_auth/*.json` (see `tests/e2e/helpers/auth.ts`) to avoid mutating tracked auth fixtures during E2E runs.
 - `.env`, `backend/.env`, uploads, SQLite artifacts, and rotated logs are ignored by `.gitignore`.
 - The repo history was rewritten on 2026-03-04 to purge `backend/cirujano.db`, `backend/cirujano.log.1`, and the confirmed legacy seed password from Git history.
 - `.github/workflows/secret-scan.yml` now blocks tracked local env files, tracked DB/log/upload artifacts, and known legacy weak literals before they are merged again.
@@ -556,19 +561,19 @@ timeout 60 python3 scripts/audit_headless.py
 - `tests/integration/`: 2 archivos
 - `tests/stores/`: 10 archivos
 - `tests/composables/`: 3 archivos
-- `tests/e2e/`: 20 archivos (specs + utilidades/fixtures)
-- `backend/tests/`: 23 archivos `test*.py`
+- `tests/e2e/`: 21 archivos (specs + utilidades/fixtures)
+- `backend/tests/`: 24 archivos `test*.py`
 
 ### Current observed results
 
-Observed in this workspace on 2026-03-05:
+Observed in this workspace on 2026-03-06:
 
 - `npm run build`
   - Result: passed
 
 - `cd backend && .venv/bin/python -m pytest -q`
   - Result: passed
-  - Summary: `66 passed`, `14 skipped`, `1 warning`
+  - Summary: `69 passed`, `14 skipped`, `1 warning`
 
 - `timeout 60 python3 scripts/audit_headless.py`
   - Result: completed
@@ -583,14 +588,25 @@ Observed in this workspace on 2026-03-05:
     - `GET /api/v1/analytics/repairs` -> `500`
     - `GET /api/v1/analytics/repairs/export` -> `500`
 
-- `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/navigation-intent.spec.ts --project=chromium --no-deps`
+- `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/navigation-intent.spec.ts --project=chromium`
   - Result: passed
-  - Summary: `4 passed`
+  - Summary: `8 passed`
   - Coverage of this run:
+    - auth setup state generation (client + admin)
     - `/tienda` exit route (`Volver al inicio`)
     - no-op internal link checks on seed public routes
+    - authenticated no-op internal link checks on seed client routes
+    - authenticated no-op internal link checks on seed admin routes
     - navbar escape links from `/tienda` (`/` and `/calculadoras`)
     - social link targets/hrefs for Instagram/Facebook/WhatsApp
+
+- `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/site-audit.spec.ts --project=chromium`
+  - Result: passed
+  - Summary: `24 passed`
+  - Coverage of this run:
+    - link graph resolution for public/client/admin scopes
+    - safe actions for `/tienda`, `/profile`, `/ot-payments`, `/repairs`
+    - safe actions for full admin surface (`/admin/*` audited in spec)
 
 - `npm run test`, `npm run test:coverage`, `npm run test:e2e`
   - ⚠️ Not re-run in this README refresh (last values in prior reports may be stale).
@@ -603,7 +619,7 @@ Observed in this workspace on 2026-03-05:
 
 | Item | Priority | Status |
 | --- | --- | --- |
-| Duplicate API layers are mounted together in `backend/app/api/v1/router.py`, causing overlapping prefixes such as `/users`, `/categories`, `/instruments`, and `/repairs`. | High | Open |
+| Legacy dual API layers still coexist in code (`app.api.v1.endpoints.*` and `app.routers.*`), but runtime registration is partially deduped (`/users`, `/instruments`, `/categories`, `/repairs`) and no duplicate method+path entries were observed in app route registration on 2026-03-06. | Medium | Monitoring |
 | App startup mutates schema outside Alembic via `Base.metadata.create_all()` and `_ensure_*_schema()` patchers in `backend/app/core/database.py`. | High | Open |
 | Frontend auth is internally mixed: `src/services/api.ts` is cookie/CSRF-ready, but the actual login flow stores JWTs in `localStorage`, and account deletion is not implemented in backend. | High | Open |
 | `.env.example` and `backend/.env.example` mix active settings with legacy placeholders (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`) not wired into critical runtime paths. | Medium | Open |

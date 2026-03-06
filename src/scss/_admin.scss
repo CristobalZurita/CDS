@@ -1579,10 +1579,12 @@ td {
 	--status-color-1: #{$color-secondary-legacy};
 	--status-color-2: #{$color-info-legacy};
 	--status-color-3: #{$color-orange-500-legacy};
-	--status-color-4: #{$color-success-legacy};
+	// VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+	--status-color-4: #{$color-primary};
 	--status-color-5: #{$color-orange-400-legacy};
 	--status-color-6: #{$color-teal-legacy};
-	--status-color-7: #{$color-green-700-legacy};
+	// VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+	--status-color-7: #{$color-primary};
 	--status-color-8: #{$color-blue-600-legacy};
 	--status-color-9: #{$color-purple-600-legacy};
 	--status-color-10: #{$color-danger};

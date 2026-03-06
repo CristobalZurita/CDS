@@ -339,9 +339,13 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // Hidratar sesión también en rutas guest-only para poder redirigir correctamente
-  // a usuarios ya autenticados que llegan a /login o /register con tokens persistidos.
-  if ((to.meta.requiresAuth || to.meta.requiresGuest) && !authStore.isAuthenticated) {
+  // Hidratar sesión cuando la ruta depende de auth/rol o cuando podría requerir
+  // redirección por estado guest. Esto evita falsos negativos de isAdmin cuando
+  // existe token persistido pero aún no se cargó user en memoria.
+  const routeDependsOnSession = Boolean(to.meta.requiresAuth || to.meta.requiresGuest || to.meta.requiresAdmin)
+  const shouldHydrateSession = routeDependsOnSession && (!authStore.isAuthenticated || !authStore.user)
+
+  if (shouldHydrateSession) {
     await authStore.checkAuth()
   }
 

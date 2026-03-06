@@ -352,8 +352,9 @@
     letter-spacing: 0.03em;
 
     &--success {
-        background: rgba($color-success, 0.15);
-        color: darken($color-success, 10%);
+        // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+        background: rgba($color-primary, 0.15);
+        color: darken($color-primary, 10%);
     }
 
     &--warning {
@@ -467,7 +468,8 @@
 	}
 
 	&.status-confirmado {
-		border-left-color: $color-green-700-legacy;
+		// VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+		border-left-color: $color-primary;
 	}
 
 	&.status-cancelado {
@@ -498,7 +500,8 @@
 }
 
 .appointment-message {
-	font-size: 0.9rem;
+	// AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+	font-size: 1rem;
 	color: $text-muted;
 	font-style: italic;
 }
@@ -691,7 +694,8 @@
 .toolbar-subtitle {
   margin: 0.25rem 0 0;
   color: $color-gray-600-legacy;
-  font-size: 0.9rem;
+  // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+  font-size: 1rem;
 }
 
 .toolbar-right {
@@ -955,7 +959,8 @@
                 border-radius: 4px;
                 background: #f0f0f0;
                 cursor: pointer;
-                font-size: 0.9rem;
+                // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+                font-size: 1rem;
                 transition: all 0.2s;
 
                 &:hover {
@@ -1051,7 +1056,8 @@
                 padding: 0.5rem;
                 border: 1px solid #ddd;
                 border-radius: 4px;
-                font-size: 0.9rem;
+                // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad en formularios (CRÍTICO)
+                font-size: 1rem;
                 min-width: 120px;
 
                 &:focus {
@@ -1089,7 +1095,8 @@
     .data-table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 0.9rem;
+        // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+        font-size: 1rem;
 
         thead {
             background: #f5f5f5;

@@ -1,29 +1,50 @@
 # AUDITORÍA DE PROBLEMAS - MIGRACIÓN SASS → VUE
 
-## 1. VERDES PROHIBIDOS (URGENTE)
+## 1. VERDES PROHIBIDOS ✅ COMPLETADO
 
 **REGLA:** El ÚNICO verde permitido es el botón de WhatsApp (#25d366).
 **PROBLEMA:** Verde y naranja hacen café, se ve horrible (colores antagonistas).
 
-### Ubicaciones detectadas:
+### ✅ STATUS: 100% ELIMINADOS
 
-#### pages/_admin.scss
-- `background: rgba($color-success, 0.15)` → CAMBIAR A rgba($color-primary, 0.15)
-- `color: darken($color-success, 10%)` → CAMBIAR A darken($color-primary, 10%)
-- `border-left-color: $color-green-700-legacy` → CAMBIAR A $color-primary
+**Total eliminados: 59 instancias de verde prohibido**
 
-#### components/_app.scss (múltiples ocurrencias)
-- `background: $color-green-100-legacy` → CAMBIAR A $color-orange-100-legacy
-- `color: $color-green-800-legacy` → CAMBIAR A $color-orange-800-legacy
-- `color: $color-success` → CAMBIAR A $color-primary
-- `border-color: $color-green-primary-legacy` → CAMBIAR A $color-primary
-- `box-shadow: 0 0 0 3px rgba($color-green-primary-legacy, 0.1)` → rgba($color-primary, 0.1)
-- `background: $color-green-light-bg-legacy` → CAMBIAR A $color-orange-50-legacy
-- `color: $color-green-primary-legacy` → CAMBIAR A $color-primary
-- `border: 2px solid $color-green-border-legacy` → $color-primary
-- `color: $color-green-text-legacy` → CAMBIAR A $color-primary
+#### ✅ pages/_admin.scss (2 eliminados)
+- Badge success variant → rgba($color-primary, 0.15)
+- Status confirmado border → $color-primary
 
-**ACCIÓN:** Reemplazar TODOS los verdes por naranja/primary.
+#### ✅ components/_app.scss (43 eliminados)
+- Status badges (completed, archivado, noventena)
+- Success content icons
+- Search input focus states
+- Brand card & instrument card active states
+- Instrument values
+- Confirmation sections
+- Summary rows borders
+- Proceed buttons with gradients
+- Progress tracker completed steps
+- Photos count boxes
+- Success icons & gradients
+- Min price boxes
+- Fault prices
+- Disclaimer boxes
+- Budget details
+- Toast success notifications
+- Spinner border colors
+- Turnstile bypass widget
+
+#### ✅ _public.scss (12 eliminados)
+- Stat icon completed
+- Repair status (entregado, noventena, archivado, completed, delivered)
+- Notification card success
+- Status colors
+- Success step gradients
+
+#### ✅ _admin.scss (2 eliminados)
+- Status changer CSS variables (--status-color-4, --status-color-7)
+
+**ACCIÓN:** ✅ COMPLETADA - Todos los verdes reemplazados por naranja/primary.
+**HEGEMONÍA NARANJA MANTENIDA:** Solo #25d366 (WhatsApp) permitido en todo el sitio.
 
 ---
 
@@ -82,33 +103,50 @@
 
 ---
 
-## 4. WIDGETS RESTANTES POR MIGRAR
+## 4. WIDGETS ✅ COMPLETADO (14/14)
 
-### FilterTabs
-- Filtros de tienda (marcas, categorías)
-- **CRÍTICO:** Texto muy pequeño aquí
+### ✅ TODOS MIGRADOS A VUE
+Migración 100% completada de 14 widgets:
 
-### FloatingQuoteButton
-- Botón flotante para cotizaciones
-
-### InlineLinkList
-- Listas de links inline (footer, etc.)
-
-### StoreCartWidget
-- Widget de carrito flotante
-
-### TurnstileWidget
-- Widget de Cloudflare Turnstile
+1. ✅ **Divider** - Línea divisoria negra
+2. ✅ **XLButton** - Botón extra-large con 3 variantes (orange, pastel, outline)
+3. ✅ **CircleIcon** - Ícono circular responsive
+4. ✅ **Spinner** - Indicador de carga
+5. ✅ **FloatingWhatsAppButton** - Único verde permitido (#25d366)
+6. ✅ **Breadcrumbs** - Migas de pan con separador ›
+7. ✅ **QuotedText** - Texto sin wrap
+8. ✅ **ProgressBar** - Barra de progreso con cálculo dinámico
+9. ✅ **SocialLinks** - Links sociales con sizing responsive complejo
+10. ✅ **TurnstileWidget** - Cloudflare Turnstile (VERDE ELIMINADO)
+11. ✅ **FilterTabs** - Filtros de tienda (TIPOGRAFÍA AUMENTADA: 1rem, fw:500-600)
+12. ✅ **FloatingQuoteButton** - Botón scroll-to-top
+13. ✅ **InlineLinkList** - Links inline con separador ·
+14. ✅ **StoreCartWidget** - Carrito flotante (TIPOGRAFÍA AUMENTADA: 1rem+)
 
 ---
 
 ## PRIORIDAD DE EJECUCIÓN
 
-1. **URGENTE:** Eliminar todos los verdes prohibidos
-2. **URGENTE:** Aumentar tipografía en formularios/inputs/selects/filtros
-3. **ALTA:** Mejorar contrastes grises
-4. **MEDIA:** Completar migración de 5 widgets restantes
-5. **BAJA:** Migrar componentes de articles (foxy heredado)
+1. ✅ **URGENTE:** ~~Eliminar todos los verdes prohibidos~~ **COMPLETADO** (59 verdes eliminados)
+2. 🔄 **URGENTE:** Aumentar tipografía en formularios/inputs/selects/filtros (122 ocurrencias pendientes)
+3. ⏳ **ALTA:** Mejorar contrastes grises (pendiente auditoría detallada)
+4. ✅ **MEDIA:** ~~Completar migración de widgets~~ **COMPLETADO** (14/14 widgets migrados)
+5. ⏳ **BAJA:** Migrar componentes de articles (foxy heredado)
+
+### PRÓXIMOS PASOS
+
+**Inmediato:** Abordar las 122 instancias de tipografía pequeña (0.6rem-0.9rem) en:
+- _public.scss (38 ocurrencias) - PRIORIDAD ALTA
+- components/_app.scss (26 ocurrencias) - PRIORIDAD ALTA
+- _admin.scss (24 ocurrencias) - PRIORIDAD MEDIA
+- pages/_admin.scss (20 ocurrencias) - PRIORIDAD MEDIA
+- Otros archivos (14 ocurrencias) - PRIORIDAD BAJA
+
+**Estrategia:**
+1. Auditar contexto de cada font-size pequeño
+2. Aumentar a mínimo 1rem donde sea texto de lectura
+3. Mantener 0.9rem solo para labels/captions secundarios
+4. Aumentar font-weight a 500-600 donde sea necesario
 
 ---
 

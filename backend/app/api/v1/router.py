@@ -120,6 +120,11 @@ api_router.include_router(sync_router.router)
 # - Mantener app.routers.user en código, pero sin montarlo para evitar doble registro /api/v1/users
 # if user_router:
 # 	api_router.include_router(user_router.router)
+# DEDUPE FASE 4 (/repairs, /categories):
+# - Fuentes canónicas activas: app.routers.repair y app.routers.category
+# - app.api.v1.endpoints.repairs y app.api.v1.endpoints.categories se mantienen
+#   en código (aditivo), pero no se importan ni se montan aquí para evitar
+#   doble capa sobre /api/v1/repairs y /api/v1/categories
 if repair_router:
 	api_router.include_router(repair_router.router)
 if instrument_router:

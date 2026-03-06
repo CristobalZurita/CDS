@@ -1322,7 +1322,8 @@ div.foxy-timeline-panel {
 }
 
 .timeline-arrow-icon {
-    font-size: 12px;
+    // AUMENTADO: de 12px a 14px para mejor legibilidad
+    font-size: 14px;
 }
 
 // Source: src/vue/components/auth/AccountDelete.vue
@@ -1704,8 +1705,9 @@ div.foxy-timeline-panel {
   color: $color-blue-700-legacy;
 }
 .status-completed {
-  background: $color-green-100-legacy;
-  color: $color-green-800-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.15);
+  color: darken($color-primary, 15%);
 }
 .status-cancelled {
   background: $color-red-100-legacy;
@@ -1726,8 +1728,9 @@ div.foxy-timeline-panel {
 .status-entregado,
 .status-noventena,
 .status-archivado {
-  background: $color-green-100-legacy;
-  color: $color-green-800-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.15);
+  color: darken($color-primary, 15%);
 }
 .status-rechazado {
   background: $color-red-100-legacy;
@@ -1811,7 +1814,8 @@ span.input-group-attach {
     }
     @include media-breakpoint-down(sm) {
         min-width: 50px;
-        font-size: 0.9rem;
+        // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+        font-size: 1rem;
     }
 }
 
@@ -1819,11 +1823,13 @@ input, textarea {
     font-size: 1rem;
     padding: 1rem;
     @include media-breakpoint-down(lg) {
-        font-size: 0.9rem;
+        // AUMENTADO: mantenido en 1rem (antes 0.9rem) para mejor legibilidad en formularios
+        font-size: 1rem;
         padding: 0.9rem;
     }
     @include media-breakpoint-down(sm) {
-        font-size: 0.85rem;
+        // AUMENTADO: de 0.85rem a 0.95rem para mejor legibilidad en formularios
+        font-size: 0.95rem;
         padding: 0.85rem;
     }
 }
@@ -1906,7 +1912,8 @@ $input-placeholder-text-color: darken($light-6, 7%);
 ::-webkit-input-placeholder {
     --font-size: 1rem;
     @include media-breakpoint-down(lg) {
-        --font-size: 0.9rem;
+        // AUMENTADO: mantenido en 1rem (antes 0.9rem) para mejor legibilidad
+        --font-size: 1rem;
     }
 
     font-size: var(--font-size);
@@ -2321,7 +2328,8 @@ div.transition-none {
 
     i {
         font-size: 3rem;
-        color: $color-success;
+        // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+        color: $color-primary;
     }
 
     h3 {
@@ -2787,8 +2795,9 @@ button.close-button {
 
   &:focus {
     outline: none;
-    border-color: $color-green-primary-legacy;
-    box-shadow: 0 0 0 3px rgba($color-green-primary-legacy, 0.1);
+    // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
   }
 }
 
@@ -2818,9 +2827,10 @@ button.close-button {
   }
 
   &.active {
-    border-color: $color-green-primary-legacy;
-    background: $color-green-light-bg-legacy;
-    box-shadow: 0 0 0 3px rgba($color-green-primary-legacy, 0.1);
+    // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+    border-color: $color-primary;
+    background: rgba($color-primary, 0.08);
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
   }
 }
 
@@ -2866,9 +2876,10 @@ button.close-button {
   }
 
   &.active {
-    border-color: $color-green-primary-legacy;
-    background: $color-green-light-bg-legacy;
-    box-shadow: 0 0 0 3px rgba($color-green-primary-legacy, 0.1);
+    // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+    border-color: $color-primary;
+    background: rgba($color-primary, 0.08);
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
   }
 }
 
@@ -2917,7 +2928,8 @@ button.close-button {
 
 .instrument-value {
   font-size: $text-sm;
-  color: $color-green-primary-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  color: $color-primary;
   font-weight: $fw-medium;
 }
 
@@ -2925,13 +2937,15 @@ button.close-button {
 .confirmation-section {
   margin-top: $spacer-xl;
   padding: $spacer-xl;
-  background: $color-green-light-bg-legacy;
-  border: 2px solid $color-green-border-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.08);
+  border: 2px solid rgba($color-primary, 0.25);
   border-radius: $border-radius-lg;
 
   h3 {
     margin: 0 0 $spacer-lg 0;
-    color: $color-green-text-legacy;
+    // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+    color: darken($color-primary, 10%);
   }
 }
 
@@ -2946,7 +2960,8 @@ button.close-button {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid $color-green-light-bg-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  border-bottom: 1px solid rgba($color-primary, 0.15);
 
   &:last-child {
     border-bottom: none;
@@ -2966,7 +2981,8 @@ button.close-button {
 .btn-proceed {
   width: 100%;
   padding: $spacer-md;
-  background: linear-gradient(135deg, $color-green-primary-legacy, $color-green-dark-legacy);
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: linear-gradient(135deg, $color-primary, darken($color-primary, 10%));
   color: $color-white;
   border: none;
   border-radius: $border-radius-md;
@@ -2974,12 +2990,13 @@ button.close-button {
   font-weight: $fw-semibold;
   cursor: pointer;
   transition: $transition-fast;
-  box-shadow: 0 4px 12px rgba($color-green-primary-legacy, 0.3);
+  box-shadow: 0 4px 12px rgba($color-primary, 0.3);
 
   &:hover {
-    background: linear-gradient(135deg, $color-green-dark-legacy, $color-green-darker-legacy);
+    // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+    background: linear-gradient(135deg, darken($color-primary, 10%), darken($color-primary, 15%));
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba($color-green-primary-legacy, 0.4);
+    box-shadow: 0 6px 16px rgba($color-primary, 0.4);
   }
 }
 
@@ -3047,10 +3064,12 @@ button.close-button {
     }
 
     &.completed {
-      border-color: $color-success;
-      
+      // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+      border-color: $color-primary;
+
       .step-circle {
-        background: $color-success;
+        // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+        background: $color-primary;
         color: $color-white;
       }
     }
@@ -3142,14 +3161,16 @@ button.close-button {
   .photos-count {
     margin-top: 1.5rem;
     padding: 1rem;
-    background: rgba($color-success, 0.1);
-    border: 2px solid $color-success;
+    // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+    background: rgba($color-primary, 0.1);
+    border: 2px solid $color-primary;
     border-radius: 12px;
     text-align: center;
 
     p {
       margin: 0;
-      color: $color-success;
+      // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+      color: $color-primary;
       font-weight: 600;
       font-size: 1rem;
     }
@@ -3684,7 +3705,8 @@ button.close-button {
 
 .success-icon {
   font-size: 3rem;
-  color: $color-success;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  color: $color-primary;
   margin-bottom: 1rem;
 }
 
@@ -3873,7 +3895,8 @@ img.img-broken {
   width: 50px;
   height: 50px;
   border: 4px solid $light-2;
-  border-top-color: $color-success;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  border-top-color: $color-primary;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -3935,7 +3958,8 @@ img.img-broken {
 }
 
 .success-gradient {
-  background: linear-gradient(135deg, $color-success, darken($color-success, 10%));
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: linear-gradient(135deg, $color-primary, darken($color-primary, 10%));
 }
 
 .header-content h2 {
@@ -4009,8 +4033,9 @@ img.img-broken {
 }
 
 .min-price {
-  background: $color-green-light-bg-legacy;
-  border: 2px solid $color-green-border-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.08);
+  border: 2px solid rgba($color-primary, 0.25);
 }
 
 .max-price {
@@ -4080,7 +4105,8 @@ img.img-broken {
 
 .fault-price {
   font-weight: $fw-semibold;
-  color: $color-success;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  color: $color-primary;
   min-width: 120px;
   text-align: right;
 }
@@ -4126,8 +4152,9 @@ img.img-broken {
 
 // Disclaimer Box
 .disclaimer-box {
-  background: $color-green-light-bg-legacy;
-  border: 2px solid $color-green-border-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.08);
+  border: 2px solid rgba($color-primary, 0.25);
   border-radius: $border-radius-md;
   padding: $spacer-lg;
   margin-bottom: $spacer-xl;
@@ -4135,7 +4162,8 @@ img.img-broken {
 
 .disclaimer-box p {
   margin: 0;
-  color: $color-green-text-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  color: darken($color-primary, 10%);
   font-size: $text-base;
   line-height: $lh-relaxed;
   white-space: pre-wrap;
@@ -4162,7 +4190,8 @@ img.img-broken {
 }
 
 .budget-details strong {
-  color: $color-success;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  color: $color-primary;
   font-weight: $fw-semibold;
 }
 
@@ -4184,7 +4213,8 @@ img.img-broken {
   content: '✓';
   position: absolute;
   left: 0;
-  color: $color-success;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  color: $color-primary;
   font-weight: bold;
 }
 
@@ -4225,7 +4255,8 @@ img.img-broken {
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, darken($color-success, 10%), darken($color-success, 15%));
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: linear-gradient(135deg, darken($color-primary, 10%), darken($color-primary, 15%));
   transform: translateY(-2px);
   box-shadow: $shadow-lg;
 }
@@ -4243,7 +4274,8 @@ img.img-broken {
 
 .btn-btn {
   padding: $spacer-sm $spacer-lg;
-  background: $color-success;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: $color-primary;
   color: white;
   border: none;
   border-radius: $border-radius-md;
@@ -4253,7 +4285,8 @@ img.img-broken {
 }
 
 .btn-btn:hover {
-  background: darken($color-success, 10%);
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: darken($color-primary, 10%);
 }
 
 // Responsive
@@ -4345,9 +4378,10 @@ img.img-broken {
 
 /* Toast Types */
 .toast-success {
-  background: $color-green-200-legacy;
-  border-left: 4px solid $color-green-400-legacy;
-  color: $color-green-darker-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.15);
+  border-left: 4px solid $color-primary;
+  color: darken($color-primary, 15%);
 }
 
 .toast-error {
@@ -4467,77 +4501,10 @@ img.img-broken {
 //}
 
 // Source: src/vue/components/widgets/FilterTabs.vue
-div.btn-group {
-    margin: 0 auto;
-    width: 50%;
-    @include media-breakpoint-down(lg) {
-        width: 100%;
-        max-width: 600px;
-    }
-}
-
-button.btn {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (padding: 0.3rem 2rem),
-        sm: (padding: 0.3rem 0)
-    ));
-
-    opacity: 0.8;
-    border-radius: 30px;
-    background-color: darken($light, 5%);
-
-    &.active, &:hover {
-        background-color: darken($light, 5%);
-        border-color: $light;
-        color: $primary;
-    }
-
-    &.active {
-        background-color: $primary;
-        color: $text-normal-contrast;
-        opacity: 1;
-    }
-}
+// MIGRADO A VUE - estilos controlados por computed properties + scoped styles
 
 // Source: src/vue/components/widgets/FloatingQuoteButton.vue
-.scroll-to-top-btn {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem !important;
-  left: auto !important;
-  z-index: 999;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: $color-primary;
-  color: $color-white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: $text-xl;
-  transition: $transition-base;
-  box-shadow: 0 4px 12px rgba($color-primary, 0.4);
-
-  &:hover {
-    background-color: $color-primary-dark;
-    transform: translateY(-4px);
-  }
-
-  &:active {
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 768px) {
-    bottom: 1rem;
-    right: 1rem !important;
-    left: auto !important;
-    width: 45px;
-    height: 45px;
-    font-size: $text-lg;
-  }
-}
+// MIGRADO A VUE - estilos controlados por computed properties + scoped styles
 
 // Source: src/vue/components/widgets/FloatingWhatsAppButton.vue
 // MIGRADO A VUE - floating WhatsApp button styles controlados por computed properties + scoped styles
@@ -5074,27 +5041,7 @@ a.social-link:hover {
 }
 
 // Source: src/vue/components/widgets/TurnstileWidget.vue
-.turnstile-widget {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 1rem 0;
-}
-
-.turnstile-bypass {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.6rem 0.9rem;
-  border-radius: 999px;
-  background: rgba($color-success, 0.12);
-  border: 1px solid rgba($color-success, 0.35);
-  color: darken($color-success, 15%);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
+// MIGRADO A VUE - estilos controlados por scoped styles en el componente
 
 // Source: src/vue/components/widgets/XLButton.vue
 // MIGRADO A VUE - button styles y variantes controlados por computed properties + scoped styles
@@ -5240,7 +5187,8 @@ a.social-link:hover {
       color: white;
       padding: 4px 8px;
       border-radius: 4px;
-      font-size: 12px;
+      // AUMENTADO: de 12px a 14px para mejor legibilidad
+      font-size: 14px;
       font-weight: 600;
       backdrop-filter: blur(4px);
     }
@@ -5399,7 +5347,8 @@ a.social-link:hover {
       }
 
       .carousel-page-indicator {
-        font-size: 11px;
+        // AUMENTADO: de 11px a 13px para mejor legibilidad en móvil
+        font-size: 13px;
         padding: 3px 6px;
       }
     }

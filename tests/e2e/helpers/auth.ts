@@ -3,9 +3,10 @@ import { fileURLToPath } from 'node:url'
 import { expect, type Page } from '@playwright/test'
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url))
+const authDir = process.env.PLAYWRIGHT_AUTH_DIR || path.resolve('/tmp', 'cds_playwright_auth')
 
 export function resolveAuthState(profile: 'admin' | 'client') {
-  return path.resolve(currentDir, '..', '.auth', `${profile}.json`)
+  return path.resolve(authDir, `${profile}.json`)
 }
 
 export async function loginFromUi(page: Page, email: string, password: string) {

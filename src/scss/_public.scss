@@ -282,7 +282,8 @@ header.foxy-header .btn-hero {
 }
 
 .stat-icon.completed {
-  background: rgba($color-success, 0.2);
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.2);
 }
 
 .stat-icon.total {
@@ -402,7 +403,8 @@ header.foxy-header .btn-hero {
 .repair-status.entregado,
 .repair-status.noventena,
 .repair-status.archivado {
-  background: rgba($color-success, 0.18);
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.18);
   color: $text-color;
 }
 
@@ -421,7 +423,8 @@ header.foxy-header .btn-hero {
 
 .repair-status.completed,
 .repair-status.delivered {
-  background: rgba($color-success, 0.18);
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.18);
   color: $text-color;
 }
 
@@ -569,8 +572,9 @@ header.foxy-header .btn-hero {
 }
 
 .notification-card.success {
-  border-left-color: $color-success;
-  background: rgba($color-success, 0.12);
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  border-left-color: $color-primary;
+  background: rgba($color-primary, 0.12);
 }
 
 .notification-icon {
@@ -887,7 +891,8 @@ header.foxy-header .btn-hero {
 
 .proof-form h3 {
   margin: 0;
-  font-size: 0.9rem;
+  // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+  font-size: 1rem;
 }
 
 .form-grid {
@@ -1017,7 +1022,8 @@ header.foxy-header .btn-hero {
 
 .status {
   margin-top: $spacer-md;
-  color: $color-success;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  color: $color-primary;
 }
 
 // Source: src/vue/content/pages/PrivacyPage.vue + src/vue/content/pages/TermsPage.vue
@@ -1055,7 +1061,8 @@ header.foxy-header .btn-hero {
 .terms-page .last-updated {
   margin: 0;
   color: $legacy-slate-500;
-  font-size: 0.9rem;
+  // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+  font-size: 1rem;
 }
 
 .privacy-content,
@@ -1729,8 +1736,9 @@ header.foxy-header .btn-hero {
 }
 
 .repair-status.completed {
-  background: $color-green-200-legacy;
-  color: $color-green-darker-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.15);
+  color: darken($color-primary, 15%);
 }
 
 .repair-status.in-progress,
@@ -1756,8 +1764,9 @@ header.foxy-header .btn-hero {
 .repair-status.entregado,
 .repair-status.noventena,
 .repair-status.archivado {
-  background: $color-green-200-legacy;
-  color: $color-green-darker-legacy;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: rgba($color-primary, 0.15);
+  color: darken($color-primary, 15%);
 }
 
 .repair-status.rechazado {
@@ -2246,7 +2255,8 @@ header.foxy-header .btn-hero {
   width: 80px;
   height: 80px;
   margin: 0 auto $spacer-lg;
-  background: linear-gradient(135deg, $color-success, darken($color-success, 5%));
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  background: linear-gradient(135deg, $color-primary, darken($color-primary, 5%));
   border-radius: $border-radius-pill;
   display: flex;
   align-items: center;
@@ -2394,7 +2404,8 @@ canvas {
 
 .status {
   margin-top: $spacer-md;
-  color: $color-success;
+  // VERDE ELIMINADO: Reemplazado por naranja/primary (mantener hegemonía)
+  color: $color-primary;
 }
 
 // Source: src/vue/content/pages/StorePage.vue
@@ -2468,7 +2479,8 @@ canvas {
 }
 
 .toolbar-field label {
-  font-size: 0.9rem;
+  // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: $fw-bold;
@@ -2552,7 +2564,8 @@ canvas {
   border-radius: 999px;
   background: rgba($success, 0.12);
   color: darken($success, 15%);
-  font-size: 0.8rem;
+  // AUMENTADO: de 0.8rem a 0.95rem para mejor legibilidad
+  font-size: 0.95rem;
   font-weight: $fw-bold;
 }
 
@@ -3295,7 +3308,8 @@ canvas {
     margin: 0;
     color: $text-muted;
     font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.9rem;
+    // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+    font-size: 1rem;
     line-height: 1.45;
 }
 
@@ -3477,7 +3491,8 @@ canvas {
       color: #2c5aa0;
       padding: 6px 12px;
       border-radius: 20px;
-      font-size: 12px;
+      // AUMENTADO: de 12px a 14px para mejor legibilidad
+      font-size: 14px;
       font-weight: 600;
       text-transform: uppercase;
     }
@@ -3512,7 +3527,8 @@ canvas {
       gap: 0.5rem;
 
       label {
-        font-size: 12px;
+        // AUMENTADO: de 12px a 14px para mejor legibilidad
+        font-size: 14px;
         font-weight: 600;
         color: #999;
         text-transform: uppercase;
@@ -3532,7 +3548,8 @@ canvas {
     padding: 1rem;
     background: #f5f5f5;
     border-radius: 8px;
-    font-size: 12px;
+    // AUMENTADO: de 12px a 14px para mejor legibilidad
+    font-size: 14px;
     color: #888;
   }
 }
@@ -3815,7 +3832,8 @@ canvas {
   .value-range,
   .value-meta {
     font-family: 'Cervo Neue', $font-family-base;
-    font-size: 0.9rem;
+    // AUMENTADO: de 0.9rem a 1rem para mejor legibilidad
+    font-size: 1rem;
     color: $text-muted;
   }
 
