@@ -264,6 +264,7 @@ const error = ref('')
 const searchTerm = ref('')
 const selectedCategory = ref('')
 const selectedAvailability = ref('all')
+const STORE_CATALOG_CACHE_KEY = 'cds_store_catalog_cache_v1'
 const router = useRouter()
 const authStore = useAuthStore()
 const shopCart = useShopCartStore()
@@ -282,6 +283,25 @@ function normalizeSearchText(value) {
     .replace(/[_-]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+function readCatalogCache() {
+  try {
+    const raw = localStorage.getItem(STORE_CATALOG_CACHE_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+function writeCatalogCache(rows) {
+  try {
+    localStorage.setItem(STORE_CATALOG_CACHE_KEY, JSON.stringify(Array.isArray(rows) ? rows : []))
+  } catch {
+    // Ignore storage errors in private mode / quota exceeded.
+  }
 }
 
 const indexedCatalog = computed(() => {
@@ -310,8 +330,7 @@ const availableCategories = computed(() => {
 
 const filteredProducts = computed(() => {
   const normalizedSearch = normalizeSearchText(searchTerm.value)
-
-  return indexedCatalog.value.filter((product) => {
+  const filtered = indexedCatalog.value.filter((product) => {
     if (selectedCategory.value && product.category !== selectedCategory.value) {
       return false
     }
@@ -331,6 +350,14 @@ const filteredProducts = computed(() => {
     }
 
     return product._searchIndex.includes(normalizedSearch)
+  })
+
+  return filtered.sort((a, b) => {
+    const byName = String(a.name || '').localeCompare(String(b.name || ''), 'es', { sensitivity: 'base' })
+    if (byName !== 0) {
+      return byName
+    }
+    return String(a.sku || '').localeCompare(String(b.sku || ''), 'es', { sensitivity: 'base' })
   })
 })
 
@@ -449,16 +476,30 @@ async function loadCatalog() {
   try {
     const res = await api.get('/inventory/public/', {
       params: {
-        limit: 500,
+        limit: 5000,
         enabled_only: true,
         in_stock_only: false,
       },
     })
-    catalog.value = Array.isArray(res?.data) ? res.data : []
+    const rows = Array.isArray(res?.data) ? res.data : []
+    if (rows.length > 0) {
+      catalog.value = rows
+      writeCatalogCache(rows)
+    } else {
+      const cached = readCatalogCache()
+      catalog.value = cached
+    }
     shopCart.syncCatalog(catalog.value)
   } catch (err) {
-    error.value = err?.response?.data?.detail || 'No se pudo cargar el catalogo publico.'
-    catalog.value = []
+    const cached = readCatalogCache()
+    if (cached.length > 0) {
+      catalog.value = cached
+      shopCart.syncCatalog(catalog.value)
+      error.value = 'No se pudo actualizar desde backend. Mostrando la ultima copia local del catalogo.'
+    } else {
+      error.value = err?.response?.data?.detail || 'No se pudo cargar el catalogo publico.'
+      catalog.value = []
+    }
   } finally {
     loading.value = false
   }
@@ -493,6 +534,11 @@ async function submitCheckout() {
 
 onMounted(async () => {
   shopCart.hydrate()
+  const cached = readCatalogCache()
+  if (cached.length > 0) {
+    catalog.value = cached
+    shopCart.syncCatalog(catalog.value)
+  }
   await loadCatalog()
 })
 </script>

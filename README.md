@@ -4,12 +4,32 @@
 
 CDS is a full-stack repair-shop platform for synth intake, repair tracking, inventory, quotes, payments, manuals, warranties, tickets, token-based signatures, and token-based customer photo uploads. The FastAPI backend is broad; the Vue 3 SPA already exposes public, client, and admin routes, but the frontend is still uneven and several modules remain in progress or only partially validated.
 
+### 1.1 Current Verified Snapshot (2026-03-05)
+
+This README refresh is based on direct code inspection and test execution in this workspace:
+
+- Frontend router source: `src/router/index.ts`
+- Frontend pages scanned from: `src/vue/content/pages/` and `src/vue/content/pages/admin/`
+- Vue components scanned from: `src/vue/components/`
+- Backend route registration scanned from: `backend/app/main.py` and `backend/app/api/v1/router.py`
+- Latest focused navigation audit run:
+  - `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/navigation-intent.spec.ts --project=chromium --no-deps`
+  - Result: `4 passed`
+
+Migration context currently present in repo:
+
+- `MIGRACION_VUE_REAL.md` states active migration principles:
+  - aditivo (no destructivo/sustractivo)
+  - deconstructivo (desarmar y rearmar)
+  - usar lo existente antes de crear
+  - no inventar variables ni comportamiento
+
 ## 2. Architecture
 
 ```text
 Browser
   |
-  |  Public SPA routes, /dashboard, /admin/*, /signature/:token, /photo-upload/:token
+  |  Public SPA routes, /tienda, /dashboard, /admin/*, /signature/:token, /photo-upload/:token
   v
 Vue 3 + Vite dev server (:5173)
   |
@@ -48,7 +68,7 @@ or PostgreSQL (same app, via DATABASE_URL=postgresql://...)
 
 ## 4. Module Status
 
-Audited Vue surface in `src/`: 19 non-admin pages, 16 admin pages, 9 calculator modules, 196 Vue components.
+Audited Vue surface in `src/`: 20 non-admin page files, 16 admin page files, 9 calculator modules, 127 Vue components, and 48 route `path` declarations in `src/router/index.ts`.
 
 | Module | Status | Notes |
 | --- | --- | --- |
@@ -60,54 +80,173 @@ Audited Vue surface in `src/`: 19 non-admin pages, 16 admin pages, 9 calculator 
 | Calculator modules | ✅ WORKING | The full `src/modules/*` surface is covered in unit tests (`CalculatorWrappers`, `ResistorColorView`, `SmdCapacitorView`, `SmdResistorView`, `Timer555View`). ⚠️ Coverage is strong for modules, but global frontend thresholds still fail due uncovered views/admin/articles areas. |
 | Digital signatures | ✅ WORKING | Backend request, lookup, submit, cancel, and SSE endpoints exist; public route `/signature/:token` exists; unit tests cover the page submission flow. ⚠️ Effective expiry is 1-5 minutes, not the schema default of 15. |
 | Token photo uploads | ✅ WORKING | Public route `/photo-upload/:token` exists; backend request lookup and upload submission endpoints exist; page unit tests cover success and failure states. |
-| Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. `StorePage` unit coverage, the full backend pytest run, and the current Playwright integration runner all pass in this workspace on 2026-03-04. ⚠️ `npm run test:coverage` now generates a valid report but exits non-zero because global thresholds remain far above real coverage. |
+| Store / purchase requests | 🔄 IN PROGRESS | Public store page, cart widget, purchase-request board, and customer deposit-proof/payment confirmation flow exist. Focused navigation Playwright audit for `/`, `/tienda`, `/calculadoras`, `/privacidad` now passes (`4 passed`, see Section 11), but this does not replace a full authenticated end-to-end regression of every admin/client flow. |
+
+### 4.1 Frontend Route Inventory (from `src/router/index.ts`)
+
+Public (Master layout children):
+
+- `/`
+- `/license`
+- `/policy`
+- `/terminos`
+- `/privacidad`
+- `/agendar` (requires auth)
+- `/cotizador-ia`
+- `/calculadoras`
+- `/tienda`
+
+Auth:
+
+- `/login`
+- `/register`
+- `/password-reset`
+
+Client:
+
+- `/dashboard`
+- `/ot-payments`
+- `/repairs`
+- `/repairs/:id`
+- `/profile`
+
+Admin (`/admin` + children):
+
+- `/admin`
+- `/admin/inventory`
+- `/admin/inventory/unified`
+- `/admin/clients`
+- `/admin/repairs`
+- `/admin/repairs/:id`
+- `/admin/quotes`
+- `/admin/categories`
+- `/admin/contact`
+- `/admin/newsletter`
+- `/admin/appointments`
+- `/admin/tickets`
+- `/admin/purchase-requests`
+- `/admin/manuals`
+- `/admin/stats`
+- `/admin/wizards`
+- `/admin/archive`
+
+Public token routes:
+
+- `/signature/:token`
+- `/photo-upload/:token`
+
+Calculator routes:
+
+- `/calc/555`
+- `/calc/resistor-color`
+- `/calc/smd-capacitor`
+- `/calc/smd-resistor`
+- `/calc/ohms-law`
+- `/calc/temperature`
+- `/calc/number-system`
+- `/calc/length`
+- `/calc/awg`
+
+Fallback:
+
+- `/:pathMatch(.*)*` -> redirect to `/`
+
+### 4.2 Home Sections vs Real Routes
+
+`Nosotros`, `Servicios`, and `Contacto` are currently in-page sections in `HomePage` (`SectionInfo` IDs `about`, `services`, `contact`) and resolve to hashes (`#about`, `#services`, `#contact`), not standalone paths like `/nosotros` or `/servicios`.
 
 ## 5. Environment Variables
 
-Source audited for this section: root `.env.example`.
+Sources audited for this section: `.env.example`, `backend/.env.example`, `.env.production.example`.
 
 ### Frontend
 
-- `VITE_API_URL=http://localhost:8000/api/v1`
-- `VITE_TURNSTILE_SITE_KEY=REPLACE_WITH_TURNSTILE_SITE_KEY`
+- `VITE_API_URL`
+- `VITE_APP_VERSION`
+- `VITE_ANALYTICS_MODE`
+- `VITE_ANALYTICS_URL`
+- `VITE_GA_ID`
+- `VITE_TURNSTILE_SITE_KEY`
+- `VITE_TURNSTILE_DISABLE`
+- `VITE_ENVIRONMENT` (defined in `.env.production.example`)
 
 ### Backend
 
-- `DEBUG=true`
-- `ENVIRONMENT=development`
-- `DATABASE_URL=sqlite:///./cirujano.db`
-- `SECRET_KEY=REPLACE_WITH_RANDOM_64_HEX`
-- `JWT_SECRET=REPLACE_WITH_RANDOM_64_HEX`
-- `JWT_REFRESH_SECRET=REPLACE_WITH_RANDOM_64_HEX`
-- `ALLOW_TOKEN_IN_RESPONSE=false`
-- `ENABLE_API_DOCS=false`
-- `ENABLE_PUBLIC_UPLOADS=false`
-- `CORS_ORIGINS=http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174,http://0.0.0.0:5173`
-- `SMTP_HOST=mail.cirujanodesintetizadores.cl`
-- `SMTP_PORT=465`
-- `SMTP_USER=not-reply@cirujanodesintetizadores.cl`
-- `SMTP_PASSWORD=REPLACE_WITH_SMTP_PASSWORD`
-- `SMTP_USE_TLS=false`
-- `SMTP_USE_SSL=true`
-- `FROM_EMAIL=not-reply@cirujanodesintetizadores.cl`
-- `CLAUDE_API_KEY=REPLACE_WITH_CLAUDE_API_KEY`
-- `UPLOAD_DIR=./uploads`
-- `MAX_FILE_SIZE=10485760`
-- `TURNSTILE_SECRET_KEY=REPLACE_WITH_TURNSTILE_SECRET_KEY`
-- `TURNSTILE_DISABLE=true`
-- `WHATSAPP_TOKEN=REPLACE_WITH_WHATSAPP_TOKEN`
-- `WHATSAPP_PHONE_ID=REPLACE_WITH_WHATSAPP_PHONE_ID`
-- `WHATSAPP_API_URL=https://graph.facebook.com/v22.0`
-- `WHATSAPP_TEMPLATE_NAME=hello_world`
-- `WHATSAPP_TEMPLATE_LANG=en_US`
+- `DEBUG`
+- `ENVIRONMENT`
+- `DATABASE_URL`
+- `SECRET_KEY`
+- `JWT_SECRET`
+- `JWT_REFRESH_SECRET`
+- `ALLOW_TOKEN_IN_RESPONSE`
+- `ENABLE_API_DOCS`
+- `ENABLE_PUBLIC_UPLOADS`
+- `CORS_ORIGINS`
+- `ALLOWED_ORIGINS`
+- `SMTP_HOST`
+- `SMTP_SERVER`
+- `SMTP_PORT`
+- `SMTP_USER`
+- `SMTP_PASSWORD`
+- `SMTP_USE_TLS`
+- `SMTP_USE_SSL`
+- `FROM_EMAIL`
+- `SMTP_FROM_EMAIL`
+- `PUBLIC_BASE_URL`
+- `ENFORCE_CSRF`
+- `RATE_LIMIT_STORAGE_URI`
+- `REDIS_URL`
+- `ENABLE_INSTRUMENT_AUTO_SYNC`
+- `INSTRUMENT_SYNC_ON_STARTUP`
+- `INSTRUMENT_SYNC_INTERVAL_MINUTES`
+- `CLAUDE_API_KEY`
+- `SENDGRID_API_KEY`
+- `SENDGRID_FROM_EMAIL`
+- `GOOGLE_CALENDAR_CREDENTIALS_FILE`
+- `GOOGLE_CALENDAR_ID`
+- `UPLOAD_DIR`
+- `MAX_FILE_SIZE`
+- `IMAGE_MAX_SIZE`
+- `ENCRYPTION_KEY`
+- `LOG_LEVEL`
+- `LOG_FILE`
+- `INVENTORY_EXCEL_PATH`
+- `IMPORT_DB_PATH`
+- `KICAD_SYMBOLS_PATH`
+- `TURNSTILE_SECRET_KEY`
+- `TURNSTILE_DISABLE`
+- `WHATSAPP_TOKEN`
+- `WHATSAPP_PHONE_ID`
+- `WHATSAPP_API_URL`
+- `WHATSAPP_TEMPLATE_NAME`
+- `WHATSAPP_TEMPLATE_LANG`
+- `SEED_ADMIN_PASSWORD`
+- `SEED_TEST_PASSWORD`
 
 ### Production
 
-- `.env.example` does not define production-only keys; it only ships development-oriented sample values.
-- A separate `.env.production.example` file exists in the repo, but it is outside the audited input requested for this README section.
-- For real production use, the current code requires secure values at minimum for `ENVIRONMENT`, `DATABASE_URL`, `SECRET_KEY`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `SMTP_PASSWORD`, `TURNSTILE_SECRET_KEY`, `WHATSAPP_TOKEN`, and `WHATSAPP_PHONE_ID`.
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `POSTGRES_DB`
+- `DATABASE_URL` (PostgreSQL)
+- `REDIS_URL`
+- `SECRET_KEY`
+- `JWT_SECRET`
+- `JWT_REFRESH_SECRET`
+- `ENFORCE_CSRF`
+- `ALLOW_TOKEN_IN_RESPONSE`
+- `ENABLE_API_DOCS`
+- `ENABLE_PUBLIC_UPLOADS`
+- `ALLOWED_ORIGINS`
+- `PUBLIC_BASE_URL`
+- `SMTP_*`
+- `WHATSAPP_*`
+- `TURNSTILE_*`
+- `CLAUDE_API_KEY`
+- `UPLOAD_DIR`
+- `MAX_FILE_SIZE`
 
-⚠️ `.env.example` and `backend/.env.example` now cover the active runtime keys audited on 2026-03-04. They still include legacy placeholders such as `CLAUDE_API_KEY`, `MAX_FILE_SIZE`, and `UPLOAD_DIR`, which are not part of the current hot path.
+⚠️ `.env.example` and `backend/.env.example` include active runtime keys plus legacy placeholders (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`) that are not currently part of the critical request path.
 
 ## 6. Local Setup
 
@@ -398,12 +537,6 @@ Frontend end-to-end suite:
 npm run test:e2e
 ```
 
-Frontend/backend integration runner used by this repo:
-
-```bash
-bash scripts/run_tests.sh
-```
-
 Backend test suite:
 
 ```bash
@@ -411,67 +544,56 @@ cd backend
 .venv/bin/python -m pytest -q
 ```
 
+Headless audit script (sin browser):
+
+```bash
+timeout 60 python3 scripts/audit_headless.py
+```
+
 ### What is actually covered
 
-- `tests/unit/` currently contains 49 files:
-  - admin pages/components: 9
-  - articles: 1
-  - auth UI: 2
-  - client pages: 6
-  - generic component specs: 2
-  - composables: 1
-  - dashboard: 1
-  - domain models: 1
-  - footer: 1
-  - layout helpers: 1
-  - model helpers: 1
-  - modules (wrappers + full calculator views): 5
-  - public pages: 4
-  - router guard: 1
-  - services: 6
-  - store pages/widgets: 2
-  - Pinia store specs: 1
-  - views: 4
-- Frontend extra active suites also exist in:
-  - `tests/integration/` with 2 files
-  - `tests/stores/` with 10 files
-  - `tests/composables/` with 3 files
-  - `tests/e2e/` with 19 files including specs, auth state, fixtures, and helpers
-- Backend active test files currently exist in `backend/tests/` with 23 `test*.py` files for auth, appointments, categories, health, imports, inventory/store sync, OT workflow, payments, uploads, rate limiting, audit logging, purchase requests, security hardening, and integration/auth-guard flows.
+- `tests/unit/`: 75 archivos (`*.test.*` / `*.spec.*`)
+- `tests/integration/`: 2 archivos
+- `tests/stores/`: 10 archivos
+- `tests/composables/`: 3 archivos
+- `tests/e2e/`: 20 archivos (specs + utilidades/fixtures)
+- `backend/tests/`: 23 archivos `test*.py`
 
 ### Current observed results
 
-Observed in this workspace on 2026-03-04:
+Observed in this workspace on 2026-03-05:
 
 - `npm run build`
   - Result: passed
 
-- `bash scripts/run_tests.sh`
-  - Result: passed
-  - Backend stage: `13 passed`
-  - Playwright stage: `9 passed`
-  - ⚠️ The script skips coverage automatically when `pytest-cov` is not installed in `backend/.venv`
-
-- `npm run test:coverage`
-  - Result: ⚠️ report generated, command exits non-zero because global thresholds fail
-  - Test files: `62`
-  - Tests: `291 passed`
-  - Coverage summary from `coverage/coverage-summary.json`:
-    - lines/statements: `66.08%`
-    - functions: `59.45%`
-    - branches: `67.24%`
-  - Threshold failure:
-    - lines/statements require `90%`
-    - functions require `90%`
-    - branches require `85%`
-
-- `npm run test -- --run tests/unit/modules`
-  - Result: passed
-  - Summary: `26 passed` (full calculator module surface)
-
 - `cd backend && .venv/bin/python -m pytest -q`
   - Result: passed
   - Summary: `66 passed`, `14 skipped`, `1 warning`
+
+- `timeout 60 python3 scripts/audit_headless.py`
+  - Result: completed
+  - Summary: `199 checks`, `191 OK`, `8 rotos`
+  - Endpoints reportados como rotos:
+    - `GET /api/v1/users/` -> `500`
+    - `GET /api/v1/users` -> `500`
+    - `POST /api/v1/instruments/` -> `500`
+    - `POST /api/v1/categories/` -> `500`
+    - `POST /api/v1/stock-movements/` -> `500`
+    - `GET /api/v1/inventory/low-stock/alerts` -> `ERROR`
+    - `GET /api/v1/analytics/repairs` -> `500`
+    - `GET /api/v1/analytics/repairs/export` -> `500`
+
+- `PLAYWRIGHT_FRONTEND_PORT=5175 PLAYWRIGHT_API_PORT=8001 PLAYWRIGHT_BASE_URL=http://127.0.0.1:5175 PLAYWRIGHT_API_URL=http://127.0.0.1:8001/api/v1 npm run test:e2e -- tests/e2e/navigation-intent.spec.ts --project=chromium --no-deps`
+  - Result: passed
+  - Summary: `4 passed`
+  - Coverage of this run:
+    - `/tienda` exit route (`Volver al inicio`)
+    - no-op internal link checks on seed public routes
+    - navbar escape links from `/tienda` (`/` and `/calculadoras`)
+    - social link targets/hrefs for Instagram/Facebook/WhatsApp
+
+- `npm run test`, `npm run test:coverage`, `npm run test:e2e`
+  - ⚠️ Not re-run in this README refresh (last values in prior reports may be stale).
 
 ⚠️ The backend run still emits current warnings from:
 
@@ -483,11 +605,17 @@ Observed in this workspace on 2026-03-04:
 | --- | --- | --- |
 | Duplicate API layers are mounted together in `backend/app/api/v1/router.py`, causing overlapping prefixes such as `/users`, `/categories`, `/instruments`, and `/repairs`. | High | Open |
 | App startup mutates schema outside Alembic via `Base.metadata.create_all()` and `_ensure_*_schema()` patchers in `backend/app/core/database.py`. | High | Open |
-| `.env.example` and `backend/.env.example` now cover the audited runtime keys, but they still mix active settings with legacy placeholders not wired into the current hot path (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`). | Medium | Open |
-| Repository hygiene is stronger after the 2026-03-04 history rewrite, but CI/test infrastructure still uses intentionally public low-entropy test defaults such as `test-secret` and `test-refresh-secret`. They are test-only values and must never be reused outside isolated test flows. | Medium | Open |
 | Frontend auth is internally mixed: `src/services/api.ts` is cookie/CSRF-ready, but the actual login flow stores JWTs in `localStorage`, and account deletion is not implemented in backend. | High | Open |
-| Frontend coverage report improves to `66.08%` line coverage (`59.45%` functions, `67.24%` branches), but `npm run test:coverage` still fails by design because global thresholds remain at `90/90/85/90`; calculator modules are covered end-to-end in `tests/unit/modules`, while major debt remains in admin/public/articles surfaces and in non-covered utility/composable layers. | High | Open |
-| `bash scripts/run_tests.sh` cannot produce backend coverage today because `pytest-cov` is not installed in `backend/.venv`; it falls back to plain `pytest`. | Medium | Open |
+| `.env.example` and `backend/.env.example` mix active settings with legacy placeholders (`CLAUDE_API_KEY`, `MAX_FILE_SIZE`, `UPLOAD_DIR`) not wired into critical runtime paths. | Medium | Open |
+| Latest authenticated headless audit (`timeout 60 python3 scripts/audit_headless.py`, 2026-03-05) reports 8 server-side broken checks (`500`/`ERROR`) in users, instruments/categories create, stock-movements, inventory low-stock alerts, and analytics repairs endpoints. | High | Open |
+| `scripts/audit_headless.py` streaming skip rule (`'ws' in path`) is broad and currently marks newsletter routes as stream-skipped because `"news"` contains `"ws"`. | Medium | Open |
+| Frontend coverage command was not re-run in this refresh (`npm run test:coverage`). | Medium | Pending refresh |
 | Signature expiry contract is inconsistent: `SignatureRequestCreate.expires_minutes` defaults to `15`, but `backend/app/routers/signature.py` clamps the real expiry to `5` minutes maximum. | Medium | Open |
 | `src/vue/components/articles/DiagnosticWizard.vue` still has `TODO: Generate PDF`; current implementation only generates CSV. | Medium | Open |
-| Confirm that roles/permissions have actually been seeded in the target database before relying on `require_permission(...)` outside test mode. | Medium | [PLACEHOLDER] |
+| Confirm that roles/permissions are seeded in target DB before relying on `require_permission(...)` outside test mode. | Medium | Pending manual DB verification |
+
+## 13. README Scope Notes (This Refresh)
+
+- This update is additive: it keeps existing architecture/context sections and appends verified inventory/results from current code and runs.
+- It documents what is present now without creating new conceptual modules or fictional routes.
+- Full "every click in every authenticated/admin flow" validation is not claimed here; current explicit automated confirmation is the focused navigation suite described in Section 11.

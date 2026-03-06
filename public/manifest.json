@@ -8,9 +8,9 @@
   "lang": "es",
   "icons": [
     {
-      "src": "/images/logo/logo_square_002.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/images/logo/logo_square_002.webp",
+      "sizes": "800x800",
+      "type": "image/webp"
     }
   ]
 }

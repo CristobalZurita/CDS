@@ -38,7 +38,12 @@ export default defineConfig({
         strictPort: false,
         // Avoid scanning or watching vendored MODELOS subprojects
         watch: {
-            ignored: ['**/MODELOS/**']
+            ignored: [
+                '**/MODELOS/**',
+                '**/backend/.venv/**',
+                '**/backend/**/__pycache__/**',
+                '**/.venv/**',
+            ]
         },
         optimizeDeps: {
             // limit dependency scanning to the primary index

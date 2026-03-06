@@ -25,16 +25,16 @@
                         <span>Agenda tu hora</span>
                     </button>
                     <Link url="/cotizador-ia">
-                        <a class="btn-hero btn-hero-primary" @click="handleQuoteClick">
+                        <span class="btn-hero btn-hero-primary" role="link" tabindex="0" @click="handleQuoteClick">
                             <i class="fa-solid fa-file-circle-check"></i>
                             <span>Cotiza tu instrumento</span>
-                        </a>
+                        </span>
                     </Link>
                     <Link v-if="!isAuthenticated" url="/login">
-                        <a class="btn-hero btn-hero-outline" @click="handleLoginClick">
+                        <span class="btn-hero btn-hero-outline" role="link" tabindex="0" @click="handleLoginClick">
                             <i class="fa-solid fa-right-to-bracket"></i>
                             <span>Iniciar sesión</span>
-                        </a>
+                        </span>
                     </Link>
                 </div>
 

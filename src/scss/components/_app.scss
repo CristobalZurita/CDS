@@ -4219,7 +4219,7 @@ img.img-broken {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, $color-success, darken($color-success, 10%));
+  background: linear-gradient(135deg, $color-primary, darken($color-primary, 10%));
   color: white;
   box-shadow: $shadow-md;
 }
@@ -4419,49 +4419,52 @@ img.img-broken {
 }
 
 // Source: src/vue/components/widgets/Breadcrumbs.vue
-ul.breadcrumbs-link-list {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    padding: 0;
-
-    @include media-breakpoint-down(md) {
-        justify-content: center;
-    }
-}
-
-li.breadcrumb-link-item {
-    margin-right: 0.3rem;
-
-    color: $light-6;
-    &:not(:last-child)::after {
-        content: "›";
-        color: $light-6;
-        margin-left: 0.2rem;
-    }
-}
+// MIGRADO A VUE - breadcrumbs styles controlados por computed properties + scoped styles
+//ul.breadcrumbs-link-list {
+//    list-style: none;
+//    display: flex;
+//    align-items: center;
+//    padding: 0;
+//
+//    @include media-breakpoint-down(md) {
+//        justify-content: center;
+//    }
+//}
+//
+//li.breadcrumb-link-item {
+//    margin-right: 0.3rem;
+//
+//    color: $light-6;
+//    &:not(:last-child)::after {
+//        content: "›";
+//        color: $light-6;
+//        margin-left: 0.2rem;
+//    }
+//}
 
 // Source: src/vue/components/widgets/CircleIcon.vue
-span.icon-stack {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (font-size: 3rem),
-        xxl:  (font-size: 2.5rem),
-        xl:   (font-size: 2.25rem),
-        lg:   (font-size: 2rem),
-        md:   (font-size: 1.5rem),
-        sm:   (font-size: 1.25rem),
-    ));
-}
+// MIGRADO A VUE - icon stack font-size responsive controlado por computed property
+//span.icon-stack {
+//    @include generate-dynamic-styles-with-hash((
+//        xxxl: (font-size: 3rem),
+//        xxl:  (font-size: 2.5rem),
+//        xl:   (font-size: 2.25rem),
+//        lg:   (font-size: 2rem),
+//        md:   (font-size: 1.5rem),
+//        sm:   (font-size: 1.25rem),
+//    ));
+//}
 
 // Source: src/vue/components/widgets/Divider.vue
-hr.solid-divider {
-    width: 60px;
-    color: black;
-    opacity: 1;
-    border: 2px solid black;
-    margin: 0 auto;
-    background-color: black;
-}
+// MIGRADO A VUE - divider styles controlados por computed property
+//hr.solid-divider {
+//    width: 60px;
+//    color: black;
+//    opacity: 1;
+//    border: 2px solid black;
+//    margin: 0 auto;
+//    background-color: black;
+//}
 
 // Source: src/vue/components/widgets/FilterTabs.vue
 div.btn-group {
@@ -4537,44 +4540,45 @@ button.btn {
 }
 
 // Source: src/vue/components/widgets/FloatingWhatsAppButton.vue
-.floating-whatsapp-btn {
-  position: fixed;
-  bottom: 2rem;
-  left: 2rem;
-  z-index: 999;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  background: #25d366;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  font-size: 2rem;
-  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.45);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.5);
-    background: #1fbe59;
-  }
-
-  &:active {
-    transform: translateY(-1px);
-  }
-}
-
-@media (max-width: 768px) {
-  .floating-whatsapp-btn {
-    bottom: 1rem;
-    left: 1rem;
-    width: 48px;
-    height: 48px;
-    font-size: 1.7rem;
-  }
-}
+// MIGRADO A VUE - floating WhatsApp button styles controlados por computed properties + scoped styles
+//.floating-whatsapp-btn {
+//  position: fixed;
+//  bottom: 2rem;
+//  left: 2rem;
+//  z-index: 999;
+//  width: 54px;
+//  height: 54px;
+//  border-radius: 50%;
+//  background: #25d366;
+//  color: #fff;
+//  display: flex;
+//  align-items: center;
+//  justify-content: center;
+//  text-decoration: none;
+//  font-size: 2rem;
+//  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.45);
+//  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+//
+//  &:hover {
+//    transform: translateY(-4px);
+//    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.5);
+//    background: #1fbe59;
+//  }
+//
+//  &:active {
+//    transform: translateY(-1px);
+//  }
+//}
+//
+//@media (max-width: 768px) {
+//  .floating-whatsapp-btn {
+//    bottom: 1rem;
+//    left: 1rem;
+//    width: 48px;
+//    height: 48px;
+//    font-size: 1.7rem;
+//  }
+//}
 
 // Source: src/vue/components/widgets/InlineLinkList.vue
 ul.inline-link-list {
@@ -4650,103 +4654,106 @@ li.inline-link-list-header {
 }
 
 // Source: src/vue/components/widgets/ProgressBar.vue
-div.progress {
-    height: 4px;
-    border-radius: 0;
-    background-color: lighten($light-3, 2%);
-}
-
-div.progress-bar {
-    background-color: $primary;
-    -webkit-transition: none;
-    -moz-transition: none;
-    -ms-transition: none;
-    -o-transition: none;
-    transition: none;
-
-    @for $i from 0 through 100 {
-        &.progress-#{$i} {
-            width: #{$i}%;
-        }
-    }
-}
+// MIGRADO A VUE - progress bar styles y width dinámico controlados por computed properties
+//div.progress {
+//    height: 4px;
+//    border-radius: 0;
+//    background-color: lighten($light-3, 2%);
+//}
+//
+//div.progress-bar {
+//    background-color: $primary;
+//    -webkit-transition: none;
+//    -moz-transition: none;
+//    -ms-transition: none;
+//    -o-transition: none;
+//    transition: none;
+//
+//    @for $i from 0 through 100 {
+//        &.progress-#{$i} {
+//            width: #{$i}%;
+//        }
+//    }
+//}
 
 // Source: src/vue/components/widgets/QuotedText.vue
-span.last-span {
-    white-space: nowrap;
-}
+// MIGRADO A VUE - white-space nowrap controlado por scoped style
+//span.last-span {
+//    white-space: nowrap;
+//}
 
 // Source: src/vue/components/widgets/SocialLinks.vue
-@mixin create-btn-social-size($std-font-size, $md-down-font-size) {
-    $font-size: $std-font-size;
-
-    font-size: $font-size;
-    width: calc($font-size * 2.4);
-    height: calc($font-size * 2.4);
-
-    @include media-breakpoint-down(xl) {
-        font-size: $md-down-font-size;
-        width: calc($md-down-font-size * 2.65);
-        height: calc($md-down-font-size * 2.65);
-    }
-
-    @include media-breakpoint-down(md) {
-        font-size: $md-down-font-size;
-        width: calc($md-down-font-size * 2.4);
-        height: calc($md-down-font-size * 2.4);
-    }
-}
-
-@mixin create-btn-social-color($color, $bg-color, $border-color, $hover-color, $hover-bg-color, $hover-border-color) {
-    color: $color;
-    background-color: $bg-color;
-    border-color: $border-color;
-
-    &:hover {
-        color: $hover-color;
-        background-color: $hover-bg-color;
-        border-color: $hover-border-color;
-    }
-}
-
-a.social-link {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
-
-    border-radius: 100%;
-    border-width: 2px;
-    color: $white;
-
-    @include create-btn-social-size(1rem, 0.85rem);
-    @include create-btn-social-color(
-        $white, lighten($primary, 10%), lighten($primary, 25%),
-        $white, lighten($dark, 15%), lighten($dark, 25%),
-    )
-}
-
-.social-icon-wrapper {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.social-icon-img {
-    width: 1em;
-    height: 1em;
-    display: block;
-}
-
-.social-icon-overlay {
-    position: absolute;
-    color: $white;
-    font-size: 0.9em;
-    pointer-events: none;
-}
+// MIGRADO A VUE - social links styles controlados por computed properties + scoped styles
+//@mixin create-btn-social-size($std-font-size, $md-down-font-size) {
+//    $font-size: $std-font-size;
+//
+//    font-size: $font-size;
+//    width: calc($font-size * 2.4);
+//    height: calc($font-size * 2.4);
+//
+//    @include media-breakpoint-down(xl) {
+//        font-size: $md-down-font-size;
+//        width: calc($md-down-font-size * 2.65);
+//        height: calc($md-down-font-size * 2.65);
+//    }
+//
+//    @include media-breakpoint-down(md) {
+//        font-size: $md-down-font-size;
+//        width: calc($md-down-font-size * 2.4);
+//        height: calc($md-down-font-size * 2.4);
+//    }
+//}
+//
+//@mixin create-btn-social-color($color, $bg-color, $border-color, $hover-color, $hover-bg-color, $hover-border-color) {
+//    color: $color;
+//    background-color: $bg-color;
+//    border-color: $border-color;
+//
+//    &:hover {
+//        color: $hover-color;
+//        background-color: $hover-bg-color;
+//        border-color: $hover-border-color;
+//    }
+//}
+//
+//a.social-link {
+//    display: inline-flex;
+//    justify-content: center;
+//    align-items: center;
+//
+//    margin-left: 0.25rem;
+//    margin-right: 0.25rem;
+//
+//    border-radius: 100%;
+//    border-width: 2px;
+//    color: $white;
+//
+//    @include create-btn-social-size(1rem, 0.85rem);
+//    @include create-btn-social-color(
+//        $white, lighten($primary, 10%), lighten($primary, 25%),
+//        $white, lighten($dark, 15%), lighten($dark, 25%),
+//    )
+//}
+//
+//.social-icon-wrapper {
+//    position: relative;
+//    display: inline-flex;
+//    align-items: center;
+//    justify-content: center;
+//}
+//
+//.social-icon-img {
+//    width: 1em;
+//    height: 1em;
+//    display: block;
+//}
+//
+//.social-icon-overlay {
+//    position: absolute;
+//    color: $white;
+//    font-size: 0.9em;
+//    pointer-events: none;
+//}
 
 a.social-link-size-2 {
     @include create-btn-social-size(1.2rem, 1rem);
@@ -4827,17 +4834,18 @@ a.social-link:hover {
 }
 
 // Source: src/vue/components/widgets/Spinner.vue
-img.foxy-spinner-widget {
-    @include generate-dynamic-styles-with-hash((
-        xxxl:   (max-width: 200px,  max-height:200px),
-        md:     (max-width: 130px,  max-height:130px),
-        sm:     (max-width: 90px,   max-height:90px),
-    ));
-
-    margin: 0 auto;
-    width: 50%;
-    height: 50%;
-}
+// MIGRADO A VUE - spinner responsive size controlado por computed property
+//img.foxy-spinner-widget {
+//    @include generate-dynamic-styles-with-hash((
+//        xxxl:   (max-width: 200px,  max-height:200px),
+//        md:     (max-width: 130px,  max-height:130px),
+//        sm:     (max-width: 90px,   max-height:90px),
+//    ));
+//
+//    margin: 0 auto;
+//    width: 50%;
+//    height: 50%;
+//}
 
 // Source: src/vue/components/widgets/StoreCartWidget.vue
 .store-cart-widget {
@@ -5089,71 +5097,72 @@ img.foxy-spinner-widget {
 }
 
 // Source: src/vue/components/widgets/XLButton.vue
-button.btn-xl {
-    @include generate-dynamic-styles-with-hash((
-        xxxl: (padding: 1.125rem 2.3rem, font-size: 1.125rem),
-        xxl:  (padding: 1rem 2rem, font-size: 1rem),
-        lg:   (padding: 1rem 1.5rem, font-size: 0.9rem)
-    ));
-
-    border-radius: 4rem;
-    font-weight: 600;
-    font-family: 'Cervo Neue', $headings-font-family;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-    letter-spacing: 0.05em;
-}
-
-// Variante Orange (Principal CTA)
-.btn-orange {
-    background-color: $primary !important;
-    color: $color-white !important;
-    border-color: $primary;
-
-    &:hover {
-        background-color: darken($primary, 10%) !important;
-        border-color: darken($primary, 10%);
-        box-shadow: 0 4px 12px rgba($primary, 0.4);
-    }
-
-    &:active {
-        background-color: darken($primary, 15%) !important;
-    }
-}
-
-// Variante Orange Pastel (Principal CTA - Suave)
-.btn-orange-pastel {
-    background-color: $orange-pastel !important;
-    color: $color-white !important;
-    border-color: $orange-pastel;
-
-    &:hover {
-        background-color: darken($orange-pastel, 10%) !important;
-        border-color: darken($orange-pastel, 10%);
-        box-shadow: 0 4px 12px rgba($orange-pastel, 0.4);
-    }
-
-    &:active {
-        background-color: darken($orange-pastel, 15%) !important;
-    }
-}
-
-// Variante Outline (Secundario)
-.btn-outline {
-    background-color: transparent !important;
-    color: $orange-pastel !important;
-    border-color: $orange-pastel;
-
-    &:hover {
-        background-color: rgba($orange-pastel, 0.1) !important;
-        box-shadow: 0 4px 12px rgba($orange-pastel, 0.2);
-    }
-
-    &:active {
-        background-color: rgba($orange-pastel, 0.2) !important;
-    }
-}
+// MIGRADO A VUE - button styles y variantes controlados por computed properties + scoped styles
+//button.btn-xl {
+//    @include generate-dynamic-styles-with-hash((
+//        xxxl: (padding: 1.125rem 2.3rem, font-size: 1.125rem),
+//        xxl:  (padding: 1rem 2rem, font-size: 1rem),
+//        lg:   (padding: 1rem 1.5rem, font-size: 0.9rem)
+//    ));
+//
+//    border-radius: 4rem;
+//    font-weight: 600;
+//    font-family: 'Cervo Neue', $headings-font-family;
+//    text-transform: uppercase;
+//    transition: all 0.3s ease;
+//    border: 2px solid transparent;
+//    letter-spacing: 0.05em;
+//}
+//
+//// Variante Orange (Principal CTA)
+//.btn-orange {
+//    background-color: $primary !important;
+//    color: $color-white !important;
+//    border-color: $primary;
+//
+//    &:hover {
+//        background-color: darken($primary, 10%) !important;
+//        border-color: darken($primary, 10%);
+//        box-shadow: 0 4px 12px rgba($primary, 0.4);
+//    }
+//
+//    &:active {
+//        background-color: darken($primary, 15%) !important;
+//    }
+//}
+//
+//// Variante Orange Pastel (Principal CTA - Suave)
+//.btn-orange-pastel {
+//    background-color: $orange-pastel !important;
+//    color: $color-white !important;
+//    border-color: $orange-pastel;
+//
+//    &:hover {
+//        background-color: darken($orange-pastel, 10%) !important;
+//        border-color: darken($orange-pastel, 10%);
+//        box-shadow: 0 4px 12px rgba($orange-pastel, 0.4);
+//    }
+//
+//    &:active {
+//        background-color: darken($orange-pastel, 15%) !important;
+//    }
+//}
+//
+//// Variante Outline (Secundario)
+//.btn-outline {
+//    background-color: transparent !important;
+//    color: $orange-pastel !important;
+//    border-color: $orange-pastel;
+//
+//    &:hover {
+//        background-color: rgba($orange-pastel, 0.1) !important;
+//        box-shadow: 0 4px 12px rgba($orange-pastel, 0.2);
+//    }
+//
+//    &:active {
+//        background-color: rgba($orange-pastel, 0.2) !important;
+//    }
+//}
 
 // Source: src/components/InstrumentCarousel.vue
 .instrument-carousel {

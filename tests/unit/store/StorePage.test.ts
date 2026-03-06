@@ -114,7 +114,7 @@ describe('StorePage', () => {
     expect(shopCartMock.hydrate).toHaveBeenCalled()
     expect(apiMock.get).toHaveBeenCalledWith('/inventory/public/', {
       params: {
-        limit: 500,
+        limit: 5000,
         enabled_only: true,
         in_stock_only: false,
       },

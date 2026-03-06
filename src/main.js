@@ -1,6 +1,6 @@
-// SASS Architecture - main.scss es el nuevo entry point
-// Si hay problemas, cambiar a: import "./scss/style.scss"
-import "./scss/main.scss"
+// Legacy aggregated SCSS entry is temporarily disabled while migrating styles to Vue-first SFCs.
+// Keep tokens loaded so component-level styles continue to work without blocking startup.
+// import "./scss/main.scss"
 import "./assets/styles/tokens.css"
 import { createApp } from "vue"
 import { createPinia } from "pinia"

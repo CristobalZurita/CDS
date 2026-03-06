@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .endpoints import brands, instruments, auth, inventory, imports, stats, ai, users
+from .endpoints import brands, auth, inventory, imports, stats, ai, users
 from app.routers import uploads as uploads_router
 from app.routers import files as files_router
 from app.api import sync as sync_router
@@ -99,7 +99,11 @@ if globals().get("inventory_products_router") is None:
 api_router = APIRouter(prefix="/api/v1")
 
 api_router.include_router(brands.router)
-api_router.include_router(instruments.router)
+# DEDUPE FASE 2 (/instruments):
+# - Fuente canónica activa: app.routers.instrument
+# - app.api.v1.endpoints.instruments se mantiene en código (no destructivo),
+#   pero ya no se importa ni se monta aquí para evitar doble capa sobre
+#   /api/v1/instruments
 api_router.include_router(auth.router)
 api_router.include_router(uploads_router.router)
 api_router.include_router(files_router.router)
@@ -111,8 +115,11 @@ api_router.include_router(users.router)
 api_router.include_router(sync_router.router)
 
 # Incluir routers adicionales si están disponibles
-if user_router:
-	api_router.include_router(user_router.router)
+# DEDUPE FASE 1 (/users):
+# - Fuente canónica activa: app.api.v1.endpoints.users (incluida arriba como users.router)
+# - Mantener app.routers.user en código, pero sin montarlo para evitar doble registro /api/v1/users
+# if user_router:
+# 	api_router.include_router(user_router.router)
 if repair_router:
 	api_router.include_router(repair_router.router)
 if instrument_router:

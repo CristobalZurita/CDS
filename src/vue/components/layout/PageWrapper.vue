@@ -1,6 +1,5 @@
 <template>
-    <div class="foxy-page-wrapper"
-         :class="noPadding ? `foxy-page-wrapper-no-padding` : ``"
+    <div :style="wrapperStyles"
          :id="props.id">
         <div :class="`foxy-page-inner ${props.readable ? 'readable' : ''}`">
             <component v-for="sectionInfo in sections"
@@ -12,9 +11,11 @@
 
 <script setup>
 import SectionInfo from "/src/models/SectionInfo.js"
-import {inject, onBeforeMount, ref} from "vue"
+import { inject, onBeforeMount, onUnmounted, computed } from "vue"
+import { useResponsive, getResponsiveValue } from "@/composables/useResponsive"
 
 const currentPageSections = inject("currentPageSections")
+const { windowWidth } = useResponsive()
 
 const props = defineProps({
     id: String,
@@ -27,7 +28,33 @@ const props = defineProps({
     }
 })
 
+// Padding-top responsive
+const wrapperPaddingTop = computed(() => {
+    if (props.noPadding) return '0'
+
+    return getResponsiveValue({
+        xxxl: '2rem',
+        xxl: '2.75rem',
+        lg: '3.5rem',
+        md: '3.5rem',
+        sm: '3.5rem'
+    }, windowWidth.value)
+})
+
+const wrapperStyles = computed(() => ({
+    paddingTop: wrapperPaddingTop.value
+}))
+
 onBeforeMount(() => {
-    currentPageSections.value = props.sections
+    if (currentPageSections) {
+        currentPageSections.value = props.sections
+    }
+})
+
+onUnmounted(() => {
+    // Avoid leaking in-page section links into routes that do not define sections.
+    if (currentPageSections) {
+        currentPageSections.value = []
+    }
 })
 </script>

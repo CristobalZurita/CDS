@@ -1,9 +1,9 @@
 <template>
     <div class="progress-bar-wrapper" :class="props.class">
-        <div class="progress">
+        <div class="progress-container" :style="containerStyles">
             <div class="progress-bar"
                  role="progressbar"
-                 :class="progressClass"
+                 :style="barStyles"
                  :aria-valuenow="parsedPercentage"
                  aria-valuemin="0"
                  aria-valuemax="100"/>
@@ -12,8 +12,9 @@
 </template>
 
 <script setup>
-import {useUtils} from "/src/composables/utils.js"
-import {computed} from "vue"
+import { useUtils } from "/src/composables/utils.js"
+import { computed } from "vue"
+import { COLORS } from "@/composables/useResponsive"
 
 const utils = useUtils()
 
@@ -26,7 +27,21 @@ const parsedPercentage = computed(() => {
     return utils.clamp(props.percentage, 0, 100)
 })
 
-const progressClass = computed(() => {
-    return `progress-${Math.round(parsedPercentage.value)}`
-})
+const containerStyles = computed(() => ({
+    height: '4px',
+    borderRadius: '0',
+    backgroundColor: '#e3e6ea' // lighten($light-3, 2%)
+}))
+
+const barStyles = computed(() => ({
+    backgroundColor: COLORS.primary,
+    width: `${parsedPercentage.value}%`,
+    transition: 'none'
+}))
 </script>
+
+<style scoped>
+.progress-bar {
+    height: 100%;
+}
+</style>
