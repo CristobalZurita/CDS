@@ -64,11 +64,21 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+
+      - name: Resolve deploy mode
+        id: deploy-mode
+        run: |
+          if [ "${{ vars.ENABLE_STAGING_DEPLOY }}" = "true" ] || [ "${{ vars.ENABLE_PROD_DEPLOY }}" = "true" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       
       - name: Log in to Container Registry
+        if: steps.deploy-mode.outputs.enabled == 'true'
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
@@ -89,7 +99,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./backend
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' && steps.deploy-mode.outputs.enabled == 'true' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
