@@ -72,3 +72,28 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.turnstile-widget {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.turnstile-bypass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  /* VERDE ELIMINADO: Reemplazado por naranja/primary */
+  background: rgba(236, 107, 0, 0.12); /* rgba($color-primary, 0.12) */
+  border: 1px solid rgba(236, 107, 0, 0.35); /* rgba($color-primary, 0.35) */
+  color: #b34f00; /* darken($color-primary, 15%) */
+  font-size: 1rem; /* AUMENTADO de 0.9rem a 1rem para mejor legibilidad */
+  font-weight: 600;
+}
+</style>

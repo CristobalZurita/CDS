@@ -1,5 +1,6 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Browser, type Page } from '@playwright/test'
 import { waitForAppToSettle } from './helpers/page'
+import { resolveAuthState } from './helpers/auth'
 
 type LinkCandidate = {
   rawHref: string
@@ -7,7 +8,20 @@ type LinkCandidate = {
   text: string
 }
 
-const seedRoutes = ['/', '/tienda', '/calculadoras', '/privacidad']
+// Rutas públicas base del sitio (sin autenticación obligatoria).
+// Se mantienen explícitas para auditar navegación real de punta a punta.
+const seedRoutes = [
+  '/',
+  '/tienda',
+  '/calculadoras',
+  '/cotizador-ia',
+  '/privacidad',
+  '/terminos',
+  '/login',
+]
+
+const clientSeedRoutes = ['/dashboard', '/repairs', '/profile', '/ot-payments']
+const adminSeedRoutes = ['/admin', '/admin/repairs', '/admin/inventory', '/admin/clients']
 
 async function collectInternalLinks(page: Page): Promise<LinkCandidate[]> {
   return page.locator('a[href]:visible').evaluateAll((nodes) => {
@@ -73,6 +87,61 @@ async function clickFirstVisibleAnchorByHref(page: Page, rawHref: string): Promi
   }, rawHref)
 }
 
+async function collectNoOpFailures(
+  browser: Browser,
+  routes: string[],
+  scopeLabel: string,
+  storageState?: string,
+): Promise<string[]> {
+  const failures: string[] = []
+  const context = await browser.newContext(storageState ? { storageState } : {})
+
+  try {
+    for (const route of routes) {
+      const page = await context.newPage()
+      await page.goto(route)
+      await waitForAppToSettle(page)
+
+      try {
+        const links = await collectInternalLinks(page)
+        for (const link of links) {
+          await page.goto(route)
+          await waitForAppToSettle(page)
+
+          const before = page.url()
+          if (link.absHref === before) {
+            continue
+          }
+
+          const clicked = await clickFirstVisibleAnchorByHref(page, link.rawHref)
+          if (!clicked) {
+            failures.push(`[${scopeLabel}] ${route} -> ${link.rawHref} [no se encontró anchor visible]`)
+            continue
+          }
+
+          await Promise.race([
+            page.waitForURL((url) => url.href !== before, { timeout: 2500 }).catch(() => null),
+            page.waitForTimeout(1200),
+          ])
+
+          const after = page.url()
+          if (after === before) {
+            failures.push(`[${scopeLabel}] ${route} -> ${link.rawHref} [${link.text || 'sin texto'}]`)
+          }
+        }
+      } catch (error: any) {
+        failures.push(`[${scopeLabel}] ${route} [error de auditoria: ${error?.message || String(error)}]`)
+      } finally {
+        await page.close()
+      }
+    }
+  } finally {
+    await context.close()
+  }
+
+  return failures
+}
+
 test('store: volver al inicio navega correctamente', async ({ page }) => {
   await page.goto('/tienda')
   await waitForAppToSettle(page)
@@ -84,37 +153,29 @@ test('store: volver al inicio navega correctamente', async ({ page }) => {
   await expect(page).toHaveURL(/\/$/)
 })
 
-test('visible internal links do not perform no-op clicks', async ({ page }) => {
-  const failures: string[] = []
+test('visible internal links do not perform no-op clicks', async ({ browser }) => {
+  const failures = await collectNoOpFailures(browser, seedRoutes, 'public')
 
-  for (const route of seedRoutes) {
-    await page.goto(route)
-    await waitForAppToSettle(page)
+  expect(
+    failures,
+    failures.length
+      ? `Links con click no-op detectados:\n${failures.join('\n')}`
+      : 'Sin links no-op',
+  ).toEqual([])
+})
 
-    const links = await collectInternalLinks(page)
-    for (const link of links) {
-      await page.goto(route)
-      await waitForAppToSettle(page)
+test('authenticated client links do not perform no-op clicks', async ({ browser }) => {
+  const failures = await collectNoOpFailures(browser, clientSeedRoutes, 'client', resolveAuthState('client'))
+  expect(
+    failures,
+    failures.length
+      ? `Links con click no-op detectados:\n${failures.join('\n')}`
+      : 'Sin links no-op',
+  ).toEqual([])
+})
 
-      const before = page.url()
-      if (link.absHref === before) {
-        continue
-      }
-
-      const clicked = await clickFirstVisibleAnchorByHref(page, link.rawHref)
-      if (!clicked) {
-        failures.push(`${route} -> ${link.rawHref} [no se encontró anchor visible]`)
-        continue
-      }
-
-      await Promise.race([page.waitForURL((url) => url.href !== before, { timeout: 2500 }).catch(() => null), page.waitForTimeout(1200)])
-
-      const after = page.url()
-      if (after === before) {
-        failures.push(`${route} -> ${link.rawHref} [${link.text || 'sin texto'}]`)
-      }
-    }
-  }
+test('authenticated admin links do not perform no-op clicks', async ({ browser }) => {
+  const failures = await collectNoOpFailures(browser, adminSeedRoutes, 'admin', resolveAuthState('admin'))
 
   expect(
     failures,

@@ -218,3 +218,60 @@ onMounted(async () => {
   await ensureAuthState()
 })
 </script>
+
+<style scoped>
+.store-cart-widget {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 5.75rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem; /* $spacer-sm */
+}
+
+.cart-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem; /* $spacer-sm */
+  padding: 0.9rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #3e3c38, #4a4742); /* linear-gradient(135deg, $color-dark, lighten($color-dark, 8%)) */
+  color: #ffffff; /* $color-white */
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18); /* rgba($color-black, 0.18) */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  font-size: 1rem; /* AUMENTADO para mejor legibilidad */
+}
+
+.cart-trigger:hover {
+  transform: translateY(-2px);
+}
+
+.cart-trigger__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background: rgba(236, 107, 0, 0.22); /* rgba($primary, 0.22) */
+  color: #f07519; /* lighten($primary, 10%) */
+  font-size: 1.1rem; /* AUMENTADO */
+}
+
+.cart-trigger__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+  font-size: 1rem; /* AUMENTADO */
+}
+
+.cart-trigger__copy small {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.9rem; /* AUMENTADO de default */
+}
+</style>
