@@ -2,6 +2,7 @@
     <div class="progress-bar-wrapper" :class="props.class">
         <div class="progress-container" :style="containerStyles">
             <div class="progress-bar"
+                 :class="barClasses"
                  role="progressbar"
                  :style="barStyles"
                  :aria-valuenow="parsedPercentage"
@@ -26,6 +27,8 @@ const props = defineProps({
 const parsedPercentage = computed(() => {
     return utils.clamp(props.percentage, 0, 100)
 })
+
+const barClasses = computed(() => [`progress-${parsedPercentage.value}`])
 
 const containerStyles = computed(() => ({
     height: '4px',

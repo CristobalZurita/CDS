@@ -14,6 +14,10 @@ on:
           - staging
           - production
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -42,11 +46,11 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_API_URL: ${{ secrets.API_URL }}
+          VITE_API_URL: ${{ secrets.API_URL || 'http://localhost:8000/api/v1' }}
           VITE_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
       
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-build
           path: dist/
@@ -95,7 +99,7 @@ jobs:
     name: Deploy to Staging
     runs-on: ubuntu-latest
     needs: [build-frontend, build-backend]
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/develop' && vars.ENABLE_STAGING_DEPLOY == 'true'
     
     environment:
       name: staging
@@ -105,13 +109,13 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Download frontend build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: frontend-build
           path: dist/
       
       - name: Deploy to staging server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.STAGING_HOST }}
           username: ${{ secrets.STAGING_USER }}
@@ -147,7 +151,7 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: [build-frontend, build-backend]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && vars.ENABLE_PROD_DEPLOY == 'true'
     
     environment:
       name: production
@@ -157,13 +161,13 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Download frontend build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: frontend-build
           path: dist/
       
       - name: Blue-Green Deployment
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USER }}
@@ -206,7 +210,7 @@ jobs:
             fi
       
       - name: Database migrations
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USER }}
@@ -242,7 +246,7 @@ jobs:
     name: Smoke Tests
     runs-on: ubuntu-latest
     needs: [deploy-staging]
-    if: always()
+    if: github.ref == 'refs/heads/develop' && vars.ENABLE_STAGING_DEPLOY == 'true'
     
     steps:
       - uses: actions/checkout@v4

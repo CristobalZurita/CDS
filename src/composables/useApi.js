@@ -53,6 +53,10 @@ export function useApi() {
     },
     delete(url, config = {}) {
       return unwrap(deleteRequest(url, config))
+    },
+    // Compatibilidad TS/JS: exponer el handler crudo para tests y capas legacy.
+    handleApiError(error) {
+      return handleApiError(error)
     }
   }
 }

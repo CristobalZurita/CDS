@@ -1,5 +1,6 @@
 <template>
-    <div :style="wrapperStyles"
+    <div :class="wrapperClasses"
+         :style="wrapperStyles"
          :id="props.id">
         <div :class="`foxy-page-inner ${props.readable ? 'readable' : ''}`">
             <component v-for="sectionInfo in sections"
@@ -43,6 +44,10 @@ const wrapperPaddingTop = computed(() => {
 
 const wrapperStyles = computed(() => ({
     paddingTop: wrapperPaddingTop.value
+}))
+
+const wrapperClasses = computed(() => ({
+    'foxy-page-wrapper-no-padding': props.noPadding
 }))
 
 onBeforeMount(() => {
