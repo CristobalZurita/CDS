@@ -5,12 +5,13 @@
 
 @use "./vendors";
 @use "./_reset.scss";
+@use "./_design-system.scss";  // CSS Custom Properties del Manual de Identidad
 @use "./_layout.scss";
 @use "./layout/_sections.scss";
-@use "./_typography.scss" as legacyTypography;
+// @use "./_typography.scss" as legacyTypography;  // LEGACY DUPLICADO - reemplazado por base/_typography
 @use "./base/_typography.scss" as baseTypography;
 @use "./_global.scss";
-@use "./_admin.scss" as legacyAdmin;
+// @use "./_admin.scss" as legacyAdmin;  // LEGACY DUPLICADO - reemplazado por pages/_admin
 @use "./_public.scss";
 @use "./pages/_admin.scss" as pageAdmin;
 @use "./components";

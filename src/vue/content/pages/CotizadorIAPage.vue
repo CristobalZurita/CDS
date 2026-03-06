@@ -131,3 +131,70 @@ const onVerify = (token) => {
   turnstileToken.value = token
 }
 </script>
+
+<style scoped>
+.cotizador-ia-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-200) 100%);
+  padding: var(--spacer-xl) var(--spacer-md);
+}
+
+.step-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacer-xl);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.4s ease-out;
+}
+
+.captcha-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacer-md);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-header {
+  margin-bottom: var(--spacer-xl);
+  padding-bottom: var(--spacer-xl);
+  border-bottom: 2px solid var(--gray-200);
+}
+
+.step-header h1 {
+  margin: 0 0 var(--spacer-sm) 0;
+  color: var(--color-dark);
+  font-size: var(--text-2xl);
+}
+
+.step-header p {
+  margin: 0;
+  color: var(--gray-600);
+  font-size: var(--text-base);
+}
+
+@media (max-width: 768px) {
+  .cotizador-ia-page {
+    padding: var(--spacer-md);
+  }
+
+  .step-container {
+    padding: var(--spacer-lg);
+  }
+
+  .step-header h1 {
+    font-size: var(--text-lg);
+  }
+}
+</style>
