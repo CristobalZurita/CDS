@@ -85,9 +85,6 @@ jobs:
         env:
           DATABASE_URL: sqlite:///./test_ci.db
           ENVIRONMENT: testing
-          SECRET_KEY: test-secret
-          JWT_SECRET: test-secret
-          JWT_REFRESH_SECRET: test-refresh-secret
           ENABLE_INSTRUMENT_AUTO_SYNC: "false"
           INSTRUMENT_SYNC_ON_STARTUP: "false"
         run: |
@@ -147,9 +144,6 @@ jobs:
         env:
           DATABASE_URL: sqlite:///./test_ci.db
           ENVIRONMENT: testing
-          SECRET_KEY: test-secret
-          JWT_SECRET: test-secret
-          JWT_REFRESH_SECRET: test-refresh-secret
           ENABLE_INSTRUMENT_AUTO_SYNC: "false"
           INSTRUMENT_SYNC_ON_STARTUP: "false"
         run: uvicorn app.main:app --host 0.0.0.0 --port 8000 &
