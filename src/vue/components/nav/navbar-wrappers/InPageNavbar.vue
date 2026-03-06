@@ -43,6 +43,15 @@ const linkList = computed(() => {
         }
     }).filter(section => section.label && section.path)
 
+    if (route.path !== '/') {
+        links.unshift({
+            path: '/',
+            label: 'INICIO',
+            faIcon: 'fa-solid fa-house',
+            isActive: false
+        })
+    }
+
     if (route.path !== '/calculadoras') {
         links.push({
             path: '/calculadoras',

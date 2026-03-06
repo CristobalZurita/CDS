@@ -1,24 +1,20 @@
 <template>
-    <div class="foxy-section-footer">
+    <div :style="footerStyles">
         <div class="row">
-            <div class="foxy-section-footer-content col-12 col-lg-8">
-                <Divider v-if="includeDivider"
-                         class="mb-4"/>
+            <div :style="footerContentStyles" class="col-12 col-lg-8">
+                <Divider v-if="includeDivider" :style="{ marginBottom: '1.5rem' }"/>
 
-                <!-- Title -->
-                <h3 v-html="parsedTitle" class="foxy-footer-title"/>
+                <h3 :style="titleStyles" v-html="parsedTitle"/>
 
-                <!-- Description -->
                 <p v-if="description"
                    v-html="parsedDescription"
-                   class="mt-3 mb-2 text-4 foxy-footer-description"
+                   :style="descriptionStyles"
                    :class="descriptionTextClass"/>
 
-                <!-- Button -->
                 <Link v-if="buttonLabel && buttonUrl" :url="buttonUrl">
                     <XLButton :label="buttonLabel"
                               :icon="buttonFaIcon"
-                              :class="`mt-4`"/>
+                              :style="{ marginTop: '1.5rem' }"/>
                 </Link>
             </div>
         </div>
@@ -26,13 +22,15 @@
 </template>
 
 <script setup>
-import Divider from "/src/vue/components/widgets/Divider.vue"
-import {computed} from "vue"
-import {useUtils} from "/src/composables/utils.js"
-import Link from "/src/vue/components/generic/Link.vue"
-import XLButton from "/src/vue/components/widgets/XLButton.vue"
+import Divider from "@/vue/components/widgets/Divider.vue"
+import { computed } from "vue"
+import { useUtils } from "@/composables/utils.js"
+import Link from "@/vue/components/generic/Link.vue"
+import XLButton from "@/vue/components/widgets/XLButton.vue"
+import { useResponsive, COLORS, getResponsiveValue } from "@/composables/useResponsive"
 
 const utils = useUtils()
+const { windowWidth } = useResponsive()
 
 const props = defineProps({
     title: String,
@@ -51,4 +49,41 @@ const parsedTitle = computed(() => {
 const parsedDescription = computed(() => {
     return utils.parseCustomText(props.description)
 })
+
+// Margin-top responsive
+const footerMarginTop = computed(() => {
+    return getResponsiveValue({
+        xxxl: '2rem',
+        xxl: '1.5rem',
+        lg: '1.1rem',
+        md: '1.05rem',
+        sm: '0.75rem'
+    }, windowWidth.value)
+})
+
+const footerStyles = computed(() => ({
+    marginTop: footerMarginTop.value,
+    textAlign: 'center'
+}))
+
+const footerContentStyles = computed(() => ({
+    textAlign: 'center',
+    margin: '0 auto'
+}))
+
+const titleStyles = computed(() => ({
+    fontFamily: "'Cervo Neue', 'Steelfish', serif",
+    fontWeight: '800',
+    letterSpacing: '0.03em',
+    color: COLORS.dark,
+    textTransform: 'uppercase'
+}))
+
+const descriptionStyles = computed(() => ({
+    fontFamily: "'Cervo Neue', system-ui, sans-serif",
+    fontWeight: '400',
+    lineHeight: '1.6',
+    marginTop: '1rem',
+    marginBottom: '0.5rem'
+}))
 </script>

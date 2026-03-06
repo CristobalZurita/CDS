@@ -325,7 +325,7 @@ def list_public_catalog(
     if category_id:
         query = query.filter(Product.category_id == category_id)
 
-    products = query.order_by(Product.name).limit(limit).all()
+    products = query.order_by(Product.name).all()
     family_filter = str(family).strip().upper() if family else None
     origin_filter = str(origin_status).strip().upper() if origin_status else None
 
@@ -367,6 +367,8 @@ def list_public_catalog(
             "min_stock": serialized["min_stock"],
             "stock_alert_level": serialized["stock_alert_level"],
         })
+        if len(result) >= limit:
+            break
 
     return result
 
