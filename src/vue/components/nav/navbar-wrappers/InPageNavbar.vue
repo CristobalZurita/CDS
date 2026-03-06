@@ -1,7 +1,7 @@
 <template>
     <Navbar :brand-logo="logo"
             :brand-label="label"
-            brand-url="#"
+            :brand-url="brandUrl"
             :link-list="linkList"
             :expandable="true"/>
 </template>
@@ -9,14 +9,11 @@
 <script setup>
 import Navbar from "/src/vue/components/nav/navbar/Navbar.vue"
 import {computed, inject, onMounted, onUnmounted, ref, watch} from "vue"
-import {useRoute, useRouter} from "vue-router"
+import {useRoute} from "vue-router"
 import {useLayout} from "/src/composables/layout.js"
-import {useAuthStore} from "@/stores/auth"
 
 const route = useRoute()
-const router = useRouter()
 const layout = useLayout()
-const authStore = useAuthStore()
 
 /**
  * @type {{value: SectionInfo[]}}
@@ -32,16 +29,18 @@ const props = defineProps({
     label: String
 })
 
+const brandUrl = computed(() => (route.path === '/' ? '#' : '/'))
+
 const linkList = computed(() => {
     const sections = currentPageSections?.value
-    const links = (!sections || !sections.length) ? [] : sections.map(section => {
-        return {
+    const links = route.path === '/' && Array.isArray(sections) && sections.length
+        ? sections.map(section => ({
             path: section.hash,
             label: section.name,
             faIcon: section.faIcon,
             isActive: currentSection.value?.id === section.id
-        }
-    }).filter(section => section.label && section.path)
+        })).filter(section => section.label && section.path)
+        : []
 
     if (route.path !== '/') {
         links.unshift({
