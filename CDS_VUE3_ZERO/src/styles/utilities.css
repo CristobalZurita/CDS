@@ -1,0 +1,5 @@
+.text-sm { font-size: var(--cds-text-sm); }
+.text-base { font-size: var(--cds-text-base); }
+.text-lg { font-size: var(--cds-text-lg); }
+.mt-4 { margin-top: 1rem; }
+.mb-4 { margin-bottom: 1rem; }

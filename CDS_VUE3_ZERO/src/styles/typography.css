@@ -1,0 +1,36 @@
+:root {
+  --cds-text-xs: 0.75rem;
+  --cds-text-sm: 0.875rem;
+  --cds-text-base: 1rem;
+  --cds-text-lg: 1.125rem;
+  --cds-text-xl: 1.25rem;
+  --cds-text-2xl: 1.5rem;
+  --cds-text-3xl: 1.75rem;
+  --cds-text-4xl: 2rem;
+  --cds-text-5xl: 2.5rem;
+
+  --cds-font-normal: 400;
+  --cds-font-medium: 500;
+  --cds-font-semibold: 600;
+  --cds-font-bold: 700;
+
+  --cds-leading-tight: 1.2;
+  --cds-leading-normal: 1.5;
+  --cds-leading-relaxed: 1.625;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --cds-text-xl: 1.5rem;
+    --cds-text-2xl: 1.75rem;
+    --cds-text-3xl: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --cds-text-xl: 1.75rem;
+    --cds-text-2xl: 2rem;
+    --cds-text-3xl: 2.5rem;
+  }
+}
