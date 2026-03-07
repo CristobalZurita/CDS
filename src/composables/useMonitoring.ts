@@ -63,7 +63,7 @@ export function useMonitoring() {
    * Setup route tracking
    */
   const setupRouteTracking = () => {
-    let previousRoute = router.currentRoute.value.path
+    let _previousRoute = router.currentRoute.value.path
 
     router.afterEach((to, from) => {
       logger.trackPageNavigation(from.path, to.path)
@@ -87,7 +87,7 @@ export function useMonitoring() {
         })
 
         observer.observe({ entryTypes: ['longtask', 'measure'] })
-      } catch (e) {
+      } catch {
         logger.debug('PerformanceObserver not supported')
       }
     }

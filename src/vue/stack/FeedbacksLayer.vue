@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import {inject, ref, onMounted, onUnmounted} from "vue"
+import {inject, ref, onUnmounted} from "vue"
 import ActivitySpinner from "/src/vue/components/loaders/ActivitySpinner.vue"
 import Loader from "/src/vue/components/loaders/Loader.vue"
 

@@ -5,7 +5,7 @@
 
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { RepairsStoreState, Repair, CreateRepairData, UpdateRepairData, RepairFilters } from '@/types/stores';
+import type { Repair, CreateRepairData, UpdateRepairData, RepairFilters } from '@/types/stores';
 import api, { get, post, put, deleteRequest, handleApiError } from '@/services/api';
 import { hydrateRepairPhotos, revokeHydratedRepairPhotos } from '@/services/secureMedia';
 

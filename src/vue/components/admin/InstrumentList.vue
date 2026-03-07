@@ -28,7 +28,7 @@
 <script setup>
 import { useInstruments } from '@/composables/useInstruments'
 const { instruments, fetchInstruments, deleteInstrument } = useInstruments()
-function editInstrument(inst) {
+function editInstrument(_inst) {
   // Implementar navegación o modal de edición
 }
 </script>

@@ -24,11 +24,9 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from "vue"
-import { useRouter } from "vue-router"
-import { useResponsive, COLORS } from "@/composables/useResponsive"
+import { useResponsive } from "@/composables/useResponsive"
 import Link from "/src/vue/components/generic/Link.vue"
 
-const router = useRouter()
 const { windowWidth } = useResponsive()
 
 const props = defineProps({

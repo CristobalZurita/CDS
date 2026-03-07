@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
+const _props = defineProps({
     visible: Boolean,
     message: String
 })

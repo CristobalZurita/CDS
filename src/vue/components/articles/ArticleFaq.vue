@@ -12,5 +12,5 @@
 </template>
 
 <script setup>
-const props = defineProps({})
+const _props = defineProps({})
 </script>

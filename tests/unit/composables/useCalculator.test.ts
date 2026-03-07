@@ -7,7 +7,7 @@ import { createValidationResult, invalidate } from '@/validation'
 describe('useCalculator', () => {
   it('returns an OK result when validation passes', () => {
     const { result, calculate } = useCalculator(
-      (input: { value: number }) => {
+      (_input: { value: number }) => {
         const validation = createValidationResult()
         validation.warnings.push({ code: 'warning', message: 'warning' })
         return validation

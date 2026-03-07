@@ -136,7 +136,7 @@ export class AlertService {
     /**
      * Check error rate
      */
-    checkErrorRate(rule, stats) {
+    checkErrorRate(rule, _stats) {
         const lastErrors = this.getMetricsInWindow(rule.windowMs, 'errors') || []
         return lastErrors.length >= rule.threshold
     }
@@ -144,7 +144,7 @@ export class AlertService {
     /**
      * Check API failure rate
      */
-    checkApiFailureRate(rule, stats) {
+    checkApiFailureRate(rule, _stats) {
         const recentCalls = this.getMetricsInWindow(rule.windowMs, 'api_calls') || []
         if (recentCalls.length === 0) return false
         

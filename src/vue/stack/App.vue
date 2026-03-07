@@ -15,7 +15,7 @@ import ToastNotification from "@/vue/components/system/ToastNotification.vue"
 import StoreCartWidget from "@/vue/components/widgets/StoreCartWidget.vue"
 import { setToastComponent } from "@/services/toastService"
 
-const auth = useAuthStore()
+const _auth = useAuthStore()
 const toastComponent = ref(null)
 
 onMounted(() => {

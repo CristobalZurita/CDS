@@ -5,7 +5,7 @@
 
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { UsersStoreState, User, CreateUserData, UpdateUserData } from '@/types/stores';
+import type { User, CreateUserData, UpdateUserData } from '@/types/stores';
 import { get, post, put, deleteRequest, handleApiError } from '@/services/api';
 
 export const useUsersStore = defineStore('users', () => {

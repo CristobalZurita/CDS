@@ -28,7 +28,7 @@ describe('App stack root', () => {
   })
 
   it('wires toast registration and analytics tracking on mount', async () => {
-    const wrapper = mount(App, {
+    const _wrapper = mount(App, {
       global: {
         stubs: {
           RouterView: {

@@ -65,7 +65,7 @@ const onSearchInput = () => {
       const res = await api.get(`/search/?query=${encodeURIComponent(q)}`)
       results.value = res.data || res || []
       showResults.value = true
-    } catch (e) {
+    } catch {
       results.value = []
       showResults.value = true
     }

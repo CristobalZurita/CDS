@@ -82,7 +82,7 @@ const submitSignature = async () => {
     const dataUrl = canvas.toDataURL('image/png')
     await api.post('/signatures/submit', { token, image_base64: dataUrl })
     status.value = 'Firma enviada correctamente.'
-  } catch (e) {
+  } catch {
     status.value = 'No se pudo enviar la firma.'
   } finally {
     saving.value = false

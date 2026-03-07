@@ -62,12 +62,12 @@
 <script setup>
 import Alert from "/src/vue/components/widgets/Alert.vue"
 import XLButton from "/src/vue/components/widgets/XLButton.vue"
-import {inject, ref} from "vue"
+import {ref} from "vue"
 import {useStrings} from "/src/composables/strings.js"
 
 const strings = useStrings()
 
-const props = defineProps({
+const _props = defineProps({
     errorMessage: String,
 })
 
@@ -85,7 +85,7 @@ const _onFocusIn = (id) => {
     focusId.value = id
 }
 
-const _onFocusOut = (id) => {
+const _onFocusOut = (_id) => {
     focusId.value = null
 }
 

@@ -85,7 +85,7 @@ const onSubmit = async (event) => {
         statusMessage.value = "Gracias por suscribirte. Te avisaremos de nuevas novedades."
         track(AnalyticsEvents.NEWSLETTER_SUBMIT_SUCCESS, { source: 'newsletter_section' }, { page: utils.getAbsoluteLocation() })
         email.value = ""
-    } catch (error) {
+    } catch {
         status.value = "error"
         statusMessage.value = "No pudimos registrar tu suscripción. Intenta nuevamente."
         track(AnalyticsEvents.NEWSLETTER_SUBMIT_ERROR, { source: 'newsletter_section' }, { page: utils.getAbsoluteLocation() })

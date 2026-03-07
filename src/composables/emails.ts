@@ -51,7 +51,7 @@ export const useEmails = () => {
         params
       );
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   };

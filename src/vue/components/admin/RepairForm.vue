@@ -40,7 +40,7 @@
 import { ref, onMounted } from 'vue'
 import { api } from '@/services/api'
 import { useRepairs } from '@/composables/useRepairs'
-const { createRepair, updateRepair } = useRepairs()
+const { createRepair, updateRepair: _updateRepair } = useRepairs()
 const emit = defineEmits(['saved'])
 const clients = ref([])
 const form = ref({
@@ -55,7 +55,7 @@ const loadClients = async () => {
   try {
     const res = await api.get('/clients/')
     clients.value = res.data || []
-  } catch (e) {
+  } catch {
     clients.value = []
   }
 }

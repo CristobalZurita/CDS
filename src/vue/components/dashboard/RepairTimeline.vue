@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
+const _props = defineProps({
   events: { type: Array, default: () => [] }
 })
 

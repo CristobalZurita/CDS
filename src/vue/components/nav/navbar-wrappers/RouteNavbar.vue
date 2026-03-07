@@ -15,7 +15,7 @@ import { useAuthStore } from '@/stores/auth'
 const route = useRoute()
 const router = useRouter()
 
-const props = defineProps({
+const _props = defineProps({
     logo: String,
     label: String
 })

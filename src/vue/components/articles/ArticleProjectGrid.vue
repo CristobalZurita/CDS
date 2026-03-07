@@ -28,7 +28,7 @@ import {useStrings} from "/src/composables/strings.js"
 import {useLayout} from "/src/composables/layout.js"
 
 const strings = useStrings()
-const layout = useLayout()
+const _layout = useLayout()
 const slots = useSlots()
 
 const selectedCategoryId = ref(null)

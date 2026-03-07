@@ -8,7 +8,7 @@
 
 <script setup>
 import { computed } from "vue"
-import { useResponsive, COLORS, LAYOUT } from "@/composables/useResponsive"
+import { useResponsive, COLORS } from "@/composables/useResponsive"
 
 const props = defineProps({
     collapsed: Boolean

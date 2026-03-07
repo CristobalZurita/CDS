@@ -66,7 +66,7 @@ const submitPhoto = async () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
     status.value = 'Foto enviada correctamente.'
-  } catch (e) {
+  } catch {
     status.value = 'No se pudo enviar la foto.'
   } finally {
     loading.value = false

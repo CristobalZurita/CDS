@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import {computed, inject, onMounted, provide, ref, watch} from "vue"
+import {computed, inject, ref} from "vue"
 import {track} from "@/analytics"
 import {AnalyticsEvents} from "@/analytics/events"
 import {useStrings} from "/src/composables/strings.js"
@@ -77,7 +77,7 @@ const _onFormSubmit = async (e) => {
         return
     }
 
-    _submit().then(r => {})
+    _submit().then(() => {})
 }
 
 const _validate = () => {
@@ -123,7 +123,7 @@ const _submitToApi = async () => {
             turnstile_token: turnstileToken.value
         })
         return true
-    } catch (error) {
+    } catch {
         return false
     }
 }

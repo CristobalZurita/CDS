@@ -123,7 +123,7 @@ const loadCategories = async () => {
   try {
     const res = await api.get('/categories')
     categories.value = res.data || res || []
-  } catch (e) {
+  } catch {
     categories.value = []
   }
 }

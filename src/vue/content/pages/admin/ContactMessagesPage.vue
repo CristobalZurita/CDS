@@ -67,7 +67,7 @@ const formatDate = (value) => {
   if (!value) return ''
   try {
     return new Date(value).toLocaleString()
-  } catch (err) {
+  } catch {
     return value
   }
 }

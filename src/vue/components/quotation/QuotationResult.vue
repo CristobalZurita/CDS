@@ -99,7 +99,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
+const _props = defineProps({
   quotation: {
     type: Object,
     default: null

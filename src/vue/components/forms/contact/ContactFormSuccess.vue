@@ -20,7 +20,6 @@
 <script setup>
 import {useStrings} from "/src/composables/strings.js"
 import {useUtils} from "/src/composables/utils.js"
-import Divider from "/src/vue/components/widgets/Divider.vue"
 
 const strings = useStrings()
 const utils = useUtils()

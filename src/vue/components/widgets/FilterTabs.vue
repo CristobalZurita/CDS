@@ -20,7 +20,7 @@
 
 <script setup>
 import { ref, computed } from "vue"
-import { useResponsive, COLORS } from "@/composables/useResponsive"
+import { useResponsive } from "@/composables/useResponsive"
 
 const props = defineProps({
     items: Array

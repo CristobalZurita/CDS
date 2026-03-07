@@ -5,7 +5,7 @@
 
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { CategoriesStoreState, CreateCategoryData, UpdateCategoryData, Category } from '@/types/stores';
+import type { CreateCategoryData, UpdateCategoryData, Category } from '@/types/stores';
 import { get, post, put, deleteRequest, handleApiError } from '@/services/api';
 
 export const useCategoriesStore = defineStore('categories', () => {

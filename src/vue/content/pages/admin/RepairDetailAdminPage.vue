@@ -307,7 +307,7 @@ const archiveRepair = async () => {
 	try {
 		const res = await api.post(`/repairs/${repairId}/archive`)
 		repair.value = { ...repair.value, archived_at: res.data?.archived_at || new Date().toISOString() }
-	} catch (e) {
+	} catch {
 		window.alert('No se pudo archivar la OT.')
 	}
 }
@@ -491,7 +491,7 @@ const getPriorityBadge = (p) => {
 }
 
 // Handlers para nuevos componentes
-const onStatusChanged = async ({ newStatusId, repair: updatedRepair }) => {
+const onStatusChanged = async ({ newStatusId: _newStatusId, repair: updatedRepair }) => {
 	if (updatedRepair) {
 		repair.value = updatedRepair
 	} else {

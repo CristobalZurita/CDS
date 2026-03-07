@@ -34,7 +34,7 @@ import ImageView from "/src/vue/components/generic/ImageView.vue"
 import {inject, onMounted, onUnmounted, ref, watch} from "vue"
 import {useLayout} from "/src/composables/layout.js"
 
-const layout = useLayout()
+const _layout = useLayout()
 const projectModalTarget = inject("projectModalTarget")
 
 const props = defineProps({

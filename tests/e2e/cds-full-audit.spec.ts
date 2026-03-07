@@ -7,7 +7,7 @@ const API = 'http://localhost:8000'
 
 // Credentials from PHASE 0 seed scripts only
 const ADMIN = { email: 'admin@example.com', password: 'admin12' }
-const CLIENT = { email: 'test@example.com', password: 'test12' }
+const _CLIENT = { email: 'test@example.com', password: 'test12' }
 
 type RouteCase = {
   key: string
@@ -42,7 +42,7 @@ const PUBLIC_ROUTES = [
   '/:pathMatch(.*)*'
 ]
 
-const AUTH_REQUIRED_ROUTES = [
+const _AUTH_REQUIRED_ROUTES = [
   '/agendar',
   '/dashboard',
   '/repairs',
@@ -64,7 +64,7 @@ const AUTH_REQUIRED_ROUTES = [
   '/admin/manuals'
 ]
 
-const ADMIN_ONLY_ROUTES = [
+const _ADMIN_ONLY_ROUTES = [
   '/admin',
   '/admin/inventory',
   '/admin/inventory/unified',
@@ -81,7 +81,7 @@ const ADMIN_ONLY_ROUTES = [
   '/admin/manuals'
 ]
 
-const NESTED_ROUTES = [
+const _NESTED_ROUTES = [
   {
     parent: '/',
     children: ['', 'license', 'policy', 'terminos', 'privacidad', 'agendar', 'cotizador-ia', 'calculadoras']
@@ -444,4 +444,3 @@ test('assets: no broken images or assets on any page', async ({ page }) => {
   }
   expect(broken, `broken assets: ${broken.join(', ')}`).toHaveLength(0)
 })
-

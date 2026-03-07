@@ -129,7 +129,7 @@ describe('Quotation Store', () => {
 
   describe('Line Items Management', () => {
     it('should add item to quotation', () => {
-      const store = useQuotationStore()
+      const _store = useQuotationStore()
       const quotation = {
         id: 1,
         repairId: 1,
@@ -149,7 +149,7 @@ describe('Quotation Store', () => {
     })
 
     it('should remove item from quotation', () => {
-      const store = useQuotationStore()
+      const _store = useQuotationStore()
       const quotation = {
         id: 1,
         repairId: 1,
@@ -305,7 +305,7 @@ describe('Quotation Store', () => {
 
   describe('Quotation Generation', () => {
     it('should generate unique quotation number', () => {
-      const store = useQuotationStore()
+      const _store = useQuotationStore()
       const quotations = [
         { id: 1, number: 'Q-2024-001', repairId: 1, clientName: 'John', items: [], labor: 50, total: 200, status: 'pending', createdAt: new Date(), validUntil: new Date() },
         { id: 2, number: 'Q-2024-002', repairId: 2, clientName: 'Jane', items: [], labor: 60, total: 250, status: 'pending', createdAt: new Date(), validUntil: new Date() }
@@ -316,7 +316,7 @@ describe('Quotation Store', () => {
     })
 
     it('should timestamp quotation creation', () => {
-      const store = useQuotationStore()
+      const _store = useQuotationStore()
       const now = new Date()
       const quotation = {
         id: 1,

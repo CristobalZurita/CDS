@@ -13,7 +13,7 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth'
 
-const props = defineProps({
+const _props = defineProps({
   title: { type: String, default: 'Admin' },
   subtitle: { type: String, default: '' }
 })

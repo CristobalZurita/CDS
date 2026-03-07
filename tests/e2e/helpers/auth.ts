@@ -2,7 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, type Page } from '@playwright/test'
 
-const currentDir = path.dirname(fileURLToPath(import.meta.url))
+const _currentDir = path.dirname(fileURLToPath(import.meta.url))
 const authDir = process.env.PLAYWRIGHT_AUTH_DIR || path.resolve('/tmp', 'cds_playwright_auth')
 
 export function resolveAuthState(profile: 'admin' | 'client') {

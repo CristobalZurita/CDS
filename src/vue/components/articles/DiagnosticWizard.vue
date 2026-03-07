@@ -243,7 +243,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import ImageView from "@/vue/components/generic/ImageView.vue"
 import { useDiagnostic } from '@/composables/useDiagnostic'
 import { useInstrumentsCatalog } from '@/composables/useInstrumentsCatalog'
@@ -267,7 +267,7 @@ const allModels = computed(() => {
     : []
 })
 
-const currentBrand = computed(() => {
+const _currentBrand = computed(() => {
   return catalog.getBrandById(selectedBrandLocal.value)
 })
 
@@ -283,7 +283,7 @@ const quoteData = computed(() => {
   return diagnostic.calculateQuote()
 })
 
-const formatPrice = (price) => {
+const _formatPrice = (price) => {
   if (!price) return '0'
   return new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -292,13 +292,13 @@ const formatPrice = (price) => {
   }).format(price).replace(/\s/g, '')
 }
 
-const selectBrand = (brandId) => {
+const _selectBrand = (brandId) => {
   diagnostic.selectedBrand.value = brandId
   diagnostic.selectedModel.value = null
   diagnostic.clearFaults()
 }
 
-const selectModel = (instrumentId) => {
+const _selectModel = (instrumentId) => {
   diagnostic.selectedModel.value = instrumentId
   diagnostic.clearFaults()
 }

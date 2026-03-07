@@ -21,7 +21,7 @@
 import { onMounted, onUnmounted, ref, watch, computed } from "vue"
 import { useRoute } from "vue-router"
 import { useUtils } from "/src/composables/utils.js"
-import { useResponsive, COLORS, LAYOUT } from "@/composables/useResponsive"
+import { useResponsive, COLORS } from "@/composables/useResponsive"
 import Link from "/src/vue/components/generic/Link.vue"
 import NavbarBrand from "/src/vue/components/nav/navbar/NavbarBrand.vue"
 import NavbarLinks from "/src/vue/components/nav/navbar/NavbarLinks.vue"

@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref, watch} from "vue"
+import {computed, ref, watch} from "vue"
 import Spinner from "/src/vue/components/widgets/Spinner.vue"
 
 const props = defineProps({
@@ -72,7 +72,7 @@ const _onImageLoadError = () => {
             loadStatus.value = LoadStatus.LOADING
             return
         }
-    } catch (e) {
+    } catch {
         // ignore and continue to error state
     }
     loadStatus.value = LoadStatus.ERROR

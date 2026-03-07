@@ -16,7 +16,7 @@ import { onMounted, ref } from 'vue'
 
 const emit = defineEmits(['verify'])
 const containerRef = ref(null)
-let widgetId = null
+let _widgetId = null
 
 const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
 const rawDisableFlag = String(import.meta.env.VITE_TURNSTILE_DISABLE || '').toLowerCase()
@@ -46,7 +46,7 @@ const renderWidget = () => {
     }
     return
   }
-  widgetId = window.turnstile.render(containerRef.value, {
+  _widgetId = window.turnstile.render(containerRef.value, {
     sitekey: siteKey,
     callback: (token) => emit('verify', token),
     'error-callback': () => {

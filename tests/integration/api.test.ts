@@ -33,7 +33,7 @@ describe('API Integration', () => {
     })
 
     it('should call POST /api/repairs', () => {
-      const endpoint = '/api/repairs'
+      const _endpoint = '/api/repairs'
       const method = 'POST'
       expect(method).toBe('POST')
     })

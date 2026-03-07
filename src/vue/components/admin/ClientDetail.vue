@@ -190,7 +190,7 @@ const loadDevices = async () => {
   try {
     const res = await api.get(`/clients/${props.client.id}/devices`)
     devices.value = res.data || res || []
-  } catch (e) {
+  } catch {
     devices.value = []
   }
 }
@@ -203,7 +203,7 @@ const loadClientRepairs = async () => {
   try {
     const res = await api.get(`/clients/${props.client.id}/repairs`)
     clientRepairs.value = res.data || res || []
-  } catch (e) {
+  } catch {
     clientRepairs.value = []
   }
 }

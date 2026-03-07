@@ -27,7 +27,7 @@ const loadRepairs = async () => {
   try {
     const res = await api.get('/repairs/')
     repairs.value = res.data || res || []
-  } catch (e) {
+  } catch {
     repairs.value = []
   }
 }

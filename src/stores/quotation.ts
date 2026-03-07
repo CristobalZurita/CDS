@@ -5,7 +5,7 @@
 
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { QuotationsStoreState, Quotation, QuotationItem } from '@/types/stores';
+import type { Quotation, QuotationItem } from '@/types/stores';
 import { get, post, handleApiError } from '@/services/api';
 
 interface Instrument {

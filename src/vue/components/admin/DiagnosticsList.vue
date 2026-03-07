@@ -28,7 +28,7 @@
 <script setup>
 import { useDiagnostics } from '@/composables/useDiagnostics'
 const { diagnostics, fetchDiagnostics, deleteDiagnostic } = useDiagnostics()
-function editDiagnostic(d) {
+function editDiagnostic(_d) {
   // Implementar edición
 }
 </script>
