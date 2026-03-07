@@ -32,7 +32,7 @@ export function useLoginValidation({ email, password, requires2fa, twoFactorCode
     }
 
     if (!String(password.value || '')) {
-      errors.password = 'La contraseña es requerida'
+      errors.password = 'La contraseña es requerida' // pragma: allowlist secret
     }
 
     if (requires2fa.value) {
@@ -90,9 +90,9 @@ export function useRegisterValidation(form) {
     }
 
     if (!String(form.password || '')) {
-      errors.password = 'La contraseña es requerida'
+      errors.password = 'La contraseña es requerida' // pragma: allowlist secret
     } else if (String(form.password).length < 8) {
-      errors.password = 'La contraseña debe tener al menos 8 caracteres'
+      errors.password = 'La contraseña debe tener al menos 8 caracteres' // pragma: allowlist secret
     }
 
     return !errors.email && !errors.username && !errors.full_name && !errors.password
@@ -144,15 +144,15 @@ export function usePasswordResetValidation({ mode, email, token, newPassword, co
     }
 
     if (!String(newPassword.value || '')) {
-      errors.newPassword = 'La nueva contraseña es requerida'
+      errors.newPassword = 'La nueva contraseña es requerida' // pragma: allowlist secret
     } else if (String(newPassword.value).length < 8) {
-      errors.newPassword = 'La nueva contraseña debe tener al menos 8 caracteres'
+      errors.newPassword = 'La nueva contraseña debe tener al menos 8 caracteres' // pragma: allowlist secret
     }
 
     if (!String(confirmPassword.value || '')) {
-      errors.confirmPassword = 'Debes confirmar la contraseña'
+      errors.confirmPassword = 'Debes confirmar la contraseña' // pragma: allowlist secret
     } else if (String(newPassword.value || '') !== String(confirmPassword.value || '')) {
-      errors.confirmPassword = 'Las contraseñas no coinciden'
+      errors.confirmPassword = 'Las contraseñas no coinciden' // pragma: allowlist secret
     }
 
     return !errors.token && !errors.newPassword && !errors.confirmPassword
