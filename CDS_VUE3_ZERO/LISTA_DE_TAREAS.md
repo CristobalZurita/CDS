@@ -23,13 +23,13 @@
 |------|----------|------------|-----------|---------|
 | **Auth** | 100% ✅ | 6/6 | 0 | Cerrado + auth.js migrado (217 líneas) |
 | **Public** | 100% ✅ | 9/9 | 0 | FASE COMPLETA - MasterLayout sin @legacy |
-| **Client** | 0% ⚪ | 0/5 | 5 | Dashboard, Repairs, RepairDetail, Profile, OtPayments |
-| **Admin** | 0% ⚪ | 0/17 | 17 | Todos los módulos (ver detalle abajo) |
+| **Client** | 100% ✅ | 5/5 | 0 | FASE COMPLETA - Dashboard, Repairs, RepairDetail, Profile, OtPayments |
+| **Admin** | 47% 🔵 | 8/17 | 9 | AdminDashboard, Stats, Categories, Newsletter, Contact, Appointments, Inventory x2 |
 | **Calculadoras** | 0% ⚪ | 0/9 | 9 | AWG, Length, NumberSystem, OhmsLaw, etc. |
 | **Token** | 0% ⚪ | 0/2 | 2 | Signature, PhotoUpload |
 
-**Total páginas:** 15 completadas / 47 totales (31.9%)
-**Referencias @legacy:** 0 en Public/Auth - alias @legacy REMOVIDO de vite.config.js
+**Total páginas:** 28 completadas / 47 totales (59.6%)
+**Referencias @legacy:** 24 (en módulos Calculadoras + Admin pendientes)
 **Infraestructura:** api.js (142 líneas), auth.js store (217 líneas), MasterLayout migrado
 
 ---
@@ -360,53 +360,75 @@ backend/
 
 ---
 
-### FASE 3: Admin (17 páginas pendientes)
+### 🔵 FASE 3: Admin (8/17 páginas completadas - 47%)
 
-**Todas pendientes (17):**
-- ❌ AdminDashboard.vue (142 bytes)
-- ❌ AppointmentsPage.vue (144 bytes)
-- ❌ ArchivePage.vue (139 bytes)
-- ❌ CategoriesPage.vue (142 bytes)
-- ❌ ClientsPage.vue (139 bytes)
-- ❌ ContactMessagesPage.vue (147 bytes)
-- ❌ InventoryPage.vue (141 bytes)
-- ❌ InventoryUnifiedPage.vue (126 bytes)
-- ❌ ManualsPage.vue (139 bytes)
-- ❌ NewsletterSubscriptionsPage.vue (155 bytes)
-- ❌ PurchaseRequestsPage.vue (148 bytes)
-- ❌ QuotesAdminPage.vue (143 bytes)
-- ❌ RepairDetailAdminPage.vue (149 bytes)
-- ❌ RepairsAdminPage.vue (144 bytes)
-- ❌ StatsPage.vue (137 bytes)
-- ❌ TicketsPage.vue (139 bytes)
-- ❌ WizardsPage.vue (139 bytes)
+**Completadas (8):**
+- ✅ AdminDashboard.vue (5.5K) → Vue real + composable useAdminDashboardPage
+- ✅ StatsPage.vue (5.0K) → Vue real + composable useStatsPage
+- ✅ CategoriesPage.vue (5.2K) → Vue real + composable useCategoriesPage
+- ✅ NewsletterSubscriptionsPage.vue (3.4K) → Vue real + composable useNewsletterSubscriptionsPage
+- ✅ ContactMessagesPage.vue (3.3K) → Vue real + composable useContactMessagesPage
+- ✅ AppointmentsPage.vue (6.1K) → Vue real + composable useAppointmentsPage
+- ✅ InventoryPage.vue (8.8K) → Vue real + composable useInventoryPage
+- ✅ InventoryUnifiedPage.vue (4.7K) → Vue real + composable useInventoryUnifiedPage
 
-**Tareas Admin (por submódulo):**
-1. [ ] **Módulo Inventory** (2 páginas)
-   - InventoryPage.vue → useInventory.js
-   - InventoryUnifiedPage.vue → useInventoryUnified.js
-   - Endpoints: GET/POST/PUT/DELETE /api/inventory
-2. [ ] **Módulo Clients** (1 página)
-   - ClientsPage.vue → useClients.js
-   - Endpoints: GET/POST/PUT/DELETE /api/clients
-3. [ ] **Módulo Repairs Admin** (2 páginas)
-   - RepairsAdminPage.vue → useRepairsAdmin.js
-   - RepairDetailAdminPage.vue → useRepairDetailAdmin.js
-   - Endpoints: GET/PUT /api/admin/repairs
-4. [ ] **Módulo Quotes** (1 página)
-   - QuotesAdminPage.vue → useQuotesAdmin.js
-   - Endpoints: GET/PUT /api/admin/quotes
-5. [ ] **Módulo Tickets** (1 página)
-   - TicketsPage.vue → useTickets.js
-   - Endpoints: GET/POST/PUT /api/tickets
-6. [ ] **Módulo Stats** (1 página)
-   - StatsPage.vue → useStats.js
-   - Endpoints: GET /api/admin/stats
-7. [ ] **Módulo Wizards** (1 página)
-   - WizardsPage.vue → useWizards.js
-8. [ ] **Módulo Appointments** (1 página)
-   - AppointmentsPage.vue → useAppointments.js
-   - Endpoints: GET/POST/PUT /api/appointments
+**Pendientes (9):**
+- ❌ ArchivePage.vue
+- ❌ ClientsPage.vue
+- ❌ ManualsPage.vue
+- ❌ PurchaseRequestsPage.vue
+- ❌ QuotesAdminPage.vue
+- ❌ RepairDetailAdminPage.vue
+- ❌ RepairsAdminPage.vue
+- ❌ TicketsPage.vue
+- ❌ WizardsPage.vue
+
+**Endpoints Admin verificados (REALES, no inventados):**
+✅ `/analytics/dashboard` - backend/app/routers/analytics.py:30
+✅ `/analytics/kpis/summary` - backend/app/routers/analytics.py:297
+✅ `/analytics/revenue` - backend/app/routers/analytics.py:155
+✅ `/analytics/inventory` - backend/app/routers/analytics.py:219
+✅ `/analytics/clients` - backend/app/routers/analytics.py:197
+✅ `/analytics/warranties` - backend/app/routers/analytics.py:274
+✅ `/stats` - backend/app/api/v1/endpoints/stats.py:19-20
+✅ `/categories/` - backend/app/routers/category.py:12
+✅ `/newsletter/subscriptions` - backend/app/routers/newsletter.py:42
+✅ `/contact/messages` - backend/app/routers/contact.py:53
+✅ `/appointments/` - backend/app/routers/appointment.py:45
+✅ `/inventory/` - backend/app/routers/inventory.py:199
+✅ `/inventory/alerts/summary` - backend/app/routers/inventory.py:261
+
+**Total cambios fase Admin (parcial):** 1,045 líneas en 8 páginas + 8 composables
+
+**Estado:** FASE EN PROGRESO - 47% completado - Endpoints verificados reales
+
+---
+
+**Tareas Admin pendientes (9):**
+1. [ ] **Módulo Clients** (1 página)
+   - ClientsPage.vue → useClientsAdminPage.js
+   - Endpoints: GET/POST/PUT/DELETE /api/v1/clients
+2. [ ] **Módulo Repairs Admin** (2 páginas)
+   - RepairsAdminPage.vue → useRepairsAdminPage.js
+   - RepairDetailAdminPage.vue → useRepairDetailAdminPage.js
+   - Endpoints: GET/PUT /api/v1/admin/repairs
+3. [ ] **Módulo Quotes** (1 página)
+   - QuotesAdminPage.vue → useQuotesAdminPage.js
+   - Endpoints: GET/PUT /api/v1/admin/quotes
+4. [ ] **Módulo Tickets** (1 página)
+   - TicketsPage.vue → useTicketsPage.js
+   - Endpoints: GET/POST/PUT /api/v1/tickets
+5. [ ] **Módulo Wizards** (1 página)
+   - WizardsPage.vue → useWizardsPage.js
+6. [ ] **Módulo Purchase Requests** (1 página)
+   - PurchaseRequestsPage.vue → usePurchaseRequestsPage.js
+   - Endpoints: GET/POST/PUT /api/v1/purchase-requests
+7. [ ] **Módulo Manuals** (1 página)
+   - ManualsPage.vue → useManualsPage.js
+   - Endpoints: GET/POST/DELETE /api/v1/manuals
+8. [ ] **Módulo Archive** (1 página)
+   - ArchivePage.vue → useArchivePage.js
+   - Endpoints: GET /api/v1/admin/archive
 9. [ ] **Módulo Categories** (1 página)
    - CategoriesPage.vue → useCategories.js
    - Endpoints: GET/POST/PUT/DELETE /api/categories

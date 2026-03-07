@@ -1,8 +1,8 @@
 # AUDITORÍA CLAUDE
-**Fecha:** 2026-03-07
+**Fecha:** 2026-03-07 (ACTUALIZADA)
 **Rama:** CDS_ZERO (commit ba01e2aa + cambios locales)
 **Auditor:** CLAUDE
-**Enfoque:** Verificación de fases Auth + Public + Client completadas
+**Enfoque:** Verificación de fases Auth + Public + Client + Admin (parcial) completadas
 
 ---
 
@@ -16,17 +16,24 @@
 | **Public** | ✅ 100% | 9/9 | ~1,700 | MasterLayout (173L), 9 páginas, 9 composables |
 | **Client** | ✅ 100% | 5/5 | ~1,640 | 5 páginas, 5 composables, utils/repairStatus |
 
-### ⚪ Fases pendientes (27/47 páginas)
+### 🔵 Fase en progreso (8/47 páginas - 17%)
+
+| Fase | Estado | Páginas | Líneas | Detalles |
+|------|--------|---------|--------|----------|
+| **Admin** | 🔵 47% | 8/17 | ~1,045 | AdminDashboard, Stats, Categories, Newsletter, Contact, Appointments, Inventory x2 |
+
+### ⚪ Fases pendientes (19/47 páginas)
 
 | Fase | Estado | Páginas | Prioridad |
 |------|--------|---------|-----------|
-| **Admin** | 0% | 0/17 | **SIGUIENTE** |
+| **Admin (resto)** | 47% | 9/17 | **SIGUIENTE** |
 | **Calculadoras** | 0% | 0/9 | Después de Admin |
 | **Token** | 0% | 0/2 | Después de Calculadoras |
 
-**Total cambios locales:** 3,940+ líneas añadidas (no commiteadas)
-**Referencias @legacy restantes:** 32 (en módulos pendientes)
-**Wrappers LegacyView:** 28 (en Admin/Calculadoras/Token)
+**Total páginas migradas:** 28/47 (59.6%)
+**Total cambios locales:** 5,985+ líneas añadidas (no commiteadas)
+**Referencias @legacy restantes:** 24 (en módulos pendientes)
+**Wrappers LegacyView:** 20 (en Admin/Calculadoras/Token)
 
 ---
 
@@ -68,10 +75,11 @@
    - stores/auth.js (217 líneas) - store Pinia real
    - layouts/MasterLayout.vue (173 líneas) - sin @legacy
 
-2. **Fases completas:**
-   - Auth: 6 páginas + componentes + composables
-   - Public: 9 páginas + MasterLayout + composables
-   - Client: 5 páginas + composables + utils
+2. **Fases completas y en progreso:**
+   - Auth: 6 páginas + componentes + composables ✅
+   - Public: 9 páginas + MasterLayout + composables ✅
+   - Client: 5 páginas + composables + utils ✅
+   - Admin: 8/17 páginas + composables 🔵
 
 3. **Calidad de código:**
    - Composables con computed/ref/reactive
@@ -80,8 +88,25 @@
    - Loading states
 
 4. **Endpoints reales (no inventados):**
-   - `/client/dashboard` verificado en backend
-   - Variables de stats verificadas en backend
+   **Client:**
+   - ✅ `/client/dashboard` - backend/app/routers/client.py (variables pending_repairs, active_repairs, completed_repairs verificadas)
+
+   **Admin (8 páginas verificadas):**
+   - ✅ `/analytics/dashboard` - backend/app/routers/analytics.py:30
+   - ✅ `/analytics/kpis/summary` - backend/app/routers/analytics.py:297
+   - ✅ `/analytics/revenue` - backend/app/routers/analytics.py:155
+   - ✅ `/analytics/inventory` - backend/app/routers/analytics.py:219
+   - ✅ `/analytics/clients` - backend/app/routers/analytics.py:197
+   - ✅ `/analytics/warranties` - backend/app/routers/analytics.py:274
+   - ✅ `/stats` - backend/app/api/v1/endpoints/stats.py:19-20
+   - ✅ `/categories/` - backend/app/routers/category.py:12 (GET/POST/PUT/DELETE)
+   - ✅ `/newsletter/subscriptions` - backend/app/routers/newsletter.py:42
+   - ✅ `/contact/messages` - backend/app/routers/contact.py:53
+   - ✅ `/appointments/` - backend/app/routers/appointment.py:45 (POST/GET/PATCH/DELETE)
+   - ✅ `/inventory/` - backend/app/routers/inventory.py:199 (GET/POST/PUT/DELETE)
+   - ✅ `/inventory/alerts/summary` - backend/app/routers/inventory.py:261
+
+   **NINGÚN ENDPOINT INVENTADO. TODOS VERIFICADOS CONTRA BACKEND REAL.**
 
 ### ⚠️ ADVERTENCIAS
 
@@ -211,13 +236,18 @@ Para cada página:
 
 ---
 
-## 📈 MÉTRICAS ACTUALES
+## 📈 MÉTRICAS ACTUALES (ACTUALIZADO)
 
 **Progreso:**
-- Páginas: 20/47 (42.6%)
-- Fases: 3/6 (50%)
-- Líneas migradas: ~3,940+
-- Referencias @legacy: 32 (en módulos pendientes)
+- Páginas: 28/47 (59.6%) 🔺
+- Fases: 3.5/6 (Auth 100%, Public 100%, Client 100%, Admin 47%) 🔺
+- Líneas migradas: ~5,985+ 🔺
+- Referencias @legacy: 24 (en Calculadoras + Admin pendientes) 🔻
+- Wrappers LegacyView: 20 🔻
+
+**Fase Admin (8/17):**
+- ✅ AdminDashboard, Stats, Categories, Newsletter, Contact, Appointments, Inventory, InventoryUnified
+- ❌ Pendientes: Clients, RepairsAdmin, QuotesAdmin, RepairDetailAdmin, Tickets, PurchaseRequests, Manuals, Wizards, Archive
 
 **Meta:**
 - Páginas: 47/47 (100%)
@@ -226,24 +256,63 @@ Para cada página:
 
 ---
 
+## 🎯 RESULTADO DE AUDITORÍA ADMIN (8/17 PÁGINAS)
+
+**✅ VERIFICADO (2026-03-07):**
+
+**Páginas Admin completadas:** 8/17 (47%)
+1. ✅ AdminDashboard.vue (5.5K)
+2. ✅ StatsPage.vue (5.0K)
+3. ✅ CategoriesPage.vue (5.2K)
+4. ✅ NewsletterSubscriptionsPage.vue (3.4K)
+5. ✅ ContactMessagesPage.vue (3.3K)
+6. ✅ AppointmentsPage.vue (6.1K)
+7. ✅ InventoryPage.vue (8.8K)
+8. ✅ InventoryUnifiedPage.vue (4.7K)
+
+**Composables creados:** 8/8 ✅
+- useAdminDashboardPage.js
+- useStatsPage.js
+- useCategoriesPage.js
+- useNewsletterSubscriptionsPage.js
+- useContactMessagesPage.js
+- useAppointmentsPage.js
+- useInventoryPage.js
+- useInventoryUnifiedPage.js
+
+**Endpoints verificados:** 13/13 ✅ TODOS REALES (no inventados)
+- Ver sección "Endpoints reales" arriba
+
+**Cumplimiento de reglas:** 7/7 ✅
+1. ✅ Aditivo (solo crear/modificar)
+2. ✅ Deconstructivo (wrappers → Vue real)
+3. ✅ Si existe se usa (endpoints backend)
+4. ✅ NO INVENTAR (todos verificados)
+5. ✅ Leer completo (legacy leído)
+6. ✅ Mantener hegemonía (paridad funcional)
+7. ✅ No commit (sin commits no autorizados)
+
+---
+
 ## 🎯 PRÓXIMA AUDITORÍA
 
-**Esperando:** Que CODEX complete submódulos de Admin
+**Esperando:** Que CODEX complete 9 páginas Admin restantes
+
+**Páginas pendientes (9):**
+- Clients, RepairsAdmin, QuotesAdmin, RepairDetailAdmin, Tickets, PurchaseRequests, Manuals, Wizards, Archive
 
 **Verificaré:**
 1. Endpoints reales (no inventados)
 2. Variables reales (no inventadas)
 3. Paridad funcional con legacy
 4. Composables creados correctamente
-5. Evidencia file:line documentada
-6. README.md actualizado
-
-**CODEX: Reporta en README.md cuando completes submódulos de Admin.**
+5. Evidencia file:line en README.md
 
 ---
 
 **FIN DE AUDITORÍA**
 
-**Estado:** Auth + Public + Client VERIFICADAS ✅
-**Siguiente:** Admin (17 páginas) por submódulos
-**Bloqueadores:** Ninguno - OK para avanzar
+**Estado:** Auth + Public + Client + Admin (8/17) VERIFICADAS ✅
+**Progreso total:** 28/47 páginas (59.6%)
+**Siguiente:** Admin (9 páginas restantes)
+**Bloqueadores:** Ninguno - OK para continuar
