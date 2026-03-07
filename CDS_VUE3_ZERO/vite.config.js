@@ -2,16 +2,18 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
-const legacySrc = '/mnt/CZ_BODEGA/010_VSCODE/007_PROYECTOS_WEB/cirujano-front_CLEAN/src' // pragma: allowlist secret
+const localSrc = fileURLToPath(new URL('./src', import.meta.url))
+const legacySrc = fileURLToPath(new URL('../src', import.meta.url))
 
 export default defineConfig({
   plugins: [vue()],
+  publicDir: '../public',
   resolve: {
     alias: [
-      { find: '@new', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
-      { find: '@legacy', replacement: legacySrc },
+      { find: '@new', replacement: localSrc },
       { find: '@', replacement: legacySrc },
-      { find: /^\/src\//, replacement: legacySrc + '/' },
+      { find: '@legacy', replacement: legacySrc },
+      { find: /^\/src\//, replacement: `${legacySrc}/` },
     ],
   },
   server: {
