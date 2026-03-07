@@ -1,0 +1,21 @@
+@import "./tokens.css";
+@import "./typography.css";
+@import "./layout.css";
+@import "./utilities.css";
+
+html, body, #app {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--cds-font-family-base), system-ui, -apple-system, sans-serif;
+  font-size: var(--cds-text-base);
+  line-height: var(--cds-leading-normal);
+  color: var(--cds-text-normal);
+  background: var(--cds-background-color);
+}
+
+input, select, textarea, button {
+  font-size: 1rem;
+}
