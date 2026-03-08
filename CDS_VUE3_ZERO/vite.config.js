@@ -3,7 +3,6 @@ import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
 const localSrc = fileURLToPath(new URL('./src', import.meta.url))
-const legacySrc = fileURLToPath(new URL('../src', import.meta.url))
 
 export default defineConfig({
   plugins: [vue()],
@@ -11,9 +10,7 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: '@new', replacement: localSrc },
-      { find: '@', replacement: legacySrc },
-      { find: '@legacy', replacement: legacySrc },
-      { find: /^\/src\//, replacement: `${legacySrc}/` },
+      { find: '@', replacement: localSrc },
     ],
   },
   server: {

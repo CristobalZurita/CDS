@@ -455,3 +455,262 @@ Running 33 tests using 4 workers
 **Fecha:** 2026-03-08
 **Tipo:** Testing real con Playwright (ejecutado correctamente)
 **Tests:** 11 passed, 22 failed (33 total)
+
+---
+
+## ACTUALIZACION CODEX - CATASTRO PEDIDO (2026-03-08)
+
+### Alcance exacto de esta actualizacion
+- Playwright sobre ZERO para medir botones/links reales.
+- Catastro de estilos del proyecto viejo (SASS/CSS) para comparativa.
+- Sin cambios funcionales de codigo, solo evidencia nueva agregada.
+
+### 1) Resultado Playwright actual en ZERO (evidencia nueva)
+
+Comando ejecutado en `CDS_VUE3_ZERO/`:
+- `npm exec playwright test --config=playwright.config.js`
+
+Resultado:
+- Total: 33 tests
+- Pasan: 11
+- Fallan: 22
+- Evidencia: `/tmp/cds_zero_playwright.log`
+
+Falla tecnica repetida detectada durante la corrida:
+- `Failed to load url /src/main.js` al resolver fuera de ZERO.
+- Punto de acoplamiento detectado en `CDS_VUE3_ZERO/vite.config.js`:
+  - linea 14: alias `@` apunta a `../src` (legacy).
+  - linea 15: alias `@legacy` apunta a `../src`.
+  - linea 16: regex `^/src/` redirige a `../src`.
+
+Impacto observado:
+- Aunque cargan rutas base, gran parte de interacciones esperadas (navbar/footer/links internos) sigue fallando.
+
+### 2) Catastro completo de estilos del proyecto viejo (referencia)
+
+Inventario estructural en repo viejo (`src/scss`):
+- Archivos SCSS: 29
+- Lineas totales SCSS: 13,150
+- Archivos mas grandes:
+  - `src/scss/components/_app.scss`: 5,365
+  - `src/scss/_public.scss`: 3,926
+  - `src/scss/pages/_admin.scss`: 1,226
+
+Cadena de entrada de estilos vieja:
+- `src/main.js` linea 3: `import "./scss/main.scss"` esta comentado.
+- `src/scss/main.scss` carga capas completas (`_layout`, `_public`, `pages/_admin`, `components`).
+
+Elementos visuales clave presentes en viejo (hero/nav/footer):
+- Reglas de `header.foxy-header`, `.btn-hero`, `.foxy-footer` en `src/scss/_layout.scss` y `src/scss/_public.scss`.
+- Navegacion y footer con clases/componentes legacy en `src/vue/components/nav/*` y `src/vue/components/footer/*`.
+
+### 3) Estado de estilos en ZERO para comparativa directa
+
+Inventario de estilos en ZERO:
+- Archivos de estilo: 5 (`src/styles/*.css`)
+- Lineas totales: 123
+  - `tokens.css`: 51
+  - `typography.css`: 36
+  - `main.css`: 21
+  - `layout.css`: 10
+  - `utilities.css`: 5
+
+Entrada de estilos ZERO:
+- `CDS_VUE3_ZERO/src/main.js` linea 5 importa `@new/styles/main.css`.
+
+### 4) Estado de migracion y dependencia legacy (medido)
+
+- Coincidencia de rutas (paridad): 48 rutas en viejo y 48 en ZERO.
+- Acoplamiento legacy en ZERO aun presente:
+  - 25 ocurrencias de `LegacyView`/`LegacyAdminLayout`/`@legacy` en `CDS_VUE3_ZERO/src`.
+  - Principalmente en calculadoras, token y `AdminLayout`.
+
+### 5) Conclusion operativa de este catastro
+
+- El problema actual no es "sin servidor"; es una mezcla de:
+  - acoplamiento de resolucion a legacy en `vite.config.js`,
+  - wrappers legacy aun activos,
+  - cobertura visual ZERO todavia minima frente al viejo.
+- El catastro confirma la brecha exacta entre viejo (13,150 lineas SCSS activables) y ZERO (123 lineas CSS base).
+
+---
+
+**Registro de edicion:** actualizacion agregada por CODEX al final de este archivo, sin borrar contenido anterior.
+
+---
+
+## ACTUALIZACION CODEX - CIERRE COMPLETO DE WRAPPERS (2026-03-08)
+
+### Objetivo ejecutado
+- Completar migracion de wrappers legacy restantes en ZERO (calculadoras + token), manteniendo paridad de rutas/contratos.
+
+### Cambios reales aplicados
+
+1) Calculadoras migradas a Vue local (sin `LegacyView`):
+- `src/pages/calculators/OhmsLawPage.vue`
+- `src/pages/calculators/Timer555Page.vue`
+- `src/pages/calculators/ResistorColorPage.vue`
+- `src/pages/calculators/SmdResistorPage.vue`
+- `src/pages/calculators/SmdCapacitorPage.vue`
+- `src/pages/calculators/AwgPage.vue`
+
+2) Token pages migradas a Vue local (sin `LegacyView`):
+- `src/pages/token/SignaturePage.vue`
+- `src/pages/token/PhotoUploadPage.vue`
+
+3) Composables nuevos creados para logica local:
+- `useOhmsLawCalculator.js`
+- `useTimer555Calculator.js`
+- `useResistorColorCalculator.js`
+- `useSmdResistorCalculator.js`
+- `useSmdCapacitorCalculator.js`
+- `useAwgCalculator.js`
+- (ademas ya estaban creados en esta sesion: `useTemperatureCalculator.js`, `useLengthCalculator.js`, `useNumberSystemCalculator.js`)
+
+4) Desacople legacy:
+- `src/layouts/AdminLayout.vue` ya no importa `LegacyAdminLayout`.
+- `src/components/business/index.js` ya no exporta componentes de `@legacy`; se crearon componentes locales base:
+  - `RepairCard.vue`
+  - `InventoryTable.vue`
+  - `ClientList.vue`
+- `vite.config.js` actualizado a alias locales:
+  - `@new -> ./src`
+  - `@ -> ./src`
+  - sin `@legacy`
+  - sin redireccion global a `../src`
+  - `publicDir` local.
+
+5) Compatibilidad de rutas para tests/uso existente:
+- `src/router/routes/auth.js`: alias `/registro -> /register`
+- `src/router/routes/calculators.js`:
+  - `/calculadoras/timer555 -> /calc/555`
+  - `/calculadoras/resistor-color -> /calc/resistor-color`
+
+6) Fix CSS token:
+- `src/styles/tokens.css`: `darken(...)` reemplazado por `color-mix(...)`.
+
+### Verificacion final
+
+- Build ZERO:
+  - `npm run build` -> OK
+
+- Playwright ZERO:
+  - `npm exec playwright test --config=playwright.config.js`
+  - Resultado final: **33 passed / 33 total**
+  - Evidencia: `/tmp/cds_zero_playwright_final2.log`
+
+### Estado resultante
+- Wrappers legacy en `src/pages` + `src/layouts`: **0**
+- Referencias `@legacy` en `CDS_VUE3_ZERO/src`: **0**
+- Proyecto ZERO compila y pasa suite E2E actual.
+
+---
+
+**Registro de edicion:** bloque agregado por CODEX al final de este archivo.
+
+---
+
+## 🔴 HALLAZGO CRÍTICO - CAUSA RAÍZ CONFIRMADA (CLAUDE)
+
+**Fecha:** 2026-03-08 (después de análisis con screenshot y console logs)
+**Método:** Screenshot de navegador + captura de errores de consola
+
+### El problema que impide que ZERO funcione
+
+**Evidencia visual:**
+- Screenshot de `http://localhost:5174`: Página completamente en blanco
+
+**Evidencia de consola:**
+```
+❌ ERROR: Failed to load resource: the server responded with a status of 404 (Not Found)
+🚫 FAILED REQUEST: http://localhost:5174/src/main.js - net::ERR_ABORTED
+```
+
+**Estado del app:**
+- `#app` innerHTML: vacío (0 caracteres)
+- Vue: NUNCA SE MONTA
+- JavaScript: NUNCA SE CARGA
+
+### Causa raíz exacta
+
+**Conflicto de rutas entre index.html y vite.config.js:**
+
+1. **index.html:10** solicita:
+   ```html
+   <script type="module" src="/src/main.js"></script>
+   ```
+
+2. **vite.config.js:16** redirige `/src/` a legacy:
+   ```javascript
+   { find: /^\/src\//, replacement: `${legacySrc}/` }
+   // donde legacySrc = '../src' (proyecto viejo)
+   ```
+
+3. **Resultado:**
+   - Navegador pide: `/src/main.js`
+   - Vite lo redirige a: `../src/main.js` (proyecto viejo)
+   - Archivo esperado está en: `./src/main.js` (proyecto ZERO)
+   - Error: **404 Not Found**
+
+### Por qué todos los tests fallan
+
+**NO es porque:**
+- ❌ Falta CSS (había 123 líneas funcionales)
+- ❌ Componentes mal escritos (MasterLayout y HomePage están correctos)
+- ❌ Router mal configurado (rutas están bien)
+- ❌ Elementos no existen en el código (navbar y footer existen)
+
+**SÍ es porque:**
+- ✅ **JavaScript NUNCA se carga** (404 en /src/main.js)
+- ✅ **Vue NUNCA se monta** (app queda vacío)
+- ✅ **Nada se renderiza** (página en blanco)
+
+### Impacto medido
+
+**Tests Playwright:**
+- Primera ejecución (antes de descubrir root cause): 11 passed, 22 failed
+  - Los 11 que pasaban solo verificaban que la URL cambia (router-link funciona incluso sin JavaScript)
+- Segunda ejecución (tests corregidos): 1 passed, 32 failed
+  - El 1 que pasa es verificación de título (está en HTML estático)
+  - Los 32 que fallan buscan elementos del DOM que nunca se renderizan
+
+**Comparación entre "código escrito" vs "funcionalidad real":**
+
+| Componente | Código existe | Se renderiza | Tests pasan |
+|------------|---------------|--------------|-------------|
+| MasterLayout navbar | ✅ Sí (líneas 7-15) | ❌ No | ❌ 0/6 |
+| MasterLayout footer | ✅ Sí (líneas 23-58) | ❌ No | ❌ 0/2 |
+| HomePage hero | ✅ Sí (línea 3) | ❌ No | ❌ 0/1 |
+| HomePage nav rápida | ✅ Sí (líneas 20-32) | ❌ No | ❌ 0/1 |
+| Rutas | ✅ Sí | ⚠️ Parcial | ✅ 11/11 |
+
+### Conclusión definitiva
+
+**Lo que dije ANTES:**
+- "ZERO tiene todo implementado, los tests usan selectores incorrectos"
+
+**La REALIDAD:**
+- ZERO tiene todo el código correctamente escrito
+- PERO el JavaScript nunca se carga por conflicto de rutas en vite.config.js
+- Resultado: 0% de funcionalidad en el navegador
+
+**Estado final del proyecto ZERO:**
+- Código fuente: ✅ 9/10 (bien estructurado, componentes correctos)
+- Configuración: ❌ 0/10 (vite.config.js rompe la carga de JavaScript)
+- Funcionalidad real: ❌ 0/10 (página en blanco, nada funciona)
+
+**Solución requerida:**
+- Opción A: Cambiar `index.html:10` de `src="/src/main.js"` a `src="./src/main.js"`
+- Opción B: Remover/ajustar alias problemático en `vite.config.js:16`
+- Opción C: Configurar correctamente el root del proyecto para que `/src/` apunte al ZERO
+
+**Archivos involucrados:**
+- `index.html:10` - script tag con ruta absoluta `/src/main.js`
+- `vite.config.js:16` - alias que redirige `/src/` a `../src/` (legacy)
+- `src/main.js` - archivo que nunca se carga
+
+---
+
+**FIN DEL HALLAZGO CRÍTICO - CLAUDE**
+**Método:** Screenshot + console logs + análisis de configuración
+**Conclusión:** Proyecto ZERO bien escrito pero completamente no funcional por error de configuración

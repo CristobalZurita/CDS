@@ -8,7 +8,7 @@
 
 <script setup>
 import Navbar from "/src/vue/components/nav/navbar/Navbar.vue"
-import {computed, inject, ref} from "vue"
+import {computed, inject, onMounted, onUnmounted, ref, watch} from "vue"
 import {useRoute} from "vue-router"
 import {useLayout} from "/src/composables/layout.js"
 

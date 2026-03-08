@@ -21,7 +21,7 @@
   --cds-background-color: #d3d0c3;
   --cds-nav-background-color: var(--cds-dark);
   --cds-footer-bg-color: var(--cds-dark);
-  --cds-footer-bg-highlight-color: darken(var(--cds-dark), 1%);
+  --cds-footer-bg-highlight-color: color-mix(in srgb, var(--cds-dark) 96%, black);
 
   --cds-navbar-height: 71px;
 
@@ -29,6 +29,13 @@
   --cds-text-normal: #3e3c38;
   --cds-text-normal-contrast: white;
   --cds-text-muted: #5a5652;
+  --cds-border-soft: rgba(62, 60, 56, 0.15);
+  --cds-border-strong: rgba(62, 60, 56, 0.25);
+  --cds-surface-1: rgba(255, 255, 255, 0.92);
+  --cds-surface-2: rgba(255, 255, 255, 0.84);
+  --cds-surface-dark: rgba(35, 34, 31, 0.92);
+  --cds-glow-primary: rgba(236, 107, 0, 0.18);
+  --cds-glow-success: rgba(3, 134, 0, 0.14);
 
   --cds-light-1: #f8f9fa;
   --cds-light-2: #e9ecef;
@@ -48,4 +55,23 @@
   --cds-texts-breakpoint-multipliers: xxxxl 1.15, xxxl 1.1, xxl 1.0, xl 0.95, lg 0.95, md 1.0, sm 1.05;
   --cds-headings-breakpoint-multipliers: xxxxl 1.2, xxxl 1.15, xxl 1.0, xl 0.95, lg 0.95, md 0.95, sm 0.95;
   --cds-headings-base-sizes: h1 3rem, h2 2.5rem, h3 2rem, h4 1.5rem, h5 1.3rem, h6 1.1rem;
+
+  --cds-space-2xs: 0.35rem;
+  --cds-space-xs: 0.55rem;
+  --cds-space-sm: 0.8rem;
+  --cds-space-md: 1rem;
+  --cds-space-lg: 1.5rem;
+  --cds-space-xl: 2rem;
+  --cds-space-2xl: 2.75rem;
+
+  --cds-radius-sm: 0.55rem;
+  --cds-radius-md: 0.85rem;
+  --cds-radius-lg: 1.1rem;
+  --cds-radius-xl: 1.4rem;
+
+  --cds-shadow-sm: 0 10px 20px rgba(35, 34, 31, 0.08);
+  --cds-shadow-md: 0 18px 34px rgba(35, 34, 31, 0.14);
+  --cds-shadow-lg: 0 28px 52px rgba(35, 34, 31, 0.2);
+
+  --cds-content-max: 1280px;
 }

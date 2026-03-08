@@ -1,5 +1,5 @@
 <template>
-  <main class="calculators-page">
+  <section class="calculators-page">
     <section class="calculators-container">
       <header class="calculators-header">
         <h1>{{ title }}</h1>
@@ -27,7 +27,7 @@
         <router-link to="/" class="back-link">Volver al inicio</router-link>
       </div>
     </section>
-  </main>
+  </section>
 </template>
 
 <script setup>
@@ -38,68 +38,97 @@ const { title, subtitle, calculatorItems } = useCalculatorsPage()
 
 <style scoped>
 .calculators-page {
-  padding: 1rem;
+  min-height: 100vh;
+  padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
+  background:
+    radial-gradient(circle at top left, rgba(236, 107, 0, 0.12), transparent 30%),
+    radial-gradient(circle at top right, rgba(3, 134, 0, 0.08), transparent 24%);
 }
 
 .calculators-container {
-  max-width: 1040px;
+  max-width: var(--cds-content-max);
   margin: 0 auto;
+}
+
+.calculators-header {
+  padding: var(--cds-space-xl);
+  border-radius: var(--cds-radius-lg);
+  background: var(--cds-surface-1);
+  border: 1px solid var(--cds-border-soft);
+  box-shadow: var(--cds-shadow-md);
 }
 
 .calculators-header h1 {
   margin: 0;
-  font-size: var(--cds-text-3xl);
-  line-height: var(--cds-leading-tight);
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  line-height: 1.1;
 }
 
 .calculators-header p {
-  margin-top: 0.4rem;
+  margin-top: var(--cds-space-xs);
   color: var(--cds-text-muted);
-  font-size: var(--cds-text-base);
+  font-size: 1.02rem;
 }
 
 .calculators-grid {
-  margin-top: 1rem;
+  margin-top: var(--cds-space-lg);
   display: grid;
-  gap: 0.75rem;
+  gap: var(--cds-space-md);
   grid-template-columns: 1fr;
 }
 
 .calculator-card {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.75rem;
-  padding: 0.95rem;
-  border-radius: 0.8rem;
-  background: var(--cds-white);
-  border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.25rem 1.35rem;
+  border-radius: var(--cds-radius-lg);
+  border: 1px solid rgba(62, 60, 56, 0.14);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(233, 236, 230, 0.66));
+  box-shadow: var(--cds-shadow-sm);
   text-decoration: none;
   color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.calculator-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(236, 107, 0, 0.35);
+  box-shadow: var(--cds-shadow-md);
 }
 
 .calculator-card-icon {
   width: 44px;
   height: 44px;
-  border-radius: 0.6rem;
-  display: grid;
-  place-items: center;
-  background: color-mix(in srgb, var(--cds-primary) 16%, white);
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(236, 107, 0, 0.12);
   color: var(--cds-primary);
+  font-size: 1.1rem;
 }
 
 .calculator-card-content h2 {
   margin: 0;
-  font-size: var(--cds-text-lg);
+  font-size: 1.02rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .calculator-card-content p {
-  margin: 0.25rem 0 0;
-  font-size: var(--cds-text-base);
-  line-height: var(--cds-leading-normal);
+  margin: 0.35rem 0 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--cds-text-muted);
 }
 
 .calculators-actions {
-  margin-top: 1rem;
+  margin-top: var(--cds-space-xl);
+  display: flex;
+  justify-content: center;
 }
 
 .back-link {
@@ -107,17 +136,25 @@ const { title, subtitle, calculatorItems } = useCalculatorsPage()
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0.65rem 1rem;
-  border-radius: 0.6rem;
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white);
-  color: var(--cds-primary);
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--cds-primary) 45%, transparent);
+  color: color-mix(in srgb, var(--cds-primary) 85%, #6b3000);
   text-decoration: none;
-  font-size: var(--cds-text-base);
+  font-size: 0.95rem;
+  font-weight: var(--cds-font-semibold);
+  text-transform: uppercase;
 }
 
 @media (min-width: 768px) {
   .calculators-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .calculators-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 </style>

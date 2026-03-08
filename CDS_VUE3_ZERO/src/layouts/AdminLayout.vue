@@ -1,9 +1,12 @@
 <template>
-  <LegacyAdminLayout>
+  <main class="admin-layout">
     <slot />
-  </LegacyAdminLayout>
+  </main>
 </template>
 
-<script setup>
-import LegacyAdminLayout from '@legacy/vue/components/admin/layout/AdminLayout.vue'
-</script>
+<style scoped>
+.admin-layout {
+  min-height: 100vh;
+  padding: 1rem;
+}
+</style>

@@ -1,11 +1,23 @@
+@import "./fonts.css";
 @import "./tokens.css";
 @import "./typography.css";
 @import "./layout.css";
 @import "./utilities.css";
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html, body, #app {
   margin: 0;
+  padding: 0;
   min-height: 100%;
+}
+
+img, video {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 body {
@@ -13,9 +25,22 @@ body {
   font-size: var(--cds-text-base);
   line-height: var(--cds-leading-normal);
   color: var(--cds-text-normal);
-  background: var(--cds-background-color);
+  background:
+    radial-gradient(circle at top left, var(--cds-glow-primary), transparent 28%),
+    radial-gradient(circle at top right, var(--cds-glow-success), transparent 25%),
+    linear-gradient(180deg, #d7d4c7 0%, #cec9b8 100%);
+  background-attachment: fixed;
 }
 
 input, select, textarea, button {
   font-size: 1rem;
+}
+
+a {
+  color: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--cds-headings-font-family), var(--cds-font-family-base), sans-serif;
+  color: var(--cds-headings-color);
 }

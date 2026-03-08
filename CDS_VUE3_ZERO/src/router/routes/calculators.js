@@ -9,6 +9,8 @@ const LengthPage = () => import('@new/pages/calculators/LengthPage.vue')
 const AwgPage = () => import('@new/pages/calculators/AwgPage.vue')
 
 export const calculatorRoutes = [
+  { path: '/calculadoras/timer555', redirect: '/calc/555' },
+  { path: '/calculadoras/resistor-color', redirect: '/calc/resistor-color' },
   { path: '/calc/555', name: 'calc-555', component: Timer555Page, meta: { requiresAuth: false } },
   { path: '/calc/resistor-color', name: 'calc-resistor-color', component: ResistorColorPage, meta: { requiresAuth: false } },
   { path: '/calc/smd-capacitor', name: 'calc-smd-capacitor', component: SmdCapacitorPage, meta: { requiresAuth: false } },

@@ -1,0 +1,51 @@
+/* Cervo Neue Condensed — pesos usados en ZERO */
+@font-face {
+  font-family: 'Cervo Neue';
+  src: url('/fonts/CERVO/CervoNeueCon-Regular.woff2') format('woff2'),
+       url('/fonts/CERVO/CervoNeueCon-Regular.woff') format('woff'),
+       url('/fonts/CERVO/CervoNeueCon-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cervo Neue';
+  src: url('/fonts/CERVO/CervoNeueCon-Medium.woff2') format('woff2'),
+       url('/fonts/CERVO/CervoNeueCon-Medium.woff') format('woff'),
+       url('/fonts/CERVO/CervoNeueCon-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cervo Neue';
+  src: url('/fonts/CERVO/CervoNeueCon-SemiBold.woff2') format('woff2'),
+       url('/fonts/CERVO/CervoNeueCon-SemiBold.woff') format('woff'),
+       url('/fonts/CERVO/CervoNeueCon-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cervo Neue';
+  src: url('/fonts/CERVO/CervoNeueCon-XtrBold.woff2') format('woff2'),
+       url('/fonts/CERVO/CervoNeueCon-XtrBold.woff') format('woff'),
+       url('/fonts/CERVO/CervoNeueCon-XtrBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Steelfish — fuente display para títulos */
+@font-face {
+  font-family: 'Steelfish';
+  src: url('/fonts/steelfish rg.woff2') format('woff2'),
+       url('/fonts/steelfish rg.woff') format('woff'),
+       url('/fonts/steelfish rg.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

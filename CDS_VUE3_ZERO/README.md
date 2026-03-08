@@ -14,53 +14,46 @@ Proyecto Vue 3 autonomo en `CDS_VUE3_ZERO/`, con migracion deconstructiva y adit
 2. Public: **9/9** paginas en Vue real.
 3. Client: **5/5** paginas en Vue real.
 4. Admin: **17/17** paginas en Vue real.
-   - Migradas en este ciclo (9 pendientes cerradas):
-     - `ClientsPage`, `RepairsAdminPage`, `QuotesAdminPage`, `RepairDetailAdminPage`, `TicketsPage`, `PurchaseRequestsPage`, `ManualsPage`, `WizardsPage`, `ArchivePage`.
-   - Composables nuevos asociados (9):
-     - `useClientsPage`, `useRepairsAdminPage`, `useQuotesAdminPage`, `useRepairDetailAdminPage`, `useTicketsPage`, `usePurchaseRequestsPage`, `useManualsPage`, `useWizardsPage`, `useArchivePage`.
+5. Calculadoras: **9/9** paginas en Vue real.
+6. Token: **2/2** paginas en Vue real.
 
-## 3) Pendiente (orden)
-1. Calculadoras: **9/9** wrappers legacy.
-2. Token: **2/2** wrappers legacy.
-3. Desacople final de referencias legacy compartidas:
-   - `src/layouts/AdminLayout.vue`
-   - `src/components/business/index.js`
+## 3) Cierre de desacople legacy
+1. Wrappers `LegacyView` en `src/pages`: **0**.
+2. Imports `@legacy` en `src`: **0**.
+3. Alias activo de trabajo: `@new` y `@` apuntando a `src` local.
 
-## 4) Checks ejecutados (este ciclo)
-1. `npm install` en `CDS_VUE3_ZERO`: **OK**.
-2. `npm run build` en `CDS_VUE3_ZERO`: **OK** (build completo generado en `dist/`).
-3. Conteo wrappers en paginas:
-   - `rg -n "<LegacyView" CDS_VUE3_ZERO/src/pages | wc -l` -> **11**.
-4. Conteo imports `@legacy` en `src`:
-   - `rg -n "@legacy" CDS_VUE3_ZERO/src | wc -l` -> **15**.
+## 4) Trabajo aplicado en este ciclo (UI Home + Navbar)
+1. Se elimino la segunda barra de navegacion en Home (`Navegacion rapida`).
+2. Se rehizo la Home con estructura visual cercana al sitio viejo, pero con Vue + CSS local (sin SASS masivo).
+3. Se dejaron solo acciones funcionales reales (rutas existentes y enlaces externos reales).
+4. Se ajusto spec E2E de navegacion para reflejar rutas/redirecciones actuales.
+5. Se rehizo `MasterLayout` para navbar mas cercano al viejo: logo real, menu completo y menu movil plegable.
+6. Se agregaron assets reales de logo en `public/images/logo` dentro de `CDS_VUE3_ZERO`.
+7. En landing (`/`) la navegacion de secciones ahora vive en el navbar principal (sin segundo bloque de navegacion en el cuerpo).
 
 ## 5) Evidencia de cambios (archivo:linea)
-1. Paginas admin migradas:
-   - `src/pages/admin/ClientsPage.vue:1`
-   - `src/pages/admin/RepairsAdminPage.vue:1`
-   - `src/pages/admin/QuotesAdminPage.vue:1`
-   - `src/pages/admin/RepairDetailAdminPage.vue:1`
-   - `src/pages/admin/TicketsPage.vue:1`
-   - `src/pages/admin/PurchaseRequestsPage.vue:1`
-   - `src/pages/admin/ManualsPage.vue:1`
-   - `src/pages/admin/WizardsPage.vue:1`
-   - `src/pages/admin/ArchivePage.vue:1`
-2. Composables admin creados:
-   - `src/composables/useClientsPage.js:1`
-   - `src/composables/useRepairsAdminPage.js:1`
-   - `src/composables/useQuotesAdminPage.js:1`
-   - `src/composables/useRepairDetailAdminPage.js:1`
-   - `src/composables/useTicketsPage.js:1`
-   - `src/composables/usePurchaseRequestsPage.js:1`
-   - `src/composables/useManualsPage.js:1`
-   - `src/composables/useWizardsPage.js:1`
-   - `src/composables/useArchivePage.js:1`
+1. Home reconstruida:
+   - `src/pages/public/HomePage.vue:1`
+2. Datos/acciones de Home actualizados:
+   - `src/composables/useHomePage.js:1`
+3. Spec E2E ajustado al comportamiento actual:
+   - `tests/e2e/navigation.spec.js:1`
+4. Navbar reconstruido:
+   - `src/layouts/MasterLayout.vue:1`
+5. Logos incorporados:
+   - `public/images/logo/logo_square_002.webp`
+   - `public/images/logo/NUEVO_cirujano.webp`
+   - `public/images/logo/logo_square_004.webp`
+   - `public/images/logo/Logo Nuevo.webp`
 
-## 6) Riesgos reales abiertos
-1. Aun quedan 11 paginas con `LegacyView` (Calculadoras + Token).
-2. Aun quedan imports `@legacy` en layout/admin y exports de componentes business.
-3. `vite.config.js` sigue manteniendo alias legacy para soportar los modulos no migrados.
+## 6) Checks ejecutados en este ciclo
+1. `npm run build`: **OK**.
+2. Playwright E2E: **NO ejecutable en este entorno** por crash de Chromium (`sandbox_host_linux.cc:41`, `Operation not permitted`).
 
-## 7) Nota de control
-- Este README documenta estado real de codigo aplicado en `CDS_VUE3_ZERO/`.
+## 7) Riesgos reales abiertos
+1. Aunque la Home ya no tiene doble navbar, queda revisar visual fino del resto de paginas publicas para mantener paridad estetica completa.
+2. La auditoria E2E automatica depende de resolver ejecucion de Chromium en este entorno.
+
+## 8) Nota de control
+- README actualizado con estado real aplicado en codigo.
 - No se hicieron commits en este ciclo.
