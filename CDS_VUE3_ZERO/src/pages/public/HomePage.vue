@@ -10,8 +10,8 @@
           src="/images/logo/NUEVO_cirujano.webp"
           alt="Cirujano de Sintetizadores"
           class="hero-logo"
-          width="800"
-          height="220"
+          width="1800"
+          height="1220"
           loading="eager"
         />
 
@@ -506,7 +506,7 @@ async function submitContact() {
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
-  filter: brightness(0.35) saturate(0.6);
+  filter: brightness(0.39) saturate(1)blur(0.35rem);
   z-index: 0;
 }
 
@@ -522,7 +522,7 @@ async function submitContact() {
 }
 
 .hero-logo {
-  width: clamp(220px, 38vw, 580px);
+  width: clamp(1300px, 145vw, 1700px);
   height: auto;
 }
 
@@ -534,11 +534,13 @@ async function submitContact() {
 
 .hero-tagline {
   margin: 0;
-  font-size: clamp(0.85rem, 1vw + 0.6rem, 1.1rem);
+  font-size: clamp(3rem, 4vw + 3rem, 3rem);
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgb(255, 115, 0);
+    -webkit-text-stroke: 2.5px #111; /* delineado */
+  paint-order: stroke fill;
 }
 
 .hero-actions {

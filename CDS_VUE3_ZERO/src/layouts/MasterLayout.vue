@@ -54,6 +54,12 @@
 
         </nav>
 
+        <!-- Cotizar — siempre visible, derecha del header -->
+        <router-link to="/cotizador-ia" class="nav-cotizar" aria-label="Ir al cotizador IA">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span class="nav-cotizar-label">Cotizar</span>
+        </router-link>
+
         <button
           class="nav-toggle"
           type="button"
@@ -74,37 +80,72 @@
 
     <footer class="site-footer">
       <div class="site-footer-grid">
-        <section>
-          <h2>Sobre el taller</h2>
-          <p>
+
+        <section class="footer-brand">
+          <img
+            src="/images/logo/logo_square_004.webp"
+            alt="Cirujano de Sintetizadores"
+            class="footer-logo"
+            width="56"
+            height="56"
+          />
+          <p class="footer-brand-name">Cirujano de Sintetizadores</p>
+          <p class="footer-brand-tagline">
             Taller especializado en reparación, restauración y modificación de
             sintetizadores, teclados y equipos de audio.
           </p>
         </section>
+
+        <section>
+          <h2>Servicios</h2>
+          <div class="site-footer-links">
+            <a href="#services">Reparación y restauración</a>
+            <a href="#services">Mantención preventiva</a>
+            <a href="#services">Modificaciones</a>
+            <router-link to="/cotizador-ia">Cotizador IA</router-link>
+            <router-link to="/calculadoras">Calculadoras</router-link>
+          </div>
+        </section>
+
         <section>
           <h2>Redes</h2>
           <div class="site-footer-links">
-            <a href="https://www.instagram.com/cirujanodesintetizadores/" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="https://www.facebook.com/Cirujanodesintetizadores/" target="_blank" rel="noopener noreferrer">Facebook</a>
-            <a href="https://wa.me/56982957538" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a href="https://www.instagram.com/cirujanodesintetizadores/" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-instagram"></i> Instagram
+            </a>
+            <a href="https://www.facebook.com/Cirujanodesintetizadores/" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-facebook"></i> Facebook
+            </a>
+            <a href="https://wa.me/56982957538" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </a>
           </div>
         </section>
+
         <section>
           <h2>Contacto</h2>
           <div class="site-footer-links">
-            <a href="tel:+56982957538">+56 9 8295 7538</a>
-            <a href="mailto:contacto@cirujanodesintetizadores.com">contacto@cirujanodesintetizadores.com</a>
+            <a href="tel:+56982957538">
+              <i class="fas fa-phone"></i> +56 9 8295 7538
+            </a>
+            <a href="mailto:contacto@cirujanodesintetizadores.com">
+              <i class="fas fa-envelope"></i> contacto@cirujanodesintetizadores.com
+            </a>
+            <span><i class="fas fa-location-dot"></i> Valparaíso, Chile</span>
           </div>
         </section>
+
       </div>
 
       <div class="site-footer-legal">
+        <span>© {{ currentYear }} Cirujano de Sintetizadores</span>
+        <span>·</span>
         <router-link to="/privacidad">Política de privacidad</router-link>
         <span>·</span>
         <router-link to="/terminos">Términos y condiciones</router-link>
         <span>·</span>
         <a href="https://github.com/CristobalZurita/cirujano-front" target="_blank" rel="noopener noreferrer">
-          Repositorio del proyecto
+          Repositorio
         </a>
       </div>
     </footer>
@@ -119,15 +160,6 @@
     >
       <i class="fa-brands fa-whatsapp"></i>
     </a>
-
-    <!-- Botón flotante Cotizar — derecha arriba -->
-    <router-link
-      to="/cotizador-ia"
-      class="floating-cotizar"
-      aria-label="Ir al cotizador IA"
-    >
-      <i class="fas fa-file-invoice-dollar"></i>
-    </router-link>
 
     <!-- Volver arriba — derecha abajo -->
     <button
@@ -159,6 +191,8 @@ const navSections = computed(() => sections.value.filter(s => s.id !== 'hero'))
 const isHome = computed(() => route.path === '/')
 
 const menuOpen = ref(false)
+
+const currentYear = new Date().getFullYear()
 
 // Scroll-to-top
 const scrollY = ref(0)
@@ -239,6 +273,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   flex-wrap: wrap;
   gap: 0.2rem;
   align-items: center;
+  flex: 1;
 }
 
 .site-nav.is-open {
@@ -281,6 +316,39 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   font-size: var(--cds-text-sm);
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.04em;
+}
+
+/* ─── COTIZAR (navbar derecha, siempre visible) ─── */
+.nav-cotizar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.45rem;
+  background: var(--cds-primary);
+  color: var(--cds-white);
+  text-decoration: none;
+  font-size: var(--cds-text-sm);
+  font-weight: var(--cds-font-semibold);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.nav-cotizar:hover {
+  background: color-mix(in srgb, var(--cds-primary) 85%, black);
+  transform: translateY(-1px);
+}
+
+.nav-cotizar-label {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .nav-cotizar-label {
+    display: inline;
+  }
 }
 
 /* ─── HAMBURGER ─── */
@@ -327,66 +395,119 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 .site-footer {
   background: var(--cds-footer-bg-highlight-color);
   color: var(--cds-white);
-  padding: 2rem 1rem 1rem;
+  padding: 2.5rem 1rem 1rem;
 }
 
 .site-footer-grid {
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
-  gap: 1.5rem;
+  gap: 2rem;
   grid-template-columns: 1fr;
 }
 
 .site-footer h2 {
-  margin: 0 0 0.5rem;
-  font-size: var(--cds-text-lg);
-  color: var(--cds-white);
+  margin: 0 0 0.75rem;
+  font-size: var(--cds-text-base);
+  font-weight: var(--cds-font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, var(--cds-white) 60%, transparent);
 }
 
 .site-footer p {
   margin: 0;
   font-size: var(--cds-text-sm);
   line-height: var(--cds-leading-normal);
-  color: color-mix(in srgb, var(--cds-white) 80%, transparent);
+  color: color-mix(in srgb, var(--cds-white) 75%, transparent);
+}
+
+/* Brand column */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.footer-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 0.4rem;
+}
+
+.footer-brand-name {
+  font-size: var(--cds-text-base);
+  font-weight: var(--cds-font-semibold);
+  color: var(--cds-white);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.footer-brand-tagline {
+  font-size: var(--cds-text-sm);
+  color: color-mix(in srgb, var(--cds-white) 65%, transparent);
+  line-height: 1.5;
+  margin: 0;
 }
 
 .site-footer-links {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.5rem;
 }
 
 .site-footer a {
-  color: color-mix(in srgb, var(--cds-white) 80%, transparent);
+  color: color-mix(in srgb, var(--cds-white) 75%, transparent);
   font-size: var(--cds-text-sm);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: color 0.15s;
 }
 
 .site-footer a:hover {
   color: var(--cds-white);
 }
 
+.site-footer-links span {
+  color: color-mix(in srgb, var(--cds-white) 65%, transparent);
+  font-size: var(--cds-text-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 .site-footer-legal {
   max-width: 1280px;
-  margin: 1.5rem auto 0;
+  margin: 2rem auto 0;
   padding-top: 1rem;
-  border-top: 1px solid color-mix(in srgb, var(--cds-white) 15%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--cds-white) 12%, transparent);
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.5rem;
   align-items: center;
   font-size: var(--cds-text-xs);
-  color: color-mix(in srgb, var(--cds-white) 60%, transparent);
+  color: color-mix(in srgb, var(--cds-white) 50%, transparent);
 }
 
 .site-footer-legal a {
-  color: color-mix(in srgb, var(--cds-white) 60%, transparent);
+  color: color-mix(in srgb, var(--cds-white) 50%, transparent);
   font-size: var(--cds-text-xs);
 }
 
-@media (min-width: 900px) {
+.site-footer-legal a:hover {
+  color: var(--cds-white);
+}
+
+@media (min-width: 600px) {
   .site-footer-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-footer-grid {
+    grid-template-columns: 2fr repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -415,31 +536,6 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 .floating-whatsapp:hover {
   transform: scale(1.08);
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.55);
-}
-
-/* Cotizar — derecha, encima del scroll-top */
-.floating-cotizar {
-  position: fixed;
-  right: 1rem;
-  bottom: 4.5rem;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: var(--cds-primary);
-  color: var(--cds-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  text-decoration: none;
-  z-index: 999;
-  box-shadow: 0 4px 14px rgba(236, 107, 0, 0.4);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.floating-cotizar:hover {
-  transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(236, 107, 0, 0.55);
 }
 
 /* Scroll-top — derecha abajo */
@@ -477,19 +573,11 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
     font-size: 1.75rem;
   }
 
-  .floating-cotizar,
   .scroll-top {
     right: 1.5rem;
+    bottom: 1.5rem;
     width: 50px;
     height: 50px;
-  }
-
-  .floating-cotizar {
-    bottom: 5rem;
-  }
-
-  .scroll-top {
-    bottom: 1.5rem;
   }
 }
 </style>
