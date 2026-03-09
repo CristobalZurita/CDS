@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { usePolicyPage } from '@new/composables/usePolicyPage'
+import { usePolicyPage } from '@/composables/usePolicyPage'
 
 const { title, subtitle, sections } = usePolicyPage()
 </script>

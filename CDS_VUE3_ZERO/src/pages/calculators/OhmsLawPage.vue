@@ -48,8 +48,8 @@
 </template>
 
 <script setup>
-import { BaseInput } from '@new/components/ui'
-import { useOhmsLawCalculator } from '@new/composables/useOhmsLawCalculator'
+import { BaseInput } from '@/components/ui'
+import { useOhmsLawCalculator } from '@/composables/useOhmsLawCalculator'
 
 const { form, canCalculate, result } = useOhmsLawCalculator()
 </script>

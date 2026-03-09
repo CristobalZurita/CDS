@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { useNewsletterSubscriptionsPage } from '@new/composables/useNewsletterSubscriptionsPage'
+import { useNewsletterSubscriptionsPage } from '@/composables/useNewsletterSubscriptionsPage'
 
 const {
   isLoading,

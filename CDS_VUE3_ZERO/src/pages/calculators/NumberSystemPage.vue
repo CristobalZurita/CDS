@@ -53,8 +53,8 @@
 </template>
 
 <script setup>
-import { BaseButton, BaseInput } from '@new/components/ui'
-import { numericBaseOptions, useNumberSystemCalculator } from '@new/composables/useNumberSystemCalculator'
+import { BaseButton, BaseInput } from '@/components/ui'
+import { numericBaseOptions, useNumberSystemCalculator } from '@/composables/useNumberSystemCalculator'
 
 const { form, isValid, result } = useNumberSystemCalculator()
 

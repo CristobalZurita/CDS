@@ -166,7 +166,7 @@
 </template>
 
 <script setup>
-import { usePrivacyPage } from '@new/composables/usePrivacyPage'
+import { usePrivacyPage } from '@/composables/usePrivacyPage'
 
 const { backToTerms, backToHome } = usePrivacyPage()
 </script>

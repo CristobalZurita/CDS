@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { useInventoryUnifiedPage } from '@new/composables/useInventoryUnifiedPage'
+import { useInventoryUnifiedPage } from '@/composables/useInventoryUnifiedPage'
 
 const {
   loading,

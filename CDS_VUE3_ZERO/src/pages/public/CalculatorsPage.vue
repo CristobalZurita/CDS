@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { useCalculatorsPage } from '@new/composables/useCalculatorsPage'
+import { useCalculatorsPage } from '@/composables/useCalculatorsPage'
 
 const { title, subtitle, calculatorItems } = useCalculatorsPage()
 </script>

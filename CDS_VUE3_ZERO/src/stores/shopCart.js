@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import api from '@new/services/api'
+import api from '@/services/api'
 
 const CART_STORAGE_KEY = 'cirujano-shop-cart-v1'
 const SHIPPING_STORAGE_KEY = 'cirujano-shop-shipping-v1'

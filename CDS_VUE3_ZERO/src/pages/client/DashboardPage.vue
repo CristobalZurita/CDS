@@ -134,7 +134,7 @@
 </template>
 
 <script setup>
-import { useDashboardPage } from '@new/composables/useDashboardPage'
+import { useDashboardPage } from '@/composables/useDashboardPage'
 
 const {
   isLoading,

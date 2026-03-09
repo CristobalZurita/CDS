@@ -54,8 +54,8 @@
 </template>
 
 <script setup>
-import { BaseButton, BaseInput } from '@new/components/ui'
-import { temperatureScales, useTemperatureCalculator } from '@new/composables/useTemperatureCalculator'
+import { BaseButton, BaseInput } from '@/components/ui'
+import { temperatureScales, useTemperatureCalculator } from '@/composables/useTemperatureCalculator'
 
 const { form, canConvert, result } = useTemperatureCalculator()
 

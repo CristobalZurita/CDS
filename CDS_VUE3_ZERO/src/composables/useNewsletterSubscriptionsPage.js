@@ -1,5 +1,5 @@
 import { computed, onMounted, ref } from 'vue'
-import api, { extractErrorMessage } from '@new/services/api'
+import api, { extractErrorMessage } from '@/services/api'
 
 function normalizeSubscription(entry) {
   return {

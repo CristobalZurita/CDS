@@ -174,8 +174,8 @@
 </template>
 
 <script setup>
-import TurnstileWidget from '@new/components/widgets/TurnstileWidget.vue'
-import { useSchedulePage } from '@new/composables/useSchedulePage'
+import TurnstileWidget from '@/components/widgets/TurnstileWidget.vue'
+import { useSchedulePage } from '@/composables/useSchedulePage'
 
 const {
   step,

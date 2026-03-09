@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { useContactMessagesPage } from '@new/composables/useContactMessagesPage'
+import { useContactMessagesPage } from '@/composables/useContactMessagesPage'
 
 const {
   isLoading,

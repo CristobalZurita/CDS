@@ -9,8 +9,8 @@
             src="/images/logo/logo_square_004.webp"
             alt="Cirujano de Sintetizadores"
             class="brand-logo"
-            width="44"
-            height="44"
+            width="80"
+            height="80"
           />
           <span class="brand-name">Cirujano de Sintetizadores</span>
         </router-link>
@@ -196,9 +196,9 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAuth } from '@new/composables/useAuth'
-import { useHomePage } from '@new/composables/useHomePage'
-import { useShopCartStore } from '@new/stores/shopCart'
+import { useAuth } from '@/composables/useAuth'
+import { useHomePage } from '@/composables/useHomePage'
+import { useShopCartStore } from '@/stores/shopCart'
 
 const { isAuthenticated } = useAuth()
 const { sections } = useHomePage()
@@ -241,6 +241,8 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 <style scoped>
 .master-layout {
+  --cds-header-height: 96px;
+  --cds-anchor-gap: 12px;
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -262,7 +264,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   width: 100%;
   max-width: none;
   padding: 0 1rem;
-  min-height: 96px;
+  min-height: var(--cds-header-height);
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -281,8 +283,8 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 }
 
 .brand-logo {
-  width: 56px;
-  height: 56px;
+  width: 80px;
+  height: 80px;
   border-radius: 0.35rem;
   flex-shrink: 0;
 }

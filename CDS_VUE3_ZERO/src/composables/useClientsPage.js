@@ -1,6 +1,6 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import api, { extractErrorMessage } from '@new/services/api'
+import api, { extractErrorMessage } from '@/services/api'
 
 function normalizeClient(entry) {
   return {

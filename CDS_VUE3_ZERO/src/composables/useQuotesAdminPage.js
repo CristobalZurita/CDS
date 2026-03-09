@@ -1,6 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api, { extractErrorMessage } from '@new/services/api'
+import api, { extractErrorMessage } from '@/services/api'
 
 const STATUS_OPTIONS = [
   { value: 'pending', label: 'Pendiente' },

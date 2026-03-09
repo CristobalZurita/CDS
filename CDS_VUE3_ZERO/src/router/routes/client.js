@@ -1,8 +1,8 @@
-const DashboardPage = () => import('@new/pages/client/DashboardPage.vue')
-const OtPaymentsPage = () => import('@new/pages/client/OtPaymentsPage.vue')
-const RepairsPage = () => import('@new/pages/client/RepairsPage.vue')
-const RepairDetailPage = () => import('@new/pages/client/RepairDetailPage.vue')
-const ProfilePage = () => import('@new/pages/client/ProfilePage.vue')
+const DashboardPage = () => import('@/pages/client/DashboardPage.vue')
+const OtPaymentsPage = () => import('@/pages/client/OtPaymentsPage.vue')
+const RepairsPage = () => import('@/pages/client/RepairsPage.vue')
+const RepairDetailPage = () => import('@/pages/client/RepairDetailPage.vue')
+const ProfilePage = () => import('@/pages/client/ProfilePage.vue')
 
 export const clientRoutes = [
   { path: '/dashboard', name: 'dashboard', component: DashboardPage, meta: { requiresAuth: true } },

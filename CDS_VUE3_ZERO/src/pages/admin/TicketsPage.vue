@@ -112,7 +112,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useTicketsPage } from '@new/composables/useTicketsPage'
+import { useTicketsPage } from '@/composables/useTicketsPage'
 
 const {
   tickets,

@@ -6,10 +6,9 @@ const localSrc = fileURLToPath(new URL('./src', import.meta.url))
 
 export default defineConfig({
   plugins: [vue()],
-  publicDir: '../public',
+  publicDir: 'public',
   resolve: {
     alias: [
-      { find: '@new', replacement: localSrc },
       { find: '@', replacement: localSrc },
     ],
   },

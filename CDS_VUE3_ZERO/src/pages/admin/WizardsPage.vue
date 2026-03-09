@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { useWizardsPage } from '@new/composables/useWizardsPage'
+import { useWizardsPage } from '@/composables/useWizardsPage'
 
 const {
   cards,

@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { useLicensePage } from '@new/composables/useLicensePage'
+import { useLicensePage } from '@/composables/useLicensePage'
 
 const { title, subtitle, sections } = useLicensePage()
 </script>

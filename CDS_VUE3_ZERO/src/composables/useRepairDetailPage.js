@@ -1,6 +1,6 @@
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import api, { extractErrorMessage } from '@new/services/api'
+import api, { extractErrorMessage } from '@/services/api'
 
 function toApiPath(path) {
   const value = String(path || '')

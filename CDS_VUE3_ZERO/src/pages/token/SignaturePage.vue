@@ -23,7 +23,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import api from '@new/services/api'
+import api from '@/services/api'
 
 const route = useRoute()
 const token = route.params.token

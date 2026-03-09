@@ -1,5 +1,5 @@
-const SignaturePage = () => import('@new/pages/token/SignaturePage.vue')
-const PhotoUploadPage = () => import('@new/pages/token/PhotoUploadPage.vue')
+const SignaturePage = () => import('@/pages/token/SignaturePage.vue')
+const PhotoUploadPage = () => import('@/pages/token/PhotoUploadPage.vue')
 
 export const tokenRoutes = [
   { path: '/signature/:token', name: 'signature', component: SignaturePage, meta: { requiresAuth: false } },

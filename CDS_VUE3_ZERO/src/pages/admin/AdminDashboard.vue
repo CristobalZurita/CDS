@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { useAdminDashboardPage } from '@new/composables/useAdminDashboardPage'
+import { useAdminDashboardPage } from '@/composables/useAdminDashboardPage'
 
 const {
   isLoading,

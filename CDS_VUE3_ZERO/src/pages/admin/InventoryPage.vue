@@ -119,7 +119,7 @@
 </template>
 
 <script setup>
-import { useInventoryPage } from '@new/composables/useInventoryPage'
+import { useInventoryPage } from '@/composables/useInventoryPage'
 
 const {
   items,

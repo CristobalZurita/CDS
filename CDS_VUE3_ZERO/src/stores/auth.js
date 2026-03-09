@@ -16,7 +16,7 @@ import {
   setStoredToken,
   setStoredUser,
   verifyTwoFactor as verifyTwoFactorRequest
-} from '@new/services/api'
+} from '@/services/api'
 
 function normalizeRole(user) {
   if (!user || typeof user !== 'object') return ''

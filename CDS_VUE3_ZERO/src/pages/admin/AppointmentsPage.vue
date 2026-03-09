@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { useAppointmentsPage } from '@new/composables/useAppointmentsPage'
+import { useAppointmentsPage } from '@/composables/useAppointmentsPage'
 
 const {
   loading,

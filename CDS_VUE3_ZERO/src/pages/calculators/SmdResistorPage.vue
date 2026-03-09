@@ -36,8 +36,8 @@
 </template>
 
 <script setup>
-import { BaseInput } from '@new/components/ui'
-import { smdResistorTypeOptions, useSmdResistorCalculator } from '@new/composables/useSmdResistorCalculator'
+import { BaseInput } from '@/components/ui'
+import { smdResistorTypeOptions, useSmdResistorCalculator } from '@/composables/useSmdResistorCalculator'
 
 const { form, isValid, formattedResistance } = useSmdResistorCalculator()
 </script>

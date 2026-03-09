@@ -32,8 +32,8 @@
 </template>
 
 <script setup>
-import { BaseInput } from '@new/components/ui'
-import { useAwgCalculator } from '@new/composables/useAwgCalculator'
+import { BaseInput } from '@/components/ui'
+import { useAwgCalculator } from '@/composables/useAwgCalculator'
 
 const { form, canCalculate, result } = useAwgCalculator()
 </script>

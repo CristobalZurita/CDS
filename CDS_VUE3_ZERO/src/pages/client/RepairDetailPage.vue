@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { useRepairDetailPage } from '@new/composables/useRepairDetailPage'
+import { useRepairDetailPage } from '@/composables/useRepairDetailPage'
 
 const {
   detail,

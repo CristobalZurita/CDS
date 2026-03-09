@@ -1,13 +1,13 @@
-const MasterLayout = () => import('@new/layouts/MasterLayout.vue')
-const HomePage = () => import('@new/pages/public/HomePage.vue')
-const LicensePage = () => import('@new/pages/public/LicensePage.vue')
-const PolicyPage = () => import('@new/pages/public/PolicyPage.vue')
-const TermsPage = () => import('@new/pages/public/TermsPage.vue')
-const PrivacyPage = () => import('@new/pages/public/PrivacyPage.vue')
-const SchedulePage = () => import('@new/pages/public/SchedulePage.vue')
-const CotizadorIAPage = () => import('@new/pages/public/CotizadorIAPage.vue')
-const CalculatorsPage = () => import('@new/pages/public/CalculatorsPage.vue')
-const StorePage = () => import('@new/pages/public/StorePage.vue')
+const MasterLayout = () => import('@/layouts/MasterLayout.vue')
+const HomePage = () => import('@/pages/public/HomePage.vue')
+const LicensePage = () => import('@/pages/public/LicensePage.vue')
+const PolicyPage = () => import('@/pages/public/PolicyPage.vue')
+const TermsPage = () => import('@/pages/public/TermsPage.vue')
+const PrivacyPage = () => import('@/pages/public/PrivacyPage.vue')
+const SchedulePage = () => import('@/pages/public/SchedulePage.vue')
+const CotizadorIAPage = () => import('@/pages/public/CotizadorIAPage.vue')
+const CalculatorsPage = () => import('@/pages/public/CalculatorsPage.vue')
+const StorePage = () => import('@/pages/public/StorePage.vue')
 
 export const publicRoutes = [
   {

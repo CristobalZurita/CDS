@@ -62,8 +62,8 @@
 </template>
 
 <script setup>
-import { BaseInput } from '@new/components/ui'
-import { smdCapacitorTypeOptions, useSmdCapacitorCalculator } from '@new/composables/useSmdCapacitorCalculator'
+import { BaseInput } from '@/components/ui'
+import { smdCapacitorTypeOptions, useSmdCapacitorCalculator } from '@/composables/useSmdCapacitorCalculator'
 
 const { form, decoded, isValidCode, convertFrom } = useSmdCapacitorCalculator()
 </script>

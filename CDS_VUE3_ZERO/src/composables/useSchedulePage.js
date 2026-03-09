@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@new/stores/auth'
-import api, { extractErrorMessage } from '@new/services/api'
+import { useAuthStore } from '@/stores/auth'
+import api, { extractErrorMessage } from '@/services/api'
 
 function normalizeAppointmentName(value) {
   const cleaned = String(value || '')

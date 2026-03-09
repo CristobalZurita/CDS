@@ -123,7 +123,7 @@
 </template>
 
 <script setup>
-import { usePurchaseRequestsPage } from '@new/composables/usePurchaseRequestsPage'
+import { usePurchaseRequestsPage } from '@/composables/usePurchaseRequestsPage'
 
 const {
   requests,

@@ -89,8 +89,8 @@
 </template>
 
 <script setup>
-import TurnstileWidget from '@new/components/widgets/TurnstileWidget.vue'
-import { useCotizadorIAPage } from '@new/composables/useCotizadorIAPage'
+import TurnstileWidget from '@/components/widgets/TurnstileWidget.vue'
+import { useCotizadorIAPage } from '@/composables/useCotizadorIAPage'
 
 const {
   step,

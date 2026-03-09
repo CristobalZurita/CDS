@@ -113,7 +113,7 @@
 </template>
 
 <script setup>
-import { useManualsPage } from '@new/composables/useManualsPage'
+import { useManualsPage } from '@/composables/useManualsPage'
 
 const {
   manuals,

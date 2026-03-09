@@ -186,7 +186,7 @@
 </template>
 
 <script setup>
-import { useRepairDetailAdminPage } from '@new/composables/useRepairDetailAdminPage'
+import { useRepairDetailAdminPage } from '@/composables/useRepairDetailAdminPage'
 
 const {
   repair,

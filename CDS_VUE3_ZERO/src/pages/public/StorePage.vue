@@ -221,7 +221,7 @@
 </template>
 
 <script setup>
-import { useStorePage } from '@new/composables/useStorePage'
+import { useStorePage } from '@/composables/useStorePage'
 
 const {
   catalog,

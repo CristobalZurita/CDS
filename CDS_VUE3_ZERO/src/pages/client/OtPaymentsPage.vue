@@ -121,7 +121,7 @@
 </template>
 
 <script setup>
-import { useOtPaymentsPage } from '@new/composables/useOtPaymentsPage'
+import { useOtPaymentsPage } from '@/composables/useOtPaymentsPage'
 
 const {
   requests,

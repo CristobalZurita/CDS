@@ -143,7 +143,7 @@
 </template>
 
 <script setup>
-import { useQuotesAdminPage } from '@new/composables/useQuotesAdminPage'
+import { useQuotesAdminPage } from '@/composables/useQuotesAdminPage'
 
 const {
   loading,

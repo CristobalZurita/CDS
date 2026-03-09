@@ -84,8 +84,8 @@
 </template>
 
 <script setup>
-import { BaseButton, BaseInput } from '@new/components/ui'
-import { timer555ModeOptions, useTimer555Calculator } from '@new/composables/useTimer555Calculator'
+import { BaseButton, BaseInput } from '@/components/ui'
+import { timer555ModeOptions, useTimer555Calculator } from '@/composables/useTimer555Calculator'
 
 const { form, isAstable, canCalculate, result, reset } = useTimer555Calculator()
 </script>

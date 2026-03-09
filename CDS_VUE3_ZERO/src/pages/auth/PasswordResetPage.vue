@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import PasswordResetForm from '@new/components/auth/PasswordResetForm.vue'
+import PasswordResetForm from '@/components/auth/PasswordResetForm.vue'
 </script>
 
 <style scoped>

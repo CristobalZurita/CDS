@@ -1,13 +1,13 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api, { extractErrorMessage } from '@new/services/api'
+import api, { extractErrorMessage } from '@/services/api'
 import {
   getRepairProgressByStatus,
   getRepairStatusBucket,
   getRepairStatusLabel,
   isActiveRepairStatus,
   normalizeRepairStatus
-} from '@new/utils/repairStatus'
+} from '@/utils/repairStatus'
 
 export function useRepairsPage() {
   const router = useRouter()

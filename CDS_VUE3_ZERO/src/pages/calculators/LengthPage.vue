@@ -54,8 +54,8 @@
 </template>
 
 <script setup>
-import { BaseButton, BaseInput } from '@new/components/ui'
-import { lengthUnits, useLengthCalculator } from '@new/composables/useLengthCalculator'
+import { BaseButton, BaseInput } from '@/components/ui'
+import { lengthUnits, useLengthCalculator } from '@/composables/useLengthCalculator'
 
 const { form, canConvert, result } = useLengthCalculator()
 

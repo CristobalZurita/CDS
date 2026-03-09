@@ -1,12 +1,12 @@
-const Timer555Page = () => import('@new/pages/calculators/Timer555Page.vue')
-const ResistorColorPage = () => import('@new/pages/calculators/ResistorColorPage.vue')
-const SmdCapacitorPage = () => import('@new/pages/calculators/SmdCapacitorPage.vue')
-const SmdResistorPage = () => import('@new/pages/calculators/SmdResistorPage.vue')
-const OhmsLawPage = () => import('@new/pages/calculators/OhmsLawPage.vue')
-const TemperaturePage = () => import('@new/pages/calculators/TemperaturePage.vue')
-const NumberSystemPage = () => import('@new/pages/calculators/NumberSystemPage.vue')
-const LengthPage = () => import('@new/pages/calculators/LengthPage.vue')
-const AwgPage = () => import('@new/pages/calculators/AwgPage.vue')
+const Timer555Page = () => import('@/pages/calculators/Timer555Page.vue')
+const ResistorColorPage = () => import('@/pages/calculators/ResistorColorPage.vue')
+const SmdCapacitorPage = () => import('@/pages/calculators/SmdCapacitorPage.vue')
+const SmdResistorPage = () => import('@/pages/calculators/SmdResistorPage.vue')
+const OhmsLawPage = () => import('@/pages/calculators/OhmsLawPage.vue')
+const TemperaturePage = () => import('@/pages/calculators/TemperaturePage.vue')
+const NumberSystemPage = () => import('@/pages/calculators/NumberSystemPage.vue')
+const LengthPage = () => import('@/pages/calculators/LengthPage.vue')
+const AwgPage = () => import('@/pages/calculators/AwgPage.vue')
 
 export const calculatorRoutes = [
   { path: '/calculadoras/timer555', redirect: '/calc/555' },

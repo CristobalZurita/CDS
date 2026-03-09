@@ -96,7 +96,7 @@ import {
   toleranceColorOptions,
   tempcoColorOptions,
   useResistorColorCalculator
-} from '@new/composables/useResistorColorCalculator'
+} from '@/composables/useResistorColorCalculator'
 
 const { form, multiplierIndex, toleranceIndex, tempcoIndex, result, setBands } = useResistorColorCalculator()
 </script>

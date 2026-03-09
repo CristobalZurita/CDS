@@ -23,10 +23,10 @@
 <script setup>
 import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@new/stores/auth'
-import { BaseInput, BaseButton } from '@new/components/ui'
-import { useRegisterValidation } from '@new/composables/useAuthForms'
-import TurnstileWidget from '@new/components/widgets/TurnstileWidget.vue'
+import { useAuthStore } from '@/stores/auth'
+import { BaseInput, BaseButton } from '@/components/ui'
+import { useRegisterValidation } from '@/composables/useAuthForms'
+import TurnstileWidget from '@/components/widgets/TurnstileWidget.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()

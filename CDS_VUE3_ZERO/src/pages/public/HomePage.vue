@@ -52,14 +52,21 @@
           </div>
 
           <div class="about-image-wrap">
-            <img
-              :src="historyEvents[activeHistoryIdx].image"
-              :alt="historyEvents[activeHistoryIdx].title"
-              class="about-image"
-              loading="lazy"
-              width="500"
-              height="350"
-            />
+            <button
+              class="about-image-trigger"
+              type="button"
+              :aria-label="`Ver foto completa: ${historyEvents[activeHistoryIdx].title}`"
+              @click="openHistoryImage"
+            >
+              <img
+                :src="historyEvents[activeHistoryIdx].image"
+                :alt="historyEvents[activeHistoryIdx].title"
+                class="about-image"
+                loading="lazy"
+                width="500"
+                height="350"
+              />
+            </button>
           </div>
         </div>
 
@@ -295,29 +302,53 @@
       </div>
     </section>
 
+    <div
+      v-if="historyLightboxOpen"
+      class="history-lightbox"
+      role="dialog"
+      aria-modal="true"
+      :aria-label="`Foto ampliada: ${historyEvents[activeHistoryIdx].title}`"
+      @click.self="closeHistoryImage"
+    >
+      <button
+        class="history-lightbox-close"
+        type="button"
+        aria-label="Cerrar imagen ampliada"
+        @click="closeHistoryImage"
+      >
+        <i class="fas fa-xmark"></i>
+      </button>
+      <img
+        :src="historyEvents[activeHistoryIdx].image"
+        :alt="historyEvents[activeHistoryIdx].title"
+        class="history-lightbox-image"
+      />
+    </div>
+
   </main>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import api from '@new/services/api'
+import { onMounted, onUnmounted, ref } from 'vue'
+import api from '@/services/api'
 
 /* ─── Historia ─── */
 const historyEvents = [
-  { year: 'Inicios', title: 'Músico de Conservatorio', image: '/images/instrumentos/KORG_MICROKORG_XL.webp',  description: 'Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido.' },
-  { year: '2000s',  title: 'Cineasta',                 image: '/images/instrumentos/YAMAHA_DX7_MK1.webp',    description: 'Experiencia en audiovisual, sonido para cine, post-producción y diseño de audio en contextos creativos.' },
-  { year: '2005',   title: 'Técnico en Electrónica',   image: '/images/instrumentos/KORG_KINGKORG.webp',      description: 'Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos.' },
-  { year: '2008',   title: 'Síntesis y Diseño Sonoro', image: '/images/instrumentos/KORG_M1.webp',            description: 'Estudios con Ernesto Romeo en Argentina. Síntesis sustractiva, FM, granular. Diseño sonoro avanzado.' },
-  { year: '2010',   title: 'Formación Continua',       image: '/images/instrumentos/YAMAHA_MONTAGE_8.webp',   description: 'Clases particulares en Chile con varios especialistas. Integración de conocimientos musicales y técnicos.' },
-  { year: '2014',   title: 'El Origen del Taller',     image: '/images/instrumentos/KORG_ELECTRIBE_EMX.webp', description: 'Nace el espacio dedicado a la reparación especializada de equipos musicales electrónicos.' },
-  { year: '2015',   title: 'Luthería Electrónica',     image: '/images/instrumentos/ROLAND_D50.webp',         description: 'Ampliación del taller: teclados, pianos eléctricos, sintetizadores, drum machines, procesadores de efecto.' },
-  { year: '2018',   title: 'Taller en Providencia',    image: '/images/instrumentos/KORG_TRITON.webp',        description: 'Local comercial en Providencia, Santiago. Consolidación de procesos con diversos modelos y estilos.' },
-  { year: '2020',   title: 'Marimbista Profesional',   image: '/images/instrumentos/YAMAHA_MONTAGE_7.webp',   description: 'Integración del trabajo como marimbista profesional. Música y técnica unidas.' },
-  { year: '2024',   title: 'Valparaíso',               image: '/images/instrumentos/KORG_WAVESTATE.webp',     description: 'Cirujano de Sintetizadores en Valparaíso. Servicio especializado regional y nacional.' },
+  { year: 'Inicios', title: 'Músico de Conservatorio', image: '/images/personales/marimba.webp',  description: 'Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido.' },
+  { year: '2000s',  title: 'Cineasta',                 image: '/images/personales/cine.webp',    description: 'Experiencia en audiovisual, sonido para cine, post-producción y diseño de audio en contextos creativos.' },
+  { year: '2005',   title: 'Técnico en Electrónica',   image: '/images/personales/tecnico.webp',           description: 'Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos.' },
+  { year: '2008',   title: 'Síntesis y Diseño Sonoro', image: '/images/personales/ernesto.webp',            description: 'Estudios con Ernesto Romeo en Argentina. Síntesis sustractiva, FM, granular. Diseño sonoro avanzado.' },
+  { year: '2010',   title: 'Formación Continua',       image: '/images/personales/electronica.webp',        description: 'Clases particulares en Chile con varios especialistas. Integración de conocimientos musicales y técnicos.' },
+  { year: '2014',   title: 'El Origen del Taller',     image: '/images/personales/origen.webp',             description: 'Nace el espacio dedicado a la reparación especializada de equipos musicales electrónicos.' },
+  { year: '2015',   title: 'Luthería Electrónica',     image: '/images/personales/lutheria.webp',           description: 'Ampliación del taller: teclados, pianos eléctricos, sintetizadores, drum machines, procesadores de efecto.' },
+  { year: '2018',   title: 'Taller en Providencia',    image: '/images/personales/providencia..webp',       description: 'Local comercial en Providencia, Santiago. Consolidación de procesos con diversos modelos y estilos.' },
+  { year: '2020',   title: 'Marimbista Profesional',   image: '/images/personales/marimbista.webp',         description: 'Integración del trabajo como marimbista profesional. Música y técnica unidas.' },
+  { year: '2024',   title: 'Valparaíso',               image: '/images/personales/valparaiso.webp',         description: 'Cirujano de Sintetizadores en Valparaíso. Servicio especializado regional y nacional.' },
 ]
 
 const activeHistoryIdx = ref(0)
 const timelineRef = ref(null)
+const historyLightboxOpen = ref(false)
 
 function selectHistory(i) {
   activeHistoryIdx.value = i
@@ -330,6 +361,17 @@ function prevHistory() {
 function nextHistory() {
   selectHistory((activeHistoryIdx.value + 1) % historyEvents.length)
 }
+function openHistoryImage() {
+  historyLightboxOpen.value = true
+}
+function closeHistoryImage() {
+  historyLightboxOpen.value = false
+}
+function onEscapeKey(event) {
+  if (event.key === 'Escape') closeHistoryImage()
+}
+onMounted(() => window.addEventListener('keydown', onEscapeKey))
+onUnmounted(() => window.removeEventListener('keydown', onEscapeKey))
 
 /* ─── Servicios ─── */
 const services = [
@@ -406,13 +448,19 @@ async function submitContact() {
 }
 
 .home-section {
-  scroll-margin-top: 72px;
+  scroll-margin-top: calc(var(--cds-header-height, 96px) + var(--cds-anchor-gap, 12px));
+  min-height: calc(100svh - var(--cds-header-height, 96px));
+  display: flex;
 }
 
 .section-inner {
-  max-width: 1200px;
+  width: min(1200px, 100%);
   margin: 0 auto;
-  padding: 3rem 1.25rem;
+  padding-top: clamp(2.75rem, 3.5vw, 3.5rem);
+  padding-right: 1.25rem;
+  padding-bottom: clamp(2.75rem, 3.5vw, 3.5rem);
+  padding-left: clamp(1.25rem, 6vw, 100px);
+  flex: 1;
 }
 
 .section-title {
@@ -501,7 +549,7 @@ async function submitContact() {
 /* ═══════════════════════════ HERO ════════════════════════════ */
 .home-hero {
   position: relative;
-  min-height: 90svh;
+  min-height: calc(100svh - var(--cds-header-height, 96px));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -515,7 +563,7 @@ async function submitContact() {
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
-  filter: brightness(0.39) saturate(1) blur(0.35rem);
+  filter: brightness(0.50) saturate(3.5) blur(0.65rem);
   z-index: 0;
 }
 
@@ -531,7 +579,7 @@ async function submitContact() {
 }
 
 .hero-logo {
-  width: clamp(1300px, 145vw, 1700px);
+  width: clamp(900px, 50vw, 500px);
   height: auto;
 }
 
@@ -573,7 +621,7 @@ async function submitContact() {
 }
 
 .about-text h3 {
-  margin: 0 0 0.75rem;
+  margin: 0 0 1.75rem;
   font-size: var(--cds-text-xl);
   color: var(--cds-primary);
 }
@@ -586,16 +634,30 @@ async function submitContact() {
 }
 
 .about-image-wrap {
-  border-radius: 0.75rem;
+  border-radius: 2.75rem;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(62, 60, 56, 0.18);
+  width: min(100%, 500px);
+  aspect-ratio: 3 / 2;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.about-image-trigger {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: zoom-in;
 }
 
 .about-image {
   width: 100%;
-  height: clamp(200px, 22vw, 320px);
-  object-fit: cover;
+  height: 100%;
   display: block;
+  object-fit: cover;
+  object-position: center;
 }
 
 .history-block {
@@ -608,12 +670,15 @@ async function submitContact() {
   margin: 0 0 1rem;
   font-size: var(--cds-text-xl);
   color: var(--cds-dark);
+  text-align: center;
 }
 
 .timeline-wrap {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  width: min(100%, 980px);
+  margin: 0 auto;
 }
 
 .timeline-arrow {
@@ -681,6 +746,46 @@ async function submitContact() {
   font-size: var(--cds-text-base);
   line-height: var(--cds-leading-relaxed);
   color: var(--cds-text-normal);
+  text-align: center;
+}
+
+.history-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--cds-dark) 35%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.history-lightbox-image {
+  width: min(96vw, 1280px);
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 0.85rem;
+  background: var(--cds-white);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.35);
+}
+
+.history-lightbox-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cds-dark) 72%, black);
+  color: var(--cds-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
 }
 
 /* ═══════════════════════════ SERVICES ════════════════════════ */

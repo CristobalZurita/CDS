@@ -1,12 +1,12 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api, { extractErrorMessage } from '@new/services/api'
-import { useAuthStore } from '@new/stores/auth'
+import api, { extractErrorMessage } from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
 import {
   getRepairProgressByStatus,
   getRepairStatusLabel,
   normalizeRepairStatus
-} from '@new/utils/repairStatus'
+} from '@/utils/repairStatus'
 
 function normalizeDashboardResponse(payload) {
   if (!payload || typeof payload !== 'object') {

@@ -33,9 +33,9 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useAuthStore } from '@new/stores/auth'
-import { usePasswordResetValidation } from '@new/composables/useAuthForms'
-import { BaseInput, BaseButton } from '@new/components/ui'
+import { useAuthStore } from '@/stores/auth'
+import { usePasswordResetValidation } from '@/composables/useAuthForms'
+import { BaseInput, BaseButton } from '@/components/ui'
 
 const route = useRoute()
 const authStore = useAuthStore()

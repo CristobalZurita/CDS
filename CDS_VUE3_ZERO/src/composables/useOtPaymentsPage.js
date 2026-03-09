@@ -1,5 +1,5 @@
 import { onMounted, ref } from 'vue'
-import api, { extractErrorMessage } from '@new/services/api'
+import api, { extractErrorMessage } from '@/services/api'
 
 function resolveApiHost() {
   const base = String(import.meta.env.VITE_API_URL || '/api/v1')

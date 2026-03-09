@@ -168,7 +168,7 @@
 </template>
 
 <script setup>
-import { useProfilePage } from '@new/composables/useProfilePage'
+import { useProfilePage } from '@/composables/useProfilePage'
 
 const {
   editMode,

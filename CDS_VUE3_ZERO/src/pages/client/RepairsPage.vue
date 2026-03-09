@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { useRepairsPage } from '@new/composables/useRepairsPage'
+import { useRepairsPage } from '@/composables/useRepairsPage'
 
 const {
   selectedStatus,

@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { useCategoriesPage } from '@new/composables/useCategoriesPage'
+import { useCategoriesPage } from '@/composables/useCategoriesPage'
 
 const {
   categories,

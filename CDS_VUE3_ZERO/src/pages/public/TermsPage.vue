@@ -183,7 +183,7 @@
 </template>
 
 <script setup>
-import { useTermsPage } from '@new/composables/useTermsPage'
+import { useTermsPage } from '@/composables/useTermsPage'
 
 const { accepted, canContinue, goToPrivacy } = useTermsPage()
 </script>

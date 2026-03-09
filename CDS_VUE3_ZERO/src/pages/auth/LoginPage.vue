@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import LoginForm from '@new/components/auth/LoginForm.vue'
+import LoginForm from '@/components/auth/LoginForm.vue'
 </script>
 
 <style scoped>

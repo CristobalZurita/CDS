@@ -222,7 +222,7 @@
 </template>
 
 <script setup>
-import { useClientsPage } from '@new/composables/useClientsPage'
+import { useClientsPage } from '@/composables/useClientsPage'
 
 const {
   clients,

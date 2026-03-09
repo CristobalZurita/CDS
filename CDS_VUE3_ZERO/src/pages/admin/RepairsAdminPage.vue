@@ -103,7 +103,7 @@
 </template>
 
 <script setup>
-import { useRepairsAdminPage } from '@new/composables/useRepairsAdminPage'
+import { useRepairsAdminPage } from '@/composables/useRepairsAdminPage'
 
 const {
   repairs,

@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { useStatsPage } from '@new/composables/useStatsPage'
+import { useStatsPage } from '@/composables/useStatsPage'
 
 const {
   isLoading,

@@ -1,9 +1,9 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '@new/services/api'
-import { useAuth } from '@new/composables/useAuth'
-import { useShopCartStore } from '@new/stores/shopCart'
-import { inventoryImagePaths, instrumentImagePaths } from '@new/utils/publicImageCatalog'
+import api from '@/services/api'
+import { useAuth } from '@/composables/useAuth'
+import { useShopCartStore } from '@/stores/shopCart'
+import { inventoryImagePaths, instrumentImagePaths } from '@/utils/publicImageCatalog'
 
 const STORE_CATALOG_CACHE_KEY = 'cds_store_catalog_cache_v1'
 

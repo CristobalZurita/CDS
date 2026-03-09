@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { useArchivePage } from '@new/composables/useArchivePage'
+import { useArchivePage } from '@/composables/useArchivePage'
 
 const {
   items,
