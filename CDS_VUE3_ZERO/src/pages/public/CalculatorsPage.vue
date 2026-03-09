@@ -6,9 +6,60 @@
         <p>{{ subtitle }}</p>
       </header>
 
+      <div class="calculators-toolbar">
+        <div class="calculators-tabs" role="tablist">
+          <button
+            v-for="cat in categories"
+            :key="cat"
+            class="calc-tab"
+            :class="{ 'calc-tab--active': activeCategory === cat }"
+            type="button"
+            role="tab"
+            :aria-selected="activeCategory === cat"
+            @click="activeCategory = cat"
+          >
+            {{ cat }}
+          </button>
+        </div>
+
+        <form class="calculators-search" @submit.prevent="applySearch">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input
+            v-model="search"
+            type="search"
+            class="search-input"
+            placeholder="Buscar por nombre"
+            autocomplete="off"
+          />
+          <button type="submit" class="search-button">Buscar</button>
+        </form>
+      </div>
+
+      <template v-if="showPopular">
+        <h2 class="section-label">Más populares</h2>
+        <div class="calculators-grid">
+          <router-link
+            v-for="item in popularItems"
+            :key="item.path"
+            :to="item.path"
+            class="calculator-card"
+          >
+            <div class="calculator-card-icon">
+              <i :class="item.icon"></i>
+            </div>
+            <div class="calculator-card-content">
+              <h3>{{ item.label }}</h3>
+              <p>{{ item.description }}</p>
+            </div>
+          </router-link>
+        </div>
+
+        <h2 class="section-label">Todas</h2>
+      </template>
+
       <div class="calculators-grid">
         <router-link
-          v-for="item in calculatorItems"
+          v-for="item in filteredItems"
           :key="item.path"
           :to="item.path"
           class="calculator-card"
@@ -17,11 +68,15 @@
             <i :class="item.icon"></i>
           </div>
           <div class="calculator-card-content">
-            <h2>{{ item.label }}</h2>
+            <h3>{{ item.label }}</h3>
             <p>{{ item.description }}</p>
           </div>
         </router-link>
       </div>
+
+      <p v-if="filteredItems.length === 0" class="no-results">
+        No hay calculadoras que coincidan con tu búsqueda.
+      </p>
 
       <div class="calculators-actions">
         <router-link to="/" class="back-link">Volver al inicio</router-link>
@@ -31,18 +86,37 @@
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
 import { useCalculatorsPage } from '@/composables/useCalculatorsPage'
 
-const { title, subtitle, calculatorItems } = useCalculatorsPage()
+const { title, subtitle, categories, calculatorItems, popularItems } = useCalculatorsPage()
+
+const search = ref('')
+const activeCategory = ref('Todas')
+
+const showPopular = computed(() =>
+  activeCategory.value === 'Todas' && search.value.trim() === ''
+)
+
+const filteredItems = computed(() => {
+  const q = search.value.trim().toLowerCase()
+  return calculatorItems.value.filter((item) => {
+    const matchCategory = activeCategory.value === 'Todas' || item.category === activeCategory.value
+    const matchSearch = !q || item.label.toLowerCase().includes(q) || item.description.toLowerCase().includes(q)
+    return matchCategory && matchSearch
+  })
+})
+
+function applySearch() {
+  search.value = search.value.trim()
+}
 </script>
 
 <style scoped>
 .calculators-page {
   min-height: 100vh;
   padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
-  background:
-    radial-gradient(circle at top left, rgba(236, 107, 0, 0.12), transparent 30%),
-    radial-gradient(circle at top right, rgba(3, 134, 0, 0.08), transparent 24%);
+  background-color: var(--cds-background-color);
 }
 
 .calculators-container {
@@ -50,79 +124,161 @@ const { title, subtitle, calculatorItems } = useCalculatorsPage()
   margin: 0 auto;
 }
 
-.calculators-header {
-  padding: var(--cds-space-xl);
-  border-radius: var(--cds-radius-lg);
-  background: var(--cds-surface-1);
-  border: 1px solid var(--cds-border-soft);
-  box-shadow: var(--cds-shadow-md);
-}
-
 .calculators-header h1 {
   margin: 0;
-  font-size: clamp(2rem, 3.2vw, 3rem);
-  letter-spacing: 0.03em;
+  font-size: var(--cds-text-3xl);
+  line-height: var(--cds-leading-tight);
   text-transform: uppercase;
-  line-height: 1.1;
 }
 
 .calculators-header p {
-  margin-top: var(--cds-space-xs);
+  margin: var(--cds-space-xs) 0 0;
   color: var(--cds-text-muted);
-  font-size: 1.02rem;
+  font-size: var(--cds-text-base);
 }
 
-.calculators-grid {
+.calculators-toolbar {
   margin-top: var(--cds-space-lg);
   display: grid;
   gap: var(--cds-space-md);
-  grid-template-columns: 1fr;
+}
+
+.calculators-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid rgba(62, 60, 56, 0.3);
+}
+
+.calc-tab {
+  border: none;
+  background: transparent;
+  color: var(--cds-dark);
+  padding: 0.55rem 0.9rem 0.6rem;
+  font-size: var(--cds-text-sm);
+  font-weight: var(--cds-font-semibold);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+
+.calc-tab--active {
+  color: var(--cds-primary);
+  border-bottom-color: var(--cds-primary);
+}
+
+.calculators-search {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--cds-text-muted);
+  pointer-events: none;
+  font-size: 0.95rem;
+}
+
+.search-input {
+  width: 100%;
+  border: 1px solid rgba(62, 60, 56, 0.25);
+  border-radius: 999px;
+  padding: 0.72rem 1rem 0.72rem 2.45rem;
+  font-size: var(--cds-text-base);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--cds-dark);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  border-color: var(--cds-primary);
+}
+
+.search-button {
+  border: none;
+  border-radius: 999px;
+  background: var(--cds-primary);
+  color: var(--cds-white);
+  font-size: var(--cds-text-sm);
+  font-weight: var(--cds-font-semibold);
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+}
+
+.section-label {
+  margin: var(--cds-space-md) 0 var(--cds-space-sm);
+  font-size: var(--cds-text-base);
+  font-weight: var(--cds-font-semibold);
+  color: var(--cds-dark);
+}
+
+.calculators-grid {
+  display: grid;
+  gap: var(--cds-space-md);
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
 }
 
 .calculator-card {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-  padding: 1.25rem 1.35rem;
-  border-radius: var(--cds-radius-lg);
-  border: 1px solid rgba(62, 60, 56, 0.14);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(233, 236, 230, 0.66));
-  box-shadow: var(--cds-shadow-sm);
+  border: 1px solid rgba(62, 60, 56, 0.25);
+  border-radius: var(--cds-radius-md);
+  background: rgba(255, 255, 255, 0.22);
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  padding: var(--cds-space-md);
+  min-height: 260px;
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  transition: border-color 0.15s ease, transform 0.15s ease;
 }
 
 .calculator-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(236, 107, 0, 0.35);
-  box-shadow: var(--cds-shadow-md);
+  border-color: var(--cds-primary);
+  transform: translateY(-2px);
 }
 
 .calculator-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 74px;
+  height: 60px;
+  border: 1px solid color-mix(in srgb, var(--cds-primary) 75%, white);
+  border-radius: 0.5rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(236, 107, 0, 0.12);
   color: var(--cds-primary);
-  font-size: 1.1rem;
+  font-size: 1.65rem;
+  margin: 0 auto;
 }
 
-.calculator-card-content h2 {
+.calculator-card-content {
+  text-align: center;
+}
+
+.calculator-card-content h3 {
   margin: 0;
-  font-size: 1.02rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  font-size: var(--cds-text-base);
+  line-height: 1.3;
+  color: var(--cds-dark);
 }
 
 .calculator-card-content p {
-  margin: 0.35rem 0 0;
-  font-size: 1rem;
-  line-height: 1.5;
+  margin: 0.55rem 0 0;
+  font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
+  line-height: 1.45;
+}
+
+.no-results {
+  margin-top: var(--cds-space-xl);
+  text-align: center;
+  color: var(--cds-text-muted);
+  font-size: var(--cds-text-base);
 }
 
 .calculators-actions {
@@ -146,15 +302,14 @@ const { title, subtitle, calculatorItems } = useCalculatorsPage()
   text-transform: uppercase;
 }
 
-@media (min-width: 768px) {
-  .calculators-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (min-width: 960px) {
+  .calculators-toolbar {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 430px);
+    align-items: end;
   }
-}
 
-@media (min-width: 1080px) {
-  .calculators-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .calculators-search {
+    margin-left: var(--cds-space-md);
   }
 }
 </style>
