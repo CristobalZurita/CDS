@@ -172,7 +172,7 @@ export const instrumentImagePaths = [
   '/images/instrumentos/KURZWEIL_K1000_KEY.webp',
   '/images/instrumentos/KURZWEIL_K1000_KEY_BACK.webp',
   '/images/instrumentos/KURZWEIL_K2000_KEY_BACK.webp',
-  '/images/instrumentos/KURZWEIL_K2000_KEYjpg',
+  '/images/instrumentos/KURZWEIL_K2000_KEYjpg', // pragma: allowlist secret
   '/images/instrumentos/KURZWEIL_K2500_RACK.webp',
   '/images/instrumentos/KURZWEIL_K2500_RACK_BACK.webp',
   '/images/instrumentos/KURZWEIL_K2600_KEY.webp',
