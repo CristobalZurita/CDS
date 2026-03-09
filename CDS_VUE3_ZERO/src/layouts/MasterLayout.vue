@@ -36,54 +36,57 @@
             @click="menuOpen = false"
           >Inicio</router-link>
 
-          <router-link to="/calculadoras" class="site-nav-link site-nav-caps" @click="menuOpen = false">Calculadoras</router-link>
-          <router-link to="/tienda" class="site-nav-link site-nav-caps" @click="menuOpen = false">Tienda</router-link>
+          <router-link to="/calculadoras" class="site-nav-link" @click="menuOpen = false">Calculadoras</router-link>
+          <router-link to="/tienda" class="site-nav-link" @click="menuOpen = false">Tienda</router-link>
 
           <router-link
             v-if="isAuthenticated"
             to="/dashboard"
-            class="site-nav-link site-nav-caps"
+            class="site-nav-link"
             @click="menuOpen = false"
           >Dashboard</router-link>
           <router-link
             v-else
             to="/login"
-            class="site-nav-link site-nav-caps"
+            class="site-nav-link"
             @click="menuOpen = false"
           >Iniciar Sesión</router-link>
 
         </nav>
 
-        <!-- Cotizar — siempre visible, derecha del header -->
-        <router-link to="/cotizador-ia" class="nav-cotizar" aria-label="Ir al cotizador IA">
-          <i class="fas fa-file-invoice-dollar"></i>
-          <span class="nav-cotizar-label">Cotizar</span>
-        </router-link>
+        <!-- Acciones fijas derecha: Cotizar, Carrito, Hamburger -->
+        <div class="nav-actions">
 
-        <!-- Carrito — abre drawer en /tienda, navega a /tienda desde otras rutas -->
-        <button
-          class="nav-cart-btn"
-          type="button"
-          aria-label="Carrito de compras"
-          @click="onCartClick"
-        >
-          <i class="fas fa-shopping-cart"></i>
-          <span class="nav-cart-label">Carrito</span>
-          <span v-if="shopCart.totals.itemsCount > 0" class="nav-cart-badge">
-            {{ shopCart.totals.itemsCount }}
-          </span>
-        </button>
+          <router-link to="/cotizador-ia" class="nav-cotizar" aria-label="Ir al cotizador IA">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span class="nav-cotizar-label">Cotizar</span>
+          </router-link>
 
-        <button
-          class="nav-toggle"
-          type="button"
-          :aria-expanded="String(menuOpen)"
-          aria-controls="primary-nav"
-          aria-label="Abrir menú"
-          @click="menuOpen = !menuOpen"
-        >
-          <i class="fas fa-bars"></i>
-        </button>
+          <button
+            class="nav-cart-btn"
+            type="button"
+            aria-label="Carrito de compras"
+            @click="onCartClick"
+          >
+            <i class="fas fa-shopping-cart"></i>
+            <span class="nav-cart-label">Carrito</span>
+            <span v-if="shopCart.totals.itemsCount > 0" class="nav-cart-badge">
+              {{ shopCart.totals.itemsCount }}
+            </span>
+          </button>
+
+          <button
+            class="nav-toggle"
+            type="button"
+            :aria-expanded="String(menuOpen)"
+            aria-controls="primary-nav"
+            aria-label="Abrir menú"
+            @click="menuOpen = !menuOpen"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+
+        </div>
 
       </div>
     </header>
@@ -250,16 +253,19 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   z-index: 100;
   background: var(--cds-dark);
   border-bottom: 1px solid color-mix(in srgb, var(--cds-light) 20%, var(--cds-dark));
+  --nav-font-size: clamp(1.8rem, 0.28vw + 1.1rem, 1.34rem);
+  --nav-link-pad-y: clamp(0.72rem, 0.18vw + 0.66rem, 0.86rem);
+  --nav-link-pad-x: clamp(1rem, 0.22vw + 0.92rem, 1.22rem);
 }
 
 .site-header-inner {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
   padding: 0 1rem;
-  min-height: 72px;
+  min-height: 96px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.75rem;
 }
 
@@ -275,14 +281,14 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 }
 
 .brand-logo {
-  width: 44px;
-  height: 44px;
+  width: 56px;
+  height: 56px;
   border-radius: 0.35rem;
   flex-shrink: 0;
 }
 
 .brand-name {
-  font-size: var(--cds-text-sm);
+  font-size: var(--cds-text-base);
   line-height: 1.2;
   display: none;
 }
@@ -296,10 +302,21 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 /* ─── NAV ─── */
 .site-nav {
   display: none;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.2rem;
   align-items: center;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Grupo derecho: Cotizar + Carrito + Hamburger */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .site-nav.is-open {
@@ -319,30 +336,30 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 .site-nav-link {
   color: var(--cds-white);
   text-decoration: none;
-  min-height: 40px;
-  padding: 0.45rem 0.65rem;
+  min-height: clamp(56px, 3vw, 62px);
+  padding: var(--nav-link-pad-y) var(--nav-link-pad-x);
   border-radius: 0.45rem;
-  font-size: var(--cds-text-base);
+  font-size: var(--nav-font-size);
+  font-family: var(--cds-font-family-base), sans-serif;
+  font-weight: var(--cds-font-medium);
+  text-transform: lowercase;
+  letter-spacing: 0.01em;
   display: inline-flex;
   align-items: center;
-  transition: background 0.15s;
+  transition: background 0.15s, font-size 0.2s ease, letter-spacing 0.2s ease;
   white-space: nowrap;
 }
 
 .site-nav-link:hover,
 .site-nav-link.router-link-active:hover {
   background: color-mix(in srgb, var(--cds-primary) 22%, transparent);
+  text-transform: uppercase;
+  font-size: calc(var(--nav-font-size) * 1.5);
+  letter-spacing: 0.03em;
 }
 
 .site-nav-link.router-link-active {
   background: transparent;
-}
-
-.site-nav-caps {
-  text-transform: uppercase;
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-semibold);
-  letter-spacing: 0.04em;
 }
 
 /* ─── COTIZAR (navbar derecha, siempre visible) ─── */
@@ -350,12 +367,12 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.45rem 0.85rem;
+  padding: 0.6rem 1.1rem;
   border-radius: 0.45rem;
   background: var(--cds-primary);
   color: var(--cds-white);
   text-decoration: none;
-  font-size: var(--cds-text-sm);
+  font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -384,13 +401,13 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  min-height: 36px;
-  padding: 0.4rem 0.85rem;
+  min-height: 52px;
+  padding: 0.55rem 1.1rem;
   border: none;
   border-radius: 0.45rem;
   background: color-mix(in srgb, var(--cds-white) 14%, transparent);
   color: var(--cds-white);
-  font-size: var(--cds-text-sm);
+  font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -438,13 +455,13 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   border: none;
   border-radius: 0.4rem;
   background: transparent;
   color: var(--cds-white);
-  font-size: 1.15rem;
+  font-size: 1.55rem;
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -459,6 +476,8 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
     display: flex;
     position: static;
     flex-direction: row;
+    justify-content: center;
+    overflow: visible;
     padding: 0;
     border-top: none;
   }
@@ -477,20 +496,26 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 .site-footer {
   background: var(--cds-footer-bg-highlight-color);
   color: var(--cds-white);
-  padding: 2.5rem 1rem 1rem;
+  --footer-safe-left: clamp(1rem, 12vw, calc(1rem + 50px + 0.75rem));
+  --footer-safe-right: clamp(1rem, 12vw, calc(1rem + 46px + 0.75rem));
+  padding-top: clamp(3rem, 3vw, 4rem);
+  padding-right: var(--footer-safe-right);
+  padding-bottom: clamp(1.4rem, 1.8vw, 2rem);
+  padding-left: var(--footer-safe-left);
 }
 
 .site-footer-grid {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   display: grid;
-  gap: 2rem;
+  gap: clamp(2rem, 2.2vw, 2.8rem);
   grid-template-columns: 1fr;
 }
 
 .site-footer h2 {
   margin: 0 0 0.75rem;
-  font-size: var(--cds-text-base);
+  font-size: clamp(1.08rem, 0.22vw + 1.02rem, 1.24rem);
   font-weight: var(--cds-font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -499,7 +524,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .site-footer p {
   margin: 0;
-  font-size: var(--cds-text-sm);
+  font-size: clamp(1rem, 0.18vw + 0.95rem, 1.12rem);
   line-height: var(--cds-leading-normal);
   color: color-mix(in srgb, var(--cds-white) 75%, transparent);
 }
@@ -512,13 +537,13 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 }
 
 .footer-logo {
-  width: 52px;
-  height: 52px;
+  width: 66px;
+  height: 66px;
   border-radius: 0.4rem;
 }
 
 .footer-brand-name {
-  font-size: var(--cds-text-base);
+  font-size: clamp(1.2rem, 0.26vw + 1.12rem, 1.36rem);
   font-weight: var(--cds-font-semibold);
   color: var(--cds-white);
   margin: 0;
@@ -526,7 +551,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 }
 
 .footer-brand-tagline {
-  font-size: var(--cds-text-sm);
+  font-size: clamp(1rem, 0.18vw + 0.95rem, 1.12rem);
   color: color-mix(in srgb, var(--cds-white) 65%, transparent);
   line-height: 1.5;
   margin: 0;
@@ -539,7 +564,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .site-footer a {
   color: color-mix(in srgb, var(--cds-white) 75%, transparent);
-  font-size: var(--cds-text-sm);
+  font-size: clamp(1rem, 0.18vw + 0.95rem, 1.12rem);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -553,28 +578,29 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .site-footer-links span {
   color: color-mix(in srgb, var(--cds-white) 65%, transparent);
-  font-size: var(--cds-text-sm);
+  font-size: clamp(1rem, 0.18vw + 0.95rem, 1.12rem);
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
 }
 
 .site-footer-legal {
-  max-width: 1280px;
-  margin: 2rem auto 0;
-  padding-top: 1rem;
+  width: 100%;
+  max-width: none;
+  margin: clamp(2rem, 2.3vw, 2.8rem) 0 0;
+  padding-top: 1.2rem;
   border-top: 1px solid color-mix(in srgb, var(--cds-white) 12%, transparent);
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.7rem;
   align-items: center;
-  font-size: var(--cds-text-xs);
+  font-size: clamp(0.96rem, 0.14vw + 0.92rem, 1.04rem);
   color: color-mix(in srgb, var(--cds-white) 50%, transparent);
 }
 
 .site-footer-legal a {
   color: color-mix(in srgb, var(--cds-white) 50%, transparent);
-  font-size: var(--cds-text-xs);
+  font-size: inherit;
 }
 
 .site-footer-legal a:hover {
@@ -584,6 +610,13 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 @media (min-width: 600px) {
   .site-footer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .site-footer {
+    --footer-safe-left: clamp(1.5rem, 8vw, calc(1.5rem + 54px + 0.9rem));
+    --footer-safe-right: clamp(1.5rem, 8vw, calc(1.5rem + 50px + 0.9rem));
   }
 }
 

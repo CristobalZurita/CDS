@@ -457,7 +457,7 @@ async function submitContact() {
   background: var(--cds-primary);
   color: var(--cds-white);
   border: 2px solid var(--cds-primary);
-      -webkit-text-stroke: 1.8px #111; /* delineado */
+      -webkit-text-stroke: 1px #111; /* delineado */
   paint-order: stroke fill;
       font-size: var(--cds-text-lg);
 }
@@ -466,7 +466,7 @@ async function submitContact() {
   background: transparent;
   color: var(--cds-white);
   border: 2px solid var(--cds-white);
-      -webkit-text-stroke: 1.8px #111; /* delineado */
+      -webkit-text-stroke: 1px #111; /* delineado */
   paint-order: stroke fill;
     font-size: var(--cds-text-lg);
 }
@@ -548,7 +548,7 @@ async function submitContact() {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgb(255, 115, 0);
-    -webkit-text-stroke: 2.5px #111; /* delineado */
+    -webkit-text-stroke: 1.5px #111; /* delineado */
   paint-order: stroke fill;
 
 }
@@ -977,7 +977,7 @@ async function submitContact() {
 }
 
 .contact-card p {
-  margin: 0;
+  margin: 10.05px;
   display: flex;
   align-items: flex-start;
   gap: 0.6rem;
@@ -992,8 +992,8 @@ async function submitContact() {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--cds-border-soft);
+  padding-top: 1rem;
+  border-top: 4px solid var(--cds-border-soft);
 }
 
 .contact-channels a {
@@ -1011,7 +1011,7 @@ async function submitContact() {
 .contact-map {
   border-radius: 0.75rem;
   overflow: hidden;
-  height: 260px;
+  height: 300px;
   box-shadow: 0 4px 14px rgba(62, 60, 56, 0.12);
 }
 
