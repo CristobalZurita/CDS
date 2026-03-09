@@ -30,35 +30,82 @@ export const smdResistorTypeOptions = [
 
 function formatResistance(valueOhm) {
   if (!Number.isFinite(valueOhm)) return '—'
+  if (valueOhm >= 1 && valueOhm < 1000 && valueOhm % 1 !== 0) return `${valueOhm.toFixed(3)} Ω`
   if (valueOhm >= 1000000) return `${(valueOhm / 1000000).toFixed(3)} MΩ`
   if (valueOhm >= 1000) return `${(valueOhm / 1000).toFixed(3)} kΩ`
   return `${valueOhm.toFixed(3)} Ω`
 }
 
+function decodeRNotation(code) {
+  const hasR = code.includes('R')
+  if (!hasR) return null
+  if ((code.match(/R/g) || []).length !== 1) return null
+  if (!/^[0-9R]+$/.test(code)) return null
+
+  const decimalNotation = code.replace('R', '.')
+  const resistanceOhm = Number(decimalNotation)
+  if (!Number.isFinite(resistanceOhm)) return null
+
+  return {
+    mode: 'R_NOTATION',
+    resistance_ohm: resistanceOhm,
+    significant: null,
+    multiplier: null,
+    multiplierLabel: null,
+    normalizedCode: code
+  }
+}
+
 function decodeSmdResistor(code, type) {
   const normalized = String(code || '').trim().toUpperCase()
-  if (!normalized) return Number.NaN
+  if (!normalized) return null
 
-  if (type === 'EIA3' && normalized.length === 3) {
+  const rNotationResult = decodeRNotation(normalized)
+  if (rNotationResult) return rNotationResult
+
+  if (type === 'EIA3' && /^\d{3}$/.test(normalized)) {
     const sig = Number(normalized.slice(0, 2))
     const mult = Math.pow(10, Number(normalized[2]))
-    return sig * mult
+    return {
+      mode: 'EIA3',
+      resistance_ohm: sig * mult,
+      significant: sig,
+      multiplier: mult,
+      multiplierLabel: `10^${normalized[2]}`,
+      normalizedCode: normalized
+    }
   }
 
-  if (type === 'EIA4' && normalized.length === 4) {
+  if (type === 'EIA4' && /^\d{4}$/.test(normalized)) {
     const sig = Number(normalized.slice(0, 3))
     const mult = Math.pow(10, Number(normalized[3]))
-    return sig * mult
+    return {
+      mode: 'EIA4',
+      resistance_ohm: sig * mult,
+      significant: sig,
+      multiplier: mult,
+      multiplierLabel: `10^${normalized[3]}`,
+      normalizedCode: normalized
+    }
   }
 
-  if (type === 'EIA96' && normalized.length >= 3) {
+  if (type === 'EIA96' && /^\d{2}[ZYRXSBHC]$/.test(normalized)) {
     const index = Number(normalized.slice(0, 2)) - 1
-    const base = e96Values[index] ?? 100
-    const mult = e96MultiplierMap[normalized[2]] ?? 1
-    return base * mult
+    const base = e96Values[index]
+    const multCode = normalized[2]
+    const mult = e96MultiplierMap[multCode]
+    if (!Number.isFinite(base) || !Number.isFinite(mult)) return null
+    return {
+      mode: 'EIA96',
+      resistance_ohm: base * mult,
+      significant: base,
+      multiplier: mult,
+      multiplierLabel: multCode,
+      normalizedCode: normalized
+    }
   }
 
-  return Number.NaN
+  return null
 }
 
 export function useSmdResistorCalculator() {
@@ -67,14 +114,43 @@ export function useSmdResistorCalculator() {
     type: 'EIA3'
   })
 
-  const resistanceOhm = computed(() => decodeSmdResistor(form.code, form.type))
+  const decoded = computed(() => decodeSmdResistor(form.code, form.type))
+  const resistanceOhm = computed(() => decoded.value?.resistance_ohm ?? Number.NaN)
   const isValid = computed(() => Number.isFinite(resistanceOhm.value))
   const formattedResistance = computed(() => formatResistance(resistanceOhm.value))
 
+  const formulaText = computed(() => {
+    if (!decoded.value) return '—'
+    if (decoded.value.mode === 'R_NOTATION') return `R como punto decimal: ${decoded.value.normalizedCode}`
+    if (decoded.value.mode === 'EIA96') return `${decoded.value.significant} × ${decoded.value.multiplierLabel}`
+    if (decoded.value.mode === 'EIA3' || decoded.value.mode === 'EIA4') {
+      return `${decoded.value.significant} × ${decoded.value.multiplierLabel}`
+    }
+    return '—'
+  })
+
+  const modeLabel = computed(() => {
+    if (!decoded.value) return '—'
+    if (decoded.value.mode === 'R_NOTATION') return 'Notación R'
+    if (decoded.value.mode === 'EIA3') return 'EIA-3'
+    if (decoded.value.mode === 'EIA4') return 'EIA-4'
+    if (decoded.value.mode === 'EIA96') return 'EIA-96'
+    return '—'
+  })
+
+  function reset() {
+    form.code = ''
+    form.type = 'EIA3'
+  }
+
   return {
     form,
+    decoded,
     resistanceOhm,
     isValid,
-    formattedResistance
+    formattedResistance,
+    formulaText,
+    modeLabel,
+    reset
   }
 }

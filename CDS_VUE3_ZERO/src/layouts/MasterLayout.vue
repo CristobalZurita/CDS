@@ -342,7 +342,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   min-height: clamp(56px, 3vw, 62px);
   padding: var(--nav-link-pad-y) var(--nav-link-pad-x);
   border-radius: 0.45rem;
-  font-size: var(--nav-font-size);
+  font-size: calc(var(--nav-font-size) * 0.85);
   font-family: var(--cds-font-family-base), sans-serif;
   font-weight: var(--cds-font-medium);
   text-transform: lowercase;
@@ -357,7 +357,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 .site-nav-link.router-link-active:hover {
   background: color-mix(in srgb, var(--cds-primary) 22%, transparent);
   text-transform: uppercase;
-  font-size: calc(var(--nav-font-size) * 1.5);
+  font-size: calc(var(--nav-font-size) * 0.85 * 1.5);
   letter-spacing: 0.03em;
 }
 

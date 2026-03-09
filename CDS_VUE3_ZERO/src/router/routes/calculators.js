@@ -1,7 +1,8 @@
 const Timer555Page = () => import('@/pages/calculators/Timer555Page.vue')
 const ResistorColorPage = () => import('@/pages/calculators/ResistorColorPage.vue')
 const SmdCapacitorPage = () => import('@/pages/calculators/SmdCapacitorPage.vue')
-const SmdResistorPage = () => import('@/pages/calculators/SmdResistorPage.vue')
+const SmdResistorCodePage = () => import('@/pages/calculators/SmdResistorCodePage.vue')
+const Cd40106Page = () => import('@/pages/calculators/SmdResistorPage.vue')
 const OhmsLawPage = () => import('@/pages/calculators/OhmsLawPage.vue')
 const TemperaturePage = () => import('@/pages/calculators/TemperaturePage.vue')
 const NumberSystemPage = () => import('@/pages/calculators/NumberSystemPage.vue')
@@ -22,8 +23,8 @@ export const calculatorRoutes = [
   { path: '/calc/555', name: 'calc-555', component: Timer555Page, meta: { requiresAuth: false } },
   { path: '/calc/resistor-color', name: 'calc-resistor-color', component: ResistorColorPage, meta: { requiresAuth: false } },
   { path: '/calc/smd-capacitor', name: 'calc-smd-capacitor', component: SmdCapacitorPage, meta: { requiresAuth: false } },
-  { path: '/calc/smd-resistor', redirect: '/calc/cd40106' },
-  { path: '/calc/cd40106', name: 'calc-cd40106', component: SmdResistorPage, meta: { requiresAuth: false } },
+  { path: '/calc/smd-resistor', name: 'calc-smd-resistor', component: SmdResistorCodePage, meta: { requiresAuth: false } },
+  { path: '/calc/cd40106', name: 'calc-cd40106', component: Cd40106Page, meta: { requiresAuth: false } },
   { path: '/calc/ohms-law', name: 'calc-ohms-law', component: OhmsLawPage, meta: { requiresAuth: false } },
   { path: '/calc/temperature', name: 'calc-temperature', component: TemperaturePage, meta: { requiresAuth: false } },
   { path: '/calc/number-system', name: 'calc-number-system', component: NumberSystemPage, meta: { requiresAuth: false } },

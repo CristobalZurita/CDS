@@ -3,7 +3,7 @@
     <section class="calc-container">
       <header class="calc-header">
         <h1>Calculadora de Resistencias</h1>
-        <p>Código de colores para resistencias THT de 4, 5 y 6 bandas.</p>
+        <p>Código de colores para resistencias THT/DIP de 4, 5 y 6 bandas.</p>
       </header>
 
       <div class="resistor-layout">
@@ -134,63 +134,6 @@
         </section>
       </div>
 
-      <div class="resistor-divider"><span>Resistencias SMD</span></div>
-
-      <div class="smd-layout">
-        <section class="resistor-panel">
-          <div class="panel-header">
-            <div class="panel-title">
-              <i class="fa-solid fa-hashtag"></i>
-              Código SMD
-            </div>
-          </div>
-
-          <div class="panel-form">
-            <div class="form-grid">
-              <label class="form-field">
-                <span>Código</span>
-                <input v-model.trim="smdForm.code" type="text" placeholder="Ej: 103 o 01C" />
-              </label>
-
-              <label class="form-field">
-                <span>Tipo</span>
-                <select v-model="smdForm.type">
-                  <option v-for="item in smdResistorTypeOptions" :key="item.value" :value="item.value">
-                    {{ item.label }}
-                  </option>
-                </select>
-              </label>
-            </div>
-
-            <div class="form-actions">
-              <button type="button" class="btn-reset" @click="resetSmd">
-                <i class="fa-solid fa-rotate-left"></i>
-                Resetear parámetros
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section class="resistor-panel output-panel">
-          <div class="panel-header">
-            <div class="panel-title">
-              <i class="fa-solid fa-circle-dot"></i>
-              Resultado SMD
-            </div>
-          </div>
-
-          <div class="output-body">
-            <div class="output-values">
-              <div class="value-row">
-                <span>Resistencia</span>
-                <strong>{{ smdIsValid ? smdFormattedResistance : '—' }}</strong>
-              </div>
-            </div>
-            <p class="output-hint">Ingresa el código impreso en la resistencia SMD.</p>
-          </div>
-        </section>
-      </div>
-
       <router-link to="/calculadoras" class="back-link">← Volver a calculadoras</router-link>
     </section>
   </main>
@@ -205,10 +148,8 @@ import {
   tempcoColorOptions,
   useResistorColorCalculator,
 } from '@/composables/useResistorColorCalculator'
-import { smdResistorTypeOptions, useSmdResistorCalculator } from '@/composables/useSmdResistorCalculator'
 
 const { form, multiplierIndex, toleranceIndex, tempcoIndex, result, setBands } = useResistorColorCalculator()
-const { form: smdForm, isValid: smdIsValid, formattedResistance: smdFormattedResistance } = useSmdResistorCalculator()
 
 const previewBands = computed(() => form.colors.slice(0, form.bands))
 
@@ -227,11 +168,6 @@ function applyBands(bands) {
 
 function resetBands() {
   applyBands(4)
-}
-
-function resetSmd() {
-  smdForm.code = ''
-  smdForm.type = 'EIA3'
 }
 
 function bandClass(color) {
@@ -267,16 +203,14 @@ function bandClass(color) {
   font-size: var(--cds-text-base);
 }
 
-.resistor-layout,
-.smd-layout {
+.resistor-layout {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
 }
 
 @media (min-width: 920px) {
-  .resistor-layout,
-  .smd-layout {
+  .resistor-layout {
     grid-template-columns: minmax(320px, 1fr) minmax(360px, 1.3fr);
     align-items: start;
   }
@@ -465,33 +399,6 @@ function bandClass(color) {
   font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
   color: var(--cds-primary);
-}
-
-.output-hint {
-  margin: 0;
-  font-size: var(--cds-text-sm);
-  color: var(--cds-text-muted);
-  text-align: center;
-}
-
-.resistor-divider {
-  display: flex;
-  justify-content: center;
-}
-
-.resistor-divider span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 36px;
-  padding: 0 1rem;
-  border-radius: 999px;
-  border: 1px solid rgba(62, 60, 56, 0.22);
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--cds-dark);
 }
 
 .back-link {
