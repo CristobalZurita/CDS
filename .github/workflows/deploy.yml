@@ -77,7 +77,7 @@ jobs:
           fi
       
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v4
       
       - name: Log in to Container Registry
         if: steps.deploy-mode.outputs.enabled == 'true'
