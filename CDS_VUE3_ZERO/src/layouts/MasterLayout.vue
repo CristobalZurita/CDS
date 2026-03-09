@@ -60,6 +60,20 @@
           <span class="nav-cotizar-label">Cotizar</span>
         </router-link>
 
+        <!-- Carrito — abre drawer en /tienda, navega a /tienda desde otras rutas -->
+        <button
+          class="nav-cart-btn"
+          type="button"
+          aria-label="Carrito de compras"
+          @click="onCartClick"
+        >
+          <i class="fas fa-shopping-cart"></i>
+          <span class="nav-cart-label">Carrito</span>
+          <span v-if="shopCart.totals.itemsCount > 0" class="nav-cart-badge">
+            {{ shopCart.totals.itemsCount }}
+          </span>
+        </button>
+
         <button
           class="nav-toggle"
           type="button"
@@ -161,10 +175,11 @@
       <i class="fa-brands fa-whatsapp"></i>
     </a>
 
-    <!-- Volver arriba — derecha abajo -->
+    <!-- Volver arriba — derecha abajo, se desplaza si el carrito está abierto -->
     <button
       v-show="showScrollTop"
       class="scroll-top"
+      :class="{ 'scroll-top--cart-open': shopCart.cartOpen }"
       type="button"
       aria-label="Ir arriba"
       @click="scrollToTop"
@@ -177,13 +192,24 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuth } from '@new/composables/useAuth'
 import { useHomePage } from '@new/composables/useHomePage'
+import { useShopCartStore } from '@new/stores/shopCart'
 
 const { isAuthenticated } = useAuth()
 const { sections } = useHomePage()
 const route = useRoute()
+const router = useRouter()
+const shopCart = useShopCartStore()
+
+function onCartClick() {
+  if (route.path === '/tienda') {
+    shopCart.openCart()
+  } else {
+    router.push('/tienda')
+  }
+}
 
 // Solo las secciones navegables (excluir hero)
 const navSections = computed(() => sections.value.filter(s => s.id !== 'hero'))
@@ -303,12 +329,13 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   white-space: nowrap;
 }
 
-.site-nav-link:hover {
-  background: color-mix(in srgb, var(--cds-white) 12%, transparent);
+.site-nav-link:hover,
+.site-nav-link.router-link-active:hover {
+  background: color-mix(in srgb, var(--cds-primary) 22%, transparent);
 }
 
 .site-nav-link.router-link-active {
-  background: color-mix(in srgb, var(--cds-primary) 55%, black);
+  background: transparent;
 }
 
 .site-nav-caps {
@@ -349,6 +376,61 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   .nav-cotizar-label {
     display: inline;
   }
+}
+
+/* ─── CARRITO (navbar) ─── */
+.nav-cart-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 36px;
+  padding: 0.4rem 0.85rem;
+  border: none;
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, var(--cds-white) 14%, transparent);
+  color: var(--cds-white);
+  font-size: var(--cds-text-sm);
+  font-weight: var(--cds-font-semibold);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.12s;
+  white-space: nowrap;
+}
+
+.nav-cart-btn:hover {
+  background: color-mix(in srgb, var(--cds-white) 24%, transparent);
+  transform: translateY(-1px);
+}
+
+.nav-cart-label {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .nav-cart-label {
+    display: inline;
+  }
+}
+
+.nav-cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--cds-primary);
+  color: var(--cds-white);
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
 }
 
 /* ─── HAMBURGER ─── */
@@ -556,12 +638,17 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   cursor: pointer;
   z-index: 999;
   box-shadow: 0 4px 14px rgba(236, 107, 0, 0.35);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s, box-shadow 0.2s;
 }
 
 .scroll-top:hover {
   transform: scale(1.08);
   box-shadow: 0 6px 20px rgba(236, 107, 0, 0.5);
+}
+
+/* Carrito abierto: mover la flecha a la izquierda del drawer */
+.scroll-top.scroll-top--cart-open {
+  right: calc(min(420px, 100vw) + 1rem);
 }
 
 @media (min-width: 768px) {
@@ -578,6 +665,10 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
     bottom: 1.5rem;
     width: 50px;
     height: 50px;
+  }
+
+  .scroll-top.scroll-top--cart-open {
+    right: calc(min(420px, 100vw) + 1.5rem);
   }
 }
 </style>

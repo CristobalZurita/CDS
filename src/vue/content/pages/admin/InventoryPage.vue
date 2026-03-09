@@ -182,9 +182,7 @@
           </div>
         </div>
 
-        <p class="inventory-page__results" data-testid="inventory-results-count">
-          Mostrando {{ filteredItems.length }} de {{ items.length }} items.
-        </p>
+       
 
         <div class="inventory-page__summary-grid" data-testid="inventory-scope-summary">
           <article class="inventory-page__summary-card">

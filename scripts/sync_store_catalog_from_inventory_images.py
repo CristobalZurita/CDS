@@ -274,8 +274,11 @@ def exact_alias_match(stem: str, product: Product) -> bool:
 
 def ensure_meta_flags(product: Product) -> None:
     meta, plain_text = parse_meta(product.description)
-    meta["enabled"] = True
-    meta["store_visible"] = True
+    # Preserve explicit manual flags; only set defaults when keys are missing.
+    if "enabled" not in meta:
+        meta["enabled"] = True
+    if "store_visible" not in meta:
+        meta["store_visible"] = True
     product.description = dump_meta(meta, plain_text)
 
 

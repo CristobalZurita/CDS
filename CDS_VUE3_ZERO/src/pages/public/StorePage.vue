@@ -6,9 +6,7 @@
         <div>
           <p class="eyebrow">Catálogo público</p>
           <h1>Tienda técnica de repuestos</h1>
-          <p class="subtitle">
-            Catálogo real con productos publicados desde inventario.
-          </p>
+     
         </div>
         <button class="btn-secondary" :disabled="loading" @click="loadCatalog">
           {{ loading ? 'Actualizando...' : 'Actualizar catálogo' }}
@@ -56,160 +54,169 @@
         </label>
       </section>
 
-      <div class="store-summary" data-testid="store-results-count">
-        Mostrando {{ filteredProducts.length }} de {{ catalog.length }} productos.
-      </div>
 
       <p v-if="error" class="store-error" data-testid="store-error">{{ error }}</p>
 
-      <div class="store-layout">
+      <!-- CATÁLOGO — ancho completo -->
+      <section class="catalog-panel">
+        <div v-if="loading" class="catalog-state" data-testid="store-loading">
+          Cargando catálogo...
+        </div>
 
-        <!-- CATÁLOGO -->
-        <section class="catalog-panel">
-          <div v-if="loading" class="catalog-state" data-testid="store-loading">
-            Cargando catálogo...
-          </div>
+        <div v-else-if="filteredProducts.length === 0" class="catalog-state" data-testid="store-empty">
+          No hay productos disponibles para el filtro actual.
+        </div>
 
-          <div v-else-if="filteredProducts.length === 0" class="catalog-state" data-testid="store-empty">
-            No hay productos disponibles para el filtro actual.
-          </div>
-
-          <div v-else class="products-grid">
-            <article
-              v-for="product in filteredProducts"
-              :key="product.id"
-              class="product-card"
-              data-testid="store-product-card"
-            >
-              <div class="product-visual">
-                <img
-                  v-if="productImageSrc(product)"
-                  :src="productImageSrc(product)"
-                  :alt="product.name"
-                  class="product-image"
-                  loading="lazy"
-                />
-                <div v-else class="product-placeholder">
-                  {{ String(product.sku || 'RP').slice(0, 3).toUpperCase() }}
-                </div>
-
-                <!-- Stock badges -->
-                <span v-if="Number(product.available_stock || 0) <= 0" class="stock-badge stock-badge--warning">
-                  Sin stock
-                </span>
-                <span v-else-if="Number(product.sellable_stock || 0) <= 0" class="stock-badge stock-badge--warning">
-                  Reservado taller
-                </span>
-                <span v-else-if="product.is_low_stock" class="stock-badge stock-badge--info">
-                  Últimas {{ product.sellable_stock }} {{ product.stock_unit || 'u' }}
-                </span>
-                <span v-else class="stock-badge">
-                  {{ product.sellable_stock }} {{ product.stock_unit || 'u' }}
-                </span>
-              </div>
-
-              <div class="product-body">
-                <p class="product-family">{{ product.family || product.category || 'Repuesto' }}</p>
-                <h2>{{ product.name }}</h2>
-                <p class="product-sku">{{ product.sku }}</p>
-                <p class="product-description">{{ describeProduct(product) }}</p>
-
-                <div class="product-footer">
-                  <div class="price-block">
-                    <strong>{{ formatCurrency(product.price) }}</strong>
-                    <small>{{ product.category || 'Sin categoría' }}</small>
-                  </div>
-
-                  <button
-                    class="btn-add"
-                    data-testid="store-add-to-cart"
-                    :disabled="!canAddProduct(product)"
-                    @click="addToCart(product)"
-                  >
-                    {{ addButtonLabel(product) }}
-                  </button>
-                </div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <!-- CARRITO SIDEBAR -->
-        <aside class="cart-panel" data-testid="store-cart">
-          <header class="cart-header">
-            <div>
-              <p class="eyebrow">Lista técnica</p>
-              <h2>Resumen actual</h2>
-            </div>
-            <span class="cart-count">{{ totals.itemsCount }} items</span>
-          </header>
-
-          <div v-if="cartItems.length === 0" class="cart-empty" data-testid="store-cart-empty">
-            La lista está vacía. Agrega repuestos del catálogo.
-          </div>
-
-          <div v-else class="cart-list">
-            <article
-              v-for="item in cartItems"
-              :key="item.id"
-              class="cart-item"
-              data-testid="store-cart-item"
-            >
-              <div class="cart-item-copy">
-                <strong>{{ item.name }}</strong>
-                <span>{{ item.sku }}</span>
-                <small>{{ formatLinePrice(item.price) }} c/u</small>
-              </div>
-
-              <div class="cart-item-actions">
-                <button class="qty-btn" @click="changeQty(item.id, -1)">−</button>
-                <span class="qty-value">{{ item.qty }}</span>
-                <button
-                  class="qty-btn"
-                  :disabled="!canAddProduct(item)"
-                  @click="changeQty(item.id, 1)"
-                >+</button>
-                <button class="remove-btn" @click="removeFromCart(item.id)">Quitar</button>
-              </div>
-            </article>
-          </div>
-
-          <div class="cart-summary">
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <strong>{{ formatSummaryAmount(totals.productsSubtotal) }}</strong>
-            </div>
-            <div class="summary-row">
-              <span>Despacho</span>
-              <strong>{{ currentShipping.name }}</strong>
-            </div>
-            <div class="summary-row">
-              <span>Costo despacho</span>
-              <strong>{{ formatCurrency(totals.shippingPrice) }}</strong>
-            </div>
-            <div class="summary-row summary-row--total">
-              <span>Total</span>
-              <strong>{{ formatSummaryAmount(totals.grandTotal) }}</strong>
-            </div>
-          </div>
-
-          <button
-            class="btn-checkout"
-            data-testid="store-checkout"
-            :disabled="cartItems.length === 0 || shopCart.submitting"
-            @click="submitCheckout"
+        <div v-else class="products-grid">
+          <article
+            v-for="product in filteredProducts"
+            :key="product.id"
+            class="product-card"
+            data-testid="store-product-card"
           >
-            {{ checkoutLabel }}
-          </button>
+            <div class="product-visual">
+              <img
+                v-if="productImageSrc(product)"
+                :src="productImageSrc(product)"
+                :alt="product.name"
+                class="product-image"
+                loading="lazy"
+              />
+              <div v-else class="product-placeholder">
+                {{ String(product.sku || 'RP').slice(0, 3).toUpperCase() }}
+              </div>
 
-          <p class="cart-note">
-            El carro global queda disponible al navegar por todo el sitio. Si inicias sesión como
-            cliente, esta lista se convierte en una solicitud real.
-          </p>
-        </aside>
+              <span v-if="Number(product.available_stock || 0) <= 0" class="stock-badge stock-badge--warning">
+                Sin stock
+              </span>
+              <span v-else-if="Number(product.sellable_stock || 0) <= 0" class="stock-badge stock-badge--warning">
+                Reservado taller
+              </span>
+              <span v-else-if="product.is_low_stock" class="stock-badge stock-badge--info">
+                Últimas {{ product.sellable_stock }} {{ product.stock_unit || 'u' }}
+              </span>
+              <span v-else class="stock-badge">
+                {{ product.sellable_stock }} {{ product.stock_unit || 'u' }}
+              </span>
+            </div>
 
+            <div class="product-body">
+              <p class="product-family">{{ product.family || product.category || 'Repuesto' }}</p>
+              <h2>{{ product.name }}</h2>
+              <p class="product-sku">{{ product.sku }}</p>
+              <p class="product-description">{{ describeProduct(product) }}</p>
+
+              <div class="product-footer">
+                <div class="price-block">
+                  <strong>{{ formatCurrency(product.price) }}</strong>
+                  <small>{{ product.category || 'Sin categoría' }}</small>
+                </div>
+
+                <button
+                  class="btn-add"
+                  data-testid="store-add-to-cart"
+                  :disabled="!canAddProduct(product)"
+                  @click="addToCart(product)"
+                >
+                  {{ addButtonLabel(product) }}
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    </div><!-- /store-shell -->
+
+    <!-- OVERLAY -->
+    <div
+      class="cart-overlay"
+      :class="{ 'cart-overlay--open': shopCart.cartOpen }"
+      @click="shopCart.closeCart()"
+    ></div>
+
+    <!-- CART DRAWER -->
+    <aside class="cart-drawer" :class="{ 'cart-drawer--open': shopCart.cartOpen }" data-testid="store-cart">
+      <header class="cart-drawer-header">
+        <div class="cart-drawer-title">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Mi lista</span>
+          <span v-if="totals.itemsCount > 0" class="cart-badge-inline">{{ totals.itemsCount }}</span>
+        </div>
+        <button class="cart-close-btn" @click="shopCart.closeCart()" aria-label="Cerrar carrito">
+          <i class="fas fa-times"></i>
+        </button>
+      </header>
+
+      <div class="cart-drawer-body">
+        <div v-if="cartItems.length === 0" class="cart-empty" data-testid="store-cart-empty">
+          <i class="fas fa-shopping-basket cart-empty-icon"></i>
+          <p>La lista está vacía.</p>
+          <p>Agrega repuestos del catálogo.</p>
+        </div>
+
+        <div v-else class="cart-list">
+          <article
+            v-for="item in cartItems"
+            :key="item.id"
+            class="cart-item"
+            data-testid="store-cart-item"
+          >
+            <div class="cart-item-copy">
+              <strong>{{ item.name }}</strong>
+              <span>{{ item.sku }}</span>
+              <small>{{ formatLinePrice(item.price) }} c/u</small>
+            </div>
+
+            <div class="cart-item-actions">
+              <button class="qty-btn" @click="changeQty(item.id, -1)">−</button>
+              <span class="qty-value">{{ item.qty }}</span>
+              <button
+                class="qty-btn"
+                :disabled="!canAddProduct(item)"
+                @click="changeQty(item.id, 1)"
+              >+</button>
+              <button class="remove-btn" @click="removeFromCart(item.id)">Quitar</button>
+            </div>
+          </article>
+        </div>
       </div>
-    </div>
+
+      <footer class="cart-drawer-footer">
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <strong>{{ formatSummaryAmount(totals.productsSubtotal) }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Despacho</span>
+            <strong>{{ currentShipping.name }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Costo despacho</span>
+            <strong>{{ formatCurrency(totals.shippingPrice) }}</strong>
+          </div>
+          <div class="summary-row summary-row--total">
+            <span>Total</span>
+            <strong>{{ formatSummaryAmount(totals.grandTotal) }}</strong>
+          </div>
+        </div>
+
+        <button
+          class="btn-checkout"
+          data-testid="store-checkout"
+          :disabled="cartItems.length === 0 || shopCart.submitting"
+          @click="submitCheckout"
+        >
+          {{ checkoutLabel }}
+        </button>
+
+        <p class="cart-note">
+          Al iniciar sesión como cliente esta lista se convierte en una solicitud real.
+        </p>
+      </footer>
+    </aside>
+
   </section>
 </template>
 
@@ -356,15 +363,11 @@ const {
   padding: var(--cds-space-sm);
 }
 
-/* ─── LAYOUT 2 COLUMNAS ─── */
-.store-layout {
-  display: grid;
-  gap: var(--cds-space-md);
-  grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.95fr);
-  align-items: start;
+/* ─── CATALOG — full width ─── */
+.catalog-panel {
+  width: 100%;
 }
 
-/* ─── CATALOG ─── */
 .catalog-state {
   min-height: 220px;
   display: grid;
@@ -531,54 +534,124 @@ const {
   cursor: default;
 }
 
-/* ─── CART SIDEBAR ─── */
-.cart-panel {
-  position: sticky;
-  top: calc(72px + var(--cds-space-md));
-  display: flex;
-  flex-direction: column;
-  gap: var(--cds-space-md);
-  padding: var(--cds-space-lg);
-  border-radius: var(--cds-radius-lg);
-  border: 1px solid var(--cds-border-soft);
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: var(--cds-shadow-md);
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
+/* ─── OVERLAY ─── */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 800;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
 }
 
-.cart-header {
+.cart-overlay--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ─── CART DRAWER ─── */
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: -440px;
+  width: min(420px, 100vw);
+  height: 100dvh;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  background: var(--cds-white, #fff);
+  box-shadow: -6px 0 32px rgba(0, 0, 0, 0.18);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cart-drawer--open {
+  right: 0;
+}
+
+.cart-drawer-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--cds-dark) 12%, white);
+  background: var(--cds-dark);
+  color: var(--cds-white);
+  flex-shrink: 0;
 }
 
-.cart-header h2 {
-  margin: 0;
-  font-size: 1.1rem;
+.cart-drawer-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: var(--cds-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-.cart-count {
+.cart-badge-inline {
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
-  padding: 0.2rem 0.75rem;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--cds-primary) 16%, white);
-  color: var(--cds-dark);
-  font-size: 0.9rem;
-  font-weight: 700;
+  background: var(--cds-primary);
+  color: var(--cds-white);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.cart-close-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cds-white);
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.cart-close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.cart-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .cart-empty {
-  min-height: 120px;
-  display: grid;
-  place-items: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   text-align: center;
   color: var(--cds-dark);
   opacity: 0.65;
+  padding: 2rem 0;
+}
+
+.cart-empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.45;
+  margin-bottom: 0.5rem;
+}
+
+.cart-empty p {
+  margin: 0;
   font-size: 0.95rem;
 }
 
@@ -658,12 +731,21 @@ const {
   cursor: pointer;
 }
 
+/* ─── CART FOOTER ─── */
+.cart-drawer-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--cds-dark) 12%, white);
+  display: flex;
+  flex-direction: column;
+  gap: var(--cds-space-sm);
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--cds-light) 28%, white);
+}
+
 .cart-summary {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  padding-top: var(--cds-space-sm);
-  border-top: 1px solid color-mix(in srgb, var(--cds-dark) 12%, white);
 }
 
 .summary-row {
@@ -729,13 +811,6 @@ const {
   .store-toolbar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .store-layout {
-    grid-template-columns: 1fr;
-  }
-  .cart-panel {
-    position: static;
-    max-height: none;
-  }
 }
 
 @media (max-width: 600px) {
@@ -747,6 +822,9 @@ const {
   }
   .products-grid {
     grid-template-columns: 1fr;
+  }
+  .cart-toggle-label {
+    display: none;
   }
 }
 </style>

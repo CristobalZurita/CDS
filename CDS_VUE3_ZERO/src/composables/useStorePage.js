@@ -257,16 +257,24 @@ export function useStorePage() {
     loading.value = true
     error.value = ''
     try {
-      const res = await api.get('/inventory/', {
-        params: { limit: 5000 },
-      })
+      // Si hay sesión activa usamos el endpoint completo (inventory.read), que devuelve
+      // todos los productos. Sin sesión usamos el público pero sin filtros de stock.
+      const endpoint = isAuthenticated.value
+        ? '/inventory/'
+        : '/inventory/public/'
+      const params = isAuthenticated.value
+        ? { limit: 5000 }
+        : { limit: 5000, enabled_only: false, in_stock_only: false }
+
+      const res = await api.get(endpoint, { params })
       const rows = normalizeCatalogPayload(res?.data)
       if (rows.length > 0) {
         catalog.value = rows
         writeCatalogCache(rows)
       } else {
-        const cached = readCatalogCache()
-        catalog.value = cached
+        // Respuesta vacía: limpiar caché stale y mostrar vacío
+        localStorage.removeItem(STORE_CATALOG_CACHE_KEY)
+        catalog.value = []
       }
       shopCart.syncCatalog(catalog.value)
     } catch (err) {
@@ -276,7 +284,7 @@ export function useStorePage() {
         shopCart.syncCatalog(catalog.value)
         error.value = 'No se pudo actualizar desde backend. Mostrando la última copia local del catálogo.'
       } else {
-        error.value = err?.response?.data?.detail || 'No se pudo cargar el catálogo público.'
+        error.value = err?.response?.data?.detail || 'No se pudo cargar el catálogo.'
         catalog.value = []
       }
     } finally {
@@ -311,6 +319,7 @@ export function useStorePage() {
 
   onMounted(async () => {
     shopCart.hydrate()
+    // Pre-cargar desde caché local mientras llega la respuesta del backend
     const cached = readCatalogCache()
     if (cached.length > 0) {
       catalog.value = cached

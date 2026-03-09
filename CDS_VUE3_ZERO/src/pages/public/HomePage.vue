@@ -457,12 +457,18 @@ async function submitContact() {
   background: var(--cds-primary);
   color: var(--cds-white);
   border: 2px solid var(--cds-primary);
+      -webkit-text-stroke: 1.8px #111; /* delineado */
+  paint-order: stroke fill;
+      font-size: var(--cds-text-lg);
 }
 
 .btn-hero-outline {
   background: transparent;
   color: var(--cds-white);
   border: 2px solid var(--cds-white);
+      -webkit-text-stroke: 1.8px #111; /* delineado */
+  paint-order: stroke fill;
+    font-size: var(--cds-text-lg);
 }
 
 .btn-section {
@@ -479,6 +485,8 @@ async function submitContact() {
   color: var(--cds-white);
   border: 2px solid var(--cds-primary);
   transition: opacity 0.15s;
+  
+
 }
 
 .btn-section:hover { opacity: 0.88; }
@@ -487,6 +495,7 @@ async function submitContact() {
   background: transparent;
   color: var(--cds-primary);
   border-color: var(--cds-primary);
+  
 }
 
 /* ═══════════════════════════ HERO ════════════════════════════ */
@@ -502,11 +511,11 @@ async function submitContact() {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/instrumentos/KORG_WAVESTATE.webp');
+  background-image: url('/images/logo/LOGO_HOME.png');
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
-  filter: brightness(0.39) saturate(1)blur(0.35rem);
+  filter: brightness(0.39) saturate(1) blur(0.35rem);
   z-index: 0;
 }
 
@@ -541,6 +550,7 @@ async function submitContact() {
   color: rgb(255, 115, 0);
     -webkit-text-stroke: 2.5px #111; /* delineado */
   paint-order: stroke fill;
+
 }
 
 .hero-actions {

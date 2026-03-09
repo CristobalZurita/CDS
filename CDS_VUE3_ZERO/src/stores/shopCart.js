@@ -71,6 +71,10 @@ export const useShopCartStore = defineStore('shop-cart', () => {
   const selectedShippingKey = ref(SHIPPING_OPTIONS[0].key)
   const hydrated = ref(false)
   const submitting = ref(false)
+  const cartOpen = ref(false)
+
+  function openCart() { cartOpen.value = true }
+  function closeCart() { cartOpen.value = false }
 
   const shippingOptions = SHIPPING_OPTIONS
 
@@ -268,6 +272,9 @@ export const useShopCartStore = defineStore('shop-cart', () => {
     items,
     hydrated,
     submitting,
+    cartOpen,
+    openCart,
+    closeCart,
     shippingOptions,
     selectedShippingKey,
     currentShipping,
