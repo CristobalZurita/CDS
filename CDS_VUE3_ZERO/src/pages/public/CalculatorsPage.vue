@@ -39,13 +39,14 @@
         <h2 class="section-label">Más populares</h2>
         <div class="calculators-grid">
           <router-link
-            v-for="item in popularItems"
+            v-for="item in popularItems.slice(0, 4)"
             :key="item.path"
             :to="item.path"
             class="calculator-card"
           >
-            <div class="calculator-card-icon">
-              <i :class="item.icon"></i>
+            <div class="calculator-card-media" :class="{ 'calculator-card-media--icon': !item.image }">
+              <img v-if="item.image" :src="item.image" :alt="item.label" loading="lazy" />
+              <i v-else :class="item.icon"></i>
             </div>
             <div class="calculator-card-content">
               <h3>{{ item.label }}</h3>
@@ -54,7 +55,8 @@
           </router-link>
         </div>
 
-        <h2 class="section-label">Todas</h2>
+        <div class="section-divider" aria-hidden="true"></div>
+        <h2 class="section-label">Todas las calculadoras</h2>
       </template>
 
       <div class="calculators-grid">
@@ -64,8 +66,9 @@
           :to="item.path"
           class="calculator-card"
         >
-          <div class="calculator-card-icon">
-            <i :class="item.icon"></i>
+          <div class="calculator-card-media" :class="{ 'calculator-card-media--icon': !item.image }">
+            <img v-if="item.image" :src="item.image" :alt="item.label" loading="lazy" />
+            <i v-else :class="item.icon"></i>
           </div>
           <div class="calculator-card-content">
             <h3>{{ item.label }}</h3>
@@ -218,6 +221,11 @@ function applySearch() {
   color: var(--cds-dark);
 }
 
+.section-divider {
+  margin-top: var(--cds-space-lg);
+  border-top: 1px solid rgba(62, 60, 56, 0.3);
+}
+
 .calculators-grid {
   display: grid;
   gap: var(--cds-space-md);
@@ -243,17 +251,33 @@ function applySearch() {
   transform: translateY(-2px);
 }
 
-.calculator-card-icon {
-  width: 74px;
-  height: 60px;
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 75%, white);
-  border-radius: 0.5rem;
-  display: inline-flex;
+.calculator-card-media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.65);
+  display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.calculator-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.35rem;
+  display: block;
+}
+
+.calculator-card-media--icon {
+  border: 1px solid color-mix(in srgb, var(--cds-primary) 75%, white);
+}
+
+.calculator-card-media--icon i {
   color: var(--cds-primary);
   font-size: 1.65rem;
-  margin: 0 auto;
 }
 
 .calculator-card-content {

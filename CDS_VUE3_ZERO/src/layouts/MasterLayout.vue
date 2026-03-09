@@ -37,6 +37,7 @@
           >Inicio</router-link>
 
           <router-link to="/calculadoras" class="site-nav-link" @click="menuOpen = false">Calculadoras</router-link>
+          <router-link to="/simulador" class="site-nav-link" @click="menuOpen = false">Simulador</router-link>
           <router-link to="/tienda" class="site-nav-link" @click="menuOpen = false">Tienda</router-link>
 
           <router-link

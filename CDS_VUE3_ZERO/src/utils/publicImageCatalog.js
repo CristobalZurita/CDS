@@ -410,13 +410,13 @@ export const inventoryImagePaths = [
 export const calculatorImagePaths = [
   '/images/calculadoras/555_Pinout.webp',
   '/images/calculadoras/CAP_C.webp',
-  '/images/calculadoras/CAP_E.svg',
+  '/images/calculadoras/CAP_E.webp',
   '/images/calculadoras/CD40106.webp',
-  '/images/calculadoras/integrado.svg',
+  '/images/calculadoras/integrado.webp',
   '/images/calculadoras/pngwing.com.webp',
-  '/images/calculadoras/resistencia.svg',
-  '/images/calculadoras/transistor_to220.svg',
-  '/images/calculadoras/transistor_to92.svg',
+  '/images/calculadoras/resistencia.webp',
+  '/images/calculadoras/transistor_to220.webp',
+  '/images/calculadoras/transistor_to92.webp',
 ]
 
 export const publicImagePaths = [

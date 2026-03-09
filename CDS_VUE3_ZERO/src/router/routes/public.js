@@ -7,6 +7,7 @@ const PrivacyPage = () => import('@/pages/public/PrivacyPage.vue')
 const SchedulePage = () => import('@/pages/public/SchedulePage.vue')
 const CotizadorIAPage = () => import('@/pages/public/CotizadorIAPage.vue')
 const CalculatorsPage = () => import('@/pages/public/CalculatorsPage.vue')
+const SimulatorPage = () => import('@/pages/public/SimulatorPage.vue')
 const StorePage = () => import('@/pages/public/StorePage.vue')
 
 export const publicRoutes = [
@@ -22,6 +23,7 @@ export const publicRoutes = [
       { path: 'agendar', name: 'agendar', component: SchedulePage, meta: { requiresAuth: true } },
       { path: 'cotizador-ia', name: 'cotizador-ia', component: CotizadorIAPage, meta: { requiresAuth: false } },
       { path: 'calculadoras', name: 'calculadoras', component: CalculatorsPage, meta: { requiresAuth: false } },
+      { path: 'simulador', name: 'simulador', component: SimulatorPage, meta: { requiresAuth: false } },
       { path: 'tienda', name: 'tienda', component: StorePage, meta: { requiresAuth: false } }
     ]
   }

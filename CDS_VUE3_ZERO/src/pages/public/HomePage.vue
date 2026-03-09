@@ -334,16 +334,16 @@ import api from '@/services/api'
 
 /* ─── Historia ─── */
 const historyEvents = [
-  { year: 'Inicios', title: 'Músico de Conservatorio', image: '/images/personales/marimba.webp',  description: 'Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido.' },
-  { year: '2000s',  title: 'Cineasta',                 image: '/images/personales/cine.webp',    description: 'Experiencia en audiovisual, sonido para cine, post-producción y diseño de audio en contextos creativos.' },
-  { year: '2005',   title: 'Técnico en Electrónica',   image: '/images/personales/tecnico.webp',           description: 'Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos.' },
-  { year: '2008',   title: 'Síntesis y Diseño Sonoro', image: '/images/personales/ernesto.webp',            description: 'Estudios con Ernesto Romeo en Argentina. Síntesis sustractiva, FM, granular. Diseño sonoro avanzado.' },
-  { year: '2010',   title: 'Formación Continua',       image: '/images/personales/electronica.webp',        description: 'Clases particulares en Chile con varios especialistas. Integración de conocimientos musicales y técnicos.' },
+  { year: '1999', title: 'Músico de Conservatorio', image: '/images/personales/marimba.webp',  description: 'Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido.' },
+  { year: '2008',  title: 'Cineasta',                 image: '/images/personales/cine.webp',    description: 'Experiencia en audiovisual, sonido para cine, post-producción y diseño de audio en contextos creativos.' },
+  { year: '2012',   title: 'Técnico en Electrónica',   image: '/images/personales/tecnico.webp',           description: 'Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos.' },
+  { year: '2013',   title: 'Formación Continua',       image: '/images/personales/electronica.webp',        description: 'Clases particulares en Chile con varios especialistas. Integración de conocimientos musicales y técnicos.' },
+  { year: '2013',   title: 'Síntesis y Diseño Sonoro', image: '/images/personales/ernesto.webp',            description: 'Estudios con Ernesto Romeo en Argentina. Síntesis sustractiva, FM, granular. Diseño sonoro avanzado.' },
   { year: '2014',   title: 'El Origen del Taller',     image: '/images/personales/origen.webp',             description: 'Nace el espacio dedicado a la reparación especializada de equipos musicales electrónicos.' },
   { year: '2015',   title: 'Luthería Electrónica',     image: '/images/personales/lutheria.webp',           description: 'Ampliación del taller: teclados, pianos eléctricos, sintetizadores, drum machines, procesadores de efecto.' },
-  { year: '2018',   title: 'Taller en Providencia',    image: '/images/personales/providencia..webp',       description: 'Local comercial en Providencia, Santiago. Consolidación de procesos con diversos modelos y estilos.' },
-  { year: '2020',   title: 'Marimbista Profesional',   image: '/images/personales/marimbista.webp',         description: 'Integración del trabajo como marimbista profesional. Música y técnica unidas.' },
-  { year: '2024',   title: 'Valparaíso',               image: '/images/personales/valparaiso.webp',         description: 'Cirujano de Sintetizadores en Valparaíso. Servicio especializado regional y nacional.' },
+  { year: '2020',   title: 'Taller en Providencia',    image: '/images/personales/providencia..webp',       description: 'Local comercial en Providencia, Santiago. Consolidación de procesos con diversos modelos y estilos.' },
+  { year: '2021',   title: 'Marimbista Profesional',   image: '/images/personales/marimbista.webp',         description: 'Integración del trabajo como marimbista profesional. Música y técnica unidas.' },
+  { year: '2023',   title: 'Valparaíso',               image: '/images/personales/valparaiso.webp',         description: 'Cirujano de Sintetizadores en Valparaíso. Servicio especializado regional y nacional.' },
 ]
 
 const activeHistoryIdx = ref(0)
@@ -514,7 +514,7 @@ async function submitContact() {
   background: transparent;
   color: var(--cds-white);
   border: 2px solid var(--cds-white);
-      -webkit-text-stroke: 1px #111; /* delineado */
+      -webkit-text-stroke: 1.5px #111; /* delineado */
   paint-order: stroke fill;
     font-size: var(--cds-text-lg);
 }
@@ -556,16 +556,7 @@ async function submitContact() {
   overflow: hidden;
 }
 
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url('/images/logo/LOGO_HOME.png');
-  background-size: cover;
-  background-position: center bottom;
-  background-repeat: no-repeat;
-  filter: brightness(0.50) saturate(3.5) blur(0.65rem);
-  z-index: 0;
-}
+
 
 .hero-content {
   position: relative;
@@ -579,7 +570,7 @@ async function submitContact() {
 }
 
 .hero-logo {
-  width: clamp(900px, 50vw, 500px);
+  width: clamp(1500px, 50vw, 500px);
   height: auto;
 }
 
@@ -596,7 +587,7 @@ async function submitContact() {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgb(255, 115, 0);
-    -webkit-text-stroke: 1.5px #111; /* delineado */
+    -webkit-text-stroke: 1px #111; /* delineado */
   paint-order: stroke fill;
 
 }
@@ -634,13 +625,26 @@ async function submitContact() {
 }
 
 .about-image-wrap {
+  position: relative;
   border-radius: 2.75rem;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(62, 60, 56, 0.18);
+  border: 2px solid #111;
+  box-shadow: 0 10px 27px rgba(62, 60, 56, 0.18);
   width: min(100%, 500px);
   aspect-ratio: 3 / 2;
   max-width: 100%;
   margin: 0 auto;
+}
+
+.about-image-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 2px rgba(0, 0, 0, 0.78),
+    inset 0 0 84px rgba(0, 0, 0, 0.28);
 }
 
 .about-image-trigger {

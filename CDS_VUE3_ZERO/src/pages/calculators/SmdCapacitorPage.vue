@@ -17,7 +17,7 @@
 
           <div class="panel-form">
             <div class="cap-visual-inline">
-              <img src="/images/calculadoras/CAP_E.svg" alt="Capacitor electrolítico" />
+              <img src="/images/calculadoras/CAP_E.webp" alt="Capacitor electrolítico" />
               <p>Electrolítico (Cap E)</p>
             </div>
 
