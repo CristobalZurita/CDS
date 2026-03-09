@@ -112,6 +112,15 @@
             Taller especializado en reparación, restauración y modificación de
             sintetizadores, teclados y equipos de audio.
           </p>
+          <p class="footer-brand-summary">
+            Restauración · Mantención · Reparación.
+          </p>
+          <p class="footer-brand-summary">
+            Agenda revisión, cotiza tu instrumento y consulta calculadoras técnicas.
+          </p>
+          <p class="footer-brand-summary">
+            Atención en Valparaíso, Chile.
+          </p>
         </section>
 
         <section>
@@ -153,10 +162,25 @@
           </div>
         </section>
 
+        <section class="footer-map-column">
+          <div class="footer-map-wrap">
+            <iframe
+              class="footer-map"
+              title="Mapa de ubicación Cirujano de Sintetizadores"
+              src="https://www.google.com/maps?q=Valpara%C3%ADso%2C%20Chile&z=13&output=embed"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </section>
+
       </div>
 
       <div class="site-footer-legal">
-        <span>© {{ currentYear }} Cirujano de Sintetizadores</span>
+        <span>© 2026 Cirujano de Sintetizadores</span>
+        <span>·</span>
+        <span class="footer-credit">Sitio hecho por Cristobal Zurita Quintanilla · Valparaíso, Chile</span>
         <span>·</span>
         <router-link to="/privacidad">Política de privacidad</router-link>
         <span>·</span>
@@ -221,8 +245,6 @@ const navSections = computed(() => sections.value.filter(s => s.id !== 'hero'))
 const isHome = computed(() => route.path === '/')
 
 const menuOpen = ref(false)
-
-const currentYear = new Date().getFullYear()
 
 // Scroll-to-top
 const scrollY = ref(0)
@@ -518,7 +540,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .site-footer h2 {
   margin: 0 0 0.75rem;
-  font-size: clamp(1.08rem, 0.22vw + 1.02rem, 1.24rem);
+  font-size: clamp(1.16rem, 0.24vw + 1.08rem, 1.34rem);
   font-weight: var(--cds-font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -527,7 +549,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .site-footer p {
   margin: 0;
-  font-size: clamp(1rem, 0.18vw + 0.95rem, 1.12rem);
+  font-size: clamp(1.08rem, 0.2vw + 1rem, 1.2rem);
   line-height: var(--cds-leading-normal);
   color: color-mix(in srgb, var(--cds-white) 75%, transparent);
 }
@@ -560,6 +582,13 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   margin: 0;
 }
 
+.footer-brand-summary {
+  font-size: clamp(0.96rem, 0.16vw + 0.9rem, 1.06rem);
+  color: color-mix(in srgb, var(--cds-white) 72%, transparent);
+  line-height: 1.45;
+  margin: 0;
+}
+
 .site-footer-links {
   display: grid;
   gap: 0.5rem;
@@ -567,7 +596,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .site-footer a {
   color: color-mix(in srgb, var(--cds-white) 75%, transparent);
-  font-size: clamp(1rem, 0.18vw + 0.95rem, 1.12rem);
+  font-size: clamp(1.08rem, 0.2vw + 1rem, 1.2rem);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -581,10 +610,30 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .site-footer-links span {
   color: color-mix(in srgb, var(--cds-white) 65%, transparent);
-  font-size: clamp(1rem, 0.18vw + 0.95rem, 1.12rem);
+  font-size: clamp(1.08rem, 0.2vw + 1rem, 1.2rem);
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+}
+
+.footer-map-column {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.footer-map-wrap {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: end;
+}
+
+.footer-map {
+  width: min(265px, 100%);
+  aspect-ratio: 16 / 9;
+  border: 1px solid color-mix(in srgb, var(--cds-white) 18%, transparent);
+  border-radius: 0.45rem;
+  background: rgba(10, 10, 10, 0.25);
 }
 
 .site-footer-legal {
@@ -595,9 +644,11 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   border-top: 1px solid color-mix(in srgb, var(--cds-white) 12%, transparent);
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.7rem;
   align-items: center;
-  font-size: clamp(0.96rem, 0.14vw + 0.92rem, 1.04rem);
+  text-align: center;
+  font-size: clamp(1.02rem, 0.16vw + 0.96rem, 1.12rem);
   color: color-mix(in srgb, var(--cds-white) 50%, transparent);
 }
 
@@ -606,8 +657,20 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   font-size: inherit;
 }
 
+.footer-credit {
+  color: color-mix(in srgb, var(--cds-white) 62%, transparent);
+}
+
 .site-footer-legal a:hover {
   color: var(--cds-white);
+}
+
+.site-footer-grid h2,
+.site-footer-grid p,
+.site-footer-grid a,
+.site-footer-grid .site-footer-links span {
+  transform: scale(1.08);
+  transform-origin: left center;
 }
 
 @media (min-width: 600px) {
@@ -625,7 +688,8 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 @media (min-width: 1024px) {
   .site-footer-grid {
-    grid-template-columns: 2fr repeat(3, minmax(0, 1fr));
+    grid-template-columns: 2fr repeat(3, minmax(0, 1fr)) minmax(250px, 265px);
+    align-items: start;
   }
 }
 
