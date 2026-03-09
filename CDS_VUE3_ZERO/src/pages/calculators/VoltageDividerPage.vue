@@ -37,6 +37,10 @@
                 </select>
               </label>
             </div>
+
+            <div class="form-actions">
+              <button type="button" class="action-btn" @click="reset">Resetear parámetros</button>
+            </div>
           </div>
         </section>
 
@@ -74,7 +78,7 @@
 import { BaseInput } from '@/components/ui'
 import { useVoltageDividerCalculator, voltageDividerResistanceUnits } from '@/composables/useVoltageDividerCalculator'
 
-const { form, canCalculate, result } = useVoltageDividerCalculator()
+const { form, canCalculate, result, reset } = useVoltageDividerCalculator()
 </script>
 
 <style scoped src="./commonCalculatorPage.css"></style>

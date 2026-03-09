@@ -43,9 +43,16 @@ export function useLengthCalculator() {
     return normalizeDecimal(meters / toFactor, 6)
   })
 
+  function reset() {
+    form.value = ''
+    form.from_unit = 'm'
+    form.to_unit = 'cm'
+  }
+
   return {
     form,
     canConvert,
-    result
+    result,
+    reset
   }
 }

@@ -57,9 +57,16 @@ export function useOhmsLawCalculator() {
     }
   })
 
+  function reset() {
+    form.voltage_v = ''
+    form.current_a = ''
+    form.resistance_ohm = ''
+  }
+
   return {
     form,
     canCalculate,
-    result
+    result,
+    reset
   }
 }

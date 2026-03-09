@@ -60,7 +60,7 @@
               </button>
               <button type="button" class="action-btn" @click="reset">
                 <i class="fa-solid fa-rotate-left"></i>
-                Limpiar
+                Resetear parámetros
               </button>
             </div>
           </div>
@@ -76,7 +76,7 @@
 
           <div class="panel-body">
             <div class="diagram-card">
-              <img src="/images/calculadoras/resistecia.webp" alt="Diagrama divisor de corriente" />
+              <img src="/images/calculadoras/corriente_div.webp" alt="Diagrama divisor de corriente" />
             </div>
 
             <div v-if="canCalculate && result" class="output-values">

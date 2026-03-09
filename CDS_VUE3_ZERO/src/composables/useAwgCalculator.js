@@ -28,9 +28,14 @@ export function useAwgCalculator() {
     }
   })
 
+  function reset() {
+    form.awg = 24
+  }
+
   return {
     form,
     canCalculate,
-    result
+    result,
+    reset
   }
 }

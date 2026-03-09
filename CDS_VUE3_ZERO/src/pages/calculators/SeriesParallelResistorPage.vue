@@ -62,7 +62,7 @@
               </button>
               <button type="button" class="action-btn" @click="reset">
                 <i class="fa-solid fa-rotate-left"></i>
-                Limpiar
+                Resetear parámetros
               </button>
             </div>
           </div>

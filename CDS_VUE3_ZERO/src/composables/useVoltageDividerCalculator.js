@@ -58,9 +58,18 @@ export function useVoltageDividerCalculator() {
     }
   })
 
+  function reset() {
+    form.vin_v = 12
+    form.r1_value = 10000
+    form.r1_unit = 'ohm'
+    form.r2_value = 10000
+    form.r2_unit = 'ohm'
+  }
+
   return {
     form,
     canCalculate,
     result,
+    reset,
   }
 }

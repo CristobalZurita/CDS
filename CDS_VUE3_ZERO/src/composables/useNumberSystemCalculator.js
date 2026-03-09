@@ -28,9 +28,16 @@ export function useNumberSystemCalculator() {
     return parsedValue.value.toString(Number(form.to)).toUpperCase()
   })
 
+  function reset() {
+    form.value = ''
+    form.from = 10
+    form.to = 2
+  }
+
   return {
     form,
     isValid,
-    result
+    result,
+    reset
   }
 }

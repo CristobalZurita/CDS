@@ -24,6 +24,10 @@
               inputmode="numeric"
               placeholder="Ej: 24"
             />
+
+            <div class="form-actions">
+              <BaseButton type="button" variant="ghost" class="reset-button" @click="reset">Resetear parámetros</BaseButton>
+            </div>
           </div>
         </section>
 
@@ -61,10 +65,10 @@
 </template>
 
 <script setup>
-import { BaseInput } from '@/components/ui'
+import { BaseButton, BaseInput } from '@/components/ui'
 import { useAwgCalculator } from '@/composables/useAwgCalculator'
 
-const { form, canCalculate, result } = useAwgCalculator()
+const { form, canCalculate, result, reset } = useAwgCalculator()
 </script>
 
 <style scoped>
@@ -133,6 +137,15 @@ const { form, canCalculate, result } = useAwgCalculator()
 
 .panel-body {
   padding: 1rem 1.1rem 1.2rem;
+}
+
+.form-actions {
+  margin-top: 0.75rem;
+  display: flex;
+}
+
+.reset-button {
+  width: auto;
 }
 
 .output-values {

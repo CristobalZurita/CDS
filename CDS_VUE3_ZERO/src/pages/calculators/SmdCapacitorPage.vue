@@ -58,7 +58,7 @@
             <div class="form-actions">
               <button type="button" class="btn-reset" @click="resetConversion">
                 <i class="fa-solid fa-rotate-left"></i>
-                Limpiar
+                Resetear parámetros
               </button>
             </div>
           </div>
@@ -97,7 +97,7 @@
             <div class="form-actions">
               <button type="button" class="btn-reset" @click="resetCode">
                 <i class="fa-solid fa-rotate-left"></i>
-                Limpiar
+                Resetear parámetros
               </button>
             </div>
           </div>

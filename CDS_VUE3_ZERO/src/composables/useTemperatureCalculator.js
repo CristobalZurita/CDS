@@ -57,9 +57,29 @@ export function useTemperatureCalculator() {
     return normalizeDecimal(converted, 4)
   })
 
+  const allScales = computed(() => {
+    if (!canConvert.value) return null
+    const inputValue = Number(form.value)
+    const celsius = toCelsius(inputValue, form.from)
+    return {
+      C: normalizeDecimal(celsius, 4),
+      F: normalizeDecimal(fromCelsius(celsius, 'F'), 4),
+      K: normalizeDecimal(fromCelsius(celsius, 'K'), 4),
+      R: normalizeDecimal(fromCelsius(celsius, 'R'), 4)
+    }
+  })
+
+  function reset() {
+    form.value = ''
+    form.from = 'C'
+    form.to = 'F'
+  }
+
   return {
     form,
     canConvert,
-    result
+    result,
+    allScales,
+    reset
   }
 }

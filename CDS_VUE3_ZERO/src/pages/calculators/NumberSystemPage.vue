@@ -42,6 +42,7 @@
 
             <div class="form-actions">
               <BaseButton type="button" variant="ghost" class="swap-button" @click="swapBases">Intercambiar bases</BaseButton>
+              <BaseButton type="button" variant="ghost" class="reset-button" @click="reset">Resetear parámetros</BaseButton>
             </div>
           </div>
         </section>
@@ -75,7 +76,7 @@
 import { BaseButton, BaseInput } from '@/components/ui'
 import { numericBaseOptions, useNumberSystemCalculator } from '@/composables/useNumberSystemCalculator'
 
-const { form, isValid, result } = useNumberSystemCalculator()
+const { form, isValid, result, reset } = useNumberSystemCalculator()
 
 function swapBases() {
   const nextFrom = form.to
@@ -191,6 +192,10 @@ function swapBases() {
 }
 
 .swap-button {
+  width: auto;
+}
+
+.reset-button {
   width: auto;
 }
 

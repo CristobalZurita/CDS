@@ -43,6 +43,7 @@
 
             <div class="form-actions">
               <BaseButton type="button" variant="ghost" class="swap-button" @click="swapUnits">Intercambiar unidades</BaseButton>
+              <BaseButton type="button" variant="ghost" class="reset-button" @click="reset">Resetear parámetros</BaseButton>
             </div>
           </div>
         </section>
@@ -76,7 +77,7 @@
 import { BaseButton, BaseInput } from '@/components/ui'
 import { lengthUnits, useLengthCalculator } from '@/composables/useLengthCalculator'
 
-const { form, canConvert, result } = useLengthCalculator()
+const { form, canConvert, result, reset } = useLengthCalculator()
 
 function swapUnits() {
   const nextFrom = form.to_unit
@@ -192,6 +193,10 @@ function swapUnits() {
 }
 
 .swap-button {
+  width: auto;
+}
+
+.reset-button {
   width: auto;
 }
 
