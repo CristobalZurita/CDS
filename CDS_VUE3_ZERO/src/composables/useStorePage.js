@@ -93,6 +93,70 @@ export function useStorePage() {
   const searchTerm = ref('')
   const selectedCategory = ref('')
 
+  // ─── CARRITO ───
+  const cart = ref([])
+  const cartOpen = ref(false)
+  const checkoutOpen = ref(false)
+  const checkoutStep = ref(1)
+  const toastMsg = ref('')
+  const toastVisible = ref(false)
+
+  const cliente = ref({ nombre: '', email: '', entrega: 'retiro', pago: 'Tarjeta de Débito' })
+
+  const cartCount = computed(() =>
+    cart.value.reduce((sum, item) => sum + item.qty, 0)
+  )
+
+  const cartTotal = computed(() =>
+    cart.value.reduce((sum, item) => sum + item.price * item.qty, 0)
+  )
+
+  const checkoutProgress = computed(() => (checkoutStep.value / 3) * 100)
+
+  function addToCart(product) {
+    if ((product.sellable_stock ?? product.stock ?? 0) <= 0) return
+    const item = cart.value.find(i => i.id === product.id)
+    if (item) {
+      item.qty++
+    } else {
+      cart.value.push({ ...product, qty: 1 })
+    }
+    toastMsg.value = `✓ ${product.name} añadido al carrito`
+    toastVisible.value = true
+    setTimeout(() => { toastVisible.value = false }, 2500)
+  }
+
+  function incrementQty(item) {
+    item.qty++
+  }
+
+  function decrementQty(item) {
+    if (item.qty > 1) {
+      item.qty--
+    } else {
+      cart.value = cart.value.filter(i => i.id !== item.id)
+    }
+  }
+
+  function removeFromCart(item) {
+    cart.value = cart.value.filter(i => i.id !== item.id)
+  }
+
+  function openCheckout() {
+    checkoutOpen.value = true
+    cartOpen.value = false
+    checkoutStep.value = 1
+  }
+
+  function nextStep() {
+    checkoutStep.value++
+  }
+
+  function finalizarCompra() {
+    checkoutStep.value = 3
+    cart.value = []
+  }
+
   const availableCategories = computed(() => {
     const values = new Set(
       catalog.value
@@ -188,6 +252,24 @@ export function useStorePage() {
     loadCatalog,
     formatCurrency,
     productImageSrc,
-    describeProduct
+    describeProduct,
+    // carrito
+    cart,
+    cartOpen,
+    cartCount,
+    cartTotal,
+    checkoutOpen,
+    checkoutStep,
+    checkoutProgress,
+    cliente,
+    toastMsg,
+    toastVisible,
+    addToCart,
+    incrementQty,
+    decrementQty,
+    removeFromCart,
+    openCheckout,
+    nextStep,
+    finalizarCompra
   }
 }
