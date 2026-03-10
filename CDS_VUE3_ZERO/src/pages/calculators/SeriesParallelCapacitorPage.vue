@@ -47,7 +47,7 @@
             <div class="form-grid">
               <div v-for="(value, index) in form.capacitors" :key="`cap-${index}`" class="field-label">
                 C{{ index + 1 }}
-                <input v-model.number="form.capacitors[index]" type="number" inputmode="decimal" class="field-control" />
+                <input v-model.number="form.capacitors[index]" type="number" min="0" step="0.1" inputmode="decimal" class="field-control" />
               </div>
             </div>
 

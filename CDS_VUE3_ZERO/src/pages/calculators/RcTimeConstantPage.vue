@@ -17,7 +17,7 @@
 
           <div class="panel-body">
             <div class="field-grid field-grid--2">
-              <BaseInput id="rc-r-value" v-model.number="form.r_value" label="Resistencia" type="number" inputmode="decimal" />
+              <BaseInput id="rc-r-value" v-model.number="form.r_value" label="Resistencia" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="rc-r-unit">
                 Unidad R
                 <select id="rc-r-unit" v-model="form.r_unit" class="field-control">
@@ -27,7 +27,7 @@
             </div>
 
             <div class="field-grid field-grid--2">
-              <BaseInput id="rc-c-value" v-model.number="form.c_value" label="Capacitancia" type="number" inputmode="decimal" />
+              <BaseInput id="rc-c-value" v-model.number="form.c_value" label="Capacitancia" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="rc-c-unit">
                 Unidad C
                 <select id="rc-c-unit" v-model="form.c_unit" class="field-control">
@@ -36,7 +36,7 @@
               </label>
             </div>
 
-            <BaseInput id="rc-target-percent" v-model.number="form.target_percent" label="Porcentaje objetivo de carga (%)" type="number" inputmode="decimal" />
+            <BaseInput id="rc-target-percent" v-model.number="form.target_percent" label="Porcentaje objetivo de carga (%)" type="number" inputmode="decimal" min="1" max="99.999" step="0.1" />
 
             <div class="form-actions">
               <button type="button" class="action-btn" @click="reset">

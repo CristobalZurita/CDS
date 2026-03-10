@@ -11,7 +11,7 @@ export function useAwgCalculator() {
   })
 
   const parsedAwg = computed(() => Number(form.awg))
-  const canCalculate = computed(() => Number.isFinite(parsedAwg.value))
+  const canCalculate = computed(() => Number.isFinite(parsedAwg.value) && parsedAwg.value >= 0)
 
   const result = computed(() => {
     if (!canCalculate.value) return null

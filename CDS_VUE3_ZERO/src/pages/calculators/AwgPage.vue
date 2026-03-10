@@ -22,6 +22,8 @@
               label="Calibre AWG"
               type="number"
               inputmode="numeric"
+              min="0"
+              step="1"
               placeholder="Ej: 24"
             />
 

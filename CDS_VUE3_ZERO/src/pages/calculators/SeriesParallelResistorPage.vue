@@ -47,7 +47,7 @@
             <div class="form-grid">
               <div v-for="(value, index) in form.resistors" :key="`res-${index}`" class="field-label">
                 R{{ index + 1 }}
-                <input v-model.number="form.resistors[index]" type="number" inputmode="decimal" class="field-control" />
+                <input v-model.number="form.resistors[index]" type="number" min="0" step="0.1" inputmode="decimal" class="field-control" />
               </div>
             </div>
 

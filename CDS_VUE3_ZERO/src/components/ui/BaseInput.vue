@@ -15,6 +15,9 @@
         :required="required"
         :disabled="disabled"
         :inputmode="inputmode"
+        :min="min"
+        :max="max"
+        :step="step"
         class="base-input__control"
         @input="handleInput"
         @blur="$emit('blur', $event)"
@@ -43,6 +46,9 @@ const props = defineProps({
   placeholder: { type: String, default: '' },
   autocomplete: { type: String, default: 'off' },
   inputmode: { type: String, default: '' },
+  min: { type: [String, Number], default: undefined },
+  max: { type: [String, Number], default: undefined },
+  step: { type: [String, Number], default: undefined },
   required: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   error: { type: String, default: '' }

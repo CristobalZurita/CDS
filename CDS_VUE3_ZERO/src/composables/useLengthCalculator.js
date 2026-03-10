@@ -30,7 +30,11 @@ export function useLengthCalculator() {
     to_unit: 'cm'
   })
 
-  const canConvert = computed(() => form.value !== '' && Number.isFinite(Number(form.value)))
+  const canConvert = computed(() =>
+    form.value !== '' &&
+    Number.isFinite(Number(form.value)) &&
+    Number(form.value) >= 0
+  )
 
   const result = computed(() => {
     if (!canConvert.value) return null

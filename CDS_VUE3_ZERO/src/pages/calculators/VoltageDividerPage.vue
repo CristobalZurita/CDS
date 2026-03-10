@@ -16,10 +16,10 @@
           </div>
 
           <div class="panel-body">
-            <BaseInput id="vd-vin" v-model.number="form.vin_v" label="Vin (V)" type="number" inputmode="decimal" />
+            <BaseInput id="vd-vin" v-model.number="form.vin_v" label="Vin (V)" type="number" inputmode="decimal" min="0" step="0.1" />
 
             <div class="field-grid field-grid--2">
-              <BaseInput id="vd-r1" v-model.number="form.r1_value" label="R1" type="number" inputmode="decimal" />
+              <BaseInput id="vd-r1" v-model.number="form.r1_value" label="R1" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="vd-r1-unit">
                 Unidad R1
                 <select id="vd-r1-unit" v-model="form.r1_unit" class="field-control">
@@ -29,7 +29,7 @@
             </div>
 
             <div class="field-grid field-grid--2">
-              <BaseInput id="vd-r2" v-model.number="form.r2_value" label="R2" type="number" inputmode="decimal" />
+              <BaseInput id="vd-r2" v-model.number="form.r2_value" label="R2" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="vd-r2-unit">
                 Unidad R2
                 <select id="vd-r2-unit" v-model="form.r2_unit" class="field-control">

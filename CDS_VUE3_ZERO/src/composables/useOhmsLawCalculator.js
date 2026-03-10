@@ -3,7 +3,9 @@ import { computed, reactive } from 'vue'
 function asNumber(value) {
   if (value === '' || value === null || value === undefined) return null
   const parsed = Number(value)
-  return Number.isFinite(parsed) ? parsed : null
+  if (!Number.isFinite(parsed)) return null
+  if (parsed < 0) return null
+  return parsed
 }
 
 function normalizeDecimal(value, decimals = 6) {

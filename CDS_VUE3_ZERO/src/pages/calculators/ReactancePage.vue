@@ -30,7 +30,7 @@
 
           <div class="panel-body">
             <div class="field-grid field-grid--2">
-              <BaseInput id="rx-frequency" v-model.number="form.frequency_value" label="Frecuencia" type="number" inputmode="decimal" />
+              <BaseInput id="rx-frequency" v-model.number="form.frequency_value" label="Frecuencia" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="rx-frequency-unit">
                 Unidad frecuencia
                 <select id="rx-frequency-unit" v-model="form.frequency_unit" class="field-control">
@@ -40,7 +40,7 @@
             </div>
 
             <div v-if="form.mode === 'capacitive'" class="field-grid field-grid--2">
-              <BaseInput id="rx-cap" v-model.number="form.capacitance_value" label="Capacitancia" type="number" inputmode="decimal" />
+              <BaseInput id="rx-cap" v-model.number="form.capacitance_value" label="Capacitancia" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="rx-cap-unit">
                 Unidad C
                 <select id="rx-cap-unit" v-model="form.capacitance_unit" class="field-control">
@@ -50,7 +50,7 @@
             </div>
 
             <div v-else class="field-grid field-grid--2">
-              <BaseInput id="rx-ind" v-model.number="form.inductance_value" label="Inductancia" type="number" inputmode="decimal" />
+              <BaseInput id="rx-ind" v-model.number="form.inductance_value" label="Inductancia" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="rx-ind-unit">
                 Unidad L
                 <select id="rx-ind-unit" v-model="form.inductance_unit" class="field-control">

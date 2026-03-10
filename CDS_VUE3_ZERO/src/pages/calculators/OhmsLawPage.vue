@@ -17,9 +17,9 @@
 
           <div class="panel-body">
             <div class="field-grid">
-              <BaseInput id="ohm-voltage" v-model.number="form.voltage_v" label="Voltaje (V)" type="number" inputmode="decimal" />
-              <BaseInput id="ohm-current" v-model.number="form.current_a" label="Corriente (A)" type="number" inputmode="decimal" />
-              <BaseInput id="ohm-resistance" v-model.number="form.resistance_ohm" label="Resistencia (Ω)" type="number" inputmode="decimal" />
+              <BaseInput id="ohm-voltage" v-model.number="form.voltage_v" label="Voltaje (V)" type="number" inputmode="decimal" min="0" step="0.1" />
+              <BaseInput id="ohm-current" v-model.number="form.current_a" label="Corriente (A)" type="number" inputmode="decimal" min="0" step="0.1" />
+              <BaseInput id="ohm-resistance" v-model.number="form.resistance_ohm" label="Resistencia (Ω)" type="number" inputmode="decimal" min="0" step="0.1" />
             </div>
 
             <div class="form-actions">
@@ -111,9 +111,9 @@ const formulaCards = [
 ]
 
 const inputState = computed(() => ({
-  hasV: form.voltage_v !== '' && Number.isFinite(Number(form.voltage_v)),
-  hasI: form.current_a !== '' && Number.isFinite(Number(form.current_a)),
-  hasR: form.resistance_ohm !== '' && Number.isFinite(Number(form.resistance_ohm))
+  hasV: form.voltage_v !== '' && Number.isFinite(Number(form.voltage_v)) && Number(form.voltage_v) >= 0,
+  hasI: form.current_a !== '' && Number.isFinite(Number(form.current_a)) && Number(form.current_a) >= 0,
+  hasR: form.resistance_ohm !== '' && Number.isFinite(Number(form.resistance_ohm)) && Number(form.resistance_ohm) >= 0
 }))
 
 const solvedVariable = computed(() => {

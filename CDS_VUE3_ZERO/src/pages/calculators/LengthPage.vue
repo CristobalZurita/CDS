@@ -22,6 +22,8 @@
               label="Valor"
               type="number"
               inputmode="decimal"
+              min="0"
+              step="0.1"
               placeholder="Ej: 1.25"
             />
 

@@ -30,7 +30,7 @@
 
           <div class="panel-body">
             <div class="field-grid field-grid--2">
-              <BaseInput id="fhp-r-value" v-model.number="form.r_value" label="Resistencia" type="number" inputmode="decimal" />
+              <BaseInput id="fhp-r-value" v-model.number="form.r_value" label="Resistencia" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="fhp-r-unit">
                 Unidad R
                 <select id="fhp-r-unit" v-model="form.r_unit" class="field-control">
@@ -40,7 +40,7 @@
             </div>
 
             <div class="field-grid field-grid--2">
-              <BaseInput id="fhp-c-value" v-model.number="form.c_value" label="Capacitancia" type="number" inputmode="decimal" />
+              <BaseInput id="fhp-c-value" v-model.number="form.c_value" label="Capacitancia" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="fhp-c-unit">
                 Unidad C
                 <select id="fhp-c-unit" v-model="form.c_unit" class="field-control">
@@ -50,7 +50,7 @@
             </div>
 
             <div class="field-grid field-grid--2">
-              <BaseInput id="fhp-f-value" v-model.number="form.frequency_value" label="Frecuencia de análisis" type="number" inputmode="decimal" />
+              <BaseInput id="fhp-f-value" v-model.number="form.frequency_value" label="Frecuencia de análisis" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="fhp-f-unit">
                 Unidad f
                 <select id="fhp-f-unit" v-model="form.frequency_unit" class="field-control">

@@ -16,12 +16,12 @@
           </div>
 
           <div class="panel-body">
-            <BaseInput id="led-supply" v-model.number="form.supply_v" label="Voltaje de fuente (V)" type="number" inputmode="decimal" />
-            <BaseInput id="led-forward" v-model.number="form.led_forward_v" label="Voltaje directo por LED (Vf)" type="number" inputmode="decimal" />
-            <BaseInput id="led-count" v-model.number="form.led_count" label="Cantidad de LEDs en serie" type="number" inputmode="numeric" />
+            <BaseInput id="led-supply" v-model.number="form.supply_v" label="Voltaje de fuente (V)" type="number" inputmode="decimal" min="0" step="0.1" />
+            <BaseInput id="led-forward" v-model.number="form.led_forward_v" label="Voltaje directo por LED (Vf)" type="number" inputmode="decimal" min="0" step="0.1" />
+            <BaseInput id="led-count" v-model.number="form.led_count" label="Cantidad de LEDs en serie" type="number" inputmode="numeric" min="1" step="1" />
 
             <div class="field-grid field-grid--2">
-              <BaseInput id="led-current" v-model.number="form.led_current_value" label="Corriente objetivo" type="number" inputmode="decimal" />
+              <BaseInput id="led-current" v-model.number="form.led_current_value" label="Corriente objetivo" type="number" inputmode="decimal" min="0" step="0.1" />
               <label class="field-label" for="led-current-unit">
                 Unidad corriente
                 <select id="led-current-unit" v-model="form.led_current_unit" class="field-control">
