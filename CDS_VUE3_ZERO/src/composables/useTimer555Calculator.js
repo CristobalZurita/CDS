@@ -14,7 +14,8 @@ const capacitanceUnitFactor = {
 
 export const timer555ModeOptions = [
   { value: 'astable_standard', label: 'Astable' },
-  { value: 'monostable', label: 'Monostable' }
+  { value: 'monostable', label: 'Monostable' },
+  { value: 'bistable', label: 'Biestable' }
 ]
 
 function toResistance(value, unit) {
@@ -48,8 +49,10 @@ export function useTimer555Calculator() {
 
   const isAstable = computed(() => form.mode === 'astable_standard')
   const isMonostable = computed(() => form.mode === 'monostable')
+  const isBistable = computed(() => form.mode === 'bistable')
 
   const canCalculate = computed(() => {
+    if (isBistable.value) return false
     const c = toCapacitance(form.c_value, form.c_unit)
     if (!Number.isFinite(c) || c <= 0) return false
     if (isAstable.value) {
@@ -62,6 +65,7 @@ export function useTimer555Calculator() {
   })
 
   const result = computed(() => {
+    if (isBistable.value) return null
     if (!canCalculate.value) return null
     const c = toCapacitance(form.c_value, form.c_unit)
 
@@ -108,6 +112,7 @@ export function useTimer555Calculator() {
     form,
     isAstable,
     isMonostable,
+    isBistable,
     canCalculate,
     result,
     reset
