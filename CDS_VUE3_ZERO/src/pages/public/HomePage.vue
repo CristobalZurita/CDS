@@ -336,11 +336,11 @@ import api from '@/services/api'
 const historyEvents = [
   { year: '1999', title: 'Músico de Conservatorio', image: '/images/personales/marimba.webp',  description: 'Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido.' },
   { year: '2008',  title: 'Cineasta',                 image: '/images/personales/cine.webp',    description: 'Experiencia en audiovisual, sonido para cine, post-producción y diseño de audio en contextos creativos.' },
-  { year: '2012',   title: 'Técnico en Electrónica',   image: '/images/personales/tecnico.webp',           description: 'Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos.' },
-  { year: '2013',   title: 'Formación Continua',       image: '/images/personales/electronica.webp',        description: 'Clases particulares en Chile con varios especialistas. Integración de conocimientos musicales y técnicos.' },
-  { year: '2013',   title: 'Síntesis y Diseño Sonoro', image: '/images/personales/ernesto.webp',            description: 'Estudios con Ernesto Romeo en Argentina. Síntesis sustractiva, FM, granular. Diseño sonoro avanzado.' },
-  { year: '2014',   title: 'El Origen del Taller',     image: '/images/personales/origen.webp',             description: 'Nace el espacio dedicado a la reparación especializada de equipos musicales electrónicos.' },
-  { year: '2015',   title: 'Luthería Electrónica',     image: '/images/personales/lutheria.webp',           description: 'Ampliación del taller: teclados, pianos eléctricos, sintetizadores, drum machines, procesadores de efecto.' },
+  { year: '2013',   title: 'Técnico en Electrónica',   image: '/images/personales/tecnico.webp',           description: 'Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos.' },
+  { year: '2014',   title: 'Síntesis y Diseño Sonoro',       image: '/images/personales/electronica.webp',        description: 'Clases particulares en Chile con varios especialistas. Integración de conocimientos musicales y técnicos.' },
+  { year: '2015',   title: 'El Origen del Taller',     image: '/images/personales/origen.webp',             description: 'Nace el espacio dedicado a la reparación especializada de equipos musicales electrónicos.' },
+  { year: '2016',   title: 'Luthería Electrónica',     image: '/images/personales/lutheria.webp',           description: 'Ampliación del taller: teclados, pianos eléctricos, sintetizadores, drum machines, procesadores de efecto.' },
+  { year: '2019',   title: 'Formación Continua', image: '/images/personales/ernesto.webp',            description: 'Estudios con Ernesto Romeo en Argentina. Síntesis sustractiva, FM, granular. Diseño sonoro avanzado.' },
   { year: '2020',   title: 'Taller en Providencia',    image: '/images/personales/providencia..webp',       description: 'Local comercial en Providencia, Santiago. Consolidación de procesos con diversos modelos y estilos.' },
   { year: '2021',   title: 'Marimbista Profesional',   image: '/images/personales/marimbista.webp',         description: 'Integración del trabajo como marimbista profesional. Música y técnica unidas.' },
   { year: '2023',   title: 'Valparaíso',               image: '/images/personales/valparaiso.webp',         description: 'Cirujano de Sintetizadores en Valparaíso. Servicio especializado regional y nacional.' },
@@ -619,7 +619,7 @@ async function submitContact() {
 
 .about-text p {
   margin: 0 0 1rem;
-  font-size: var(--cds-text-base);
+  font-size: var(--cds-text-lg);
   line-height: var(--cds-leading-relaxed);
   color: var(--cds-text-normal);
 }
@@ -630,7 +630,7 @@ async function submitContact() {
   overflow: hidden;
   border: 2px solid #111;
   box-shadow: 0 10px 27px rgba(62, 60, 56, 0.18);
-  width: min(100%, 500px);
+  width: min(100%, 650px);
   aspect-ratio: 3 / 2;
   max-width: 100%;
   margin: 0 auto;
@@ -665,13 +665,16 @@ async function submitContact() {
 }
 
 .history-block {
-  margin-top: 2.5rem;
-  padding-top: 2rem;
+  width: min(1549px, calc(100vw - 2rem));
+  margin-top: 2.75rem;
+  margin-left: 50%;
+  padding-top: 2.25rem;
+  transform: translateX(-50%);
   border-top: 1px solid var(--cds-border-soft);
 }
 
 .history-title {
-  margin: 0 0 1rem;
+  margin: 0 0 1.25rem;
   font-size: var(--cds-text-xl);
   color: var(--cds-dark);
   text-align: center;
@@ -680,15 +683,15 @@ async function submitContact() {
 .timeline-wrap {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  width: min(100%, 980px);
+  gap: 0.65rem;
+  width: 100%;
   margin: 0 auto;
 }
 
 .timeline-arrow {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border: none;
   border-radius: 50%;
   background: var(--cds-dark);
@@ -697,17 +700,17 @@ async function submitContact() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 .timeline-track {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;
   flex: 1;
-  padding: 0.25rem 0;
+  padding: 0.45rem 0;
 }
 
 .timeline-track::-webkit-scrollbar { display: none; }
@@ -717,15 +720,17 @@ async function submitContact() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.5rem 0.75rem;
+  justify-content: center;
+  gap: 0.38rem;
+  padding: 0.75rem 1.15rem;
   border: 1px solid var(--cds-border-soft);
-  border-radius: 0.5rem;
+  border-radius: 0.55rem;
   background: var(--cds-white);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
   text-align: center;
-  min-width: 64px;
+  min-width: 112px;
+  min-height: 96px;
 }
 
 .timeline-node.active {
@@ -740,13 +745,13 @@ async function submitContact() {
 }
 
 .node-label {
-  font-size: 0.7rem;
-  line-height: 1.2;
-  max-width: 70px;
+  font-size: 0.9rem;
+  line-height: 1.25;
+  max-width: 114px;
 }
 
 .history-desc {
-  margin: 1rem 0 0;
+  margin: 1.25rem 0 0;
   font-size: var(--cds-text-base);
   line-height: var(--cds-leading-relaxed);
   color: var(--cds-text-normal);
@@ -1083,6 +1088,7 @@ async function submitContact() {
   display: grid;
   gap: 0.75rem;
   margin-bottom: 1.25rem;
+   width: 98.15%;
 }
 
 .contact-card p {
@@ -1125,7 +1131,7 @@ async function submitContact() {
 }
 
 .contact-map iframe {
-  width: 100%;
+  width: 98%;
   height: 100%;
   border: none;
   display: block;

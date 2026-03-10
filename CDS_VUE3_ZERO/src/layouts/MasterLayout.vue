@@ -530,7 +530,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 }
 
 .site-footer-grid {
-  width: 100%;
+  width: 98%;
   max-width: none;
   margin: 0;
   display: grid;
@@ -562,28 +562,28 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 }
 
 .footer-logo {
-  width: 66px;
-  height: 66px;
+  width: 130px;
+  height: 130x;
   border-radius: 0.4rem;
 }
 
-.footer-brand-name {
-  font-size: clamp(1.2rem, 0.26vw + 1.12rem, 1.36rem);
+.footer-brand .footer-brand-name {
+  font-size: clamp(1.5rem, 0.26vw + 1.62rem, 1.86rem);
   font-weight: var(--cds-font-semibold);
   color: var(--cds-white);
   margin: 0;
   line-height: 1.2;
 }
 
-.footer-brand-tagline {
-  font-size: clamp(1rem, 0.18vw + 0.95rem, 1.12rem);
+.footer-brand .footer-brand-tagline {
+  font-size: clamp(1.5rem, 0.18vw + 1.45rem, 1.62rem);
   color: color-mix(in srgb, var(--cds-white) 65%, transparent);
   line-height: 1.5;
   margin: 0;
 }
 
-.footer-brand-summary {
-  font-size: clamp(0.96rem, 0.16vw + 0.9rem, 1.06rem);
+.footer-brand .footer-brand-summary {
+  font-size: clamp(1.46rem, 0.16vw + 1.4rem, 1.56rem);
   color: color-mix(in srgb, var(--cds-white) 72%, transparent);
   line-height: 1.45;
   margin: 0;
@@ -596,7 +596,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .site-footer a {
   color: color-mix(in srgb, var(--cds-white) 75%, transparent);
-  font-size: clamp(1.08rem, 0.2vw + 1rem, 1.2rem);
+  font-size: clamp(1.6rem, 0.2vw + 1rem, 1.2rem);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -629,7 +629,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 }
 
 .footer-map {
-  width: min(265px, 100%);
+  width: min(240px, 100%);
   aspect-ratio: 16 / 9;
   border: 1px solid color-mix(in srgb, var(--cds-white) 18%, transparent);
   border-radius: 0.45rem;
@@ -648,7 +648,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   gap: 0.7rem;
   align-items: center;
   text-align: center;
-  font-size: clamp(1.02rem, 0.16vw + 0.96rem, 1.12rem);
+  font-size: clamp(2.02rem, 0.16vw + 0.96rem, 1.12rem);
   color: color-mix(in srgb, var(--cds-white) 50%, transparent);
 }
 

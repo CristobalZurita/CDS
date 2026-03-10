@@ -6,17 +6,17 @@
 */
 :root {
   /* --- Texto funcional (UI, labels, cuerpo) --- */
-  --cds-text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.85rem);   /*  12–13.6px */
-  --cds-text-sm:   clamp(0.9rem,   0.85rem + 0.3vw,  1.05rem);   /*  14.4–16.8px */
-  --cds-text-base: clamp(1.05rem,  1rem    + 0.45vw, 1.3rem);    /*  16.8–20.8px */
-  --cds-text-lg:   clamp(1.15rem,  1.05rem + 0.6vw,  1.45rem);  /*  18.4–23.2px */
+  --cds-text-xs:   clamp(1.1rem,   1.05rem + 0.25vw, 1.2rem);    /*  17.6–19.2px */
+  --cds-text-sm:   clamp(1.25rem,  1.2rem  + 0.3vw,  1.4rem);    /*  20–22.4px   */
+  --cds-text-base: clamp(1.4rem,   1.35rem + 0.45vw, 1.65rem);   /*  22.4–26.4px */
+  --cds-text-lg:   clamp(1.5rem,   1.4rem  + 0.6vw,  1.8rem);    /*  24–28.8px   */
 
   /* --- Títulos y encabezados --- */
-  --cds-text-xl:   clamp(1.25rem,  1rem    + 1.25vw, 1.75rem);   /*  20–28px   */
-  --cds-text-2xl:  clamp(1.5rem,   1.1rem  + 2vw,    2.2rem);    /*  24–35.2px */
-  --cds-text-3xl:  clamp(1.8rem,   1.2rem  + 3vw,    2.75rem);   /*  28.8–44px */
-  --cds-text-4xl:  clamp(2.1rem,   1.3rem  + 4vw,    3.25rem);   /*  33.6–52px */
-  --cds-text-5xl:  clamp(2.5rem,   1.4rem  + 5.5vw,  4rem);      /*  40–64px   */
+  --cds-text-xl:   clamp(1.6rem,   1.35rem + 1.25vw, 2.1rem);    /*  25.6–33.6px */
+  --cds-text-2xl:  clamp(1.85rem,  1.45rem + 2vw,    2.55rem);   /*  29.6–40.8px */
+  --cds-text-3xl:  clamp(2.15rem,  1.55rem + 3vw,    3.1rem);    /*  34.4–49.6px */
+  --cds-text-4xl:  clamp(2.45rem,  1.65rem + 4vw,    3.6rem);    /*  39.2–57.6px */
+  --cds-text-5xl:  clamp(2.85rem,  1.75rem + 5.5vw,  4.35rem);   /*  45.6–69.6px */
 
   /* --- Pesos --- */
   --cds-font-normal:   400;
