@@ -4,12 +4,11 @@
  */
 
 import { test, expect } from '@playwright/test'
-import { resolveAuthState } from './helpers/auth.js'
+import { loginFromUi } from './helpers/auth.js'
 import { waitForAppToSettle, trackBrowserErrors } from './helpers/page.js'
 
 test.describe('Admin - Filtros de Reparaciones', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe cargar lista de reparaciones con filtros', async ({ page }) => {
     const tracker = trackBrowserErrors(page)
@@ -121,7 +120,6 @@ test.describe('Admin - Filtros de Reparaciones', () => {
 
 test.describe('Admin - Acciones de Reparaciones', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe abrir detalle de una reparacion', async ({ page }) => {
     await page.goto('/admin/repairs')
@@ -164,7 +162,6 @@ test.describe('Admin - Acciones de Reparaciones', () => {
 
 test.describe('Admin - Crear Reparacion desde Listado', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe mostrar formulario de nueva reparacion', async ({ page }) => {
     await page.goto('/admin/repairs')

@@ -5,12 +5,10 @@
  */
 
 import { test, expect } from '@playwright/test'
-import { resolveAuthState } from './helpers/auth.js'
 import { waitForAppToSettle, trackBrowserErrors } from './helpers/page.js'
 
 test.describe('Admin - Detalle de Reparacion', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe cargar detalle de una reparacion', async ({ page }) => {
     const tracker = trackBrowserErrors(page)
@@ -57,7 +55,6 @@ test.describe('Admin - Detalle de Reparacion', () => {
 
 test.describe('Admin - Cambio de Estado de Reparacion', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe cambiar el estado de una reparacion', async ({ page }) => {
     const tracker = trackBrowserErrors(page)
@@ -153,7 +150,6 @@ test.describe('Admin - Cambio de Estado de Reparacion', () => {
 
 test.describe('Admin - Firmas y Fotos', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe solicitar firma de ingreso', async ({ page }) => {
     await page.goto('/admin/repairs')
@@ -214,7 +210,6 @@ test.describe('Admin - Firmas y Fotos', () => {
 
 test.describe('Admin - Notas de Reparacion', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe mostrar seccion de notas', async ({ page }) => {
     await page.goto('/admin/repairs')
@@ -246,7 +241,6 @@ test.describe('Admin - Notas de Reparacion', () => {
 
 test.describe('Admin - Navegacion desde Detalle', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe volver al listado desde detalle', async ({ page }) => {
     await page.goto('/admin/repairs')

@@ -69,9 +69,9 @@ npx playwright test -g "login"  # Tests que contienen "login"
 ```bash
 # Usuarios de test personalizados
 export TEST_ADMIN_EMAIL="miadmin@test.com"
-export TEST_ADMIN_PASSWORD="mipassword"
+export TEST_ADMIN_PASSWORD=""
 export TEST_CLIENT_EMAIL="miclient@test.com"
-export TEST_CLIENT_PASSWORD="mipassword"
+export TEST_CLIENT_PASSWORD=""
 
 # API del backend
 export VITE_API_URL="http://localhost:8000/api/v1"

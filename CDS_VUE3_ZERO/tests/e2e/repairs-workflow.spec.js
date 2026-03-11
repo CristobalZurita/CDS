@@ -4,12 +4,11 @@
  */
 
 import { test, expect } from '@playwright/test'
-import { resolveAuthState, loginFromUi } from './helpers/auth.js'
+import { loginFromUi } from './helpers/auth.js'
 import { waitForAppToSettle, trackBrowserErrors } from './helpers/page.js'
 
 test.describe('Flujo de Reparaciones', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe mostrar lista de reparaciones', async ({ page }) => {
     const tracker = trackBrowserErrors(page)
@@ -135,7 +134,7 @@ test.describe('Cliente - Mis Reparaciones', () => {
   test('cliente puede ver sus reparaciones', async ({ page }) => {
     // Login como cliente
     await page.goto('/login')
-    await loginFromUi(page, 'client@example.com', 'client123')
+    await loginFromUi(page, 'cliente@test.com', 'client123')
     await expect(page).toHaveURL(/\/dashboard/)
     
     // Ir a reparaciones
@@ -153,7 +152,7 @@ test.describe('Cliente - Mis Reparaciones', () => {
   test('cliente NO puede crear reparaciones desde admin', async ({ page }) => {
     // Login como cliente
     await page.goto('/login')
-    await loginFromUi(page, 'client@example.com', 'client123')
+    await loginFromUi(page, 'cliente@test.com', 'client123')
     
     // Intentar acceder a admin/repairs
     await page.goto('/admin/repairs')

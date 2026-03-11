@@ -4,12 +4,11 @@
  */
 
 import { test, expect } from '@playwright/test'
-import { resolveAuthState } from './helpers/auth.js'
+import { loginFromUi } from './helpers/auth.js'
 import { waitForAppToSettle, trackBrowserErrors } from './helpers/page.js'
 
 test.describe('Admin - CRUD de Clientes', () => {
   
-  test.use({ storageState: resolveAuthState('admin') })
 
   test('debe cargar pagina de clientes con listado', async ({ page }) => {
     const tracker = trackBrowserErrors(page)
@@ -228,7 +227,7 @@ test.describe('Proteccion de rutas de Clientes', () => {
   test('cliente autenticado no puede acceder a /admin/clients', async ({ page }) => {
     // Login como cliente
     await page.goto('/login')
-    await page.locator('input[type="email"]').fill('client@example.com')
+    await page.locator('input[type="email"]').fill('cliente@test.com')
     await page.locator('input[type="password"]').fill('client123')
     await page.locator('button[type="submit"]').click()
     await page.waitForURL(/\/dashboard/, { timeout: 5000 })

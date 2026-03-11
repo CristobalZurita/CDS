@@ -37,7 +37,9 @@ export async function loginFromUi(page, email, password) {
   await page.locator('button[type="submit"]').click()
   
   // Esperar redirección (login exitoso va a dashboard o admin)
-  await page.waitForURL(/\/(dashboard|admin)/, { timeout: 5000 })
+  // Aumentado timeout y agregado waitForLoadState para estabilidad
+  await page.waitForURL(/\/(dashboard|admin)/, { timeout: 10000 })
+  await page.waitForLoadState('networkidle')
 }
 
 /**
