@@ -9,10 +9,20 @@ import { waitForAppToSettle, trackBrowserErrors } from './helpers/page.js'
 
 test.describe('Admin - CRUD de Clientes', () => {
   
+  const TEST_ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || 'admin@example.com'
+  const TEST_ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || ''
+  const TEST_CLIENT_EMAIL = process.env.TEST_CLIENT_EMAIL || 'cliente@test.com'
+  const TEST_CLIENT_PASSWORD = process.env.TEST_CLIENT_PASSWORD || ''
+
+  async function loginAsAdmin(page) {
+    await page.goto('/login')
+    await loginFromUi(page, TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD)
+  }
 
   test('debe cargar pagina de clientes con listado', async ({ page }) => {
     const tracker = trackBrowserErrors(page)
     
+    await loginAsAdmin(page)
     await page.goto('/admin/clients')
     await waitForAppToSettle(page)
     
@@ -47,6 +57,7 @@ test.describe('Admin - CRUD de Clientes', () => {
       address: 'Av. Test 123'
     }
     
+    await loginAsAdmin(page)
     await page.goto('/admin/clients')
     await waitForAppToSettle(page)
     
@@ -83,6 +94,7 @@ test.describe('Admin - CRUD de Clientes', () => {
   })
 
   test('debe buscar clientes por nombre', async ({ page }) => {
+    await loginAsAdmin(page)
     await page.goto('/admin/clients')
     await waitForAppToSettle(page)
     
@@ -106,6 +118,7 @@ test.describe('Admin - CRUD de Clientes', () => {
   })
 
   test('debe seleccionar un cliente y ver sus detalles', async ({ page }) => {
+    await loginAsAdmin(page)
     await page.goto('/admin/clients')
     await waitForAppToSettle(page)
     
@@ -132,6 +145,7 @@ test.describe('Admin - CRUD de Clientes', () => {
     const tracker = trackBrowserErrors(page)
     const newName = `Updated ${Date.now()}`
     
+    await loginAsAdmin(page)
     await page.goto('/admin/clients')
     await waitForAppToSettle(page)
     
@@ -160,6 +174,7 @@ test.describe('Admin - CRUD de Clientes', () => {
   })
 
   test('debe agregar un dispositivo a un cliente', async ({ page }) => {
+    await loginAsAdmin(page)
     await page.goto('/admin/clients')
     await waitForAppToSettle(page)
     
@@ -188,6 +203,7 @@ test.describe('Admin - CRUD de Clientes', () => {
   })
 
   test('debe crear una orden de trabajo desde un cliente', async ({ page }) => {
+    await loginAsAdmin(page)
     await page.goto('/admin/clients')
     await waitForAppToSettle(page)
     
@@ -227,9 +243,7 @@ test.describe('Proteccion de rutas de Clientes', () => {
   test('cliente autenticado no puede acceder a /admin/clients', async ({ page }) => {
     // Login como cliente
     await page.goto('/login')
-    await page.locator('input[type="email"]').fill('cliente@test.com')
-    await page.locator('input[type="password"]').fill('client123')
-    await page.locator('button[type="submit"]').click()
+    await loginFromUi(page, TEST_CLIENT_EMAIL, TEST_CLIENT_PASSWORD)
     await page.waitForURL(/\/dashboard/, { timeout: 5000 })
     
     // Intentar ir a admin clients
