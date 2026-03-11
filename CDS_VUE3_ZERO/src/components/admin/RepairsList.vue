@@ -1,55 +1,53 @@
 <template>
-  <section class="admin-section">
-    <div class="section-header">
-      <h2 class="section-title">🔧 Últimas Reparaciones</h2>
-      <div class="section-actions">
-        <input
-          v-model="searchQuery"
-          type="search"
-          class="search-input"
-          placeholder="Buscar OT, cliente o instrumento..."
-        />
-        <button class="btn-refresh" @click="fetchRepairs">Actualizar</button>
-      </div>
+  <div class="repairs-list">
+    <div class="list-toolbar">
+      <input
+        v-model="searchQuery"
+        type="search"
+        class="search-input"
+        placeholder="Buscar OT, cliente o instrumento..."
+      />
+      <button class="btn-refresh" @click="fetchRepairs">↻ Actualizar</button>
     </div>
-    <div class="table-wrap">
-      <table class="admin-table">
+    
+    <div class="table-container">
+      <table class="data-table">
         <thead>
           <tr>
             <th>OT</th>
             <th>Cliente</th>
             <th>Instrumento</th>
             <th>Estado</th>
-            <th>Acciones</th>
+            <th class="actions">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="repair in filteredRepairs" :key="repair.id" data-testid="repair-row">
-            <td data-label="OT">{{ repair.repair_code || repair.repair_number || repair.id }}</td>
-            <td data-label="Cliente">
-              <div class="cell-stack">
-                <strong>{{ repair.client_name || 'Sin cliente' }}</strong>
-                <small v-if="repair.client_code">{{ repair.client_code }}</small>
+          <tr v-for="repair in filteredRepairs" :key="repair.id">
+            <td class="mono">{{ repair.repair_code || repair.repair_number || repair.id }}</td>
+            <td>
+              <div class="client-cell">
+                <span class="client-name">{{ repair.client_name || 'Sin cliente' }}</span>
+                <span v-if="repair.client_code" class="client-code">{{ repair.client_code }}</span>
               </div>
             </td>
-            <td data-label="Instrumento">{{ repair.device_model || 'Sin modelo' }}</td>
-            <td data-label="Estado">
-              <span :class="['status-badge', `status-${repair.status}`]">
+            <td>{{ repair.device_model || 'Sin modelo' }}</td>
+            <td>
+              <span :class="['status-pill', repair.status]">
                 {{ formatStatus(repair.status) }}
               </span>
             </td>
-            <td data-label="Acciones">
-              <button class="btn-action" @click="editRepair(repair)">Editar</button>
-              <button class="btn-action danger" @click="deleteRepair(repair.id)">Borrar</button>
+            <td class="actions">
+              <button class="btn-icon" @click="editRepair(repair)" title="Editar">✏️</button>
+              <button class="btn-icon danger" @click="removeRepair(repair.id)" title="Eliminar">🗑️</button>
             </td>
           </tr>
           <tr v-if="filteredRepairs.length === 0">
-            <td colspan="5" class="empty-row">No se encontraron reparaciones</td>
+            <td colspan="5" class="empty-cell">No se encontraron reparaciones</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
@@ -63,7 +61,7 @@ const searchQuery = ref('')
 
 const filteredRepairs = computed(() => {
   const q = searchQuery.value.trim().toLowerCase()
-  if (!q) return repairs.value.slice(0, 10) // Show last 10
+  if (!q) return repairs.value.slice(0, 10)
   return (repairs.value || []).filter((repair) => {
     const haystack = [
       repair.repair_code,
@@ -77,198 +75,181 @@ const filteredRepairs = computed(() => {
 })
 
 const formatStatus = (status) => {
-  const statusMap = {
+  const map = {
     'pending': 'Pendiente',
     'in_progress': 'En progreso',
     'completed': 'Completada',
     'delivered': 'Entregada',
     'cancelled': 'Cancelada'
   }
-  return statusMap[status] || status
+  return map[status] || status
 }
 
 const editRepair = (repair) => {
   router.push(`/admin/repairs/${repair.id}`)
 }
 
-onMounted(() => {
-  fetchRepairs()
-})
+const removeRepair = async (id) => {
+  if (!confirm('¿Eliminar esta reparación?')) return
+  await deleteRepair(id)
+}
+
+onMounted(fetchRepairs)
 </script>
 
 <style scoped>
-.admin-section {
-  background: var(--color-white, #fff);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+/* 35% larger */
+.repairs-list {
+  width: 100%;
 }
 
-.section-header {
+.list-toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
   gap: 1rem;
-}
-
-.section-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-dark, #1a1a2e);
-}
-
-.section-actions {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
+  margin-bottom: 1.35rem;
+  flex-wrap: wrap;
 }
 
 .search-input {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--color-light, #e0e0e0);
-  border-radius: 6px;
-  min-width: 250px;
+  flex: 1;
+  min-width: 340px;
+  padding: 0.85rem 1.2rem;
+  border: 1px solid #e8ecf1;
+  border-radius: 11px;
+  font-size: 1.35rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #ff6b35;
 }
 
 .btn-refresh {
-  padding: 0.5rem 1rem;
-  background: var(--color-primary, #ff6b35);
-  color: var(--color-white, #fff);
-  border: none;
-  border-radius: 6px;
+  padding: 0.85rem 1.35rem;
+  background: #f8fafc;
+  border: 1px solid #e8ecf1;
+  border-radius: 11px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  font-size: 1.35rem;
+  color: #374151;
 }
 
 .btn-refresh:hover {
-  opacity: 0.9;
+  background: #e8ecf1;
 }
 
-.table-wrap {
+.table-container {
   overflow-x: auto;
 }
 
-.admin-table {
+.data-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 1.4rem;
 }
 
-.admin-table th,
-.admin-table td {
-  padding: 0.75rem;
+.data-table th {
   text-align: left;
-  border-bottom: 1px solid var(--color-light, #e0e0e0);
-}
-
-.admin-table th {
+  padding: 1rem;
   font-weight: 600;
-  background: var(--color-bg, #f5f5f5);
-  color: var(--color-dark, #1a1a2e);
+  color: #6b7280;
+  border-bottom: 1px solid #e8ecf1;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-.admin-table tr:hover td {
-  background: var(--color-bg, #f5f5f5);
+.data-table td {
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
 }
 
-.cell-stack {
+.data-table tr:hover td {
+  background: #f8fafc;
+}
+
+.mono {
+  font-family: ui-monospace, monospace;
+  font-size: 1.25rem;
+  color: #6b7280;
+}
+
+.client-cell {
   display: flex;
   flex-direction: column;
+  gap: 0.2rem;
 }
 
-.cell-stack small {
-  color: var(--color-gray-600, #666);
-  font-size: 0.8rem;
+.client-name {
+  font-weight: 500;
+  color: #1a1f36;
 }
 
-.status-badge {
+.client-code {
+  font-size: 1.15rem;
+  color: #6b7280;
+}
+
+.status-pill {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 1.1rem;
   font-weight: 600;
   text-transform: uppercase;
 }
 
-.status-pending {
-  background: rgba(255, 193, 7, 0.2);
-  color: #856404;
+.status-pill.pending {
+  background: #fef3c7;
+  color: #92400e;
 }
 
-.status-in_progress {
-  background: rgba(23, 162, 184, 0.2);
-  color: #0c5460;
+.status-pill.in_progress {
+  background: #dbeafe;
+  color: #1e40af;
 }
 
-.status-completed {
-  background: rgba(40, 167, 69, 0.2);
-  color: #155724;
+.status-pill.completed {
+  background: #d1fae5;
+  color: #065f46;
 }
 
-.status-delivered {
-  background: rgba(108, 117, 125, 0.2);
-  color: #383d41;
+.status-pill.delivered {
+  background: #f3f4f6;
+  color: #374151;
 }
 
-.status-cancelled {
-  background: rgba(220, 53, 69, 0.2);
-  color: #721c24;
+.status-pill.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
-.btn-action {
-  padding: 0.35rem 0.75rem;
-  margin-right: 0.25rem;
-  background: transparent;
-  border: 1px solid var(--color-primary, #ff6b35);
-  color: var(--color-primary, #ff6b35);
-  border-radius: 4px;
+.actions {
+  text-align: right;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
   cursor: pointer;
-  font-size: 0.8rem;
-  transition: all 0.2s;
+  padding: 0.5rem;
+  font-size: 1.35rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
 }
 
-.btn-action:hover {
-  background: var(--color-primary, #ff6b35);
-  color: var(--color-white, #fff);
+.btn-icon:hover {
+  opacity: 1;
 }
 
-.btn-action.danger {
-  border-color: var(--color-danger, #dc3545);
-  color: var(--color-danger, #dc3545);
+.btn-icon.danger:hover {
+  color: #dc2626;
 }
 
-.btn-action.danger:hover {
-  background: var(--color-danger, #dc3545);
-  color: var(--color-white, #fff);
-}
-
-.empty-row {
+.empty-cell {
   text-align: center;
-  color: var(--color-gray-600, #666);
-  padding: 2rem;
-}
-
-@media (max-width: 768px) {
-  .section-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .section-actions {
-    flex-direction: column;
-  }
-  
-  .search-input {
-    min-width: 100%;
-  }
-  
-  .admin-table th,
-  .admin-table td {
-    padding: 0.5rem;
-    font-size: 0.875rem;
-  }
+  color: #6b7280;
+  padding: 2.7rem;
 }
 </style>

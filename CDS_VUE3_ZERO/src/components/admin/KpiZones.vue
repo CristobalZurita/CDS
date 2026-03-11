@@ -1,129 +1,140 @@
 <template>
-  <section class="kpi-zones">
-    <!-- Zona OT -->
-    <article class="kpi-zone">
-      <header class="zone-header">
-        <h3>📋 Zona OT</h3>
-        <p>Seguimiento operativo de órdenes de trabajo</p>
-      </header>
-      <div class="zone-grid">
-        <div class="kpi-card">
-          <span class="kpi-label">OT totales</span>
-          <strong class="kpi-value">{{ asInt(summary?.total_repairs, dashboard?.repairs) }}</strong>
+  <section class="kpi-section">
+    <div class="kpi-grid">
+      <!-- Zona OT -->
+      <div class="kpi-box">
+        <div class="kpi-header">
+          <span class="kpi-icon">📋</span>
+          <div>
+            <h3 class="kpi-title">Órdenes de Trabajo</h3>
+            <p class="kpi-desc">Seguimiento operativo</p>
+          </div>
         </div>
-        <div class="kpi-card">
-          <span class="kpi-label">OT activas</span>
-          <strong class="kpi-value">{{ asInt(summary?.active_repairs, dashboard?.active_repairs) }}</strong>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">OT este mes</span>
-          <strong class="kpi-value">{{ asInt(summary?.repairs_this_month, dashboard?.repairs_this_month) }}</strong>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">OT completadas</span>
-          <strong class="kpi-value">{{ asInt(dashboard?.completed_repairs, 0) }}</strong>
+        <div class="kpi-metrics">
+          <div class="metric">
+            <span class="metric-value">{{ asInt(summary?.total_repairs, dashboard?.repairs) }}</span>
+            <span class="metric-label">Totales</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">{{ asInt(summary?.active_repairs, dashboard?.active_repairs) }}</span>
+            <span class="metric-label">Activas</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">{{ asInt(summary?.repairs_this_month, dashboard?.repairs_this_month) }}</span>
+            <span class="metric-label">Este mes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">{{ asInt(dashboard?.completed_repairs, 0) }}</span>
+            <span class="metric-label">Completadas</span>
+          </div>
         </div>
       </div>
-    </article>
 
-    <!-- Zona Financiera -->
-    <article class="kpi-zone">
-      <header class="zone-header">
-        <h3>💰 Zona Financiera</h3>
-        <p>Facturación, cobranza y flujo de caja</p>
-      </header>
-      <div class="zone-grid">
-        <div class="kpi-card">
-          <span class="kpi-label">Facturado total</span>
-          <strong class="kpi-value">{{ money(summary?.revenue?.total_invoiced, revenue?.total_invoiced) }}</strong>
+      <!-- Zona Financiera -->
+      <div class="kpi-box">
+        <div class="kpi-header">
+          <span class="kpi-icon">💰</span>
+          <div>
+            <h3 class="kpi-title">Finanzas</h3>
+            <p class="kpi-desc">Facturación y cobranza</p>
+          </div>
         </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Facturado mes</span>
-          <strong class="kpi-value">{{ money(summary?.revenue?.invoiced_this_month, revenue?.total_paid) }}</strong>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Pendiente cobro</span>
-          <strong class="kpi-value">{{ money(summary?.revenue?.pending_collection, revenue?.total_pending) }}</strong>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Tasa de cobro</span>
-          <strong class="kpi-value">{{ percent(revenue?.collection_rate) }}</strong>
+        <div class="kpi-metrics">
+          <div class="metric">
+            <span class="metric-value">{{ money(summary?.revenue?.total_invoiced, revenue?.total_invoiced) }}</span>
+            <span class="metric-label">Facturado</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">{{ money(summary?.revenue?.invoiced_this_month, revenue?.total_paid) }}</span>
+            <span class="metric-label">Este mes</span>
+          </div>
+          <div class="metric warning">
+            <span class="metric-value">{{ money(summary?.revenue?.pending_collection, revenue?.total_pending) }}</span>
+            <span class="metric-label">Pendiente</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">{{ percent(revenue?.collection_rate) }}</span>
+            <span class="metric-label">Cobranza</span>
+          </div>
         </div>
       </div>
-    </article>
 
-    <!-- Zona Inventario -->
-    <article class="kpi-zone">
-      <header class="zone-header">
-        <h3>📦 Zona Inventario</h3>
-        <p>Disponibilidad y riesgo de stock</p>
-      </header>
-      <div class="zone-grid">
-        <div class="kpi-card">
-          <span class="kpi-label">Items en stock</span>
-          <strong class="kpi-value">{{ asInt(inventory?.total_items, summary?.total_items) }}</strong>
+      <!-- Zona Inventario -->
+      <div class="kpi-box">
+        <div class="kpi-header">
+          <span class="kpi-icon">📦</span>
+          <div>
+            <h3 class="kpi-title">Inventario</h3>
+            <p class="kpi-desc">Stock y disponibilidad</p>
+          </div>
         </div>
-        <div class="kpi-card warning">
-          <span class="kpi-label">Stock bajo</span>
-          <strong class="kpi-value">{{ asInt(summary?.low_stock_alerts, inventory?.low_stock_items) }}</strong>
-        </div>
-        <div class="kpi-card danger">
-          <span class="kpi-label">Sin stock</span>
-          <strong class="kpi-value">{{ asInt(summary?.out_of_stock, inventory?.out_of_stock) }}</strong>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Valor inventario</span>
-          <strong class="kpi-value">{{ money(summary?.inventory_value, inventory?.total_inventory_value) }}</strong>
+        <div class="kpi-metrics">
+          <div class="metric">
+            <span class="metric-value">{{ asInt(inventory?.total_items, summary?.total_items) }}</span>
+            <span class="metric-label">Items</span>
+          </div>
+          <div class="metric warning">
+            <span class="metric-value">{{ asInt(summary?.low_stock_alerts, inventory?.low_stock_items) }}</span>
+            <span class="metric-label">Stock bajo</span>
+          </div>
+          <div class="metric danger">
+            <span class="metric-value">{{ asInt(summary?.out_of_stock, inventory?.out_of_stock) }}</span>
+            <span class="metric-label">Sin stock</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">{{ moneyCompact(summary?.inventory_value, inventory?.total_inventory_value) }}</span>
+            <span class="metric-label">Valor</span>
+          </div>
         </div>
       </div>
-    </article>
 
-    <!-- Zona Clientes y Garantía -->
-    <article class="kpi-zone">
-      <header class="zone-header">
-        <h3>👥 Zona Clientes y Garantía</h3>
-        <p>Crecimiento de clientes y postventa</p>
-      </header>
-      <div class="zone-grid">
-        <div class="kpi-card">
-          <span class="kpi-label">Clientes totales</span>
-          <strong class="kpi-value">{{ asInt(summary?.total_clients, clients?.total_clients) }}</strong>
+      <!-- Zona Clientes -->
+      <div class="kpi-box">
+        <div class="kpi-header">
+          <span class="kpi-icon">👥</span>
+          <div>
+            <h3 class="kpi-title">Clientes</h3>
+            <p class="kpi-desc">Base y garantías</p>
+          </div>
         </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Clientes nuevos mes</span>
-          <strong class="kpi-value">{{ asInt(summary?.new_clients_this_month, clients?.new_this_month) }}</strong>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Garantías activas</span>
-          <strong class="kpi-value">{{ asInt(summary?.active_warranties, warranty?.active_warranties) }}</strong>
-        </div>
-        <div class="kpi-card warning">
-          <span class="kpi-label">Reclamos pendientes</span>
-          <strong class="kpi-value">{{ pendingClaims }}</strong>
+        <div class="kpi-metrics">
+          <div class="metric">
+            <span class="metric-value">{{ asInt(summary?.total_clients, clients?.total_clients) }}</span>
+            <span class="metric-label">Totales</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">{{ asInt(summary?.new_clients_this_month, clients?.new_this_month) }}</span>
+            <span class="metric-label">Nuevos</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">{{ asInt(summary?.active_warranties, warranty?.active_warranties) }}</span>
+            <span class="metric-label">Garantías</span>
+          </div>
+          <div class="metric warning" v-if="pendingClaims > 0">
+            <span class="metric-value">{{ pendingClaims }}</span>
+            <span class="metric-label">Reclamos</span>
+          </div>
         </div>
       </div>
-    </article>
+    </div>
 
-    <!-- Zona Alertas -->
-    <article class="kpi-zone alerts-zone">
-      <header class="zone-header">
-        <h3>🚨 Zona Alertas</h3>
-        <p>Eventos que requieren gestión inmediata</p>
-      </header>
-      <div v-if="alerts.length === 0" class="alerts-empty">
-        ✅ Sin alertas activas
+    <!-- Alertas -->
+    <div v-if="alerts.length > 0" class="alerts-box">
+      <div class="alerts-header">
+        <span class="alerts-icon">🚨</span>
+        <h3>Alertas que requieren atención</h3>
       </div>
-      <ul v-else class="alerts-list">
+      <ul class="alerts-list">
         <li
           v-for="(alert, index) in alerts"
-          :key="`${alert.type}-${index}`"
-          :class="['alert-item', `severity-${alert.severity || 'info'}`]"
+          :key="index"
+          :class="['alert-item', `alert-${alert.severity || 'info'}`]"
         >
-          <span class="alert-message">{{ alert.message || alert.type }}</span>
-          <span class="alert-count">{{ asInt(alert.count, 0) }}</span>
+          <span class="alert-text">{{ alert.message || alert.type }}</span>
+          <span class="alert-badge">{{ asInt(alert.count, 0) }}</span>
         </li>
       </ul>
-    </article>
+    </div>
   </section>
 </template>
 
@@ -178,109 +189,136 @@ const money = (value, fallback = 0) => {
   }).format(amount)
 }
 
+const moneyCompact = (value, fallback = 0) => {
+  const raw = value != null ? value : fallback
+  const normalized = Number(raw)
+  const amount = Number.isFinite(normalized) ? normalized : 0
+  if (amount >= 1000000) {
+    return '$' + (amount / 1000000).toFixed(1) + 'M'
+  }
+  if (amount >= 1000) {
+    return '$' + (amount / 1000).toFixed(0) + 'k'
+  }
+  return money(value, fallback)
+}
+
 const percent = (value) => {
   const normalized = Number(value)
   const amount = Number.isFinite(normalized) ? normalized : 0
-  return `${amount.toFixed(1)}%`
+  return `${amount.toFixed(0)}%`
 }
 </script>
 
 <style scoped>
-.kpi-zones {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+/* 35% larger */
+.kpi-section {
+  margin-bottom: 2.7rem;
 }
 
-.kpi-zone {
-  background: var(--color-white, #fff);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.zone-header {
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid var(--color-light, #e0e0e0);
-}
-
-.zone-header h3 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-dark, #1a1a2e);
-}
-
-.zone-header p {
-  margin: 0;
-  font-size: 0.875rem;
-  color: var(--color-gray-600, #666);
-}
-
-.zone-grid {
+.kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 2rem;
 }
 
-.kpi-card {
-  background: var(--color-bg, #f5f5f5);
-  border-radius: 8px;
+.kpi-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.7rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8ecf1;
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.35rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid #e8ecf1;
+}
+
+.kpi-icon {
+  font-size: 2rem;
+}
+
+.kpi-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1f36;
+}
+
+.kpi-desc {
+  margin: 0.2rem 0 0;
+  font-size: 1.25rem;
+  color: #6b7280;
+}
+
+.kpi-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
+}
+
+.metric {
+  background: #f8fafc;
+  border-radius: 11px;
   padding: 1rem;
   text-align: center;
-  border: 2px solid transparent;
-  transition: transform 0.2s;
 }
 
-.kpi-card:hover {
-  transform: translateY(-2px);
-}
-
-.kpi-card.warning {
-  background: rgba(255, 193, 7, 0.15);
-  border-color: rgba(255, 193, 7, 0.3);
-}
-
-.kpi-card.danger {
-  background: rgba(220, 53, 69, 0.15);
-  border-color: rgba(220, 53, 69, 0.3);
-}
-
-.kpi-label {
+.metric-value {
   display: block;
-  font-size: 0.75rem;
-  color: var(--color-gray-600, #666);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1f36;
+  margin-bottom: 0.4rem;
+}
+
+.metric-label {
+  display: block;
+  font-size: 1.15rem;
+  color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  margin-bottom: 0.5rem;
 }
 
-.kpi-value {
-  display: block;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-dark, #1a1a2e);
+.metric.warning .metric-value {
+  color: #b45309;
 }
 
-.kpi-card.warning .kpi-value {
-  color: #856404;
+.metric.danger .metric-value {
+  color: #dc2626;
 }
 
-.kpi-card.danger .kpi-value {
-  color: #721c24;
+/* Alertas - 35% larger */
+.alerts-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.7rem;
+  margin-top: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8ecf1;
+  border-left: 4px solid #ff6b35;
 }
 
-.alerts-zone {
-  border-left: 4px solid var(--color-primary, #ff6b35);
+.alerts-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
 }
 
-.alerts-empty {
-  padding: 2rem;
-  text-align: center;
-  color: var(--color-gray-600, #666);
-  font-style: italic;
+.alerts-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1f36;
+}
+
+.alerts-icon {
+  font-size: 1.75rem;
 }
 
 .alerts-list {
@@ -289,47 +327,47 @@ const percent = (value) => {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 
 .alert-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1.35rem;
+  background: #f8fafc;
   border-radius: 8px;
-  background: var(--color-bg, #f5f5f5);
-  border-left: 3px solid var(--color-info, #17a2b8);
+  border-left: 3px solid #6b7280;
 }
 
-.alert-item.severity-warning {
-  border-left-color: #ffc107;
-  background: rgba(255, 193, 7, 0.1);
+.alert-item.alert-warning {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
 }
 
-.alert-item.severity-danger {
-  border-left-color: #dc3545;
-  background: rgba(220, 53, 69, 0.1);
+.alert-item.alert-danger {
+  border-left-color: #dc2626;
+  background: #fef2f2;
 }
 
-.alert-item.severity-success {
-  border-left-color: #28a745;
-  background: rgba(40, 167, 69, 0.1);
+.alert-item.alert-success {
+  border-left-color: #10b981;
+  background: #ecfdf5;
 }
 
-.alert-count {
-  font-weight: 700;
-  color: var(--color-dark, #1a1a2e);
-  background: var(--color-white, #fff);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+.alert-text {
+  font-size: 1.4rem;
+  color: #374151;
+}
+
+.alert-badge {
+  background: #fff;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1a1f36;
   min-width: 2rem;
   text-align: center;
-}
-
-@media (max-width: 768px) {
-  .zone-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 </style>

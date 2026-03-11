@@ -9,6 +9,16 @@ from app.core.ratelimit import limiter
 from app.services.logging_service import create_audit
 from app.services.instrument_sync_service import run_instrument_sync
 
+# ADITIVO: Importar Cloudinary service si está disponible
+try:
+    from app.services.cloudinary_service import (
+        is_cloudinary_enabled,
+        upload_image as upload_to_cloudinary,
+    )
+    CLOUDINARY_AVAILABLE = True
+except ImportError:
+    CLOUDINARY_AVAILABLE = False
+
 router = APIRouter(prefix="/uploads", tags=["uploads"])
 
 
@@ -44,7 +54,11 @@ async def upload_image(
     auto_sync_instruments: bool = Query(False, description="Ejecuta sync luego de guardar"),
     user: Optional[dict] = Depends(require_upload_access),
 ):
-    """Upload de imagen con validación. Soporta destino estándar o carpeta de instrumentos."""
+    """Upload de imagen con validación. Soporta destino estándar o carpeta de instrumentos.
+    
+    ADITIVO: Si CLOUDINARY_URL está configurado, sube a Cloudinary.
+    Si no, guarda localmente (comportamiento anterior).
+    """
     await validate_image(file)
 
     destination = (destination or "uploads").lower()
@@ -54,18 +68,34 @@ async def upload_image(
             detail="Acceso denegado. Solo administradores.",
         )
     is_instruments_destination = destination == "instrumentos"
-    dest_dir, public_root = _resolve_destination(destination)
-
-    if is_instruments_destination and not Path(file.filename or "").suffix.lower() == ".webp":
-        raise HTTPException(status_code=400, detail="Para instrumentos solo se permiten archivos .webp")
-
-    path = await save_upload(file, dest_dir=dest_dir)
-    public_path = None
-    if public_root:
-        public_path = f"{public_root}/{Path(path).name}"
+    
+    # ADITIVO: Verificar si usar Cloudinary o local
+    use_cloudinary = CLOUDINARY_AVAILABLE and is_cloudinary_enabled()
+    
+    if use_cloudinary:
+        # Subir a Cloudinary
+        result = await upload_to_cloudinary(file, destination=destination)
+        path = result["path"]
+        public_path = result["public_path"]
+        cloudinary_info = {
+            "public_id": result.get("cloudinary_public_id"),
+            "format": result.get("format"),
+            "bytes": result.get("bytes"),
+        }
+    else:
+        # Guardar localmente (comportamiento original)
+        dest_dir, public_root = _resolve_destination(destination)
+        
+        if is_instruments_destination and not Path(file.filename or "").suffix.lower() == ".webp":
+            raise HTTPException(status_code=400, detail="Para instrumentos solo se permiten archivos .webp")
+        
+        path = await save_upload(file, dest_dir=dest_dir)
+        public_path = f"{public_root}/{Path(path).name}" if public_root else None
+        cloudinary_info = None
 
     sync_payload = None
-    if is_instruments_destination or auto_sync_instruments:
+    # Solo hacer sync si es guardado local de instrumentos
+    if not use_cloudinary and (is_instruments_destination or auto_sync_instruments):
         sync_payload = run_instrument_sync(force=False, trigger="upload")
 
     # Audit upload
@@ -82,6 +112,8 @@ async def upload_image(
                 "public_path": public_path,
                 "filename": file.filename,
                 "destination": destination,
+                "storage": "cloudinary" if use_cloudinary else "local",
+                "cloudinary": cloudinary_info,
                 "sync": sync_payload,
             },
             message="Image uploaded",
@@ -89,13 +121,20 @@ async def upload_image(
     except Exception:
         pass
 
-    return {
+    response = {
         "path": path,
         "public_path": public_path,
         "filename": file.filename,
         "destination": destination,
+        "storage": "cloudinary" if use_cloudinary else "local",
         "sync": sync_payload,
     }
+    
+    # Incluir info de Cloudinary si aplica
+    if cloudinary_info:
+        response["cloudinary"] = cloudinary_info
+    
+    return response
 
 
 @router.post("/instrumentos", status_code=status.HTTP_201_CREATED)

@@ -21,9 +21,9 @@
       </nav>
 
       <div class="sidebar-footer">
-        <router-link to="/dashboard" class="nav-item back-link">
+        <router-link to="/" class="nav-item back-link">
           <span class="nav-icon">←</span>
-          <span class="nav-label">Volver al Panel</span>
+          <span class="nav-label">Volver al Inicio</span>
         </router-link>
         <button class="nav-item logout-btn" @click="handleLogout">
           <span class="nav-icon">🚪</span>
@@ -128,16 +128,17 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
-/* Layout principal */
+/* Layout principal - 35% larger */
 .admin-shell-layout {
   display: flex;
   min-height: 100vh;
   background: #f5f7fa;
+  font-size: 1.35rem;
 }
 
-/* Sidebar */
+/* Sidebar - 35% larger */
 .admin-sidebar {
-  width: 260px;
+  width: 351px;
   background: #1a1f36;
   color: #fff;
   display: flex;
@@ -148,34 +149,34 @@ const handleLogout = () => {
 }
 
 .sidebar-brand {
-  padding: 1.5rem;
+  padding: 2rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .brand-icon {
-  font-size: 1.75rem;
+  font-size: 2.4rem;
 }
 
 .brand-text {
-  font-size: 1.25rem;
+  font-size: 1.7rem;
   font-weight: 700;
   letter-spacing: -0.5px;
 }
 
 .sidebar-nav {
   flex: 1;
-  padding: 1rem 0;
+  padding: 1.35rem 0;
   overflow-y: auto;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 0.875rem;
-  padding: 0.875rem 1.5rem;
+  gap: 1.2rem;
+  padding: 1.2rem 2rem;
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   transition: all 0.2s;
@@ -184,7 +185,7 @@ const handleLogout = () => {
   background: none;
   border: none;
   width: 100%;
-  font-size: 0.9375rem;
+  font-size: 1.25rem;
 }
 
 .nav-item:hover {
@@ -199,8 +200,8 @@ const handleLogout = () => {
 }
 
 .nav-icon {
-  font-size: 1.25rem;
-  width: 1.5rem;
+  font-size: 1.7rem;
+  width: 2rem;
   text-align: center;
 }
 
@@ -209,7 +210,7 @@ const handleLogout = () => {
 }
 
 .sidebar-footer {
-  padding: 1rem 0;
+  padding: 1.35rem 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -230,19 +231,19 @@ const handleLogout = () => {
   color: #ff6464;
 }
 
-/* Main content */
+/* Main content - 35% larger */
 .admin-main {
   flex: 1;
-  margin-left: 260px;
+  margin-left: 351px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Topbar */
+/* Topbar - 35% larger */
 .admin-topbar {
   background: #fff;
-  padding: 1.25rem 2rem;
+  padding: 1.7rem 2.7rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -254,29 +255,29 @@ const handleLogout = () => {
 
 .page-title {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #1a1f36;
 }
 
 .page-subtitle {
-  margin: 0.25rem 0 0;
-  font-size: 0.875rem;
+  margin: 0.35rem 0 0;
+  font-size: 1.2rem;
   color: #6b7280;
 }
 
 .user-badge {
   background: #f3f4f6;
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 1.35rem;
   border-radius: 999px;
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   color: #374151;
 }
 
-/* Content area */
+/* Content area - 35% larger */
 .admin-content {
   flex: 1;
-  padding: 2rem;
+  padding: 2.7rem;
   overflow-y: auto;
 }
 
@@ -294,7 +295,7 @@ const handleLogout = () => {
 /* Responsive */
 @media (max-width: 1024px) {
   .admin-sidebar {
-    width: 70px;
+    width: 95px;
   }
   
   .brand-text,
@@ -304,12 +305,12 @@ const handleLogout = () => {
   
   .sidebar-brand {
     justify-content: center;
-    padding: 1rem;
+    padding: 1.35rem;
   }
   
   .nav-item {
     justify-content: center;
-    padding: 1rem;
+    padding: 1.35rem;
   }
   
   .nav-icon {
@@ -317,11 +318,11 @@ const handleLogout = () => {
   }
   
   .admin-main {
-    margin-left: 70px;
+    margin-left: 95px;
   }
   
   .admin-content {
-    padding: 1.5rem;
+    padding: 2rem;
   }
 }
 
@@ -332,12 +333,12 @@ const handleLogout = () => {
     position: relative;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 0.5rem;
+    padding: 0.7rem;
   }
   
   .sidebar-brand {
     border-bottom: none;
-    padding: 0.5rem 1rem;
+    padding: 0.7rem 1.35rem;
   }
   
   .sidebar-nav {
@@ -349,7 +350,7 @@ const handleLogout = () => {
   }
   
   .nav-item {
-    padding: 0.5rem 1rem;
+    padding: 0.7rem 1.35rem;
     border-left: none;
     border-bottom: 2px solid transparent;
   }
@@ -370,11 +371,11 @@ const handleLogout = () => {
   }
   
   .admin-topbar {
-    padding: 1rem;
+    padding: 1.35rem;
   }
   
   .page-title {
-    font-size: 1.25rem;
+    font-size: 1.7rem;
   }
 }
 </style>

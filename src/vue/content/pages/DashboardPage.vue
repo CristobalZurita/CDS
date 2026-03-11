@@ -1,5 +1,8 @@
 <template>
-  <div class="dashboard-page">
+  <div v-if="isAdmin" class="redirect-notice">
+    <p>Redirigiendo al panel de administración...</p>
+  </div>
+  <div v-else class="dashboard-page">
     <div class="dashboard-container">
       <!-- Header -->
       <div class="dashboard-header">
@@ -221,6 +224,7 @@ const activeRepairs = computed(() => stats.value.active_repairs)
 const completedRepairs = computed(() => stats.value.completed_repairs)
 const totalSpent = computed(() => stats.value.total_spent)
 const pendingOtPayments = computed(() => stats.value.pending_ot_payments || 0)
+const isAdmin = computed(() => authStore.user?.role === 'admin' || authStore.user?.is_admin === true)
 
 // Methods
 const getStatusLabel = (status) => {
@@ -294,11 +298,26 @@ const fetchDashboard = async () => {
 }
 
 onMounted(() => {
+  // ADITIVO: Redirigir admins al nuevo panel de ZERO
+  if (isAdmin.value) {
+    window.location.href = 'http://localhost:5174/admin'
+    return
+  }
   fetchDashboard()
 })
 </script>
 
 <style scoped>
+.redirect-notice {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 20% 10%, rgba(236, 107, 0, 0.25) 0%, rgba(62, 60, 56, 0.95) 45%, rgba(0, 0, 0, 0.98) 100%);
+  color: white;
+  font-size: 1.25rem;
+}
+
 .dashboard-page {
   min-height: 100vh;
   background: radial-gradient(circle at 20% 10%, rgba(236, 107, 0, 0.25) 0%, rgba(62, 60, 56, 0.95) 45%, rgba(0, 0, 0, 0.98) 100%);

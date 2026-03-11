@@ -1,40 +1,41 @@
 <template>
-  <section class="admin-section">
-    <div class="section-header">
-      <h2 class="section-title">👤 Usuarios</h2>
-      <button class="btn-refresh" @click="fetchUsers">Actualizar</button>
+  <div class="users-list">
+    <div class="list-toolbar">
+      <span class="list-count">{{ users.length }} usuarios</span>
+      <button class="btn-refresh" @click="fetchUsers">↻ Actualizar</button>
     </div>
-    <div class="table-wrap">
-      <table class="admin-table">
+    
+    <div class="table-container">
+      <table class="data-table">
         <thead>
           <tr>
             <th>Email</th>
             <th>Nombre</th>
             <th>Rol</th>
-            <th>Acciones</th>
+            <th class="actions">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id" data-testid="user-row">
-            <td data-label="Email">{{ user.email }}</td>
-            <td data-label="Nombre">{{ user.full_name || user.firstName + ' ' + user.lastName }}</td>
-            <td data-label="Rol">
-              <span :class="['role-badge', `role-${user.role}`]">
+          <tr v-for="user in users" :key="user.id">
+            <td>{{ user.email }}</td>
+            <td>{{ user.full_name || user.firstName + ' ' + user.lastName }}</td>
+            <td>
+              <span :class="['role-pill', user.role]">
                 {{ formatRole(user.role) }}
               </span>
             </td>
-            <td data-label="Acciones">
-              <button class="btn-action" @click="editUser(user)">Editar</button>
-              <button class="btn-action danger" @click="removeUser(user)">Borrar</button>
+            <td class="actions">
+              <button class="btn-icon" @click="editUser(user)" title="Editar">✏️</button>
+              <button class="btn-icon danger" @click="removeUser(user)" title="Eliminar">🗑️</button>
             </td>
           </tr>
           <tr v-if="!users?.length">
-            <td colspan="4" class="empty-row">No hay usuarios registrados</td>
+            <td colspan="4" class="empty-cell">No hay usuarios registrados</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
@@ -45,12 +46,12 @@ const { users, fetchUsers, deleteUser } = useUsers()
 const emit = defineEmits(['edit'])
 
 const formatRole = (role) => {
-  const roleMap = {
-    'admin': 'Administrador',
+  const map = {
+    'admin': 'Admin',
     'technician': 'Técnico',
     'client': 'Cliente'
   }
-  return roleMap[role] || role
+  return map[role] || role
 }
 
 const editUser = (user) => {
@@ -58,132 +59,125 @@ const editUser = (user) => {
 }
 
 const removeUser = async (user) => {
-  if (!window.confirm(`¿Eliminar usuario "${user.email}"?`)) return
+  if (!confirm(`¿Eliminar usuario "${user.email}"?`)) return
   await deleteUser(user.id)
 }
 
-onMounted(() => {
-  fetchUsers()
-})
+onMounted(fetchUsers)
 </script>
 
 <style scoped>
-.admin-section {
-  background: var(--color-white, #fff);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+/* 35% larger */
+.users-list {
+  width: 100%;
 }
 
-.section-header {
+.list-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.35rem;
 }
 
-.section-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-dark, #1a1a2e);
+.list-count {
+  font-size: 1.2rem;
+  color: #6b7280;
 }
 
 .btn-refresh {
-  padding: 0.5rem 1rem;
-  background: var(--color-primary, #ff6b35);
-  color: var(--color-white, #fff);
-  border: none;
-  border-radius: 6px;
+  padding: 0.7rem 1.35rem;
+  background: #f8fafc;
+  border: 1px solid #e8ecf1;
+  border-radius: 11px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  font-size: 1.2rem;
+  color: #374151;
 }
 
 .btn-refresh:hover {
-  opacity: 0.9;
+  background: #e8ecf1;
 }
 
-.table-wrap {
+.table-container {
   overflow-x: auto;
 }
 
-.admin-table {
+.data-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 1.4rem;
 }
 
-.admin-table th,
-.admin-table td {
-  padding: 0.75rem;
+.data-table th {
   text-align: left;
-  border-bottom: 1px solid var(--color-light, #e0e0e0);
-}
-
-.admin-table th {
+  padding: 1rem;
   font-weight: 600;
-  background: var(--color-bg, #f5f5f5);
-  color: var(--color-dark, #1a1a2e);
+  color: #6b7280;
+  border-bottom: 1px solid #e8ecf1;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-.admin-table tr:hover td {
-  background: var(--color-bg, #f5f5f5);
+.data-table td {
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
 }
 
-.role-badge {
+.data-table tr:hover td {
+  background: #f8fafc;
+}
+
+.role-pill {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 1.1rem;
   font-weight: 600;
   text-transform: uppercase;
 }
 
-.role-admin {
-  background: rgba(255, 107, 53, 0.2);
-  color: #d84315;
+.role-pill.admin {
+  background: #ffedd5;
+  color: #9a3412;
 }
 
-.role-technician {
-  background: rgba(23, 162, 184, 0.2);
-  color: #0c5460;
+.role-pill.technician {
+  background: #dbeafe;
+  color: #1e40af;
 }
 
-.role-client {
-  background: rgba(108, 117, 125, 0.2);
-  color: #383d41;
+.role-pill.client {
+  background: #f3f4f6;
+  color: #374151;
 }
 
-.btn-action {
-  padding: 0.35rem 0.75rem;
-  margin-right: 0.25rem;
-  background: transparent;
-  border: 1px solid var(--color-primary, #ff6b35);
-  color: var(--color-primary, #ff6b35);
-  border-radius: 4px;
+.actions {
+  text-align: right;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
   cursor: pointer;
-  font-size: 0.8rem;
-  transition: all 0.2s;
+  padding: 0.5rem;
+  font-size: 1.35rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
 }
 
-.btn-action:hover {
-  background: var(--color-primary, #ff6b35);
-  color: var(--color-white, #fff);
+.btn-icon:hover {
+  opacity: 1;
 }
 
-.btn-action.danger {
-  border-color: var(--color-danger, #dc3545);
-  color: var(--color-danger, #dc3545);
+.btn-icon.danger:hover {
+  color: #dc2626;
 }
 
-.btn-action.danger:hover {
-  background: var(--color-danger, #dc3545);
-  color: var(--color-white, #fff);
-}
-
-.empty-row {
+.empty-cell {
   text-align: center;
-  color: var(--color-gray-600, #666);
-  padding: 2rem;
+  color: #6b7280;
+  padding: 2.7rem;
 }
 </style>

@@ -107,36 +107,37 @@ const onSubmit = async () => {
 </script>
 
 <style scoped>
+/* 35% larger */
 .user-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.35rem;
 }
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.35rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
 }
 
 .form-group label {
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--color-dark, #1a1a2e);
 }
 
 .form-group input,
 .form-group select {
-  padding: 0.5rem 0.75rem;
+  padding: 0.7rem 1rem;
   border: 1px solid var(--color-light, #e0e0e0);
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 1.35rem;
   min-height: 40px;
 }
 
@@ -144,12 +145,12 @@ const onSubmit = async () => {
 .form-group select:focus {
   outline: none;
   border-color: var(--color-primary, #ff6b35);
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
 }
 
 .password-field {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.7rem;
 }
 
 .password-field input {
@@ -157,25 +158,25 @@ const onSubmit = async () => {
 }
 
 .toggle-password {
-  padding: 0.5rem 0.75rem;
+  padding: 0.7rem 1rem;
   background: var(--color-light, #e0e0e0);
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.35rem;
 }
 
 .form-actions {
-  margin-top: 0.5rem;
+  margin-top: 0.7rem;
 }
 
 .btn-submit {
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 2rem;
   background: var(--color-primary, #ff6b35);
   color: var(--color-white, #fff);
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 1.35rem;
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;

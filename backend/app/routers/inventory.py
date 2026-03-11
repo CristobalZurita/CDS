@@ -16,6 +16,15 @@ from app.models.inventory import Product
 from app.models.stock import Stock
 from app.models.category import Category
 
+# ADITIVO: Importar servicio de Cloudinary para resolver imágenes
+try:
+    from app.services.cloudinary_catalog_service import resolve_image_url
+    CLOUDINARY_AVAILABLE = True
+except ImportError:
+    CLOUDINARY_AVAILABLE = False
+    def resolve_image_url(path):
+        return path
+
 router = APIRouter(prefix="/inventory", tags=["Inventory"])
 
 _STORE_EXCLUDED_TERMS = (
@@ -161,6 +170,9 @@ def _serialize_inventory_product(db: Session, product: Product) -> dict:
     sellable_stock = max(int(available_qty or 0) - int(min_stock or 0), 0)
     stock_alert_level = _stock_alert_level(int(available_qty or 0), int(min_stock or 0))
 
+        # ADITIVO: Resolver imagen a Cloudinary si está disponible
+    image_url_resolved = resolve_image_url(product.image_url) if CLOUDINARY_AVAILABLE else product.image_url
+
     return {
         "id": product.id,
         "name": product.name,
@@ -178,7 +190,7 @@ def _serialize_inventory_product(db: Session, product: Product) -> dict:
         "available_stock": available_qty,
         "sellable_stock": sellable_stock,
         "stock_unit": "u",
-        "image_url": product.image_url,
+        "image_url": image_url_resolved,
         "price": product.price,
         "min_stock": min_stock,
         "is_low_stock": available_qty <= min_stock,

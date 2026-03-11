@@ -175,3 +175,11 @@ if globals().get("manuals_router"):
 	api_router.include_router(globals()["manuals_router"].router)
 if globals().get("photo_requests_router"):
 	api_router.include_router(globals()["photo_requests_router"].router)
+
+# ADITIVO: Router para resolver imágenes de Cloudinary
+try:
+	from app.routers import images as images_router
+	api_router.include_router(images_router.router)
+except Exception:
+	# Si el módulo no está disponible, se ignora
+	pass

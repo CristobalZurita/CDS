@@ -1,5 +1,8 @@
 <template>
-  <main class="dashboard-page">
+  <main v-if="isAdmin" class="redirect-notice">
+    <p>Redirigiendo al panel de administración...</p>
+  </main>
+  <main v-else class="dashboard-page">
     <section class="dashboard-header">
       <div>
         <h1>Mi Panel de Control</h1>
@@ -7,9 +10,6 @@
       </div>
 
       <div class="header-actions">
-        <router-link v-if="isAdmin" to="/admin" class="btn-admin">
-          ⚙️ Admin
-        </router-link>
         <router-link to="/cotizador-ia" class="btn-primary">
           + Nueva Cotizacion
         </router-link>
@@ -139,10 +139,19 @@
 <script setup>
 import { useDashboardPage } from '@/composables/useDashboardPage'
 import { useAuthStore } from '@/stores/auth'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const isAdmin = computed(() => authStore.isAdmin)
+
+// ADITIVO: Redirigir admins directo al panel de administración
+onMounted(() => {
+  if (isAdmin.value) {
+    router.replace('/admin')
+  }
+})
 
 const {
   isLoading,
@@ -168,6 +177,16 @@ const {
 </script>
 
 <style scoped>
+.redirect-notice {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cds-bg, #f5f5f5);
+  color: var(--cds-text-normal, #333);
+  font-size: 1.25rem;
+}
+
 .dashboard-page {
   padding: 1rem;
   display: grid;
