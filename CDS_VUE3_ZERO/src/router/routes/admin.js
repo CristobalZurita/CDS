@@ -15,6 +15,7 @@ const PurchaseRequestsPage = () => import('@/pages/admin/PurchaseRequestsPage.vu
 const ManualsPage = () => import('@/pages/admin/ManualsPage.vue')
 const StatsPage = () => import('@/pages/admin/StatsPage.vue')
 const WizardsPage = () => import('@/pages/admin/WizardsPage.vue')
+const IntakeWizardPage = () => import('@/pages/admin/IntakeWizardPage.vue')
 const ArchivePage = () => import('@/pages/admin/ArchivePage.vue')
 
 export const adminRoutes = [
@@ -39,6 +40,7 @@ export const adminRoutes = [
       { path: 'manuals', name: 'admin-manuals', component: ManualsPage },
       { path: 'stats', name: 'admin-stats', component: StatsPage },
       { path: 'wizards', name: 'admin-wizards', component: WizardsPage },
+      { path: 'intake', name: 'admin-intake', component: IntakeWizardPage },
       { path: 'archive', name: 'admin-archive', component: ArchivePage }
     ]
   }

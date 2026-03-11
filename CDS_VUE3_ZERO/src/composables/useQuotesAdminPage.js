@@ -253,6 +253,30 @@ export function useQuotesAdminPage() {
     }
   }
 
+  async function createQuote(quoteData) {
+    error.value = ''
+    
+    try {
+      const response = await api.post('/diagnostic/quotes', {
+        client_name: quoteData.client_name,
+        client_email: quoteData.client_email,
+        client_phone: quoteData.client_phone || null,
+        problem_description: quoteData.problem_description,
+        estimated_total: Number(quoteData.estimated_total) || 0,
+        estimated_parts_cost: Number(quoteData.estimated_parts_cost) || 0,
+        estimated_labor_cost: Number(quoteData.estimated_labor_cost) || 0,
+        diagnosis: quoteData.diagnosis || null,
+        valid_until: quoteData.valid_until || null
+      })
+      
+      await loadBoard()
+      return { success: true, data: response.data }
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+      return { success: false, error: error.value }
+    }
+  }
+
   onMounted(loadBoard)
 
   return {
@@ -277,6 +301,7 @@ export function useQuotesAdminPage() {
     changeStatus,
     createRepairFromQuote,
     openRepair,
-    deleteQuote
+    deleteQuote,
+    createQuote
   }
 }

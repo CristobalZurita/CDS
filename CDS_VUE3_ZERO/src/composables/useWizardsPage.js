@@ -6,9 +6,9 @@ const WIZARD_CARDS = [
   {
     id: 'intake',
     title: 'Cliente + Instrumento + OT',
-    description: 'Acceso directo al flujo de intake y creacion de OT.',
-    routeName: 'admin-clients',
-    cta: 'Ir a Clientes'
+    description: 'Flujo completo de ingreso: crea cliente, equipo y OT en un solo paso.',
+    routeName: 'admin-intake',
+    cta: 'Nuevo Ingreso'
   },
   {
     id: 'inventory',

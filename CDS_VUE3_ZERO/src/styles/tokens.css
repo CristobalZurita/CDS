@@ -8,8 +8,28 @@
   --cds-primary: #ec6b00;
   --cds-dark: #3e3c38;
   --cds-success: #038600;
+  --cds-danger: #dc2626;
+  --cds-warning: #f59e0b;
+  --cds-info: #0ea5e9;
   --cds-light: #d3d0c3;
   --cds-white: white;
+  
+  /* Estados de validación */
+  --cds-valid-bg: #f0fdf4;
+  --cds-valid-border: #86efac;
+  --cds-valid-text: #166534;
+  
+  --cds-invalid-bg: #fef2f2;
+  --cds-invalid-border: #fecaca;
+  --cds-invalid-text: #991b1b;
+  
+  --cds-warning-bg: #fffbeb;
+  --cds-warning-border: #fcd34d;
+  --cds-warning-text: #92400e;
+  
+  /* Focus states */
+  --cds-focus-ring: 0 0 0 3px rgba(236, 107, 0, 0.25);
+  --cds-focus-ring-danger: 0 0 0 3px rgba(220, 38, 38, 0.25);
 
   --cds-vintage-orange: #cc7d43;
   --cds-fluor-green: #d9ff4e;

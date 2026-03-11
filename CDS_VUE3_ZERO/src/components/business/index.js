@@ -1,3 +1,8 @@
-export { default as RepairCard } from './RepairCard.vue'
-export { default as InventoryTable } from './InventoryTable.vue'
-export { default as ClientList } from './ClientList.vue'
+/**
+ * Componentes de Negocio (Business Components)
+ * 
+ * Componentes específicos del dominio del taller:
+ * subida de fotos, gestión de materiales, etc.
+ */
+
+export { default as PhotoUpload } from './PhotoUpload.vue'

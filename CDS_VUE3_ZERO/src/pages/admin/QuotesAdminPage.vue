@@ -6,6 +6,9 @@
         <p>Tablero de estados para pendientes, enviadas y cerradas.</p>
       </div>
       <div class="header-actions">
+        <button class="btn-primary" @click="showNewQuoteModal = true">
+          + Nueva Cotización
+        </button>
         <button class="btn-secondary" :disabled="loading" @click="loadBoard">
           {{ loading ? 'Actualizando...' : 'Actualizar' }}
         </button>
@@ -139,10 +142,128 @@
         </div>
       </article>
     </section>
+
+    <!-- Modal Nueva Cotización -->
+    <div v-if="showNewQuoteModal" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <header class="modal-header">
+          <h2>Nueva Cotización</h2>
+          <button class="modal-close" @click="closeModal">×</button>
+        </header>
+
+        <form class="modal-form" @submit.prevent="handleCreateQuote">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Nombre del cliente *</label>
+              <input 
+                v-model="newQuote.client_name" 
+                type="text" 
+                placeholder="Ej: Juan Pérez"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Email *</label>
+              <input 
+                v-model="newQuote.client_email" 
+                type="email" 
+                placeholder="ejemplo@correo.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Teléfono</label>
+              <input 
+                v-model="newQuote.client_phone" 
+                type="tel" 
+                placeholder="+56912345678"
+              />
+            </div>
+
+            <div class="form-group full">
+              <label>Descripción del problema *</label>
+              <textarea 
+                v-model="newQuote.problem_description" 
+                placeholder="Describa el problema del equipo..."
+                rows="3"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label>Diagnóstico (opcional)</label>
+              <textarea 
+                v-model="newQuote.diagnosis" 
+                placeholder="Su diagnóstico técnico preliminar..."
+                rows="2"
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Costo repuestos (CLP)</label>
+              <input 
+                v-model.number="newQuote.estimated_parts_cost" 
+                type="number" 
+                min="0"
+                step="1000"
+                placeholder="0"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Costo mano de obra (CLP)</label>
+              <input 
+                v-model.number="newQuote.estimated_labor_cost" 
+                type="number" 
+                min="0"
+                step="1000"
+                placeholder="0"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Total estimado * (CLP)</label>
+              <input 
+                v-model.number="newQuote.estimated_total" 
+                type="number" 
+                min="0"
+                step="1000"
+                placeholder="0"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Válida hasta</label>
+              <input 
+                v-model="newQuote.valid_until" 
+                type="date"
+              />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" @click="closeModal">
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              class="btn-primary"
+              :disabled="isCreating"
+            >
+              {{ isCreating ? 'Creando...' : 'Crear Cotización' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 </template>
 
 <script setup>
+import { ref, reactive } from 'vue'
 import { useQuotesAdminPage } from '@/composables/useQuotesAdminPage'
 
 const {
@@ -167,8 +288,61 @@ const {
   changeStatus,
   createRepairFromQuote,
   openRepair,
-  deleteQuote
+  deleteQuote,
+  createQuote
 } = useQuotesAdminPage()
+
+// Modal state
+const showNewQuoteModal = ref(false)
+const isCreating = ref(false)
+
+// Default valid until (30 days)
+const defaultValidUntil = () => {
+  const date = new Date()
+  date.setDate(date.getDate() + 30)
+  return date.toISOString().split('T')[0]
+}
+
+const newQuote = reactive({
+  client_name: '',
+  client_email: '',
+  client_phone: '',
+  problem_description: '',
+  diagnosis: '',
+  estimated_parts_cost: 0,
+  estimated_labor_cost: 0,
+  estimated_total: 0,
+  valid_until: defaultValidUntil()
+})
+
+function closeModal() {
+  showNewQuoteModal.value = false
+  resetForm()
+}
+
+function resetForm() {
+  newQuote.client_name = ''
+  newQuote.client_email = ''
+  newQuote.client_phone = ''
+  newQuote.problem_description = ''
+  newQuote.diagnosis = ''
+  newQuote.estimated_parts_cost = 0
+  newQuote.estimated_labor_cost = 0
+  newQuote.estimated_total = 0
+  newQuote.valid_until = defaultValidUntil()
+}
+
+async function handleCreateQuote() {
+  isCreating.value = true
+  
+  const result = await createQuote(newQuote)
+  
+  if (result.success) {
+    closeModal()
+  }
+  
+  isCreating.value = false
+}
 </script>
 
 <style scoped>
@@ -216,5 +390,124 @@ const {
   .toolbar-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .columns-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--cds-white);
+  border-radius: var(--cds-radius-lg);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--cds-shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: var(--cds-text-xl);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--cds-text-muted);
+  padding: 0.25rem;
+}
+
+.modal-close:hover {
+  color: var(--cds-text-normal);
+}
+
+.modal-form {
+  padding: 1.25rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: var(--cds-text-sm);
+  font-weight: 500;
+  color: var(--cds-text-normal);
+}
+
+.form-group input,
+.form-group textarea {
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
+  border-radius: var(--cds-radius-sm);
+  font-size: var(--cds-text-base);
+  font-family: inherit;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--cds-primary);
+  box-shadow: var(--cds-focus-ring);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+}
+
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .modal-actions button {
+    width: 100%;
+  }
 }
 </style>
