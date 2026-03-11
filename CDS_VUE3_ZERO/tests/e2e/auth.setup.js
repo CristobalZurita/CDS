@@ -11,11 +11,11 @@ import { setupAuth } from './helpers/auth.js'
 const USERS = {
   admin: {
     email: process.env.TEST_ADMIN_EMAIL || 'admin@example.com',
-    password: process.env.TEST_ADMIN_PASSWORD || 'admin123'
+    password: process.env.TEST_ADMIN_PASSWORD || 'Admin123!'
   },
   client: {
     email: process.env.TEST_CLIENT_EMAIL || 'client@example.com',
-    password: process.env.TEST_CLIENT_PASSWORD || 'client123'
+    password: process.env.TEST_CLIENT_PASSWORD || 'Client123!'
   }
 }
 

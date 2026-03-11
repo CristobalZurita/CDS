@@ -7,6 +7,11 @@ import { test, expect } from '@playwright/test'
 import { resolveAuthState, loginFromUi } from './helpers/auth.js'
 import { trackBrowserErrors, waitForAppToSettle } from './helpers/page.js'
 
+const TEST_ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || 'admin@example.com'
+const TEST_ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || 'Admin123!'
+const TEST_CLIENT_EMAIL = process.env.TEST_CLIENT_EMAIL || 'client@example.com'
+const TEST_CLIENT_PASSWORD = process.env.TEST_CLIENT_PASSWORD || 'Client123!'
+
 // Usar storageState para reutilizar autenticación
 test.describe('Admin Dashboard', () => {
   
@@ -17,7 +22,7 @@ test.describe('Admin Dashboard', () => {
     
     // Login como admin
     await page.goto('/login')
-    await loginFromUi(page, 'admin@example.com', 'admin123')
+    await loginFromUi(page, TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD)
     
     // Guardar estado
     const authFile = resolveAuthState('admin')
@@ -115,7 +120,7 @@ test.describe('Admin Dashboard', () => {
     test('cliente no puede acceder a /admin', async ({ page }) => {
       // Login como cliente
       await page.goto('/login')
-      await loginFromUi(page, 'client@example.com', 'client123')
+      await loginFromUi(page, TEST_CLIENT_EMAIL, TEST_CLIENT_PASSWORD)
       
       // Intentar ir a admin
       await page.goto('/admin')

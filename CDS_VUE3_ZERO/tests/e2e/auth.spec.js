@@ -7,6 +7,11 @@ import { test, expect } from '@playwright/test'
 import { loginFromUi, logoutFromUi } from './helpers/auth.js'
 import { trackBrowserErrors, waitForAppToSettle } from './helpers/page.js'
 
+const TEST_ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || 'admin@example.com'
+const TEST_ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || 'Admin123!'
+const TEST_CLIENT_EMAIL = process.env.TEST_CLIENT_EMAIL || 'test@example.com'
+const TEST_CLIENT_PASSWORD = process.env.TEST_CLIENT_PASSWORD || 'Client123!'
+
 test.describe('Autenticación', () => {
   
   test('usuario no autenticado es redirigido a login desde /admin', async ({ page }) => {
@@ -33,7 +38,7 @@ test.describe('Autenticación', () => {
     const tracker = trackBrowserErrors(page)
     
     await page.goto('/login')
-    await loginFromUi(page, 'test@example.com', 'password123')
+    await loginFromUi(page, TEST_CLIENT_EMAIL, TEST_CLIENT_PASSWORD)
     
     // Cliente va a /dashboard
     await expect(page).toHaveURL(/\/dashboard/)
@@ -45,7 +50,7 @@ test.describe('Autenticación', () => {
   test('login con credenciales válidas redirige a admin (admin)', async ({ page }) => {
     // Nota: Este test requiere un usuario admin en la base de datos
     await page.goto('/login')
-    await loginFromUi(page, 'admin@example.com', 'admin123')
+    await loginFromUi(page, TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD)
     
     // Admin va a /admin
     await expect(page).toHaveURL(/\/admin/)
@@ -70,7 +75,7 @@ test.describe('Autenticación', () => {
   test('logout funciona correctamente', async ({ page }) => {
     // Login primero
     await page.goto('/login')
-    await loginFromUi(page, 'test@example.com', 'password123')
+    await loginFromUi(page, TEST_CLIENT_EMAIL, TEST_CLIENT_PASSWORD)
     await expect(page).toHaveURL(/\/dashboard/)
     
     // Logout
@@ -84,7 +89,7 @@ test.describe('Autenticación', () => {
   test('persistencia de sesión después de recargar', async ({ page }) => {
     // Login
     await page.goto('/login')
-    await loginFromUi(page, 'test@example.com', 'password123')
+    await loginFromUi(page, TEST_CLIENT_EMAIL, TEST_CLIENT_PASSWORD)
     await expect(page).toHaveURL(/\/dashboard/)
     
     // Recargar
