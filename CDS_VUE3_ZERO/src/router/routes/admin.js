@@ -1,4 +1,4 @@
-const MasterLayout = () => import('@/layouts/MasterLayout.vue')
+const AdminShellLayout = () => import('@/layouts/AdminShellLayout.vue')
 const AdminDashboard = () => import('@/pages/admin/AdminDashboard.vue')
 const InventoryPage = () => import('@/pages/admin/InventoryPage.vue')
 const InventoryUnified = () => import('@/pages/admin/InventoryUnifiedPage.vue')
@@ -21,7 +21,7 @@ const ArchivePage = () => import('@/pages/admin/ArchivePage.vue')
 export const adminRoutes = [
   {
     path: '/admin',
-    component: MasterLayout,
+    component: AdminShellLayout,
     meta: { requiresAuth: true, requiresAdmin: true },
     children: [
       { path: '', name: 'admin-dashboard', component: AdminDashboard },
