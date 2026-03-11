@@ -193,6 +193,33 @@ if settings.environment and settings.environment.lower() in ("production", "prod
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Referrer-Policy"] = "no-referrer-when-downgrade"
         response.headers["Permissions-Policy"] = "geolocation=(), microphone=()"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Expect-CT"] = "max-age=86400, enforce"
+        
+        # Content Security Policy - configurable por entorno
+        # En desarrollo: permitir localhost para API
+        # En producción: restringir a dominios específicos
+        csp_connect_src = "'self'"
+        if settings.public_base_url:
+            csp_connect_src += f" {settings.public_base_url}"
+        # Si hay orígenes de desarrollo en CORS, permitirlos también
+        for origin in (settings.allowed_origins or []):
+            if "localhost" in origin or "127.0.0.1" in origin:
+                csp_connect_src += f" {origin}"
+        
+        csp = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-eval'; "  # Vue necesita eval para runtime
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            "img-src 'self' data: https://res.cloudinary.com; "
+            f"font-src 'self' https://fonts.gstatic.com; "
+            f"connect-src {csp_connect_src}; "
+            "frame-ancestors 'none'; "
+            "base-uri 'self'; "
+            "form-action 'self';"
+        )
+        response.headers["Content-Security-Policy"] = csp
+        
         return response
 
     # Expose audit service for internal use
