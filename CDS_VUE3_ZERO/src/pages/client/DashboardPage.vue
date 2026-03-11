@@ -7,6 +7,9 @@
       </div>
 
       <div class="header-actions">
+        <router-link v-if="isAdmin" to="/admin" class="btn-admin">
+          ⚙️ Admin
+        </router-link>
         <router-link to="/cotizador-ia" class="btn-primary">
           + Nueva Cotizacion
         </router-link>
@@ -135,6 +138,11 @@
 
 <script setup>
 import { useDashboardPage } from '@/composables/useDashboardPage'
+import { useAuthStore } from '@/stores/auth'
+import { computed } from 'vue'
+
+const authStore = useAuthStore()
+const isAdmin = computed(() => authStore.isAdmin)
 
 const {
   isLoading,
@@ -218,6 +226,24 @@ const {
   border: 1px solid var(--cds-primary);
   background: var(--cds-primary);
   color: var(--cds-white);
+}
+
+.btn-admin {
+  border: 1px solid var(--cds-dark);
+  background: var(--cds-dark);
+  color: var(--cds-white);
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.55rem;
+  font-size: var(--cds-text-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-admin:hover {
+  background: color-mix(in srgb, var(--cds-dark) 80%, black);
 }
 
 .btn-secondary,
