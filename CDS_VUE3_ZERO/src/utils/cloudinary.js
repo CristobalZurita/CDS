@@ -6,8 +6,7 @@
 import imageMapping from '../../../image-mapping.json'
 
 const CLOUDINARY_CLOUD_NAME = 'dgwwi77ic'
-const CLOUDINARY_FOLDER_BASE = 'cirujano'
-const CLOUDINARY_BASE_URL = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${CLOUDINARY_FOLDER_BASE}`
+const CLOUDINARY_BASE_URL = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload`
 
 // Crear índice del mapeo para búsqueda rápida
 const imageMap = new Map()
@@ -35,10 +34,11 @@ export function toCloudinaryUrl(localPath, options = {}) {
   // Buscar en el mapeo primero (para obtener URL con versión correcta)
   let url = imageMap.get(localPath)
   
-  // Si no está en el mapeo, construir URL manualmente (fallback)
+  // Si no está en el mapeo, fallback por nombre de archivo (public_id raíz)
   if (!url) {
-    const cleanPath = localPath.startsWith('/') ? localPath.slice(1) : localPath
-    url = `${CLOUDINARY_BASE_URL}/${cleanPath}`
+    const fileName = String(localPath).split('/').pop()
+    if (!fileName) return localPath
+    url = `${CLOUDINARY_BASE_URL}/${encodeURIComponent(fileName)}`
   }
   
   // Aplicar transformaciones si se solicitan

@@ -55,7 +55,7 @@
             </div>
 
             <div class="pinout-card">
-              <img src="/images/calculadoras/CD40106.webp" alt="Pinout CD40106" class="pinout-image" />
+              <img :src="useCloudinaryImage('/images/calculadoras/CD40106.webp')" alt="Pinout CD40106" class="pinout-image" />
             </div>
           </div>
         </section>
@@ -97,6 +97,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { useCloudinaryImage } from '@/composables/useCloudinary'
 
 const form = reactive({
   r_value: 100,

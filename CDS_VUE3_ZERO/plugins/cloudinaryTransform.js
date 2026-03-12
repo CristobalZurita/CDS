@@ -8,6 +8,7 @@ import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
+const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/dgwwi77ic/image/upload'
 
 // Cargar el mapeo de imágenes desde el archivo JSON
 const imageMap = new Map()
@@ -40,8 +41,10 @@ function toCloudinaryUrl(localPath) {
     return cloudUrl
   }
   
-  // Si no está en el mapeo, devolver la ruta original
-  return localPath
+  // Fallback robusto: usa el nombre de archivo como public_id
+  const fileName = String(localPath).split('/').pop()
+  if (!fileName) return localPath
+  return `${CLOUDINARY_BASE_URL}/${encodeURIComponent(fileName)}`
 }
 
 /**
@@ -53,8 +56,8 @@ function transformContent(content, id) {
     return content
   }
   
-  // Patrón para encontrar src="/images/..." o src='/images/...'
-  const imgRegex = /src=(["'])\/images\/([^"']+)\1/g
+  // Patrón para encontrar cualquier string literal "/images/..."
+  const imgRegex = /(["'])\/images\/([^"']+)\1/g
   
   let changed = false
   const transformed = content.replace(imgRegex, (match, quote, imagePath) => {
@@ -63,7 +66,7 @@ function transformContent(content, id) {
     
     if (cloudUrl !== localPath) {
       changed = true
-      return `src=${quote}${cloudUrl}${quote}`
+      return `${quote}${cloudUrl}${quote}`
     }
     
     return match
@@ -75,7 +78,7 @@ function transformContent(content, id) {
 export default function cloudinaryTransformPlugin() {
   return {
     name: 'cloudinary-transform',
-    enforce: 'post',
+    enforce: 'pre',
     
     transform(code, id) {
       const transformed = transformContent(code, id)

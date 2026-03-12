@@ -45,7 +45,7 @@
             class="calculator-card"
           >
             <div class="calculator-card-media" :class="{ 'calculator-card-media--icon': !item.image }">
-              <img v-if="item.image" :src="item.image" :alt="item.label" loading="lazy" />
+              <img v-if="item.image" :src="resolveCalculatorImage(item.image)" :alt="item.label" loading="lazy" />
               <i v-else :class="item.icon"></i>
             </div>
             <div class="calculator-card-content">
@@ -67,7 +67,7 @@
           class="calculator-card"
         >
           <div class="calculator-card-media" :class="{ 'calculator-card-media--icon': !item.image }">
-            <img v-if="item.image" :src="item.image" :alt="item.label" loading="lazy" />
+            <img v-if="item.image" :src="resolveCalculatorImage(item.image)" :alt="item.label" loading="lazy" />
             <i v-else :class="item.icon"></i>
           </div>
           <div class="calculator-card-content">
@@ -91,6 +91,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useCalculatorsPage } from '@/composables/useCalculatorsPage'
+import { useCloudinaryImage } from '@/composables/useCloudinary'
 
 const { title, subtitle, categories, calculatorItems, popularItems } = useCalculatorsPage()
 
@@ -112,6 +113,10 @@ const filteredItems = computed(() => {
 
 function applySearch() {
   search.value = search.value.trim()
+}
+
+function resolveCalculatorImage(image) {
+  return image ? useCloudinaryImage(image) : ''
 }
 </script>
 

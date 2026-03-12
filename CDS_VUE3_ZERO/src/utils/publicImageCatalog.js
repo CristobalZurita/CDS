@@ -432,6 +432,6 @@ import { toCloudinaryUrl as cloudinaryUtil } from './cloudinary.js'
 export { toCloudinaryUrl, toThumbnail, toOptimized, getCloudinaryUrlFromMapping } from './cloudinary.js'
 
 // Exportar todas las imágenes con URLs de Cloudinary
-export const instrumentCloudinaryUrls = instrumentImagePaths.map(p => toCloudinaryUrl(p))
-export const inventoryCloudinaryUrls = inventoryImagePaths.map(p => toCloudinaryUrl(p))
-export const calculatorCloudinaryUrls = calculatorImagePaths.map(p => toCloudinaryUrl(p))
+export const instrumentCloudinaryUrls = instrumentImagePaths.map((p) => cloudinaryUtil(p))
+export const inventoryCloudinaryUrls = inventoryImagePaths.map((p) => cloudinaryUtil(p))
+export const calculatorCloudinaryUrls = calculatorImagePaths.map((p) => cloudinaryUtil(p))

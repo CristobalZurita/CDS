@@ -4,6 +4,7 @@ import api from '@/services/api'
 import { useAuth } from '@/composables/useAuth'
 import { useShopCartStore } from '@/stores/shopCart'
 import { inventoryImagePaths, instrumentImagePaths } from '@/utils/publicImageCatalog'
+import { useCloudinaryImage } from '@/composables/useCloudinary'
 
 const STORE_CATALOG_CACHE_KEY = 'cds_store_catalog_cache_v1'
 
@@ -74,8 +75,9 @@ function catalogImageFallback(product) {
   const instrumentExact = findExactMatch(tokenCandidates, instrumentImageMap)
   if (instrumentExact) return instrumentExact
   const inventoryLoose = findLooseMatch(tokenCandidates, inventoryImageEntries)
-  if (inventoryLoose) return inventoryLoose
-  return findLooseMatch(tokenCandidates, instrumentImageEntries)
+  if (inventoryLoose) return useCloudinaryImage(inventoryLoose)
+  const instrumentLoose = findLooseMatch(tokenCandidates, instrumentImageEntries)
+  return instrumentLoose ? useCloudinaryImage(instrumentLoose) : ''
 }
 
 function readCatalogCache() {
@@ -189,8 +191,9 @@ export function useStorePage() {
   function productImageSrc(product) {
     const value = String(product?.image_url || '').trim()
     if (value) {
-      if (/^https?:\/\//i.test(value) || value.startsWith('/')) return value
-      return `/${value.replace(/^\/+/, '')}`
+      if (/^https?:\/\//i.test(value)) return value
+      const normalized = value.startsWith('/') ? value : `/${value.replace(/^\/+/, '')}`
+      return useCloudinaryImage(normalized)
     }
     return catalogImageFallback(product)
   }

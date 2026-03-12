@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+import { useCloudinaryImage } from '@/composables/useCloudinary'
 
 export function useCalculatorsPage() {
   const title = computed(() => 'Calculadoras')
@@ -6,7 +7,8 @@ export function useCalculatorsPage() {
 
   const categories = ['Todas', 'Cálculo', 'Identificación', 'Conversión']
 
-  const calculatorItems = computed(() => ([
+  const calculatorItems = computed(() => {
+    const items = [
     {
       label: 'La Máquina del tiempo NE555',
       description: 'Calcula tiempos y configuraciones básicas del 555.',
@@ -169,7 +171,13 @@ export function useCalculatorsPage() {
       category: 'Identificación',
       popular: false,
     },
-  ]))
+  ]
+
+    return items.map((item) => ({
+      ...item,
+      image: item.image ? useCloudinaryImage(item.image) : item.image,
+    }))
+  })
 
   const popularItems = computed(() =>
     calculatorItems.value.filter(item => item.popular)

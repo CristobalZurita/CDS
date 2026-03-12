@@ -1,10 +1,13 @@
 /**
- * Composable Cloudinary - Versión debug
+ * Composable Cloudinary ZERO
+ * Resuelve rutas locales /images/* a URLs Cloudinary.
  */
 
 import mapping from '../../../image-mapping.json'
 
-// Crear mapa
+const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/dgwwi77ic/image/upload'
+
+// Índice local -> cloudinary
 const URLS: Record<string, string> = {}
 if (Array.isArray(mapping)) {
   for (const item of mapping) {
@@ -18,13 +21,14 @@ export function useCloudinaryImage(localPath: string): string {
   if (!localPath) return ''
   if (localPath.startsWith('http')) return localPath
   
-  // Buscar directamente
+  // Mapeo exacto
   const url = URLS[localPath]
   if (url) return url
   
-  // Log para debug
-  console.warn('[Cloudinary] No encontrado:', localPath)
-  return localPath
+  // Fallback robusto por nombre de archivo
+  const fileName = String(localPath).split('/').pop()
+  if (!fileName) return localPath
+  return `${CLOUDINARY_BASE_URL}/${encodeURIComponent(fileName)}`
 }
 
 export default useCloudinaryImage
