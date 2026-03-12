@@ -109,28 +109,24 @@
           />
           <p class="footer-brand-name">Cirujano de Sintetizadores</p>
           <p class="footer-brand-tagline">
-            Taller especializado en reparación, restauración y modificación de
-            sintetizadores, teclados y equipos de audio.
+            Reparación, restauración y modificación
+            de sintetizadores, teclados y más.
           </p>
-          <p class="footer-brand-summary">
-            Restauración · Mantención · Reparación.
-          </p>
+     
           <p class="footer-brand-summary">
             Agenda revisión, cotiza tu instrumento y consulta calculadoras técnicas.
           </p>
-          <p class="footer-brand-summary">
-            Atención en Valparaíso, Chile.
-          </p>
+     
         </section>
 
         <section>
           <h2>Servicios</h2>
           <div class="site-footer-links">
-            <a href="#services">Reparación y restauración</a>
-            <a href="#services">Mantención preventiva</a>
-            <a href="#services">Modificaciones</a>
             <router-link to="/cotizador-ia">Cotizador IA</router-link>
             <router-link to="/calculadoras">Calculadoras</router-link>
+            <a href="#services">Modificaciones</a>
+            <a href="#services">Mantención preventiva</a>
+            <a href="#services">Reparación y restauración</a>
           </div>
         </section>
 
@@ -152,13 +148,13 @@
         <section>
           <h2>Contacto</h2>
           <div class="site-footer-links">
+            <span><i class="fas fa-location-dot"></i> Valparaíso, Chile</span>
             <a href="tel:+56982957538">
               <i class="fas fa-phone"></i> +56 9 8295 7538
             </a>
             <a href="mailto:contacto@cirujanodesintetizadores.com">
               <i class="fas fa-envelope"></i> contacto@cirujanodesintetizadores.com
             </a>
-            <span><i class="fas fa-location-dot"></i> Valparaíso, Chile</span>
           </div>
         </section>
 
@@ -527,15 +523,17 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   padding-right: var(--footer-safe-right);
   padding-bottom: clamp(1.4rem, 1.8vw, 2rem);
   padding-left: var(--footer-safe-left);
+  
 }
 
 .site-footer-grid {
-  width: 98%;
+  width: 105%;
   max-width: none;
-  margin: 0;
+  margin-left: -3rem;
   display: grid;
   gap: clamp(2rem, 2.2vw, 2.8rem);
   grid-template-columns: 1fr;
+  
 }
 
 .site-footer h2 {
@@ -559,12 +557,14 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  
 }
 
 .footer-logo {
   width: 130px;
   height: 130x;
   border-radius: 0.4rem;
+  
 }
 
 .footer-brand .footer-brand-name {
@@ -573,13 +573,15 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   color: var(--cds-white);
   margin: 0;
   line-height: 1.2;
+  
 }
 
 .footer-brand .footer-brand-tagline {
   font-size: clamp(1.5rem, 0.18vw + 1.45rem, 1.62rem);
   color: color-mix(in srgb, var(--cds-white) 65%, transparent);
   line-height: 1.5;
-  margin: 0;
+
+
 }
 
 .footer-brand .footer-brand-summary {
@@ -587,6 +589,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   color: color-mix(in srgb, var(--cds-white) 72%, transparent);
   line-height: 1.45;
   margin: 0;
+  
 }
 
 .site-footer-links {
@@ -602,10 +605,12 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   align-items: center;
   gap: 0.45rem;
   transition: color 0.15s;
+  
 }
 
 .site-footer a:hover {
   color: var(--cds-white);
+  
 }
 
 .site-footer-links span {
@@ -614,12 +619,14 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  
 }
 
 .footer-map-column {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+  
 }
 
 .footer-map-wrap {
@@ -634,7 +641,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   border: 1px solid color-mix(in srgb, var(--cds-white) 18%, transparent);
   border-radius: 0.45rem;
   background: rgba(10, 10, 10, 0.25);
-  margin-left: 6.6rem;
+  margin-left: 2.3rem;
 }
 
 .site-footer-legal {
@@ -651,11 +658,13 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   text-align: center;
   font-size: clamp(2.02rem, 0.16vw + 0.96rem, 1.12rem);
   color: color-mix(in srgb, var(--cds-white) 50%, transparent);
+  
 }
 
 .site-footer-legal a {
   color: color-mix(in srgb, var(--cds-white) 50%, transparent);
   font-size: inherit;
+  
 }
 
 .footer-credit {

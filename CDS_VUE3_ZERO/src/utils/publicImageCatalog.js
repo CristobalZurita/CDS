@@ -426,36 +426,10 @@ export const publicImagePaths = [
 ]
 
 // ADITIVO: URLs de Cloudinary para todas las imágenes
-const CLOUDINARY_CLOUD_NAME = 'dgwwi77ic'
-const CLOUDINARY_BASE_URL = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload`
-const CLOUDINARY_FOLDER_BASE = 'cirujano'
+import { toCloudinaryUrl as cloudinaryUtil } from './cloudinary.js'
 
-/**
- * Convierte ruta local a URL de Cloudinary
- * Ej: /images/instrumentos/ACCESS_VIRUS_A.webp → https://res.cloudinary.com/.../image/upload/cirujano/images/instrumentos/ACCESS_VIRUS_A.webp
- */
-export function toCloudinaryUrl(localPath, options = {}) {
-  if (!localPath) return ''
-  if (localPath.startsWith('http')) return localPath
-  
-  // Quitar leading slash y construir ruta completa con prefijo cirujano
-  const cleanPath = localPath.startsWith('/') ? localPath.slice(1) : localPath
-  const fullPath = `${CLOUDINARY_FOLDER_BASE}/${cleanPath}`
-  
-  // Aplicar transformaciones si se solicitan
-  if (options.width || options.height) {
-    const transforms = []
-    if (options.width) transforms.push(`w_${options.width}`)
-    if (options.height) transforms.push(`h_${options.height}`)
-    if (options.crop) transforms.push(`c_${options.crop}`)
-    transforms.push('q_auto') // Calidad automática
-    
-    const transformStr = transforms.join(',')
-    return `${CLOUDINARY_BASE_URL}/${transformStr}/${fullPath}`
-  }
-  
-  return `${CLOUDINARY_BASE_URL}/${fullPath}`
-}
+// Re-exportar desde cloudinary.js para mantener compatibilidad
+export { toCloudinaryUrl, toThumbnail, toOptimized, getCloudinaryUrlFromMapping } from './cloudinary.js'
 
 // Exportar todas las imágenes con URLs de Cloudinary
 export const instrumentCloudinaryUrls = instrumentImagePaths.map(p => toCloudinaryUrl(p))
