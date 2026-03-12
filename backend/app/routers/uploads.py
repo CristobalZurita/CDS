@@ -14,6 +14,7 @@ try:
     from app.services.cloudinary_service import (
         is_cloudinary_enabled,
         upload_image as upload_to_cloudinary,
+        generate_upload_signature,
     )
     CLOUDINARY_AVAILABLE = True
 except ImportError:
@@ -154,3 +155,47 @@ async def upload_instrument_image(
         auto_sync_instruments=True,
         user=user,
     )
+
+
+@router.post("/signature", status_code=status.HTTP_200_OK)
+@limiter.limit("30/minute")
+async def get_upload_signature(
+    request: Request,
+    destination: str = Query("uploads", description="uploads|instrumentos|inventario"),
+    user: Optional[dict] = Depends(require_upload_access),
+):
+    """
+    Genera firma para upload directo desde el frontend a Cloudinary.
+    Evita que el archivo pase por el servidor, ahorrando RAM y ancho de banda.
+    
+    El frontend debe:
+    1. Obtener esta firma
+    2. POST a https://api.cloudinary.com/v1_1/{cloud_name}/image/upload
+       con: file, api_key, timestamp, signature, folder
+    3. Guardar la URL retornada por Cloudinary
+    """
+    if not CLOUDINARY_AVAILABLE or not is_cloudinary_enabled():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Cloudinary no está configurado",
+        )
+    
+    destination = (destination or "uploads").lower()
+    if destination in {"instrumentos", "inventario"} and (not user or user.get("role") != "admin"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acceso denegado. Solo administradores.",
+        )
+    
+    signature_data = generate_upload_signature(destination=destination)
+    
+    if not signature_data:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="No se pudo generar la firma",
+        )
+    
+    return {
+        "success": True,
+        "data": signature_data,
+    }

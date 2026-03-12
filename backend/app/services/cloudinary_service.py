@@ -6,6 +6,7 @@ Usa CLOUDINARY_URL desde variables de entorno.
 
 import os
 import logging
+import time
 from typing import Optional, Dict, Any
 from fastapi import UploadFile
 
@@ -174,3 +175,55 @@ def delete_image(public_id: str) -> bool:
     except Exception as e:
         logger.error(f"Failed to delete image {public_id}: {e}")
         return False
+
+
+def generate_upload_signature(destination: str = "uploads") -> Optional[Dict[str, Any]]:
+    """
+    Genera firma para upload directo desde el frontend a Cloudinary.
+    Evita que el archivo pase por el servidor.
+    
+    Returns:
+        {
+            "cloud_name": str,
+            "api_key": str,
+            "timestamp": int,
+            "signature": str,
+            "folder": str,
+        }
+    """
+    client = _get_client()
+    if not client:
+        return None
+    
+    try:
+        import cloudinary.utils
+        
+        cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME")
+        api_key = os.getenv("CLOUDINARY_API_KEY")
+        api_secret = os.getenv("CLOUDINARY_API_SECRET")
+        
+        if not all([cloud_name, api_key, api_secret]):
+            return None
+        
+        timestamp = int(time.time())
+        folder = _get_folder_for_destination(destination)
+        
+        # Generar firma para upload con folder específico
+        params_to_sign = {
+            "timestamp": timestamp,
+            "folder": folder,
+        }
+        
+        signature = cloudinary.utils.api_sign_request(params_to_sign, api_secret)
+        
+        return {
+            "cloud_name": cloud_name,
+            "api_key": api_key,
+            "timestamp": timestamp,
+            "signature": signature,
+            "folder": folder,
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to generate upload signature: {e}")
+        return None
