@@ -1,19 +1,47 @@
 """
-Servicio Cloudinary para almacenamiento de imágenes.
+Servicio Cloudinary - ÚNICO SERVICIO para gestión de imágenes
 ADITIVO: No modifica el comportamiento local existente.
 Usa CLOUDINARY_URL desde variables de entorno.
 """
 
 import os
+import json
 import logging
 import time
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
+from pathlib import Path
 from fastapi import UploadFile
 
 logger = logging.getLogger(__name__)
 
 # Variable global para el cliente (lazy loading)
 _cloudinary_client = None
+
+# Cache en memoria de las imágenes
+_cloudinary_cache = {}
+
+# Cargar mapeo local de imágenes desde image-mapping.json
+_local_image_mapping = {}
+
+def _load_local_mapping():
+    """Carga el image-mapping.json como fuente de verdad."""
+    global _local_image_mapping
+    try:
+        # Buscar el archivo en la raíz del proyecto (3 niveles arriba de este archivo)
+        repo_root = Path(__file__).resolve().parents[3]
+        mapping_file = repo_root / "image-mapping.json"
+        if mapping_file.exists():
+            with open(mapping_file, 'r') as f:
+                data = json.load(f)
+                for item in data:
+                    if item.get('local') and item.get('cloudinary'):
+                        _local_image_mapping[item['local']] = item['cloudinary']
+                logger.info(f"[cloudinary] Cargado mapeo local con {len(_local_image_mapping)} imágenes")
+    except Exception as e:
+        logger.error(f"[cloudinary] Error cargando mapeo local: {e}")
+
+# Cargar al iniciar
+_load_local_mapping()
 
 
 def _get_client():
@@ -227,3 +255,113 @@ def generate_upload_signature(destination: str = "uploads") -> Optional[Dict[str
     except Exception as e:
         logger.error(f"Failed to generate upload signature: {e}")
         return None
+
+
+# =============================================================================
+# FUNCIONES DE RESOLUCIÓN DE URLs (desde cloudinary_catalog_service.py)
+# =============================================================================
+
+def fetch_all_images() -> List[Dict]:
+    """
+    Obtiene todas las imágenes de Cloudinary con sus URLs.
+    Retorna lista de dicts con: public_id, url, format, bytes
+    """
+    client = _get_client()
+    if not client:
+        return []
+    
+    import cloudinary.api
+    
+    images = []
+    next_cursor = None
+    
+    try:
+        while True:
+            result = cloudinary.api.resources(
+                type="upload",
+                resource_type="image",
+                max_results=500,
+                next_cursor=next_cursor
+            )
+            
+            for resource in result.get("resources", []):
+                images.append({
+                    "public_id": resource.get("public_id"),
+                    "url": resource.get("secure_url"),
+                    "format": resource.get("format"),
+                    "bytes": resource.get("bytes"),
+                    "width": resource.get("width"),
+                    "height": resource.get("height"),
+                })
+            
+            next_cursor = result.get("next_cursor")
+            if not next_cursor:
+                break
+                
+        # Guardar en cache
+        global _cloudinary_cache
+        _cloudinary_cache = {img["public_id"]: img for img in images}
+        
+        return images
+        
+    except Exception as e:
+        logger.error(f"Error fetching Cloudinary resources: {e}")
+        return []
+
+
+def find_image_by_name(local_name: str) -> Optional[str]:
+    """
+    Busca una imagen en Cloudinary por nombre local.
+    Ej: 'BOTON_GRANDE_B_MPC' → 'https://res.cloudinary.com/...'
+    """
+    global _cloudinary_cache
+    
+    # Si no hay cache, cargar
+    if not _cloudinary_cache:
+        fetch_all_images()
+    
+    # Buscar coincidencia parcial (ignorar hash y extensión)
+    local_base = local_name.split(".")[0].lower()
+    
+    for public_id, img_data in _cloudinary_cache.items():
+        # Quitar hash del final (ej: BOTON_GRANDE_B_MPC_os4tnj → BOTON_GRANDE_B_MPC)
+        cloudinary_base = public_id.split("_")[:-1] if "_" in public_id else [public_id]
+        cloudinary_name = "_".join(cloudinary_base).lower()
+        
+        if local_base == cloudinary_name:
+            return img_data["url"]
+    
+    return None
+
+
+def resolve_image_url(local_path: str) -> str:
+    """
+    Resuelve una ruta local a URL de Cloudinary.
+    PRIMERO busca en image-mapping.json (fuente de verdad)
+    LUEGO busca en Cloudinary API como fallback.
+    
+    Ej: '/images/INVENTARIO/BOTON_GRANDE_B_MPC.webp' → 'https://res.cloudinary.com/...'
+    """
+    if not local_path:
+        return ""
+    
+    # Si ya es URL, devolverla
+    if local_path.startswith("http"):
+        return local_path
+    
+    # PRIMERO: Buscar en el mapeo local (image-mapping.json)
+    normalized_path = local_path if local_path.startswith('/') else f'/{local_path}'
+    if normalized_path in _local_image_mapping:
+        return _local_image_mapping[normalized_path]
+    
+    # SEGUNDO: Buscar en Cloudinary API
+    filename = local_path.split("/")[-1]
+    name_without_ext = filename.rsplit(".", 1)[0]
+    cloudinary_url = find_image_by_name(name_without_ext)
+    
+    if cloudinary_url:
+        return cloudinary_url
+    
+    # Fallback: mantener ruta local si no se encuentra
+    logger.warning(f"[cloudinary] Image not found: {local_path}")
+    return local_path

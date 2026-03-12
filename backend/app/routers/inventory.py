@@ -18,7 +18,7 @@ from app.models.category import Category
 
 # ADITIVO: Importar servicio de Cloudinary para resolver imágenes
 try:
-    from app.services.cloudinary_catalog_service import resolve_image_url
+    from app.services.cloudinary_service import resolve_image_url
     CLOUDINARY_AVAILABLE = True
 except ImportError:
     CLOUDINARY_AVAILABLE = False

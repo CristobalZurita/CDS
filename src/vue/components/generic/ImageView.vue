@@ -3,7 +3,7 @@
         <img class="image"
              v-show="shouldShowImage"
              ref="img"
-             :src="src"
+             :src="resolvedSrc"
              :alt="alt"
              @load="_onImageLoadSuccess"
              @error="_onImageLoadError"/>
@@ -22,12 +22,17 @@
 <script setup>
 import {computed, ref, watch} from "vue"
 import Spinner from "/src/vue/components/widgets/Spinner.vue"
+import { toCloudinaryUrl } from "../../../CDS_VUE3_ZERO/src/utils/cloudinary.js"
 
 const props = defineProps({
     src: String,
     alt: String,
     class: String,
     spinnerEnabled: Boolean
+})
+
+const resolvedSrc = computed(() => {
+    return props.src ? toCloudinaryUrl(props.src) : ''
 })
 
 const LoadStatus = {
@@ -64,10 +69,10 @@ const _onImageLoadSuccess = () => {
 const _onImageLoadError = () => {
     // Try a gentle fallback for missing instrument photos: replace with brand/agency logo
     try {
-        const currentSrc = img.value?.getAttribute('src') || props.src
+        const currentSrc = img.value?.getAttribute('src') || resolvedSrc.value
         if (currentSrc && currentSrc.includes('/images/instrumentos/') && !currentSrc.includes('-fallback')) {
             // Attempt a single fallback to an agency logo
-            const fallback = '/images/logo/agency-logo.webp'
+            const fallback = toCloudinaryUrl('/images/logo/agency-logo.webp')
             if (img.value) img.value.setAttribute('src', fallback)
             loadStatus.value = LoadStatus.LOADING
             return

@@ -5,7 +5,7 @@ ADITIVO: No modifica la BD, solo consulta Cloudinary API.
 
 from fastapi import APIRouter, Depends, Query
 from typing import List, Optional
-from app.services.cloudinary_catalog_service import (
+from app.services.cloudinary_service import (
     fetch_all_images,
     resolve_image_url,
     find_image_by_name,

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
+import cloudinaryTransform from './CDS_VUE3_ZERO/plugins/cloudinaryTransform.js'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,6 +9,7 @@ export default defineConfig({
     base: '/',
     plugins: [
         vue(),
+        cloudinaryTransform(),
     ],
     
     // Configuración del alias @ para resolver rutas
