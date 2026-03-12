@@ -75,8 +75,8 @@ def upload_all():
 if __name__ == "__main__":
     if not API_KEY or not API_SECRET:
         print("❌ Configura CLOUDINARY_API_KEY y CLOUDINARY_API_SECRET")
-        print("   export CLOUDINARY_API_KEY='tu_key'")
-        print("   export CLOUDINARY_API_SECRET='tu_secret'")
+        print("   Define ambas variables de entorno antes de ejecutar este script.")
+        print("   Referencia: scripts/verify_cloudinary_urls.html")
         sys.exit(1)
     
     upload_all()
