@@ -128,3 +128,5 @@ postgres_data/
 
 # Local screenshots/scratch workspace
 /image/
+/public/image/
+/CDS_VUE3_ZERO/public/imagess/
