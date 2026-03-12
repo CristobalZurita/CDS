@@ -329,11 +329,14 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
 import api from '@/services/api'
+import { useSiteImages } from '@/composables/useSiteImages'
 
 /* ─── Historia ─── */
-const historyEvents = [
+const { resolveImageUrl, resolveImageArray } = useSiteImages()
+
+const historyEventsRaw = [
   { year: '1999', title: 'Músico de Conservatorio', image: '/images/personales/marimba.webp',  description: 'Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido.' },
   { year: '2008',  title: 'Cineasta',                 image: '/images/personales/cine.webp',    description: 'Experiencia en audiovisual, sonido para cine, post-producción y diseño de audio en contextos creativos.' },
   { year: '2013',   title: 'Técnico en Electrónica',   image: '/images/personales/tecnico.webp',           description: 'Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos.' },
@@ -346,6 +349,8 @@ const historyEvents = [
   { year: '2023',   title: 'Valparaíso',               image: '/images/personales/valparaiso.webp',         description: 'Cirujano de Sintetizadores en Valparaíso. Servicio especializado regional y nacional.' },
 ]
 
+const historyEvents = computed(() => resolveImageArray(historyEventsRaw))
+
 const activeHistoryIdx = ref(0)
 const timelineRef = ref(null)
 const historyLightboxOpen = ref(false)
@@ -356,10 +361,10 @@ function selectHistory(i) {
   el?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
 }
 function prevHistory() {
-  selectHistory((activeHistoryIdx.value - 1 + historyEvents.length) % historyEvents.length)
+  selectHistory((activeHistoryIdx.value - 1 + historyEvents.value.length) % historyEvents.value.length)
 }
 function nextHistory() {
-  selectHistory((activeHistoryIdx.value + 1) % historyEvents.length)
+  selectHistory((activeHistoryIdx.value + 1) % historyEvents.value.length)
 }
 function openHistoryImage() {
   historyLightboxOpen.value = true
@@ -382,7 +387,7 @@ const services = [
 ]
 
 /* ─── Trabajos destacados ─── */
-const featuredInstruments = [
+const featuredInstrumentsRaw = [
   { name: 'KORG Wavestate',   image: '/images/instrumentos/KORG_WAVESTATE.webp' },
   { name: 'KORG Wavestation', image: '/images/instrumentos/KORG_WAVESTATION.webp' },
   { name: 'Roland D-50',      image: '/images/instrumentos/ROLAND_D50.webp' },
@@ -390,6 +395,8 @@ const featuredInstruments = [
   { name: 'KORG M1',          image: '/images/instrumentos/KORG_M1.webp' },
   { name: 'KORG Triton',      image: '/images/instrumentos/KORG_TRITON.webp' },
 ]
+
+const featuredInstruments = computed(() => resolveImageArray(featuredInstrumentsRaw))
 
 /* ─── FAQ ─── */
 const faqs = [

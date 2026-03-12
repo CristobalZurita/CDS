@@ -4,7 +4,8 @@
  */
 
 const CLOUDINARY_CLOUD_NAME = 'dgwwi77ic'
-const CLOUDINARY_BASE_URL = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload`
+const CLOUDINARY_FOLDER_BASE = 'cirujano'
+const CLOUDINARY_BASE_URL = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/${CLOUDINARY_FOLDER_BASE}`
 
 /**
  * Convierte una ruta local a URL de Cloudinary
