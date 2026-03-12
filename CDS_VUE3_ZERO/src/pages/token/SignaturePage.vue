@@ -1,6 +1,6 @@
 <template>
   <div class="signature-page">
-    <div class="card">
+    <div class="card card--wide">
       <h1>Firma digital</h1>
       <p>Firma dentro del recuadro y presiona Enviar.</p>
 
@@ -106,79 +106,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-.signature-page {
-  --signature-ink: #222222;
-  min-height: 100vh;
-  background: var(--cds-light);
-  padding: 1rem;
-  display: grid;
-  place-items: center;
-}
-
-.card {
-  width: min(760px, 100%);
-  background: var(--cds-white);
-  border: 1px solid color-mix(in srgb, var(--cds-light) 75%, white);
-  border-radius: 0.8rem;
-  padding: 1rem;
-  display: grid;
-  gap: 0.8rem;
-}
-
-.card h1 {
-  margin: 0;
-  font-size: var(--cds-text-2xl);
-}
-
-.card p {
-  margin: 0;
-  color: var(--cds-text-muted);
-}
-
-.canvas-wrap {
-  border: 2px dashed var(--cds-light-5);
-  border-radius: 0.7rem;
-  padding: 0.5rem;
-  overflow: auto;
-}
-
-canvas {
-  width: 100%;
-  max-width: 100%;
-  background: #fcfcfc;
-  touch-action: none;
-}
-
-.actions {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-}
-
-.btn-primary,
-.btn-outline {
-  min-height: 44px;
-  padding: 0.65rem 1rem;
-  border-radius: 0.6rem;
-  cursor: pointer;
-  font-size: var(--cds-text-base);
-}
-
-.btn-primary {
-  background: var(--cds-primary);
-  border: 1px solid var(--cds-primary);
-  color: var(--cds-white);
-}
-
-.btn-outline {
-  background: transparent;
-  border: 1px solid var(--cds-light-5);
-  color: var(--cds-text-normal);
-}
-
-.status {
-  color: var(--cds-primary);
-  font-weight: var(--cds-font-medium);
-}
-</style>
+<style scoped src="./commonTokenPage.css"></style>

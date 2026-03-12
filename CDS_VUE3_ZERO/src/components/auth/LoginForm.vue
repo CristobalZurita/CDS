@@ -162,47 +162,4 @@ watch(requires2fa, (enabled) => {
 })
 </script>
 
-<style scoped>
-.auth-form {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.auth-toggle {
-  justify-self: start;
-  border: none;
-  background: none;
-  padding: 0;
-  color: var(--cds-primary);
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-medium);
-  cursor: pointer;
-}
-
-.auth-error {
-  margin: 0;
-  padding: 0.75rem;
-  border: 1px solid #f4c7c3;
-  border-radius: 0.5rem;
-  background: #fef3f2;
-  color: #b42318;
-  font-size: var(--cds-text-sm);
-}
-
-.auth-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  text-align: center;
-}
-
-.auth-links a {
-  color: var(--cds-primary);
-  font-size: var(--cds-text-sm);
-  text-decoration: none;
-}
-
-.auth-links a:hover {
-  text-decoration: underline;
-}
-</style>
+<style scoped src="./commonAuthForm.css"></style>

@@ -29,10 +29,13 @@ dist/
 .env
 *.env
 .env.local
+.env.development
 .env.production
 .env.*.local
 backend/.env
 backend/.env.local
+backend/.env.development
+CDS_VUE3_ZERO/.env.development
 
 # Python
 __pycache__/
@@ -94,6 +97,7 @@ Thumbs.db
 test-results/
 playwright-report/
 tests/e2e/.auth/
+CDS_VUE3_ZERO/tests/e2e/.auth/
 coverage/
 backend/tests/e2e_runtime/
 backend/test-results*.xml

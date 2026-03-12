@@ -1,0 +1,176 @@
+/* Specific styles for Ohm's Law calculator */
+
+.calc-container {
+  max-width: 980px;
+}
+
+.ohm-visual-grid {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.ohm-wheel-card {
+  border: 1px solid rgba(62, 60, 56, 0.12);
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.62);
+  padding: 0.8rem;
+  display: flex;
+  justify-content: center;
+}
+
+.ohm-wheel {
+  width: 182px;
+  height: 182px;
+  border-radius: 50%;
+  border: 1px solid rgba(62, 60, 56, 0.3);
+  background: conic-gradient(
+    rgba(236, 107, 0, 0.32) 0deg 90deg,
+    rgba(43, 139, 215, 0.3) 90deg 180deg,
+    rgba(91, 74, 63, 0.32) 180deg 270deg,
+    rgba(206, 63, 42, 0.3) 270deg 360deg
+  );
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wheel-label {
+  position: absolute;
+  font-size: var(--cds-text-base);
+  font-weight: var(--cds-font-semibold);
+  color: rgba(62, 60, 56, 0.56);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.wheel-label.is-active {
+  color: var(--cds-dark);
+  transform: scale(1.12);
+}
+
+.wheel-label--v { top: 12%; left: 50%; transform: translateX(-50%); }
+.wheel-label--i { top: 50%; right: 13%; transform: translateY(-50%); }
+.wheel-label--r { bottom: 12%; left: 50%; transform: translateX(-50%); }
+.wheel-label--p { top: 50%; left: 13%; transform: translateY(-50%); }
+
+.wheel-label--v.is-active,
+.wheel-label--r.is-active {
+  transform: translateX(-50%) scale(1.12);
+}
+
+.wheel-label--i.is-active,
+.wheel-label--p.is-active {
+  transform: translateY(-50%) scale(1.12);
+}
+
+.wheel-core {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(62, 60, 56, 0.2);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.15rem;
+  text-align: center;
+}
+
+.wheel-core small {
+  font-size: var(--cds-text-xs);
+  color: var(--cds-text-muted);
+}
+
+.wheel-core strong {
+  font-size: var(--cds-text-sm);
+  color: var(--cds-dark);
+}
+
+.formula-grid {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.formula-card {
+  border: 1px solid rgba(62, 60, 56, 0.13);
+  border-radius: 0.55rem;
+  background: rgba(255, 255, 255, 0.62);
+  padding: 0.55rem 0.6rem;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.formula-card span {
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-muted);
+}
+
+.formula-card strong {
+  font-size: var(--cds-text-base);
+  color: var(--cds-dark);
+}
+
+.formula-card--active {
+  border-color: color-mix(in srgb, var(--cds-primary) 55%, transparent);
+  background: color-mix(in srgb, var(--cds-primary) 12%, white);
+}
+
+.meter-grid {
+  margin-top: 0.8rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.meter-card {
+  border: 1px solid rgba(62, 60, 56, 0.1);
+  border-radius: 0.55rem;
+  background: rgba(255, 255, 255, 0.62);
+  padding: 0.5rem 0.6rem 0.55rem;
+}
+
+.meter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.meter-head span {
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-muted);
+}
+
+.meter-head strong {
+  font-size: var(--cds-text-sm);
+  color: var(--cds-dark);
+}
+
+.meter-track {
+  margin-top: 0.45rem;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(62, 60, 56, 0.12);
+}
+
+.meter-fill {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  transition: width 0.25s ease;
+}
+
+@media (min-width: 560px) {
+  .ohm-visual-grid {
+    grid-template-columns: minmax(180px, 210px) minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 420px) {
+  .formula-grid {
+    grid-template-columns: 1fr;
+  }
+}

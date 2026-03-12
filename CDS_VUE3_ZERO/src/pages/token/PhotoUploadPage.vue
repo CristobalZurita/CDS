@@ -1,6 +1,6 @@
 <template>
   <div class="photo-upload-page">
-    <div class="card">
+    <div class="card card--narrow">
       <h1>Subir foto</h1>
       <p>Envía una foto para esta reparación.</p>
 
@@ -77,77 +77,4 @@ async function submitPhoto() {
 }
 </script>
 
-<style scoped>
-.photo-upload-page {
-  min-height: 100vh;
-  background: var(--cds-light);
-  padding: 1rem;
-  display: grid;
-  place-items: center;
-}
-
-.card {
-  width: min(640px, 100%);
-  background: var(--cds-white);
-  border: 1px solid color-mix(in srgb, var(--cds-light) 75%, white);
-  border-radius: 0.8rem;
-  padding: 1rem;
-  display: grid;
-  gap: 0.9rem;
-}
-
-.card h1 {
-  margin: 0;
-  font-size: var(--cds-text-2xl);
-}
-
-.card p {
-  margin: 0;
-  color: var(--cds-text-muted);
-}
-
-.form-group {
-  display: grid;
-  gap: 0.35rem;
-}
-
-.form-group label {
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-medium);
-}
-
-.form-group input {
-  min-height: 44px;
-  border: 2px solid var(--cds-light-4);
-  border-radius: 0.5rem;
-  padding: 0.75rem 0.875rem;
-  font-size: var(--cds-text-base);
-}
-
-.actions {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-}
-
-.btn-primary {
-  min-height: 44px;
-  padding: 0.65rem 1rem;
-  border-radius: 0.6rem;
-  background: var(--cds-primary);
-  border: 1px solid var(--cds-primary);
-  color: var(--cds-white);
-  cursor: pointer;
-  font-size: var(--cds-text-base);
-}
-
-.btn-primary:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-.status {
-  color: var(--cds-primary);
-  font-weight: var(--cds-font-medium);
-}
-</style>
+<style scoped src="./commonTokenPage.css"></style>

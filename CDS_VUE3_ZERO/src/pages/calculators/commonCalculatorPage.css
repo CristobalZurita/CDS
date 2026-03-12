@@ -166,6 +166,24 @@
   color: var(--cds-primary);
   font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
+  overflow-wrap: anywhere;
+}
+
+/* Additional form styles */
+.panel-form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.swap-button,
+.reset-button {
+  width: auto;
+}
+
+@media (min-width: 560px) {
+  .field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .result-hint {

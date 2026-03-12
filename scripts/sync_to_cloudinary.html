@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sync Images to Cloudinary</title>
+  <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+    h1 { color: #333; }
+    .folder { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; margin: 5px; }
+    button:hover { background: #0056b3; }
+    #status { margin-top: 20px; padding: 10px; background: #e8f5e9; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Subir imágenes a Cloudinary</h1>
+  <p>Este script sube todas las fotos locales a Cloudinary manteniendo la estructura de carpetas.</p>
+  
+  <div class="folder">
+    <h3>Carpetas a sincronizar:</h3>
+    <ul>
+      <li>images/personales/ (10 fotos)</li>
+      <li>images/instrumentos/ (~300 fotos)</li>
+      <li>images/INVENTARIO/ (~100 fotos)</li>
+      <li>images/calculadoras/ (15 fotos)</li>
+      <li>images/logo/ (5 fotos)</li>
+    </ul>
+  </div>
+
+  <h3>Pasos manuales:</h3>
+  <ol>
+    <li>Ve a <a href="https://cloudinary.com/console" target="_blank">Cloudinary Console</a></li>
+    <li>En Media Library, crea la carpeta "images"</li>
+    <li>Dentro de "images", crea: personales, instrumentos, INVENTARIO, calculadoras, logo</li>
+    <li>Arrastra las carpetas desde tu computadora a cada carpeta correspondiente en Cloudinary</li>
+    <li>Asegúrate de que el upload preset esté configurado sin sufijo único</li>
+  </ol>
+
+  <h3>O usa el widget automático:</h3>
+  <button id="upload_widget">Abrir Widget de Upload</button>
+  
+  <div id="status"></div>
+
+  <script>
+    // Configuración - REEMPLAZA CON TU UPLOAD PRESET
+    const UPLOAD_PRESET = 'zcia3ea0'; // Tu preset unsigned
+    const CLOUD_NAME = 'dgwwi77ic';
+    
+    document.getElementById('upload_widget').addEventListener('click', function() {
+      cloudinary.openUploadWidget({
+        cloudName: CLOUD_NAME,
+        uploadPreset: UPLOAD_PRESET,
+        folder: 'images/personales', // Cambia según la carpeta que estés subiendo
+        sources: ['local', 'url'],
+        multiple: true,
+        maxFiles: 500,
+        showAdvancedOptions: false,
+        cropping: false,
+        showPoweredBy: false,
+      }, function(error, result) {
+        if (error) {
+          console.error('Error:', error);
+          document.getElementById('status').innerHTML = '<p style="color:red">Error: ' + error.message + '</p>';
+        }
+        if (result && result.event === 'success') {
+          console.log('Subido:', result.info);
+          document.getElementById('status').innerHTML += '<p>✅ Subido: ' + result.info.original_filename + '</p>';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

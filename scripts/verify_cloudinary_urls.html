@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verificar URLs de Cloudinary</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        h1 { color: #333; }
+        .test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .test-item { border: 1px solid #ddd; padding: 10px; border-radius: 5px; text-align: center; }
+        .test-item img { max-width: 150px; max-height: 150px; object-fit: cover; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+        .loading { background: #fff3cd; }
+        .url { font-size: 10px; word-break: break-all; margin-top: 5px; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>Verificación de URLs de Cloudinary</h1>
+    <p>Este script prueba diferentes patrones de URL para encontrar el correcto.</p>
+    
+    <div id="controls">
+        <label>
+            <input type="radio" name="pattern" value="standard" checked> 
+            Estándar: <code>/image/upload/{folder}/{filename}</code>
+        </label><br>
+        <label>
+            <input type="radio" name="pattern" value="with_version"> 
+            Con versión: <code>/image/upload/v{timestamp}/{folder}/{filename}</code>
+        </label><br>
+        <label>
+            <input type="radio" name="pattern" value="cirujano"> 
+            Con /cirujano/: <code>/image/upload/cirujano/{folder}/{filename}</code>
+        </label><br>
+        <button onclick="runTests()">Ejecutar Tests</button>
+        <button onclick="testActualUrls()">Test URLs Reales</button>
+    </div>
+    
+    <h3>Resultados:</h3>
+    <div id="results" class="test-grid"></div>
+
+    <script>
+        const TEST_IMAGES = [
+            { folder: 'images/personales', name: 'marimba' },
+            { folder: 'images/instrumentos', name: 'KORG_WAVESTATE' },
+            { folder: 'images/logo', name: 'logo' },
+        ];
+        
+        const CLOUD_NAME = 'dgwwi77ic';
+        const BASE_URL = `https://res.cloudinary.com/${CLOUD_NAME}`;
+        
+        function getUrl(pattern, folder, filename, version) {
+            const ext = '.webp';
+            switch(pattern) {
+                case 'standard':
+                    return `${BASE_URL}/image/upload/${folder}/${filename}${ext}`;
+                case 'with_version':
+                    return `${BASE_URL}/image/upload/v${version || '1234567890'}/${folder}/${filename}${ext}`;
+                case 'cirujano':
+                    return `${BASE_URL}/image/upload/cirujano/${folder}/${filename}${ext}`;
+                default:
+                    return `${BASE_URL}/image/upload/${folder}/${filename}${ext}`;
+            }
+        }
+        
+        function createTestItem(image, pattern) {
+            const div = document.createElement('div');
+            div.className = 'test-item loading';
+            
+            const url = getUrl(pattern, image.folder, image.name);
+            
+            div.innerHTML = `
+                <div><strong>${image.name}</strong></div>
+                <div style="font-size: 11px; color: #666;">${pattern}</div>
+                <img src="${url}" alt="${image.name}" onload="this.parentElement.classList.remove('loading'); this.parentElement.classList.add('success');" onerror="this.parentElement.classList.remove('loading'); this.parentElement.classList.add('error'); this.style.display='none';">
+                <div class="url">${url}</div>
+            `;
+            return div;
+        }
+        
+        function runTests() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+            
+            const pattern = document.querySelector('input[name="pattern"]:checked').value;
+            
+            TEST_IMAGES.forEach(img => {
+                results.appendChild(createTestItem(img, pattern));
+            });
+        }
+        
+        async function testActualUrls() {
+            // Lista completa de URLs que deberían funcionar según la estructura local
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Cargando todas las imágenes...</p>';
+            
+            // Aquí puedes pegar la lista completa de imágenes locales
+            // Por ahora usamos las de ejemplo
+            const allImages = [
+                '/images/personales/marimba.webp',
+                '/images/personales/head_sinty.webp',
+                '/images/instrumentos/KORG_WAVESTATE.webp',
+                '/images/logo/logo.webp',
+            ];
+            
+            results.innerHTML = '';
+            allImages.forEach(localPath => {
+                const cleanPath = localPath.startsWith('/') ? localPath.slice(1) : localPath;
+                const url = `${BASE_URL}/image/upload/${cleanPath}`;
+                
+                const div = document.createElement('div');
+                div.className = 'test-item loading';
+                div.innerHTML = `
+                    <div><strong>${localPath.split('/').pop()}</strong></div>
+                    <img src="${url}" alt="" onload="this.parentElement.classList.remove('loading'); this.parentElement.classList.add('success');" onerror="this.parentElement.classList.remove('loading'); this.parentElement.classList.add('error'); this.style.display='none';">
+                    <div class="url">${url}</div>
+                `;
+                results.appendChild(div);
+            });
+        }
+        
+        // Auto-run on load
+        window.onload = runTests;
+    </script>
+</body>
+</html>

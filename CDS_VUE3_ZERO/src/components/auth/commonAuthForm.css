@@ -1,0 +1,99 @@
+/* Common styles for auth form components */
+
+.auth-form,
+.flow {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.auth-toggle,
+.show-btn {
+  justify-self: start;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--cds-primary);
+  font-size: var(--cds-text-sm);
+  font-weight: var(--cds-font-medium);
+  cursor: pointer;
+}
+
+.auth-error,
+.feedback {
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid #f4c7c3;
+  border-radius: 0.5rem;
+  background: #fef3f2;
+  color: #b42318;
+  font-size: var(--cds-text-sm);
+}
+
+.feedback--ok {
+  border-color: #84d2a7;
+  background: #ebfdf3;
+  color: #0f5132;
+}
+
+.feedback--error {
+  border-color: #f4c7c3;
+  background: #fef3f2;
+  color: #b42318;
+}
+
+.auth-links,
+.auth-link,
+.back-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: center;
+  margin: 0;
+  font-size: var(--cds-text-sm);
+}
+
+.auth-links a,
+.auth-link a,
+.back-link a {
+  color: var(--cds-primary);
+  text-decoration: none;
+}
+
+.auth-links a:hover,
+.auth-link a:hover,
+.back-link a:hover {
+  text-decoration: underline;
+}
+
+.auth-link a,
+.back-link a {
+  font-weight: var(--cds-font-medium);
+}
+
+/* PasswordResetForm specific */
+.reset-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.mode-toggle__btn {
+  min-height: 44px;
+  border: 2px solid var(--cds-light-4);
+  border-radius: 0.5rem;
+  background: var(--cds-white);
+  color: var(--cds-text-normal);
+  font-size: var(--cds-text-sm);
+  font-weight: var(--cds-font-semibold);
+  cursor: pointer;
+}
+
+.mode-toggle__btn.active {
+  border-color: var(--cds-primary);
+  color: var(--cds-primary);
+}

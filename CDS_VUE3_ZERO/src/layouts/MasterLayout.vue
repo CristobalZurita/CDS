@@ -618,14 +618,14 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .footer-map-column {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
 }
 
 .footer-map-wrap {
   display: grid;
   gap: 0.45rem;
-  justify-items: end;
+  justify-items: start;
 }
 
 .footer-map {
@@ -634,6 +634,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   border: 1px solid color-mix(in srgb, var(--cds-white) 18%, transparent);
   border-radius: 0.45rem;
   background: rgba(10, 10, 10, 0.25);
+  margin-left: 6.6rem;
 }
 
 .site-footer-legal {
