@@ -458,54 +458,17 @@ export function useIntakeWizard() {
         }
       }
       
-      // 6. Subir fotos si hay (upload directo a Cloudinary)
+      // 6. Subir fotos si hay
       for (const photo of form.device.photos) {
         if (photo.file) {
           try {
-            // Obtener firma para upload directo
-            const signatureRes = await api.post('/uploads/signature?destination=uploads')
-            const sig = signatureRes.data?.data
-            
-            if (sig) {
-              // Upload directo a Cloudinary
-              const cloudForm = new FormData()
-              cloudForm.append('file', photo.file)
-              cloudForm.append('api_key', sig.api_key)
-              cloudForm.append('timestamp', sig.timestamp)
-              cloudForm.append('signature', sig.signature)
-              cloudForm.append('folder', sig.folder)
-              
-              const cloudRes = await fetch(
-                `https://api.cloudinary.com/v1_1/${sig.cloud_name}/image/upload`,
-                { method: 'POST', body: cloudForm }
-              )
-              
-              if (!cloudRes.ok) throw new Error('Cloudinary upload failed')
-              const cloudData = await cloudRes.json()
-              const photoUrl = cloudData.secure_url
-              
-              if (photoUrl) {
-                await api.post(`/repairs/${repairId}/photos`, {
-                  photo_url: photoUrl,
-                  caption: photo.caption || 'Foto de ingreso',
-                  photo_type: 'before'
-                })
-              }
-            } else {
-              // Fallback: upload tradicional por backend
-              const formData = new FormData()
-              formData.append('file', photo.file)
-              const uploadResponse = await api.post('/uploads/images', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+            const photoUrl = await uploadImage(photo.file, 'uploads')
+            if (photoUrl) {
+              await api.post(`/repairs/${repairId}/photos`, {
+                photo_url: photoUrl,
+                caption: photo.caption || 'Foto de ingreso',
+                photo_type: 'before'
               })
-              const photoUrl = uploadResponse.data?.path
-              if (photoUrl) {
-                await api.post(`/repairs/${repairId}/photos`, {
-                  photo_url: photoUrl,
-                  caption: photo.caption || 'Foto de ingreso',
-                  photo_type: 'before'
-                })
-              }
             }
           } catch (uploadErr) {
             console.warn('Error subiendo foto:', uploadErr)
