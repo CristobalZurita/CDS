@@ -7,6 +7,9 @@
 import { test, expect } from '@playwright/test'
 import { waitForAppToSettle, trackBrowserErrors } from './helpers/page.js'
 
+// Usar storageState para tests de admin
+test.use({ storageState: 'tests/e2e/.auth/admin.json' })
+
 test.describe('Admin - Detalle de Reparacion', () => {
   
 

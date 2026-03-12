@@ -5,10 +5,12 @@
 
 import { expect } from '@playwright/test'
 import path from 'path'
-import os from 'os'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Directorio para guardar estados de autenticación
-const AUTH_DIR = process.env.PLAYWRIGHT_AUTH_DIR || path.join(os.tmpdir(), 'cds_zero_auth')
+const AUTH_DIR = process.env.PLAYWRIGHT_AUTH_DIR || path.join(__dirname, '..', '.auth')
 
 /**
  * Resuelve la ruta al archivo de estado de autenticación
@@ -20,12 +22,27 @@ export function resolveAuthState(profile) {
 }
 
 /**
+ * Verifica si hay rate limiting en la página
+ * @param {import('@playwright/test').Page} page 
+ * @returns {Promise<boolean>}
+ */
+export async function checkRateLimit(page) {
+  const pageContent = await page.content()
+  return pageContent.includes('Rate limit exceeded')
+}
+
+/**
  * Login desde la UI
  * @param {import('@playwright/test').Page} page 
  * @param {string} email 
  * @param {string} password 
+ * @param {Object} options
+ * @param {boolean} options.skipRateLimitCheck - Si es true, no verifica rate limiting
+ * @throws {Error} Si hay rate limiting o el login falla
  */
-export async function loginFromUi(page, email, password) {
+export async function loginFromUi(page, email, password, options = {}) {
+  const { skipRateLimitCheck = false } = options
+  
   // Verificar que estamos en login
   await expect(page.locator('input[type="email"]')).toBeVisible()
   
@@ -33,8 +50,23 @@ export async function loginFromUi(page, email, password) {
   await page.locator('input[type="email"]').fill(email)
   await page.locator('input[type="password"]').fill(password)
   
+  // Pequeña pausa para dar tiempo a Vue a propagar el evento de Turnstile
+  await page.waitForTimeout(500)
+  
+  // Esperar a que el botón esté habilitado (Turnstile puede tardar en emitir token)
+  const submitButton = page.locator('button[type="submit"]')
+  await expect(submitButton).toBeEnabled({ timeout: 10000 })
+  
   // Submit
-  await page.locator('button[type="submit"]').click()
+  await submitButton.click()
+  
+  // Esperar un momento para ver si aparece rate limit
+  await page.waitForTimeout(500)
+  
+  // Verificar rate limiting
+  if (!skipRateLimitCheck && await checkRateLimit(page)) {
+    throw new Error('RATE_LIMIT_EXCEEDED')
+  }
   
   // Esperar redirección (login exitoso va a dashboard o admin)
   // Aumentado timeout y agregado waitForLoadState para estabilidad
