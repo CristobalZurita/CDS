@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import brandsData from '@/assets/data/brands.json'
 import instrumentsData from '@/data/instruments.json'
-import { toCloudinaryUrl } from '../CDS_VUE3_ZERO/src/utils/cloudinary.js'
+import { useCloudinaryImage } from './useCloudinary'
 import type { ComputedRef, Ref } from 'vue'
 
 interface Brand {
@@ -103,7 +103,7 @@ const toBrandId = (marca: string): string => {
 const normalizeModel = (modelo: string): string => String(modelo || '').replace(/_/g, ' ')
 
 const buildInstrumentPath = (photoName: string): string =>
-  toCloudinaryUrl(`/images/instrumentos/${photoName}.webp`)
+  useCloudinaryImage(`/images/instrumentos/${photoName}.webp`)
 
 export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
   const syncedPayload = instrumentsData as SyncedInstrumentsPayload
@@ -197,7 +197,7 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
     if (instrument?.imagen_url) {
       return instrument.imagen_url
     }
-    return toCloudinaryUrl('/images/placeholder.svg')
+    return useCloudinaryImage('/images/placeholder.svg')
   }
 
   const getInstrumentImageVariants = async (instrument: Instrument): Promise<string[]> => {
@@ -219,14 +219,14 @@ export function useInstrumentsCatalog(): UseInstrumentsCatalogComposable {
 
   const getBrandLogo = (brandId: string): string => {
     if (!brandId) return ''
-    if (brandLogoById[brandId]) return toCloudinaryUrl(brandLogoById[brandId])
+    if (brandLogoById[brandId]) return useCloudinaryImage(brandLogoById[brandId])
 
     const normalized = String(brandId).toUpperCase().replace(/-/g, '_')
     const brandLogoFixes: Record<string, string> = {
       BEHRINGER: 'BEHERINGER',
     }
     const logoKey = brandLogoFixes[normalized] || normalized
-    return toCloudinaryUrl(`/images/instrumentos/LOGOS/LOGO_${logoKey}.webp`)
+    return useCloudinaryImage(`/images/instrumentos/LOGOS/LOGO_${logoKey}.webp`)
   }
 
   const enrichInstrument = (inst: Instrument): EnrichedInstrument => {

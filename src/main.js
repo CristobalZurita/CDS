@@ -6,6 +6,7 @@ import { createApp } from "vue"
 import { createPinia } from "pinia"
 import App from "/src/vue/stack/App.vue"
 import router from "@/router"
+import cloudinaryPlugin from "@/plugins/cloudinary"
 import { useAuthStore } from "@/stores/auth"
 import { initAnalytics, track } from "@/analytics"
 import { AnalyticsEvents } from "@/analytics/events"
@@ -18,6 +19,9 @@ app.use(pinia)
 
 // Install Vue Router
 app.use(router)
+
+// Install Cloudinary SDK
+app.use(cloudinaryPlugin)
 
 // Initialize auth on app startup
 const authStore = useAuthStore()

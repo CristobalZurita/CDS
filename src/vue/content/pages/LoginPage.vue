@@ -4,7 +4,7 @@
       <div class="login-header">
         <!-- Logo oficial desde /public/images/logo/ -->
         <img
-          src="/images/logo/NUEVO_cirujano.webp"
+          :src="useCloudinaryImage('/images/logo/NUEVO_cirujano.webp')"
           alt="Cirujano de Sintetizadores"
           class="login-logo"
         />
@@ -22,6 +22,7 @@
 
 <script setup>
 import LoginForm from '@/vue/components/auth/LoginForm.vue'
+import { useCloudinaryImage } from '@/composables/useCloudinary'
 </script>
 
 <style scoped lang="scss">

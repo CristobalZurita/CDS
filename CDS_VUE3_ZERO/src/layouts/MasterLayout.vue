@@ -6,7 +6,7 @@
 
         <router-link to="/" class="brand-link" @click="menuOpen = false">
           <img
-            src="/images/logo/logo_square_004.webp"
+            :src="useCloudinaryImage('/images/logo/logo_square_004.webp')"
             alt="Cirujano de Sintetizadores"
             class="brand-logo"
             width="80"
@@ -101,7 +101,7 @@
 
         <section class="footer-brand">
           <img
-            src="/images/logo/logo_square_004.webp"
+            :src="useCloudinaryImage('/images/logo/logo_square_004.webp')"
             alt="Cirujano de Sintetizadores"
             class="footer-logo"
             width="56"
@@ -220,6 +220,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import { useHomePage } from '@/composables/useHomePage'
 import { useShopCartStore } from '@/stores/shopCart'
+import { useCloudinaryImage } from '@/composables/useCloudinary'
 
 const { isAuthenticated } = useAuth()
 const { sections } = useHomePage()

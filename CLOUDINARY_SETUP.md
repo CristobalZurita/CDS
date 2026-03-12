@@ -40,13 +40,11 @@ Se eliminaron duplicados y se consolidó TODO en:
 ```
 
 ### 2.2 Configurar variables de entorno
-```bash
-# En backend/.env o exportar:
-export CLOUDINARY_CLOUD_NAME="dgwwi77ic"
-export CLOUDINARY_API_KEY="tu_api_key"
-export CLOUDINARY_API_SECRET="tu_api_secret"
-export CLOUDINARY_URL="cloudinary://API_KEY:API_SECRET@CLOUD_NAME"
-```
+En `backend/.env` debes definir estas variables (sin publicar valores reales):
+
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
 
 ### 2.3 Crear Upload Preset (Unsigned)
 ```bash

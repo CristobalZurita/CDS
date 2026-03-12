@@ -7,7 +7,7 @@
 
       <div class="hero-content">
         <img
-          src="/images/logo/NUEVO_cirujano.webp"
+          :src="resolveImageUrl('/images/logo/NUEVO_cirujano.webp')"
           alt="Cirujano de Sintetizadores"
           class="hero-logo"
           width="1800"
@@ -149,7 +149,7 @@
         </div>
         <div class="diagnostic-image">
           <img
-            src="/images/instrumentos/KORG_WAVESTATE.webp"
+            :src="resolveImageUrl('/images/instrumentos/KORG_WAVESTATE.webp')"
             alt="KORG Wavestate — sintetizador"
             loading="lazy"
             width="480"

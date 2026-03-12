@@ -90,7 +90,7 @@
 
             <div class="pinout-card">
               <img
-                src="/images/calculadoras/555_Pinout.webp"
+                src="https://res.cloudinary.com/dgwwi77ic/image/upload/v1773305894/555_Pinout.webp"
                 alt="Pinout NE555"
                 class="pinout-image"
               />
@@ -166,6 +166,7 @@ import PageSectionContent from '/src/vue/components/layout/PageSectionContent.vu
 import Link from '/src/vue/components/generic/Link.vue'
 import WorkshopFooter from '/src/vue/components/footer/WorkshopFooter.vue'
 import { useCalculator } from '@/composables/useCalculator'
+
 import { Timer555Input, Timer555Output } from '@/domain/timer555/contract'
 import { calculateTimer555 } from '@/domain/timer555/model'
 import { createValidationResult } from '@/validation'

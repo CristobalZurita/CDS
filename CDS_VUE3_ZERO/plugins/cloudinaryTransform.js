@@ -48,30 +48,34 @@ function toCloudinaryUrl(localPath) {
  * Transforma el contenido de archivos Vue/HTML
  */
 function transformContent(content, id) {
-  // Solo procesar archivos Vue, HTML, JSX, TSX
-  if (!/\.(vue|html|jsx|tsx)$/i.test(id)) {
+  // Solo procesar archivos Vue, HTML, JSX, TSX, JS, TS
+  if (!/\.(vue|html|jsx|tsx|js|ts)$/i.test(id)) {
     return content
   }
   
   // Patrón para encontrar src="/images/..." o src='/images/...'
   const imgRegex = /src=(["'])\/images\/([^"']+)\1/g
   
-  return content.replace(imgRegex, (match, quote, imagePath) => {
+  let changed = false
+  const transformed = content.replace(imgRegex, (match, quote, imagePath) => {
     const localPath = `/images/${imagePath}`
     const cloudUrl = toCloudinaryUrl(localPath)
     
     if (cloudUrl !== localPath) {
+      changed = true
       return `src=${quote}${cloudUrl}${quote}`
     }
     
     return match
   })
+  
+  return changed ? transformed : content
 }
 
 export default function cloudinaryTransformPlugin() {
   return {
     name: 'cloudinary-transform',
-    enforce: 'pre',
+    enforce: 'post',
     
     transform(code, id) {
       const transformed = transformContent(code, id)

@@ -3,7 +3,7 @@
     <div class="reset-container">
       <div class="reset-header">
         <img
-          src="/images/logo/NUEVO_cirujano.webp"
+          :src="useCloudinaryImage('/images/logo/NUEVO_cirujano.webp')"
           alt="Cirujano de Sintetizadores"
           class="reset-logo"
         />
@@ -19,6 +19,7 @@
 
 <script setup>
 import PasswordReset from '@/vue/components/auth/PasswordReset.vue'
+import { useCloudinaryImage } from '@/composables/useCloudinary'
 </script>
 
 <style scoped lang="scss">

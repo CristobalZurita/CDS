@@ -22,7 +22,7 @@
 <script setup>
 import {computed, ref, watch} from "vue"
 import Spinner from "/src/vue/components/widgets/Spinner.vue"
-import { toCloudinaryUrl } from "../../../CDS_VUE3_ZERO/src/utils/cloudinary.js"
+import { useCloudinaryImage } from "@/composables/useCloudinary"
 
 const props = defineProps({
     src: String,
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 
 const resolvedSrc = computed(() => {
-    return props.src ? toCloudinaryUrl(props.src) : ''
+    return props.src ? useCloudinaryImage(props.src) : ''
 })
 
 const LoadStatus = {
@@ -72,7 +72,7 @@ const _onImageLoadError = () => {
         const currentSrc = img.value?.getAttribute('src') || resolvedSrc.value
         if (currentSrc && currentSrc.includes('/images/instrumentos/') && !currentSrc.includes('-fallback')) {
             // Attempt a single fallback to an agency logo
-            const fallback = toCloudinaryUrl('/images/logo/agency-logo.webp')
+            const fallback = useCloudinaryImage('/images/logo/agency-logo.webp')
             if (img.value) img.value.setAttribute('src', fallback)
             loadStatus.value = LoadStatus.LOADING
             return

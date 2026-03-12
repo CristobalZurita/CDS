@@ -17,7 +17,7 @@
 
           <div class="panel-form">
             <div class="cap-visual-inline">
-              <img src="/images/calculadoras/CAP_E.svg" alt="Capacitor electrolítico" />
+              <img src="https://res.cloudinary.com/dgwwi77ic/image/upload/v1773305943/CAP_E.webp" alt="Capacitor electrolítico" />
               <p>Electrolítico (Cap E)</p>
             </div>
             <div class="form-grid form-grid-wide">
@@ -93,7 +93,7 @@
 
           <form class="panel-form" @submit.prevent="onDecode">
             <div class="cap-visual-inline">
-              <img src="/images/calculadoras/CAP_C.webp" alt="Capacitor cerámico" />
+              <img src="https://res.cloudinary.com/dgwwi77ic/image/upload/v1773305925/CAP_C.webp" alt="Capacitor cerámico" />
               <p>Cerámico (Cap C)</p>
             </div>
             <div class="form-grid">
@@ -174,6 +174,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
+import { useCloudinaryImage } from '@/composables/useCloudinary'
 import PageSection from '/src/vue/components/layout/PageSection.vue'
 import PageSectionHeader from '/src/vue/components/layout/PageSectionHeader.vue'
 import PageSectionContent from '/src/vue/components/layout/PageSectionContent.vue'

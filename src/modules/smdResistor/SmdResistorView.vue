@@ -56,7 +56,7 @@
 
             <div class="pinout-card">
               <img
-                src="/images/calculadoras/CD40106.webp"
+                src="https://res.cloudinary.com/dgwwi77ic/image/upload/v1773305907/CD40106.webp"
                 alt="Pinout CD40106"
                 class="pinout-image"
               />
@@ -114,6 +114,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { useCloudinaryImage } from '@/composables/useCloudinary'
 import PageSection from '/src/vue/components/layout/PageSection.vue'
 import PageSectionHeader from '/src/vue/components/layout/PageSectionHeader.vue'
 import PageSectionContent from '/src/vue/components/layout/PageSectionContent.vue'
