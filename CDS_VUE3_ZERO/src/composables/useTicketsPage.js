@@ -1,5 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatDate } from '@/utils/format'
 
 function normalizeTicket(entry) {
   return {
@@ -95,13 +96,6 @@ export function useTicketsPage() {
   function toggleForm() {
     showForm.value = !showForm.value
     if (!showForm.value) resetForm()
-  }
-
-  function formatDate(value) {
-    if (!value) return '—'
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return '—'
-    return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
   }
 
   async function loadSupportData() {

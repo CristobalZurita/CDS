@@ -1,4 +1,5 @@
 import { computed, reactive } from 'vue'
+import { normalizeDecimal } from '@/utils/format'
 
 const unitFactorMap = {
   mm: 0.001,
@@ -17,11 +18,6 @@ export const lengthUnits = [
   { value: 'in', label: 'Pulgadas (in)' },
   { value: 'ft', label: 'Pies (ft)' }
 ]
-
-function normalizeDecimal(value, decimals = 6) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
-}
 
 export function useLengthCalculator() {
   const form = reactive({

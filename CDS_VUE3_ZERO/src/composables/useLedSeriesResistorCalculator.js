@@ -1,18 +1,6 @@
 import { computed, reactive } from 'vue'
-
-const currentUnitFactor = {
-  a: 1,
-  ma: 1e-3,
-}
-
-function toAmp(value, unit) {
-  return Number(value) * (currentUnitFactor[unit] || 1)
-}
-
-function normalizeDecimal(value, decimals = 9) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
-}
+import { normalizeDecimal } from '@/utils/format'
+import { toAmp } from '@/utils/units'
 
 export const ledCurrentUnitOptions = [
   { value: 'ma', label: 'mA' },

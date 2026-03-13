@@ -1,20 +1,6 @@
 import { computed, reactive } from 'vue'
-
-const resistanceUnitFactor = {
-  ohm: 1,
-  kohm: 1000,
-  mohm: 1000000,
-}
-
-function toOhm(value, unit) {
-  const factor = resistanceUnitFactor[unit] || 1
-  return Number(value) * factor
-}
-
-function normalizeDecimal(value, decimals = 6) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
-}
+import { normalizeDecimal } from '@/utils/format'
+import { toOhm } from '@/utils/units'
 
 export const voltageDividerResistanceUnits = [
   { value: 'ohm', label: 'Ω' },

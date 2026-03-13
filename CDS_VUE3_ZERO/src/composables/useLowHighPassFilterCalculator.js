@@ -1,41 +1,6 @@
 import { computed, reactive } from 'vue'
-
-const resistanceUnitFactor = {
-  ohm: 1,
-  kohm: 1000,
-  mohm: 1000000,
-}
-
-const capacitanceUnitFactor = {
-  pf: 1e-12,
-  nf: 1e-9,
-  uf: 1e-6,
-  mf: 1e-3,
-  f: 1,
-}
-
-const frequencyUnitFactor = {
-  hz: 1,
-  khz: 1000,
-  mhz: 1000000,
-}
-
-function normalizeDecimal(value, decimals = 9) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
-}
-
-function toOhm(value, unit) {
-  return Number(value) * (resistanceUnitFactor[unit] || 1)
-}
-
-function toFarad(value, unit) {
-  return Number(value) * (capacitanceUnitFactor[unit] || 1)
-}
-
-function toHz(value, unit) {
-  return Number(value) * (frequencyUnitFactor[unit] || 1)
-}
+import { normalizeDecimal } from '@/utils/format'
+import { toOhm, toFarad, toHz } from '@/utils/units'
 
 export const filterModeOptions = [
   { value: 'lowpass', label: 'Low Pass' },

@@ -1,4 +1,5 @@
 import { computed, reactive } from 'vue'
+import { normalizeDecimal } from '@/utils/format'
 
 export const temperatureScales = [
   { value: 'C', label: 'Celsius (°C)' },
@@ -33,11 +34,6 @@ function fromCelsius(value, to) {
     default:
       return value
   }
-}
-
-function normalizeDecimal(value, decimals = 4) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
 }
 
 export function useTemperatureCalculator() {

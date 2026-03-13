@@ -1,33 +1,6 @@
 import { computed, reactive } from 'vue'
-
-const resistanceUnitFactor = {
-  ohm: 1,
-  kohm: 1000,
-  mohm: 1000000,
-}
-
-const currentUnitFactor = {
-  a: 1,
-  ma: 1e-3,
-}
-
-function toOhm(value, unit) {
-  return Number(value) * (resistanceUnitFactor[unit] || 1)
-}
-
-function toAmp(value, unit) {
-  return Number(value) * (currentUnitFactor[unit] || 1)
-}
-
-function fromAmp(value, unit) {
-  const factor = currentUnitFactor[unit] || 1
-  return value / factor
-}
-
-function normalizeDecimal(value, decimals = 9) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
-}
+import { normalizeDecimal } from '@/utils/format'
+import { toOhm, toAmp, fromAmp } from '@/utils/units'
 
 export const currentDividerResistanceUnitOptions = [
   { value: 'ohm', label: 'Ω' },

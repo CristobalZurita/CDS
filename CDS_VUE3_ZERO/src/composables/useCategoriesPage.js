@@ -1,5 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatDate } from '@/utils/format'
 
 function normalizeCategory(entry) {
   return {
@@ -32,13 +33,6 @@ export function useCategoriesPage() {
   function resetForm() {
     form.value = { name: '', description: '' }
     editingCategoryId.value = null
-  }
-
-  function formatDate(value) {
-    if (!value) return '—'
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return '—'
-    return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
   }
 
   async function loadCategories() {

@@ -5,6 +5,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useShopCartStore } from '@/stores/shopCart'
 import { inventoryImagePaths, instrumentImagePaths } from '@/utils/publicImageCatalog'
 import { useCloudinaryImage } from '@/composables/useCloudinary'
+import { formatCurrency } from '@/utils/format'
 
 const STORE_CATALOG_CACHE_KEY = 'cds_store_catalog_cache_v1'
 
@@ -196,16 +197,6 @@ export function useStorePage() {
       return useCloudinaryImage(normalized)
     }
     return catalogImageFallback(product)
-  }
-
-  function formatCurrency(value) {
-    const amount = Number(value || 0)
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount)
   }
 
   function formatLinePrice(value) {

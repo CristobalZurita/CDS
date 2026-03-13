@@ -1,6 +1,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatDate } from '@/utils/format'
 
 function normalizeArchiveEntry(entry) {
   return {
@@ -42,13 +43,6 @@ export function useArchivePage() {
       return text.includes(query)
     })
   })
-
-  function formatDate(value) {
-    if (!value) return '—'
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return '—'
-    return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
-  }
 
   async function loadArchive() {
     loading.value = true

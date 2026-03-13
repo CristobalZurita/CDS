@@ -1,25 +1,6 @@
 import { computed, reactive } from 'vue'
-
-const unitFactor = {
-  ohm: 1,
-  kohm: 1000,
-  mohm: 1000000,
-}
-
-function toOhm(value, unit) {
-  const factor = unitFactor[unit] || 1
-  return Number(value) * factor
-}
-
-function fromOhm(value, unit) {
-  const factor = unitFactor[unit] || 1
-  return value / factor
-}
-
-function normalizeDecimal(value, decimals = 6) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
-}
+import { normalizeDecimal } from '@/utils/format'
+import { toOhm, fromOhm } from '@/utils/units'
 
 export const resistorNetworkModes = [
   { value: 'parallel', label: 'Paralelo' },

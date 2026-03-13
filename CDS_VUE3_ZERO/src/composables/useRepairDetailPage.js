@@ -1,6 +1,7 @@
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatDateOnly as formatDate } from '@/utils/format'
 
 function toApiPath(path) {
   const value = String(path || '')
@@ -40,13 +41,6 @@ export function useRepairDetailPage() {
     photos: photos.value,
     notes: notes.value
   }))
-
-  function formatDate(value) {
-    if (!value) return '—'
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return '—'
-    return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium' }).format(date)
-  }
 
   function formatPrice(value) {
     const amount = Number(value)

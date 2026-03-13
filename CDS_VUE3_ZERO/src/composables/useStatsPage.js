@@ -1,5 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatCurrency } from '@/utils/format'
 
 function safeData(result, fallback = {}) {
   if (result.status !== 'fulfilled') return fallback
@@ -65,16 +66,6 @@ export function useStatsPage() {
     } finally {
       isLoading.value = false
     }
-  }
-
-  function formatCurrency(value) {
-    const amount = Number(value || 0)
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount)
   }
 
   onMounted(load)

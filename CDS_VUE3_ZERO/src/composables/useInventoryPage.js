@@ -1,5 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatCurrency } from '@/utils/format'
 
 function normalizeItem(entry) {
   return {
@@ -98,16 +99,6 @@ export function useInventoryPage() {
   function toggleForm() {
     showForm.value = !showForm.value
     if (!showForm.value) resetForm()
-  }
-
-  function formatCurrency(value) {
-    const amount = Number(value || 0)
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount)
   }
 
   async function loadCategories() {

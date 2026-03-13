@@ -1,6 +1,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatDate, formatCurrency } from '@/utils/format'
 
 const STATUS_OPTIONS = [
   { id: 1, label: 'Ingreso' },
@@ -187,23 +188,6 @@ export function useRepairDetailAdminPage() {
       paid_amount: Number(repair.value.paid_amount || 0),
       payment_method: String(repair.value.payment_method || 'cash')
     }
-  }
-
-  function formatDate(value) {
-    if (!value) return '—'
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return '—'
-    return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
-  }
-
-  function formatCurrency(value) {
-    const amount = Number(value || 0)
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount)
   }
 
   function noteTypeClass(noteType) {

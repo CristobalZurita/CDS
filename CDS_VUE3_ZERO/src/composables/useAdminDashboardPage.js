@@ -7,6 +7,7 @@
 
 import { ref, onMounted, computed } from 'vue'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatDate, formatCurrency } from '@/utils/format'
 
 export function useAdminDashboardPage() {
   const isLoading = ref(false)
@@ -82,27 +83,6 @@ export function useAdminDashboardPage() {
     } finally {
       isLoading.value = false
     }
-  }
-  
-  // Formateo de moneda
-  function formatCurrency(value) {
-    const amount = Number(value || 0)
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0
-    }).format(amount)
-  }
-  
-  // Formateo de fecha
-  function formatDate(value) {
-    if (!value) return '—'
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return '—'
-    return new Intl.DateTimeFormat('es-CL', { 
-      dateStyle: 'medium',
-      timeStyle: 'short'
-    }).format(date)
   }
   
   onMounted(loadDashboard)

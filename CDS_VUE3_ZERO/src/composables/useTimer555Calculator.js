@@ -1,16 +1,6 @@
 import { computed, reactive } from 'vue'
-
-const resistanceUnitFactor = {
-  ohm: 1,
-  kohm: 1000,
-  mohm: 1000000
-}
-
-const capacitanceUnitFactor = {
-  pf: 1e-12,
-  nf: 1e-9,
-  uf: 1e-6
-}
+import { normalizeDecimal } from '@/utils/format'
+import { resistanceUnitFactor, capacitanceUnitFactor } from '@/utils/units'
 
 export const timer555ModeOptions = [
   { value: 'astable_standard', label: 'Astable' },
@@ -26,11 +16,6 @@ function toResistance(value, unit) {
 function toCapacitance(value, unit) {
   const factor = capacitanceUnitFactor[unit] || 1e-6
   return Number(value) * factor
-}
-
-function normalizeDecimal(value, decimals = 9) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
 }
 
 export function useTimer555Calculator() {
@@ -73,8 +58,8 @@ export function useTimer555Calculator() {
       const r = toResistance(form.r_value, form.r_unit)
       const period = 1.0986 * r * c
       return {
-        period_s: normalizeDecimal(period),
-        frequency_hz: period > 0 ? normalizeDecimal(1 / period) : null
+        period_s: normalizeDecimal(period, 9),
+        frequency_hz: period > 0 ? normalizeDecimal(1 / period, 9) : null
       }
     }
 
@@ -87,11 +72,11 @@ export function useTimer555Calculator() {
     const dutyCycle = period > 0 ? tHigh / period : 0
 
     return {
-      t_high_s: normalizeDecimal(tHigh),
-      t_low_s: normalizeDecimal(tLow),
-      period_s: normalizeDecimal(period),
-      frequency_hz: normalizeDecimal(frequency),
-      duty_cycle: normalizeDecimal(dutyCycle)
+      t_high_s: normalizeDecimal(tHigh, 9),
+      t_low_s: normalizeDecimal(tLow, 9),
+      period_s: normalizeDecimal(period, 9),
+      frequency_hz: normalizeDecimal(frequency, 9),
+      duty_cycle: normalizeDecimal(dutyCycle, 9)
     }
   })
 

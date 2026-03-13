@@ -1,9 +1,5 @@
 import { computed, reactive } from 'vue'
-
-function normalizeDecimal(value, decimals = 6) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
-}
+import { normalizeDecimal } from '@/utils/format'
 
 export function useAwgCalculator() {
   const form = reactive({

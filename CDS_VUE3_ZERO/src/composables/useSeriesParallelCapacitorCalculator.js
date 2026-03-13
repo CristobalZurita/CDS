@@ -1,27 +1,6 @@
 import { computed, reactive } from 'vue'
-
-const unitFactor = {
-  pf: 1e-12,
-  nf: 1e-9,
-  uf: 1e-6,
-  mf: 1e-3,
-  f: 1,
-}
-
-function toFarad(value, unit) {
-  const factor = unitFactor[unit] || 1
-  return Number(value) * factor
-}
-
-function fromFarad(value, unit) {
-  const factor = unitFactor[unit] || 1
-  return value / factor
-}
-
-function normalizeDecimal(value, decimals = 9) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
-}
+import { normalizeDecimal } from '@/utils/format'
+import { toFarad, fromFarad } from '@/utils/units'
 
 export const capacitorNetworkModes = [
   { value: 'series', label: 'Serie' },

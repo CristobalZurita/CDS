@@ -1,6 +1,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatDate } from '@/utils/format'
 
 function normalizeRepair(entry) {
   return {
@@ -91,13 +92,6 @@ export function useRepairsAdminPage() {
 
   function resetForm() {
     form.value = baseForm()
-  }
-
-  function formatDate(value) {
-    if (!value) return '—'
-    const parsed = new Date(value)
-    if (Number.isNaN(parsed.getTime())) return '—'
-    return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeStyle: 'short' }).format(parsed)
   }
 
   async function loadClients() {

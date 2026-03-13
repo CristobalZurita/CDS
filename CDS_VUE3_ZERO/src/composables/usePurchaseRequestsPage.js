@@ -1,6 +1,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatDate, formatCurrency } from '@/utils/format'
 
 const STATUS_OPTIONS = [
   'draft',
@@ -121,23 +122,6 @@ export function usePurchaseRequestsPage() {
         instruction: 'Deposita el monto solicitado y sube comprobante en tu panel.'
       }
     }
-  }
-
-  function formatCurrency(value) {
-    const amount = Number(value || 0)
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount)
-  }
-
-  function formatDate(value) {
-    if (!value) return '—'
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return '—'
-    return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
   }
 
   async function loadSupportData() {

@@ -1,5 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import api, { extractErrorMessage } from '@/services/api'
+import { formatDate } from '@/utils/format'
 
 function normalizeSubscription(entry) {
   return {
@@ -27,13 +28,6 @@ export function useNewsletterSubscriptionsPage() {
         item.source_url.toLowerCase().includes(query)
     })
   })
-
-  function formatDate(value) {
-    if (!value) return '—'
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return '—'
-    return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeStyle: 'short' }).format(date)
-  }
 
   async function loadSubscriptions() {
     isLoading.value = true

@@ -1,4 +1,5 @@
 import { computed, reactive } from 'vue'
+import { normalizeDecimal } from '@/utils/format'
 
 function asNumber(value) {
   if (value === '' || value === null || value === undefined) return null
@@ -6,11 +7,6 @@ function asNumber(value) {
   if (!Number.isFinite(parsed)) return null
   if (parsed < 0) return null
   return parsed
-}
-
-function normalizeDecimal(value, decimals = 6) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
 }
 
 export function useOhmsLawCalculator() {

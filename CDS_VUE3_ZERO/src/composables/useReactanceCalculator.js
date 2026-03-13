@@ -1,41 +1,6 @@
 import { computed, reactive } from 'vue'
-
-const frequencyUnitFactor = {
-  hz: 1,
-  khz: 1000,
-  mhz: 1000000,
-}
-
-const capacitanceUnitFactor = {
-  pf: 1e-12,
-  nf: 1e-9,
-  uf: 1e-6,
-  mf: 1e-3,
-  f: 1,
-}
-
-const inductanceUnitFactor = {
-  uh: 1e-6,
-  mh: 1e-3,
-  h: 1,
-}
-
-function toHz(value, unit) {
-  return Number(value) * (frequencyUnitFactor[unit] || 1)
-}
-
-function toFarad(value, unit) {
-  return Number(value) * (capacitanceUnitFactor[unit] || 1)
-}
-
-function toHenry(value, unit) {
-  return Number(value) * (inductanceUnitFactor[unit] || 1)
-}
-
-function normalizeDecimal(value, decimals = 9) {
-  if (!Number.isFinite(value)) return null
-  return Number(value.toFixed(decimals))
-}
+import { normalizeDecimal } from '@/utils/format'
+import { toHz, toFarad, toHenry } from '@/utils/units'
 
 export const reactanceModeOptions = [
   { value: 'capacitive', label: 'Capacitiva (Xc)' },
