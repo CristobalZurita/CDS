@@ -7,7 +7,7 @@
 
       <div class="hero-content">
         <img
-          :src="resolveImageUrl('/images/logo/NUEVO_cirujano.webp')"
+          :src="resolveSlotOr('home.hero.logo', resolveImageUrl('/images/logo/NUEVO_cirujano.webp'))"
           alt="Cirujano de Sintetizadores"
           class="hero-logo"
           width="1800"
@@ -149,7 +149,7 @@
         </div>
         <div class="diagnostic-image">
           <img
-            :src="resolveImageUrl('/images/instrumentos/KORG_WAVESTATE.webp')"
+            :src="resolveSlotOr('home.diagnostic.image', resolveImageUrl('/images/instrumentos/KORG_WAVESTATE.webp'))"
             alt="KORG Wavestate — sintetizador"
             loading="lazy"
             width="480"
@@ -332,9 +332,11 @@
 import { onMounted, onUnmounted, ref, computed } from 'vue'
 import api from '@/services/api'
 import { useSiteImages } from '@/composables/useSiteImages'
+import { useMediaBinding } from '@/composables/useMediaBinding'
 
 /* ─── Historia ─── */
 const { resolveImageUrl, resolveImageArray } = useSiteImages()
+const { resolveSlotOr } = useMediaBinding()
 
 const historyEventsRaw = [
   { year: '1999', title: 'Músico de Conservatorio', image: '/images/personales/marimba.webp',  description: 'Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido.' },

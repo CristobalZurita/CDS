@@ -25,3 +25,7 @@ Thumbs.db
 # Test artifacts
 test-results/
 playwright-report/
+
+# Local docs / scratch (no commitear sin revisión manual)
+CLOUDINARY_ACTIVACION_PASO_A_PASO.md
+VUE_APLICADO.md

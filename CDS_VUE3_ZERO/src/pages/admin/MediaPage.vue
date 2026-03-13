@@ -9,6 +9,9 @@
         <button class="btn-secondary" :disabled="loadingCatalog" @click="loadCatalog">
           {{ loadingCatalog ? 'Cargando...' : 'Actualizar catálogo' }}
         </button>
+        <button class="btn-secondary" :disabled="importing" @click="importFromCloudinary">
+          {{ importing ? `Importando... (${importProgress})` : 'Importar desde Cloudinary' }}
+        </button>
       </div>
     </header>
 
@@ -223,6 +226,29 @@ async function loadCatalog() {
     error.value = 'Error al cargar el catálogo. Verificá que el backend esté corriendo.'
   } finally {
     loadingCatalog.value = false
+  }
+}
+
+// ─── Importación masiva desde Cloudinary ──────────────────────────────────
+const importing = ref(false)
+const importProgress = ref('')
+
+async function importFromCloudinary() {
+  if (importing.value) return
+  importing.value = true
+  importProgress.value = 'conectando...'
+  error.value = null
+  try {
+    const { data } = await api.post('/media/assets/import-from-cloudinary')
+    importProgress.value = ''
+    await loadCatalog()
+    const { inserted = 0, updated = 0, total = 0 } = data
+    alert(`Importación completa: ${total} imágenes procesadas (${inserted} nuevas, ${updated} actualizadas).`)
+  } catch {
+    error.value = 'Error al importar desde Cloudinary. Verificá que el backend tenga acceso a Cloudinary.'
+  } finally {
+    importing.value = false
+    importProgress.value = ''
   }
 }
 

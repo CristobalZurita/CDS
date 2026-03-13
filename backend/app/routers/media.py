@@ -97,6 +97,64 @@ def register_asset(data: MediaAssetCreate, db: Session = Depends(get_db)):
         return existing
 
 
+@router.post("/assets/import-from-cloudinary")
+def import_from_cloudinary(db: Session = Depends(get_db)):
+    """
+    Importa masivamente todos los assets de Cloudinary a media_assets.
+    Hace upsert por public_id: actualiza si ya existe, inserta si es nuevo.
+    Retorna conteo de insertados y actualizados.
+    """
+    from app.services.cloudinary_service import fetch_all_images
+
+    resources = fetch_all_images()
+    if not resources:
+        return {"inserted": 0, "updated": 0, "total": 0, "message": "Cloudinary no disponible o sin imágenes."}
+
+    inserted = 0
+    updated = 0
+
+    for r in resources:
+        public_id = r.get("public_id")
+        secure_url = r.get("url") or r.get("secure_url")
+        if not public_id or not secure_url:
+            continue
+
+        folder = public_id.rsplit("/", 1)[0] if "/" in public_id else ""
+        original_filename = public_id.split("/")[-1]
+
+        existing = db.query(MediaAsset).filter(MediaAsset.public_id == public_id).first()
+        if existing:
+            existing.secure_url = secure_url
+            existing.folder = folder or existing.folder
+            existing.format = r.get("format") or existing.format
+            existing.bytes = r.get("bytes") or existing.bytes
+            existing.width = r.get("width") or existing.width
+            existing.height = r.get("height") or existing.height
+            updated += 1
+        else:
+            asset = MediaAsset(
+                public_id=public_id,
+                secure_url=secure_url,
+                folder=folder,
+                original_filename=original_filename,
+                format=r.get("format"),
+                bytes=r.get("bytes"),
+                width=r.get("width"),
+                height=r.get("height"),
+            )
+            db.add(asset)
+            inserted += 1
+
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error al importar desde Cloudinary: {e}")
+        raise HTTPException(status_code=500, detail="Error al guardar los assets importados.")
+
+    return {"inserted": inserted, "updated": updated, "total": inserted + updated}
+
+
 @router.delete("/assets/{asset_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_asset(asset_id: int, from_cloudinary: bool = False, db: Session = Depends(get_db)):
     """
