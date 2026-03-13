@@ -87,7 +87,8 @@ const pageTitle = computed(() => {
     'admin-stats': 'Estadísticas',
     'admin-wizards': 'Magos',
     'admin-intake': 'Nuevo Ingreso',
-    'admin-archive': 'Archivo'
+    'admin-archive': 'Archivo',
+    'admin-media': 'Gestión de Medios'
   }
   return titles[route.name] || 'Panel Admin'
 })
@@ -113,7 +114,8 @@ const menuItems = [
   { to: '/admin/inventory', label: 'Inventario', icon: '📦' },
   { to: '/admin/appointments', label: 'Citas', icon: '📅' },
   { to: '/admin/tickets', label: 'Tickets', icon: '🎫' },
-  { to: '/admin/stats', label: 'Estadísticas', icon: '📈' }
+  { to: '/admin/stats', label: 'Estadísticas', icon: '📈' },
+  { to: '/admin/media', label: 'Medios', icon: '🖼️' }
 ]
 
 const isActive = (item) => {
