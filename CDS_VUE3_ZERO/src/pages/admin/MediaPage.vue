@@ -16,7 +16,7 @@
 
     <section class="summary-grid">
       <article class="summary-card">
-        <span>Total en Cloudinary</span>
+        <span>Total registradas</span>
         <strong>{{ images.length }}</strong>
       </article>
       <article class="summary-card">
@@ -29,6 +29,7 @@
       </article>
     </section>
 
+    <!-- SUBIR IMÁGENES -->
     <section class="panel-card">
       <h2>Subir imágenes</h2>
 
@@ -73,6 +74,87 @@
       </div>
     </section>
 
+    <!-- SLOTS DEL SITIO (bindings) -->
+    <section class="panel-card">
+      <div class="panel-head">
+        <h2>Slots del sitio ({{ bindings.length }})</h2>
+        <button class="btn-secondary" @click="toggleBindingForm">
+          {{ showBindingForm ? 'Cancelar' : '+ Asignar imagen a slot' }}
+        </button>
+      </div>
+
+      <p class="catalog-hint">
+        Un slot es un lugar fijo del sitio (ej: <code>home.hero.bg</code>). Asignás una imagen y el sitio la muestra automáticamente sin tocar código.
+      </p>
+
+      <!-- Formulario nuevo/editar binding -->
+      <div v-if="showBindingForm" class="binding-form">
+        <div class="binding-form-fields">
+          <label>
+            <span>Slot (clave única)</span>
+            <input
+              v-model.trim="bindingForm.slot_key"
+              type="text"
+              placeholder="ej: home.hero.bg"
+              :readonly="isEditingBinding"
+              :style="isEditingBinding ? 'background: rgba(62,60,56,.06); cursor: not-allowed;' : ''"
+            />
+          </label>
+          <label>
+            <span>Nombre legible (opcional)</span>
+            <input v-model.trim="bindingForm.label" type="text" placeholder="ej: Imagen de fondo del hero" />
+          </label>
+        </div>
+
+        <div class="binding-picker">
+          <span class="binding-picker-label">Elegir imagen del catálogo</span>
+          <input v-model.trim="pickerSearch" type="search" placeholder="Buscar..." class="picker-search" />
+          <div class="picker-grid">
+            <figure
+              v-for="img in pickerFiltered"
+              :key="img.public_id"
+              class="picker-tile"
+              :class="{ 'picker-tile--selected': bindingForm.asset_id === img.id }"
+              @click="bindingForm.asset_id = img.id"
+            >
+              <img :src="thumb(img.secure_url)" :alt="shortName(img.public_id)" loading="lazy" />
+              <figcaption>{{ shortName(img.public_id) }}</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="panel-actions">
+          <button
+            class="btn-primary"
+            :disabled="!bindingForm.slot_key || !bindingForm.asset_id || savingBinding"
+            @click="saveBinding"
+          >
+            {{ savingBinding ? 'Guardando...' : 'Guardar slot' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de bindings actuales -->
+      <p v-if="loadingBindings" class="catalog-hint">Cargando slots...</p>
+      <p v-else-if="!bindings.length" class="catalog-hint">No hay slots asignados todavía.</p>
+
+      <div v-else class="bindings-list">
+        <div v-for="b in bindings" :key="b.slot_key" class="binding-row">
+          <img v-if="b.asset?.secure_url" :src="thumb(b.asset.secure_url)" :alt="b.slot_key" class="binding-thumb" />
+          <div class="binding-info">
+            <span class="binding-slot">{{ b.slot_key }}</span>
+            <span v-if="b.label" class="binding-label">{{ b.label }}</span>
+            <span class="binding-name">{{ shortName(b.asset?.public_id) }}</span>
+          </div>
+          <div class="binding-actions">
+            <button class="btn-icon" title="Editar" @click="editBinding(b)">✏️</button>
+            <button class="btn-icon btn-icon--danger" title="Quitar" @click="deleteBinding(b.slot_key)">✕</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATÁLOGO -->
     <section class="panel-card">
       <div class="panel-head">
         <h2>Catálogo ({{ filtered.length }})</h2>
@@ -87,12 +169,12 @@
         </div>
       </div>
 
-      <p v-if="loadingCatalog" class="catalog-hint">Cargando catálogo desde Cloudinary...</p>
-      <p v-else-if="!images.length" class="catalog-hint">No hay imágenes en el catálogo o Cloudinary no está conectado.</p>
+      <p v-if="loadingCatalog" class="catalog-hint">Cargando catálogo...</p>
+      <p v-else-if="!images.length" class="catalog-hint">No hay imágenes registradas todavía. Usá la sección "Subir imágenes" — cada imagen que subas quedará registrada aquí automáticamente.</p>
 
       <div v-else class="image-grid">
         <figure v-for="img in filtered" :key="img.public_id" class="image-tile">
-          <img :src="thumb(img.url)" :alt="shortName(img.public_id)" loading="lazy" />
+          <img :src="thumb(img.secure_url)" :alt="shortName(img.public_id)" loading="lazy" />
           <figcaption>
             <span class="tile-name">{{ shortName(img.public_id) }}</span>
             <span class="tile-meta">{{ formatBytes(img.bytes) }}</span>
@@ -106,26 +188,19 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import api from '@/services/api.js'
-import { uploadImage } from '@/services/uploadService.js'
+import { uploadImageWithMeta } from '@/services/uploadService.js'
 
+// ─── Catálogo (desde BD) ───────────────────────────────────────────────────
 const images = ref([])
 const loadingCatalog = ref(false)
 const error = ref(null)
-
-const destination = ref('uploads')
-const isDragging = ref(false)
-const queue = ref([])
-const uploading = ref(false)
-const uploadProgress = ref(0)
-const fileInput = ref(null)
-
 const search = ref('')
 const folderFilter = ref('')
 
 const filtered = computed(() => {
   let list = images.value
   if (folderFilter.value) {
-    list = list.filter(img => img.public_id?.includes(folderFilter.value))
+    list = list.filter(img => img.folder?.includes(folderFilter.value) || img.public_id?.includes(folderFilter.value))
   }
   if (search.value) {
     const q = search.value.toLowerCase()
@@ -135,21 +210,29 @@ const filtered = computed(() => {
 })
 
 function countByFolder(folder) {
-  return images.value.filter(img => img.public_id?.includes(folder)).length
+  return images.value.filter(img => img.folder?.includes(folder) || img.public_id?.includes(folder)).length
 }
 
 async function loadCatalog() {
   loadingCatalog.value = true
   error.value = null
   try {
-    const { data } = await api.get('/images/catalog')
-    images.value = data?.images || []
+    const { data } = await api.get('/media/assets')
+    images.value = data || []
   } catch {
-    error.value = 'Error al cargar el catálogo. Verificá que el backend esté corriendo y Cloudinary configurado.'
+    error.value = 'Error al cargar el catálogo. Verificá que el backend esté corriendo.'
   } finally {
     loadingCatalog.value = false
   }
 }
+
+// ─── Upload ────────────────────────────────────────────────────────────────
+const destination = ref('uploads')
+const isDragging = ref(false)
+const queue = ref([])
+const uploading = ref(false)
+const uploadProgress = ref(0)
+const fileInput = ref(null)
 
 function onDrop(e) {
   isDragging.value = false
@@ -173,27 +256,127 @@ function addToQueue(files) {
 }
 
 async function uploadAll() {
+  if (uploading.value) return
   uploading.value = true
   uploadProgress.value = 0
-  for (const item of queue.value) {
-    if (item.status === 'done') { uploadProgress.value++; continue }
-    item.status = 'uploading'
-    try {
-      const url = await uploadImage(item.file, destination.value)
-      item.status = url ? 'done' : 'error'
-    } catch {
-      item.status = 'error'
+  error.value = null
+  try {
+    for (const item of queue.value) {
+      if (item.status === 'done') { uploadProgress.value++; continue }
+      item.status = 'uploading'
+      try {
+        const meta = await uploadImageWithMeta(item.file, destination.value)
+        if (meta?.secure_url) {
+          // Registrar en BD
+          await api.post('/media/assets', meta).catch(() => {})
+          item.status = 'done'
+        } else {
+          item.status = 'error'
+        }
+      } catch {
+        item.status = 'error'
+      }
+      uploadProgress.value++
     }
-    uploadProgress.value++
+    await loadCatalog()
+  } finally {
+    uploading.value = false
   }
-  uploading.value = false
-  await loadCatalog()
 }
 
 function clearQueue() {
   queue.value = queue.value.filter(i => i.status === 'uploading')
 }
 
+// ─── Bindings ──────────────────────────────────────────────────────────────
+const bindings = ref([])
+const loadingBindings = ref(false)
+const showBindingForm = ref(false)
+const savingBinding = ref(false)
+const pickerSearch = ref('')
+const isEditingBinding = ref(false)
+
+const bindingForm = ref({ slot_key: '', label: '', asset_id: null })
+
+const pickerFiltered = computed(() => {
+  const q = pickerSearch.value.toLowerCase()
+  const base = q
+    ? images.value.filter(img => img.public_id?.toLowerCase().includes(q))
+    : images.value
+  const limited = base.slice(0, 40)
+  const selectedId = bindingForm.value.asset_id
+  if (!selectedId) return limited
+
+  const selected = images.value.find(img => img.id === selectedId)
+  if (!selected) return limited
+  if (limited.some(img => img.id === selected.id)) return limited
+
+  return [selected, ...limited.slice(0, 39)]
+})
+
+async function loadBindings() {
+  loadingBindings.value = true
+  try {
+    const { data } = await api.get('/media/bindings')
+    bindings.value = data || []
+  } catch {
+    error.value = 'Error al cargar los slots del sitio.'
+  } finally {
+    loadingBindings.value = false
+  }
+}
+
+async function saveBinding() {
+  if (!bindingForm.value.slot_key || !bindingForm.value.asset_id) return
+  savingBinding.value = true
+  try {
+    await api.put(`/media/bindings/${bindingForm.value.slot_key}`, {
+      asset_id: bindingForm.value.asset_id,
+      label: bindingForm.value.label || null,
+    })
+    bindingForm.value = { slot_key: '', label: '', asset_id: null }
+    showBindingForm.value = false
+    isEditingBinding.value = false
+    error.value = null
+    await loadBindings()
+  } catch {
+    error.value = 'Error al guardar el slot.'
+  } finally {
+    savingBinding.value = false
+  }
+}
+
+function toggleBindingForm() {
+  showBindingForm.value = !showBindingForm.value
+  if (!showBindingForm.value) {
+    isEditingBinding.value = false
+    bindingForm.value = { slot_key: '', label: '', asset_id: null }
+    pickerSearch.value = ''
+  }
+}
+
+function editBinding(b) {
+  bindingForm.value = {
+    slot_key: b.slot_key,
+    label: b.label || '',
+    asset_id: b.asset?.id || null,
+  }
+  isEditingBinding.value = true
+  showBindingForm.value = true
+}
+
+async function deleteBinding(slotKey) {
+  if (!confirm(`¿Quitar el slot "${slotKey}"?`)) return
+  try {
+    await api.delete(`/media/bindings/${slotKey}`)
+    error.value = null
+    await loadBindings()
+  } catch {
+    error.value = 'Error al quitar el slot.'
+  }
+}
+
+// ─── Helpers ───────────────────────────────────────────────────────────────
 function thumb(url) {
   if (!url) return ''
   return url.replace('/upload/', '/upload/w_200,c_limit,q_auto/')
@@ -215,7 +398,10 @@ function statusLabel(status) {
   return map[status] || status
 }
 
-onMounted(loadCatalog)
+onMounted(() => {
+  loadCatalog()
+  loadBindings()
+})
 </script>
 
 <style scoped>
@@ -265,6 +451,7 @@ onMounted(loadCatalog)
 .catalog-filters { display: flex; gap: .5rem; flex-wrap: wrap; }
 .catalog-filters input, .catalog-filters select { min-height: 40px; border: 1.5px solid rgba(62,60,56,.25); border-radius: .5rem; padding: .4rem .75rem; font-size: var(--cds-text-sm); background: var(--cds-white); color: var(--cds-dark); }
 .catalog-hint { margin: 0; color: var(--cds-text-muted); font-size: var(--cds-text-base); }
+.catalog-hint code { background: rgba(62,60,56,.08); padding: .1em .4em; border-radius: .3rem; font-size: .9em; }
 
 .image-grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
 .image-tile { margin: 0; display: grid; border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .6rem; overflow: hidden; background: rgba(62,60,56,.03); }
@@ -273,8 +460,36 @@ onMounted(loadCatalog)
 .tile-name { font-size: var(--cds-text-xs); font-weight: var(--cds-font-semibold); color: var(--cds-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tile-meta { font-size: var(--cds-text-xs); color: var(--cds-text-muted); }
 
+/* Bindings */
+.binding-form { display: grid; gap: .75rem; padding: .9rem; background: rgba(62,60,56,.03); border-radius: .6rem; border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); }
+.binding-form-fields { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.binding-form-fields label { display: grid; gap: .3rem; font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
+.binding-form-fields input { min-height: 44px; border: 1.5px solid rgba(62,60,56,.25); border-radius: .5rem; padding: .5rem .75rem; font-size: var(--cds-text-base); background: var(--cds-white); color: var(--cds-dark); }
+.binding-picker { display: grid; gap: .5rem; }
+.binding-picker-label { font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
+.picker-search { min-height: 40px; border: 1.5px solid rgba(62,60,56,.25); border-radius: .5rem; padding: .4rem .75rem; font-size: var(--cds-text-sm); background: var(--cds-white); color: var(--cds-dark); width: 100%; max-width: 320px; }
+.picker-grid { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); max-height: 260px; overflow-y: auto; padding: .25rem; border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .5rem; }
+.picker-tile { margin: 0; cursor: pointer; border: 2px solid transparent; border-radius: .45rem; overflow: hidden; background: rgba(62,60,56,.03); transition: border-color .15s; }
+.picker-tile:hover { border-color: color-mix(in srgb, var(--cds-primary) 40%, transparent); }
+.picker-tile--selected { border-color: var(--cds-primary); }
+.picker-tile img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+.picker-tile figcaption { padding: .2rem .3rem; font-size: var(--cds-text-xs); color: var(--cds-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.bindings-list { display: grid; gap: .4rem; }
+.binding-row { display: flex; align-items: center; gap: .75rem; padding: .5rem .75rem; background: rgba(62,60,56,.03); border-radius: .45rem; border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); }
+.binding-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: .35rem; flex-shrink: 0; }
+.binding-info { flex: 1; display: grid; gap: .1rem; min-width: 0; }
+.binding-slot { font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); font-family: monospace; }
+.binding-label { font-size: var(--cds-text-xs); color: var(--cds-text-muted); }
+.binding-name { font-size: var(--cds-text-xs); color: var(--cds-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.binding-actions { display: flex; gap: .35rem; flex-shrink: 0; }
+.btn-icon { min-height: 36px; min-width: 36px; padding: .3rem .5rem; border-radius: .4rem; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); background: var(--cds-white); cursor: pointer; font-size: var(--cds-text-sm); }
+.btn-icon--danger { border-color: #fcc; color: #c0392b; }
+.btn-icon--danger:hover { background: #fdf3f2; }
+
 @media (max-width: 600px) {
   .summary-grid { grid-template-columns: 1fr; }
   .image-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .picker-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
 }
 </style>

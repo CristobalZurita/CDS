@@ -39,6 +39,7 @@ from app.models.repair_intake_sheet import RepairIntakeSheet
 from app.models.permission import Permission, Role, role_permissions, user_role_assignments
 from app.models.invoice import Invoice, InvoiceItem, InvoiceSequence, InvoiceStatus, InvoiceType
 from app.models.warranty import Warranty, WarrantyClaim, WarrantyType, WarrantyStatus, ClaimStatus
+from app.models.media import MediaAsset, MediaBinding
 
 __all__ = [
     "User", "UserRole",
@@ -84,4 +85,5 @@ __all__ = [
     "Permission", "Role",
     "Invoice", "InvoiceItem", "InvoiceSequence", "InvoiceStatus", "InvoiceType",
     "Warranty", "WarrantyClaim", "WarrantyType", "WarrantyStatus", "ClaimStatus",
+    "MediaAsset", "MediaBinding",
 ]

@@ -6,6 +6,71 @@
 import api from './api.js'
 
 /**
+ * Sube una imagen y devuelve el objeto completo con metadatos.
+ * Útil para registrar el asset en la BD después del upload.
+ * @param {File} file
+ * @param {string} destination
+ * @returns {Promise<{secure_url,public_id,folder,original_filename,format,bytes,width,height}|null>}
+ */
+export async function uploadImageWithMeta(file, destination = 'uploads') {
+  if (!file) return null
+
+  try {
+    const signatureRes = await api.post(`/uploads/signature?destination=${destination}`)
+    const sig = signatureRes.data?.data
+
+    if (sig) {
+      const cloudForm = new FormData()
+      cloudForm.append('file', file)
+      cloudForm.append('api_key', sig.api_key)
+      cloudForm.append('timestamp', sig.timestamp)
+      cloudForm.append('signature', sig.signature)
+      cloudForm.append('folder', sig.folder)
+
+      const cloudRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${sig.cloud_name}/image/upload`,
+        { method: 'POST', body: cloudForm }
+      )
+
+      if (cloudRes.ok) {
+        const d = await cloudRes.json()
+        return {
+          secure_url: d.secure_url,
+          public_id: d.public_id,
+          folder: sig.folder,
+          original_filename: file.name,
+          format: d.format,
+          bytes: d.bytes,
+          width: d.width,
+          height: d.height,
+        }
+      }
+    }
+  } catch {
+    // fallback
+  }
+
+  // Fallback: backend tradicional
+  const formData = new FormData()
+  formData.append('file', file)
+  const response = await api.post('/uploads/images', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+  const path = response?.data?.path || null
+  if (!path) return null
+  return {
+    secure_url: path,
+    public_id: file.name.replace(/\.[^.]+$/, ''),
+    folder: destination,
+    original_filename: file.name,
+    format: null,
+    bytes: file.size,
+    width: null,
+    height: null,
+  }
+}
+
+/**
  * Sube una imagen directo a Cloudinary (evita pasar por backend)
  * @param {File} file - Archivo a subir
  * @param {string} destination - Destino (uploads|instrumentos|inventario)

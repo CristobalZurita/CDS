@@ -183,3 +183,10 @@ try:
 except Exception:
 	# Si el módulo no está disponible, se ignora
 	pass
+
+# ADITIVO: Router para gestión dinámica de medios (assets + bindings en BD)
+try:
+	from app.routers import media as media_router
+	api_router.include_router(media_router.router)
+except Exception:
+	pass
