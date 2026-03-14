@@ -1,0 +1,8 @@
+export { default as HeroSection } from './HeroSection.vue'
+export { default as AboutSection } from './AboutSection.vue'
+export { default as ServicesSection } from './ServicesSection.vue'
+export { default as DiagnosticSection } from './DiagnosticSection.vue'
+export { default as FeaturedSection } from './FeaturedSection.vue'
+export { default as FaqSection } from './FaqSection.vue'
+export { default as ReviewsSection } from './ReviewsSection.vue'
+export { default as ContactSection } from './ContactSection.vue'

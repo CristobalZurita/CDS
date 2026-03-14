@@ -1,6 +1,10 @@
 /**
  * Composable para resolver imágenes desde Cloudinary vía API.
  * ADITIVO: No modifica rutas, consulta al backend.
+ *
+ * @deprecated Sin consumidores activos. Definido pero no importado fuera de este archivo.
+ * Alternativa activa: useSiteImages.js (resolución sincrónica vía toCloudinaryUrl).
+ * Mantener hasta confirmar que el endpoint /images/resolve no se retomará.
  */
 
 import { ref, onMounted } from 'vue'

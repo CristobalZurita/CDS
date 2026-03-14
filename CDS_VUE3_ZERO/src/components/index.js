@@ -24,3 +24,6 @@ export * from './auth'
 
 // Componentes UI legacy (mantener compatibilidad)
 export * from './ui'
+
+// Secciones de la HomePage
+export * from './home'

@@ -1,3 +1,7 @@
+<!--
+  @deprecated Sin consumidores activos. No exportado en business/index.js.
+  No importado en ningún archivo del proyecto. Mantener hasta decidir si se reactiva.
+-->
 <template>
   <article class="repair-card">
     <slot />

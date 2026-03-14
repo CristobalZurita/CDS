@@ -1,0 +1,66 @@
+/* ═══════════════════════════════════════════════════════════
+   homeShared.css — Estilos compartidos entre secciones de HomePage
+   Importar como: <style scoped src="./homeShared.css"></style>
+   ═══════════════════════════════════════════════════════════ */
+
+.home-section {
+  scroll-margin-top: calc(var(--cds-header-height, 96px) + var(--cds-anchor-gap, 12px));
+  min-height: calc(100svh - var(--cds-header-height, 96px));
+  display: flex;
+}
+
+.section-inner {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding-top: clamp(2.75rem, 3.5vw, 3.5rem);
+  padding-right: 1.25rem;
+  padding-bottom: clamp(2.75rem, 3.5vw, 3.5rem);
+  padding-left: clamp(1.25rem, 6vw, 100px);
+  flex: 1;
+}
+
+.section-title {
+  margin: 0 0 0.75rem;
+  font-size: var(--cds-text-3xl);
+  font-family: var(--cds-headings-font-family), var(--cds-font-family-base), sans-serif;
+  color: var(--cds-dark);
+  line-height: var(--cds-leading-tight);
+}
+
+.section-lead {
+  margin: 0 0 2rem;
+  font-size: var(--cds-text-lg);
+  color: var(--cds-text-muted);
+  line-height: var(--cds-leading-normal);
+}
+
+.section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.65rem 1.25rem;
+  border-radius: 0.55rem;
+  font-size: var(--cds-text-base);
+  font-weight: var(--cds-font-semibold);
+  text-decoration: none;
+  background: var(--cds-primary);
+  color: var(--cds-white);
+  border: 2px solid var(--cds-primary);
+  transition: opacity 0.15s;
+}
+
+.btn-section:hover { opacity: 0.88; }
+
+.btn-section-outline {
+  background: transparent;
+  color: var(--cds-primary);
+  border-color: var(--cds-primary);
+}
