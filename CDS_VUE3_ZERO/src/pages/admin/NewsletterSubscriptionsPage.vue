@@ -55,20 +55,7 @@ const {
 } = useNewsletterSubscriptionsPage()
 </script>
 
+<style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-.admin-page { padding: 1rem; display: grid; gap: 1rem; }
-.admin-header, .panel-card { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); }
-.admin-header { padding: .9rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem; align-items: center; }
-.admin-header h1 { margin: 0; font-size: var(--cds-text-3xl); }
-.admin-header p { margin: .3rem 0 0; color: var(--cds-text-muted); }
-.header-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
 .header-actions input { min-height: 44px; min-width: 250px; padding: .65rem .75rem; border-radius: .55rem; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); font-size: var(--cds-text-base); }
-.btn-secondary { min-height: 44px; padding: .65rem .9rem; border-radius: .55rem; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); background: var(--cds-white); color: var(--cds-text-normal); font-size: var(--cds-text-base); }
-.admin-error { margin: 0; border: 1px solid #f4c7c3; background: #fef3f2; color: #b42318; border-radius: .6rem; padding: .75rem; }
-.panel-card { padding: .9rem; }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-th, td { text-align: left; padding: .6rem; border-bottom: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); }
-th { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
-.empty-state { border: 1px dashed color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .7rem; padding: .9rem; }
 </style>

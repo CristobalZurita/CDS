@@ -6,6 +6,11 @@
     </label>
     
     <div class="base-input-container">
+      <!-- Slot prefijo (ej: símbolo de moneda, unidad) -->
+      <span v-if="$slots.prefix" class="input-slot input-slot--prefix">
+        <slot name="prefix" />
+      </span>
+
       <input
         :id="inputId"
         :type="type"
@@ -19,14 +24,20 @@
         :step="step"
         :pattern="pattern"
         :autocomplete="autocomplete"
+        :inputmode="inputmode"
         :class="inputClasses"
         @input="handleInput"
         @blur="handleBlur"
         @focus="$emit('focus', $event)"
         @keydown="$emit('keydown', $event)"
       />
-      
-      <!-- Icono derecha -->
+
+      <!-- Slot sufijo (ej: unidad de medida) -->
+      <span v-if="$slots.suffix" class="input-slot input-slot--suffix">
+        <slot name="suffix" />
+      </span>
+
+      <!-- Icono derecha (legacy) -->
       <span v-if="$slots.rightIcon || rightIcon" class="input-icon-right">
         <slot name="rightIcon">
           <i v-if="rightIcon" :class="rightIcon"></i>
@@ -48,6 +59,7 @@ import { computed } from 'vue'
 
 const props = defineProps({
   modelValue: { type: [String, Number], default: '' },
+  modelModifiers: { type: Object, default: () => ({}) },
   label: { type: String, default: '' },
   type: { 
     type: String, 
@@ -68,6 +80,7 @@ const props = defineProps({
   step: { type: [String, Number], default: undefined },
   pattern: { type: String, default: '' },
   autocomplete: { type: String, default: '' },
+  inputmode: { type: String, default: '' },
   rightIcon: { type: String, default: '' },
   id: { type: String, default: '' },
   size: { 
@@ -99,15 +112,25 @@ const inputClasses = computed(() => [
   }
 ])
 
-// Handler de input con validación por tipo
+// Handler de input con modificadores y validación por tipo
 function handleInput(event) {
   let value = event.target.value
-  
-  // Validación por tipo de input
-  if (props.type === 'number') {
-    value = value === '' ? '' : Number(value)
+
+  if (props.modelModifiers.trim) {
+    value = value.trim()
   }
-  
+
+  if (props.modelModifiers.number) {
+    const parsed = Number(value)
+    emit('update:modelValue', Number.isNaN(parsed) ? '' : parsed)
+    return
+  }
+
+  // Compatibilidad con type="number" sin modificador
+  if (props.type === 'number' && value !== '') {
+    value = Number(value)
+  }
+
   emit('update:modelValue', value)
 }
 
@@ -258,6 +281,18 @@ function validateInput(value) {
   padding: 0.8rem 1rem;
   font-size: var(--cds-text-lg);
 }
+
+/* Slots prefix / suffix */
+.input-slot {
+  display: inline-flex;
+  align-items: center;
+  color: var(--cds-text-muted);
+  font-size: var(--cds-text-sm);
+  flex-shrink: 0;
+}
+
+.input-slot--prefix { padding-right: 0.4rem; }
+.input-slot--suffix { padding-left: 0.4rem; }
 
 /* Icono derecha */
 .base-input.has-right-icon {

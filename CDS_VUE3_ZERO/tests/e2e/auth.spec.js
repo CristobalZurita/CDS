@@ -8,7 +8,7 @@ import { loginFromUi, checkRateLimit } from './helpers/auth.js'
 import { trackBrowserErrors, waitForAppToSettle } from './helpers/page.js'
 
 const TEST_ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL || 'admin@example.com'
-const TEST_ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || ''
+const TEST_ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || 'Admin123!'
 const TEST_CLIENT_EMAIL = process.env.TEST_CLIENT_EMAIL || 'cliente@test.com'
 const TEST_CLIENT_PASSWORD = process.env.TEST_CLIENT_PASSWORD || 'client123'
 

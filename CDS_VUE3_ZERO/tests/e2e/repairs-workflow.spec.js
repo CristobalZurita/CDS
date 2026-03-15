@@ -8,7 +8,7 @@ import { loginFromUi } from './helpers/auth.js'
 import { waitForAppToSettle, trackBrowserErrors } from './helpers/page.js'
 
 const TEST_CLIENT_EMAIL = process.env.TEST_CLIENT_EMAIL || 'cliente@test.com'
-const TEST_CLIENT_PASS = process.env.TEST_CLIENT_PASSWORD || ''
+const TEST_CLIENT_PASS = process.env.TEST_CLIENT_PASSWORD || 'client123'
 
 // Usar storageState para tests de admin
 test.use({ storageState: 'tests/e2e/.auth/admin.json' })

@@ -149,10 +149,8 @@ function onEditUser(user) {
 .admin-dashboard-page {
   max-width: 1760px;
   margin: 0 auto;
-  font-size: 1.75rem;
 }
 
-/* Stats Section - 45% larger (35% + 10%) */
 .stats-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -161,14 +159,14 @@ function onEditUser(user) {
 }
 
 .stat-card {
-  background: #fff;
-  border-radius: 18px;
+  background: var(--cds-white);
+  border-radius: var(--cds-radius-lg);
   padding: 2.2rem;
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e8ecf1;
+  box-shadow: var(--cds-shadow-sm);
+  border: 1px solid var(--cds-light-2);
 }
 
 .stat-icon {
@@ -178,8 +176,8 @@ function onEditUser(user) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #ff6b35 0%, #ff8f35 100%);
-  border-radius: 18px;
+  background: linear-gradient(135deg, var(--cds-primary) 0%, var(--cds-orange-pastel) 100%);
+  border-radius: var(--cds-radius-lg);
 }
 
 .stat-info {
@@ -190,25 +188,24 @@ function onEditUser(user) {
 .stat-value {
   font-size: 3rem;
   font-weight: 700;
-  color: #1a1f36;
+  color: var(--cds-text-normal);
   line-height: 1.2;
 }
 
 .stat-label {
   font-size: 1.5rem;
-  color: #6b7280;
+  color: var(--cds-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-/* Content Sections - 45% larger (35% + 10%) */
 .content-section {
-  background: #fff;
-  border-radius: 18px;
+  background: var(--cds-white);
+  border-radius: var(--cds-radius-lg);
   padding: 2.2rem;
   margin-bottom: 2.2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e8ecf1;
+  box-shadow: var(--cds-shadow-sm);
+  border: 1px solid var(--cds-light-2);
 }
 
 .section-header {
@@ -224,11 +221,11 @@ function onEditUser(user) {
   margin: 0;
   font-size: 1.65rem;
   font-weight: 600;
-  color: #1a1f36;
+  color: var(--cds-text-normal);
 }
 
 .btn-link {
-  color: #ff6b35;
+  color: var(--cds-primary);
   text-decoration: none;
   font-weight: 500;
   font-size: 1.3rem;
@@ -240,10 +237,10 @@ function onEditUser(user) {
 
 .btn-primary {
   padding: 0.95rem 1.9rem;
-  background: #ff6b35;
-  color: #fff;
+  background: var(--cds-primary);
+  color: var(--cds-white);
   border: none;
-  border-radius: 12px;
+  border-radius: var(--cds-radius-md);
   cursor: pointer;
   font-weight: 500;
   font-size: 1.3rem;
@@ -251,21 +248,21 @@ function onEditUser(user) {
 }
 
 .btn-primary:hover {
-  background: #e55a2b;
+  background: color-mix(in srgb, var(--cds-primary) 85%, black);
 }
 
 .form-panel {
-  background: #f8fafc;
-  border-radius: 12px;
+  background: var(--cds-light-1);
+  border-radius: var(--cds-radius-md);
   padding: 2.2rem;
   margin-bottom: 2.2rem;
-  border: 1px solid #e8ecf1;
+  border: 1px solid var(--cds-light-2);
 }
 
 .form-panel h3 {
   margin: 0 0 1.5rem 0;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1a1f36;
+  color: var(--cds-text-normal);
 }
 </style>

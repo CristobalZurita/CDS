@@ -99,26 +99,20 @@ const {
 } = useAppointmentsPage()
 </script>
 
+<style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-.admin-page { padding: 1rem; display: grid; gap: 1rem; }
-.admin-header, .filter-row, .appointment-card, .empty-state { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); }
-.admin-header, .filter-row, .empty-state { padding: .9rem; }
-.admin-header { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: space-between; align-items: center; }
-.admin-header h1 { margin: 0; font-size: var(--cds-text-3xl); }
-.admin-header p { margin: .3rem 0 0; color: var(--cds-text-muted); }
-.btn-secondary, .btn-success, .btn-danger, .chip { min-height: 44px; padding: .65rem .9rem; border-radius: .55rem; font-size: var(--cds-text-base); border: 1px solid transparent; }
-.btn-secondary, .chip { border-color: color-mix(in srgb, var(--cds-light) 65%, white); background: var(--cds-white); color: var(--cds-text-normal); }
-.btn-success { border-color: #16a34a; background: #16a34a; color: #fff; }
-.btn-danger { border-color: #dc2626; background: #dc2626; color: #fff; }
-.filter-row { display: flex; flex-wrap: wrap; gap: .5rem; }
-.chip { cursor: pointer; }
+/* Botones extra de esta página */
+.btn-success { min-height: 44px; padding: .65rem .9rem; border-radius: .55rem; font-size: var(--cds-text-base); border: 1px solid #16a34a; background: #16a34a; color: #fff; cursor: pointer; }
+/* Filter chips */
+.filter-row { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); padding: .9rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { min-height: 44px; padding: .65rem .9rem; border-radius: .55rem; font-size: var(--cds-text-base); border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); background: var(--cds-white); color: var(--cds-text-normal); cursor: pointer; }
 .chip.active { border-color: var(--cds-primary); background: color-mix(in srgb, var(--cds-primary) 14%, white); }
 .chip.warning.active { border-color: #ca8a04; background: #fef9c3; }
 .chip.success.active { border-color: #15803d; background: #dcfce7; }
 .chip.neutral.active { border-color: #4b5563; background: #e5e7eb; }
-.admin-error { margin: 0; border: 1px solid #f4c7c3; background: #fef3f2; color: #b42318; border-radius: .6rem; padding: .75rem; }
+/* Cards de cita */
 .cards-grid { display: grid; gap: .7rem; }
-.appointment-card { padding: .9rem; display: grid; gap: .6rem; border-left: 4px solid var(--cds-primary); }
+.appointment-card { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); padding: .9rem; display: grid; gap: .6rem; border-left: 4px solid var(--cds-primary); }
 .appointment-card.status-pendiente { border-left-color: #ca8a04; }
 .appointment-card.status-confirmado { border-left-color: #16a34a; }
 .appointment-card.status-cancelado { border-left-color: #4b5563; }
@@ -128,5 +122,6 @@ const {
 .status-badge { border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white); background: color-mix(in srgb, var(--cds-primary) 12%, white); border-radius: 999px; padding: .3rem .7rem; font-size: var(--cds-text-sm); align-self: flex-start; }
 .appointment-body p { margin: 0; }
 .appointment-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
-.empty-state { display: grid; place-items: center; min-height: 160px; text-align: center; }
+/* Empty state específico (override del común) */
+.empty-state { border: none; display: grid; place-items: center; min-height: 160px; text-align: center; }
 </style>

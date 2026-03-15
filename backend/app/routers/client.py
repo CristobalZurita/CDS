@@ -25,7 +25,11 @@ from app.models.repair_photo import RepairPhoto
 from app.core.config import settings
 from app.services.logging_service import create_audit
 from app.services.pdf_generator import generate_repair_closure_pdf_bytes
-from app.services.ot_code_service import repair_code as _repair_code
+from app.services.repair_helpers import (
+    resolved_repair_code as _resolved_repair_code,
+    safe_pdf_filename as _safe_pdf_filename,
+)
+from app.services.user_helpers import split_full_name as _split_full_name
 from app.routers.inventory import _store_visible_from_meta
 from app.routers.purchase_requests import _apply_request_stock_state
 
@@ -58,15 +62,6 @@ _STATUS_ALIASES = {
     "archivado": "archivado",
     "rechazado": "rechazado",
 }
-
-
-def _split_full_name(full_name: str) -> tuple[str | None, str | None]:
-    parts = (full_name or "").strip().split()
-    if not parts:
-        return None, None
-    if len(parts) == 1:
-        return parts[0], None
-    return parts[0], " ".join(parts[1:])
 
 
 def _ensure_client(db: Session, user: User) -> Client:
@@ -123,24 +118,6 @@ def _status_progress(code: str) -> int:
         "rechazado": 0,
     }
     return mapping.get(normalized, 10)
-
-
-def _resolved_repair_code(repair: Repair | None, client_id: int | None) -> str | None:
-    if not repair:
-        return None
-    if repair.repair_number and not str(repair.repair_number).startswith("R-"):
-        return repair.repair_number
-    if not client_id:
-        return repair.repair_number
-
-    if repair.ot_parent_id and repair.ot_sequence:
-        if repair.ot_parent_id == repair.id:
-            if int(repair.ot_sequence) <= 1:
-                return _repair_code(client_id, repair.id)
-            return _repair_code(client_id, repair.id, int(repair.ot_sequence))
-        return _repair_code(client_id, int(repair.ot_parent_id), int(repair.ot_sequence))
-
-    return _repair_code(client_id, repair.id)
 
 
 def _device_label(db: Session, device: Device) -> str:
@@ -220,18 +197,6 @@ def _product_sellable_stock(db: Session, product: Product) -> int:
     min_stock = int(stock.minimum_stock if stock else product.min_quantity or 0)
     return max(available_qty - min_stock, 0)
 
-
-def _safe_pdf_filename(value: str) -> str:
-    text = str(value or "OT").strip()
-    if not text:
-        text = "OT"
-    sanitized = []
-    for char in text:
-        if char.isalnum() or char in ("-", "_", "."):
-            sanitized.append(char)
-        else:
-            sanitized.append("_")
-    return "".join(sanitized)
 
 
 def _build_client_purchase_request_payload(

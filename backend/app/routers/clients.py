@@ -7,47 +7,22 @@ Usa permisos granulares (require_permission).
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List, Dict
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_admin, require_permission
 from app.models.client import Client
 from app.models.device import Device
 from app.models.repair import Repair
-from app.services.ot_code_service import repair_code as _repair_code
+from app.services.repair_helpers import (
+    auto_archive_repairs as _auto_archive_repairs,
+    resolved_repair_code as _resolved_repair_code,
+)
 
 router = APIRouter(prefix="/clients", tags=["clients"])
 
 def _client_code(client_id: int) -> str:
     return f"CDS-{client_id:03d}"
-
-def _auto_archive_repairs(db: Session) -> None:
-    cutoff = datetime.utcnow() - timedelta(days=90)
-    to_archive = (
-        db.query(Repair)
-        .filter(Repair.delivery_date.isnot(None))
-        .filter(Repair.archived_at.is_(None))
-        .filter(Repair.delivery_date <= cutoff)
-        .all()
-    )
-    if not to_archive:
-        return
-    for repair in to_archive:
-        repair.archived_at = datetime.utcnow()
-        repair.status_id = 9
-    db.commit()
-
-
-def _resolved_repair_code(repair: Repair, client_id: int) -> str:
-    if repair.repair_number and not str(repair.repair_number).startswith("R-"):
-        return repair.repair_number
-    if repair.ot_parent_id and repair.ot_sequence:
-        if repair.ot_parent_id == repair.id:
-            if int(repair.ot_sequence) <= 1:
-                return _repair_code(client_id, repair.id)
-            return _repair_code(client_id, repair.id, int(repair.ot_sequence))
-        return _repair_code(client_id, int(repair.ot_parent_id), int(repair.ot_sequence))
-    return _repair_code(client_id, repair.id)
 
 
 @router.get("", response_model=List[Dict])

@@ -90,30 +90,4 @@ const {
 } = useCategoriesPage()
 </script>
 
-<style scoped>
-.admin-page { padding: 1rem; display: grid; gap: 1rem; }
-.admin-header, .panel-card { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); }
-.admin-header { padding: .9rem; display: flex; flex-wrap: wrap; gap: .75rem; justify-content: space-between; align-items: center; }
-.admin-header h1 { margin: 0; font-size: var(--cds-text-3xl); }
-.admin-header p { margin: .3rem 0 0; color: var(--cds-text-muted); }
-.header-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
-.btn-primary, .btn-secondary, .btn-danger { min-height: 44px; padding: .65rem .9rem; border-radius: .55rem; font-size: var(--cds-text-base); border: 1px solid transparent; }
-.btn-primary { border-color: var(--cds-primary); background: var(--cds-primary); color: var(--cds-white); }
-.btn-secondary { border-color: color-mix(in srgb, var(--cds-light) 65%, white); background: var(--cds-white); color: var(--cds-text-normal); }
-.btn-danger { border-color: #dc2626; background: #dc2626; color: #fff; }
-.admin-error { margin: 0; border: 1px solid #f4c7c3; background: #fef3f2; color: #b42318; border-radius: .6rem; padding: .75rem; }
-.panel-card { padding: .9rem; display: grid; gap: .6rem; }
-.panel-card h2 { margin: 0; font-size: var(--cds-text-xl); }
-.form-grid { display: grid; gap: .6rem; }
-.form-grid label { display: grid; gap: .35rem; }
-.form-grid span { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
-.form-grid input, .form-grid textarea { min-height: 44px; border-radius: .55rem; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); padding: .65rem .75rem; font-size: var(--cds-text-base); }
-.form-grid textarea { min-height: 92px; resize: vertical; }
-.panel-actions { display: flex; justify-content: flex-end; }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-th, td { text-align: left; padding: .6rem; border-bottom: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); vertical-align: top; }
-th { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
-.row-actions { display: flex; flex-wrap: wrap; gap: .45rem; }
-.empty-state { border: 1px dashed color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .7rem; padding: .8rem; }
-</style>
+<style scoped src="./commonAdminPage.css"></style>

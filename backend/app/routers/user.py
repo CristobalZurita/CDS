@@ -11,15 +11,7 @@ from app.schemas.user import UserCreate, UserRead, UserUpdate
 from app.core.database import get_db
 from app.core.dependencies import get_current_admin, require_permission
 from app.core.security import hash_password
-
-
-def _split_full_name(full_name: str) -> tuple[str | None, str | None]:
-    parts = (full_name or "").strip().split()
-    if not parts:
-        return None, None
-    if len(parts) == 1:
-        return parts[0], None
-    return parts[0], " ".join(parts[1:])
+from app.services.user_helpers import split_full_name as _split_full_name
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

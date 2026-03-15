@@ -1,10 +1,5 @@
 import { computed, reactive } from 'vue'
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function isEmailValid(value) {
-  return EMAIL_PATTERN.test(String(value || '').trim())
-}
+import { validators } from './useFormValidation'
 
 export function useLoginValidation({ email, password, requires2fa, twoFactorCode }) {
   const errors = reactive({
@@ -14,7 +9,7 @@ export function useLoginValidation({ email, password, requires2fa, twoFactorCode
   })
 
   const canSubmit = computed(() => {
-    const hasEmail = isEmailValid(email.value)
+    const hasEmail = validators.required(email.value) && validators.email(email.value)
     const hasPassword = String(password.value || '').length >= 1
     const hasTwoFactor = !requires2fa.value || String(twoFactorCode.value || '').trim().length >= 6
     return hasEmail && hasPassword && hasTwoFactor
@@ -27,7 +22,7 @@ export function useLoginValidation({ email, password, requires2fa, twoFactorCode
 
     if (!String(email.value || '').trim()) {
       errors.email = 'El email es requerido'
-    } else if (!isEmailValid(email.value)) {
+    } else if (!validators.email(email.value)) {
       errors.email = 'Email inválido'
     }
 
@@ -62,7 +57,7 @@ export function useRegisterValidation(form) {
   })
 
   const canSubmit = computed(() => {
-    const hasEmail = isEmailValid(form.email)
+    const hasEmail = validators.required(form.email) && validators.email(form.email)
     const hasUser = String(form.username || '').trim().length >= 1
     const hasName = String(form.full_name || '').trim().length >= 1
     const hasPassword = String(form.password || '').length >= 8
@@ -77,7 +72,7 @@ export function useRegisterValidation(form) {
 
     if (!String(form.email || '').trim()) {
       errors.email = 'El email es requerido'
-    } else if (!isEmailValid(form.email)) {
+    } else if (!validators.email(form.email)) {
       errors.email = 'Email inválido'
     }
 
@@ -115,7 +110,7 @@ export function usePasswordResetValidation({ mode, email, token, newPassword, co
 
   const canSubmit = computed(() => {
     if (mode.value === 'request') {
-      return isEmailValid(email.value)
+      return validators.required(email.value) && validators.email(email.value)
     }
 
     const hasToken = String(token.value || '').trim().length >= 1
@@ -128,7 +123,7 @@ export function usePasswordResetValidation({ mode, email, token, newPassword, co
     errors.email = ''
     if (!String(email.value || '').trim()) {
       errors.email = 'El email es requerido'
-    } else if (!isEmailValid(email.value)) {
+    } else if (!validators.email(email.value)) {
       errors.email = 'Email inválido'
     }
     return !errors.email

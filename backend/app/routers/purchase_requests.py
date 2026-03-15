@@ -15,7 +15,7 @@ from app.models.stock_movement import StockMovement
 from app.schemas import PaymentRead
 from app.schemas.purchase_request import PurchaseRequestCreate, PurchaseRequestOut
 from app.services.logging_service import create_audit
-from app.services.ot_code_service import repair_code as _repair_code
+from app.services.repair_helpers import resolved_repair_code as _resolved_repair_code_shared
 
 router = APIRouter(prefix="/purchase-requests", tags=["purchase_requests"])
 
@@ -297,25 +297,7 @@ def _latest_request_payment(db: Session, request_id: int) -> Payment | None:
 
 
 def _resolved_repair_code(req: PurchaseRequest) -> str | None:
-    repair = req.repair
-    if not repair:
-        return None
-
-    if repair.repair_number and not str(repair.repair_number).startswith("R-"):
-        return repair.repair_number
-
-    client_id = int(req.client_id or 0) or None
-    if not client_id:
-        return repair.repair_number
-
-    if repair.ot_parent_id and repair.ot_sequence:
-        if repair.ot_parent_id == repair.id:
-            if int(repair.ot_sequence) <= 1:
-                return _repair_code(client_id, repair.id)
-            return _repair_code(client_id, repair.id, int(repair.ot_sequence))
-        return _repair_code(client_id, int(repair.ot_parent_id), int(repair.ot_sequence))
-
-    return _repair_code(client_id, repair.id)
+    return _resolved_repair_code_shared(req.repair, int(req.client_id or 0) or None)
 
 
 def _serialize_request(db: Session, req: PurchaseRequest) -> dict:

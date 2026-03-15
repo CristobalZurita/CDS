@@ -1,102 +1,95 @@
 <template>
-  <main class="calc-page" id="cd40106-calculator">
-    <section class="calc-container">
-      <header class="calc-header">
-        <h1>Oscilador CD40106</h1>
-        <p>Schmitt trigger con R y C para estimar frecuencia y periodo.</p>
-      </header>
-
-      <div class="cd40106-layout">
-        <section class="cd40106-panel">
-          <div class="panel-header">
-            <div class="panel-title">
-              <i class="fa-solid fa-sliders"></i>
-              Parámetros
-            </div>
-          </div>
-
-          <div class="panel-form">
-            <div class="form-grid">
-              <div class="form-field">
-                <label>R</label>
-                <div class="unit-input">
-                  <input v-model.number="form.r_value" type="number" min="0" step="0.1" inputmode="decimal" />
-                  <select v-model="form.r_unit" class="unit-select">
-                    <option value="ohm">Ω</option>
-                    <option value="kohm">kΩ</option>
-                    <option value="mohm">MΩ</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-field">
-                <label>C</label>
-                <div class="unit-input">
-                  <input v-model.number="form.c_value" type="number" min="0" step="0.1" inputmode="decimal" />
-                  <select v-model="form.c_unit" class="unit-select">
-                    <option value="pf">pF</option>
-                    <option value="nf">nF</option>
-                    <option value="uf">µF</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-field">
-                <label>Vcc (V)</label>
-                <input v-model.number="form.vcc_v" type="number" min="0" step="0.1" inputmode="decimal" class="input-solo" />
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button type="button" class="btn-reset" @click="reset">
-                <i class="fa-solid fa-rotate-left"></i>
-                Resetear parámetros
-              </button>
-            </div>
-
-            <div class="pinout-card">
-              <img :src="useCloudinaryImage('/images/calculadoras/CD40106.webp')" alt="Pinout CD40106" class="pinout-image" />
-            </div>
-          </div>
-        </section>
-
-        <section class="cd40106-panel output-panel">
-          <div class="panel-header">
-            <div class="panel-title">
-              <i class="fa-solid fa-wave-square"></i>
-              Resultado
-            </div>
-          </div>
-
-          <div class="output-body">
-            <div class="circuit-card">
-              <canvas ref="canvasRef" class="circuit-canvas" width="420" height="260" />
-              <div class="circuit-label">Oscilador Schmitt</div>
-            </div>
-
-            <div class="output-values">
-              <div class="value-row">
-                <span>Frecuencia</span>
-                <strong>{{ formattedFrequency }}</strong>
-              </div>
-              <div class="value-row">
-                <span>Periodo</span>
-                <strong>{{ formattedPeriod }}</strong>
-              </div>
-            </div>
-
-            <p class="output-hint">La frecuencia es aproximada y cambia al ajustar R y C.</p>
-          </div>
-        </section>
+  <BaseCalculatorPage
+    title="Oscilador CD40106"
+    description="Schmitt trigger con R y C para estimar frecuencia y periodo."
+  >
+    <section class="calc-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-sliders"></i>
+          Parámetros
+        </div>
       </div>
 
-      <router-link to="/calculadoras" class="back-link">← Volver a calculadoras</router-link>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="form-field">
+            <label>R</label>
+            <div class="unit-input">
+              <input v-model.number="form.r_value" type="number" min="0" step="0.1" inputmode="decimal" />
+              <select v-model="form.r_unit" class="unit-select">
+                <option value="ohm">Ω</option>
+                <option value="kohm">kΩ</option>
+                <option value="mohm">MΩ</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>C</label>
+            <div class="unit-input">
+              <input v-model.number="form.c_value" type="number" min="0" step="0.1" inputmode="decimal" />
+              <select v-model="form.c_unit" class="unit-select">
+                <option value="pf">pF</option>
+                <option value="nf">nF</option>
+                <option value="uf">µF</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Vcc (V)</label>
+            <input v-model.number="form.vcc_v" type="number" min="0" step="0.1" inputmode="decimal" class="input-solo" />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="action-btn" @click="reset">
+            <i class="fa-solid fa-rotate-left"></i>
+            Resetear parámetros
+          </button>
+        </div>
+
+        <div class="pinout-card">
+          <img :src="useCloudinaryImage('/images/calculadoras/CD40106.webp')" alt="Pinout CD40106" class="pinout-image" />
+        </div>
+      </div>
     </section>
-  </main>
+
+    <section class="calc-panel cd40106-output">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-wave-square"></i>
+          Resultado
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div class="circuit-card">
+          <canvas ref="canvasRef" class="circuit-canvas" width="420" height="260" />
+          <div class="circuit-label">Oscilador Schmitt</div>
+        </div>
+
+        <div class="output-values">
+          <div class="value-row">
+            <span>Frecuencia</span>
+            <strong>{{ formattedFrequency }}</strong>
+          </div>
+          <div class="value-row">
+            <span>Periodo</span>
+            <strong>{{ formattedPeriod }}</strong>
+          </div>
+        </div>
+
+        <p class="result-hint">La frecuencia es aproximada y cambia al ajustar R y C.</p>
+      </div>
+    </section>
+  </BaseCalculatorPage>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { BaseCalculatorPage } from '@/components/base'
 import { useCloudinaryImage } from '@/composables/useCloudinary'
 
 const form = reactive({
@@ -168,7 +161,8 @@ function getBlinkDurations() {
 }
 
 function getCanvasPalette() {
-  if (typeof window === 'undefined') {
+  const canvas = canvasRef.value
+  if (!canvas || typeof window === 'undefined') {
     return {
       panelFill: 'transparent',
       stroke: 'transparent',
@@ -179,9 +173,8 @@ function getCanvasPalette() {
       ledGlow: 'transparent',
     }
   }
-  const root = document.getElementById('cd40106-calculator')
-  const styles = root ? getComputedStyle(root) : null
-  const read = (name) => styles?.getPropertyValue(name).trim() || 'transparent'
+  const styles = getComputedStyle(canvas)
+  const read = (name) => styles.getPropertyValue(name).trim() || 'transparent'
   return {
     panelFill: read('--smd-panel-fill'),
     stroke: read('--smd-stroke'),
@@ -370,8 +363,10 @@ watch([
 })
 </script>
 
+<style scoped src="./commonCalculatorPage.css"></style>
 <style scoped>
-.calc-page {
+/* CSS vars for canvas palette — defined on output section, cascade to canvas */
+.cd40106-output {
   --smd-panel-fill: rgba(245, 243, 238, 0.85);
   --smd-stroke: #3e3c38;
   --smd-chip-fill: #3e3c38;
@@ -379,261 +374,23 @@ watch([
   --smd-led-on: #ec6b00;
   --smd-led-off: #c4c0b4;
   --smd-led-glow: rgba(236, 107, 0, 0.4);
-
-  padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
-  background:
-    radial-gradient(circle at top left, rgba(236, 107, 0, 0.1), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(3, 134, 0, 0.06), transparent 28%);
 }
-
-.calc-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  gap: 1.5rem;
-}
-
-.calc-header h1 {
-  margin: 0;
-  font-size: var(--cds-text-3xl);
-  line-height: var(--cds-leading-tight);
-}
-
-.calc-header p {
-  margin: 0.4rem 0 0;
-  color: var(--cds-text-muted);
-  font-size: var(--cds-text-base);
-}
-
-.cd40106-layout {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 900px) {
-  .cd40106-layout {
-    grid-template-columns: minmax(320px, 1fr) minmax(380px, 1.4fr);
-    align-items: start;
-  }
-}
-
-.cd40106-panel {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(233, 236, 230, 0.7));
-  border: 1px solid rgba(62, 60, 56, 0.13);
-  border-radius: var(--cds-radius-lg);
-  box-shadow: var(--cds-shadow-sm);
-  overflow: hidden;
-}
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.85rem 1.1rem;
-  background: rgba(62, 60, 56, 0.05);
-  border-bottom: 1px solid rgba(62, 60, 56, 0.1);
-}
-
-.panel-title {
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--cds-dark);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.panel-form {
-  padding: 1rem 1.1rem 1.25rem;
-  display: grid;
-  gap: 1rem;
-}
-
-.form-grid {
-  display: grid;
-  gap: 0.85rem;
-}
-
-.form-field {
-  display: grid;
-  gap: 0.3rem;
-}
-
-.form-field label {
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-semibold);
-  color: var(--cds-dark);
-  letter-spacing: 0.02em;
-}
-
-.unit-input {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  border: 1.5px solid rgba(62, 60, 56, 0.25);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  background: var(--cds-white);
-  transition: border-color 0.15s;
-}
-
-.unit-input:focus-within {
-  border-color: var(--cds-primary);
-}
-
-.unit-input input {
-  border: none;
-  outline: none;
-  padding: 0.65rem 0.75rem;
-  font-size: var(--cds-text-base);
-  background: transparent;
-  color: var(--cds-dark);
-  min-width: 0;
-}
-
-.unit-select {
-  border: none;
-  border-left: 1.5px solid rgba(62, 60, 56, 0.15);
-  outline: none;
-  padding: 0 0.6rem;
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-semibold);
-  background: rgba(62, 60, 56, 0.04);
-  color: var(--cds-dark);
-  cursor: pointer;
-}
-
-.input-solo {
-  border: 1.5px solid rgba(62, 60, 56, 0.25);
-  border-radius: 0.5rem;
-  padding: 0.65rem 0.75rem;
-  font-size: var(--cds-text-base);
-  background: var(--cds-white);
-  color: var(--cds-dark);
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.input-solo:focus {
-  border-color: var(--cds-primary);
-}
-
-.form-actions {
-  display: flex;
-}
-
-.btn-reset {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.55rem 1rem;
-  border-radius: 0.5rem;
-  border: 1.5px solid rgba(62, 60, 56, 0.25);
-  background: transparent;
-  color: var(--cds-dark);
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-semibold);
-  cursor: pointer;
-}
-
-.pinout-card {
-  border-radius: var(--cds-radius-md);
-  overflow: hidden;
-  background: rgba(62, 60, 56, 0.04);
-  border: 1px solid rgba(62, 60, 56, 0.1);
-}
-
-.pinout-image {
-  width: 100%;
-  display: block;
-}
-
-.output-panel {
-  display: flex;
-  flex-direction: column;
-}
-
-.output-body {
-  padding: 1rem 1.1rem 1.25rem;
-  display: grid;
-  gap: 1rem;
-}
-
-.circuit-card {
-  background: rgba(62, 60, 56, 0.04);
-  border: 1px solid rgba(62, 60, 56, 0.1);
-  border-radius: var(--cds-radius-md);
-  overflow: hidden;
-  text-align: center;
-}
-
-.circuit-canvas {
-  display: block;
-  width: 100%;
-  max-width: 420px;
-  height: auto;
-  margin: 0 auto;
-}
-
-.circuit-label {
-  padding: 0.4rem 0.75rem 0.6rem;
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-semibold);
-  color: var(--cds-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.output-values {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.value-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.55rem 0.85rem;
-  background: rgba(62, 60, 56, 0.04);
-  border-radius: 0.45rem;
-  border: 1px solid rgba(62, 60, 56, 0.08);
-}
-
-.value-row span {
-  font-size: var(--cds-text-sm);
-  color: var(--cds-text-muted);
-}
-
-.value-row strong {
-  font-size: var(--cds-text-base);
-  font-weight: var(--cds-font-semibold);
-  color: var(--cds-primary);
-}
-
-.output-hint {
-  margin: 0;
-  font-size: var(--cds-text-sm);
-  color: var(--cds-text-muted);
-  text-align: center;
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0.65rem 1rem;
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, transparent);
-  border-radius: 0.6rem;
-  text-decoration: none;
-  color: var(--cds-primary);
-  font-weight: var(--cds-font-semibold);
-  width: fit-content;
-  font-size: var(--cds-text-sm);
-}
+/* Form fields */
+.form-field { display: grid; gap: 0.3rem; }
+.form-field label { font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); letter-spacing: 0.02em; }
+/* Unit input with select */
+.unit-input { display: grid; grid-template-columns: 1fr auto; border: 1.5px solid rgba(62, 60, 56, 0.25); border-radius: 0.5rem; overflow: hidden; background: var(--cds-white); transition: border-color 0.15s; }
+.unit-input:focus-within { border-color: var(--cds-primary); }
+.unit-input input { border: none; outline: none; padding: 0.65rem 0.75rem; font-size: var(--cds-text-base); background: transparent; color: var(--cds-dark); min-width: 0; }
+.unit-select { border: none; border-left: 1.5px solid rgba(62, 60, 56, 0.15); outline: none; padding: 0 0.6rem; font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); background: rgba(62, 60, 56, 0.04); color: var(--cds-dark); cursor: pointer; }
+/* Solo input (Vcc) */
+.input-solo { border: 1.5px solid rgba(62, 60, 56, 0.25); border-radius: 0.5rem; padding: 0.65rem 0.75rem; font-size: var(--cds-text-base); background: var(--cds-white); color: var(--cds-dark); outline: none; width: 100%; box-sizing: border-box; }
+.input-solo:focus { border-color: var(--cds-primary); }
+/* Pinout */
+.pinout-card { border-radius: var(--cds-radius-md); overflow: hidden; background: rgba(62, 60, 56, 0.04); border: 1px solid rgba(62, 60, 56, 0.1); }
+.pinout-image { width: 100%; display: block; }
+/* Circuit canvas */
+.circuit-card { background: rgba(62, 60, 56, 0.04); border: 1px solid rgba(62, 60, 56, 0.1); border-radius: var(--cds-radius-md); overflow: hidden; text-align: center; }
+.circuit-canvas { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 auto; }
+.circuit-label { padding: 0.4rem 0.75rem 0.6rem; font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 </style>

@@ -19,7 +19,7 @@ from app.models.repair_photo import RepairPhoto
 from app.models.device import Device
 from app.models.client import Client
 from app.models.repair_intake_sheet import RepairIntakeSheet
-from datetime import date as dt_date, datetime, timedelta
+from datetime import date as dt_date, datetime
 import json
 from app.core.config import settings
 from app.services.email_service import EmailService, build_email_html
@@ -34,25 +34,13 @@ from app.services.ot_code_service import (
     repair_code as _repair_code,
 )
 from app.models.repair_component_usage import RepairComponentUsage
+from app.services.repair_helpers import (
+    auto_archive_repairs as _auto_archive_repairs,
+    resolved_repair_code as _resolved_repair_code,
+    safe_pdf_filename as _safe_pdf_filename,
+)
 
 router = APIRouter(prefix="/repairs", tags=["repairs"])
-
-
-def _auto_archive_repairs(db: Session) -> None:
-    cutoff = datetime.utcnow() - timedelta(days=90)
-    to_archive = (
-        db.query(Repair)
-        .filter(Repair.delivery_date.isnot(None))
-        .filter(Repair.archived_at.is_(None))
-        .filter(Repair.delivery_date <= cutoff)
-        .all()
-    )
-    if not to_archive:
-        return
-    for r in to_archive:
-        r.archived_at = datetime.utcnow()
-        r.status_id = 9
-    db.commit()
 
 
 def _repair_payload(repair: Repair, db: Session) -> Dict:
@@ -76,22 +64,6 @@ def _repair_payload(repair: Repair, db: Session) -> Dict:
         "created_at": repair.created_at.isoformat() if repair.created_at else None,
         "archived_at": repair.archived_at.isoformat() if repair.archived_at else None
     }
-
-
-def _resolved_repair_code(repair: Repair, client_id: int | None) -> str:
-    if repair.repair_number and not str(repair.repair_number).startswith("R-"):
-        return repair.repair_number
-    if not client_id:
-        return repair.repair_number
-
-    if repair.ot_parent_id and repair.ot_sequence:
-        if repair.ot_parent_id == repair.id:
-            if int(repair.ot_sequence) <= 1:
-                return _repair_code(client_id, repair.id)
-            return _repair_code(client_id, repair.id, int(repair.ot_sequence))
-        return _repair_code(client_id, int(repair.ot_parent_id), int(repair.ot_sequence))
-
-    return _repair_code(client_id, repair.id)
 
 
 def _parse_optional_date(value):
@@ -235,19 +207,6 @@ def _build_repair_closure_payload(repair: Repair, db: Session) -> Dict:
         "photos_count": photos_count,
         "intake_sheet": _serialize_intake_sheet(intake_sheet) if intake_sheet else None,
     }
-
-
-def _safe_pdf_filename(value: str) -> str:
-    text = str(value or "OT").strip()
-    if not text:
-        text = "OT"
-    sanitized = []
-    for char in text:
-        if char.isalnum() or char in ("-", "_", "."):
-            sanitized.append(char)
-        else:
-            sanitized.append("_")
-    return "".join(sanitized)
 
 
 @router.get("")

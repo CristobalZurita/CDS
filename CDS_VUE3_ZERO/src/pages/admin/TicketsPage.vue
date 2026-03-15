@@ -144,38 +144,16 @@ async function submitMessage(ticket) {
 }
 </script>
 
+<style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-.admin-page { padding: 1rem; display: grid; gap: 1rem; }
-.admin-header, .panel-card { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); }
-.admin-header { padding: .9rem; display: flex; justify-content: space-between; align-items: center; gap: .75rem; flex-wrap: wrap; }
-.admin-header h1 { margin: 0; font-size: var(--cds-text-3xl); }
-.admin-header p { margin: .3rem 0 0; color: var(--cds-text-muted); }
-.header-actions { display: flex; gap: .45rem; flex-wrap: wrap; }
-.btn-primary, .btn-secondary, .btn-danger { min-height: 44px; padding: .65rem .9rem; border-radius: .55rem; border: 1px solid transparent; font-size: var(--cds-text-base); }
-.btn-primary { background: var(--cds-primary); border-color: var(--cds-primary); color: var(--cds-white); }
-.btn-secondary { background: var(--cds-white); border-color: color-mix(in srgb, var(--cds-light) 65%, white); color: var(--cds-text-normal); }
-.btn-danger { background: #dc2626; border-color: #dc2626; color: #fff; }
-.admin-error { margin: 0; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; border-radius: .65rem; padding: .75rem; }
-.panel-card { padding: .9rem; display: grid; gap: .7rem; }
-.panel-card h2 { margin: 0; font-size: var(--cds-text-xl); }
-.filters-panel label, .form-grid label { display: grid; gap: .3rem; }
-.filters-panel span, .form-grid span { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
-.filters-panel input, .form-grid input, .form-grid textarea, .form-grid select, table select { min-height: 44px; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: .55rem; padding: .65rem .75rem; font-size: var(--cds-text-base); }
-.form-grid { display: grid; gap: .6rem; grid-template-columns: 1fr; }
-.form-grid.two-cols { grid-template-columns: 1fr; }
-.form-grid .full { grid-column: 1 / -1; }
-.form-grid textarea { min-height: 92px; resize: vertical; }
-.panel-actions { display: flex; justify-content: flex-end; }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-th, td { text-align: left; padding: .55rem; border-bottom: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); vertical-align: top; }
-th { color: var(--cds-text-muted); font-size: var(--cds-text-sm); }
-.row-actions { display: flex; gap: .45rem; }
+/* Filtro inline en filters-panel */
+.filters-panel label { display: grid; gap: .3rem; }
+.filters-panel span { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
+.filters-panel input { min-height: 44px; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: .55rem; padding: .65rem .75rem; font-size: var(--cds-text-base); }
+/* Select inline en tabla */
+table select { min-height: 44px; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: .55rem; padding: .65rem .75rem; font-size: var(--cds-text-base); }
+/* Mensaje rápido inline */
 .inline-message { display: grid; gap: .45rem; grid-template-columns: 1fr; }
 .message-row td { background: color-mix(in srgb, var(--cds-light) 7%, white); }
-.empty-state { margin: 0; border: 1px dashed color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .65rem; padding: .8rem; color: var(--cds-text-muted); }
-@media (min-width: 900px) {
-  .form-grid.two-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .inline-message { grid-template-columns: 1fr auto; }
-}
+@media (min-width: 900px) { .inline-message { grid-template-columns: 1fr auto; } }
 </style>
