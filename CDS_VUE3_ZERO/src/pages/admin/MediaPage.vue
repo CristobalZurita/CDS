@@ -50,6 +50,7 @@
       <div
         class="drop-zone"
         :class="{ 'drop-zone--active': isDragging }"
+        @dragenter.prevent="isDragging = true"
         @dragover.prevent="isDragging = true"
         @dragleave.prevent="isDragging = false"
         @drop.prevent="onDrop"
@@ -57,9 +58,18 @@
       >
         <i class="fa-solid fa-cloud-arrow-up"></i>
         <p>Arrastrá imágenes aquí o hacé clic para seleccionar</p>
-        <span>Podés seleccionar múltiples archivos</span>
+        <span>Podés seleccionar múltiples archivos o una carpeta completa</span>
         <input ref="fileInput" type="file" multiple accept="image/*" @change="onFileSelect" />
+        <input ref="folderInput" type="file" multiple accept="image/*" webkitdirectory @change="onFileSelect" />
       </div>
+
+      <div class="upload-extra-actions">
+        <button class="btn-secondary" type="button" @click="folderInput.click()">
+          <i class="fa-solid fa-folder-open"></i> Seleccionar carpeta
+        </button>
+      </div>
+
+      <p v-if="uploadValidationError" class="upload-validation-error">{{ uploadValidationError }}</p>
 
       <div v-if="queue.length" class="queue-list">
         <div v-for="item in queue" :key="`${item.name}-${item.size}`" class="queue-item">
@@ -259,6 +269,9 @@ const queue = ref([])
 const uploading = ref(false)
 const uploadProgress = ref(0)
 const fileInput = ref(null)
+const folderInput = ref(null)
+const uploadValidationError = ref('')
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10 MB
 
 function onDrop(e) {
   isDragging.value = false
@@ -273,12 +286,18 @@ function onFileSelect(e) {
 }
 
 function addToQueue(files) {
+  const rechazados = []
   for (const file of files) {
+    if (file.size > MAX_FILE_SIZE) {
+      rechazados.push(`${file.name}: supera 10 MB`)
+      continue
+    }
     const exists = queue.value.find(q => q.name === file.name && q.size === file.size)
     if (!exists) {
       queue.value.push({ file, name: file.name, size: file.size, status: 'pending' })
     }
   }
+  uploadValidationError.value = rechazados.length ? rechazados.join(' · ') : ''
 }
 
 async function uploadAll() {
@@ -463,6 +482,9 @@ onMounted(() => {
 .drop-zone p { margin: 0; font-size: var(--cds-text-base); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
 .drop-zone span { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
 .drop-zone input { display: none; }
+
+.upload-extra-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.upload-validation-error { margin: 0; color: #c0392b; font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); }
 
 .queue-list { display: grid; gap: .35rem; }
 .queue-item { display: flex; align-items: center; gap: .75rem; padding: .5rem .75rem; background: rgba(62,60,56,.04); border-radius: .45rem; font-size: var(--cds-text-sm); }

@@ -45,10 +45,11 @@
             <i class="fas fa-chevron-left"></i>
           </button>
 
-          <div class="timeline-track" ref="timelineRef">
+          <div class="timeline-track">
             <button
               v-for="(ev, i) in historyEvents"
               :key="i"
+              :ref="el => { if (el) nodeRefs[i] = el }"
               class="timeline-node"
               :class="{ active: activeHistoryIdx === i }"
               @click="selectHistory(i)"
@@ -71,32 +72,39 @@
     </div>
   </section>
 
-  <div
-    v-if="historyLightboxOpen"
-    class="history-lightbox"
-    role="dialog"
-    aria-modal="true"
-    :aria-label="`Foto ampliada: ${historyEvents[activeHistoryIdx].title}`"
-    @click.self="closeHistoryImage"
-  >
-    <button
-      class="history-lightbox-close"
-      type="button"
-      aria-label="Cerrar imagen ampliada"
-      @click="closeHistoryImage"
-    >
-      <i class="fas fa-xmark"></i>
-    </button>
-    <img
-      :src="historyEvents[activeHistoryIdx].image"
-      :alt="historyEvents[activeHistoryIdx].title"
-      class="history-lightbox-image"
-    />
-  </div>
+  <Teleport to="body">
+    <Transition name="lightbox">
+      <div
+        v-if="historyLightboxOpen"
+        ref="lightboxRef"
+        class="history-lightbox"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="`Foto ampliada: ${historyEvents[activeHistoryIdx].title}`"
+        tabindex="-1"
+        @click.self="closeHistoryImage"
+        @keydown.esc="closeHistoryImage"
+      >
+        <button
+          class="history-lightbox-close"
+          type="button"
+          aria-label="Cerrar imagen ampliada"
+          @click="closeHistoryImage"
+        >
+          <i class="fas fa-xmark"></i>
+        </button>
+        <img
+          :src="historyEvents[activeHistoryIdx].image"
+          :alt="historyEvents[activeHistoryIdx].title"
+          class="history-lightbox-image"
+        />
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref, computed } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { useSiteImages } from '@/composables/useSiteImages'
 
 const { resolveImageArray } = useSiteImages()
@@ -117,13 +125,13 @@ const historyEventsRaw = [
 const historyEvents = computed(() => resolveImageArray(historyEventsRaw))
 
 const activeHistoryIdx = ref(0)
-const timelineRef = ref(null)
+const nodeRefs = ref([])
+const lightboxRef = ref(null)
 const historyLightboxOpen = ref(false)
 
 function selectHistory(i) {
   activeHistoryIdx.value = i
-  const el = timelineRef.value?.querySelectorAll('.timeline-node')[i]
-  el?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+  nodeRefs.value[i]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
 }
 function prevHistory() {
   selectHistory((activeHistoryIdx.value - 1 + historyEvents.value.length) % historyEvents.value.length)
@@ -137,11 +145,10 @@ function openHistoryImage() {
 function closeHistoryImage() {
   historyLightboxOpen.value = false
 }
-function onEscapeKey(event) {
-  if (event.key === 'Escape') closeHistoryImage()
-}
-onMounted(() => window.addEventListener('keydown', onEscapeKey))
-onUnmounted(() => window.removeEventListener('keydown', onEscapeKey))
+
+watch(historyLightboxOpen, val => {
+  if (val) nextTick(() => lightboxRef.value?.focus())
+})
 </script>
 
 <style scoped src="./homeShared.css"></style>
@@ -315,6 +322,7 @@ onUnmounted(() => window.removeEventListener('keydown', onEscapeKey))
   background: color-mix(in srgb, var(--cds-dark) 35%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  outline: none;
 }
 
 .history-lightbox-image {
@@ -341,6 +349,16 @@ onUnmounted(() => window.removeEventListener('keydown', onEscapeKey))
   justify-content: center;
   cursor: pointer;
   font-size: 1.2rem;
+}
+
+/* Transition del lightbox — Vue gestiona el ciclo enter/leave */
+.lightbox-enter-active,
+.lightbox-leave-active {
+  transition: opacity 0.2s ease;
+}
+.lightbox-enter-from,
+.lightbox-leave-to {
+  opacity: 0;
 }
 
 @media (min-width: 900px) {

@@ -13,7 +13,8 @@
           :key="item.to"
           :to="item.to"
           class="nav-item"
-          :class="{ active: isActive(item) }"
+          :activeClass="item.exact ? '' : 'active'"
+          exactActiveClass="active"
         >
           <span class="nav-icon">{{ item.icon }}</span>
           <span class="nav-label">{{ item.label }}</span>
@@ -49,7 +50,9 @@
       <div class="admin-content">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
-            <component :is="Component" />
+            <keep-alive :include="keepAlivePages">
+              <component :is="Component" />
+            </keep-alive>
           </transition>
         </router-view>
       </div>
@@ -68,60 +71,23 @@ const authStore = useAuthStore()
 
 const userName = computed(() => authStore.user?.full_name || authStore.user?.email || 'Admin')
 
-const pageTitle = computed(() => {
-  const titles = {
-    'admin-dashboard': 'Dashboard',
-    'admin-repairs': 'Reparaciones',
-    'admin-repair-detail': 'Detalle de Reparación',
-    'admin-quotes': 'Cotizaciones',
-    'admin-clients': 'Clientes',
-    'admin-inventory': 'Inventario',
-    'admin-inventory-unified': 'Inventario Unificado',
-    'admin-categories': 'Categorías',
-    'admin-appointments': 'Citas',
-    'admin-contact': 'Mensajes',
-    'admin-newsletter': 'Newsletter',
-    'admin-tickets': 'Tickets',
-    'admin-purchase-requests': 'Solicitudes de Compra',
-    'admin-manuals': 'Manuales',
-    'admin-stats': 'Estadísticas',
-    'admin-wizards': 'Magos',
-    'admin-intake': 'Nuevo Ingreso',
-    'admin-archive': 'Archivo',
-    'admin-media': 'Gestión de Medios'
-  }
-  return titles[route.name] || 'Panel Admin'
-})
-
-const pageSubtitle = computed(() => {
-  const subtitles = {
-    'admin-dashboard': 'Panel de control administrativo',
-    'admin-repairs': 'Gestión de órdenes de trabajo',
-    'admin-quotes': 'Cotizaciones y presupuestos',
-    'admin-clients': 'Base de datos de clientes',
-    'admin-inventory': 'Control de stock y materiales',
-    'admin-intake': 'Ingreso unificado de equipos'
-  }
-  return subtitles[route.name] || ''
-})
+const pageTitle    = computed(() => route.meta.title    || 'Panel Admin')
+const pageSubtitle = computed(() => route.meta.subtitle || '')
 
 const menuItems = [
-  { to: '/admin', label: 'Dashboard', icon: '📊' },
-  { to: '/admin/intake', label: 'Nuevo Ingreso', icon: '➕' },
-  { to: '/admin/repairs', label: 'Reparaciones', icon: '🔧' },
-  { to: '/admin/quotes', label: 'Cotizaciones', icon: '📄' },
-  { to: '/admin/clients', label: 'Clientes', icon: '👥' },
-  { to: '/admin/inventory', label: 'Inventario', icon: '📦' },
-  { to: '/admin/appointments', label: 'Citas', icon: '📅' },
-  { to: '/admin/tickets', label: 'Tickets', icon: '🎫' },
-  { to: '/admin/stats', label: 'Estadísticas', icon: '📈' },
-  { to: '/admin/media', label: 'Medios', icon: '🖼️' }
+  { to: '/admin', label: 'Dashboard',     icon: '📊', exact: true },
+  { to: '/admin/intake',    label: 'Nuevo Ingreso', icon: '➕' },
+  { to: '/admin/repairs',   label: 'Reparaciones',  icon: '🔧' },
+  { to: '/admin/quotes',    label: 'Cotizaciones',  icon: '📄' },
+  { to: '/admin/clients',   label: 'Clientes',      icon: '👥' },
+  { to: '/admin/inventory', label: 'Inventario',    icon: '📦' },
+  { to: '/admin/appointments', label: 'Citas',      icon: '📅' },
+  { to: '/admin/tickets',   label: 'Tickets',       icon: '🎫' },
+  { to: '/admin/stats',     label: 'Estadísticas',  icon: '📈' },
+  { to: '/admin/media',     label: 'Medios',        icon: '🖼️' },
 ]
 
-const isActive = (item) => {
-  if (item.to === '/admin') return route.path === '/admin'
-  return route.path.startsWith(item.to)
-}
+const keepAlivePages = ['RepairsAdminPage', 'ClientsPage', 'InventoryPage', 'QuotesAdminPage']
 
 const handleLogout = () => {
   authStore.logout()
@@ -299,30 +265,30 @@ const handleLogout = () => {
   .admin-sidebar {
     width: 95px;
   }
-  
+
   .brand-text,
   .nav-label {
     display: none;
   }
-  
+
   .sidebar-brand {
     justify-content: center;
     padding: 1.35rem;
   }
-  
+
   .nav-item {
     justify-content: center;
     padding: 1.35rem;
   }
-  
+
   .nav-icon {
     width: auto;
   }
-  
+
   .admin-main {
     margin-left: 95px;
   }
-  
+
   .admin-content {
     padding: 2rem;
   }
@@ -337,12 +303,12 @@ const handleLogout = () => {
     flex-wrap: wrap;
     padding: 0.7rem;
   }
-  
+
   .sidebar-brand {
     border-bottom: none;
     padding: 0.7rem 1.35rem;
   }
-  
+
   .sidebar-nav {
     display: flex;
     flex-direction: row;
@@ -350,32 +316,32 @@ const handleLogout = () => {
     padding: 0;
     flex: none;
   }
-  
+
   .nav-item {
     padding: 0.7rem 1.35rem;
     border-left: none;
     border-bottom: 2px solid transparent;
   }
-  
+
   .nav-item.active {
     border-left-color: transparent;
     border-bottom-color: #ff6b35;
   }
-  
+
   .sidebar-footer {
     display: flex;
     border-top: none;
     padding: 0;
   }
-  
+
   .admin-main {
     margin-left: 0;
   }
-  
+
   .admin-topbar {
     padding: 1.35rem;
   }
-  
+
   .page-title {
     font-size: 1.7rem;
   }
