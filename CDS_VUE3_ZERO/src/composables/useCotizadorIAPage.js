@@ -29,9 +29,16 @@ export function useCotizadorIAPage() {
   const turnstileToken = ref('')
   const leadSubmitted = ref(false)
 
+  // ── Modo "instrumento no encontrado" ─────────────────────────────────────────
+  const notFoundMode = ref(false)
+  const manualBrand = ref('')
+  const manualModel = ref('')
+
   // ── Computed ─────────────────────────────────────────────────────────────────
   const canContinueStep1 = computed(() =>
-    Boolean(selectedBrand.value && selectedModel.value)
+    notFoundMode.value
+      ? Boolean(manualBrand.value.trim() && manualModel.value.trim())
+      : Boolean(selectedBrand.value && selectedModel.value)
   )
 
   const canContinueStep2 = computed(() => selectedFaultIds.value.length > 0)
@@ -54,11 +61,13 @@ export function useCotizadorIAPage() {
   })
 
   const selectedBrandName = computed(() => {
+    if (notFoundMode.value) return manualBrand.value
     const b = brands.value.find(b => b.id === selectedBrand.value)
     return b ? b.name : selectedBrand.value
   })
 
   const selectedModelName = computed(() => {
+    if (notFoundMode.value) return manualModel.value
     const m = models.value.find(m => m.id === selectedModel.value)
     return m ? m.model : selectedModel.value
   })
@@ -171,6 +180,23 @@ export function useCotizadorIAPage() {
     }
   }
 
+  function activateNotFoundMode() {
+    notFoundMode.value = true
+    selectedBrand.value = ''
+    selectedModel.value = ''
+    models.value = []
+    faults.value = []
+    selectedFaultIds.value = []
+    error.value = ''
+  }
+
+  function deactivateNotFoundMode() {
+    notFoundMode.value = false
+    manualBrand.value = ''
+    manualModel.value = ''
+    error.value = ''
+  }
+
   function onVerify(token) {
     turnstileToken.value = token
   }
@@ -191,6 +217,9 @@ export function useCotizadorIAPage() {
     acceptedDisclaimer.value = false
     turnstileToken.value = ''
     leadSubmitted.value = false
+    notFoundMode.value = false
+    manualBrand.value = ''
+    manualModel.value = ''
     error.value = ''
   }
 
@@ -211,6 +240,9 @@ export function useCotizadorIAPage() {
     acceptedDisclaimer,
     turnstileToken,
     leadSubmitted,
+    notFoundMode,
+    manualBrand,
+    manualModel,
     canContinueStep1,
     canContinueStep2,
     canSubmitLead,
@@ -225,6 +257,8 @@ export function useCotizadorIAPage() {
     submitLead,
     onVerify,
     goToSchedule,
-    resetAll
+    resetAll,
+    activateNotFoundMode,
+    deactivateNotFoundMode,
   }
 }

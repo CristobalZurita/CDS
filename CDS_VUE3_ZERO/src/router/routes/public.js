@@ -21,7 +21,7 @@ export const publicRoutes = [
       { path: 'terminos', name: 'terminos', component: TermsPage },
       { path: 'privacidad', name: 'privacidad', component: PrivacyPage },
       { path: 'agendar', name: 'agendar', component: SchedulePage, meta: { requiresAuth: true } },
-      { path: 'cotizador-ia', name: 'cotizador-ia', component: CotizadorIAPage, meta: { requiresAuth: false } },
+      { path: 'cotizador', name: 'cotizador', component: CotizadorIAPage, meta: { requiresAuth: false } },
       { path: 'calculadoras', name: 'calculadoras', component: CalculatorsPage, meta: { requiresAuth: false } },
       { path: 'simulador', name: 'simulador', component: SimulatorPage, meta: { requiresAuth: false } },
       { path: 'tienda', name: 'tienda', component: StorePage, meta: { requiresAuth: false } }

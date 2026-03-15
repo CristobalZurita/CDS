@@ -21,7 +21,7 @@
           <i class="fas fa-calendar-check"></i>
           Agenda tu hora
         </router-link>
-        <router-link to="/cotizador-ia" class="btn-hero btn-hero-outline">
+        <router-link to="/cotizador" class="btn-hero btn-hero-outline">
           <i class="fas fa-file-circle-check"></i>
           Cotiza tu instrumento
         </router-link>

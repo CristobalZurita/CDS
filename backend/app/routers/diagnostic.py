@@ -36,16 +36,15 @@ from datetime import datetime, timedelta
 
 router = APIRouter(prefix="/diagnostic", tags=["diagnostic"])
 
-# Load static data (resolve paths relative to project root)
-_root = Path(__file__).resolve().parents[3]
-data_dir = _root / "src" / "assets" / "data"
-with open(data_dir / "brands.json", "r") as f:
+# Load static data — fuente canónica: backend/app/data/ (autosuficiente)
+_data_dir = Path(__file__).resolve().parent.parent / "data"
+with open(_data_dir / "brands.json", "r") as f:
     brands_data = json.load(f)
 
-with open(data_dir / "instruments.json", "r") as f:
+with open(_data_dir / "instruments.json", "r") as f:
     instruments_data = json.load(f)
 
-with open(data_dir / "faults.json", "r") as f:
+with open(_data_dir / "faults.json", "r") as f:
     faults_data = json.load(f)
 
 

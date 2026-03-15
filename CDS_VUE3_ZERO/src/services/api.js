@@ -1,8 +1,11 @@
 import axios from 'axios'
 
 const API_URL = String(import.meta.env.VITE_API_URL || '/api/v1').replace(/\/+$/, '')
+// CSRF endpoint sits outside /api/v1 (at /api/csrf-token)
+const CSRF_URL = API_URL.replace(/\/api\/v\d+.*$/, '') + '/api/csrf-token'
 const AUTH_TOKEN_KEY = 'cds_auth_token'
 const AUTH_USER_KEY = 'cds_auth_user'
+const MUTATING_METHODS = new Set(['post', 'put', 'patch', 'delete'])
 
 const api = axios.create({
   baseURL: API_URL,
@@ -59,11 +62,29 @@ export function clearStoredSession() {
   setStoredUser(null)
 }
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(async (config) => {
   const token = getStoredToken()
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
+    // Bearer token requests bypass CSRF on the backend — nothing more needed
+    return config
   }
+
+  // For unauthenticated mutation requests, inject a fresh CSRF token.
+  // The backend enforces CSRF only in production (ENFORCE_CSRF=true) and only
+  // for requests without an Authorization: Bearer header.
+  if (MUTATING_METHODS.has((config.method || '').toLowerCase())) {
+    try {
+      const res = await axios.get(CSRF_URL)
+      const csrfToken = res.data?.token
+      if (csrfToken) {
+        config.headers['X-CSRF-Token'] = csrfToken
+      }
+    } catch {
+      // CSRF fetch failed — proceed without token (will only matter in production)
+    }
+  }
+
   return config
 })
 

@@ -40,9 +40,9 @@ def _resolve_destination(destination: str) -> tuple[str, str | None]:
     if target == "uploads":
         return "uploads/images", "/uploads/images"
     if target == "instrumentos":
-        return "public/images/instrumentos", "/images/instrumentos"
+        return "uploads/images/instrumentos", "/uploads/images/instrumentos"
     if target == "inventario":
-        return "public/images/INVENTARIO", "/images/INVENTARIO"
+        return "uploads/images/inventario", "/uploads/images/inventario"
     raise HTTPException(status_code=400, detail="Destino inválido. Use uploads, instrumentos o inventario")
 
 

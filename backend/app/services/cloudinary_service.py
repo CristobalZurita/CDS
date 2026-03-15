@@ -27,9 +27,9 @@ def _load_local_mapping():
     """Carga el image-mapping.json como fuente de verdad."""
     global _local_image_mapping
     try:
-        # Buscar el archivo en la raíz del proyecto (3 niveles arriba de este archivo)
+        # Buscar el archivo en CDS_VUE3_ZERO/ (4 niveles arriba de este archivo)
         repo_root = Path(__file__).resolve().parents[3]
-        mapping_file = repo_root / "image-mapping.json"
+        mapping_file = repo_root / "CDS_VUE3_ZERO" / "image-mapping.json"
         if mapping_file.exists():
             with open(mapping_file, 'r') as f:
                 data = json.load(f)

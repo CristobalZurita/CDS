@@ -10,7 +10,7 @@
       </div>
 
       <div class="header-actions">
-        <router-link to="/cotizador-ia" class="btn-primary">
+        <router-link to="/cotizador" class="btn-primary">
           + Nueva Cotizacion
         </router-link>
         <button class="btn-secondary" type="button" data-testid="dashboard-logout" @click="handleLogout">
@@ -91,14 +91,14 @@
 
         <div v-else class="empty-state" data-testid="dashboard-empty-repairs">
           <p>No tienes reparaciones activas.</p>
-          <router-link to="/cotizador-ia" class="btn-primary">Solicitar cotizacion</router-link>
+          <router-link to="/cotizador" class="btn-primary">Solicitar cotizacion</router-link>
         </div>
       </article>
 
       <article class="panel-card">
         <h2>Acciones rapidas</h2>
         <div class="quick-actions">
-          <router-link to="/cotizador-ia" class="action-card">Nueva cotizacion</router-link>
+          <router-link to="/cotizador" class="action-card">Nueva cotizacion</router-link>
           <router-link to="/agendar" class="action-card">Agendar cita</router-link>
           <router-link to="/ot-payments" class="action-card">Pagos OT</router-link>
           <router-link to="/repairs" class="action-card">Historial</router-link>

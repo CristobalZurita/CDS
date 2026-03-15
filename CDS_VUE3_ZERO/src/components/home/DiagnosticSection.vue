@@ -9,8 +9,8 @@
           <li><i class="fas fa-check"></i> Sin necesidad de registrarte</li>
           <li><i class="fas fa-check"></i> Compatible con todos los equipos de audio</li>
         </ul>
-        <router-link to="/cotizador-ia" class="btn-section">
-          <i class="fas fa-file-circle-check"></i> Ir al cotizador IA
+        <router-link to="/cotizador" class="btn-section">
+          <i class="fas fa-file-circle-check"></i> Ir al cotizador
         </router-link>
       </div>
       <div class="diagnostic-image">

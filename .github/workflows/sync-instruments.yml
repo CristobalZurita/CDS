@@ -1,15 +1,11 @@
 name: Sincronizar Instrumentos Automáticamente
 
 on:
-  schedule:
-    - cron: '0 */6 * * *'  # cada 6 horas (4 veces al día)
-  push:
-    paths:
-      - 'public/images/instrumentos/**/*.webp'
-      - 'scripts/sync_instruments.py'
-      - 'scripts/auto_sync.py'
-      - 'scripts/validate_instruments_sync.py'
-  workflow_dispatch:  # Permite ejecución manual
+  # Triggers automáticos desactivados: la estructura L (public/images/instrumentos,
+  # src/assets/data/) fue migrada a RESTO. El sync de instrumentos ahora corre
+  # dentro del backend via instrument_sync_service.py en el proceso uvicorn.
+  # Mantener workflow_dispatch para ejecución manual si se requiere.
+  workflow_dispatch:
 
 jobs:
   sync:

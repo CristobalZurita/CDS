@@ -20,6 +20,7 @@ from app.models.stock_movement import StockMovement
 from app.models.invoice import Invoice, InvoiceStatus
 from app.models.warranty import Warranty, WarrantyClaim, WarrantyStatus
 from app.models.repair_component_usage import RepairComponentUsage
+from app.models.device import Device
 
 
 class ReportingService:
@@ -522,6 +523,127 @@ class ReportingService:
             "rejected_claims": rejected_claims,
             "approval_rate": round(approved_claims / total_claims * 100, 2) if total_claims > 0 else 0,
             "total_warranty_cost": warranty_cost
+        }
+
+    # =========================================================================
+    # KPIs DE TALLER — turnaround, vencidas, conversión, top modelos, retorno
+    # =========================================================================
+
+    def get_turnaround_stats(self) -> Dict[str, Any]:
+        """
+        Tiempo promedio de resolución de OTs (intake_date → completion_date).
+        Solo considera OTs completadas o entregadas (status_id 7 u 8).
+        """
+        completed = self.db.query(Repair).filter(
+            Repair.completion_date.isnot(None),
+            Repair.intake_date.isnot(None),
+            Repair.status_id.in_([7, 8])
+        ).all()
+
+        if not completed:
+            return {"avg_days": None, "min_days": None, "max_days": None, "count": 0}
+
+        days_list = [
+            (r.completion_date - r.intake_date).days
+            for r in completed
+            if r.completion_date >= r.intake_date
+        ]
+
+        if not days_list:
+            return {"avg_days": None, "min_days": None, "max_days": None, "count": 0}
+
+        return {
+            "avg_days": round(sum(days_list) / len(days_list), 1),
+            "min_days": min(days_list),
+            "max_days": max(days_list),
+            "count": len(days_list),
+        }
+
+    def get_overdue_repairs(self, threshold_days: int = 30) -> Dict[str, Any]:
+        """
+        OTs activas (no terminadas ni canceladas) con más de threshold_days días abiertos.
+        """
+        active_status_ids = [1, 2, 3, 4, 5, 6]
+        cutoff = datetime.utcnow() - timedelta(days=threshold_days)
+
+        total_active = self.db.query(func.count(Repair.id)).filter(
+            Repair.status_id.in_(active_status_ids)
+        ).scalar() or 0
+
+        overdue = self.db.query(func.count(Repair.id)).filter(
+            Repair.status_id.in_(active_status_ids),
+            Repair.intake_date <= cutoff
+        ).scalar() or 0
+
+        return {
+            "overdue_count": overdue,
+            "threshold_days": threshold_days,
+            "total_active": total_active,
+            "overdue_pct": round(overdue / total_active * 100, 1) if total_active > 0 else 0,
+        }
+
+    def get_lead_conversion(self) -> Dict[str, Any]:
+        """
+        Tasa de conversión leads → reparaciones.
+        Usa el campo status del modelo Lead (new / contacted / converted).
+        """
+        from app.models.lead import Lead
+
+        total = self.db.query(func.count(Lead.id)).scalar() or 0
+        converted = self.db.query(func.count(Lead.id)).filter(
+            Lead.status == "converted"
+        ).scalar() or 0
+        contacted = self.db.query(func.count(Lead.id)).filter(
+            Lead.status == "contacted"
+        ).scalar() or 0
+
+        return {
+            "total_leads": total,
+            "new": total - converted - contacted,
+            "contacted": contacted,
+            "converted": converted,
+            "conversion_rate": round(converted / total * 100, 1) if total > 0 else 0,
+        }
+
+    def get_top_models(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """
+        Modelos de equipos más reparados (join Repair → Device).
+        """
+        results = self.db.query(
+            Device.model,
+            func.count(Repair.id).label("repair_count")
+        ).join(Repair, Repair.device_id == Device.id)\
+         .group_by(Device.model)\
+         .order_by(func.count(Repair.id).desc())\
+         .limit(limit)\
+         .all()
+
+        return [{"model": r.model, "repair_count": r.repair_count} for r in results]
+
+    def get_client_return_rate(self) -> Dict[str, Any]:
+        """
+        Tasa de retorno de clientes: clientes con más de una OT registrada.
+        """
+        subq = self.db.query(
+            Device.client_id,
+            func.count(Repair.id).label("repair_count")
+        ).join(Repair, Repair.device_id == Device.id)\
+         .group_by(Device.client_id)\
+         .subquery()
+
+        total_with_repairs = self.db.query(
+            func.count(subq.c.client_id)
+        ).scalar() or 0
+
+        returning = self.db.query(
+            func.count(subq.c.client_id)
+        ).filter(subq.c.repair_count > 1).scalar() or 0
+
+        return {
+            "returning_clients": returning,
+            "first_time_clients": total_with_repairs - returning,
+            "total_clients_with_repairs": total_with_repairs,
+            "return_rate": round(returning / total_with_repairs * 100, 1) if total_with_repairs > 0 else 0,
         }
 
     # =========================================================================

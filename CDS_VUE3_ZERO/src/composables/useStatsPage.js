@@ -18,6 +18,13 @@ export function useStatsPage() {
   const kpiInventory = ref({})
   const kpiClients = ref({})
   const kpiWarranty = ref({})
+  const repairsTimeline = ref([])
+  const revenueTimeline = ref([])
+  const kpiTurnaround = ref({})
+  const kpiOverdue = ref({})
+  const kpiLeadConversion = ref({})
+  const kpiTopModels = ref([])
+  const kpiClientReturn = ref({})
 
   const cards = computed(() => {
     const s = stats.value || {}
@@ -43,7 +50,14 @@ export function useStatsPage() {
         revenueRes,
         inventoryRes,
         clientsRes,
-        warrantyRes
+        warrantyRes,
+        repairsTimelineRes,
+        revenueTimelineRes,
+        turnaroundRes,
+        overdueRes,
+        leadConvRes,
+        topModelsRes,
+        clientReturnRes,
       ] = await Promise.allSettled([
         api.get('/stats', { params: { extended: true } }),
         api.get('/analytics/kpis/summary'),
@@ -51,7 +65,14 @@ export function useStatsPage() {
         api.get('/analytics/revenue'),
         api.get('/analytics/inventory'),
         api.get('/analytics/clients'),
-        api.get('/analytics/warranties')
+        api.get('/analytics/warranties'),
+        api.get('/analytics/repairs/timeline', { params: { days: 30, group_by: 'day' } }),
+        api.get('/analytics/revenue/timeline', { params: { months: 12 } }),
+        api.get('/analytics/kpis/turnaround'),
+        api.get('/analytics/kpis/overdue'),
+        api.get('/analytics/kpis/lead-conversion'),
+        api.get('/analytics/kpis/top-models', { params: { limit: 8 } }),
+        api.get('/analytics/kpis/client-return'),
       ])
 
       stats.value = safeData(statsRes, {})
@@ -61,6 +82,13 @@ export function useStatsPage() {
       kpiInventory.value = safeData(inventoryRes, {})
       kpiClients.value = safeData(clientsRes, {})
       kpiWarranty.value = safeData(warrantyRes, {})
+      repairsTimeline.value = safeData(repairsTimelineRes, [])
+      revenueTimeline.value = safeData(revenueTimelineRes, [])
+      kpiTurnaround.value = safeData(turnaroundRes, {})
+      kpiOverdue.value = safeData(overdueRes, {})
+      kpiLeadConversion.value = safeData(leadConvRes, {})
+      kpiTopModels.value = safeData(topModelsRes, [])
+      kpiClientReturn.value = safeData(clientReturnRes, {})
     } catch (loadError) {
       error.value = extractErrorMessage(loadError)
     } finally {
@@ -81,6 +109,13 @@ export function useStatsPage() {
     kpiInventory,
     kpiClients,
     kpiWarranty,
+    repairsTimeline,
+    revenueTimeline,
+    kpiTurnaround,
+    kpiOverdue,
+    kpiLeadConversion,
+    kpiTopModels,
+    kpiClientReturn,
     formatCurrency,
     load
   }

@@ -100,6 +100,18 @@ class Settings(BaseModel):
     whatsapp_api_url: str = os.getenv("WHATSAPP_API_URL", "https://graph.facebook.com/v17.0")
     whatsapp_template_name: Optional[str] = os.getenv("WHATSAPP_TEMPLATE_NAME")
     whatsapp_template_lang: str = os.getenv("WHATSAPP_TEMPLATE_LANG", "en_US")
+    whatsapp_webhook_verify_token: Optional[str] = os.getenv("WHATSAPP_WEBHOOK_VERIFY_TOKEN")
+
+    # Payment Gateway Configuration
+    # Set PAYMENT_GATEWAY to "transbank" or "mercadopago"
+    payment_gateway: str = os.getenv("PAYMENT_GATEWAY", "")
+    # Transbank Webpay Plus
+    transbank_commerce_code: Optional[str] = os.getenv("TRANSBANK_COMMERCE_CODE")
+    transbank_api_key: Optional[str] = os.getenv("TRANSBANK_API_KEY")
+    transbank_environment: str = os.getenv("TRANSBANK_ENVIRONMENT", "integration")  # "integration" | "production"
+    # MercadoPago
+    mercadopago_access_token: Optional[str] = os.getenv("MERCADOPAGO_ACCESS_TOKEN")
+    mercadopago_webhook_secret: Optional[str] = os.getenv("MERCADOPAGO_WEBHOOK_SECRET")
 
     # Pricing Configuration
     diagnostic_fee: int = 0  # Free diagnostic

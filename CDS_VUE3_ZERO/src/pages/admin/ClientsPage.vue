@@ -30,7 +30,7 @@
         <label><span>Ciudad</span><input v-model.trim="createForm.city" type="text" /></label>
         <label><span>Region</span><input v-model.trim="createForm.region" type="text" /></label>
         <label><span>Pais</span><input v-model.trim="createForm.country" type="text" /></label>
-        <label class="full"><span>Direccion</span><input v-model.trim="createForm.address" type="text" /></label>
+        <label class="full"><span>Direccion</span><input ref="createAddressRef" v-model.trim="createForm.address" type="text" /></label>
         <label class="full"><span>Notas</span><textarea v-model.trim="createForm.notes" rows="3"></textarea></label>
       </div>
       <div class="panel-actions">
@@ -111,7 +111,7 @@
                 <label><span>Ciudad</span><input v-model.trim="editForm.city" type="text" /></label>
                 <label><span>Region</span><input v-model.trim="editForm.region" type="text" /></label>
                 <label><span>Pais</span><input v-model.trim="editForm.country" type="text" /></label>
-                <label class="full"><span>Direccion</span><input v-model.trim="editForm.address" type="text" /></label>
+                <label class="full"><span>Direccion</span><input ref="editAddressRef" v-model.trim="editForm.address" type="text" /></label>
                 <label class="full"><span>Notas</span><textarea v-model.trim="editForm.notes" rows="3"></textarea></label>
                 <label class="full"><span>Notas internas</span><textarea v-model.trim="editForm.internal_notes" rows="3"></textarea></label>
               </div>
@@ -222,7 +222,9 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useClientsPage } from '@/composables/useClientsPage'
+import { usePlacesAutocomplete } from '@/composables/usePlacesAutocomplete'
 
 const {
   clients,
@@ -255,6 +257,41 @@ const {
   createDeviceForSelectedClient,
   createRepairForSelectedClient
 } = useClientsPage()
+
+const { initAutocomplete } = usePlacesAutocomplete()
+const createAddressRef = ref(null)
+const editAddressRef   = ref(null)
+let _cleanupCreate = () => {}
+let _cleanupEdit   = () => {}
+
+onMounted(async () => {
+  if (createAddressRef.value) {
+    _cleanupCreate = await initAutocomplete(createAddressRef.value, ({ address, city, region, country }) => {
+      createForm.value.address = address
+      if (city)    createForm.value.city    = city
+      if (region)  createForm.value.region  = region
+      if (country) createForm.value.country = country
+    })
+  }
+})
+
+// Re-attach when edit form becomes visible (input renders lazily)
+watch(
+  () => editAddressRef.value,
+  async (el) => {
+    _cleanupEdit()
+    if (el) {
+      _cleanupEdit = await initAutocomplete(el, ({ address, city, region, country }) => {
+        editForm.value.address = address
+        if (city)    editForm.value.city    = city
+        if (region)  editForm.value.region  = region
+        if (country) editForm.value.country = country
+      })
+    }
+  }
+)
+
+onUnmounted(() => { _cleanupCreate(); _cleanupEdit() })
 </script>
 
 <style scoped src="./commonAdminPage.css"></style>

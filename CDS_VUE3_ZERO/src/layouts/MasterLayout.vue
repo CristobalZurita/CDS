@@ -58,7 +58,7 @@
         <!-- Acciones fijas derecha: Cotizar, Carrito, Hamburger -->
         <div class="nav-actions">
 
-          <router-link to="/cotizador-ia" class="nav-cotizar" aria-label="Ir al cotizador IA">
+          <router-link to="/cotizador" class="nav-cotizar" aria-label="Ir al cotizador">
             <i class="fas fa-file-invoice-dollar"></i>
             <span class="nav-cotizar-label">Cotizar</span>
           </router-link>
@@ -122,7 +122,7 @@
         <section>
           <h2>Servicios</h2>
           <div class="site-footer-links">
-            <router-link to="/cotizador-ia">Cotizador IA</router-link>
+            <router-link to="/cotizador">Cotizador</router-link>
             <router-link to="/calculadoras">Calculadoras</router-link>
             <a href="#services">Modificaciones</a>
             <a href="#services">Mantención preventiva</a>

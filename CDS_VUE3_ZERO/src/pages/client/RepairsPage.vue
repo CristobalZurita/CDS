@@ -7,7 +7,7 @@
       </div>
 
       <div class="header-actions">
-        <router-link to="/cotizador-ia" class="btn-primary">+ Nueva Cotizacion</router-link>
+        <router-link to="/cotizador" class="btn-primary">+ Nueva Cotizacion</router-link>
         <button class="btn-secondary" :disabled="isLoading" @click="loadRepairs">
           {{ isLoading ? 'Actualizando...' : 'Actualizar' }}
         </button>
@@ -70,7 +70,7 @@
 
     <section v-else class="empty-state" data-testid="repairs-empty">
       <p>No hay reparaciones para el filtro actual.</p>
-      <router-link to="/cotizador-ia" class="btn-primary">Solicitar cotizacion</router-link>
+      <router-link to="/cotizador" class="btn-primary">Solicitar cotizacion</router-link>
     </section>
   </main>
 </template>

@@ -5,7 +5,7 @@
     <div class="progress-bar" aria-hidden="true">
       <div
         class="progress-fill"
-        :style="{ width: `${(step / 4) * 100}%` }"
+        :style="{ width: notFoundMode ? (step === 1 ? '50%' : '100%') : `${(step / 4) * 100}%` }"
       ></div>
     </div>
 
@@ -15,12 +15,13 @@
     <!-- ── Paso 1: Selección de equipo ───────────────────────────── -->
     <div v-if="step === 1" class="cotizador-card">
       <header class="step-header">
-        <span class="step-badge">Paso 1 de 4</span>
+        <span class="step-badge">{{ notFoundMode ? 'Paso 1 de 2' : 'Paso 1 de 4' }}</span>
         <h1>Seleccionar equipo</h1>
-        <p>Elige la marca y el modelo de tu instrumento.</p>
+        <p>{{ notFoundMode ? 'Escribe la marca y el modelo de tu instrumento.' : 'Elige la marca y el modelo de tu instrumento.' }}</p>
       </header>
 
-      <div class="form-grid">
+      <!-- Modo normal: selects de marca y modelo -->
+      <div v-if="!notFoundMode" class="form-grid">
         <label class="field">
           <span>Marca</span>
           <select
@@ -53,8 +54,52 @@
         </label>
       </div>
 
-      <div v-if="loading" class="loading-row">
+      <!-- Modo "no encontrado": inputs libres -->
+      <div v-else class="form-grid">
+        <label class="field">
+          <span>Marca <em class="required">*</em></span>
+          <input
+            v-model.trim="manualBrand"
+            type="text"
+            placeholder="Ej: Yamaha, Roland, Korg…"
+            autocomplete="off"
+          />
+        </label>
+        <label class="field">
+          <span>Modelo <em class="required">*</em></span>
+          <input
+            v-model.trim="manualModel"
+            type="text"
+            placeholder="Ej: DX7, Juno-106, Minilogue…"
+            autocomplete="off"
+          />
+        </label>
+      </div>
+
+      <div v-if="loading && !notFoundMode" class="loading-row">
         <span class="spinner"></span> Cargando…
+      </div>
+
+      <!-- Toggle "no encontré / volver a lista" -->
+      <div class="not-found-toggle">
+        <button
+          v-if="!notFoundMode"
+          type="button"
+          class="btn-link"
+          @click="activateNotFoundMode"
+        >
+          <i class="fas fa-question-circle"></i>
+          Mi instrumento no está en la lista
+        </button>
+        <button
+          v-else
+          type="button"
+          class="btn-link"
+          @click="deactivateNotFoundMode"
+        >
+          <i class="fas fa-arrow-left"></i>
+          Volver a la lista
+        </button>
       </div>
 
       <div class="actions">
@@ -62,7 +107,7 @@
         <button
           class="btn-primary"
           :disabled="!canContinueStep1 || loading"
-          @click="step = 2"
+          @click="notFoundMode ? (step = 4) : (step = 2)"
         >
           Siguiente →
         </button>
@@ -174,7 +219,7 @@
     <div v-if="step === 4" class="cotizador-card">
       <template v-if="!leadSubmitted">
         <header class="step-header">
-          <span class="step-badge">Paso 4 de 4</span>
+          <span class="step-badge">{{ notFoundMode ? 'Paso 2 de 2' : 'Paso 4 de 4' }}</span>
           <h1>Tus datos de contacto</h1>
           <p>Te contactaremos para coordinar la revisión de tu equipo.</p>
         </header>
@@ -217,7 +262,7 @@
         <TurnstileWidget @verify="onVerify" />
 
         <div class="actions">
-          <button class="btn-secondary" @click="step = 3">← Atrás</button>
+          <button class="btn-secondary" @click="notFoundMode ? (step = 1) : (step = 3)">← Atrás</button>
           <button
             class="btn-primary"
             :disabled="!canSubmitLead || loading"
@@ -234,10 +279,15 @@
         <div class="success-box">
           <i class="fa-solid fa-circle-check success-icon"></i>
           <h2>¡Listo, {{ leadForm.nombre.split(' ')[0] }}!</h2>
-          <p>
+          <p v-if="!notFoundMode">
             Recibimos tu solicitud para el
             <strong>{{ selectedBrandName }} {{ selectedModelName }}</strong>.
             Estimación: <strong>{{ formattedFinalCost }}</strong>.
+          </p>
+          <p v-else>
+            Recibimos tu solicitud para el
+            <strong>{{ selectedBrandName }} {{ selectedModelName }}</strong>.
+            Prepararemos una cotización personalizada para tu equipo.
           </p>
           <p>Te contactaremos pronto para coordinar la revisión.</p>
         </div>
@@ -270,6 +320,9 @@ const {
   leadForm,
   acceptedDisclaimer,
   leadSubmitted,
+  notFoundMode,
+  manualBrand,
+  manualModel,
   canContinueStep1,
   canContinueStep2,
   canSubmitLead,
@@ -284,7 +337,9 @@ const {
   submitLead,
   onVerify,
   goToSchedule,
-  resetAll
+  resetAll,
+  activateNotFoundMode,
+  deactivateNotFoundMode,
 } = useCotizadorIAPage()
 
 function formatCLP(value) {
@@ -674,6 +729,31 @@ function formatCLP(value) {
 
 .btn-secondary:not(:disabled):hover {
   background: color-mix(in srgb, var(--cds-light) 20%, white);
+}
+
+/* Toggle "no encontré mi instrumento" */
+.not-found-toggle {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--cds-text-muted);
+  font-size: var(--cds-text-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+}
+
+.btn-link:hover {
+  color: var(--cds-primary);
 }
 
 /* Accesibilidad */

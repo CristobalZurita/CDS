@@ -18,8 +18,8 @@
         <router-link to="/agendar" class="btn-section">
           <i class="fas fa-calendar-check"></i> Agendar revisión
         </router-link>
-        <router-link to="/cotizador-ia" class="btn-section btn-section-outline">
-          <i class="fas fa-file-invoice-dollar"></i> Cotizador IA
+        <router-link to="/cotizador" class="btn-section btn-section-outline">
+          <i class="fas fa-file-invoice-dollar"></i> Cotizar
         </router-link>
       </div>
     </div>

@@ -16,7 +16,7 @@ try:
 	from app.routers import quotation as quotation_router
 	from app.routers import payments as payments_router
 	from app.routers import appointment as appointment_router
-	from app.routers import client as client_router
+	from app.routers import client_portal as client_router
 	from app.routers import clients as clients_router
 	from app.routers import device as device_router
 	from app.routers import repair_status as repair_status_router
@@ -58,7 +58,7 @@ except Exception:
 import importlib
 for name in (
 	"repair", "user", "instrument", "category", "stock_movement", "contact",
-	"quotation", "appointment", "client", "clients", "device",
+	"quotation", "appointment", "clients", "device",
 	"newsletter", "tools", "signature", "tickets", "purchase_requests",
 	"manuals", "photo_requests", "inventory", "repair_status",
 	"invoice", "warranty", "analytics", "search",
@@ -86,6 +86,14 @@ if globals().get("diagnostic_router") is None:
 		globals()["diagnostic_router"] = mod
 	except Exception:
 		globals()["diagnostic_router"] = None
+
+# client_portal uses a custom variable name (client_router), recover it explicitly.
+if globals().get("client_router") is None:
+	try:
+		mod = importlib.import_module("app.routers.client_portal")
+		globals()["client_router"] = mod
+	except Exception:
+		globals()["client_router"] = None
 
 # inventory uses a custom variable name, so recover it explicitly if the broad
 # import block failed earlier.
@@ -198,5 +206,19 @@ except Exception:
 try:
 	from app.routers import leads as leads_router
 	api_router.include_router(leads_router.router)
+except Exception:
+	pass
+
+# ADITIVO: WhatsApp Webhook (verificación Meta + mensajes entrantes)
+try:
+	from app.routers import whatsapp_webhook as whatsapp_webhook_router
+	api_router.include_router(whatsapp_webhook_router.router)
+except Exception:
+	pass
+
+# ADITIVO: Pasarela de pagos (Transbank Webpay Plus / MercadoPago)
+try:
+	from app.routers import payment_gateway as payment_gateway_router
+	api_router.include_router(payment_gateway_router.router)
 except Exception:
 	pass

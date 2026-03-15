@@ -6,7 +6,7 @@ export function useHomePage() {
 
   const primaryActions = computed(() => ([
     { label: 'Agendar revisión', to: '/agendar', variant: 'primary' },
-    { label: 'Abrir cotizador IA', to: '/cotizador-ia', variant: 'secondary' }
+    { label: 'Cotizar', to: '/cotizador', variant: 'secondary' }
   ]))
 
   const sections = computed(() => ([
@@ -39,7 +39,7 @@ export function useHomePage() {
       id: 'diagnostic',
       title: 'Cotizar',
       description: 'Acceso a estimación inicial y flujo de evaluación técnica.',
-      links: [{ label: 'Ir a cotizador IA', to: '/cotizador-ia' }]
+      links: [{ label: 'Ir al cotizador', to: '/cotizador' }]
     },
     {
       id: 'featured',

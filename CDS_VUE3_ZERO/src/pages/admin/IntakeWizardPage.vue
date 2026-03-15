@@ -104,6 +104,7 @@
           />
           
           <FormField
+            ref="addressFieldRef"
             v-model="form.client.address"
             label="Dirección"
             placeholder="Calle, número, depto"
@@ -544,9 +545,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useIntakeWizard } from '@/composables/useIntakeWizard'
+import { usePlacesAutocomplete } from '@/composables/usePlacesAutocomplete'
 import { FormField } from '@/components/composite'
 import { BaseButton } from '@/components/base'
 import PhotoUpload from '@/components/business/PhotoUpload.vue'
@@ -572,6 +574,10 @@ const {
   submit,
   reset
 } = useIntakeWizard()
+
+const { initAutocomplete } = usePlacesAutocomplete()
+const addressFieldRef = ref(null)
+let _cleanupAddressAc = () => {}
 
 // Estado local
 const selectedClientId = ref('')
@@ -635,7 +641,7 @@ function scrollToSection(sectionId) {
 }
 
 // Scroll spy
-onMounted(() => {
+onMounted(async () => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach(entry => {
@@ -646,12 +652,25 @@ onMounted(() => {
     },
     { rootMargin: '-20% 0px -80% 0px' }
   )
-  
+
   sections.forEach(section => {
     const element = document.getElementById(section.id)
     if (element) observer.observe(element)
   })
+
+  // Google Places Autocomplete on address field
+  const inputEl = addressFieldRef.value?.$el?.querySelector('input')
+  if (inputEl) {
+    _cleanupAddressAc = await initAutocomplete(inputEl, ({ address, city, region, country }) => {
+      form.client.address = address
+      if (city)    form.client.city    = city
+      if (region)  form.client.region  = region
+      if (country) form.client.country = country
+    })
+  }
 })
+
+onUnmounted(() => _cleanupAddressAc())
 </script>
 
 <style scoped>

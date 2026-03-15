@@ -291,6 +291,62 @@ def get_warranty_report(
 
 
 # ============================================================================
+# KPIs DE TALLER
+# ============================================================================
+
+@router.get("/kpis/turnaround")
+def get_turnaround_stats(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("reports", "read"))
+):
+    """Tiempo promedio de resolución de OTs (intake → completion)."""
+    svc = ReportingService(db)
+    return svc.get_turnaround_stats()
+
+
+@router.get("/kpis/overdue")
+def get_overdue_repairs(
+    threshold_days: int = Query(30, ge=1, le=365),
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("reports", "read"))
+):
+    """OTs activas abiertas más de threshold_days días."""
+    svc = ReportingService(db)
+    return svc.get_overdue_repairs(threshold_days=threshold_days)
+
+
+@router.get("/kpis/lead-conversion")
+def get_lead_conversion(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("reports", "read"))
+):
+    """Tasa de conversión leads → reparaciones."""
+    svc = ReportingService(db)
+    return svc.get_lead_conversion()
+
+
+@router.get("/kpis/top-models")
+def get_top_models(
+    limit: int = Query(10, ge=1, le=50),
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("reports", "read"))
+):
+    """Modelos de equipos más reparados."""
+    svc = ReportingService(db)
+    return svc.get_top_models(limit=limit)
+
+
+@router.get("/kpis/client-return")
+def get_client_return_rate(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("reports", "read"))
+):
+    """Tasa de retorno de clientes (más de una OT)."""
+    svc = ReportingService(db)
+    return svc.get_client_return_rate()
+
+
+# ============================================================================
 # KPIs COMBINADOS (para widgets del dashboard)
 # ============================================================================
 
@@ -309,12 +365,22 @@ def get_kpis_summary(
     clients = svc.get_clients_report()
     inventory = svc.get_inventory_report()
     warranty = svc.get_warranty_report()
+    turnaround = svc.get_turnaround_stats()
+    overdue = svc.get_overdue_repairs()
+    lead_conv = svc.get_lead_conversion()
+    client_ret = svc.get_client_return_rate()
 
     return {
         # Reparaciones
         "total_repairs": dashboard["repairs"],
         "active_repairs": dashboard["active_repairs"],
         "repairs_this_month": dashboard["repairs_this_month"],
+
+        # KPIs de taller
+        "turnaround": turnaround,
+        "overdue": overdue,
+        "lead_conversion": lead_conv,
+        "client_return": client_ret,
 
         # Clientes
         "total_clients": clients["total_clients"],
