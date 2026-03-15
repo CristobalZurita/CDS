@@ -24,6 +24,18 @@ logger = logging.getLogger(__name__)
 
 # ── Transbank Webpay Plus ─────────────────────────────────────────────────────
 
+def _require_transbank_credentials() -> tuple[str, str]:
+    """Require explicit Transbank credentials for both integration and production."""
+    commerce_code = (settings.transbank_commerce_code or "").strip()
+    api_key = (settings.transbank_api_key or "").strip()
+    if commerce_code and api_key:
+        return commerce_code, api_key
+    raise RuntimeError(
+        "TRANSBANK_COMMERCE_CODE and TRANSBANK_API_KEY must be configured in .env "
+        "for the selected Transbank environment."
+    )
+
+
 def _transbank_create(
     amount: int,
     buy_order: str,
@@ -43,17 +55,17 @@ def _transbank_create(
             "transbank-sdk not installed. Run: pip install transbank-sdk"
         )
 
+    commerce_code, api_key = _require_transbank_credentials()
     if settings.transbank_environment == "production":
         options = WebpayOptions(
-            commerce_code=settings.transbank_commerce_code,
-            api_key=settings.transbank_api_key,
+            commerce_code=commerce_code,
+            api_key=api_key,
             integration_type=IntegrationType.LIVE,
         )
     else:
-        # Uses Transbank integration credentials automatically
         options = WebpayOptions(
-            commerce_code=settings.transbank_commerce_code or "597055555532",
-            api_key=settings.transbank_api_key or "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
+            commerce_code=commerce_code,
+            api_key=api_key,
             integration_type=IntegrationType.TEST,
         )
 
@@ -81,16 +93,17 @@ def _transbank_commit(token: str) -> Dict[str, Any]:
     except ImportError:
         raise RuntimeError("transbank-sdk not installed.")
 
+    commerce_code, api_key = _require_transbank_credentials()
     if settings.transbank_environment == "production":
         options = WebpayOptions(
-            commerce_code=settings.transbank_commerce_code,
-            api_key=settings.transbank_api_key,
+            commerce_code=commerce_code,
+            api_key=api_key,
             integration_type=IntegrationType.LIVE,
         )
     else:
         options = WebpayOptions(
-            commerce_code=settings.transbank_commerce_code or "597055555532",
-            api_key=settings.transbank_api_key or "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
+            commerce_code=commerce_code,
+            api_key=api_key,
             integration_type=IntegrationType.TEST,
         )
 
@@ -174,7 +187,7 @@ class PaymentGatewayService:
     @property
     def is_configured(self) -> bool:
         if self.gateway == "transbank":
-            return bool(settings.transbank_commerce_code or settings.transbank_environment == "integration")
+            return bool(settings.transbank_commerce_code and settings.transbank_api_key)
         if self.gateway == "mercadopago":
             return bool(settings.mercadopago_access_token)
         return False
