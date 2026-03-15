@@ -13,7 +13,7 @@ const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/dgwwi77ic/image/upload'
 // Cargar el mapeo de imágenes desde el archivo JSON
 const imageMap = new Map()
 try {
-  const mappingPath = resolve(__dirname, '../../image-mapping.json')
+  const mappingPath = resolve(__dirname, '../image-mapping.json')
   const imageMapping = JSON.parse(readFileSync(mappingPath, 'utf-8'))
   if (Array.isArray(imageMapping)) {
     for (const item of imageMapping) {

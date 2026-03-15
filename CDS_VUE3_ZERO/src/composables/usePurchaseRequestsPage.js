@@ -2,6 +2,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
 import { formatDate, formatCurrency } from '@/utils/format'
+import { normalizeClient } from '@/utils/api-helpers'
 
 const STATUS_OPTIONS = [
   'draft',
@@ -16,14 +17,6 @@ const STATUS_OPTIONS = [
   'applied_ot',
   'cancelled'
 ]
-
-function normalizeClient(entry) {
-  return {
-    id: Number(entry?.id || 0),
-    name: String(entry?.name || ''),
-    client_code: String(entry?.client_code || '')
-  }
-}
 
 function normalizeRepair(entry) {
   return {

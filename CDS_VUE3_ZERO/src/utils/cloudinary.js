@@ -3,7 +3,7 @@
  * ADITIVO: Convierte rutas locales a URLs de Cloudinary usando el mapeo
  */
 
-import imageMapping from '../../../image-mapping.json'
+import imageMapping from '../../image-mapping.json'
 
 const CLOUDINARY_CLOUD_NAME = 'dgwwi77ic'
 const CLOUDINARY_BASE_URL = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload`

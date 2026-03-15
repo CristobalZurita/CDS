@@ -4,7 +4,7 @@ Router de Reparaciones
 Endpoints para gestión de reparaciones.
 Usa permisos granulares (require_permission).
 """
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from app.models.repair import Repair, RepairStatus
@@ -512,6 +512,7 @@ def archive_repair(
 @router.post("/{repair_id}/notify")
 def notify_client(
     repair_id: int,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("repairs", "update"))
 ):
@@ -553,9 +554,10 @@ def notify_client(
     )
 
     if client.phone:
-        WhatsAppService().send_text(
+        background_tasks.add_task(
+            WhatsAppService().send_text,
             to_phone=client.phone,
-            message=f"Resumen OT {repair.repair_number}: {repair.problem_reported or 'SIN_DATO'}. Revisa el detalle en tu panel."
+            message=f"Resumen OT {repair.repair_number}: {repair.problem_reported or 'SIN_DATO'}. Revisa el detalle en tu panel.",
         )
 
     return {"ok": True}

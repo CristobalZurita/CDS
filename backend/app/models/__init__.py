@@ -40,6 +40,7 @@ from app.models.permission import Permission, Role, role_permissions, user_role_
 from app.models.invoice import Invoice, InvoiceItem, InvoiceSequence, InvoiceStatus, InvoiceType
 from app.models.warranty import Warranty, WarrantyClaim, WarrantyType, WarrantyStatus, ClaimStatus
 from app.models.media import MediaAsset, MediaBinding
+from app.models.lead import Lead
 
 __all__ = [
     "User", "UserRole",
@@ -86,4 +87,5 @@ __all__ = [
     "Invoice", "InvoiceItem", "InvoiceSequence", "InvoiceStatus", "InvoiceType",
     "Warranty", "WarrantyClaim", "WarrantyType", "WarrantyStatus", "ClaimStatus",
     "MediaAsset", "MediaBinding",
+    "Lead",
 ]

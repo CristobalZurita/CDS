@@ -18,6 +18,7 @@ const WizardsPage = () => import('@/pages/admin/WizardsPage.vue')
 const IntakeWizardPage = () => import('@/pages/admin/IntakeWizardPage.vue')
 const ArchivePage = () => import('@/pages/admin/ArchivePage.vue')
 const MediaPage = () => import('@/pages/admin/MediaPage.vue')
+const LeadsAdminPage = () => import('@/pages/admin/LeadsAdminPage.vue')
 
 export const adminRoutes = [
   {
@@ -63,6 +64,8 @@ export const adminRoutes = [
         meta: { title: 'Archivo' } },
       { path: 'media', name: 'admin-media', component: MediaPage,
         meta: { title: 'Gestión de Medios' } },
+      { path: 'leads', name: 'admin-leads', component: LeadsAdminPage,
+        meta: { title: 'Prospectos', subtitle: 'Leads del cotizador público' } },
     ]
   }
 ]

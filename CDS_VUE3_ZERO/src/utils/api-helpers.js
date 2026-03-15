@@ -72,3 +72,15 @@ export function simplifyHost(url) {
     return url
   }
 }
+
+/**
+ * Normaliza una entrada de cliente a forma canónica mínima
+ * ADITIVO: Extraído de useRepairsAdminPage.js y usePurchaseRequestsPage.js (idéntico en ambos)
+ */
+export function normalizeClient(entry) {
+  return {
+    id: Number(entry?.id || 0),
+    name: String(entry?.name || ''),
+    client_code: String(entry?.client_code || '')
+  }
+}

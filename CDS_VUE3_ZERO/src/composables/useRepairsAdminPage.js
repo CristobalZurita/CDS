@@ -2,6 +2,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
 import { formatDate } from '@/utils/format'
+import { normalizeClient } from '@/utils/api-helpers'
 
 function normalizeRepair(entry) {
   return {
@@ -16,14 +17,6 @@ function normalizeRepair(entry) {
     problem_reported: String(entry?.problem_reported || ''),
     created_at: entry?.created_at || null,
     archived_at: entry?.archived_at || null
-  }
-}
-
-function normalizeClient(entry) {
-  return {
-    id: Number(entry?.id || 0),
-    name: String(entry?.name || ''),
-    client_code: String(entry?.client_code || '')
   }
 }
 

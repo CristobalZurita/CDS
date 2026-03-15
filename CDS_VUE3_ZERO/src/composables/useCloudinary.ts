@@ -3,7 +3,7 @@
  * Resuelve rutas locales /images/* a URLs Cloudinary.
  */
 
-import mapping from '../../../image-mapping.json'
+import mapping from '../../image-mapping.json'
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/dgwwi77ic/image/upload'
 

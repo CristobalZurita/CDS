@@ -2,7 +2,7 @@
 API routes for diagnostic and quotation system
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from typing import List, Optional
@@ -915,6 +915,7 @@ async def update_quote_status(
 async def send_quote(
     quote_id: int,
     payload: dict,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("update")),
 ):
@@ -977,15 +978,17 @@ async def send_quote(
         else:
             failed_to.append(email)
 
-    whatsapp_sent = False
+    whatsapp_queued = False
     if payload.get("send_whatsapp", False) and client and client.phone:
-        whatsapp_sent = WhatsAppService().send_text(
+        background_tasks.add_task(
+            WhatsAppService().send_text,
             to_phone=client.phone,
             message=(
                 f"Cotización {quote.quote_number}: total estimado ${quote.estimated_total or 0:,.0f} CLP. "
                 f"Revisa tu correo para el detalle."
             ),
         )
+        whatsapp_queued = True
 
     if quote.status == QuoteStatus.PENDING:
         quote.status = QuoteStatus.SENT
@@ -1003,7 +1006,7 @@ async def send_quote(
                 "quote_number": quote.quote_number,
                 "sent_to": sent_to,
                 "failed_to": failed_to,
-                "whatsapp_sent": whatsapp_sent,
+                "whatsapp_queued": whatsapp_queued,
             },
             message=f"Quote {quote.quote_number} sent",
         )
@@ -1030,7 +1033,7 @@ async def send_quote(
         "quote": serialize_quote(quote, client),
         "sent_to": sent_to,
         "failed_to": failed_to,
-        "whatsapp_sent": whatsapp_sent,
+        "whatsapp_queued": whatsapp_queued,
     }
 
 

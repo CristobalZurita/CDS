@@ -137,8 +137,11 @@ if contact_router:
 	api_router.include_router(contact_router.router)
 if globals().get("diagnostic_router"):
 	api_router.include_router(globals()["diagnostic_router"].router)
-if globals().get("quotation_router"):
-	api_router.include_router(globals()["quotation_router"].router)
+# DESACTIVADO: quotation_router lee src/assets/data/*.json (estructura L, movida a RESTO).
+# El endpoint canónico de cotización es /api/v1/diagnostic/calculate (diagnostic_router).
+# La lógica guiada de quotation.py se migrará a quote_calculator_service.py cuando sea necesario.
+# if globals().get("quotation_router"):
+# 	api_router.include_router(globals()["quotation_router"].router)
 if globals().get("payments_router"):
 	api_router.include_router(globals()["payments_router"].router)
 if globals().get("appointment_router"):
@@ -188,5 +191,12 @@ except Exception:
 try:
 	from app.routers import media as media_router
 	api_router.include_router(media_router.router)
+except Exception:
+	pass
+
+# ADITIVO: Router para leads del cotizador público (NOT-clientes)
+try:
+	from app.routers import leads as leads_router
+	api_router.include_router(leads_router.router)
 except Exception:
 	pass

@@ -4,12 +4,12 @@ Handles appointment booking and management
 """
 
 import os
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 
-from app.core.database import get_db
+from app.core.database import get_db, SessionLocal
 from app.core.ratelimit import limiter
 from app.core.dependencies import require_permission
 from app.crud.appointment import (
@@ -37,6 +37,28 @@ except Exception:
 router = APIRouter(prefix="/appointments", tags=["appointments"])
 
 
+async def _bg_sync_calendar(appointment_id: int) -> None:
+    """Sincroniza una cita con Google Calendar en background (sesión propia)."""
+    if not sync_to_google_calendar:
+        return
+    db = SessionLocal()
+    try:
+        db_appointment = await get_appointment(db, appointment_id)
+        if not db_appointment:
+            return
+        calendar_id = await sync_to_google_calendar(db_appointment)
+        if calendar_id:
+            await update_appointment(
+                db,
+                appointment_id,
+                AppointmentUpdate(google_calendar_id=calendar_id),
+            )
+    except Exception as e:
+        print(f"Error syncing to Google Calendar (background): {e}")
+    finally:
+        db.close()
+
+
 def _should_skip_turnstile() -> bool:
     env = str(os.getenv("ENVIRONMENT") or "").strip().lower()
     return os.getenv("TURNSTILE_DISABLE", "false").lower() == "true" or env in {"test", "testing"}
@@ -47,11 +69,12 @@ def _should_skip_turnstile() -> bool:
 async def create_appointment_endpoint(
     appointment: AppointmentCreate,
     request: Request,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db)
 ):
     """
     Create a new appointment booking.
-    
+
     - **nombre**: Customer full name (letters, accents, Ñ only)
     - **email**: Valid email address
     - **telefono**: Phone number starting with + followed by digits
@@ -67,36 +90,19 @@ async def create_appointment_endpoint(
 
         # Create appointment in database
         db_appointment = await create_appointment(db, appointment)
-        
-        # Send confirmation email
-        try:
-            await send_appointment_confirmation(
-                email=db_appointment.email,
-                nombre=db_appointment.nombre,
-                fecha=db_appointment.fecha,
-                appointment_id=db_appointment.id
-            )
-        except Exception as e:
-            print(f"Error sending email: {e}")
-            # Don't fail the appointment creation if email fails
-        
-        # Sync to Google Calendar
-        if sync_to_google_calendar:
-            try:
-                calendar_id = await sync_to_google_calendar(db_appointment)
-                if calendar_id:
-                    db_appointment.google_calendar_id = calendar_id
-                    await update_appointment(
-                        db,
-                        db_appointment.id,
-                        AppointmentUpdate(google_calendar_id=calendar_id)
-                    )
-            except Exception as e:
-                print(f"Error syncing to Google Calendar: {e}")
-                # Don't fail the appointment creation if calendar sync fails
-        
+
+        # Email y calendar en background — no bloquean la respuesta HTTP
+        background_tasks.add_task(
+            send_appointment_confirmation,
+            email=db_appointment.email,
+            nombre=db_appointment.nombre,
+            fecha=db_appointment.fecha,
+            appointment_id=db_appointment.id,
+        )
+        background_tasks.add_task(_bg_sync_calendar, db_appointment.id)
+
         return db_appointment
-    
+
     except HTTPException:
         raise
     except Exception as e:
