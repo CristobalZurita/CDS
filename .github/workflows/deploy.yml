@@ -100,7 +100,7 @@ jobs:
             type=sha,prefix={{branch}}-
       
       - name: Build and push backend image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v7
         with:
           context: ./backend
           push: ${{ github.event_name != 'pull_request' && steps.deploy-mode.outputs.enabled == 'true' }}
