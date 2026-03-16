@@ -15,8 +15,9 @@ logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 SYNC_SCRIPT_PATH = PROJECT_ROOT / "scripts" / "sync_instruments.py"
-INSTRUMENTS_JSON_PATH = PROJECT_ROOT / "src" / "data" / "instruments.json"
-SYNC_METADATA_PATH = PROJECT_ROOT / "src" / "data" / ".sync_metadata.json"
+_APP_DATA = Path(__file__).resolve().parents[1] / "data"
+INSTRUMENTS_JSON_PATH = _APP_DATA / "instruments.json"
+SYNC_METADATA_PATH = _APP_DATA / ".sync_metadata.json"
 
 
 def _read_json(path: Path) -> Dict[str, Any]:

@@ -100,12 +100,12 @@ class ReportingService:
 
     def _get_revenue_stats(self, start_of_month: datetime) -> Dict[str, Any]:
         """Estadísticas de ingresos"""
-        # Total facturado (solo pagadas)
+        # Total facturado (Invoices PAID)
         total_invoiced = self.db.query(func.sum(Invoice.total)).filter(
             Invoice.status == InvoiceStatus.PAID.value
         ).scalar() or 0
 
-        # Este mes
+        # Este mes (Invoices PAID)
         invoiced_this_month = self.db.query(func.sum(Invoice.total)).filter(
             Invoice.status == InvoiceStatus.PAID.value,
             Invoice.paid_at >= start_of_month
@@ -117,10 +117,23 @@ class ReportingService:
                                InvoiceStatus.PARTIAL.value, InvoiceStatus.OVERDUE.value])
         ).scalar() or 0
 
+        # Pagos cobrados reales (Payment.status == success) — refleja dinero real recibido
+        # aunque no haya Invoices emitidas
+        payments_collected = self.db.query(func.sum(Payment.amount)).filter(
+            Payment.status == "success"
+        ).scalar() or 0
+
+        payments_this_month = self.db.query(func.sum(Payment.amount)).filter(
+            Payment.status == "success",
+            Payment.created_at >= start_of_month
+        ).scalar() or 0
+
         return {
             "total_invoiced": total_invoiced,
             "invoiced_this_month": invoiced_this_month,
-            "pending_collection": pending_collection
+            "pending_collection": pending_collection,
+            "payments_collected": payments_collected,
+            "payments_this_month": payments_this_month,
         }
 
     def _get_alerts(self) -> List[Dict[str, Any]]:

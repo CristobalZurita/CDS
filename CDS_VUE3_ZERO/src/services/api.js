@@ -129,7 +129,7 @@ export async function login(payload) {
 }
 
 export async function verifyTwoFactor(payload) {
-  const { data } = await api.post('/auth/2fa/verify', payload)
+  const { data } = await api.post('/auth/verify-2fa', payload)
   return data
 }
 
@@ -149,12 +149,12 @@ export async function logout() {
 }
 
 export async function requestPasswordReset(payload) {
-  const { data } = await api.post('/auth/password-reset/request', payload)
+  const { data } = await api.post('/auth/forgot-password', payload)
   return data
 }
 
 export async function confirmPasswordReset(payload) {
-  const { data } = await api.post('/auth/password-reset/confirm', payload)
+  const { data } = await api.post('/auth/reset-password', payload)
   return data
 }
 

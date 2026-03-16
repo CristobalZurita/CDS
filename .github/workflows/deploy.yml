@@ -42,19 +42,21 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
+        working-directory: CDS_VUE3_ZERO
         run: npm ci
-      
+
       - name: Build
+        working-directory: CDS_VUE3_ZERO
         run: npm run build
         env:
           VITE_API_URL: ${{ secrets.API_URL || 'http://localhost:8000/api/v1' }}
           VITE_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
-      
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          path: dist/
+          path: CDS_VUE3_ZERO/dist/
 
   build-backend:
     name: Build Backend

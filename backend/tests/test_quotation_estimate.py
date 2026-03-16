@@ -17,12 +17,20 @@ os.environ["TURNSTILE_DISABLE"] = "true"
 from app.main import app
 from app.routers.quotation import INSTRUMENTS
 
+# Guard: si no hay instrumentos sin "rack" en el modelo, saltear todo el módulo.
+_candidates = [
+    iid
+    for iid, inst in INSTRUMENTS.items()
+    if "rack" not in str(inst.get("model") or "").lower()
+]
+if not _candidates:
+    import pytest
+    pytest.skip(
+        "No hay instrumentos no-rack en INSTRUMENTS — instrumentos.json vacío o no disponible.",
+        allow_module_level=True,
+    )
 
-INSTRUMENT_ID = next(
-    instrument_id
-    for instrument_id, instrument in INSTRUMENTS.items()
-    if "rack" not in str(instrument.get("model") or "").lower()
-)
+INSTRUMENT_ID = _candidates[0]
 
 
 def test_guided_estimate_blocks_downstream_branches_when_instrument_has_no_power():

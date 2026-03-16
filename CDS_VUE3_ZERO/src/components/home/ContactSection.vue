@@ -26,6 +26,8 @@
               <textarea id="cf-message" v-model="form.message" rows="5" placeholder="Describe tu consulta..." required></textarea>
             </div>
 
+            <TurnstileWidget @verify="t => form.turnstile_token = t" />
+
             <p v-if="formError" class="form-msg form-msg-error">
               <i class="fas fa-triangle-exclamation"></i> {{ formError }}
             </p>
@@ -77,8 +79,9 @@
 <script setup>
 import { ref } from 'vue'
 import api from '@/services/api'
+import TurnstileWidget from '@/components/widgets/TurnstileWidget.vue'
 
-const form = ref({ name: '', email: '', subject: '', message: '' })
+const form = ref({ name: '', email: '', subject: '', message: '', turnstile_token: '' })
 const formSending = ref(false)
 const formSuccess = ref(false)
 const formError = ref('')
@@ -99,9 +102,10 @@ async function submitContact() {
       email: form.value.email,
       subject: form.value.subject,
       message: form.value.message,
+      turnstile_token: form.value.turnstile_token,
     })
     formSuccess.value = true
-    form.value = { name: '', email: '', subject: '', message: '' }
+    form.value = { name: '', email: '', subject: '', message: '', turnstile_token: '' }
   } catch {
     formError.value = 'Error al enviar el mensaje. Intenta de nuevo o contáctanos por WhatsApp.'
   } finally {

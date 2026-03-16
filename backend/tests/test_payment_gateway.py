@@ -56,14 +56,15 @@ def test_initiate_nonexistent_payment(test_client, admin_token):
 
 def test_initiate_gateway_not_configured(test_client, admin_token, db):
     """Con gateway vacío y Payment real → 503 (gateway no configurado)."""
+    import time
     import app.routers.payment_gateway as gw_mod
     from app.models.payment import Payment, PaymentStatus
 
-    # Crear un Payment de prueba
+    # Crear un Payment de prueba (transaction_id único por ejecución)
     pay = Payment(
         amount=5000,
         payment_method="card",
-        transaction_id=f"test-gw-001",
+        transaction_id=f"test-gw-{int(time.time() * 1000)}",
         status=PaymentStatus.PENDING,
         currency="CLP",
     )

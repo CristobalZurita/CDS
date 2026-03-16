@@ -1,4 +1,6 @@
 import io
+import os
+import pytest
 from pathlib import Path
 
 
@@ -6,6 +8,19 @@ def _auth_headers(token: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {token}"}
 
 
+def _cloudinary_active() -> bool:
+    """Retorna True si Cloudinary está configurado en este entorno."""
+    try:
+        from app.services.cloudinary_service import is_cloudinary_enabled
+        return is_cloudinary_enabled()
+    except Exception:
+        return bool(os.getenv("CLOUDINARY_URL"))
+
+
+@pytest.mark.skipif(
+    _cloudinary_active(),
+    reason="Cloudinary activo: test diseñado para almacenamiento local.",
+)
 def test_upload_valid_image(test_client, customer_token):
     img = io.BytesIO()
     # create a small PNG via bytes (header only)
@@ -19,6 +34,10 @@ def test_upload_valid_image(test_client, customer_token):
     Path("uploads/images/test.png").unlink(missing_ok=True)
 
 
+@pytest.mark.skipif(
+    _cloudinary_active(),
+    reason="Cloudinary activo: test diseñado para almacenamiento local.",
+)
 def test_upload_inventory_image_returns_public_path(test_client, admin_token):
     img = io.BytesIO()
     img.write(b"RIFF\x18\x00\x00\x00WEBPVP8 \x0c\x00\x00\x000000000000")

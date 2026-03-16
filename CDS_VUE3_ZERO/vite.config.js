@@ -16,6 +16,16 @@ export default defineConfig({
       { find: '@', replacement: localSrc },
     ],
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-charts': ['apexcharts', 'vue3-apexcharts'],
+          'vendor-vue': ['vue', 'vue-router', 'pinia'],
+        },
+      },
+    },
+  },
   server: {
     host: '0.0.0.0',
     port: 5174,

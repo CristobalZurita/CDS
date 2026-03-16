@@ -1,9 +1,19 @@
 import io
+import os
+import pytest
 from pathlib import Path
 from fastapi.testclient import TestClient
 import importlib
 import app.main as _main
 import app.core.database as _db_core
+
+
+def _cloudinary_active() -> bool:
+    try:
+        from app.services.cloudinary_service import is_cloudinary_enabled
+        return is_cloudinary_enabled()
+    except Exception:
+        return bool(os.getenv("CLOUDINARY_URL"))
 
 importlib.reload(_main)
 app = _main.app
@@ -72,6 +82,10 @@ def test_repair_crud_audit():
     assert rec is not None and rec.details.get("repair_id") == rid
 
 
+@pytest.mark.skipif(
+    _cloudinary_active(),
+    reason="Cloudinary activo: test diseñado para almacenamiento local.",
+)
 def test_upload_image_creates_audit(tmp_path, customer_token):
     importlib.reload(_main)
     client = TestClient(_main.app)

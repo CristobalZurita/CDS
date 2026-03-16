@@ -4,7 +4,7 @@ import json
 
 router = APIRouter(prefix="/instruments", tags=["instruments"]) 
 
-DATA_FILE = Path(__file__).resolve().parents[5] / "src" / "data" / "instruments.json"
+DATA_FILE = Path(__file__).resolve().parents[3] / "data" / "instruments.json"
 
 
 def load_instruments_data() -> dict:

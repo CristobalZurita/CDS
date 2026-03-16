@@ -5,7 +5,7 @@ from pathlib import Path
 
 router = APIRouter(prefix="/brands", tags=["brands"])
 
-DATA_PATH = Path(__file__).resolve().parents[5] / "src" / "assets" / "data"
+DATA_PATH = Path(__file__).resolve().parents[3] / "data"
 
 @router.get("/", response_model=List[dict])
 async def list_brands():

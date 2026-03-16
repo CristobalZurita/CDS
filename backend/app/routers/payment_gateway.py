@@ -21,6 +21,7 @@ from typing import Dict
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.dependencies import require_permission
 from app.models.payment import Payment, PaymentStatus
@@ -162,8 +163,6 @@ async def mercadopago_ipn(request: Request, db: Session = Depends(get_db)):
     Verifies signature via MERCADOPAGO_WEBHOOK_SECRET if configured,
     then updates the corresponding Payment row.
     """
-    from app.core.config import settings
-
     try:
         body = await request.json()
     except Exception:

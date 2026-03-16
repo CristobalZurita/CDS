@@ -79,7 +79,7 @@ fi
 
 echo
 echo "==> Playwright integration flow"
-if (cd "$ROOT_DIR" && npm run test:e2e -- tests/e2e/integration-flows.spec.ts); then
+if (cd "$ROOT_DIR/CDS_VUE3_ZERO" && npm run test:e2e -- tests/e2e/integration-flows.spec.ts); then
   E2E_STATUS=0
 else
   E2E_STATUS=$?

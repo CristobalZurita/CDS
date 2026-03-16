@@ -12,7 +12,7 @@ router = APIRouter(prefix="/quotations", tags=["quotations"])
 # Load data from frontend data assets so quotation logic uses same dataset
 # DATA_PATH should point to the frontend data folder within the project
 # The module sits at backend/app/routers, so parents[3] resolves to the project root
-DATA_PATH = Path(__file__).resolve().parents[3] / "src" / "assets" / "data"
+DATA_PATH = Path(__file__).resolve().parents[1] / "data"
 
 def _load_json(name: str):
     try:

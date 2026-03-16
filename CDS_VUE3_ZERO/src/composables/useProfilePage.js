@@ -191,16 +191,16 @@ export function useProfilePage() {
     resetMessages()
 
     if (!passwordForm.value.current || !passwordForm.value.next || !passwordForm.value.confirm) {
-      error.value = 'Completa todos los campos de contrasena.'
+      error.value = 'Completa todos los campos de contraseña.'
       return
     }
 
     if (passwordForm.value.next !== passwordForm.value.confirm) {
-      error.value = 'Las contrasenas no coinciden.'
+      error.value = 'Las contraseñas no coinciden.'
       return
     }
 
-    success.value = 'Cambio de contrasena registrado. (Integracion backend pendiente)'
+    error.value = 'El cambio de contraseña no está disponible en esta versión. Usa "Olvidé mi contraseña" desde el inicio de sesión.'
     showChangePassword.value = false
     passwordForm.value = { current: '', next: '', confirm: '' }
     showPassword.value = false
@@ -208,7 +208,7 @@ export function useProfilePage() {
 
   function deleteAccount() {
     resetMessages()
-    success.value = 'Solicitud de eliminacion registrada. (Flujo backend pendiente)'
+    error.value = 'La eliminación de cuenta no está disponible en esta versión. Contáctanos directamente.'
     showDeleteAccount.value = false
   }
 

@@ -212,12 +212,21 @@ def _build_repair_closure_payload(repair: Repair, db: Session) -> Dict:
 @router.get("")
 @router.get("/")
 def list_repairs(
+    limit: int | None = None,
+    sort: str | None = None,
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("repairs", "read"))
 ):
     _auto_archive_repairs(db)
     repairs = RepairReadService(db).list_active()
-    return [_repair_payload(repair, db) for repair in repairs]
+    result = [_repair_payload(repair, db) for repair in repairs]
+    if sort == '-created_at':
+        result.sort(key=lambda r: r.get('created_at') or '', reverse=True)
+    elif sort == 'created_at':
+        result.sort(key=lambda r: r.get('created_at') or '')
+    if limit is not None and limit > 0:
+        result = result[:limit]
+    return result
 
 
 @router.get("/archived")
