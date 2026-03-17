@@ -116,7 +116,7 @@
     <section class="charts-grid">
       <article class="panel-card chart-card" v-if="repairsTimeline.length > 0">
         <h2>OTs últimos 30 días</h2>
-        <apexchart
+        <VueApexCharts
           type="area"
           height="220"
           :options="repairsChartOptions"
@@ -126,7 +126,7 @@
 
       <article class="panel-card chart-card" v-if="revenueTimeline.length > 0">
         <h2>Ingresos últimos 12 meses</h2>
-        <apexchart
+        <VueApexCharts
           type="bar"
           height="220"
           :options="revenueChartOptions"
@@ -136,7 +136,7 @@
 
       <article class="panel-card chart-card" v-if="kpiTopModels.length > 0">
         <h2>Top modelos reparados</h2>
-        <apexchart
+        <VueApexCharts
           type="bar"
           height="220"
           :options="topModelsChartOptions"
@@ -149,6 +149,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import VueApexCharts from 'vue3-apexcharts'
 import { useStatsPage } from '@/composables/useStatsPage'
 
 const {
@@ -175,7 +176,7 @@ const {
 // ── Chart: OTs timeline (area) ───────────────────────────────────────────────
 const repairsChartOptions = computed(() => ({
   chart: { toolbar: { show: false }, sparkline: { enabled: false } },
-  colors: ['var(--cds-primary)', '#9ca3af'],
+  colors: ['var(--cds-primary)', 'var(--cds-light-5)'],
   stroke: { curve: 'smooth', width: 2 },
   fill: { opacity: 0.15 },
   xaxis: {
@@ -195,7 +196,7 @@ const repairsChartSeries = computed(() => [
 // ── Chart: Revenue timeline (bar) ────────────────────────────────────────────
 const revenueChartOptions = computed(() => ({
   chart: { toolbar: { show: false } },
-  colors: ['var(--cds-primary)', '#9ca3af'],
+  colors: ['var(--cds-primary)', 'var(--cds-light-5)'],
   plotOptions: { bar: { borderRadius: 4, columnWidth: '55%' } },
   xaxis: {
     categories: revenueTimeline.value.map(d => d.month),
@@ -238,11 +239,8 @@ const topModelsChartSeries = computed(() => [
 
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-.stat-card { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); padding: .8rem; display: grid; gap: .2rem; }
 .stat-label { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
 .stat-value { font-size: var(--cds-text-2xl); }
-.cards-grid { display: grid; gap: .7rem; grid-template-columns: repeat(1,minmax(0,1fr)); }
-.panel-grid { display: grid; gap: .7rem; grid-template-columns: repeat(1,minmax(0,1fr)); }
 .panel-card h2 { margin: 0 0 .45rem; }
 .panel-card ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .35rem; }
 .panel-card li { display: flex; justify-content: space-between; gap: .55rem; }

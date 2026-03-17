@@ -24,7 +24,6 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            'vendor-charts': ['apexcharts', 'vue3-apexcharts'],
             'vendor-vue': ['vue', 'vue-router', 'pinia'],
           },
         },
