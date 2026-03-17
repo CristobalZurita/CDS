@@ -60,3 +60,4 @@ def test_openapi_marks_quotation_as_canonical_and_diagnostic_as_compatibility(te
     assert paths["/api/v1/diagnostic/quotes"]["get"]["deprecated"] is True
     assert paths["/api/v1/diagnostic/quotes"]["post"]["deprecated"] is True
     assert paths["/api/v1/diagnostic/quotes/board"]["get"]["deprecated"] is True
+    assert paths["/api/v1/ai/analyze"]["post"]["deprecated"] is True

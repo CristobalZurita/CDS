@@ -9,7 +9,12 @@ from app.core.ratelimit import limiter
 router = APIRouter(prefix="/ai", tags=["ai"])
 
 
-@router.post("/analyze", summary="Análisis experimental de imagen", description="Endpoint aislado de IA. No participa del flujo público canónico del cotizador.")
+@router.post(
+    "/analyze",
+    summary="Análisis experimental de imagen",
+    description="Endpoint aislado de IA. No participa del flujo público canónico del cotizador.",
+    deprecated=True,
+)
 @limiter.limit("10/minute")
 def analyze(payload: dict, request: Request):
     image_url = payload.get("image_url") or payload.get("image") or ""

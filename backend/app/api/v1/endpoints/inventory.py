@@ -27,14 +27,14 @@ def _serialize_item_summary(product: Product, category_name: Optional[str] = Non
 	)
 
 
-@router.get('', response_model=List[ItemSummary])
+@router.get('', response_model=List[ItemSummary], deprecated=True)
 def list_items(
 	limit: int = Query(20, ge=1, le=200),
 	page: int = Query(1, ge=1),
 	category: Optional[str] = None,
 	db: Session = Depends(get_db),
 ):
-	"""List items from the current database-backed inventory."""
+	"""Compatibility list endpoint. Canonical inventory flow lives under /inventory."""
 	query = db.query(Product, Category.name).join(Category, Product.category_id == Category.id)
 	if category:
 		query = query.filter(Category.name.ilike(f"%{category}%"))
@@ -50,7 +50,7 @@ def list_items(
 	return [_serialize_item_summary(product, category_name) for product, category_name in rows]
 
 
-@router.get('/{item_id}', response_model=ItemSummary)
+@router.get('/{item_id}', response_model=ItemSummary, deprecated=True)
 def get_item(item_id: int, db: Session = Depends(get_db)):
 	row = (
 		db.query(Product, Category.name)
@@ -68,7 +68,7 @@ def get_item(item_id: int, db: Session = Depends(get_db)):
 # CRUD ENDPOINTS - Database-backed (Product model)
 # ============================================================================
 
-@router.post('', response_model=ProductResponse, status_code=status.HTTP_201_CREATED)
+@router.post('', response_model=ProductResponse, status_code=status.HTTP_201_CREATED, deprecated=True)
 def create_item(data: ProductCreate, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
 	"""
 	Crear nuevo producto en inventario.
@@ -92,7 +92,7 @@ def create_item(data: ProductCreate, db: Session = Depends(get_db), user: dict =
 	)
 
 
-@router.put('/{item_id}', response_model=ProductResponse)
+@router.put('/{item_id}', response_model=ProductResponse, deprecated=True)
 def update_item(item_id: int, data: ProductUpdate, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
 	"""
 	Actualizar producto existente.
@@ -107,7 +107,7 @@ def update_item(item_id: int, data: ProductUpdate, db: Session = Depends(get_db)
 	return update_product_record(db, product, data.model_dump(exclude_unset=True))
 
 
-@router.delete('/{item_id}', status_code=status.HTTP_200_OK)
+@router.delete('/{item_id}', status_code=status.HTTP_200_OK, deprecated=True)
 def delete_item(item_id: int, db: Session = Depends(get_db), user: dict = Depends(get_current_user)):
 	"""
 	Eliminar producto del inventario.

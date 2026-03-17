@@ -14,7 +14,7 @@ from app.services.cloudinary_service import (
 router = APIRouter(prefix="/images", tags=["images"])
 
 
-@router.get("/catalog")
+@router.get("/catalog", deprecated=True)
 def get_image_catalog():
     """
     Obtiene catálogo completo de imágenes desde Cloudinary.
@@ -27,7 +27,7 @@ def get_image_catalog():
     }
 
 
-@router.get("/resolve")
+@router.get("/resolve", deprecated=True)
 def resolve_image(
     path: str = Query(..., description="Ruta local de la imagen, ej: /images/INVENTARIO/foto.webp")
 ):
@@ -43,7 +43,7 @@ def resolve_image(
     }
 
 
-@router.post("/resolve-batch")
+@router.post("/resolve-batch", deprecated=True)
 def resolve_images_batch(paths: List[str]):
     """
     Resuelve múltiples rutas locales a URLs de Cloudinary.
@@ -60,7 +60,7 @@ def resolve_images_batch(paths: List[str]):
     }
 
 
-@router.get("/search")
+@router.get("/search", deprecated=True)
 def search_image(
     name: str = Query(..., description="Nombre base de la imagen sin extensión")
 ):
