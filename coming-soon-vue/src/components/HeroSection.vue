@@ -418,12 +418,16 @@ function drawWave(ctx, W, H, elapsed, primaryHex) {
   // PWM duty continuo
   const duty = 0.5 + 0.35 * Math.sin(elapsed * 1.2)
 
-  // Noise y S&H: estables por episodio — se regeneran solo al cambiar de onda
-  const isNewEp = oscEpStart !== oscPrevEpStart || !oscEpisodeNoise || oscEpisodeNoise.length !== W
-  if (isNewEp) {
+  // Noise y S&H: estables por episodio
+  // shValues NO se regeneran cuando el episodio que arranca ES sh —
+  // los valores del episodio anterior ya fueron usados en el morph → continuidad perfecta
+  const isNewEp = oscEpStart !== oscPrevEpStart || !oscEpisodeNoise
+  if (isNewEp || (oscEpisodeNoise && oscEpisodeNoise.length !== W)) {
     oscPrevEpStart  = oscEpStart
     oscEpisodeNoise = Float32Array.from({ length: W }, () => Math.random() * 2 - 1)
-    oscEpisodeShN   = Math.max(4, Math.round(freq * 4))
+  }
+  if (isNewEp && WAVEFORMS[oscCurIdx].id !== 'sh') {
+    oscEpisodeShN = Math.max(4, Math.round(freq * 4))
     buildSH(oscEpisodeShN)
   }
   const shN      = oscEpisodeShN
@@ -448,15 +452,16 @@ function drawWave(ctx, W, H, elapsed, primaryHex) {
   ctx.lineJoin = isSharp ? 'miter' : 'round'
   ctx.lineCap  = 'round'
 
+  // scroll: triangle wave lineal — cada tramo dura lo mismo (izq→cent→der→cent→izq)
+  const _tN   = (elapsed * 0.35 / (Math.PI * 2)) % 1
+  const scroll = (_tN < 0.5 ? _tN * 2 - 0.5 : 1.5 - _tN * 2)
   ctx.beginPath()
   for (let x = 0; x <= W; x++) {
-    const dist = Math.abs(x - W / 2) / (W / 2)   // 0 en centro → 1 en bordes
-    const t    = dist * freq
-    const p    = t % 1
-    const yA  = waveY(curType,  p, duty, shN, noiseArr)
-    const yB  = waveY(nextType, p, duty, shN, noiseArr)
-    const yn  = lerp(yA, yB, morphT)
-    const y   = H / 2 - yn * amp
+    const p  = (((x / W) + scroll) * freq % 1 + 1) % 1
+    const yA = waveY(curType,  p, duty, shN, noiseArr)
+    const yB = waveY(nextType, p, duty, shN, noiseArr)
+    const yn = lerp(yA, yB, morphT)
+    const y  = H / 2 - yn * amp
     x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
   }
   ctx.stroke()
@@ -672,7 +677,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
   padding: 0.75rem 1.5rem;
   border-radius: var(--cds-radius-pill);
   font-family: var(--cds-font-family-base);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -682,7 +687,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
 .btn:hover  { transform: translateY(-2px); opacity: 0.88; }
 .btn:active { transform: translateY(0); }
 .btn-wa   { background: var(--cds-whatsapp); color: var(--cds-white); }
-.btn-dark { background: var(--cds-dark);     color: var(--cds-light); }
+.btn-dark { background: var(--cds-primary);     color: var(--cds-light); }
 
 /* ─── Entrada ───────────────────────────────────── */
 @keyframes fadeUp {
@@ -690,10 +695,15 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ─── Mobile ────────────────────────────────────── */
-@media (max-width: 600px) {
-  .hero-title   { white-space: normal; font-size: clamp(9vw, 12vw, 5rem); }
-  .hero-actions { flex-direction: column; align-items: center; }
+/* ─── Tablet (600–899px) ────────────────────────── */
+@media (min-width: 600px) and (max-width: 899px) {
+  .hero-title { white-space: normal; font-size: clamp(5vw, 7vw, 4.5rem); }
+}
+
+/* ─── Mobile (<600px) ───────────────────────────── */
+@media (max-width: 599px) {
+  .hero-title    { white-space: normal; font-size: clamp(9vw, 12vw, 5rem); }
+  .hero-actions  { flex-direction: column; align-items: center; }
   .services-type { letter-spacing: 0.12em; }
 }
 </style>

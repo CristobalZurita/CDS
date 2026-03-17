@@ -337,8 +337,8 @@ async function submitForm() {
       "title  form"
       "lead   form"
       "direct form";
-    column-gap: 4rem;
-    row-gap: 1.8rem;
+    column-gap: var(--cds-space-xl);
+    row-gap: var(--cds-space-md);
     align-items: start;
   }
   .contact-title  { grid-area: title; }
