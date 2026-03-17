@@ -13,8 +13,8 @@ def test_resolve_cloudinary_config_accepts_explicit_env(monkeypatch):
 
     assert config == {
         "cloud_name": "demo-cloud",
-        "api_key": "demo-key",
-        "api_secret": "demo-secret",
+        "api_key": "demo-key",          # pragma: allowlist secret
+        "api_secret": "demo-secret",    # pragma: allowlist secret
     }
 
 
@@ -22,7 +22,7 @@ def test_resolve_cloudinary_config_accepts_cloudinary_url(monkeypatch):
     monkeypatch.delenv("CLOUDINARY_CLOUD_NAME", raising=False)
     monkeypatch.delenv("CLOUDINARY_API_KEY", raising=False)
     monkeypatch.delenv("CLOUDINARY_API_SECRET", raising=False)
-    monkeypatch.setenv("CLOUDINARY_URL", "cloudinary://demo-key:demo-secret@demo-cloud")
+    monkeypatch.setenv("CLOUDINARY_URL", "cloudinary://demo-key:demo-secret@demo-cloud")  # pragma: allowlist secret
 
     config = cloudinary_service.resolve_cloudinary_config()
 
