@@ -1,6 +1,6 @@
 # Cirujano de Sintetizadores (CDS)
 
-Estado auditado: 2026-03-15 · Rama activa: `CDS_ZERO`
+Estado auditado: 2026-03-17 · Rama activa: `CDS_ZERO`
 
 ---
 
@@ -19,7 +19,23 @@ Plataforma de taller para reparación de sintetizadores e instrumentos electrón
 
 ---
 
-## 2. Estructura del repositorio
+## 2. Estado actual del sistema
+
+Hoy CDS se entrega y despliega como un monolito modular con estas fuentes de verdad:
+
+- Frontend activo único: `CDS_VUE3_ZERO`
+- Backend activo único: `backend/` con FastAPI
+- Cotizador público canónico: `/api/v1/quotations/*`
+- `diagnostic` queda para compatibilidad diagnóstica/interna y rutas legacy deprecadas
+- Media canónica: `/api/v1/media/*` con Cloudinary como fuente real
+- `images` queda como compatibilidad legacy deprecada
+- Inventario canónico: `/api/v1/inventory/*`
+- `/items/*` queda como compatibilidad legacy deprecada
+- La ruta futura a microservicios está documentada en `MICROS.md`, pero no es la fase actual de entrega
+
+---
+
+## 3. Estructura del repositorio
 
 ```
 raiz/
@@ -33,17 +49,17 @@ raiz/
 
 ---
 
-## 3. Frontend — CDS_VUE3_ZERO
+## 4. Frontend — CDS_VUE3_ZERO
 
-### 3.1 Stack
+### 4.1 Stack
 
 - Vue 3 Composition API + `<script setup>`
 - Vue Router 4 · Pinia · Vite 6
-- Axios · vue3-apexcharts
+- Axios · ApexCharts cargado sólo donde se usa
 - CSS puro con tokens `--cds-*` (sin Bootstrap, sin SCSS global)
 - Font Awesome 6 Free
 
-### 3.2 Estructura interna
+### 4.2 Estructura interna
 
 ```
 CDS_VUE3_ZERO/src/
@@ -54,8 +70,9 @@ CDS_VUE3_ZERO/src/
 │   ├── business/       ← PhotoUpload, RepairCard…
 │   ├── composite/      ← FormField, DataTable…
 │   ├── home/           ← Secciones de la homepage
-│   └── ui/
-├── composables/        ← 58 composables (uno por dominio)
+│   ├── ui/             ← Compatibilidad residual
+│   └── widgets/
+├── composables/        ← Flujo por dominio/página
 ├── layouts/
 │   ├── MasterLayout.vue       ← Público + cliente
 │   └── AdminShellLayout.vue   ← Admin (sidebar + topbar)
@@ -71,12 +88,14 @@ CDS_VUE3_ZERO/src/
 ├── stores/             ← auth.js · shopCart.js
 └── styles/
     ├── tokens.css      ← Variables --cds-* (única fuente de verdad)
+    ├── fonts.css
     ├── typography.css
     ├── main.css
-    └── layout.css
+    ├── utilities.css
+    └── layout.css      ← Compatibilidad / residuo controlado
 ```
 
-### 3.3 Rutas frontend
+### 4.3 Rutas frontend
 
 #### Públicas
 
@@ -146,9 +165,9 @@ CDS_VUE3_ZERO/src/
 
 ---
 
-## 4. Backend — FastAPI
+## 5. Backend — FastAPI
 
-### 4.1 Stack
+### 5.1 Stack
 
 - FastAPI 0.104.1 · Uvicorn 0.24.0
 - SQLAlchemy 2.0.23 · Alembic 1.12.1
@@ -158,7 +177,7 @@ CDS_VUE3_ZERO/src/
 - SlowAPI 0.1.5 (rate limiting)
 - SDK opcional: `transbank-sdk` o `mercadopago` (según `PAYMENT_GATEWAY`)
 
-### 4.2 Estructura
+### 5.2 Estructura
 
 ```
 backend/
@@ -170,7 +189,7 @@ backend/
 │   │   ├── dependencies.py  ← require_permission, get_current_user
 │   │   └── security.py
 │   ├── models/              ← SQLAlchemy models
-│   ├── routers/             ← 35+ routers
+│   ├── routers/             ← Routers por dominio
 │   ├── services/            ← Lógica de negocio
 │   ├── schemas/             ← Pydantic schemas
 │   └── data/                ← brands.json · instruments.json · faults.json
@@ -180,33 +199,35 @@ backend/
 └── .env.example
 ```
 
-### 4.3 Grupos de API (`/api/v1/`)
+### 5.3 Grupos de API (`/api/v1/`)
 
 ```
 analytics          KPIs, dashboard, timelines, reportes
 appointments       Citas
+ai                 Análisis experimental / compatibilidad deprecada
 auth               Login, register, JWT refresh, 2FA
 brands             Marcas de instrumentos
 categories         Categorías de inventario
-client             Portal cliente autenticado (/client/*)
+client             Portal cliente autenticado (servido por client_portal)
 clients            CRUD admin de clientes (/clients/*)
 contact            Formulario de contacto público
 devices            Dispositivos de clientes
-diagnostic         Cotizador público (calcula precio)
+diagnostic         Compatibilidad diagnóstica e interna (deprecated)
 files              Archivos protegidos
-images             Resolución Cloudinary
+images             Compatibilidad Cloudinary legacy (deprecated)
 imports            Importación de datos
 instruments        Catálogo de instrumentos
-inventory          Inventario y productos
+inventory          Inventario y productos (canónico; /items deprecated)
 invoices           Facturación
 leads              Leads del cotizador público
 manuals            Manuales técnicos
-media              Gestión de medios (Cloudinary bindings)
+media              Gestión canónica de assets y bindings Cloudinary
 newsletter         Suscripciones
 payment-gateway    Transbank Webpay Plus / MercadoPago
 payments           CRUD de pagos
 photo-requests     Solicitudes de foto por enlace
 purchase-requests  Solicitudes de compra
+quotation          Cotizador público canónico + quotes admin
 repair-statuses    Estados de OT
 repairs            Órdenes de trabajo (core)
 search             Búsqueda global
@@ -221,7 +242,23 @@ warranties         Garantías
 webhooks           WhatsApp Cloud API (verify + receive)
 ```
 
-### 4.4 KPIs disponibles en `/api/v1/analytics/`
+### 5.4 Contratos canónicos hoy
+
+- Cotizador público: `POST /api/v1/quotations/estimate`
+- Gestión de quotes admin: `/api/v1/quotations/quotes/*`
+- Media dinámica: `/api/v1/media/assets` y `/api/v1/media/bindings`
+- Upload firmado y helpers de media: `/api/v1/uploads/*`
+- Portal cliente: `/api/v1/client/*`
+- Inventario activo: `/api/v1/inventory/*`
+
+Compatibilidades que siguen vivas, pero ya no son la capa primaria:
+
+- `/api/v1/diagnostic/*`
+- `/api/v1/images/*`
+- `/api/v1/items/*`
+- `/api/v1/ai/analyze`
+
+### 5.5 KPIs disponibles en `/api/v1/analytics/`
 
 | Endpoint | Qué retorna |
 |----------|-------------|
@@ -236,7 +273,7 @@ webhooks           WhatsApp Cloud API (verify + receive)
 
 ---
 
-## 5. Ejecución local
+## 6. Ejecución local
 
 ### Frontend
 
@@ -245,6 +282,7 @@ cd CDS_VUE3_ZERO
 npm install
 npm run dev
 # http://localhost:5174
+npm run build
 ```
 
 ### Backend
@@ -280,7 +318,7 @@ Variables clave:
 
 ---
 
-## 6. Tests
+## 7. Tests
 
 ### Backend (pytest)
 
@@ -305,7 +343,7 @@ npm run test:e2e
 
 ---
 
-## 7. CI/CD
+## 8. CI/CD
 
 | Workflow | Propósito |
 |----------|-----------|
@@ -317,7 +355,16 @@ npm run test:e2e
 
 ---
 
-## 8. Filosofía del proyecto
+## 9. Entrega y crecimiento
+
+- La entrega inmediata es el sistema real desplegado como monolito modular
+- El dominio/host real tiene prioridad frente a demos en localhost
+- La evolución a microservicios existe, pero está diferida y documentada en `MICROS.md`
+- No se deben abrir microservicios antes de cerrar y estabilizar el monolito actual
+
+---
+
+## 10. Filosofía del proyecto
 
 - **Aditivo** — agregar, no eliminar funcionalidad existente
 - **Deconstructivo** — desarmar para entender, reconstruir limpio
@@ -327,4 +374,4 @@ npm run test:e2e
 
 ---
 
-*README actualizado: 2026-03-15 · CDS_ZERO · d6bfc0ff*
+*README actualizado: 2026-03-17 · CDS_ZERO*
