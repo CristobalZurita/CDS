@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 
 from app.models.appointment import Appointment
 from app.schemas.appointment import AppointmentCreate, AppointmentResponse
+from app.core.timezone import CL_TZ
 from app.crud.appointment import (
     create_appointment,
     get_appointment,
@@ -299,9 +300,40 @@ class TestAppointmentAPI:
     def test_get_pending_appointments(self, client: TestClient):
         """Test GET /appointments/status/pending"""
         response = client.get("/api/v1/appointments/status/pending")
-        
+
         assert response.status_code == 200
         assert isinstance(response.json(), list)
+
+    def test_get_public_availability_returns_occupied_slots(self, client: TestClient):
+        """Test GET /appointments/public-availability"""
+        target_local = (datetime.now(CL_TZ) + timedelta(days=1)).replace(
+            hour=10,
+            minute=30,
+            second=0,
+            microsecond=0,
+        )
+
+        create_response = client.post(
+            "/api/v1/appointments/",
+            json={
+                "nombre": "Test User",
+                "email": "test@example.com",
+                "telefono": "+56912345678",
+                "fecha": target_local.isoformat(),
+                "mensaje": "Test appointment"
+            }
+        )
+        assert create_response.status_code == 201
+
+        response = client.get(
+            "/api/v1/appointments/public-availability",
+            params={"date": target_local.date().isoformat()},
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["date"] == target_local.date().isoformat()
+        assert "10:30" in data["occupied_slots"]
 
 
 # Fixtures for testing

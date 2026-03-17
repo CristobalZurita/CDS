@@ -12,8 +12,10 @@ ADITIVO: no modifica tests existentes.
 """
 
 import importlib
+import time
 import app.main as _main
 from fastapi.testclient import TestClient
+from app.models.payment import Payment, PaymentStatus
 
 
 def _make_client():
@@ -126,14 +128,14 @@ def test_mercadopago_ipn_empty_body():
 
 
 def test_mercadopago_ipn_payment_notification():
-    """Notificación de pago → 200 {"ok": True}."""
+    """Sin verificación disponible no debe marcar éxito ciegamente."""
     client = _make_client()
     res = client.post(
         "/api/v1/payment-gateway/mercadopago/ipn",
         json={"type": "payment", "data": {"id": "123456789"}},
     )
     assert res.status_code == 200
-    assert res.json() == {"ok": True}
+    assert res.json() == {"ok": True, "verified": False}
 
 
 def test_mercadopago_ipn_non_payment_topic():
@@ -162,6 +164,47 @@ def test_mercadopago_ipn_no_signature_check_without_secret():
         assert res.status_code == 200
     finally:
         gw_mod.settings.mercadopago_webhook_secret = original
+
+
+def test_mercadopago_ipn_updates_payment_after_verified_lookup(test_client, db):
+    """Con verificación real/monkeypatched, actualiza el Payment correcto."""
+    import app.routers.payment_gateway as gw_mod
+
+    payment = Payment(
+        amount=12000,
+        payment_method="mercadopago",
+        transaction_id=f"OT-999-{int(time.time() * 1000)}",
+        status=PaymentStatus.PENDING,
+        currency="CLP",
+    )
+    db.add(payment)
+    db.commit()
+    db.refresh(payment)
+
+    original_lookup = gw_mod.PaymentGatewayService.get_mercadopago_payment
+
+    def _fake_lookup(self, payment_id):
+        assert payment_id == "mp-test-123"
+        return {
+            "id": payment_id,
+            "status": "approved",
+            "external_reference": payment.transaction_id,
+        }
+
+    gw_mod.PaymentGatewayService.get_mercadopago_payment = _fake_lookup
+    try:
+        res = test_client.post(
+            "/api/v1/payment-gateway/mercadopago/ipn",
+            json={"type": "payment", "data": {"id": "mp-test-123"}},
+        )
+        assert res.status_code == 200
+        assert res.json() == {"ok": True}
+
+        db.refresh(payment)
+        assert payment.status == PaymentStatus.SUCCESS
+        assert payment.payment_processor == "mercadopago"
+    finally:
+        gw_mod.PaymentGatewayService.get_mercadopago_payment = original_lookup
 
 
 # ── Rutas registradas ─────────────────────────────────────────────────────────

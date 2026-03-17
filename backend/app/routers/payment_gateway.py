@@ -204,20 +204,43 @@ async def mercadopago_ipn(request: Request, db: Session = Depends(get_db)):
 
     if topic == "payment" and resource_id:
         logger.info("MercadoPago IPN: payment notification id=%s", resource_id)
-        # Locate payment by transaction_id containing the resource_id
-        payment = (
-            db.query(Payment)
-            .filter(Payment.transaction_id.contains(resource_id))
-            .order_by(Payment.id.desc())
-            .first()
-        )
+        svc = PaymentGatewayService()
+        try:
+            provider_payment = svc.get_mercadopago_payment(resource_id)
+        except RuntimeError as exc:
+            logger.warning("MercadoPago IPN: verification skipped for id=%s (%s)", resource_id, exc)
+            return {"ok": True, "verified": False}
+
+        provider_status = str(provider_payment.get("status") or "").strip().lower()
+        external_reference = str(provider_payment.get("external_reference") or "").strip()
+        payment = None
+        if external_reference:
+            payment = (
+                db.query(Payment)
+                .filter(Payment.transaction_id == external_reference)
+                .order_by(Payment.id.desc())
+                .first()
+            )
+
         if payment:
-            # In production you would call the MP API to verify status.
-            # Here we mark SUCCESS on payment notification as a base implementation.
-            payment.status = PaymentStatus.SUCCESS
+            if provider_status == "approved":
+                payment.status = PaymentStatus.SUCCESS
+            elif provider_status in {"rejected", "cancelled", "refunded", "charged_back"}:
+                payment.status = PaymentStatus.FAILED
+            else:
+                payment.status = PaymentStatus.PENDING
             payment.payment_processor = "mercadopago"
             db.commit()
-            logger.info("Payment %d updated to SUCCESS via MercadoPago IPN", payment.id)
+            logger.info(
+                "Payment %d updated via MercadoPago IPN (status=%s)",
+                payment.id,
+                provider_status or "unknown",
+            )
+        else:
+            logger.warning(
+                "MercadoPago IPN: no local payment found for external_reference=%s",
+                external_reference or "<empty>",
+            )
     else:
         logger.debug("MercadoPago IPN: unhandled topic=%s id=%s", topic, resource_id)
 

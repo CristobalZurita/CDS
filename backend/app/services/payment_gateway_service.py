@@ -173,6 +173,29 @@ def _mercadopago_create(
     }
 
 
+def _mercadopago_get_payment(payment_id: str) -> Dict[str, Any]:
+    """
+    Consulta el estado real de un pago en MercadoPago usando su API.
+    Retorna el payload `response` de la SDK.
+    """
+    try:
+        import mercadopago  # type: ignore
+    except ImportError:
+        raise RuntimeError(
+            "mercadopago not installed. Run: pip install mercadopago"
+        )
+
+    if not settings.mercadopago_access_token:
+        raise RuntimeError("MERCADOPAGO_ACCESS_TOKEN not configured.")
+
+    sdk = mercadopago.SDK(settings.mercadopago_access_token)
+    response = sdk.payment().get(payment_id)
+    payload = response.get("response") or {}
+    if not isinstance(payload, dict):
+        raise RuntimeError("MercadoPago payment lookup returned invalid payload.")
+    return payload
+
+
 # ── Public facade ─────────────────────────────────────────────────────────────
 
 class PaymentGatewayService:
@@ -241,3 +264,7 @@ class PaymentGatewayService:
         if self.gateway != "transbank":
             raise RuntimeError("commit() is only for Transbank gateway.")
         return _transbank_commit(token)
+
+    def get_mercadopago_payment(self, payment_id: str) -> Dict[str, Any]:
+        """Lookup a MercadoPago payment by provider-side payment id."""
+        return _mercadopago_get_payment(payment_id)

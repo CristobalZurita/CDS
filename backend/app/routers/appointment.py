@@ -7,11 +7,12 @@ import os
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 from typing import List
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from app.core.database import get_db, SessionLocal
 from app.core.ratelimit import limiter
 from app.core.dependencies import require_permission
+from app.core.timezone import CL_TZ, to_local, to_utc
 from app.crud.appointment import (
     create_appointment,
     get_appointment,
@@ -62,6 +63,50 @@ async def _bg_sync_calendar(appointment_id: int) -> None:
 def _should_skip_turnstile() -> bool:
     env = str(os.getenv("ENVIRONMENT") or "").strip().lower()
     return os.getenv("TURNSTILE_DISABLE", "false").lower() == "true" or env in {"test", "testing"}
+
+
+@router.get("/public-availability")
+async def get_public_availability(
+    date: str = Query(..., description="Fecha local Chile en formato YYYY-MM-DD"),
+    db: Session = Depends(get_db),
+):
+    """
+    Retorna los bloques horarios ya ocupados para una fecha pública.
+
+    El frontend agenda en hora Chile; por eso la fecha recibida se interpreta en
+    America/Santiago y luego se normaliza a UTC para consultar la base.
+    """
+    try:
+        target_date = datetime.strptime(date, "%Y-%m-%d").date()
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Fecha inválida. Use YYYY-MM-DD.") from exc
+
+    start_local = datetime(
+        target_date.year,
+        target_date.month,
+        target_date.day,
+        0,
+        0,
+        0,
+        tzinfo=CL_TZ,
+    )
+    end_local = start_local + timedelta(days=1)
+
+    appointments = await get_appointments_by_date_range(
+        db,
+        start_date=to_utc(start_local),
+        end_date=to_utc(end_local),
+    )
+
+    occupied_slots = sorted(
+        {
+            to_local(appointment.fecha).strftime("%H:%M")
+            for appointment in appointments
+            if appointment.estado in {"pendiente", "confirmado"} and appointment.fecha
+        }
+    )
+
+    return {"date": date, "occupied_slots": occupied_slots}
 
 
 @router.post("/", response_model=AppointmentResponse, status_code=201)

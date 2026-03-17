@@ -69,14 +69,17 @@
           <div class="timeslots-container">
             <div class="timeslot-group">
               <h3>Mañana (09:00 - 12:00)</h3>
+              <p v-if="isLoadingAvailability" class="schedule-info">Cargando disponibilidad...</p>
+              <p v-else-if="availabilityError" class="schedule-warning">{{ availabilityError }}</p>
               <div class="timeslots">
                 <button
                   v-for="time in morningSlots"
                   :key="time"
                   class="timeslot"
-                  :class="{ selected: selectedTime === time }"
+                  :class="{ selected: selectedTime === time, unavailable: isTimeSlotUnavailable(time) }"
                   data-testid="schedule-time-slot"
                   :data-time="time"
+                  :disabled="isLoadingAvailability || isTimeSlotUnavailable(time)"
                   @click="selectedTime = time"
                 >
                   {{ time }}
@@ -90,9 +93,10 @@
                   v-for="time in afternoonSlots"
                   :key="time"
                   class="timeslot"
-                  :class="{ selected: selectedTime === time }"
+                  :class="{ selected: selectedTime === time, unavailable: isTimeSlotUnavailable(time) }"
                   data-testid="schedule-time-slot"
                   :data-time="time"
+                  :disabled="isLoadingAvailability || isTimeSlotUnavailable(time)"
                   @click="selectedTime = time"
                 >
                   {{ time }}
@@ -103,7 +107,12 @@
 
           <div class="step-actions">
             <button class="btn-secondary" data-testid="schedule-time-back" @click="step = 1">← Atrás</button>
-            <button class="btn-primary" data-testid="schedule-time-next" :disabled="!timeSelected" @click="step = 3">
+            <button
+              class="btn-primary"
+              data-testid="schedule-time-next"
+              :disabled="!timeSelected || isLoadingAvailability"
+              @click="step = 3"
+            >
               Siguiente →
             </button>
           </div>
@@ -124,13 +133,16 @@
               <p><strong>Duración estimada:</strong> 20-30 minutos.</p>
               <p><strong>Importante:</strong> Trae el instrumento y accesorios asociados.</p>
             </div>
+            <p v-if="!contactDetailsComplete" class="schedule-warning">
+              Debes tener correo y teléfono en tu perfil para confirmar la cita.
+            </p>
             <label class="checkbox-container">
               <input v-model="agreeConditions" type="checkbox" />
               <span>Acepto los términos y condiciones de esta cita</span>
             </label>
           </div>
 
-          <TurnstileWidget @verify="onVerify" />
+          <TurnstileWidget :key="turnstileRenderKey" @verify="onVerify" />
 
           <p v-if="submissionError" class="schedule-error" data-testid="schedule-error">
             {{ submissionError }}
@@ -141,7 +153,7 @@
             <button
               class="btn-primary"
               data-testid="schedule-confirm"
-              :disabled="isSubmitting || !agreeConditions || !turnstileToken"
+              :disabled="isSubmitting || !agreeConditions || !turnstileToken || !contactDetailsComplete"
               @click="confirmAppointment"
             >
               {{ isSubmitting ? 'Confirmando...' : 'Confirmar Cita' }}
@@ -181,11 +193,15 @@ const {
   step,
   selectedDate,
   selectedTime,
+  contactDetailsComplete,
   agreeConditions,
   turnstileToken,
+  turnstileRenderKey,
   appointmentNumber,
   isSubmitting,
+  isLoadingAvailability,
   submissionError,
+  availabilityError,
   weekdays,
   morningSlots,
   afternoonSlots,
@@ -199,6 +215,7 @@ const {
   isSameDate,
   selectDate,
   formatDate,
+  isTimeSlotUnavailable,
   onVerify,
   confirmAppointment,
   goHome
@@ -355,6 +372,11 @@ const {
   color: var(--cds-white);
 }
 
+.timeslot.unavailable {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .confirmation-card {
   display: grid;
   gap: 0.7rem;
@@ -398,6 +420,25 @@ const {
   color: #b42318;
   border-radius: 0.5rem;
   padding: 0.7rem;
+}
+
+.schedule-info,
+.schedule-warning {
+  margin: 0;
+  border-radius: 0.5rem;
+  padding: 0.7rem;
+}
+
+.schedule-info {
+  border: 1px solid color-mix(in srgb, var(--cds-primary) 20%, white);
+  background: color-mix(in srgb, var(--cds-primary) 8%, white);
+  color: var(--cds-text-normal);
+}
+
+.schedule-warning {
+  border: 1px solid color-mix(in srgb, var(--cds-warning) 35%, white);
+  background: color-mix(in srgb, var(--cds-warning) 12%, white);
+  color: var(--cds-text-normal);
 }
 
 .success-step {

@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import api, { extractErrorMessage } from '@/services/api'
@@ -19,11 +19,15 @@ export function useSchedulePage() {
   const step = ref(1)
   const selectedDate = ref(null)
   const selectedTime = ref('')
+  const occupiedSlots = ref([])
   const agreeConditions = ref(false)
   const turnstileToken = ref('')
+  const turnstileRenderKey = ref(0)
   const appointmentNumber = ref('')
   const isSubmitting = ref(false)
+  const isLoadingAvailability = ref(false)
   const submissionError = ref('')
+  const availabilityError = ref('')
 
   const currentMonth = ref(new Date().getMonth())
   const currentYear = ref(new Date().getFullYear())
@@ -31,6 +35,7 @@ export function useSchedulePage() {
   const weekdays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab']
   const morningSlots = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30']
   const afternoonSlots = ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']
+  const allSlots = [...morningSlots, ...afternoonSlots]
 
   const monthYearString = computed(() => {
     const monthNames = [
@@ -52,7 +57,14 @@ export function useSchedulePage() {
   })
 
   const dateSelected = computed(() => selectedDate.value !== null)
-  const timeSelected = computed(() => String(selectedTime.value || '').length > 0)
+  const contactDetailsComplete = computed(() => {
+    const email = String(authStore.user?.email || '').trim()
+    const phone = String(authStore.user?.phone || '').trim()
+    return Boolean(email && phone)
+  })
+  const timeSelected = computed(() => {
+    return String(selectedTime.value || '').length > 0 && !isTimeSlotUnavailable(selectedTime.value)
+  })
 
   function previousMonth() {
     if (currentMonth.value === 0) {
@@ -89,7 +101,15 @@ export function useSchedulePage() {
 
   function selectDate(day) {
     if (!day || isDateDisabled(day)) return
-    selectedDate.value = new Date(currentYear.value, currentMonth.value, day)
+    const nextDate = new Date(currentYear.value, currentMonth.value, day)
+    const previous = selectedDate.value ? selectedDate.value.getTime() : null
+    selectedDate.value = nextDate
+    selectedTime.value = ''
+    availabilityError.value = ''
+    submissionError.value = ''
+    if (previous !== nextDate.getTime()) {
+      resetTurnstile()
+    }
   }
 
   function formatDate(date) {
@@ -103,8 +123,67 @@ export function useSchedulePage() {
     submissionError.value = ''
   }
 
+  function resetTurnstile() {
+    turnstileToken.value = ''
+    turnstileRenderKey.value += 1
+  }
+
+  function formatAvailabilityDate(date) {
+    if (!(date instanceof Date)) return ''
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  function isTimeSlotUnavailable(time) {
+    return occupiedSlots.value.includes(String(time || ''))
+  }
+
+  async function loadAvailability(date = selectedDate.value) {
+    if (!(date instanceof Date)) {
+      occupiedSlots.value = []
+      availabilityError.value = ''
+      return
+    }
+
+    isLoadingAvailability.value = true
+    availabilityError.value = ''
+
+    try {
+      const response = await api.get('/appointments/public-availability', {
+        params: { date: formatAvailabilityDate(date) }
+      })
+      const nextSlots = Array.isArray(response?.data?.occupied_slots)
+        ? response.data.occupied_slots.filter((slot) => allSlots.includes(slot))
+        : []
+      occupiedSlots.value = nextSlots
+
+      if (nextSlots.includes(selectedTime.value)) {
+        selectedTime.value = ''
+      }
+    } catch (error) {
+      occupiedSlots.value = []
+      availabilityError.value = extractErrorMessage(error)
+    } finally {
+      isLoadingAvailability.value = false
+    }
+  }
+
   async function confirmAppointment() {
     if (!selectedDate.value || !selectedTime.value || !turnstileToken.value) return
+
+    if (!contactDetailsComplete.value) {
+      submissionError.value = 'Completa tu correo y teléfono antes de agendar la cita.'
+      return
+    }
+
+    if (isTimeSlotUnavailable(selectedTime.value)) {
+      submissionError.value = 'Ese horario ya fue tomado. Selecciona otro bloque disponible.'
+      step.value = 2
+      resetTurnstile()
+      return
+    }
 
     isSubmitting.value = true
     submissionError.value = ''
@@ -117,7 +196,7 @@ export function useSchedulePage() {
       const response = await api.post('/appointments/', {
         nombre: normalizeAppointmentName(authStore.user?.full_name),
         email: authStore.user?.email || '',
-        telefono: authStore.user?.phone || '+56900000000',
+        telefono: authStore.user?.phone || '',
         fecha: appointmentDate.toISOString(),
         mensaje: 'Cita de diagnóstico',
         turnstile_token: turnstileToken.value
@@ -127,6 +206,7 @@ export function useSchedulePage() {
       step.value = 4
     } catch (error) {
       submissionError.value = extractErrorMessage(error)
+      resetTurnstile()
     } finally {
       isSubmitting.value = false
     }
@@ -136,15 +216,33 @@ export function useSchedulePage() {
     router.push('/')
   }
 
+  watch(selectedDate, (date) => {
+    loadAvailability(date)
+  })
+
+  watch(selectedTime, (time, previous) => {
+    if (time && time !== previous) {
+      submissionError.value = ''
+    }
+    if (time !== previous && turnstileToken.value) {
+      resetTurnstile()
+    }
+  })
+
   return {
     step,
     selectedDate,
     selectedTime,
+    occupiedSlots,
     agreeConditions,
     turnstileToken,
+    turnstileRenderKey,
     appointmentNumber,
     isSubmitting,
+    isLoadingAvailability,
     submissionError,
+    availabilityError,
+    contactDetailsComplete,
     currentMonth,
     currentYear,
     weekdays,
@@ -160,6 +258,7 @@ export function useSchedulePage() {
     isSameDate,
     selectDate,
     formatDate,
+    isTimeSlotUnavailable,
     onVerify,
     confirmAppointment,
     goHome
