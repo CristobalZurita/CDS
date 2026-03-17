@@ -33,188 +33,62 @@
       </article>
     </section>
 
-    <!-- SUBIR IMÁGENES -->
-    <section class="panel-card">
-      <h2>Subir imágenes</h2>
+    <MediaUploadPanel
+      v-model:destination="destination"
+      :queue="queue"
+      :uploading="uploading"
+      :upload-progress="uploadProgress"
+      :upload-validation-error="uploadValidationError"
+      :format-bytes="formatBytes"
+      :queue-path="queuePath"
+      :status-label="statusLabel"
+      @files-selected="addToQueue"
+      @upload-all="uploadAll"
+      @clear-queue="clearQueue"
+    />
 
-      <div class="upload-controls">
-        <label>
-          <span>Destino</span>
-          <select v-model="destination">
-            <option value="uploads">General</option>
-            <option value="instrumentos">Instrumentos</option>
-            <option value="inventario">Inventario</option>
-          </select>
-        </label>
-      </div>
+    <MediaBindingsPanel
+      :bindings="bindings"
+      :loading-bindings="loadingBindings"
+      :show-binding-form="showBindingForm"
+      :saving-binding="savingBinding"
+      :is-editing-binding="isEditingBinding"
+      :picker-search="pickerSearch"
+      :picker-filtered="pickerFiltered"
+      :binding-form="bindingForm"
+      :binding-pending-delete="bindingPendingDelete"
+      :deleting-binding="deletingBinding"
+      :thumb="thumb"
+      :short-name="shortName"
+      @toggle-binding-form="toggleBindingForm"
+      @update-binding-field="updateBindingField"
+      @update:picker-search="pickerSearch = $event"
+      @select-asset="selectBindingAsset"
+      @save-binding="saveBinding"
+      @edit-binding="editBinding"
+      @request-delete-binding="deleteBinding"
+      @cancel-delete-binding="cancelDeleteBinding"
+      @confirm-delete-binding="confirmDeleteBinding"
+    />
 
-      <div
-        class="drop-zone"
-        :class="{ 'drop-zone--active': isDragging }"
-        @dragenter.prevent="isDragging = true"
-        @dragover.prevent="isDragging = true"
-        @dragleave.prevent="isDragging = false"
-        @drop.prevent="onDrop"
-        @click="fileInput.click()"
-      >
-        <i class="fa-solid fa-cloud-arrow-up"></i>
-        <p>Arrastrá imágenes aquí o hacé clic para seleccionar</p>
-        <span>Podés seleccionar múltiples archivos o una carpeta completa</span>
-        <input ref="fileInput" type="file" multiple accept="image/*" @change="onFileSelect" />
-        <input ref="folderInput" type="file" multiple accept="image/*" webkitdirectory @change="onFileSelect" />
-      </div>
-
-      <div class="upload-extra-actions">
-        <button class="btn-secondary" type="button" @click="folderInput.click()">
-          <i class="fa-solid fa-folder-open"></i> Seleccionar carpeta
-        </button>
-      </div>
-
-      <p v-if="uploadValidationError" class="upload-validation-error">{{ uploadValidationError }}</p>
-
-      <div v-if="queue.length" class="queue-list">
-        <div v-for="item in queue" :key="`${item.publicId}-${item.size}`" class="queue-item">
-          <div class="queue-main">
-            <span class="queue-name">{{ item.name }}</span>
-            <span class="queue-target">{{ queuePath(item) }}</span>
-          </div>
-          <span class="queue-size">{{ formatBytes(item.size) }}</span>
-          <span class="queue-status" :class="`status--${item.status}`">{{ statusLabel(item.status) }}</span>
-        </div>
-      </div>
-
-      <div v-if="queue.length" class="panel-actions">
-        <button class="btn-primary" :disabled="uploading" @click="uploadAll">
-          {{ uploading ? `Subiendo ${uploadProgress}/${queue.length}...` : `Subir ${queue.length} imagen(es)` }}
-        </button>
-        <button class="btn-secondary" :disabled="uploading" @click="clearQueue">Limpiar</button>
-      </div>
-    </section>
-
-    <!-- SLOTS DEL SITIO (bindings) -->
-    <section class="panel-card">
-      <div class="panel-head">
-        <h2>Slots del sitio ({{ bindings.length }})</h2>
-        <button class="btn-secondary" @click="toggleBindingForm">
-          {{ showBindingForm ? 'Cancelar' : '+ Asignar imagen a slot' }}
-        </button>
-      </div>
-
-      <p class="catalog-hint">
-        Un slot es un lugar fijo del sitio (ej: <code>home.hero.bg</code>). Asignás una imagen y el sitio la muestra automáticamente sin tocar código.
-      </p>
-
-      <!-- Formulario nuevo/editar binding -->
-      <div v-if="showBindingForm" class="binding-form">
-        <div class="binding-form-fields">
-          <label>
-            <span>Slot (clave única)</span>
-            <input
-              v-model.trim="bindingForm.slot_key"
-              type="text"
-              placeholder="ej: home.hero.bg"
-              :readonly="isEditingBinding"
-              :class="{ 'binding-slot-input--readonly': isEditingBinding }"
-            />
-          </label>
-          <label>
-            <span>Nombre legible (opcional)</span>
-            <input v-model.trim="bindingForm.label" type="text" placeholder="ej: Imagen de fondo del hero" />
-          </label>
-        </div>
-
-        <div class="binding-picker">
-          <span class="binding-picker-label">Elegir imagen del catálogo</span>
-          <input v-model.trim="pickerSearch" type="search" placeholder="Buscar..." class="picker-search" />
-          <div class="picker-grid">
-            <figure
-              v-for="img in pickerFiltered"
-              :key="img.public_id"
-              class="picker-tile"
-              :class="{ 'picker-tile--selected': bindingForm.asset_id === img.id }"
-              @click="bindingForm.asset_id = img.id"
-            >
-              <img :src="thumb(img.secure_url)" :alt="shortName(img.public_id)" loading="lazy" />
-              <figcaption>{{ shortName(img.public_id) }}</figcaption>
-            </figure>
-          </div>
-        </div>
-
-        <div class="panel-actions">
-          <button
-            class="btn-primary"
-            :disabled="!bindingForm.slot_key || !bindingForm.asset_id || savingBinding"
-            @click="saveBinding"
-          >
-            {{ savingBinding ? 'Guardando...' : 'Guardar slot' }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Lista de bindings actuales -->
-      <p v-if="loadingBindings" class="catalog-hint">Cargando slots...</p>
-      <p v-else-if="!bindings.length" class="catalog-hint">No hay slots asignados todavía.</p>
-
-      <div v-else class="bindings-list">
-        <div v-for="b in bindings" :key="b.slot_key" class="binding-row">
-          <img v-if="b.asset?.secure_url" :src="thumb(b.asset.secure_url)" :alt="b.slot_key" class="binding-thumb" />
-          <div class="binding-info">
-            <span class="binding-slot">{{ b.slot_key }}</span>
-            <span v-if="b.label" class="binding-label">{{ b.label }}</span>
-            <span class="binding-name">{{ shortName(b.asset?.public_id) }}</span>
-          </div>
-          <div class="binding-actions">
-            <button class="btn-icon" title="Editar" @click="editBinding(b)">✏️</button>
-            <button class="btn-icon btn-icon--danger" title="Quitar" @click="deleteBinding(b.slot_key)">✕</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CATÁLOGO -->
-    <section class="panel-card">
-      <div class="panel-head">
-        <h2>Catálogo ({{ filtered.length }})</h2>
-        <div class="catalog-filters">
-          <input v-model.trim="search" type="search" placeholder="Buscar por nombre..." />
-          <select v-model="folderFilter">
-            <option value="">Todas las carpetas</option>
-            <option value="instrumentos">Instrumentos</option>
-            <option value="inventario">Inventario</option>
-            <option value="general">General</option>
-          </select>
-        </div>
-      </div>
-
-      <p v-if="loadingCatalog" class="catalog-hint">Cargando catálogo...</p>
-      <p v-else-if="!images.length" class="catalog-hint">No hay imágenes registradas todavía. Usá la sección "Subir imágenes" — cada imagen que subas quedará registrada aquí automáticamente.</p>
-
-      <div v-else class="image-grid">
-        <figure v-for="img in filtered" :key="img.public_id" class="image-tile">
-          <img :src="thumb(img.secure_url)" :alt="shortName(img.public_id)" loading="lazy" />
-          <figcaption>
-            <span class="tile-name">{{ shortName(img.public_id) }}</span>
-            <span class="tile-meta">{{ formatBytes(img.bytes) }}</span>
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <BaseConfirmDialog
-      :open="Boolean(bindingPendingDelete)"
-      title="Quitar slot"
-      :message="bindingPendingDelete ? `¿Quitar el slot ${bindingPendingDelete}?` : ''"
-      confirm-label="Quitar"
-      :confirm-loading="deletingBinding"
-      @cancel="cancelDeleteBinding"
-      @confirm="confirmDeleteBinding"
+    <MediaCatalogPanel
+      v-model:search="search"
+      v-model:folder-filter="folderFilter"
+      :images="images"
+      :filtered="filtered"
+      :loading-catalog="loadingCatalog"
+      :thumb="thumb"
+      :short-name="shortName"
+      :format-bytes="formatBytes"
     />
   </main>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { BaseConfirmDialog } from '@/components/base'
+import MediaBindingsPanel from '@/components/admin/MediaBindingsPanel.vue'
+import MediaCatalogPanel from '@/components/admin/MediaCatalogPanel.vue'
+import MediaUploadPanel from '@/components/admin/MediaUploadPanel.vue'
 import api from '@/services/api.js'
 import { resolveUploadPublicId, uploadImageWithMeta } from '@/services/uploadService.js'
 
@@ -290,26 +164,11 @@ async function importFromCloudinary() {
 
 // ─── Upload ────────────────────────────────────────────────────────────────
 const destination = ref('uploads')
-const isDragging = ref(false)
 const queue = ref([])
 const uploading = ref(false)
 const uploadProgress = ref(0)
-const fileInput = ref(null)
-const folderInput = ref(null)
 const uploadValidationError = ref('')
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10 MB
-
-function onDrop(e) {
-  isDragging.value = false
-  const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'))
-  addToQueue(files)
-}
-
-function onFileSelect(e) {
-  const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'))
-  addToQueue(files)
-  e.target.value = ''
-}
 
 function addToQueue(files) {
   const rechazados = []
@@ -460,6 +319,21 @@ function editBinding(b) {
   showBindingForm.value = true
 }
 
+function updateBindingField({ field, value }) {
+  if (!field) return
+  bindingForm.value = {
+    ...bindingForm.value,
+    [field]: value,
+  }
+}
+
+function selectBindingAsset(assetId) {
+  bindingForm.value = {
+    ...bindingForm.value,
+    asset_id: assetId,
+  }
+}
+
 function deleteBinding(slotKey) {
   bindingPendingDelete.value = slotKey
 }
@@ -519,104 +393,4 @@ onMounted(() => {
 </script>
 
 <style scoped src="./commonAdminPage.css"></style>
-<style scoped>
-.btn-primary:disabled, .btn-secondary:disabled { opacity: .55; cursor: not-allowed; }
-/* Override panel-actions: multi-action row (not justify-end) */
-.panel-actions { justify-content: flex-start; flex-wrap: wrap; gap: var(--cds-space-xs); }
-
-.summary-grid { display: grid; gap: .7rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-.panel-head { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: space-between; align-items: center; }
-
-.upload-controls label,
-.binding-form-fields label {
-  display: grid;
-  gap: .3rem;
-  font-size: var(--cds-text-sm);
-  font-weight: var(--cds-font-semibold);
-  color: var(--cds-dark);
-}
-
-.upload-controls label {
-  width: fit-content;
-}
-
-.upload-controls select,
-.catalog-filters input,
-.catalog-filters select,
-.binding-form-fields input,
-.picker-search {
-  min-height: 40px;
-  border: 1px solid var(--cds-border-input);
-  border-radius: var(--cds-radius-sm);
-  padding: .4rem .75rem;
-  font-size: var(--cds-text-sm);
-  background: var(--cds-white);
-  color: var(--cds-dark);
-}
-
-.drop-zone { border: 2px dashed color-mix(in srgb, var(--cds-primary) 40%, transparent); border-radius: var(--cds-radius-md); padding: 2rem 1rem; text-align: center; cursor: pointer; display: grid; gap: .4rem; justify-items: center; transition: background .15s; }
-.drop-zone:hover, .drop-zone--active { background: color-mix(in srgb, var(--cds-primary) 6%, white); }
-.drop-zone i { font-size: 2rem; color: var(--cds-primary); }
-.drop-zone p { margin: 0; font-size: var(--cds-text-base); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
-.drop-zone span { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
-.drop-zone input { display: none; }
-
-.upload-extra-actions { display: flex; gap: var(--cds-space-xs); flex-wrap: wrap; }
-.upload-validation-error { margin: 0; color: var(--cds-invalid-text); font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); }
-
-.queue-list { display: grid; gap: .35rem; }
-.queue-item { display: flex; align-items: center; gap: .75rem; padding: .5rem .75rem; background: rgba(62,60,56,.04); border-radius: var(--cds-radius-sm); font-size: var(--cds-text-sm); }
-.queue-main { flex: 1; min-width: 0; display: grid; gap: .1rem; }
-.queue-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cds-dark); }
-.queue-target { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cds-text-muted); font-family: monospace; font-size: var(--cds-text-xs); }
-.queue-size { color: var(--cds-text-muted); white-space: nowrap; }
-.queue-status { white-space: nowrap; font-weight: var(--cds-font-semibold); }
-.status--pending { color: var(--cds-text-muted); }
-.status--uploading { color: var(--cds-primary); }
-.status--done { color: var(--cds-valid-text); }
-.status--error { color: var(--cds-invalid-text); }
-
-.catalog-filters { display: flex; gap: .5rem; flex-wrap: wrap; }
-.catalog-hint { margin: 0; color: var(--cds-text-muted); font-size: var(--cds-text-base); }
-.catalog-hint code { background: rgba(62,60,56,.08); padding: .1em .4em; border-radius: .3rem; font-size: .9em; }
-
-.image-grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-.image-tile { margin: 0; display: grid; border: 1px solid var(--cds-border-card); border-radius: var(--cds-radius-sm); overflow: hidden; background: rgba(62,60,56,.03); }
-.image-tile img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
-.image-tile figcaption { padding: .35rem .5rem; display: grid; gap: .15rem; }
-.tile-name { font-size: var(--cds-text-xs); font-weight: var(--cds-font-semibold); color: var(--cds-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tile-meta { font-size: var(--cds-text-xs); color: var(--cds-text-muted); }
-
-/* Bindings */
-.binding-form { display: grid; gap: .75rem; padding: .9rem; background: rgba(62,60,56,.03); border-radius: var(--cds-radius-md); border: 1px solid var(--cds-border-card); }
-.binding-form-fields { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-.binding-slot-input--readonly { background: color-mix(in srgb, var(--cds-light) 18%, white); cursor: not-allowed; }
-.binding-picker { display: grid; gap: .5rem; }
-.binding-picker-label { font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
-.picker-search { width: 100%; max-width: 320px; }
-.picker-grid { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); max-height: 260px; overflow-y: auto; padding: .25rem; border: 1px solid var(--cds-border-card); border-radius: var(--cds-radius-sm); }
-.picker-tile { margin: 0; cursor: pointer; border: 2px solid transparent; border-radius: var(--cds-radius-sm); overflow: hidden; background: rgba(62,60,56,.03); transition: border-color .15s; }
-.picker-tile:hover { border-color: color-mix(in srgb, var(--cds-primary) 40%, transparent); }
-.picker-tile--selected { border-color: var(--cds-primary); }
-.picker-tile img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
-.picker-tile figcaption { padding: .2rem .3rem; font-size: var(--cds-text-xs); color: var(--cds-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-.bindings-list { display: grid; gap: .4rem; }
-.binding-row { display: flex; align-items: center; gap: .75rem; padding: .5rem .75rem; background: rgba(62,60,56,.03); border-radius: var(--cds-radius-sm); border: 1px solid var(--cds-border-card); }
-.binding-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: var(--cds-radius-sm); flex-shrink: 0; }
-.binding-info { flex: 1; display: grid; gap: .1rem; min-width: 0; }
-.binding-slot { font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); font-family: monospace; }
-.binding-label { font-size: var(--cds-text-xs); color: var(--cds-text-muted); }
-.binding-name { font-size: var(--cds-text-xs); color: var(--cds-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.binding-actions { display: flex; gap: .35rem; flex-shrink: 0; }
-.btn-icon { min-height: 36px; min-width: 36px; padding: .3rem .5rem; border-radius: var(--cds-radius-sm); border: 1px solid var(--cds-border-input); background: var(--cds-white); cursor: pointer; font-size: var(--cds-text-sm); }
-.btn-icon--danger { border-color: var(--cds-invalid-border); color: var(--cds-invalid-text); }
-.btn-icon--danger:hover { background: var(--cds-invalid-bg); }
-
-@media (max-width: 600px) {
-  .summary-grid { grid-template-columns: 1fr; }
-  .image-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
-  .picker-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
-}
-</style>
+<style scoped src="./mediaPageShared.css"></style>
