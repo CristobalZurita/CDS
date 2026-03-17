@@ -51,9 +51,9 @@ def test_upload_inventory_image_returns_public_path(test_client, admin_token):
     assert response.status_code in (200, 201)
     data = response.json()
     assert data["destination"] == "inventario"
-    assert data["public_path"].startswith("/images/INVENTARIO/")
+    assert data["public_path"].startswith("/uploads/images/inventario/")
     assert data["filename"] == "jack.webp"
-    Path("public/images/INVENTARIO/jack.webp").unlink(missing_ok=True)
+    Path("uploads/images/inventario/jack.webp").unlink(missing_ok=True)
 
 
 def test_upload_blocked_extension(test_client, customer_token):

@@ -47,7 +47,8 @@ def resolve_image(
 def resolve_images_batch(paths: List[str]):
     """
     Resuelve múltiples rutas locales a URLs de Cloudinary.
-    Útil para cargar muchas imágenes a la vez.
+    Útil para cargar muchas imágenes a la vez usando la convención canónica
+    /images/... -> public_id.
     """
     results = {}
     for path in paths:

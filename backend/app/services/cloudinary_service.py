@@ -1,11 +1,9 @@
 """
-Servicio Cloudinary - ÚNICO SERVICIO para gestión de imágenes
-ADITIVO: No modifica el comportamiento local existente.
+Servicio Cloudinary - fuente canónica para uploads y resolución dinámica.
 Usa CLOUDINARY_URL desde variables de entorno.
 """
 
 import os
-import json
 import logging
 import time
 from typing import Optional, Dict, Any, List
@@ -20,28 +18,55 @@ _cloudinary_client = None
 # Cache en memoria de las imágenes
 _cloudinary_cache = {}
 
-# Cargar mapeo local de imágenes desde image-mapping.json
-_local_image_mapping = {}
+LEGACY_IMAGE_PREFIX = "/images/"
+DESTINATION_PUBLIC_ID_PREFIXES = {
+    "uploads": "general",
+    "uploads/images": "general",
+    "instrumentos": "instrumentos",
+    "inventario": "INVENTARIO",
+    "public/images/instrumentos": "instrumentos",
+    "public/images/INVENTARIO": "INVENTARIO",
+}
 
-def _load_local_mapping():
-    """Carga el image-mapping.json como fuente de verdad."""
-    global _local_image_mapping
-    try:
-        # Buscar el archivo en CDS_VUE3_ZERO/ (4 niveles arriba de este archivo)
-        repo_root = Path(__file__).resolve().parents[3]
-        mapping_file = repo_root / "CDS_VUE3_ZERO" / "image-mapping.json"
-        if mapping_file.exists():
-            with open(mapping_file, 'r') as f:
-                data = json.load(f)
-                for item in data:
-                    if item.get('local') and item.get('cloudinary'):
-                        _local_image_mapping[item['local']] = item['cloudinary']
-                logger.info(f"[cloudinary] Cargado mapeo local con {len(_local_image_mapping)} imágenes")
-    except Exception as e:
-        logger.error(f"[cloudinary] Error cargando mapeo local: {e}")
 
-# Cargar al iniciar
-_load_local_mapping()
+def _normalize_public_id_candidate(value: str) -> str:
+    normalized = str(value or "").replace("\\", "/").strip().strip("/")
+    if not normalized:
+        return ""
+    parts = normalized.split("/")
+    parts[-1] = Path(parts[-1]).stem
+    return "/".join(part for part in parts if part)
+
+
+def local_path_to_public_id(local_path: str) -> str:
+    """
+    Convierte una ruta legacy /images/... al public_id canónico de Cloudinary.
+    Ej: /images/personales/marimba.webp -> personales/marimba
+    """
+    normalized = str(local_path or "").strip()
+    if not normalized:
+        return ""
+    if normalized.startswith("http"):
+        return normalized
+    if not normalized.startswith("/"):
+        normalized = f"/{normalized}"
+    candidate = normalized[len(LEGACY_IMAGE_PREFIX):] if normalized.startswith(LEGACY_IMAGE_PREFIX) else normalized.lstrip("/")
+    return _normalize_public_id_candidate(candidate)
+
+
+def _canonical_prefix_for_destination(destination: str) -> str:
+    target = (destination or "uploads").strip()
+    return DESTINATION_PUBLIC_ID_PREFIXES.get(target, "general")
+
+
+def _resolve_upload_target(destination: str, filename: Optional[str] = None, public_id: Optional[str] = None) -> tuple[str, str]:
+    prefix = _canonical_prefix_for_destination(destination)
+    candidate = _normalize_public_id_candidate(public_id or filename or "")
+    if not candidate:
+        raise RuntimeError("Could not determine Cloudinary public_id")
+    full_public_id = candidate if "/" in candidate else f"{prefix}/{candidate}"
+    asset_folder = full_public_id.rsplit("/", 1)[0] if "/" in full_public_id else prefix
+    return full_public_id, asset_folder
 
 
 def _get_client():
@@ -81,22 +106,6 @@ def is_cloudinary_enabled() -> bool:
     return os.getenv("CLOUDINARY_URL") is not None and _get_client() is not None
 
 
-def _get_folder_for_destination(destination: str) -> str:
-    """Mapea destinos locales a carpetas en Cloudinary."""
-    folder_base = os.getenv("CLOUDINARY_FOLDER_BASE", "cirujano")
-    
-    mapping = {
-        "uploads": f"{folder_base}/general",
-        "uploads/images": f"{folder_base}/general",
-        "instrumentos": f"{folder_base}/instrumentos",
-        "inventario": f"{folder_base}/inventario",
-        "public/images/instrumentos": f"{folder_base}/instrumentos",
-        "public/images/INVENTARIO": f"{folder_base}/inventario",
-    }
-    
-    return mapping.get(destination, f"{folder_base}/general")
-
-
 async def upload_image(
     file: UploadFile,
     destination: str = "uploads",
@@ -119,27 +128,24 @@ async def upload_image(
     
     import cloudinary.uploader
     
-    folder = _get_folder_for_destination(destination)
-    
     # Leer contenido del archivo
     content = await file.read()
     await file.seek(0)
-    
-    # Generar public_id si no se proporciona
-    if not public_id and file.filename:
-        # Limpiar nombre para usarlo como public_id
-        base_name = file.filename.rsplit(".", 1)[0] if "." in file.filename else file.filename
-        public_id = f"{folder}/{base_name}"
-    else:
-        public_id = f"{folder}/{public_id}"
+
+    public_id, asset_folder = _resolve_upload_target(
+        destination=destination,
+        filename=file.filename,
+        public_id=public_id,
+    )
     
     try:
         result = cloudinary.uploader.upload(
             content,
             public_id=public_id,
+            asset_folder=asset_folder,
             overwrite=True,
+            invalidate=True,
             resource_type="image",
-            folder="",  # public_id ya incluye la carpeta
         )
         
         return {
@@ -205,7 +211,11 @@ def delete_image(public_id: str) -> bool:
         return False
 
 
-def generate_upload_signature(destination: str = "uploads") -> Optional[Dict[str, Any]]:
+def generate_upload_signature(
+    destination: str = "uploads",
+    filename: Optional[str] = None,
+    public_id: Optional[str] = None,
+) -> Optional[Dict[str, Any]]:
     """
     Genera firma para upload directo desde el frontend a Cloudinary.
     Evita que el archivo pase por el servidor.
@@ -216,7 +226,8 @@ def generate_upload_signature(destination: str = "uploads") -> Optional[Dict[str
             "api_key": str,
             "timestamp": int,
             "signature": str,
-            "folder": str,
+            "public_id": str,
+            "asset_folder": str,
         }
     """
     client = _get_client()
@@ -234,12 +245,18 @@ def generate_upload_signature(destination: str = "uploads") -> Optional[Dict[str
             return None
         
         timestamp = int(time.time())
-        folder = _get_folder_for_destination(destination)
-        
-        # Generar firma para upload con folder específico
+        resolved_public_id, asset_folder = _resolve_upload_target(
+            destination=destination,
+            filename=filename,
+            public_id=public_id,
+        )
+
         params_to_sign = {
             "timestamp": timestamp,
-            "folder": folder,
+            "public_id": resolved_public_id,
+            "asset_folder": asset_folder,
+            "overwrite": "true",
+            "invalidate": "true",
         }
         
         signature = cloudinary.utils.api_sign_request(params_to_sign, api_secret)
@@ -249,7 +266,10 @@ def generate_upload_signature(destination: str = "uploads") -> Optional[Dict[str
             "api_key": api_key,
             "timestamp": timestamp,
             "signature": signature,
-            "folder": folder,
+            "public_id": resolved_public_id,
+            "asset_folder": asset_folder,
+            "overwrite": True,
+            "invalidate": True,
         }
         
     except Exception as e:
@@ -337,8 +357,8 @@ def find_image_by_name(local_name: str) -> Optional[str]:
 def resolve_image_url(local_path: str) -> str:
     """
     Resuelve una ruta local a URL de Cloudinary.
-    PRIMERO busca en image-mapping.json (fuente de verdad)
-    LUEGO busca en Cloudinary API como fallback.
+    Para rutas legacy /images/... deriva directamente el public_id canónico.
+    Para otros strings, intenta búsqueda por nombre como fallback.
     
     Ej: '/images/INVENTARIO/BOTON_GRANDE_B_MPC.webp' → 'https://res.cloudinary.com/...'
     """
@@ -348,13 +368,14 @@ def resolve_image_url(local_path: str) -> str:
     # Si ya es URL, devolverla
     if local_path.startswith("http"):
         return local_path
-    
-    # PRIMERO: Buscar en el mapeo local (image-mapping.json)
-    normalized_path = local_path if local_path.startswith('/') else f'/{local_path}'
-    if normalized_path in _local_image_mapping:
-        return _local_image_mapping[normalized_path]
-    
-    # SEGUNDO: Buscar en Cloudinary API
+
+    public_id = local_path_to_public_id(local_path)
+    if public_id and not public_id.startswith("http"):
+        if is_cloudinary_enabled():
+            return get_optimized_url(public_id)
+        return local_path
+
+    # Fallback: Buscar en Cloudinary API por nombre
     filename = local_path.split("/")[-1]
     name_without_ext = filename.rsplit(".", 1)[0]
     cloudinary_url = find_image_by_name(name_without_ext)

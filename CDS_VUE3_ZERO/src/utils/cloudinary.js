@@ -1,90 +1,74 @@
 /**
- * Utilidad para construir URLs de Cloudinary
- * ADITIVO: Convierte rutas locales a URLs de Cloudinary usando el mapeo
+ * Utilidad para construir URLs de Cloudinary.
+ * Deriva el public_id directamente desde la ruta local — sin JSON, sin mapeo estático.
  */
 
-import imageMapping from '../../image-mapping.json'
+import { Cloudinary } from '@cloudinary/url-gen'
+import { scale, thumbnail as cldThumbnail } from '@cloudinary/url-gen/actions/resize'
+import { quality } from '@cloudinary/url-gen/actions/delivery'
+import { auto as autoQuality } from '@cloudinary/url-gen/qualifiers/quality'
+import { localPathToPublicId } from '@/utils/cloudinaryContract'
 
-const CLOUDINARY_CLOUD_NAME = 'dgwwi77ic'
-const CLOUDINARY_BASE_URL = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload`
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dgwwi77ic'
 
-// Crear índice del mapeo para búsqueda rápida
-const imageMap = new Map()
-if (Array.isArray(imageMapping)) {
-  for (const item of imageMapping) {
-    if (item.local) {
-      imageMap.set(item.local, item.cloudinary || item.altUrl)
-    }
+const _cld = new Cloudinary({ cloud: { cloudName: CLOUDINARY_CLOUD_NAME } })
+
+/**
+ * Construye una URL de Cloudinary desde un public_id usando el SDK.
+ * Usar en código nuevo — el public_id es el identificador canónico en Cloudinary.
+ *
+ * @param {string} publicId  Ej: 'personales/marimba' o 'instrumentos/KORG_WAVESTATE'
+ * @param {Object} options   { width, height, crop }
+ * @returns {string}
+ */
+export function buildUrl(publicId, options = {}) {
+  if (!publicId) return ''
+  const img = _cld.image(publicId)
+  if (options.width || options.height) {
+    const action = options.crop === 'thumb'
+      ? cldThumbnail().width(options.width || 200).height(options.height || 200)
+      : scale().width(options.width).height(options.height)
+    img.resize(action)
   }
+  img.delivery(quality(autoQuality()))
+  return img.toURL()
 }
 
 /**
- * Convierte una ruta local a URL de Cloudinary
- * Usa el image-mapping.json para obtener la URL correcta con versión
- * @param {string} localPath - Ruta local (ej: '/images/instrumentos/ms20.jpg')
- * @param {Object} options - Opciones de transformación
- * @returns {string} URL completa de Cloudinary
+ * Convierte una ruta local a URL de Cloudinary.
+ * Acepta /images/... (ruta local) o public_id directo.
+ *
+ * @param {string} localPath  /images/personales/marimba.webp o personales/marimba
+ * @param {Object} options    { width, height, crop }
+ * @returns {string}
  */
 export function toCloudinaryUrl(localPath, options = {}) {
   if (!localPath) return ''
-  
-  // Si ya es URL completa, devolverla
   if (localPath.startsWith('http')) return localPath
-  
-  // Buscar en el mapeo primero (para obtener URL con versión correcta)
-  let url = imageMap.get(localPath)
-  
-  // Si no está en el mapeo, fallback por nombre de archivo (public_id raíz)
-  if (!url) {
-    const fileName = String(localPath).split('/').pop()
-    if (!fileName) return localPath
-    url = `${CLOUDINARY_BASE_URL}/${encodeURIComponent(fileName)}`
-  }
-  
-  // Aplicar transformaciones si se solicitan
-  if (options.width || options.height || options.quality) {
-    const transforms = []
-    if (options.width) transforms.push(`w_${options.width}`)
-    if (options.height) transforms.push(`h_${options.height}`)
-    if (options.crop) transforms.push(`c_${options.crop}`)
-    if (options.quality) transforms.push(`q_${options.quality}`)
-    
-    const transformStr = transforms.join(',')
-    
-    // Insertar transformaciones después de /upload/ y antes de la versión/path
-    if (url.includes('/upload/v')) {
-      // URL con versión: .../upload/v1234567890/path
-      url = url.replace('/upload/v', `/upload/${transformStr}/v`)
-    } else if (url.includes('/image/upload/')) {
-      // URL sin versión: .../image/upload/path
-      url = url.replace('/image/upload/', `/image/upload/${transformStr}/`)
-    }
-  }
-  
-  return url
+  const publicId = localPathToPublicId(localPath)
+  return buildUrl(publicId, options)
 }
 
 /**
- * Genera URL de thumbnail
+ * Genera URL de thumbnail.
  */
 export function toThumbnail(localPath, width = 200) {
-  return toCloudinaryUrl(localPath, { width, crop: 'limit', quality: 'auto' })
+  return toCloudinaryUrl(localPath, { width, crop: 'thumb' })
 }
 
 /**
- * Genera URL de imagen completa optimizada
+ * Genera URL de imagen completa optimizada.
  */
 export function toOptimized(localPath, width = 800) {
-  return toCloudinaryUrl(localPath, { width, crop: 'limit', quality: 'auto' })
+  return toCloudinaryUrl(localPath, { width })
 }
 
 /**
- * Obtiene la URL de Cloudinary directamente del mapeo
- * @param {string} localPath - Ruta local
- * @returns {string|null} URL de Cloudinary o null si no existe
+ * Mantiene la firma anterior para compatibilidad.
+ * Ahora deriva el public_id en vez de buscar en un JSON.
  */
 export function getCloudinaryUrlFromMapping(localPath) {
   if (!localPath) return null
   if (localPath.startsWith('http')) return localPath
-  return imageMap.get(localPath) || null
+  return toCloudinaryUrl(localPath)
 }

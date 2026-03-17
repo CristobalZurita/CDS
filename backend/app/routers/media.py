@@ -13,11 +13,21 @@ Endpoints:
 """
 
 import logging
+import re
 from typing import List
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+
+
+def _strip_version(url: str) -> str:
+    """Quita /vNNNNNNNNNN/ de URLs de Cloudinary.
+    Sin versión, Cloudinary siempre sirve el asset más reciente para ese public_id.
+    """
+    if not url:
+        return url
+    return re.sub(r'/v\d+/', '/', url)
 
 from app.core.database import SessionLocal
 from app.models.media import MediaAsset, MediaBinding
@@ -54,7 +64,11 @@ def register_asset(data: MediaAssetCreate, db: Session = Depends(get_db)):
     Si el public_id ya existe, actualiza sus datos (overwrite en Cloudinary).
     """
     update_payload = data.model_dump(exclude_unset=True, exclude_none=True)
+    if 'secure_url' in update_payload:
+        update_payload['secure_url'] = _strip_version(update_payload['secure_url'])
     create_payload = data.model_dump(exclude_none=True)
+    if 'secure_url' in create_payload:
+        create_payload['secure_url'] = _strip_version(create_payload['secure_url'])
 
     existing = db.query(MediaAsset).filter(MediaAsset.public_id == data.public_id).first()
     if existing:
@@ -115,7 +129,7 @@ def import_from_cloudinary(db: Session = Depends(get_db)):
 
     for r in resources:
         public_id = r.get("public_id")
-        secure_url = r.get("url") or r.get("secure_url")
+        secure_url = _strip_version(r.get("url") or r.get("secure_url") or "")
         if not public_id or not secure_url:
             continue
 

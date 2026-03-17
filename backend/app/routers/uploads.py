@@ -162,6 +162,8 @@ async def upload_instrument_image(
 async def get_upload_signature(
     request: Request,
     destination: str = Query("uploads", description="uploads|instrumentos|inventario"),
+    filename: str | None = Query(None, description="Nombre original del archivo a subir"),
+    public_id: str | None = Query(None, description="Public ID opcional si ya viene determinado desde el front"),
     user: Optional[dict] = Depends(require_upload_access),
 ):
     """
@@ -171,7 +173,7 @@ async def get_upload_signature(
     El frontend debe:
     1. Obtener esta firma
     2. POST a https://api.cloudinary.com/v1_1/{cloud_name}/image/upload
-       con: file, api_key, timestamp, signature, folder
+       con: file, api_key, timestamp, signature, public_id, asset_folder
     3. Guardar la URL retornada por Cloudinary
     """
     if not CLOUDINARY_AVAILABLE or not is_cloudinary_enabled():
@@ -187,7 +189,11 @@ async def get_upload_signature(
             detail="Acceso denegado. Solo administradores.",
         )
     
-    signature_data = generate_upload_signature(destination=destination)
+    signature_data = generate_upload_signature(
+        destination=destination,
+        filename=filename,
+        public_id=public_id,
+    )
     
     if not signature_data:
         raise HTTPException(

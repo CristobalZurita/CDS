@@ -3,7 +3,6 @@ import { useRouter } from 'vue-router'
 import api from '@/services/api'
 import { useAuth } from '@/composables/useAuth'
 import { useShopCartStore } from '@/stores/shopCart'
-import { inventoryImagePaths, instrumentImagePaths } from '@/utils/publicImageCatalog'
 import { useCloudinaryImage } from '@/composables/useCloudinary'
 import { formatCurrency } from '@/utils/format'
 
@@ -17,68 +16,6 @@ function normalizeSearchText(value) {
     .replace(/[_-]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
-}
-
-function normalizeImageToken(value) {
-  return normalizeSearchText(value)
-    .replace(/[^a-z0-9 ]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
-function imageStemFromPath(path) {
-  const filename = String(path || '').split('/').pop() || ''
-  return filename.replace(/\.[^.]+$/, '')
-}
-
-function buildImageEntries(paths) {
-  return paths.map((path) => ({
-    path,
-    token: normalizeImageToken(imageStemFromPath(path))
-  }))
-}
-
-function buildExactMap(entries) {
-  return new Map(entries.map((entry) => [entry.token, entry.path]))
-}
-
-function findExactMatch(tokens, map) {
-  for (const token of tokens) {
-    const match = map.get(token)
-    if (match) return match
-  }
-  return ''
-}
-
-function findLooseMatch(tokens, entries) {
-  for (const token of tokens) {
-    if (token.length < 3) continue
-    const match = entries.find((entry) => entry.token.includes(token) || token.includes(entry.token))
-    if (match) return match.path
-  }
-  return ''
-}
-
-const inventoryImageEntries = buildImageEntries(inventoryImagePaths)
-const instrumentImageEntries = buildImageEntries(instrumentImagePaths)
-const inventoryImageMap = buildExactMap(inventoryImageEntries)
-const instrumentImageMap = buildExactMap(instrumentImageEntries)
-
-function catalogImageFallback(product) {
-  const tokenCandidates = Array.from(new Set(
-    [product?.sku, product?.name, product?.family, product?.category]
-      .map((value) => normalizeImageToken(value))
-      .filter(Boolean)
-  ))
-  if (!tokenCandidates.length) return ''
-  const inventoryExact = findExactMatch(tokenCandidates, inventoryImageMap)
-  if (inventoryExact) return inventoryExact
-  const instrumentExact = findExactMatch(tokenCandidates, instrumentImageMap)
-  if (instrumentExact) return instrumentExact
-  const inventoryLoose = findLooseMatch(tokenCandidates, inventoryImageEntries)
-  if (inventoryLoose) return useCloudinaryImage(inventoryLoose)
-  const instrumentLoose = findLooseMatch(tokenCandidates, instrumentImageEntries)
-  return instrumentLoose ? useCloudinaryImage(instrumentLoose) : ''
 }
 
 function readCatalogCache() {
@@ -191,12 +128,10 @@ export function useStorePage() {
 
   function productImageSrc(product) {
     const value = String(product?.image_url || '').trim()
-    if (value) {
-      if (/^https?:\/\//i.test(value)) return value
-      const normalized = value.startsWith('/') ? value : `/${value.replace(/^\/+/, '')}`
-      return useCloudinaryImage(normalized)
-    }
-    return catalogImageFallback(product)
+    if (!value) return ''
+    if (/^https?:\/\//i.test(value)) return value
+    const normalized = value.startsWith('/') ? value : `/${value.replace(/^\/+/, '')}`
+    return useCloudinaryImage(normalized)
   }
 
   function formatLinePrice(value) {

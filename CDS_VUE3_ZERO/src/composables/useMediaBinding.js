@@ -2,9 +2,6 @@
  * Composable para resolver slots de medios dinámicos desde la BD.
  * Lee GET /api/v1/media/bindings una sola vez (caché de módulo),
  * y expone resolveSlot(slotKey) → secure_url o null.
- *
- * Fallback: si el slot no está en BD, busca en image-mapping.json
- * usando la ruta local del slot como clave (e.g. "/images/logo/logo.webp").
  */
 
 import { ref, readonly } from 'vue'

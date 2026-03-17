@@ -16,7 +16,9 @@ export async function uploadImageWithMeta(file, destination = 'uploads') {
   if (!file) return null
 
   try {
-    const signatureRes = await api.post(`/uploads/signature?destination=${destination}`)
+    const signatureRes = await api.post(
+      `/uploads/signature?destination=${encodeURIComponent(destination)}&filename=${encodeURIComponent(file.name)}`
+    )
     const sig = signatureRes.data?.data
 
     if (sig) {
@@ -25,7 +27,10 @@ export async function uploadImageWithMeta(file, destination = 'uploads') {
       cloudForm.append('api_key', sig.api_key)
       cloudForm.append('timestamp', sig.timestamp)
       cloudForm.append('signature', sig.signature)
-      cloudForm.append('folder', sig.folder)
+      cloudForm.append('public_id', sig.public_id)
+      if (sig.asset_folder) cloudForm.append('asset_folder', sig.asset_folder)
+      if (sig.overwrite) cloudForm.append('overwrite', 'true')
+      if (sig.invalidate) cloudForm.append('invalidate', 'true')
 
       const cloudRes = await fetch(
         `https://api.cloudinary.com/v1_1/${sig.cloud_name}/image/upload`,
@@ -36,8 +41,8 @@ export async function uploadImageWithMeta(file, destination = 'uploads') {
         const d = await cloudRes.json()
         return {
           secure_url: d.secure_url,
-          public_id: d.public_id,
-          folder: sig.folder,
+          public_id: d.public_id || sig.public_id,
+          folder: sig.asset_folder || (d.public_id ? d.public_id.split('/').slice(0, -1).join('/') : destination),
           original_filename: file.name,
           format: d.format,
           bytes: d.bytes,
@@ -81,7 +86,9 @@ export async function uploadImage(file, destination = 'uploads') {
   
   // Intentar upload directo a Cloudinary
   try {
-    const signatureRes = await api.post(`/uploads/signature?destination=${destination}`)
+    const signatureRes = await api.post(
+      `/uploads/signature?destination=${encodeURIComponent(destination)}&filename=${encodeURIComponent(file.name)}`
+    )
     const sig = signatureRes.data?.data
     
     if (sig) {
@@ -90,7 +97,10 @@ export async function uploadImage(file, destination = 'uploads') {
       cloudForm.append('api_key', sig.api_key)
       cloudForm.append('timestamp', sig.timestamp)
       cloudForm.append('signature', sig.signature)
-      cloudForm.append('folder', sig.folder)
+      cloudForm.append('public_id', sig.public_id)
+      if (sig.asset_folder) cloudForm.append('asset_folder', sig.asset_folder)
+      if (sig.overwrite) cloudForm.append('overwrite', 'true')
+      if (sig.invalidate) cloudForm.append('invalidate', 'true')
       
       const cloudRes = await fetch(
         `https://api.cloudinary.com/v1_1/${sig.cloud_name}/image/upload`,
