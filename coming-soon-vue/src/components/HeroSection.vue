@@ -687,7 +687,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
 .btn:hover  { transform: translateY(-2px); opacity: 0.88; }
 .btn:active { transform: translateY(0); }
 .btn-wa   { background: var(--cds-whatsapp); color: var(--cds-white); }
-.btn-dark { background: var(--cds-primary);     color: var(--cds-light); }
+.btn-dark { background: var(--cds-dark);         color: var(--cds-light); }
 
 /* ─── Entrada ───────────────────────────────────── */
 @keyframes fadeUp {
