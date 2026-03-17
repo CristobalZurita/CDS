@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   packages: write
 
 env:
@@ -27,11 +28,7 @@ jobs:
     name: Build Frontend
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || vars.ENABLE_STAGING_DEPLOY == 'true' || vars.ENABLE_PROD_DEPLOY == 'true'
-    
-    outputs:
-      image: ${{ steps.meta.outputs.image }}
-      tags: ${{ steps.meta.outputs.tags }}
-    
+
     steps:
       - uses: actions/checkout@v4
       
@@ -137,8 +134,10 @@ jobs:
           script: |
             cd /var/www/cirujano-staging
             git pull origin develop
+            cd CDS_VUE3_ZERO
             npm ci
             npm run build
+            cd ..
             docker-compose -f docker-compose.staging.yml pull
             docker-compose -f docker-compose.staging.yml up -d
             
@@ -194,8 +193,10 @@ jobs:
             
             # Deploy new version (Green)
             git pull origin main
+            cd CDS_VUE3_ZERO
             npm ci
             npm run build
+            cd ..
             
             # Update Docker images
             docker-compose pull
@@ -253,8 +254,9 @@ jobs:
             Production Deployment ${{ job.status }}
             Commit: ${{ github.sha }}
             Branch: ${{ github.ref }}
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
           fields: repo,message,commit,author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   smoke-tests:
     name: Smoke Tests
@@ -265,17 +267,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-      
-      - name: Install test dependencies
-        run: npm ci
-      
-      - name: Run smoke tests
+      - name: Run smoke checks
         env:
-          TEST_URL: ${{ github.ref == 'refs/heads/main' && 'https://cirujano.app' || 'https://staging.cirujano.app' }}
-          TEST_USER: ${{ secrets.TEST_USER_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
-        run: npm run test:smoke || true
+          TEST_URL: https://staging.cirujano.app
+        run: |
+          curl -fsS "$TEST_URL/" > /dev/null
+          curl -fsS "$TEST_URL/login" > /dev/null
+          curl -fsS "$TEST_URL/tienda" > /dev/null
+          curl -fsS "$TEST_URL/api/health" > /dev/null

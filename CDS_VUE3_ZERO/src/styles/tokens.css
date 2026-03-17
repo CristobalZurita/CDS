@@ -31,11 +31,7 @@
   --cds-focus-ring: 0 0 0 3px rgba(236, 107, 0, 0.25);
   --cds-focus-ring-danger: 0 0 0 3px rgba(220, 38, 38, 0.25);
 
-  --cds-vintage-orange: #cc7d43;
   --cds-fluor-green: #d9ff4e;
-  --cds-vintage-beige: var(--cds-light);
-  --cds-vintage-black: var(--cds-dark);
-  --cds-orange-primary: var(--cds-primary);
   --cds-orange-pastel: #e8935a;
 
   --cds-background-color: #d3d0c3;
@@ -67,12 +63,6 @@
   --cds-light-6: #6c757d;
   --cds-light-7: #495057;
   --cds-light-shades-palette: var(--cds-light-1), var(--cds-light-2), var(--cds-light-3), var(--cds-light-4), var(--cds-light-5), var(--cds-light-6), var(--cds-light-7);
-
-  --cds-text-1: var(--cds-text-xs);
-  --cds-text-2: var(--cds-text-sm);
-  --cds-text-3: var(--cds-text-base);
-  --cds-text-4: var(--cds-text-lg);
-  --cds-text-5: var(--cds-text-xl);
 
   --cds-texts-breakpoint-multipliers: xxxxl 1.15, xxxl 1.1, xxl 1.0, xl 0.95, lg 0.95, md 1.0, sm 1.05;
   --cds-headings-breakpoint-multipliers: xxxxl 1.2, xxxl 1.15, xxl 1.0, xl 0.95, lg 0.95, md 0.95, sm 0.95;

@@ -4,23 +4,27 @@
  */
 
 import { ref } from 'vue'
-import api from '@/services/api'
+import api, { extractErrorMessage } from '@/services/api'
 
-const repairs = ref([])
-const isLoading = ref(false)
-const error = ref(null)
+function toRepairList(payload) {
+  return Array.isArray(payload?.data) ? payload.data : []
+}
 
 export function useRepairs() {
+  const repairs = ref([])
+  const isLoading = ref(false)
+  const error = ref('')
+
   async function fetchRepairs() {
     isLoading.value = true
-    error.value = null
+    error.value = ''
     try {
-      const response = await api.get('/repairs')
-      repairs.value = response.data || response || []
+      const response = await api.get('/repairs/')
+      repairs.value = toRepairList(response)
       return repairs.value
-    } catch (e) {
-      error.value = e.message || 'Error cargando reparaciones'
-      console.error('Error fetching repairs:', e)
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+      repairs.value = []
       return []
     } finally {
       isLoading.value = false
@@ -28,15 +32,14 @@ export function useRepairs() {
   }
 
   async function deleteRepair(id) {
-    if (!window.confirm('¿Eliminar esta reparación?')) return false
+    error.value = ''
     try {
       await api.delete(`/repairs/${id}`)
       repairs.value = repairs.value.filter(r => r.id !== id)
       return true
-    } catch (e) {
-      console.error('Error deleting repair:', e)
-      alert('Error eliminando reparación')
-      return false
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+      throw requestError
     }
   }
 

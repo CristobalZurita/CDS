@@ -1,13 +1,13 @@
 /**
  * useAdminDashboardPage
- * 
- * Dashboard administrativo completo.
- * Basado en LEGACY - trae StatsCards, KPIs, RepairsList, UserList.
+ *
+ * Estado y carga de KPIs del dashboard administrativo.
+ * Reutiliza los endpoints ya presentes en la page legacy, sin duplicarlos.
  */
 
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import api, { extractErrorMessage } from '@/services/api'
-import { formatDate, formatCurrency } from '@/utils/format'
+import { pickSettledData } from '@/utils/api-helpers'
 
 export function useAdminDashboardPage() {
   const isLoading = ref(false)
@@ -24,28 +24,12 @@ export function useAdminDashboardPage() {
   const kpiClients = ref({})
   const kpiWarranty = ref({})
   
-  // Lista de reparaciones recientes
-  const recentRepairs = ref([])
-  
   // Cards del dashboard
-  const cards = computed(() => [
-    { id: 'users', label: 'Usuarios', value: stats.value.users || 0 },
-    { id: 'clients', label: 'Clientes', value: stats.value.clients || 0 },
-    { id: 'repairs', label: 'Reparaciones', value: stats.value.repairs || 0 }
-  ])
-  
-  // Helper para obtener datos seguros
-  const safeData = (result, fallback = {}) => {
-    if (result.status !== 'fulfilled') return fallback
-    return result.value?.data || fallback
-  }
-  
   async function loadDashboard() {
     isLoading.value = true
     error.value = ''
-    
+
     try {
-      // Llamadas paralelas a todos los endpoints de analytics
       const [
         statsRes,
         summaryRes,
@@ -53,44 +37,36 @@ export function useAdminDashboardPage() {
         revenueRes,
         inventoryRes,
         clientsRes,
-        warrantyRes,
-        repairsRes
+        warrantyRes
       ] = await Promise.allSettled([
-        api.get('/analytics/dashboard'),
+        api.get('/stats', { params: { extended: true } }),
         api.get('/analytics/kpis/summary'),
         api.get('/analytics/dashboard'),
         api.get('/analytics/revenue'),
         api.get('/analytics/inventory'),
         api.get('/analytics/clients'),
-        api.get('/analytics/warranties'),
-        api.get('/repairs/', { params: { limit: 10, sort: '-created_at' } })
+        api.get('/analytics/warranties')
       ])
-      
-      stats.value = safeData(statsRes, {})
-      kpiSummary.value = safeData(summaryRes, {})
-      kpiDashboard.value = safeData(dashboardRes, {})
-      kpiRevenue.value = safeData(revenueRes, {})
-      kpiInventory.value = safeData(inventoryRes, {})
-      kpiClients.value = safeData(clientsRes, {})
-      kpiWarranty.value = safeData(warrantyRes, {})
-      
-      // Reparaciones recientes
-      const repairsData = safeData(repairsRes, [])
-      recentRepairs.value = Array.isArray(repairsData) ? repairsData : (repairsData.data || [])
-      
+
+      stats.value = pickSettledData(statsRes, {})
+      kpiSummary.value = pickSettledData(summaryRes, {})
+      kpiDashboard.value = pickSettledData(dashboardRes, {})
+      kpiRevenue.value = pickSettledData(revenueRes, {})
+      kpiInventory.value = pickSettledData(inventoryRes, {})
+      kpiClients.value = pickSettledData(clientsRes, {})
+      kpiWarranty.value = pickSettledData(warrantyRes, {})
     } catch (err) {
       error.value = extractErrorMessage(err)
     } finally {
       isLoading.value = false
     }
   }
-  
+
   onMounted(loadDashboard)
-  
+
   return {
     isLoading,
     error,
-    cards,
     stats,
     kpiSummary,
     kpiDashboard,
@@ -98,10 +74,7 @@ export function useAdminDashboardPage() {
     kpiInventory,
     kpiClients,
     kpiWarranty,
-    recentRepairs,
     loadDashboard,
-    formatCurrency,
-    formatDate
   }
 }
 

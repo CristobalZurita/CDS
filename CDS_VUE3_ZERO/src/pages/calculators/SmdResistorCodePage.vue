@@ -133,15 +133,15 @@ function applyExample(example) {
 /* Form fields */
 .form-field { display: grid; gap: 0.3rem; }
 .form-field span { font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
-.form-field select, .form-field input { border: 1.5px solid rgba(62, 60, 56, 0.25); border-radius: 0.5rem; padding: 0.62rem 0.75rem; font-size: var(--cds-text-base); background: var(--cds-white); color: var(--cds-dark); outline: none; width: 100%; box-sizing: border-box; }
+.form-field select, .form-field input { border: 1.5px solid var(--cds-border-strong); border-radius: var(--cds-radius-sm); padding: 0.62rem 0.75rem; font-size: var(--cds-text-base); background: var(--cds-white); color: var(--cds-dark); outline: none; width: 100%; box-sizing: border-box; }
 .form-field select:focus, .form-field input:focus { border-color: var(--cds-primary); }
 /* Helper examples */
 .helper-block { display: grid; gap: 0.45rem; }
 .helper-title { margin: 0; font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
 .example-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.example-chip { border: 1px solid rgba(62, 60, 56, 0.25); background: var(--cds-white); color: var(--cds-dark); border-radius: 999px; min-height: 32px; padding: 0 0.7rem; font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); cursor: pointer; }
+.example-chip { border: 1px solid var(--cds-border-strong); background: var(--cds-white); color: var(--cds-dark); border-radius: var(--cds-radius-pill); min-height: 32px; padding: 0 0.7rem; font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); cursor: pointer; }
 /* Chip preview */
-.chip-preview { min-height: 64px; border-radius: 0.8rem; border: 1px solid rgba(62, 60, 56, 0.25); background: linear-gradient(135deg, #292a2d, #17181a); display: flex; align-items: center; justify-content: center; }
+.chip-preview { min-height: 64px; border-radius: var(--cds-radius-md); border: 1px solid var(--cds-border-strong); background: linear-gradient(135deg, #292a2d, #17181a); display: flex; align-items: center; justify-content: center; }
 .chip-preview--active { box-shadow: 0 0 0 1px color-mix(in srgb, var(--cds-primary) 45%, transparent) inset; }
-.chip-text { color: #f2f2f2; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.05em; }
+.chip-text { color: var(--cds-white); font-size: 1.2rem; font-weight: 700; letter-spacing: 0.05em; }
 </style>

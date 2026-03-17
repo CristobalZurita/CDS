@@ -30,11 +30,11 @@
 }
 
 .sim-frame-wrap {
-  border: 1px solid rgba(62, 60, 56, 0.28);
+  border: 1px solid var(--cds-border-strong);
   border-radius: var(--cds-radius-md);
   overflow: hidden;
   box-shadow: var(--cds-shadow-sm);
-  background: #111;
+  background: var(--cds-dark);
 }
 
 .sim-frame {

@@ -173,17 +173,17 @@ function bandClass(color) {
 <style scoped>
 /* Panel tabs */
 .panel-tabs { display: flex; gap: 0.3rem; }
-.panel-tab { padding: 0.3rem 0.85rem; border-radius: 999px; border: 1px solid rgba(62, 60, 56, 0.22); background: transparent; color: var(--cds-dark); font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); cursor: pointer; }
+.panel-tab { padding: 0.3rem 0.85rem; border-radius: var(--cds-radius-pill); border: 1px solid var(--cds-border-strong); background: transparent; color: var(--cds-dark); font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); cursor: pointer; }
 .panel-tab--active { background: var(--cds-primary); border-color: var(--cds-primary); color: var(--cds-white); }
 /* Form fields (selects dentro del panel) */
 .form-field { display: grid; gap: 0.3rem; }
 .form-field span { font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); letter-spacing: 0.02em; }
-.form-field select, .form-field input { border: 1.5px solid rgba(62, 60, 56, 0.25); border-radius: 0.5rem; padding: 0.62rem 0.75rem; font-size: var(--cds-text-base); background: var(--cds-white); color: var(--cds-dark); outline: none; width: 100%; box-sizing: border-box; }
+.form-field select, .form-field input { border: 1.5px solid var(--cds-border-strong); border-radius: var(--cds-radius-sm); padding: 0.62rem 0.75rem; font-size: var(--cds-text-base); background: var(--cds-white); color: var(--cds-dark); outline: none; width: 100%; box-sizing: border-box; }
 .form-field select:focus, .form-field input:focus { border-color: var(--cds-primary); }
 /* Resistor visual */
 .resistor-visual { display: flex; justify-content: center; padding: 0.2rem 0 0.5rem; }
-.resistor-body { width: min(100%, 380px); min-height: 64px; border-radius: 999px; background: linear-gradient(135deg, #f1d9a8, #e8c98d); border: 1px solid rgba(62, 60, 56, 0.25); display: grid; grid-auto-flow: column; grid-auto-columns: 18px; justify-content: center; align-items: stretch; gap: 10px; padding: 0 1.2rem; }
-.band { border-radius: 4px; margin: 8px 0; border: 1px solid rgba(62, 60, 56, 0.3); }
+.resistor-body { width: min(100%, 380px); min-height: 64px; border-radius: var(--cds-radius-pill); background: linear-gradient(135deg, #f1d9a8, #e8c98d); border: 1px solid var(--cds-border-strong); display: grid; grid-auto-flow: column; grid-auto-columns: 18px; justify-content: center; align-items: stretch; gap: 10px; padding: 0 1.2rem; }
+.band { border-radius: 4px; margin: 8px 0; border: 1px solid var(--cds-border-strong); }
 .band-black  { background: #1f1f1f; }
 .band-brown  { background: #6f4a2a; }
 .band-red    { background: #b8392c; }

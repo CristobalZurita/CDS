@@ -564,7 +564,7 @@
 
 .photo-item {
   margin: 0;
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
+  border: 1px solid var(--cds-border-input);
   border-radius: 0.7rem;
   overflow: hidden;
   background: var(--cds-white);

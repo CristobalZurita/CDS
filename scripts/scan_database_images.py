@@ -1,38 +1,41 @@
 #!/usr/bin/env python3
 """
 Escanea la base de datos SQLite para encontrar referencias a imágenes
-Genera un reporte de qué imágenes se usan y su estado en Cloudinary
+Genera un reporte de qué imágenes se usan y su public_id canónico en Cloudinary
 """
 
 import sqlite3
-import json
 import re
+import sys
 from pathlib import Path
 from collections import defaultdict
 
-DB_PATH = Path(__file__).parent.parent / "cirujano.db"
-IMAGE_MAPPING_PATH = Path(__file__).parent.parent / "image-mapping.json"
+ROOT = Path(__file__).resolve().parents[1]
+BACKEND_ROOT = ROOT / "backend"
+DB_CANDIDATES = [
+    BACKEND_ROOT / "cirujano.db",
+    ROOT / "cirujano.db",
+]
+
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
+
+from app.services.cloudinary_service import local_path_to_public_id  # type: ignore  # noqa: E402
 
 
 def get_db_connection():
     """Obtiene conexión a la BD."""
-    try:
-        return sqlite3.connect(DB_PATH)
-    except Exception as e:
-        print(f"❌ Error al conectar a la BD: {e}")
-        return None
+    for db_path in DB_CANDIDATES:
+        if not db_path.exists():
+            continue
+        try:
+            print(f"📂 Usando BD: {db_path}")
+            return sqlite3.connect(db_path)
+        except Exception as e:
+            print(f"⚠️  No se pudo abrir {db_path}: {e}")
 
-
-def load_image_mapping():
-    """Carga el mapeo de imágenes."""
-    try:
-        with open(IMAGE_MAPPING_PATH, 'r') as f:
-            mapping = json.load(f)
-            # Crear diccionario por ruta local
-            return {item['local']: item for item in mapping}
-    except Exception as e:
-        print(f"❌ Error al cargar image-mapping.json: {e}")
-        return {}
+    print("❌ Error al conectar a la BD: no se encontró una base SQLite válida")
+    return None
 
 
 def find_image_columns(cursor, table_name):
@@ -128,12 +131,6 @@ def main():
     
     cursor = conn.cursor()
     
-    # Cargar mapeo
-    print("📂 Cargando mapeo de imágenes...")
-    image_mapping = load_image_mapping()
-    print(f"   {len(image_mapping)} imágenes en el mapeo")
-    print()
-    
     # Obtener todas las tablas
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = [row[0] for row in cursor.fetchall()]
@@ -199,19 +196,11 @@ def main():
                     if path not in unique_paths:
                         unique_paths.add(path)
                         
-                        # Verificar si está en el mapeo
-                        in_mapping = path in image_mapping
-                        status = "✅" if in_mapping else "❌"
-                        
+                        public_id = local_path_to_public_id(path) if path.startswith('/images/') else ''
+                        status = "✅" if public_id else "❌"
                         print(f"  {status} {path}")
-                        
-                        if in_mapping:
-                            cloud_url = image_mapping[path].get('cloudinary', '')
-                            # Verificar si la URL tiene formato correcto (con versión)
-                            if '/v' in cloud_url and '/upload/v' in cloud_url:
-                                print(f"      → URL correcta: {cloud_url[:60]}...")
-                            else:
-                                print(f"      → ⚠️ URL sin versión: {cloud_url[:60]}...")
+                        if public_id:
+                            print(f"      → public_id: {public_id}")
     
     # Mostrar imágenes de uploads
     if categories['uploads']:

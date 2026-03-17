@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Script para completar datos faltantes en instruments.json
-Especialmente valor_estimado, year, description basados en tier de marca
+Script para completar datos faltantes en backend/app/data/instruments.json.
+Especialmente valor_estimado, year y description basados en tier de marca.
 """
 
 import json
 import sys
+from pathlib import Path
 
 # Valores estimados por tier (rango en CLP)
 TIER_RANGES = {
@@ -50,12 +51,17 @@ YEAR_BY_TIER = {
     'historic': 1980
 }
 
+ROOT = Path(__file__).resolve().parents[1]
+INSTRUMENTS_PATH = ROOT / 'backend' / 'app' / 'data' / 'instruments.json'
+BRANDS_PATH = ROOT / 'backend' / 'app' / 'data' / 'brands.json'
+
+
 def load_files():
     """Cargar JSONs"""
-    with open('src/assets/data/instruments.json', 'r', encoding='utf-8') as f:
+    with open(INSTRUMENTS_PATH, 'r', encoding='utf-8') as f:
         instruments_data = json.load(f)
     
-    with open('src/assets/data/brands.json', 'r', encoding='utf-8') as f:
+    with open(BRANDS_PATH, 'r', encoding='utf-8') as f:
         brands_data = json.load(f)
     
     # Crear dict de marcas por ID
@@ -123,7 +129,7 @@ def main():
     instruments_data, changes = complete_instruments(instruments_data, brands)
     
     # Guardar
-    save_file(instruments_data, 'src/assets/data/instruments.json')
+    save_file(instruments_data, str(INSTRUMENTS_PATH))
     
     # Reporte
     print(f"\n📊 Cambios realizados:")

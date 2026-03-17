@@ -87,10 +87,10 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   padding: 0.6rem 0.9rem;
-  border-radius: 999px;
-  background: rgba(236, 107, 0, 0.12);
-  border: 1px solid rgba(236, 107, 0, 0.35);
-  color: #b34f00;
+  border-radius: var(--cds-radius-pill);
+  background: var(--cds-warning-bg);
+  border: 1px solid var(--cds-warning-border);
+  color: var(--cds-warning-text);
   font-size: 1rem;
   font-weight: 600;
 }

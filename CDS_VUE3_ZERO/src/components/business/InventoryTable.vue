@@ -20,7 +20,7 @@
 
 .inventory-table :deep(th),
 .inventory-table :deep(td) {
-  border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+  border: 1px solid var(--cds-border-card);
   padding: 0.65rem 0.75rem;
   font-size: var(--cds-text-base);
 }

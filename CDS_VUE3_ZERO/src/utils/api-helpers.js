@@ -84,3 +84,12 @@ export function normalizeClient(entry) {
     client_code: String(entry?.client_code || '')
   }
 }
+
+/**
+ * Extrae data de un resultado de Promise.allSettled de forma segura
+ * y mantiene un fallback estable cuando la request falla.
+ */
+export function pickSettledData(result, fallback = {}) {
+  if (result?.status !== 'fulfilled') return fallback
+  return result.value?.data ?? fallback
+}

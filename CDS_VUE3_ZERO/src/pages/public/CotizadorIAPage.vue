@@ -3,10 +3,7 @@
 
     <!-- Indicador de progreso -->
     <div class="progress-bar" aria-hidden="true">
-      <div
-        class="progress-fill"
-        :style="{ width: notFoundMode ? (step === 1 ? '50%' : '100%') : `${(step / 4) * 100}%` }"
-      ></div>
+      <div class="progress-fill"></div>
     </div>
 
     <!-- Error global -->
@@ -14,11 +11,14 @@
 
     <!-- ── Paso 1: Selección de equipo ───────────────────────────── -->
     <div v-if="step === 1" class="cotizador-card">
-      <header class="step-header">
-        <span class="step-badge">{{ notFoundMode ? 'Paso 1 de 2' : 'Paso 1 de 4' }}</span>
-        <h1>Seleccionar equipo</h1>
-        <p>{{ notFoundMode ? 'Escribe la marca y el modelo de tu instrumento.' : 'Elige la marca y el modelo de tu instrumento.' }}</p>
-      </header>
+      <CotizadorStepHeader
+        :badge="notFoundMode ? 'Paso 1 de 2' : 'Paso 1 de 4'"
+        title="Seleccionar equipo"
+      >
+        <template #description>
+          {{ notFoundMode ? 'Escribe la marca y el modelo de tu instrumento.' : 'Elige la marca y el modelo de tu instrumento.' }}
+        </template>
+      </CotizadorStepHeader>
 
       <!-- Modo normal: selects de marca y modelo -->
       <div v-if="!notFoundMode" class="form-grid">
@@ -116,11 +116,11 @@
 
     <!-- ── Paso 2: Selección de fallas ──────────────────────────── -->
     <div v-if="step === 2" class="cotizador-card">
-      <header class="step-header">
-        <span class="step-badge">Paso 2 de 4</span>
-        <h1>Síntomas del equipo</h1>
-        <p>Selecciona todo lo que presenta tu <strong>{{ selectedBrandName }} {{ selectedModelName }}</strong>.</p>
-      </header>
+      <CotizadorStepHeader badge="Paso 2 de 4" title="Síntomas del equipo">
+        <template #description>
+          Selecciona todo lo que presenta tu <strong>{{ selectedBrandName }} {{ selectedModelName }}</strong>.
+        </template>
+      </CotizadorStepHeader>
 
       <div v-if="loading" class="loading-row">
         <span class="spinner"></span> Cargando fallas disponibles…
@@ -172,41 +172,18 @@
 
     <!-- ── Paso 3: Resultado del cálculo ────────────────────────── -->
     <div v-if="step === 3" class="cotizador-card">
-      <header class="step-header">
-        <span class="step-badge">Paso 3 de 4</span>
-        <h1>Estimación referencial</h1>
-        <p>Basada en los síntomas seleccionados y el perfil del equipo.</p>
-      </header>
+      <CotizadorStepHeader badge="Paso 3 de 4" title="Estimación referencial">
+        <template #description>
+          Basada en los síntomas seleccionados y el perfil del equipo.
+        </template>
+      </CotizadorStepHeader>
 
-      <div v-if="quoteResult" class="result-box">
-        <div class="result-equipment">
-          <strong>{{ quoteResult.equipment_info.brand }} {{ quoteResult.equipment_info.model }}</strong>
-        </div>
-
-        <div class="result-faults">
-          <span v-for="name in selectedFaultNames" :key="name" class="fault-tag">{{ name }}</span>
-        </div>
-
-        <div class="result-breakdown">
-          <div class="breakdown-row">
-            <span>Costo base de diagnóstico</span>
-            <span>{{ formatCLP(quoteResult.base_cost) }}</span>
-          </div>
-          <div class="breakdown-row" v-if="quoteResult.complexity_factor !== 1">
-            <span>Factor complejidad (marca)</span>
-            <span>× {{ quoteResult.complexity_factor }}</span>
-          </div>
-          <div class="breakdown-row" v-if="quoteResult.value_factor !== 1">
-            <span>Factor valor estimado</span>
-            <span>× {{ quoteResult.value_factor }}</span>
-          </div>
-        </div>
-
-        <div class="result-total">
-          <span>Estimación total</span>
-          <strong>{{ formattedFinalCost }}</strong>
-        </div>
-      </div>
+      <CotizadorQuoteSummary
+        :quote-result="quoteResult"
+        :selected-fault-names="selectedFaultNames"
+        :formatted-final-cost="formattedFinalCost"
+        :format-clp="formatCLP"
+      />
 
       <div class="disclaimer">
         <p>Esta cotización es referencial y no vinculante. El presupuesto formal
@@ -224,11 +201,14 @@
     <!-- ── Paso 4: Formulario de contacto ────────────────────────── -->
     <div v-if="step === 4" class="cotizador-card">
       <template v-if="!leadSubmitted">
-        <header class="step-header">
-          <span class="step-badge">{{ notFoundMode ? 'Paso 2 de 2' : 'Paso 4 de 4' }}</span>
-          <h1>Tus datos de contacto</h1>
-          <p>Te contactaremos para coordinar la revisión de tu equipo.</p>
-        </header>
+        <CotizadorStepHeader
+          :badge="notFoundMode ? 'Paso 2 de 2' : 'Paso 4 de 4'"
+          title="Tus datos de contacto"
+        >
+          <template #description>
+            Te contactaremos para coordinar la revisión de tu equipo.
+          </template>
+        </CotizadorStepHeader>
 
         <div class="form-grid">
           <label class="field">
@@ -282,21 +262,13 @@
 
       <!-- Éxito -->
       <template v-else>
-        <div class="success-box">
-          <i class="fa-solid fa-circle-check success-icon"></i>
-          <h2>¡Listo, {{ leadForm.nombre.split(' ')[0] }}!</h2>
-          <p v-if="!notFoundMode">
-            Recibimos tu solicitud para el
-            <strong>{{ selectedBrandName }} {{ selectedModelName }}</strong>.
-            Estimación: <strong>{{ formattedFinalCost }}</strong>.
-          </p>
-          <p v-else>
-            Recibimos tu solicitud para el
-            <strong>{{ selectedBrandName }} {{ selectedModelName }}</strong>.
-            Prepararemos una cotización personalizada para tu equipo.
-          </p>
-          <p>Te contactaremos pronto para coordinar la revisión.</p>
-        </div>
+        <CotizadorLeadSuccess
+          :lead-name="leadForm.nombre"
+          :selected-brand-name="selectedBrandName"
+          :selected-model-name="selectedModelName"
+          :formatted-final-cost="formattedFinalCost"
+          :not-found-mode="notFoundMode"
+        />
 
         <div class="actions actions--center">
           <button class="btn-secondary" @click="resetAll">Nueva cotización</button>
@@ -309,6 +281,10 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import CotizadorLeadSuccess from '@/components/business/CotizadorLeadSuccess.vue'
+import CotizadorQuoteSummary from '@/components/business/CotizadorQuoteSummary.vue'
+import CotizadorStepHeader from '@/components/business/CotizadorStepHeader.vue'
 import TurnstileWidget from '@/components/widgets/TurnstileWidget.vue'
 import { useCotizadorIAPage } from '@/composables/useCotizadorIAPage'
 
@@ -352,6 +328,15 @@ const {
   deactivateNotFoundMode,
 } = useCotizadorIAPage()
 
+const progressScale = computed(() => {
+  const currentStep = Number(step.value || 1)
+  if (notFoundMode.value) {
+    return currentStep === 1 ? '0.5' : '1'
+  }
+  const normalized = Math.min(Math.max(currentStep / 4, 0), 1)
+  return String(normalized)
+})
+
 function formatCLP(value) {
   return new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -383,7 +368,9 @@ function formatCLP(value) {
 .progress-fill {
   height: 100%;
   background: var(--cds-primary);
-  transition: width 0.35s ease;
+  transform: scaleX(v-bind(progressScale));
+  transform-origin: left center;
+  transition: transform 0.35s ease;
 }
 
 /* Alerta de error */
@@ -410,32 +397,6 @@ function formatCLP(value) {
   padding: 1.25rem 1rem;
   display: grid;
   gap: 1rem;
-}
-
-/* Encabezado del paso */
-.step-badge {
-  font-size: var(--cds-text-xs);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--cds-primary);
-}
-
-.step-header {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.step-header h1 {
-  margin: 0;
-  font-size: var(--cds-text-2xl);
-  line-height: 1.2;
-}
-
-.step-header p {
-  margin: 0;
-  color: var(--cds-text-muted);
-  font-size: var(--cds-text-sm);
 }
 
 /* Grid de formulario */
@@ -577,61 +538,6 @@ function formatCLP(value) {
   margin-top: 0.1rem;
 }
 
-/* Caja de resultado */
-.result-box {
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 25%, white);
-  border-radius: 0.7rem;
-  padding: 0.9rem;
-  display: grid;
-  gap: 0.75rem;
-}
-
-.result-equipment {
-  font-size: var(--cds-text-base);
-}
-
-.result-faults {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.fault-tag {
-  font-size: var(--cds-text-xs);
-  padding: 0.2rem 0.5rem;
-  background: color-mix(in srgb, var(--cds-light) 40%, white);
-  border-radius: 0.35rem;
-  color: var(--cds-text-normal);
-}
-
-.result-breakdown {
-  display: grid;
-  gap: 0.3rem;
-  border-top: 1px solid color-mix(in srgb, var(--cds-light) 55%, white);
-  padding-top: 0.65rem;
-}
-
-.breakdown-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--cds-text-sm);
-  color: var(--cds-text-muted);
-}
-
-.result-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 2px solid color-mix(in srgb, var(--cds-primary) 30%, white);
-  padding-top: 0.65rem;
-  font-size: var(--cds-text-base);
-}
-
-.result-total strong {
-  font-size: var(--cds-text-2xl);
-  color: var(--cds-primary);
-}
-
 /* Disclaimer */
 .disclaimer {
   border: 1px solid var(--cds-border-input);
@@ -661,31 +567,6 @@ function formatCLP(value) {
   height: 18px;
   flex-shrink: 0;
   accent-color: var(--cds-primary);
-}
-
-/* Éxito */
-.success-box {
-  display: grid;
-  gap: 0.6rem;
-  text-align: center;
-  padding: 1rem 0;
-}
-
-.success-icon {
-  font-size: 2.5rem;
-  color: var(--cds-primary);
-  margin: 0 auto;
-}
-
-.success-box h2 {
-  margin: 0;
-  font-size: var(--cds-text-xl);
-}
-
-.success-box p {
-  margin: 0;
-  font-size: var(--cds-text-sm);
-  color: var(--cds-text-muted);
 }
 
 /* Acciones */

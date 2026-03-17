@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 """
 SYNC INSTRUMENTS - LITERAL + AUTO
-Lee exactamente lo que existe en public/images/instrumentos/*.webp y genera:
-- src/data/instruments.json (canónico)
-- src/assets/data/instruments.json (compatibilidad front/back legado)
+Lee los assets reales de instrumentos y genera:
+- backend/app/data/instruments.json
+- backend/app/data/brands.json
+Prioriza media_assets (Cloudinary importado a BD) y usa fallback local cuando haga falta.
 No inventa instrumentos: solo procesa fotos reales.
 """
 
 import argparse
 import hashlib
 import json
+import sqlite3
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
-DEFAULT_EXPECTED_FOTOS = 249
+DEFAULT_EXPECTED_FOTOS = 273
 VARIANT_SUFFIXES = (
     "BACK2",
     "FRONT2",
@@ -100,13 +102,18 @@ class InstrumentSyncer:
 
     def __init__(self, workspace_root: str, expected_fotos: int = DEFAULT_EXPECTED_FOTOS):
         self.workspace_root = Path(workspace_root)
-        self.images_dir = self.workspace_root / "public" / "images" / "instrumentos"
+        self.zero_root = self.workspace_root / "CDS_VUE3_ZERO"
+        self.backend_root = self.workspace_root / "backend"
+        self.data_root = self.workspace_root / "backend" / "app" / "data"
+        self.backend_db_path = self.backend_root / "cirujano.db"
+        self.images_dir = self.zero_root / "public" / "images" / "instrumentos"
         self.logos_dir = self.images_dir / "LOGOS"
-        self.json_path = self.workspace_root / "src" / "data" / "instruments.json"
-        self.assets_json_path = self.workspace_root / "src" / "assets" / "data" / "instruments.json"
-        self.brands_json_path = self.workspace_root / "src" / "assets" / "data" / "brands.json"
-        self.metadata_path = self.workspace_root / "src" / "data" / ".sync_metadata.json"
+        self.assets_json_path = self.data_root / "instruments.json"
+        self.brands_json_path = self.data_root / "brands.json"
+        self.metadata_path = self.data_root / ".sync_metadata.json"
         self.expected_fotos = expected_fotos
+        self._instrument_sources_cache: Optional[Dict[str, str]] = None
+        self._logo_sources_cache: Optional[Dict[str, str]] = None
 
     def get_metadata(self) -> Dict:
         """Carga metadatos previos de sincronización."""
@@ -134,6 +141,107 @@ class InstrumentSyncer:
         files_str = "|".join(sorted(all_names))
         return hashlib.sha256(files_str.encode()).hexdigest()
 
+    @staticmethod
+    def _to_legacy_image_url(public_id: str, fmt: Optional[str] = None) -> str:
+        normalized = str(public_id or "").strip().strip("/")
+        if not normalized:
+            return ""
+        extension = str(fmt or "webp").strip().lower() or "webp"
+        return f"/images/{normalized}.{extension}"
+
+    def _open_backend_db(self) -> Optional[sqlite3.Connection]:
+        if not self.backend_db_path.exists():
+            return None
+        try:
+            return sqlite3.connect(self.backend_db_path)
+        except Exception:
+            return None
+
+    @staticmethod
+    def _has_media_assets_table(conn: sqlite3.Connection) -> bool:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='media_assets'"
+        )
+        row = cursor.fetchone()
+        return bool(row and row[0])
+
+    def _load_media_asset_sources(self) -> Tuple[Dict[str, str], Dict[str, str]]:
+        instruments: Dict[str, str] = {}
+        logos: Dict[str, str] = {}
+
+        conn = self._open_backend_db()
+        if not conn:
+            return instruments, logos
+
+        try:
+            if not self._has_media_assets_table(conn):
+                return instruments, logos
+
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT public_id, format
+                FROM media_assets
+                WHERE public_id LIKE 'instrumentos/%'
+                ORDER BY public_id ASC
+                """
+            )
+
+            for public_id, fmt in cursor.fetchall():
+                normalized_public_id = str(public_id or "").strip()
+                if not normalized_public_id:
+                    continue
+
+                stem = normalized_public_id.split("/")[-1]
+                legacy_url = self._to_legacy_image_url(normalized_public_id, fmt)
+
+                if normalized_public_id.startswith("instrumentos/LOGOS/"):
+                    brand = stem.replace("LOGO_", "")
+                    logos.setdefault(brand, legacy_url)
+                else:
+                    instruments.setdefault(stem, legacy_url)
+        finally:
+            conn.close()
+
+        return instruments, logos
+
+    def get_instrument_image_sources(self) -> Dict[str, str]:
+        """Fuente canónica de imágenes de instrumentos.
+        Prioriza media_assets y completa con fallback local si aún existe material no migrado.
+        """
+        if self._instrument_sources_cache is not None:
+            return dict(self._instrument_sources_cache)
+
+        media_instruments, _ = self._load_media_asset_sources()
+        merged_sources = dict(media_instruments)
+
+        if self.images_dir.exists():
+            for local_file in sorted(self.images_dir.glob("*.webp")):
+                merged_sources.setdefault(local_file.stem, f"/images/instrumentos/{local_file.name}")
+
+        self._instrument_sources_cache = merged_sources
+        return dict(merged_sources)
+
+    def get_logo_sources(self) -> Dict[str, str]:
+        """Fuente canónica de logos de marca.
+        Prioriza media_assets y completa con fallback local.
+        """
+        if self._logo_sources_cache is not None:
+            return dict(self._logo_sources_cache)
+
+        _, media_logos = self._load_media_asset_sources()
+        merged_sources = dict(media_logos)
+
+        if self.logos_dir.exists():
+            for ext in ("webp", "svg", "png", "jpg", "jpeg"):
+                for logo_file in sorted(self.logos_dir.glob(f"LOGO_*.{ext}")):
+                    marca = logo_file.stem.replace("LOGO_", "")
+                    merged_sources.setdefault(marca, f"/images/instrumentos/LOGOS/{logo_file.name}")
+
+        self._logo_sources_cache = merged_sources
+        return dict(merged_sources)
+
     def detect_changes(self, all_names: List[str], metadata: Dict) -> Tuple[Set[str], Set[str], bool]:
         """Detecta nuevos, eliminados y si hubo cambio respecto al último estado."""
         current_hash = self.calculate_files_hash(all_names)
@@ -156,24 +264,16 @@ class InstrumentSyncer:
         return nuevos, eliminados, cambio_detectado
 
     def get_all_webp_files(self) -> Set[str]:
-        """Obtiene todos los archivos .webp de instrumentos."""
-        if not self.images_dir.exists():
-            print(f"❌ Directorio no encontrado: {self.images_dir}")
+        """Obtiene todos los instrumentos disponibles desde la fuente canónica."""
+        sources = self.get_instrument_image_sources()
+        if not sources:
+            print(f"❌ No se encontraron assets de instrumentos en BD ni en: {self.images_dir}")
             return set()
-
-        return {webp_file.stem for webp_file in self.images_dir.glob("*.webp")}
+        return set(sources.keys())
 
     def get_logo_files(self) -> Dict[str, str]:
         """Obtiene marcas con logo y su ruta pública."""
-        logos: Dict[str, str] = {}
-        if not self.logos_dir.exists():
-            return logos
-
-        for ext in ("webp", "svg", "png", "jpg", "jpeg"):
-            for logo_file in self.logos_dir.glob(f"LOGO_*.{ext}"):
-                marca = logo_file.stem.replace("LOGO_", "")
-                logos[marca] = f"/images/instrumentos/LOGOS/{logo_file.name}"
-        return logos
+        return self.get_logo_sources()
 
     def resolve_variant_base(self, name: str, all_names_set: Set[str]) -> Tuple[str, str]:
         """
@@ -299,12 +399,6 @@ class InstrumentSyncer:
 
         return data
 
-    def save_json(self, data: Dict) -> None:
-        """Guarda JSON generado."""
-        self.json_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.json_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-
     @staticmethod
     def _normalize_lookup(value: str) -> str:
         return "".join(ch for ch in str(value or "").lower() if ch.isalnum())
@@ -343,6 +437,7 @@ class InstrumentSyncer:
 
         assets_instruments: List[Dict] = []
         matched_photo_keys: Set[str] = set()
+        instrument_sources = self.get_instrument_image_sources()
 
         for canonical_inst in canonical_data.get("instruments", []):
             photo_key = canonical_inst.get("foto_principal")
@@ -391,7 +486,7 @@ class InstrumentSyncer:
                     "components": components,
                     "valor_estimado": value_payload,
                     "fallas_comunes": fallas_comunes,
-                    "imagen_url": f"/images/instrumentos/{photo_key}.webp",
+                    "imagen_url": instrument_sources.get(photo_key) or f"/images/instrumentos/{photo_key}.webp",
                     "manual_url": previous.get("manual_url"),
                     "image": image_payload,
                     "photo_key": photo_key,
@@ -501,8 +596,10 @@ class InstrumentSyncer:
         print("\n" + "=" * 100)
         print("🎯 SYNC INSTRUMENTS - AUTOMATIC LITERAL + INTELLIGENT")
         print("=" * 100)
-        print(f"\n📁 Leyendo de: {self.images_dir}")
-        print(f"📝 Generando: {self.json_path}\n")
+        print(f"\n📁 Fuente primaria BD: {self.backend_db_path}")
+        print(f"📁 Fallback local: {self.images_dir}")
+        print(f"📝 Generando: {self.assets_json_path}")
+        print(f"📝 Generando: {self.brands_json_path}\n")
 
         try:
             all_webp = self.get_all_webp_files()
@@ -512,13 +609,14 @@ class InstrumentSyncer:
                 print("❌ No hay archivos .webp encontrados")
                 return 1
 
-            print(f"✅ {len(all_names)} archivos .webp encontrados")
+            print(f"✅ {len(all_names)} assets/fotos de instrumentos encontrados")
             metadata = self.get_metadata()
             print(f"📊 Último conteo: {metadata['last_count']} archivos")
             print(f"📊 Conteo actual: {len(all_names)} archivos\n")
 
             assets_data_exists = False
             assets_needs_schema_sync = True
+            assets_needs_validation_refresh = False
             if self.assets_json_path.exists():
                 try:
                     with open(self.assets_json_path, "r", encoding="utf-8") as f:
@@ -527,12 +625,23 @@ class InstrumentSyncer:
                     assets_needs_schema_sync = (
                         existing_assets_snapshot.get("sync_schema_version") != ASSETS_SYNC_SCHEMA_VERSION
                     )
+                    validation_snapshot = existing_assets_snapshot.get("validacion", {}) or {}
+                    assets_needs_validation_refresh = (
+                        validation_snapshot.get("esperado_dataset_base") != self.expected_fotos
+                    )
                 except Exception:
                     assets_data_exists = False
                     assets_needs_schema_sync = True
+                    assets_needs_validation_refresh = True
 
             nuevos, eliminados, cambio = self.detect_changes(all_names, metadata)
-            if not cambio and not force_sync and assets_data_exists and not assets_needs_schema_sync:
+            if (
+                not cambio
+                and not force_sync
+                and assets_data_exists
+                and not assets_needs_schema_sync
+                and not assets_needs_validation_refresh
+            ):
                 print("✨ SIN CAMBIOS - Saltando sincronización (más rápido)")
                 print("   Usa --force para forzar resincronización\n")
                 return 0
@@ -554,12 +663,10 @@ class InstrumentSyncer:
             print()
 
             existing_data = None
-            if self.json_path.exists():
-                with open(self.json_path, "r", encoding="utf-8") as f:
+            if self.assets_json_path.exists():
+                with open(self.assets_json_path, "r", encoding="utf-8") as f:
                     existing_data = json.load(f)
-
             data = self.sync_and_generate_json(all_names, existing_data)
-            self.save_json(data)
 
             existing_assets_data = None
             if self.assets_json_path.exists():
@@ -629,7 +736,9 @@ class InstrumentSyncer:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Sincroniza instrumentos desde /public/images/instrumentos")
+    parser = argparse.ArgumentParser(
+        description="Sincroniza instrumentos desde media_assets con fallback CDS_VUE3_ZERO/public/images/instrumentos"
+    )
     parser.add_argument("--force", "-f", action="store_true", help="Forzar resincronización")
     parser.add_argument(
         "--expected-fotos",

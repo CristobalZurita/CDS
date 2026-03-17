@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Sincroniza el catalogo de tienda usando la carpeta public/images/INVENTARIO.
+Sincroniza el catalogo de tienda usando la carpeta CDS_VUE3_ZERO/public/images/INVENTARIO.
 
 - Reutiliza productos existentes cuando el nombre/SKU calza con la imagen.
 - Si no existe un producto razonable, crea uno derivado del nombre del archivo.
@@ -32,10 +32,11 @@ if str(BACKEND_ROOT) not in sys.path:
 from app.core.database import SessionLocal  # type: ignore  # noqa: E402
 from app.models.category import Category  # type: ignore  # noqa: E402
 from app.models.inventory import Product  # type: ignore  # noqa: E402
+from app.models.media import MediaAsset  # type: ignore  # noqa: E402
 from app.models.stock import Stock  # type: ignore  # noqa: E402
 
 
-IMAGE_DIR = ROOT / "public" / "images" / "INVENTARIO"
+IMAGE_DIR = ROOT / "CDS_VUE3_ZERO" / "public" / "images" / "INVENTARIO"
 GENERIC_PRICE = 1000
 STEM_PREFIXES = (
     "CONECTOR_",
@@ -59,6 +60,12 @@ STEM_EQUIVALENTS: dict[str, tuple[str, ...]] = {
 class ImageRule:
     category: str
     aliases: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class CatalogImage:
+    name: str
+    local_url: str
 
 
 FILE_RULES: dict[str, ImageRule] = {
@@ -308,19 +315,90 @@ def _normalized_stem_from_filename(filename: str) -> str:
     return normalize_text(Path(filename).stem.replace(".jpg", "").replace(".JPG", ""))
 
 
-def find_best_image_match(filename: str, images: list[Path]) -> Path | None:
+def _inventory_image_url(filename: str) -> str:
+    return f"/images/INVENTARIO/{filename}"
+
+
+def _media_asset_filename(asset: MediaAsset) -> str:
+    original = str(asset.original_filename or "").strip()
+    asset_format = str(asset.format or "").strip().lstrip(".")
+
+    if original:
+        parsed = Path(original)
+        if parsed.suffix:
+            return parsed.name
+        if asset_format:
+            return f"{parsed.name}.{asset_format}"
+        return parsed.name
+
+    public_leaf = str(asset.public_id or "").split("/")[-1].strip()
+    if not public_leaf:
+        return ""
+    if "." in public_leaf or not asset_format:
+        return public_leaf
+    return f"{public_leaf}.{asset_format}"
+
+
+def load_inventory_images(session) -> list[CatalogImage]:
+    assets = []
+    for asset in session.query(MediaAsset).order_by(MediaAsset.id.asc()).all():
+        folder = str(asset.folder or "").upper()
+        public_id = str(asset.public_id or "").upper()
+        if "INVENTARIO" not in folder and not public_id.startswith("INVENTARIO/"):
+            continue
+        filename = _media_asset_filename(asset)
+        if not filename:
+            continue
+        assets.append(
+            CatalogImage(
+                name=filename,
+                local_url=_inventory_image_url(filename),
+            )
+        )
+
+    if assets:
+        unique_assets: dict[str, CatalogImage] = {}
+        for image in assets:
+            unique_assets.setdefault(image.name, image)
+        return sorted(unique_assets.values(), key=lambda image: image.name)
+
+    if not IMAGE_DIR.exists():
+        return []
+
+    return [
+        CatalogImage(
+            name=path.name,
+            local_url=_inventory_image_url(path.name),
+        )
+        for path in sorted(IMAGE_DIR.iterdir())
+        if path.is_file()
+    ]
+
+
+def extract_inventory_image_name(image_url: str | None) -> str:
+    value = str(image_url or "").strip()
+    if not value:
+        return ""
+    marker = "/images/INVENTARIO/"
+    if marker in value:
+        return value.split(marker, 1)[1].strip()
+    return Path(value).name.strip()
+
+
+def find_best_image_match(filename: str, images: list[CatalogImage]) -> CatalogImage | None:
     missing_variants = stem_variants(_normalized_stem_from_filename(filename))
-    for image_path in images:
-        live_variants = stem_variants(_normalized_stem_from_filename(image_path.name))
+    for image in images:
+        live_variants = stem_variants(_normalized_stem_from_filename(image.name))
         if missing_variants & live_variants:
-            return image_path
+            return image
     return None
 
 
 def build_catalog_status() -> dict:
     session = SessionLocal()
     try:
-        files = sorted(path.name for path in IMAGE_DIR.iterdir() if path.is_file())
+        images = load_inventory_images(session)
+        files = sorted(image.name for image in images)
         products = session.query(Product).filter(Product.image_url.like("/images/INVENTARIO/%")).all()
 
         linked_images = []
@@ -329,9 +407,9 @@ def build_catalog_status() -> dict:
         with_nonzero_stock = 0
 
         for product in products:
-            image_url = str(product.image_url or "").strip()
-            if "/images/INVENTARIO/" in image_url:
-                linked_images.append(image_url.split("/images/INVENTARIO/", 1)[1])
+            image_name = extract_inventory_image_name(product.image_url)
+            if image_name:
+                linked_images.append(image_name)
 
             meta, _ = parse_meta(product.description)
             if meta.get("store_visible") is True:
@@ -415,7 +493,7 @@ def create_product_from_image(session, stem: str, filename: str, categories_by_k
         price=GENERIC_PRICE,
         quantity=0,
         min_quantity=0,
-        image_url=f"/images/INVENTARIO/{filename}",
+        image_url=_inventory_image_url(filename),
     )
     session.add(product)
     session.flush()
@@ -429,10 +507,7 @@ def sync_catalog(apply_changes: bool) -> dict:
         categories = session.query(Category).all()
         categories_by_key = category_name_map(session)
 
-        images = sorted(
-            path for path in IMAGE_DIR.iterdir()
-            if path.is_file()
-        )
+        images = load_inventory_images(session)
 
         matched = []
         created = []
@@ -441,14 +516,11 @@ def sync_catalog(apply_changes: bool) -> dict:
         used_product_ids: set[int] = set()
 
         for image_path in images:
-            stem = normalize_text(image_path.stem.replace(".jpg", "").replace(".JPG", ""))
+            stem = normalize_text(Path(image_path.name).stem.replace(".jpg", "").replace(".JPG", ""))
             product = match_existing_product(session, stem, used_product_ids)
 
             if product:
-                if not product.image_url:
-                    product.image_url = f"/images/INVENTARIO/{image_path.name}"
-                else:
-                    product.image_url = f"/images/INVENTARIO/{image_path.name}"
+                product.image_url = image_path.local_url
                 if int(product.price or 0) <= 0:
                     product.price = GENERIC_PRICE
                 ensure_meta_flags(product)
@@ -477,16 +549,16 @@ def sync_catalog(apply_changes: bool) -> dict:
             )
             used_product_ids.add(int(product.id))
 
-        image_names = {path.name for path in images}
+        image_names = {image.name for image in images}
         linked_products = session.query(Product).filter(Product.image_url.like("/images/INVENTARIO/%")).all()
         for product in linked_products:
-            current_name = str(product.image_url or "").split("/images/INVENTARIO/", 1)[-1].strip()
+            current_name = extract_inventory_image_name(product.image_url)
             if not current_name or current_name in image_names:
                 continue
 
             replacement = find_best_image_match(current_name, images)
             if replacement:
-                product.image_url = f"/images/INVENTARIO/{replacement.name}"
+                product.image_url = replacement.local_url
                 ensure_meta_flags(product)
                 relinked.append(
                     {
@@ -528,7 +600,7 @@ def sync_catalog(apply_changes: bool) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Sincroniza catalogo de tienda desde public/images/INVENTARIO")
+    parser = argparse.ArgumentParser(description="Sincroniza catalogo de tienda desde media_assets (fallback local: CDS_VUE3_ZERO/public/images/INVENTARIO)")
     parser.add_argument("--apply", action="store_true", help="Aplica cambios sobre la DB")
     parser.add_argument(
         "--database-url",

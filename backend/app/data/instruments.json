@@ -1,7 +1,7 @@
 {
   "version": "2.1.0",
   "sync_schema_version": "1.0.0",
-  "generated_at": "2026-03-03T21:20:29.685965",
+  "generated_at": "2026-03-16T19:16:48.793229",
   "source": "scripts/sync_instruments.py",
   "total_instruments": 231,
   "total_fotos": 273,
@@ -140,7 +140,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772336"
+      "agregado_en": "2026-03-16T19:16:48.790434"
     },
     {
       "id": "access_virus_b_rack",
@@ -302,7 +302,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772351"
+      "agregado_en": "2026-03-16T19:16:48.790493"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -356,7 +356,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772355"
+      "agregado_en": "2026-03-16T19:16:48.790507"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -410,7 +410,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T15:48:58.829371"
+      "agregado_en": "2026-03-16T19:16:48.790515"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -467,7 +467,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772362"
+      "agregado_en": "2026-03-16T19:16:48.790525"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -521,7 +521,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772365"
+      "agregado_en": "2026-03-16T19:16:48.790534"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -575,7 +575,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772369"
+      "agregado_en": "2026-03-16T19:16:48.790543"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -629,7 +629,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772372"
+      "agregado_en": "2026-03-16T19:16:48.790550"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -683,7 +683,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772379"
+      "agregado_en": "2026-03-16T19:16:48.790557"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -737,7 +737,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772382"
+      "agregado_en": "2026-03-16T19:16:48.790574"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -791,7 +791,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772385"
+      "agregado_en": "2026-03-16T19:16:48.790581"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -845,7 +845,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772388"
+      "agregado_en": "2026-03-16T19:16:48.790588"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -899,7 +899,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772392"
+      "agregado_en": "2026-03-16T19:16:48.790594"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -953,7 +953,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772395"
+      "agregado_en": "2026-03-16T19:16:48.790601"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1007,7 +1007,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772398"
+      "agregado_en": "2026-03-16T19:16:48.790610"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1063,7 +1063,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772401"
+      "agregado_en": "2026-03-16T19:16:48.790617"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1117,7 +1117,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772405"
+      "agregado_en": "2026-03-16T19:16:48.790624"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1171,7 +1171,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772408"
+      "agregado_en": "2026-03-16T19:16:48.790631"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1225,7 +1225,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772411"
+      "agregado_en": "2026-03-16T19:16:48.790638"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1279,7 +1279,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772415"
+      "agregado_en": "2026-03-16T19:16:48.790646"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1335,7 +1335,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772418"
+      "agregado_en": "2026-03-16T19:16:48.790654"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1389,7 +1389,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772421"
+      "agregado_en": "2026-03-16T19:16:48.790662"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1443,7 +1443,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772424"
+      "agregado_en": "2026-03-16T19:16:48.790669"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1497,7 +1497,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772428"
+      "agregado_en": "2026-03-16T19:16:48.790675"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1551,7 +1551,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772431"
+      "agregado_en": "2026-03-16T19:16:48.790681"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1605,7 +1605,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772434"
+      "agregado_en": "2026-03-16T19:16:48.790689"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1659,7 +1659,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772438"
+      "agregado_en": "2026-03-16T19:16:48.790696"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1713,7 +1713,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772441"
+      "agregado_en": "2026-03-16T19:16:48.790703"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1767,7 +1767,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772446"
+      "agregado_en": "2026-03-16T19:16:48.790717"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1821,7 +1821,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772449"
+      "agregado_en": "2026-03-16T19:16:48.790725"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1877,7 +1877,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772453"
+      "agregado_en": "2026-03-16T19:16:48.790733"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -1933,7 +1933,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772457"
+      "agregado_en": "2026-03-16T19:16:48.790741"
     },
     {
       "id": "alesis-micron",
@@ -1987,7 +1987,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772460"
+      "agregado_en": "2026-03-16T19:16:48.790748"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2043,7 +2043,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772464"
+      "agregado_en": "2026-03-16T19:16:48.790756"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2097,7 +2097,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772467"
+      "agregado_en": "2026-03-16T19:16:48.790763"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2151,7 +2151,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772471"
+      "agregado_en": "2026-03-16T19:16:48.790769"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2207,7 +2207,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772474"
+      "agregado_en": "2026-03-16T19:16:48.790776"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2263,7 +2263,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772477"
+      "agregado_en": "2026-03-16T19:16:48.790786"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2317,7 +2317,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772480"
+      "agregado_en": "2026-03-16T19:16:48.790793"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2373,7 +2373,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772484"
+      "agregado_en": "2026-03-16T19:16:48.790803"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2429,7 +2429,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772487"
+      "agregado_en": "2026-03-16T19:16:48.790811"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2483,7 +2483,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772493"
+      "agregado_en": "2026-03-16T19:16:48.790818"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2539,7 +2539,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772496"
+      "agregado_en": "2026-03-16T19:16:48.790824"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2593,7 +2593,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772499"
+      "agregado_en": "2026-03-16T19:16:48.790830"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2649,7 +2649,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T15:48:58.829394"
+      "agregado_en": "2026-03-16T19:16:48.790843"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2705,7 +2705,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772506"
+      "agregado_en": "2026-03-16T19:16:48.790851"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2761,7 +2761,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772509"
+      "agregado_en": "2026-03-16T19:16:48.790858"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2817,7 +2817,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772514"
+      "agregado_en": "2026-03-16T19:16:48.790866"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2873,7 +2873,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772518"
+      "agregado_en": "2026-03-16T19:16:48.790881"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2929,7 +2929,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772521"
+      "agregado_en": "2026-03-16T19:16:48.790890"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -2983,7 +2983,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772525"
+      "agregado_en": "2026-03-16T19:16:48.790898"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3037,7 +3037,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772528"
+      "agregado_en": "2026-03-16T19:16:48.790905"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3091,7 +3091,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772531"
+      "agregado_en": "2026-03-16T19:16:48.790912"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3145,7 +3145,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772535"
+      "agregado_en": "2026-03-16T19:16:48.790918"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3199,7 +3199,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772538"
+      "agregado_en": "2026-03-16T19:16:48.790925"
     },
     {
       "id": "casio-cz-101",
@@ -3256,7 +3256,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772541"
+      "agregado_en": "2026-03-16T19:16:48.790932"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3310,7 +3310,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772545"
+      "agregado_en": "2026-03-16T19:16:48.790939"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3364,7 +3364,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772548"
+      "agregado_en": "2026-03-16T19:16:48.790945"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3418,7 +3418,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772551"
+      "agregado_en": "2026-03-16T19:16:48.790952"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3472,7 +3472,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772554"
+      "agregado_en": "2026-03-16T19:16:48.790958"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3526,7 +3526,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772558"
+      "agregado_en": "2026-03-16T19:16:48.790964"
     },
     {
       "id": "casio-wk-1800",
@@ -3580,7 +3580,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772561"
+      "agregado_en": "2026-03-16T19:16:48.790971"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3634,7 +3634,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772564"
+      "agregado_en": "2026-03-16T19:16:48.790985"
     },
     {
       "id": "casio-wk-3000",
@@ -3688,7 +3688,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772568"
+      "agregado_en": "2026-03-16T19:16:48.790992"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -3742,7 +3742,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772571"
+      "agregado_en": "2026-03-16T19:16:48.791000"
     },
     {
       "id": "casio-wk-3300",
@@ -3796,7 +3796,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772602"
+      "agregado_en": "2026-03-16T19:16:48.791007"
     },
     {
       "id": "casio-wk-3500",
@@ -3850,7 +3850,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772607"
+      "agregado_en": "2026-03-16T19:16:48.791014"
     },
     {
       "id": "casio-wk-3700",
@@ -3904,7 +3904,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772611"
+      "agregado_en": "2026-03-16T19:16:48.791024"
     },
     {
       "id": "casio-wk-3800",
@@ -3958,7 +3958,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772615"
+      "agregado_en": "2026-03-16T19:16:48.791047"
     },
     {
       "id": "casio-xw-p1",
@@ -4014,7 +4014,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772633"
+      "agregado_en": "2026-03-16T19:16:48.791055"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -4070,7 +4070,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772637"
+      "agregado_en": "2026-03-16T19:16:48.791063"
     },
     {
       "id": "kawai_cn24",
@@ -4400,7 +4400,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772641"
+      "agregado_en": "2026-03-16T19:16:48.791112"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -4456,7 +4456,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772644"
+      "agregado_en": "2026-03-16T19:16:48.791143"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -4510,7 +4510,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772648"
+      "agregado_en": "2026-03-16T19:16:48.791150"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -4564,7 +4564,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772652"
+      "agregado_en": "2026-03-16T19:16:48.791158"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -4618,7 +4618,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772656"
+      "agregado_en": "2026-03-16T19:16:48.791166"
     },
     {
       "id": "korg_electribe_2a",
@@ -4780,7 +4780,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772667"
+      "agregado_en": "2026-03-16T19:16:48.791188"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -4834,7 +4834,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772671"
+      "agregado_en": "2026-03-16T19:16:48.791195"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -4888,7 +4888,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772677"
+      "agregado_en": "2026-03-16T19:16:48.791202"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -4942,7 +4942,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772681"
+      "agregado_en": "2026-03-16T19:16:48.791215"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -4996,7 +4996,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772685"
+      "agregado_en": "2026-03-16T19:16:48.791222"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -5050,7 +5050,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772689"
+      "agregado_en": "2026-03-16T19:16:48.791231"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -5104,7 +5104,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772692"
+      "agregado_en": "2026-03-16T19:16:48.791238"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -5158,7 +5158,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772696"
+      "agregado_en": "2026-03-16T19:16:48.791250"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -5214,7 +5214,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772713"
+      "agregado_en": "2026-03-16T19:16:48.791258"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -5268,7 +5268,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772717"
+      "agregado_en": "2026-03-16T19:16:48.791264"
     },
     {
       "id": "korg_kaossilator_2s",
@@ -5430,7 +5430,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772723"
+      "agregado_en": "2026-03-16T19:16:48.791284"
     },
     {
       "id": "korg-karma",
@@ -5484,7 +5484,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772726"
+      "agregado_en": "2026-03-16T19:16:48.791295"
     },
     {
       "id": "korg-kingkorg",
@@ -5538,7 +5538,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772730"
+      "agregado_en": "2026-03-16T19:16:48.791302"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -5592,7 +5592,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772733"
+      "agregado_en": "2026-03-16T19:16:48.791308"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -5646,7 +5646,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772738"
+      "agregado_en": "2026-03-16T19:16:48.791316"
     },
     {
       "id": "korg-m1",
@@ -5700,7 +5700,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772741"
+      "agregado_en": "2026-03-16T19:16:48.791323"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -5754,7 +5754,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772744"
+      "agregado_en": "2026-03-16T19:16:48.791329"
     },
     {
       "id": "korg_microkorg_mk1",
@@ -5916,7 +5916,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772753"
+      "agregado_en": "2026-03-16T19:16:48.791356"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -5970,7 +5970,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772756"
+      "agregado_en": "2026-03-16T19:16:48.791364"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6024,7 +6024,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772761"
+      "agregado_en": "2026-03-16T19:16:48.791371"
     },
     {
       "id": "korg-minilogue",
@@ -6078,7 +6078,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772766"
+      "agregado_en": "2026-03-16T19:16:48.791380"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6132,7 +6132,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772769"
+      "agregado_en": "2026-03-16T19:16:48.791391"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6186,7 +6186,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772772"
+      "agregado_en": "2026-03-16T19:16:48.791398"
     },
     {
       "id": "korg-ms2000",
@@ -6240,7 +6240,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772775"
+      "agregado_en": "2026-03-16T19:16:48.791404"
     },
     {
       "id": "korg-ms2000r",
@@ -6293,7 +6293,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772779"
+      "agregado_en": "2026-03-16T19:16:48.791409"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6347,7 +6347,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772784"
+      "agregado_en": "2026-03-16T19:16:48.791511"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6401,7 +6401,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772789"
+      "agregado_en": "2026-03-16T19:16:48.791520"
     },
     {
       "id": "korg-n364",
@@ -6455,7 +6455,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772792"
+      "agregado_en": "2026-03-16T19:16:48.791541"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6509,7 +6509,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.772795"
+      "agregado_en": "2026-03-16T19:16:48.791552"
     },
     {
       "id": "korg-pa1000",
@@ -6563,7 +6563,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773070"
+      "agregado_en": "2026-03-16T19:16:48.791563"
     },
     {
       "id": "korg-pa700",
@@ -6617,7 +6617,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773076"
+      "agregado_en": "2026-03-16T19:16:48.791612"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6671,7 +6671,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773079"
+      "agregado_en": "2026-03-16T19:16:48.791628"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6725,7 +6725,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773082"
+      "agregado_en": "2026-03-16T19:16:48.791639"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6779,7 +6779,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773085"
+      "agregado_en": "2026-03-16T19:16:48.791651"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6833,7 +6833,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773088"
+      "agregado_en": "2026-03-16T19:16:48.791661"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6887,7 +6887,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773090"
+      "agregado_en": "2026-03-16T19:16:48.791671"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -6941,7 +6941,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773093"
+      "agregado_en": "2026-03-16T19:16:48.791683"
     },
     {
       "id": "korg-triton-le",
@@ -6995,7 +6995,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773096"
+      "agregado_en": "2026-03-16T19:16:48.791694"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7049,7 +7049,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773099"
+      "agregado_en": "2026-03-16T19:16:48.791704"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7103,7 +7103,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773102"
+      "agregado_en": "2026-03-16T19:16:48.791718"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7157,7 +7157,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773105"
+      "agregado_en": "2026-03-16T19:16:48.791730"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7211,7 +7211,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773110"
+      "agregado_en": "2026-03-16T19:16:48.791742"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7265,7 +7265,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773113"
+      "agregado_en": "2026-03-16T19:16:48.791753"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7319,7 +7319,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773116"
+      "agregado_en": "2026-03-16T19:16:48.791771"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7373,7 +7373,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773120"
+      "agregado_en": "2026-03-16T19:16:48.791784"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7427,7 +7427,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773124"
+      "agregado_en": "2026-03-16T19:16:48.791802"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7481,7 +7481,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773127"
+      "agregado_en": "2026-03-16T19:16:48.791814"
     },
     {
       "id": "korg-wavestate",
@@ -7537,7 +7537,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773130"
+      "agregado_en": "2026-03-16T19:16:48.791826"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7593,7 +7593,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773133"
+      "agregado_en": "2026-03-16T19:16:48.791838"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7647,7 +7647,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773136"
+      "agregado_en": "2026-03-16T19:16:48.791852"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -7701,7 +7701,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773138"
+      "agregado_en": "2026-03-16T19:16:48.791894"
     },
     {
       "id": "kurzweil_k1000_key",
@@ -8253,7 +8253,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773141"
+      "agregado_en": "2026-03-16T19:16:48.792019"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8307,7 +8307,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773144"
+      "agregado_en": "2026-03-16T19:16:48.792033"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8361,7 +8361,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773147"
+      "agregado_en": "2026-03-16T19:16:48.792045"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8415,7 +8415,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773152"
+      "agregado_en": "2026-03-16T19:16:48.792056"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8469,7 +8469,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773154"
+      "agregado_en": "2026-03-16T19:16:48.792067"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8523,7 +8523,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773157"
+      "agregado_en": "2026-03-16T19:16:48.792089"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8577,7 +8577,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773160"
+      "agregado_en": "2026-03-16T19:16:48.792100"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8631,7 +8631,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773163"
+      "agregado_en": "2026-03-16T19:16:48.792112"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8685,7 +8685,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773165"
+      "agregado_en": "2026-03-16T19:16:48.792126"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8739,7 +8739,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773168"
+      "agregado_en": "2026-03-16T19:16:48.792139"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8793,7 +8793,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773171"
+      "agregado_en": "2026-03-16T19:16:48.792151"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8849,7 +8849,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773174"
+      "agregado_en": "2026-03-16T19:16:48.792173"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8905,7 +8905,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773176"
+      "agregado_en": "2026-03-16T19:16:48.792187"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -8961,7 +8961,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773181"
+      "agregado_en": "2026-03-16T19:16:48.792201"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9017,7 +9017,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T15:48:58.829417"
+      "agregado_en": "2026-03-16T19:16:48.792217"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9071,7 +9071,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773187"
+      "agregado_en": "2026-03-16T19:16:48.792231"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9125,7 +9125,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773191"
+      "agregado_en": "2026-03-16T19:16:48.792244"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9179,7 +9179,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773193"
+      "agregado_en": "2026-03-16T19:16:48.792257"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9233,7 +9233,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773196"
+      "agregado_en": "2026-03-16T19:16:48.792279"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9287,7 +9287,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773200"
+      "agregado_en": "2026-03-16T19:16:48.792294"
     },
     {
       "id": "yamaha-dx11",
@@ -9341,7 +9341,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773203"
+      "agregado_en": "2026-03-16T19:16:48.792306"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9397,7 +9397,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773218"
+      "agregado_en": "2026-03-16T19:16:48.792328"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9453,7 +9453,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773221"
+      "agregado_en": "2026-03-16T19:16:48.792341"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9507,7 +9507,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773224"
+      "agregado_en": "2026-03-16T19:16:48.792356"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9561,7 +9561,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773227"
+      "agregado_en": "2026-03-16T19:16:48.792370"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9615,7 +9615,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773229"
+      "agregado_en": "2026-03-16T19:16:48.792384"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9669,7 +9669,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773232"
+      "agregado_en": "2026-03-16T19:16:48.792401"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9723,7 +9723,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773235"
+      "agregado_en": "2026-03-16T19:16:48.792583"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9777,7 +9777,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773238"
+      "agregado_en": "2026-03-16T19:16:48.792612"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -9831,7 +9831,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773241"
+      "agregado_en": "2026-03-16T19:16:48.792620"
     },
     {
       "id": "yamaha-modx6",
@@ -9885,7 +9885,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773243"
+      "agregado_en": "2026-03-16T19:16:48.792627"
     },
     {
       "id": "yamaha-modx7",
@@ -9939,7 +9939,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773246"
+      "agregado_en": "2026-03-16T19:16:48.792634"
     },
     {
       "id": "yamaha-modx8",
@@ -9993,7 +9993,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773250"
+      "agregado_en": "2026-03-16T19:16:48.792642"
     },
     {
       "id": "yamaha_moiif_rack",
@@ -10101,7 +10101,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773257"
+      "agregado_en": "2026-03-16T19:16:48.792659"
     },
     {
       "id": "yamaha-montage-7",
@@ -10155,7 +10155,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773260"
+      "agregado_en": "2026-03-16T19:16:48.792735"
     },
     {
       "id": "yamaha-montage-8",
@@ -10209,7 +10209,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773263"
+      "agregado_en": "2026-03-16T19:16:48.792744"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10263,7 +10263,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773266"
+      "agregado_en": "2026-03-16T19:16:48.792751"
     },
     {
       "id": "yamaha-motif-xf7",
@@ -10317,7 +10317,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773269"
+      "agregado_en": "2026-03-16T19:16:48.792757"
     },
     {
       "id": "yamaha-motif-xs6",
@@ -10371,7 +10371,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773271"
+      "agregado_en": "2026-03-16T19:16:48.792769"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10425,7 +10425,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773274"
+      "agregado_en": "2026-03-16T19:16:48.792777"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10479,7 +10479,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773277"
+      "agregado_en": "2026-03-16T19:16:48.792788"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10533,7 +10533,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773280"
+      "agregado_en": "2026-03-16T19:16:48.792795"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10587,7 +10587,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773282"
+      "agregado_en": "2026-03-16T19:16:48.792804"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10641,7 +10641,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773285"
+      "agregado_en": "2026-03-16T19:16:48.792810"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10695,7 +10695,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773288"
+      "agregado_en": "2026-03-16T19:16:48.792817"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10749,7 +10749,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773290"
+      "agregado_en": "2026-03-16T19:16:48.792824"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10803,7 +10803,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773293"
+      "agregado_en": "2026-03-16T19:16:48.792831"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -10857,7 +10857,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773297"
+      "agregado_en": "2026-03-16T19:16:48.792838"
     },
     {
       "id": "yamaha-psr-e463",
@@ -10911,7 +10911,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773300"
+      "agregado_en": "2026-03-16T19:16:48.792845"
     },
     {
       "id": "yamaha-psr-e473",
@@ -10965,7 +10965,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773303"
+      "agregado_en": "2026-03-16T19:16:48.792852"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11019,7 +11019,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773306"
+      "agregado_en": "2026-03-16T19:16:48.792859"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11073,7 +11073,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773310"
+      "agregado_en": "2026-03-16T19:16:48.792866"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11127,7 +11127,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773313"
+      "agregado_en": "2026-03-16T19:16:48.792873"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11181,7 +11181,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773315"
+      "agregado_en": "2026-03-16T19:16:48.792883"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11235,7 +11235,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773318"
+      "agregado_en": "2026-03-16T19:16:48.792890"
     },
     {
       "id": "yamaha-psr-sx600",
@@ -11289,7 +11289,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773321"
+      "agregado_en": "2026-03-16T19:16:48.792897"
     },
     {
       "id": "yamaha-psr-sx700",
@@ -11343,7 +11343,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773323"
+      "agregado_en": "2026-03-16T19:16:48.792905"
     },
     {
       "id": "yamaha-psr-sx900",
@@ -11397,7 +11397,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773326"
+      "agregado_en": "2026-03-16T19:16:48.792914"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11451,7 +11451,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773329"
+      "agregado_en": "2026-03-16T19:16:48.792921"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11505,7 +11505,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773332"
+      "agregado_en": "2026-03-16T19:16:48.792927"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11559,7 +11559,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773336"
+      "agregado_en": "2026-03-16T19:16:48.792934"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11613,7 +11613,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773339"
+      "agregado_en": "2026-03-16T19:16:48.792941"
     },
     {
       "id": "yamaha_ps_20",
@@ -11775,7 +11775,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773342"
+      "agregado_en": "2026-03-16T19:16:48.792964"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11831,7 +11831,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773345"
+      "agregado_en": "2026-03-16T19:16:48.792972"
     },
     {
       "id": "yamaha-reface-cp",
@@ -11885,7 +11885,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773348"
+      "agregado_en": "2026-03-16T19:16:48.792980"
     },
     {
       "id": "yamaha-reface-yc",
@@ -11939,7 +11939,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773351"
+      "agregado_en": "2026-03-16T19:16:48.792987"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -11993,7 +11993,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773353"
+      "agregado_en": "2026-03-16T19:16:48.792998"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12047,7 +12047,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773356"
+      "agregado_en": "2026-03-16T19:16:48.793006"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12101,7 +12101,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773359"
+      "agregado_en": "2026-03-16T19:16:48.793013"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12155,7 +12155,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773362"
+      "agregado_en": "2026-03-16T19:16:48.793021"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12209,7 +12209,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773366"
+      "agregado_en": "2026-03-16T19:16:48.793028"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12263,7 +12263,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773369"
+      "agregado_en": "2026-03-16T19:16:48.793035"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12317,7 +12317,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773372"
+      "agregado_en": "2026-03-16T19:16:48.793041"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12371,7 +12371,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773374"
+      "agregado_en": "2026-03-16T19:16:48.793053"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12425,7 +12425,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773379"
+      "agregado_en": "2026-03-16T19:16:48.793060"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12479,7 +12479,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773382"
+      "agregado_en": "2026-03-16T19:16:48.793067"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12533,7 +12533,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773386"
+      "agregado_en": "2026-03-16T19:16:48.793074"
     },
     {
       "type": "Keyboard / Synthesizer",
@@ -12587,7 +12587,7 @@
       "tipos": [
         "sintetizador"
       ],
-      "agregado_en": "2026-02-17T16:00:49.773389"
+      "agregado_en": "2026-03-16T19:16:48.793083"
     }
   ]
 }

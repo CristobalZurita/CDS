@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Añade el bloque `image` a cada instrument en src/assets/data/instruments.json
+Añade el bloque `image` a cada instrumento en backend/app/data/instruments.json.
 """
 import json
 from pathlib import Path
 
-p = Path('src/assets/data/instruments.json')
+ROOT = Path(__file__).resolve().parents[1]
+p = ROOT / 'backend' / 'app' / 'data' / 'instruments.json'
 if not p.exists():
     print('File not found:', p)
     raise SystemExit(1)

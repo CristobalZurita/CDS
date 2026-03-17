@@ -1,0 +1,29 @@
+:root {
+  /* ── Colores base ─────────────────────────────── */
+  --cds-primary:  #ec6b00;
+  --cds-dark:     #5a5a5a;
+  --cds-light:    #d3d0c3;
+  --cds-white:    #ffffff;
+  --cds-whatsapp: #25d366;
+  --cds-success:  #038600;
+  --cds-danger:   #dc2626;
+  --cds-black:    #000000;
+ 
+  /* ── Compuestos ───────────────────────────────── */
+  --cds-footer-bg: color-mix(in srgb, var(--cds-dark) 96%, black);
+
+  /* ── Tipografía ───────────────────────────────── */
+  --cds-font-family-base:     'Cervo Neue', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --cds-headings-font-family: 'Steelfish', 'Cervo Neue', 'Oswald', serif;
+  --cds-font-medium:   500;
+  --cds-font-semibold: 600;
+  --cds-font-bold:     700;
+
+  /* ── Ritmo ────────────────────────────────────── */
+  --cds-leading-tight:  1.2;
+  --cds-leading-normal: 1.6;
+
+  /* ── Radios ───────────────────────────────────── */
+  --cds-radius-sm:   0.55rem;
+  --cds-radius-pill: 999px;
+}

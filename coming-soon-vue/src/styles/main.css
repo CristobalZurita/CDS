@@ -1,0 +1,32 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body, #app {
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--cds-font-family-base);
+  font-size: 1rem;
+  line-height: var(--cds-leading-normal);
+  color: var(--cds-dark);
+  -webkit-font-smoothing: antialiased;
+  background: var(--cds-light);
+}
+
+img, video { display: block; max-width: 100%; height: auto; }
+
+a { color: inherit; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--cds-headings-font-family);
+  color: var(--cds-dark);
+}
+
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: 1rem;
+}

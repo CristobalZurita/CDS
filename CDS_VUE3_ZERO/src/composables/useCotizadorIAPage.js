@@ -298,7 +298,6 @@ export function useCotizadorIAPage() {
     quoteResult,
     leadForm,
     acceptedDisclaimer,
-    turnstileToken,
     leadSubmitted,
     notFoundMode,
     manualBrand,

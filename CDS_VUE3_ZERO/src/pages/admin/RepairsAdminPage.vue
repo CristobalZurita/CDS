@@ -128,8 +128,5 @@ const {
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
 .filters-panel { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-.filters-panel label { display: grid; gap: .3rem; }
-.filters-panel span { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
-.filters-panel input, .filters-panel select { min-height: 44px; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: .55rem; padding: .65rem .75rem; font-size: var(--cds-text-base); }
 @media (min-width: 900px) { .filters-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>

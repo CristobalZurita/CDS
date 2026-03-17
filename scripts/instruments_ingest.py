@@ -6,12 +6,11 @@ import json
 import re
 from pathlib import Path
 
+from sync_instruments import InstrumentSyncer
+
 ROOT = Path(__file__).resolve().parents[1]
-IMAGES_DIR = ROOT / "public" / "images" / "instrumentos"
 OUT_CSV = Path("/tmp/instruments_seed.csv")
 OUT_JSON = Path("/tmp/instruments_seed.json")
-
-VALID_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"}
 
 
 def parse_name(stem: str) -> tuple[str, str]:
@@ -27,16 +26,16 @@ def parse_name(stem: str) -> tuple[str, str]:
 
 
 def main() -> None:
+    syncer = InstrumentSyncer(str(ROOT))
+    image_sources = syncer.get_instrument_image_sources()
     rows = []
-    for p in sorted(IMAGES_DIR.iterdir()):
-        if not p.is_file() or p.suffix.lower() not in VALID_EXTS:
-            continue
-        brand, model = parse_name(p.stem)
+    for stem, local_url in sorted(image_sources.items()):
+        brand, model = parse_name(stem)
         rows.append(
             {
                 "brand": brand,
                 "model": model,
-                "photo_base_url": f"/images/instrumentos/{p.name}",
+                "photo_base_url": local_url,
                 "status": "pending_map",
                 "template_json": "",
             }

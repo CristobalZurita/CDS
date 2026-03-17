@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from sync_instruments import InstrumentSyncer
+from sync_instruments import DEFAULT_EXPECTED_FOTOS, InstrumentSyncer
 
 
 logging.basicConfig(
@@ -30,12 +30,11 @@ class AutoSyncRunner:
 
     def __init__(self, workspace_root: Path, expected_fotos: int):
         self.workspace_root = workspace_root
-        self.photos_dir = workspace_root / "public" / "images" / "instrumentos"
         self.syncer = InstrumentSyncer(str(workspace_root), expected_fotos=expected_fotos)
         self._last_seen_hash = None
 
-    def _current_folder_hash(self) -> str:
-        names = sorted([p.stem for p in self.photos_dir.glob("*.webp")]) if self.photos_dir.exists() else []
+    def _current_source_hash(self) -> str:
+        names = sorted(self.syncer.get_all_webp_files())
         return self.syncer.calculate_files_hash(names)
 
     def run_sync(self, force: bool = False, reason: str = "manual") -> dict:
@@ -53,9 +52,9 @@ class AutoSyncRunner:
             "return_code": rc,
         }
 
-        if self.syncer.json_path.exists():
+        if self.syncer.assets_json_path.exists():
             try:
-                data = json.loads(self.syncer.json_path.read_text(encoding="utf-8"))
+                data = json.loads(self.syncer.assets_json_path.read_text(encoding="utf-8"))
                 payload["total_instruments"] = data.get("total_instruments")
                 payload["total_fotos"] = data.get("total_fotos")
                 payload["validacion"] = data.get("validacion", {})
@@ -90,11 +89,11 @@ class AutoSyncRunner:
                 return 0
 
     def run_watch(self, watch_seconds: int, force_first_run: bool = False, max_runs: int = 0) -> int:
-        """Sincroniza cuando detecta cambios de archivos en carpeta."""
+        """Sincroniza cuando detecta cambios en la fuente canónica de instrumentos."""
         interval_seconds = max(5, watch_seconds)
         logger.info("👀 Modo watch activo. Poll cada %s segundos", interval_seconds)
 
-        self._last_seen_hash = self._current_folder_hash()
+        self._last_seen_hash = self._current_source_hash()
         run_count = 0
         self.run_sync(force=force_first_run, reason="watch-start")
         run_count += 1
@@ -103,9 +102,9 @@ class AutoSyncRunner:
 
         while True:
             time.sleep(interval_seconds)
-            current_hash = self._current_folder_hash()
+            current_hash = self._current_source_hash()
             if current_hash != self._last_seen_hash:
-                logger.info("📸 Cambio detectado en carpeta. Ejecutando sincronización...")
+                logger.info("📸 Cambio detectado en la fuente de instrumentos. Ejecutando sincronización...")
                 self.run_sync(force=False, reason="watch-change-detected")
                 self._last_seen_hash = current_hash
                 run_count += 1
@@ -113,7 +112,7 @@ class AutoSyncRunner:
                     logger.info("🏁 max_runs alcanzado (%s). Finalizando.", max_runs)
                     return 0
             else:
-                logger.info("Sin cambios en carpeta de fotos.")
+                logger.info("Sin cambios en la fuente de instrumentos.")
 
 
 def main() -> int:
@@ -124,7 +123,12 @@ def main() -> int:
     parser.add_argument("--daemon", action="store_true", help="Modo periódico cada N minutos")
     parser.add_argument("--watch-seconds", type=int, default=30, help="Polling de watch (segundos)")
     parser.add_argument("--interval-minutes", type=int, default=360, help="Intervalo modo daemon (minutos)")
-    parser.add_argument("--expected-fotos", type=int, default=249, help="Conteo esperado base para validación")
+    parser.add_argument(
+        "--expected-fotos",
+        type=int,
+        default=DEFAULT_EXPECTED_FOTOS,
+        help="Conteo esperado base para validación",
+    )
     parser.add_argument("--max-runs", type=int, default=0, help="Limitar ciclos (0 = infinito)")
     args = parser.parse_args()
 

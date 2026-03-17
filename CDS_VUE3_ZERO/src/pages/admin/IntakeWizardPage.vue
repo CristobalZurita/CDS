@@ -1,34 +1,10 @@
 <template>
   <main class="intake-wizard-page">
-    <!-- Header sticky -->
-    <header class="wizard-header">
-      <div class="header-content">
-        <div>
-          <h1>Nueva Orden de Trabajo</h1>
-          <p class="subtitle">Ingreso único de Cliente + Equipo + OT</p>
-        </div>
-        
-        <!-- Progress indicator -->
-        <div class="progress-section">
-          <div class="progress-bar">
-            <div class="progress-fill" :style="{ width: `${progress}%` }"></div>
-          </div>
-          <span class="progress-text">{{ progress }}% completado</span>
-        </div>
-        
-        <!-- Códigos -->
-        <div class="codes-display">
-          <div class="code-box">
-            <span class="code-label">Cliente</span>
-            <span class="code-value">{{ nextClientCode || '---' }}</span>
-          </div>
-          <div class="code-box">
-            <span class="code-label">OT</span>
-            <span class="code-value">{{ nextOtCode || '---' }}</span>
-          </div>
-        </div>
-      </div>
-    </header>
+    <IntakeWizardHeader
+      :next-client-code="nextClientCode"
+      :next-ot-code="nextOtCode"
+      :progress="progress"
+    />
 
     <!-- Error general -->
     <div v-if="generalError" class="error-banner" role="alert">
@@ -451,60 +427,11 @@
         </div>
       </section>
 
-      <!-- SECCIÓN 5: MATERIALES -->
-      <section id="materiales" class="form-section">
-        <div class="section-header">
-          <h2>5. Materiales a Utilizar</h2>
-          <BaseButton
-            type="button"
-            variant="ghost"
-            size="sm"
-            @click="addMaterial"
-          >
-            + Agregar material
-          </BaseButton>
-        </div>
-
-        <div v-if="form.materials.length === 0" class="empty-materials">
-          <p>No se han agregado materiales aún.</p>
-          <p class="hint">Puedes agregarlos ahora o más tarde desde la OT.</p>
-        </div>
-
-        <div v-for="(material, index) in form.materials" :key="material.id" class="material-item">
-          <div class="material-fields">
-            <FormField
-              v-model="material.sku"
-              label="SKU"
-              placeholder="Buscar por SKU..."
-              size="sm"
-            />
-            
-            <FormField
-              v-model="material.quantity"
-              type="number"
-              label="Cantidad"
-              :min="1"
-              size="sm"
-            />
-            
-            <FormField
-              v-model="material.notes"
-              label="Notas"
-              placeholder="Descripción..."
-              size="sm"
-            />
-          </div>
-          
-          <BaseButton
-            type="button"
-            variant="ghost"
-            size="sm"
-            @click="removeMaterial(index)"
-          >
-            🗑️
-          </BaseButton>
-        </div>
-      </section>
+      <IntakeWizardMaterialsSection
+        :materials="form.materials"
+        @add-material="addMaterial"
+        @remove-material="removeMaterial"
+      />
 
       <!-- Acciones finales -->
       <div class="form-actions">
@@ -529,28 +456,34 @@
       </div>
     </form>
 
-    <!-- Navegación flotante (scroll spy) -->
-    <nav class="wizard-nav">
-      <a 
-        v-for="section in sections" 
-        :key="section.id"
-        :href="`#${section.id}`"
-        :class="{ 'is-active': activeSection === section.id }"
-        @click.prevent="scrollToSection(section.id)"
-      >
-        {{ section.label }}
-      </a>
-    </nav>
+    <IntakeWizardSectionNav
+      :sections="sections"
+      :active-section="activeSection"
+      @navigate="scrollToSection"
+    />
+
+    <BaseConfirmDialog
+      :open="showResetDialog"
+      title="Limpiar formulario"
+      message="¿Estás seguro de limpiar todo el formulario?"
+      confirm-label="Limpiar todo"
+      confirm-variant="warning"
+      @cancel="showResetDialog = false"
+      @confirm="confirmReset"
+    />
   </main>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import IntakeWizardHeader from '@/components/admin/IntakeWizardHeader.vue'
+import IntakeWizardMaterialsSection from '@/components/admin/IntakeWizardMaterialsSection.vue'
+import IntakeWizardSectionNav from '@/components/admin/IntakeWizardSectionNav.vue'
 import { useIntakeWizard } from '@/composables/useIntakeWizard'
 import { usePlacesAutocomplete } from '@/composables/usePlacesAutocomplete'
 import { FormField } from '@/components/composite'
-import { BaseButton } from '@/components/base'
+import { BaseButton, BaseConfirmDialog } from '@/components/base'
 import PhotoUpload from '@/components/business/PhotoUpload.vue'
 
 const router = useRouter()
@@ -558,7 +491,6 @@ const router = useRouter()
 // Usar el composable maestro
 const {
   form,
-  isLoading,
   isSubmitting,
   generalError,
   useExistingClient,
@@ -582,6 +514,7 @@ let _cleanupAddressAc = () => {}
 // Estado local
 const selectedClientId = ref('')
 const activeSection = ref('cliente')
+const showResetDialog = ref(false)
 
 const errors = computed(() => validation.errors.value)
 
@@ -626,10 +559,13 @@ async function handleSubmit() {
 }
 
 function resetForm() {
-  if (confirm('¿Estás seguro de limpiar todo el formulario?')) {
-    reset()
-    selectedClientId.value = ''
-  }
+  showResetDialog.value = true
+}
+
+function confirmReset() {
+  reset()
+  selectedClientId.value = ''
+  showResetDialog.value = false
 }
 
 function scrollToSection(sectionId) {
@@ -679,96 +615,6 @@ onUnmounted(() => _cleanupAddressAc())
   padding-bottom: 4rem;
   max-width: 900px;
   margin: 0 auto;
-}
-
-/* Header */
-.wizard-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--cds-surface-1);
-  backdrop-filter: blur(8px);
-  border-radius: var(--cds-radius-lg);
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  box-shadow: var(--cds-shadow-sm);
-}
-
-.header-content {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.wizard-header h1 {
-  margin: 0;
-  font-size: var(--cds-text-xl);
-}
-
-.subtitle {
-  margin: 0.25rem 0 0;
-  color: var(--cds-text-muted);
-  font-size: var(--cds-text-sm);
-}
-
-/* Progress */
-.progress-section {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-width: 200px;
-}
-
-.progress-bar {
-  flex: 1;
-  height: 8px;
-  background: var(--cds-light-3);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--cds-primary);
-  border-radius: 999px;
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  font-size: var(--cds-text-sm);
-  color: var(--cds-text-muted);
-  white-space: nowrap;
-}
-
-/* Códigos */
-.codes-display {
-  display: flex;
-  gap: 1rem;
-}
-
-.code-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: var(--cds-light-1);
-  border-radius: var(--cds-radius-md);
-  min-width: 80px;
-}
-
-.code-label {
-  font-size: var(--cds-text-xs);
-  color: var(--cds-text-muted);
-  text-transform: uppercase;
-}
-
-.code-value {
-  font-size: var(--cds-text-lg);
-  font-weight: 700;
-  color: var(--cds-primary);
-  font-family: monospace;
 }
 
 /* Error banner */
@@ -863,35 +709,6 @@ onUnmounted(() => _cleanupAddressAc())
   margin-bottom: 1rem;
 }
 
-/* Materiales */
-.empty-materials {
-  text-align: center;
-  padding: 2rem;
-  color: var(--cds-text-muted);
-}
-
-.empty-materials .hint {
-  font-size: var(--cds-text-sm);
-  opacity: 0.7;
-}
-
-.material-item {
-  display: flex;
-  gap: 0.75rem;
-  align-items: flex-end;
-  padding: 1rem;
-  background: var(--cds-light-1);
-  border-radius: var(--cds-radius-md);
-  margin-bottom: 0.75rem;
-}
-
-.material-fields {
-  display: grid;
-  grid-template-columns: 2fr 1fr 2fr;
-  gap: 0.75rem;
-  flex: 1;
-}
-
 /* Acciones */
 .form-actions {
   display: flex;
@@ -908,85 +725,23 @@ onUnmounted(() => _cleanupAddressAc())
   border-radius: var(--cds-radius-lg) var(--cds-radius-lg) 0 0;
 }
 
-/* Navegación flotante */
-.wizard-nav {
-  position: fixed;
-  right: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  background: var(--cds-white);
-  border-radius: var(--cds-radius-lg);
-  box-shadow: var(--cds-shadow-md);
-  z-index: 90;
-}
-
-.wizard-nav a {
-  padding: 0.5rem 0.75rem;
-  font-size: var(--cds-text-sm);
-  color: var(--cds-text-muted);
-  text-decoration: none;
-  border-radius: var(--cds-radius-sm);
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.wizard-nav a:hover {
-  background: var(--cds-light-1);
-  color: var(--cds-text-normal);
-}
-
-.wizard-nav a.is-active {
-  background: var(--cds-primary);
-  color: var(--cds-white);
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .intake-wizard-page {
     padding: 0.5rem;
   }
   
-  .wizard-header {
-    position: relative;
-  }
-  
-  .header-content {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .progress-section {
-    order: 3;
-  }
-  
-  .codes-display {
-    order: 2;
-    justify-content: center;
-  }
-  
   .field-grid.cols-2,
   .field-grid.cols-3 {
     grid-template-columns: 1fr;
   }
-  
-  .material-fields {
-    grid-template-columns: 1fr;
-  }
-  
+
   .form-actions {
     flex-direction: column;
   }
   
   .form-actions :deep(.base-button) {
     width: 100%;
-  }
-  
-  .wizard-nav {
-    display: none; /* En móvil, ocultar nav lateral */
   }
 }
 </style>

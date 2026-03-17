@@ -1,11 +1,7 @@
 import { computed, onMounted, ref } from 'vue'
 import api, { extractErrorMessage } from '@/services/api'
+import { pickSettledData } from '@/utils/api-helpers'
 import { formatCurrency } from '@/utils/format'
-
-function safeData(result, fallback = {}) {
-  if (result.status !== 'fulfilled') return fallback
-  return result.value?.data || fallback
-}
 
 export function useStatsPage() {
   const isLoading = ref(false)
@@ -75,20 +71,20 @@ export function useStatsPage() {
         api.get('/analytics/kpis/client-return'),
       ])
 
-      stats.value = safeData(statsRes, {})
-      kpiSummary.value = safeData(summaryRes, {})
-      kpiDashboard.value = safeData(dashboardRes, {})
-      kpiRevenue.value = safeData(revenueRes, {})
-      kpiInventory.value = safeData(inventoryRes, {})
-      kpiClients.value = safeData(clientsRes, {})
-      kpiWarranty.value = safeData(warrantyRes, {})
-      repairsTimeline.value = safeData(repairsTimelineRes, [])
-      revenueTimeline.value = safeData(revenueTimelineRes, [])
-      kpiTurnaround.value = safeData(turnaroundRes, {})
-      kpiOverdue.value = safeData(overdueRes, {})
-      kpiLeadConversion.value = safeData(leadConvRes, {})
-      kpiTopModels.value = safeData(topModelsRes, [])
-      kpiClientReturn.value = safeData(clientReturnRes, {})
+      stats.value = pickSettledData(statsRes, {})
+      kpiSummary.value = pickSettledData(summaryRes, {})
+      kpiDashboard.value = pickSettledData(dashboardRes, {})
+      kpiRevenue.value = pickSettledData(revenueRes, {})
+      kpiInventory.value = pickSettledData(inventoryRes, {})
+      kpiClients.value = pickSettledData(clientsRes, {})
+      kpiWarranty.value = pickSettledData(warrantyRes, {})
+      repairsTimeline.value = pickSettledData(repairsTimelineRes, [])
+      revenueTimeline.value = pickSettledData(revenueTimelineRes, [])
+      kpiTurnaround.value = pickSettledData(turnaroundRes, {})
+      kpiOverdue.value = pickSettledData(overdueRes, {})
+      kpiLeadConversion.value = pickSettledData(leadConvRes, {})
+      kpiTopModels.value = pickSettledData(topModelsRes, [])
+      kpiClientReturn.value = pickSettledData(clientReturnRes, {})
     } catch (loadError) {
       error.value = extractErrorMessage(loadError)
     } finally {

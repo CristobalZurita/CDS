@@ -252,7 +252,7 @@ watch(() => props.currentPage, (newPage) => {
   flex-wrap: wrap;
   gap: 1rem;
   padding: 1rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+  border-bottom: 1px solid var(--cds-border-card);
   background: color-mix(in srgb, var(--cds-light) 5%, white);
 }
 
@@ -286,7 +286,7 @@ watch(() => props.currentPage, (newPage) => {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  border-top: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+  border-top: 1px solid var(--cds-border-card);
   background: color-mix(in srgb, var(--cds-light) 3%, white);
 }
 
