@@ -27,7 +27,7 @@ jobs:
       run:
         working-directory: CDS_VUE3_ZERO
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -78,7 +78,7 @@ jobs:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -124,7 +124,7 @@ jobs:
     needs: [frontend, backend]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push' && (vars.ENABLE_PROD_DEPLOY == 'true' || vars.ENABLE_STAGING_DEPLOY == 'true')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Build backend image
         run: docker build -t cirujano-backend:latest ./backend

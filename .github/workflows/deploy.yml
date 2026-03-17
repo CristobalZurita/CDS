@@ -30,7 +30,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || vars.ENABLE_STAGING_DEPLOY == 'true' || vars.ENABLE_PROD_DEPLOY == 'true'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -64,7 +64,7 @@ jobs:
       image: ${{ steps.meta.outputs.tags }}
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Resolve deploy mode
         id: deploy-mode
@@ -117,7 +117,7 @@ jobs:
       url: https://staging.cirujano.app
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Download frontend build
         uses: actions/download-artifact@v4
@@ -171,7 +171,7 @@ jobs:
       url: https://cirujano.app
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Download frontend build
         uses: actions/download-artifact@v4
@@ -265,7 +265,7 @@ jobs:
     if: github.ref == 'refs/heads/develop' && vars.ENABLE_STAGING_DEPLOY == 'true'
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Run smoke checks
         env:
