@@ -4,50 +4,116 @@
  */
 
 import api from './api.js'
+import { localPathToPublicId } from '@/utils/cloudinaryContract'
+
+const DESTINATION_PREFIXES = {
+  uploads: 'general',
+  instrumentos: 'instrumentos',
+  inventario: 'INVENTARIO',
+}
+
+function normalizeRelativeUploadPath(relativePath = '') {
+  const normalized = String(relativePath || '').replace(/\\/g, '/').replace(/^\/+/, '')
+  if (!normalized) return ''
+  return normalized.replace(/^images\//i, '')
+}
+
+function buildSignatureUrl(destination, fileName, explicitPublicId = '') {
+  const params = new URLSearchParams({
+    destination,
+    filename: fileName,
+  })
+  if (explicitPublicId) {
+    params.set('public_id', explicitPublicId)
+  }
+  return `/uploads/signature?${params.toString()}`
+}
+
+function buildCloudinaryUploadForm(file, signatureData) {
+  const cloudForm = new FormData()
+  cloudForm.append('file', file)
+  cloudForm.append('api_key', signatureData.api_key)
+  cloudForm.append('timestamp', signatureData.timestamp)
+  cloudForm.append('signature', signatureData.signature)
+  cloudForm.append('public_id', signatureData.public_id)
+  if (signatureData.asset_folder) cloudForm.append('asset_folder', signatureData.asset_folder)
+  if (signatureData.overwrite) cloudForm.append('overwrite', 'true')
+  if (signatureData.invalidate) cloudForm.append('invalidate', 'true')
+  return cloudForm
+}
+
+async function requestUploadSignature(destination, fileName, publicId) {
+  const signatureRes = await api.post(buildSignatureUrl(destination, fileName, publicId))
+  return signatureRes.data?.data || null
+}
+
+async function uploadDirectToCloudinary(file, signatureData) {
+  const cloudRes = await fetch(
+    `https://api.cloudinary.com/v1_1/${signatureData.cloud_name}/image/upload`,
+    { method: 'POST', body: buildCloudinaryUploadForm(file, signatureData) }
+  )
+
+  if (!cloudRes.ok) return null
+  return cloudRes.json()
+}
+
+async function uploadViaBackend(file) {
+  const formData = new FormData()
+  formData.append('file', file)
+  const response = await api.post('/uploads/images', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+  return response?.data?.path || null
+}
+
+function folderFromPublicId(publicId, destination = 'uploads') {
+  if (!publicId) return destination
+  return publicId.includes('/') ? publicId.split('/').slice(0, -1).join('/') : destination
+}
+
+export function resolveUploadPublicId(file, destination = 'uploads', relativePath = '') {
+  const normalizedRelativePath =
+    normalizeRelativeUploadPath(relativePath || file?.webkitRelativePath || '')
+
+  if (normalizedRelativePath) {
+    return localPathToPublicId(`/images/${normalizedRelativePath}`)
+  }
+
+  const normalizedDestination = String(destination || 'uploads').trim().replace(/^\/+|\/+$/g, '')
+  const destinationPrefix = DESTINATION_PREFIXES[normalizedDestination] || DESTINATION_PREFIXES.uploads
+  const fileName = String(file?.name || '').trim()
+  if (!fileName) return ''
+  return localPathToPublicId(`/images/${destinationPrefix}/${fileName}`)
+}
 
 /**
  * Sube una imagen y devuelve el objeto completo con metadatos.
  * Útil para registrar el asset en la BD después del upload.
  * @param {File} file
  * @param {string} destination
+ * @param {string} explicitPublicId
  * @returns {Promise<{secure_url,public_id,folder,original_filename,format,bytes,width,height}|null>}
  */
-export async function uploadImageWithMeta(file, destination = 'uploads') {
+export async function uploadImageWithMeta(file, destination = 'uploads', explicitPublicId = '') {
   if (!file) return null
+  const resolvedPublicId = explicitPublicId || resolveUploadPublicId(file, destination)
 
   try {
-    const signatureRes = await api.post(
-      `/uploads/signature?destination=${encodeURIComponent(destination)}&filename=${encodeURIComponent(file.name)}`
-    )
-    const sig = signatureRes.data?.data
+    const sig = await requestUploadSignature(destination, file.name, resolvedPublicId)
 
     if (sig) {
-      const cloudForm = new FormData()
-      cloudForm.append('file', file)
-      cloudForm.append('api_key', sig.api_key)
-      cloudForm.append('timestamp', sig.timestamp)
-      cloudForm.append('signature', sig.signature)
-      cloudForm.append('public_id', sig.public_id)
-      if (sig.asset_folder) cloudForm.append('asset_folder', sig.asset_folder)
-      if (sig.overwrite) cloudForm.append('overwrite', 'true')
-      if (sig.invalidate) cloudForm.append('invalidate', 'true')
+      const uploaded = await uploadDirectToCloudinary(file, sig)
 
-      const cloudRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${sig.cloud_name}/image/upload`,
-        { method: 'POST', body: cloudForm }
-      )
-
-      if (cloudRes.ok) {
-        const d = await cloudRes.json()
+      if (uploaded) {
         return {
-          secure_url: d.secure_url,
-          public_id: d.public_id || sig.public_id,
-          folder: sig.asset_folder || (d.public_id ? d.public_id.split('/').slice(0, -1).join('/') : destination),
+          secure_url: uploaded.secure_url,
+          public_id: uploaded.public_id || sig.public_id,
+          folder: sig.asset_folder || folderFromPublicId(uploaded.public_id || resolvedPublicId, destination),
           original_filename: file.name,
-          format: d.format,
-          bytes: d.bytes,
-          width: d.width,
-          height: d.height,
+          format: uploaded.format,
+          bytes: uploaded.bytes,
+          width: uploaded.width,
+          height: uploaded.height,
         }
       }
     }
@@ -56,17 +122,13 @@ export async function uploadImageWithMeta(file, destination = 'uploads') {
   }
 
   // Fallback: backend tradicional
-  const formData = new FormData()
-  formData.append('file', file)
-  const response = await api.post('/uploads/images', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
-  const path = response?.data?.path || null
+  const path = await uploadViaBackend(file)
   if (!path) return null
+  const fallbackPublicId = resolvedPublicId || file.name.replace(/\.[^.]+$/, '')
   return {
     secure_url: path,
-    public_id: file.name.replace(/\.[^.]+$/, ''),
-    folder: destination,
+    public_id: fallbackPublicId,
+    folder: folderFromPublicId(fallbackPublicId, destination),
     original_filename: file.name,
     format: null,
     bytes: file.size,
@@ -79,48 +141,10 @@ export async function uploadImageWithMeta(file, destination = 'uploads') {
  * Sube una imagen directo a Cloudinary (evita pasar por backend)
  * @param {File} file - Archivo a subir
  * @param {string} destination - Destino (uploads|instrumentos|inventario)
+ * @param {string} explicitPublicId
  * @returns {Promise<string|null>} URL de la imagen o null
  */
-export async function uploadImage(file, destination = 'uploads') {
-  if (!file) return null
-  
-  // Intentar upload directo a Cloudinary
-  try {
-    const signatureRes = await api.post(
-      `/uploads/signature?destination=${encodeURIComponent(destination)}&filename=${encodeURIComponent(file.name)}`
-    )
-    const sig = signatureRes.data?.data
-    
-    if (sig) {
-      const cloudForm = new FormData()
-      cloudForm.append('file', file)
-      cloudForm.append('api_key', sig.api_key)
-      cloudForm.append('timestamp', sig.timestamp)
-      cloudForm.append('signature', sig.signature)
-      cloudForm.append('public_id', sig.public_id)
-      if (sig.asset_folder) cloudForm.append('asset_folder', sig.asset_folder)
-      if (sig.overwrite) cloudForm.append('overwrite', 'true')
-      if (sig.invalidate) cloudForm.append('invalidate', 'true')
-      
-      const cloudRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${sig.cloud_name}/image/upload`,
-        { method: 'POST', body: cloudForm }
-      )
-      
-      if (cloudRes.ok) {
-        const cloudData = await cloudRes.json()
-        return cloudData.secure_url
-      }
-    }
-  } catch (e) {
-    // Silencioso - fallback a backend
-  }
-  
-  // Fallback: upload tradicional por backend
-  const formData = new FormData()
-  formData.append('file', file)
-  const response = await api.post('/uploads/images', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  })
-  return response?.data?.path || null
+export async function uploadImage(file, destination = 'uploads', explicitPublicId = '') {
+  const meta = await uploadImageWithMeta(file, destination, explicitPublicId)
+  return meta?.secure_url || null
 }

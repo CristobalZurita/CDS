@@ -16,6 +16,7 @@
     </header>
 
     <p v-if="error" class="admin-error">{{ error }}</p>
+    <p v-if="success" class="admin-success">{{ success }}</p>
 
     <section class="summary-grid">
       <article class="summary-card">
@@ -72,8 +73,11 @@
       <p v-if="uploadValidationError" class="upload-validation-error">{{ uploadValidationError }}</p>
 
       <div v-if="queue.length" class="queue-list">
-        <div v-for="item in queue" :key="`${item.name}-${item.size}`" class="queue-item">
-          <span class="queue-name">{{ item.name }}</span>
+        <div v-for="item in queue" :key="`${item.publicId}-${item.size}`" class="queue-item">
+          <div class="queue-main">
+            <span class="queue-name">{{ item.name }}</span>
+            <span class="queue-target">{{ queuePath(item) }}</span>
+          </div>
           <span class="queue-size">{{ formatBytes(item.size) }}</span>
           <span class="queue-status" :class="`status--${item.status}`">{{ statusLabel(item.status) }}</span>
         </div>
@@ -110,7 +114,7 @@
               type="text"
               placeholder="ej: home.hero.bg"
               :readonly="isEditingBinding"
-              :style="isEditingBinding ? 'background: rgba(62,60,56,.06); cursor: not-allowed;' : ''"
+              :class="{ 'binding-slot-input--readonly': isEditingBinding }"
             />
           </label>
           <label>
@@ -195,25 +199,45 @@
         </figure>
       </div>
     </section>
+
+    <BaseConfirmDialog
+      :open="Boolean(bindingPendingDelete)"
+      title="Quitar slot"
+      :message="bindingPendingDelete ? `¿Quitar el slot ${bindingPendingDelete}?` : ''"
+      confirm-label="Quitar"
+      :confirm-loading="deletingBinding"
+      @cancel="cancelDeleteBinding"
+      @confirm="confirmDeleteBinding"
+    />
   </main>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { BaseConfirmDialog } from '@/components/base'
 import api from '@/services/api.js'
-import { uploadImageWithMeta } from '@/services/uploadService.js'
+import { resolveUploadPublicId, uploadImageWithMeta } from '@/services/uploadService.js'
 
 // ─── Catálogo (desde BD) ───────────────────────────────────────────────────
 const images = ref([])
 const loadingCatalog = ref(false)
 const error = ref(null)
+const success = ref('')
 const search = ref('')
 const folderFilter = ref('')
+
+function normalizeAssetGroup(img) {
+  const source = String(img?.folder || img?.public_id || '').toLowerCase()
+  if (source.startsWith('instrumentos/') || source.includes('/instrumentos/')) return 'instrumentos'
+  if (source.startsWith('inventario/') || source.startsWith('inventario') || source.includes('/inventario/')) return 'inventario'
+  if (source.startsWith('inventa') || String(img?.folder || img?.public_id || '').startsWith('INVENTARIO')) return 'inventario'
+  return 'general'
+}
 
 const filtered = computed(() => {
   let list = images.value
   if (folderFilter.value) {
-    list = list.filter(img => img.folder?.includes(folderFilter.value) || img.public_id?.includes(folderFilter.value))
+    list = list.filter(img => normalizeAssetGroup(img) === folderFilter.value)
   }
   if (search.value) {
     const q = search.value.toLowerCase()
@@ -223,12 +247,13 @@ const filtered = computed(() => {
 })
 
 function countByFolder(folder) {
-  return images.value.filter(img => img.folder?.includes(folder) || img.public_id?.includes(folder)).length
+  return images.value.filter(img => normalizeAssetGroup(img) === folder).length
 }
 
 async function loadCatalog() {
   loadingCatalog.value = true
   error.value = null
+  success.value = ''
   try {
     const { data } = await api.get('/media/assets')
     images.value = data || []
@@ -248,12 +273,13 @@ async function importFromCloudinary() {
   importing.value = true
   importProgress.value = 'conectando...'
   error.value = null
+  success.value = ''
   try {
     const { data } = await api.post('/media/assets/import-from-cloudinary')
     importProgress.value = ''
     await loadCatalog()
     const { inserted = 0, updated = 0, total = 0 } = data
-    alert(`Importación completa: ${total} imágenes procesadas (${inserted} nuevas, ${updated} actualizadas).`)
+    success.value = `Importación completa: ${total} imágenes procesadas (${inserted} nuevas, ${updated} actualizadas).`
   } catch {
     error.value = 'Error al importar desde Cloudinary. Verificá que el backend tenga acceso a Cloudinary.'
   } finally {
@@ -292,9 +318,18 @@ function addToQueue(files) {
       rechazados.push(`${file.name}: supera 10 MB`)
       continue
     }
-    const exists = queue.value.find(q => q.name === file.name && q.size === file.size)
+    const relativePath = String(file.webkitRelativePath || '').replace(/\\/g, '/').replace(/^\/+/, '').replace(/^images\//i, '')
+    const publicId = resolveUploadPublicId(file, destination.value, relativePath)
+    const exists = queue.value.find(q => q.publicId === publicId || (q.name === file.name && q.size === file.size))
     if (!exists) {
-      queue.value.push({ file, name: file.name, size: file.size, status: 'pending' })
+      queue.value.push({
+        file,
+        name: file.name,
+        size: file.size,
+        relativePath,
+        publicId,
+        status: 'pending',
+      })
     }
   }
   uploadValidationError.value = rechazados.length ? rechazados.join(' · ') : ''
@@ -305,12 +340,14 @@ async function uploadAll() {
   uploading.value = true
   uploadProgress.value = 0
   error.value = null
+  success.value = ''
   try {
     for (const item of queue.value) {
       if (item.status === 'done') { uploadProgress.value++; continue }
       item.status = 'uploading'
       try {
-        const meta = await uploadImageWithMeta(item.file, destination.value)
+        const explicitPublicId = item.publicId || resolveUploadPublicId(item.file, destination.value, item.relativePath)
+        const meta = await uploadImageWithMeta(item.file, destination.value, explicitPublicId)
         if (meta?.secure_url) {
           // Registrar en BD
           await api.post('/media/assets', meta).catch(() => {})
@@ -333,6 +370,16 @@ function clearQueue() {
   queue.value = queue.value.filter(i => i.status === 'uploading')
 }
 
+watch(destination, (nextDestination) => {
+  queue.value = queue.value.map((item) => {
+    if (item.relativePath) return item
+    return {
+      ...item,
+      publicId: resolveUploadPublicId(item.file, nextDestination),
+    }
+  })
+})
+
 // ─── Bindings ──────────────────────────────────────────────────────────────
 const bindings = ref([])
 const loadingBindings = ref(false)
@@ -340,6 +387,8 @@ const showBindingForm = ref(false)
 const savingBinding = ref(false)
 const pickerSearch = ref('')
 const isEditingBinding = ref(false)
+const bindingPendingDelete = ref('')
+const deletingBinding = ref(false)
 
 const bindingForm = ref({ slot_key: '', label: '', asset_id: null })
 
@@ -374,6 +423,7 @@ async function loadBindings() {
 async function saveBinding() {
   if (!bindingForm.value.slot_key || !bindingForm.value.asset_id) return
   savingBinding.value = true
+  success.value = ''
   try {
     await api.put(`/media/bindings/${bindingForm.value.slot_key}`, {
       asset_id: bindingForm.value.asset_id,
@@ -410,14 +460,28 @@ function editBinding(b) {
   showBindingForm.value = true
 }
 
-async function deleteBinding(slotKey) {
-  if (!confirm(`¿Quitar el slot "${slotKey}"?`)) return
+function deleteBinding(slotKey) {
+  bindingPendingDelete.value = slotKey
+}
+
+function cancelDeleteBinding() {
+  if (deletingBinding.value) return
+  bindingPendingDelete.value = ''
+}
+
+async function confirmDeleteBinding() {
+  if (!bindingPendingDelete.value || deletingBinding.value) return
+  deletingBinding.value = true
+  success.value = ''
   try {
-    await api.delete(`/media/bindings/${slotKey}`)
+    await api.delete(`/media/bindings/${bindingPendingDelete.value}`)
     error.value = null
     await loadBindings()
+    bindingPendingDelete.value = ''
   } catch {
     error.value = 'Error al quitar el slot.'
+  } finally {
+    deletingBinding.value = false
   }
 }
 
@@ -429,6 +493,11 @@ function thumb(url) {
 
 function shortName(publicId) {
   return publicId?.split('/').pop() || publicId || ''
+}
+
+function queuePath(item) {
+  if (item?.relativePath) return item.relativePath
+  return item?.publicId || item?.name || ''
 }
 
 function formatBytes(bytes) {
@@ -453,76 +522,97 @@ onMounted(() => {
 <style scoped>
 .btn-primary:disabled, .btn-secondary:disabled { opacity: .55; cursor: not-allowed; }
 /* Override panel-actions: multi-action row (not justify-end) */
-.panel-actions { justify-content: flex-start; flex-wrap: wrap; gap: .5rem; }
+.panel-actions { justify-content: flex-start; flex-wrap: wrap; gap: var(--cds-space-xs); }
 
 .summary-grid { display: grid; gap: .7rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.summary-card { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); padding: .9rem; display: grid; gap: .25rem; }
-.summary-card span { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
-.summary-card strong { font-size: var(--cds-text-2xl); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
 
 .panel-head { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: space-between; align-items: center; }
 
-.upload-controls label { display: grid; gap: .3rem; font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); width: fit-content; }
-.upload-controls select { min-height: 44px; border: 1.5px solid rgba(62,60,56,.25); border-radius: .5rem; padding: .5rem .75rem; font-size: var(--cds-text-base); background: var(--cds-white); color: var(--cds-dark); }
+.upload-controls label,
+.binding-form-fields label {
+  display: grid;
+  gap: .3rem;
+  font-size: var(--cds-text-sm);
+  font-weight: var(--cds-font-semibold);
+  color: var(--cds-dark);
+}
 
-.drop-zone { border: 2px dashed color-mix(in srgb, var(--cds-primary) 40%, transparent); border-radius: .75rem; padding: 2rem 1rem; text-align: center; cursor: pointer; display: grid; gap: .4rem; justify-items: center; transition: background .15s; }
+.upload-controls label {
+  width: fit-content;
+}
+
+.upload-controls select,
+.catalog-filters input,
+.catalog-filters select,
+.binding-form-fields input,
+.picker-search {
+  min-height: 40px;
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-sm);
+  padding: .4rem .75rem;
+  font-size: var(--cds-text-sm);
+  background: var(--cds-white);
+  color: var(--cds-dark);
+}
+
+.drop-zone { border: 2px dashed color-mix(in srgb, var(--cds-primary) 40%, transparent); border-radius: var(--cds-radius-md); padding: 2rem 1rem; text-align: center; cursor: pointer; display: grid; gap: .4rem; justify-items: center; transition: background .15s; }
 .drop-zone:hover, .drop-zone--active { background: color-mix(in srgb, var(--cds-primary) 6%, white); }
 .drop-zone i { font-size: 2rem; color: var(--cds-primary); }
 .drop-zone p { margin: 0; font-size: var(--cds-text-base); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
 .drop-zone span { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
 .drop-zone input { display: none; }
 
-.upload-extra-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
-.upload-validation-error { margin: 0; color: #c0392b; font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); }
+.upload-extra-actions { display: flex; gap: var(--cds-space-xs); flex-wrap: wrap; }
+.upload-validation-error { margin: 0; color: var(--cds-invalid-text); font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); }
 
 .queue-list { display: grid; gap: .35rem; }
-.queue-item { display: flex; align-items: center; gap: .75rem; padding: .5rem .75rem; background: rgba(62,60,56,.04); border-radius: .45rem; font-size: var(--cds-text-sm); }
-.queue-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cds-dark); }
+.queue-item { display: flex; align-items: center; gap: .75rem; padding: .5rem .75rem; background: rgba(62,60,56,.04); border-radius: var(--cds-radius-sm); font-size: var(--cds-text-sm); }
+.queue-main { flex: 1; min-width: 0; display: grid; gap: .1rem; }
+.queue-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cds-dark); }
+.queue-target { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cds-text-muted); font-family: monospace; font-size: var(--cds-text-xs); }
 .queue-size { color: var(--cds-text-muted); white-space: nowrap; }
 .queue-status { white-space: nowrap; font-weight: var(--cds-font-semibold); }
 .status--pending { color: var(--cds-text-muted); }
 .status--uploading { color: var(--cds-primary); }
-.status--done { color: #2e7d32; }
-.status--error { color: #c0392b; }
+.status--done { color: var(--cds-valid-text); }
+.status--error { color: var(--cds-invalid-text); }
 
 .catalog-filters { display: flex; gap: .5rem; flex-wrap: wrap; }
-.catalog-filters input, .catalog-filters select { min-height: 40px; border: 1.5px solid rgba(62,60,56,.25); border-radius: .5rem; padding: .4rem .75rem; font-size: var(--cds-text-sm); background: var(--cds-white); color: var(--cds-dark); }
 .catalog-hint { margin: 0; color: var(--cds-text-muted); font-size: var(--cds-text-base); }
 .catalog-hint code { background: rgba(62,60,56,.08); padding: .1em .4em; border-radius: .3rem; font-size: .9em; }
 
 .image-grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-.image-tile { margin: 0; display: grid; border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .6rem; overflow: hidden; background: rgba(62,60,56,.03); }
+.image-tile { margin: 0; display: grid; border: 1px solid var(--cds-border-card); border-radius: var(--cds-radius-sm); overflow: hidden; background: rgba(62,60,56,.03); }
 .image-tile img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
 .image-tile figcaption { padding: .35rem .5rem; display: grid; gap: .15rem; }
 .tile-name { font-size: var(--cds-text-xs); font-weight: var(--cds-font-semibold); color: var(--cds-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tile-meta { font-size: var(--cds-text-xs); color: var(--cds-text-muted); }
 
 /* Bindings */
-.binding-form { display: grid; gap: .75rem; padding: .9rem; background: rgba(62,60,56,.03); border-radius: .6rem; border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); }
+.binding-form { display: grid; gap: .75rem; padding: .9rem; background: rgba(62,60,56,.03); border-radius: var(--cds-radius-md); border: 1px solid var(--cds-border-card); }
 .binding-form-fields { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-.binding-form-fields label { display: grid; gap: .3rem; font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
-.binding-form-fields input { min-height: 44px; border: 1.5px solid rgba(62,60,56,.25); border-radius: .5rem; padding: .5rem .75rem; font-size: var(--cds-text-base); background: var(--cds-white); color: var(--cds-dark); }
+.binding-slot-input--readonly { background: color-mix(in srgb, var(--cds-light) 18%, white); cursor: not-allowed; }
 .binding-picker { display: grid; gap: .5rem; }
 .binding-picker-label { font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); }
-.picker-search { min-height: 40px; border: 1.5px solid rgba(62,60,56,.25); border-radius: .5rem; padding: .4rem .75rem; font-size: var(--cds-text-sm); background: var(--cds-white); color: var(--cds-dark); width: 100%; max-width: 320px; }
-.picker-grid { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); max-height: 260px; overflow-y: auto; padding: .25rem; border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .5rem; }
-.picker-tile { margin: 0; cursor: pointer; border: 2px solid transparent; border-radius: .45rem; overflow: hidden; background: rgba(62,60,56,.03); transition: border-color .15s; }
+.picker-search { width: 100%; max-width: 320px; }
+.picker-grid { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); max-height: 260px; overflow-y: auto; padding: .25rem; border: 1px solid var(--cds-border-card); border-radius: var(--cds-radius-sm); }
+.picker-tile { margin: 0; cursor: pointer; border: 2px solid transparent; border-radius: var(--cds-radius-sm); overflow: hidden; background: rgba(62,60,56,.03); transition: border-color .15s; }
 .picker-tile:hover { border-color: color-mix(in srgb, var(--cds-primary) 40%, transparent); }
 .picker-tile--selected { border-color: var(--cds-primary); }
 .picker-tile img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
 .picker-tile figcaption { padding: .2rem .3rem; font-size: var(--cds-text-xs); color: var(--cds-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .bindings-list { display: grid; gap: .4rem; }
-.binding-row { display: flex; align-items: center; gap: .75rem; padding: .5rem .75rem; background: rgba(62,60,56,.03); border-radius: .45rem; border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); }
-.binding-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: .35rem; flex-shrink: 0; }
+.binding-row { display: flex; align-items: center; gap: .75rem; padding: .5rem .75rem; background: rgba(62,60,56,.03); border-radius: var(--cds-radius-sm); border: 1px solid var(--cds-border-card); }
+.binding-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: var(--cds-radius-sm); flex-shrink: 0; }
 .binding-info { flex: 1; display: grid; gap: .1rem; min-width: 0; }
 .binding-slot { font-size: var(--cds-text-sm); font-weight: var(--cds-font-semibold); color: var(--cds-dark); font-family: monospace; }
 .binding-label { font-size: var(--cds-text-xs); color: var(--cds-text-muted); }
 .binding-name { font-size: var(--cds-text-xs); color: var(--cds-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .binding-actions { display: flex; gap: .35rem; flex-shrink: 0; }
-.btn-icon { min-height: 36px; min-width: 36px; padding: .3rem .5rem; border-radius: .4rem; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); background: var(--cds-white); cursor: pointer; font-size: var(--cds-text-sm); }
-.btn-icon--danger { border-color: #fcc; color: #c0392b; }
-.btn-icon--danger:hover { background: #fdf3f2; }
+.btn-icon { min-height: 36px; min-width: 36px; padding: .3rem .5rem; border-radius: var(--cds-radius-sm); border: 1px solid var(--cds-border-input); background: var(--cds-white); cursor: pointer; font-size: var(--cds-text-sm); }
+.btn-icon--danger { border-color: var(--cds-invalid-border); color: var(--cds-invalid-text); }
+.btn-icon--danger:hover { background: var(--cds-invalid-bg); }
 
 @media (max-width: 600px) {
   .summary-grid { grid-template-columns: 1fr; }
