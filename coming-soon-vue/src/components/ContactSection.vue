@@ -155,16 +155,16 @@ async function submitForm() {
 }
 
 .contact-inner {
-  max-width: 1000px;
+  max-width: min(1690px, 94vw);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: var(--cds-space-lg);
 }
 
 .contact-title {
   font-family: var(--cds-headings-font-family);
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-size: var(--cds-text-xl);
   font-weight: var(--cds-font-bold);
   color: var(--cds-white);
   line-height: var(--cds-leading-tight);
@@ -173,23 +173,23 @@ async function submitForm() {
 }
 
 .contact-lead {
-  font-size: clamp(1rem, 2vw, 1.1rem);
+  font-size: var(--cds-text-lg);
   color: var(--cds-light);
   opacity: 0.72;
   line-height: var(--cds-leading-normal);
-  margin-top: -0.75rem;
+  margin-top: calc(-1 * var(--cds-space-sm));
 }
 
 /* Form */
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: var(--cds-space-md);
 }
 
 .form-row {
   display: grid;
-  gap: 1.1rem;
+  gap: var(--cds-space-md);
   grid-template-columns: 1fr;
 }
 
@@ -200,11 +200,11 @@ async function submitForm() {
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: var(--cds-space-xs);
 }
 
 .form-field label {
-  font-size: 0.9rem;
+  font-size: var(--cds-text-md);
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -217,9 +217,9 @@ async function submitForm() {
   background: color-mix(in srgb, var(--cds-white) 6%, transparent);
   border: 1px solid color-mix(in srgb, var(--cds-light) 22%, transparent);
   border-radius: var(--cds-radius-sm);
-  padding: 0.75rem 1rem;
+  padding: var(--cds-space-sm) var(--cds-space-md);
   color: var(--cds-white);
-  font-size: 1rem;
+  font-size: var(--cds-text-md);
   font-family: var(--cds-font-family-base);
   transition: border-color 0.15s, box-shadow 0.15s;
   resize: vertical;
@@ -244,7 +244,7 @@ async function submitForm() {
 }
 
 .field-error {
-  font-size: 0.82rem;
+  font-size: var(--cds-text-sm);
   color: color-mix(in srgb, var(--cds-danger) 70%, var(--cds-white));
   font-weight: var(--cds-font-medium);
 }
@@ -253,11 +253,11 @@ async function submitForm() {
 .form-feedback {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.85rem 1.1rem;
+  gap: var(--cds-space-sm);
+  padding: var(--cds-space-sm) var(--cds-space-md);
   border-radius: var(--cds-radius-sm);
   font-weight: var(--cds-font-semibold);
-  font-size: 1rem;
+  font-size: var(--cds-text-md);
 }
 
 .form-feedback--ok  {
@@ -275,16 +275,16 @@ async function submitForm() {
 .btn-submit {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--cds-space-xs);
   align-self: flex-start;
-  min-height: 48px;
-  padding: 0.75rem 1.75rem;
+  min-height: 3.5rem;
+  padding: var(--cds-space-sm) var(--cds-space-xl);
   border: none;
   border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
   font-family: var(--cds-font-family-base);
-  font-size: 1rem;
+  font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -307,16 +307,16 @@ async function submitForm() {
 .contact-direct {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1.5rem;
-  padding-top: 0.5rem;
+  gap: var(--cds-space-sm) var(--cds-space-xl);
+  padding-top: var(--cds-space-sm);
   border-top: 1px solid color-mix(in srgb, var(--cds-light) 12%, transparent);
 }
 
 .direct-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 1rem;
+  gap: var(--cds-space-xs);
+  font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
   color: color-mix(in srgb, var(--cds-light) 72%, transparent);
   text-decoration: none;
@@ -327,4 +327,23 @@ async function submitForm() {
 
 .direct-link--wa { color: var(--cds-whatsapp); }
 .direct-link--wa:hover { color: color-mix(in srgb, var(--cds-whatsapp) 60%, var(--cds-white)); }
+
+/* ── PC: 2 columnas — izquierda info, derecha formulario ── */
+@media (min-width: 900px) {
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    grid-template-areas:
+      "title  form"
+      "lead   form"
+      "direct form";
+    column-gap: 4rem;
+    row-gap: 1.8rem;
+    align-items: start;
+  }
+  .contact-title  { grid-area: title; }
+  .contact-lead   { grid-area: lead; margin-top: 0; }
+  .contact-form   { grid-area: form; grid-row: 1 / 4; }
+  .contact-direct { grid-area: direct; }
+}
 </style>

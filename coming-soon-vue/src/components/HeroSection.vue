@@ -536,7 +536,7 @@ onUnmounted(() => { if (raf) cancelAnimationFrame(raf) })
   top: 50%;
   left: 50%;
   transform: translate(-50%, -52%);
-  width: min(88vw, 1060px);
+  width: min(92vw, 1040px);
   height: 74%;
   background: var(--cds-light);
   border-radius: 2.5rem;
@@ -556,7 +556,7 @@ onUnmounted(() => { if (raf) cancelAnimationFrame(raf) })
   padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 5vw, 3rem) clamp(6rem, 14vw, 11rem);
   gap: clamp(1.2rem, 2.5vw, 1.8rem);
   width: 100%;
-  max-width: 1200px;
+  max-width: 1440px;
 margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio quede pegado */
 }
 
@@ -579,7 +579,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
 
 /* ─── Logo ──────────────────────────────────────── */
 .hero-logo {
-  width: min(140vw, 100rem);
+  width: min(80vw, 60rem);
   height: auto;
   animation: fadeUp 0.7s 0.05s ease both;
   margin-bottom: -0.5rem;
@@ -643,11 +643,10 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
   animation: fadeUp 0.6s 0.42s ease both;
 }
 .hero-body p {
-  font-size: clamp(1.9rem, 3.6vw, 2.2rem);
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
   font-weight: var(--cds-font-medium);
   line-height: 1.3;
   color: var(--cds-black);
-  max-width: 100ch;
   opacity: 0.75;
 }
 .hero-body-sub {

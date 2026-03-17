@@ -183,6 +183,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+  margin-left: 14.5%;
 }
 
 .footer-map-wrap {
@@ -191,9 +192,9 @@
 }
 
 .footer-map {
-  width: min(240px, 100%);
+  width: min(300px, 120%);
   aspect-ratio: 16 / 9;
-  border: 1px solid color-mix(in srgb, var(--cds-white) 15%, transparent);
+  border: 8px solid color-mix(in srgb, var(--cds-white) 15%, transparent);
   border-radius: var(--cds-radius-sm);
   background: color-mix(in srgb, var(--cds-dark) 80%, black);
 }
@@ -234,12 +235,12 @@
     align-items: start;
   }
 
-  /* En desktop reducir tamaños al rango normal de footer */
-  .site-footer h2          { font-size: 0.82rem; }
-  .site-footer p           { font-size: 0.95rem; }
-  .footer-brand-name       { font-size: 1.15rem !important; }
+  /* En desktop: escala usando tokens, no hardcodeado */
+  .site-footer h2          { font-size: var(--cds-text-sm); }
+  .site-footer p           { font-size: var(--cds-text-sm); }
+  .footer-brand-name       { font-size: var(--cds-text-base) !important; }
   .site-footer a,
-  .site-footer-links span  { font-size: 0.9rem; }
-  .site-footer-legal       { font-size: 0.8rem; }
+  .site-footer-links span  { font-size: var(--cds-text-sm); }
+  .site-footer-legal       { font-size: clamp(1rem, 1.5vw, 1.4rem); }
 }
 </style>

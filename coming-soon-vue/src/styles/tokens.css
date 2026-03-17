@@ -26,4 +26,18 @@
   /* ── Radios ───────────────────────────────────── */
   --cds-radius-sm:   0.55rem;
   --cds-radius-pill: 999px;
+
+  /* ── Escala tipográfica fluida ─────────────────── */
+  --cds-text-sm:   clamp(1.2rem, 2vw,   1.8rem);   /* errores validación     */
+  --cds-text-base: clamp(1.5rem, 2.5vw, 2rem);     /* botón, links directos  */
+  --cds-text-md:   clamp(1.7rem, 2.8vw, 2.1rem);   /* labels, inputs, feedback */
+  --cds-text-lg:   clamp(2.2rem, 4vw,   3rem);     /* lead / párrafo destacado */
+  --cds-text-xl:   clamp(2.2rem, 4.5vw, 3.2rem);   /* título de sección (h2)  */
+
+  /* ── Espaciado base ────────────────────────────── */
+  --cds-space-xs:  0.5rem;
+  --cds-space-sm:  0.9rem;
+  --cds-space-md:  1.5rem;
+  --cds-space-lg:  2.4rem;
+  --cds-space-xl:  4rem;
 }
