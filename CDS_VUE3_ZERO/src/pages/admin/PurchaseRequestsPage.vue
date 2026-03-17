@@ -152,11 +152,10 @@ const {
 
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-.notice-card { background: color-mix(in srgb, #0284c7 10%, white); }
+.notice-card { background: color-mix(in srgb, var(--cds-info) 10%, white); }
 .notice-card p { margin: 0; }
 .form-grid textarea { min-height: 88px; }
-.payment-box input, .row-actions select { min-height: 44px; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: .55rem; padding: .65rem .75rem; font-size: var(--cds-text-base); }
-.chip { border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: 999px; padding: .15rem .55rem; font-size: var(--cds-text-sm); text-transform: uppercase; }
+.chip { border: 1px solid var(--cds-border-input); border-radius: var(--cds-radius-pill); padding: .15rem .55rem; font-size: var(--cds-text-sm); text-transform: uppercase; }
 .payment-box { display: grid; gap: .35rem; min-width: 220px; }
 .row-actions { display: grid; gap: .35rem; min-width: 180px; }
 </style>

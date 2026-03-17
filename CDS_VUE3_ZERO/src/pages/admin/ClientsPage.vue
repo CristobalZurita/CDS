@@ -296,22 +296,18 @@ onUnmounted(() => { _cleanupCreate(); _cleanupEdit() })
 
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-.summary-card, .panel-nested { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); }
 .toolbar { display: grid; gap: .45rem; }
-.toolbar input { min-height: 44px; border-radius: .55rem; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); padding: .65rem .75rem; font-size: var(--cds-text-base); }
 .split-grid { display: grid; gap: .8rem; grid-template-columns: 1fr; }
 .list-panel, .detail-panel { display: grid; gap: .65rem; }
 .list-panel h3, .detail-panel h3, .panel-nested h4 { margin: 0; }
 .list-reset { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
-.list-item { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .65rem; padding: .65rem; cursor: pointer; display: grid; gap: .25rem; }
+.list-item { border: 1px solid var(--cds-border-card); border-radius: var(--cds-radius-sm); padding: .65rem; cursor: pointer; display: grid; gap: .25rem; }
 .list-item.active { border-color: color-mix(in srgb, var(--cds-primary) 40%, white); background: color-mix(in srgb, var(--cds-primary) 8%, white); }
 .item-head { display: flex; justify-content: space-between; gap: .45rem; align-items: center; }
-.chip { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: 999px; padding: .2rem .55rem; font-size: var(--cds-text-sm); }
+.chip { border: 1px solid var(--cds-border-card); border-radius: var(--cds-radius-pill); padding: .2rem .55rem; font-size: var(--cds-text-sm); }
 .detail-head { display: flex; justify-content: space-between; gap: .65rem; flex-wrap: wrap; align-items: start; }
 .detail-head p { margin: .2rem 0 0; color: var(--cds-text-muted); }
-.summary-grid { display: grid; gap: .65rem; grid-template-columns: repeat(1, minmax(0, 1fr)); }
-.summary-card { padding: .65rem; display: grid; gap: .2rem; }
-.summary-card span { color: var(--cds-text-muted); font-size: var(--cds-text-sm); }
+.summary-card { padding: .65rem; }
 .summary-card strong { font-size: var(--cds-text-lg); }
 .panel-nested { padding: .8rem; display: grid; gap: .6rem; }
 .checkbox-row { display: flex !important; align-items: center; gap: .5rem !important; }

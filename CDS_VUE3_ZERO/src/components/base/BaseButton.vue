@@ -1,5 +1,6 @@
 <template>
   <button
+    ref="buttonRef"
     :type="type"
     :disabled="disabled || loading"
     class="base-button"
@@ -27,7 +28,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   type: { 
@@ -53,6 +54,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['click'])
+const buttonRef = ref(null)
 
 const buttonClasses = computed(() => [
   `variant-${props.variant}`,
@@ -63,6 +65,10 @@ const buttonClasses = computed(() => [
     'is-loading': props.loading
   }
 ])
+
+defineExpose({
+  focus: () => buttonRef.value?.focus()
+})
 </script>
 
 <style scoped>
@@ -186,7 +192,7 @@ const buttonClasses = computed(() => [
 }
 
 .is-rounded {
-  border-radius: 9999px;
+  border-radius: var(--cds-radius-pill);
 }
 
 .is-loading {

@@ -1,3 +1,9 @@
+<script>
+export default {
+  inheritAttrs: false
+}
+</script>
+
 <template>
   <div class="base-input-wrapper" :class="wrapperClasses">
     <label v-if="label" :for="inputId" class="base-input-label">
@@ -12,6 +18,7 @@
       </span>
 
       <input
+        ref="inputRef"
         :id="inputId"
         :type="type"
         :value="modelValue"
@@ -22,10 +29,11 @@
         :min="min"
         :max="max"
         :step="step"
-        :pattern="pattern"
+        :pattern="nativePattern"
         :autocomplete="autocomplete"
         :inputmode="inputmode"
         :class="inputClasses"
+        v-bind="attrs"
         @input="handleInput"
         @blur="handleBlur"
         @focus="$emit('focus', $event)"
@@ -55,7 +63,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, useAttrs, useSlots } from 'vue'
 
 const props = defineProps({
   modelValue: { type: [String, Number], default: '' },
@@ -91,6 +99,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'blur', 'focus', 'keydown', 'validate'])
+const attrs = useAttrs()
+const slots = useSlots()
+const inputRef = ref(null)
 
 // ID único para el input
 const inputId = computed(() => props.id || `input-${Math.random().toString(36).substr(2, 9)}`)
@@ -106,11 +117,24 @@ const wrapperClasses = computed(() => ({
 const inputClasses = computed(() => [
   'base-input',
   {
-    'has-right-icon': props.rightIcon || props.$slots?.rightIcon,
+    'has-right-icon': props.rightIcon || Boolean(slots.rightIcon),
     'is-invalid': !!props.error,
     [`input-${props.size}`]: true
   }
 ])
+
+const NON_NATIVE_PATTERNS = new Set(['letters-only', 'numbers-only', 'rut'])
+
+const nativePattern = computed(() => {
+  const value = String(props.pattern || '').trim()
+  if (!value || NON_NATIVE_PATTERNS.has(value)) return undefined
+  return value
+})
+
+defineExpose({
+  focus: () => inputRef.value?.focus(),
+  select: () => inputRef.value?.select()
+})
 
 // Handler de input con modificadores y validación por tipo
 function handleInput(event) {
@@ -231,7 +255,7 @@ function validateInput(value) {
   width: 100%;
   min-height: 44px;
   padding: 0.65rem 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
+  border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-sm);
   background: var(--cds-white);
   color: var(--cds-text-normal);

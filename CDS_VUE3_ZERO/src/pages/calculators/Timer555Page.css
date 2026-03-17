@@ -53,7 +53,7 @@
 
 .panel-tab {
   padding: 0.34rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--cds-radius-pill);
   border: 1px solid rgba(62, 60, 56, 0.22);
   background: transparent;
   color: var(--cds-dark);
@@ -289,7 +289,7 @@
 
 .wave-card {
   border: 1px solid rgba(62, 60, 56, 0.1);
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   background: rgba(62, 60, 56, 0.04);
   overflow: hidden;
 }
@@ -335,7 +335,7 @@
   margin-bottom: 0.25rem;
   padding: 0.7rem 0.8rem;
   border: 1px solid color-mix(in srgb, var(--cds-primary) 26%, rgba(62, 60, 56, 0.18));
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   background: color-mix(in srgb, var(--cds-primary) 7%, var(--cds-white));
 }
 

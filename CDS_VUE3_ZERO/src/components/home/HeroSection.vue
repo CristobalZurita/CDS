@@ -76,8 +76,8 @@ const { resolveSlotOr } = useMediaBinding()
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgb(255, 115, 0);
-  -webkit-text-stroke: 1px #111;
+  color: var(--cds-primary);
+  -webkit-text-stroke: 1px var(--cds-dark);
   paint-order: stroke fill;
 }
 
@@ -85,7 +85,7 @@ const { resolveSlotOr } = useMediaBinding()
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.85rem;
+  gap: var(--cds-space-sm);
   margin-top: 0.5rem;
 }
 
@@ -95,7 +95,7 @@ const { resolveSlotOr } = useMediaBinding()
   gap: 0.5rem;
   min-height: 48px;
   padding: 0.75rem 1.4rem;
-  border-radius: 0.6rem;
+  border-radius: var(--cds-radius-md);
   font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
   text-decoration: none;
@@ -108,7 +108,7 @@ const { resolveSlotOr } = useMediaBinding()
   background: var(--cds-primary);
   color: var(--cds-white);
   border: 2px solid var(--cds-primary);
-  -webkit-text-stroke: 1px #111;
+  -webkit-text-stroke: 1px var(--cds-dark);
   paint-order: stroke fill;
   font-size: var(--cds-text-lg);
 }
@@ -117,7 +117,7 @@ const { resolveSlotOr } = useMediaBinding()
   background: transparent;
   color: var(--cds-white);
   border: 2px solid var(--cds-white);
-  -webkit-text-stroke: 1.5px #111;
+  -webkit-text-stroke: 1.5px var(--cds-dark);
   paint-order: stroke fill;
   font-size: var(--cds-text-lg);
 }

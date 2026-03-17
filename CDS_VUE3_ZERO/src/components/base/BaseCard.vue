@@ -79,7 +79,7 @@ const bodyClasses = computed(() => ({
 
 /* Variantes */
 .variant-default {
-  border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+  border: 1px solid var(--cds-border-card);
 }
 
 .variant-outlined {
@@ -119,7 +119,7 @@ const bodyClasses = computed(() => ({
   align-items: flex-start;
   gap: 1rem;
   padding: 1rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+  border-bottom: 1px solid var(--cds-border-card);
 }
 
 .card-header-content {
@@ -189,7 +189,7 @@ const bodyClasses = computed(() => ({
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border-top: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+  border-top: 1px solid var(--cds-border-card);
   background: color-mix(in srgb, var(--cds-light) 5%, white);
 }
 

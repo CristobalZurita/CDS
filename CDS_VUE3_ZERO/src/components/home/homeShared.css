@@ -37,7 +37,7 @@
 .section-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: var(--cds-space-sm);
   margin-top: 2rem;
 }
 
@@ -47,7 +47,7 @@
   gap: 0.5rem;
   min-height: 44px;
   padding: 0.65rem 1.25rem;
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
   text-decoration: none;
@@ -63,4 +63,17 @@
   background: transparent;
   color: var(--cds-primary);
   border-color: var(--cds-primary);
+}
+
+.home-services .section-title,
+.home-reviews .section-title {
+  color: var(--cds-white);
+}
+
+.service-card,
+.review-card {
+  background: color-mix(in srgb, var(--cds-white) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cds-white) 15%, transparent);
+  border-radius: var(--cds-radius-md);
+  padding: var(--cds-space-lg);
 }

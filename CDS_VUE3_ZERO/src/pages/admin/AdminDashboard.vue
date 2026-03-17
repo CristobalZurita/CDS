@@ -64,20 +64,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import api from '@/services/api'
+import { ref } from 'vue'
 import KpiZones from '@/components/admin/KpiZones.vue'
 import RepairsList from '@/components/admin/RepairsList.vue'
 import UserList from '@/components/admin/UserList.vue'
 import UserForm from '@/components/admin/UserForm.vue'
+import { useAdminDashboardPage } from '@/composables/useAdminDashboardPage'
 
-const stats = ref({})
-const kpiSummary = ref({})
-const kpiDashboard = ref({})
-const kpiRevenue = ref({})
-const kpiInventory = ref({})
-const kpiClients = ref({})
-const kpiWarranty = ref({})
+const {
+  stats,
+  kpiSummary,
+  kpiDashboard,
+  kpiRevenue,
+  kpiInventory,
+  kpiClients,
+  kpiWarranty,
+} = useAdminDashboardPage()
 
 const showUserForm = ref(false)
 const selectedUser = ref(null)
@@ -87,41 +89,6 @@ const formatNumber = (val) => {
   const num = Number(val)
   return Number.isFinite(num) ? num.toLocaleString('es-CL') : '0'
 }
-
-const safeData = (result, fallback = {}) => {
-  if (result.status !== 'fulfilled') return fallback
-  return result.value?.data || result.value || fallback
-}
-
-async function loadStats() {
-  const [
-    statsRes,
-    summaryRes,
-    dashboardRes,
-    revenueRes,
-    inventoryRes,
-    clientsRes,
-    warrantyRes
-  ] = await Promise.allSettled([
-    api.get('/stats', { params: { extended: true } }),
-    api.get('/analytics/kpis/summary'),
-    api.get('/analytics/dashboard'),
-    api.get('/analytics/revenue'),
-    api.get('/analytics/inventory'),
-    api.get('/analytics/clients'),
-    api.get('/analytics/warranties')
-  ])
-
-  stats.value = safeData(statsRes, {})
-  kpiSummary.value = safeData(summaryRes, {})
-  kpiDashboard.value = safeData(dashboardRes, {})
-  kpiRevenue.value = safeData(revenueRes, {})
-  kpiInventory.value = safeData(inventoryRes, {})
-  kpiClients.value = safeData(clientsRes, {})
-  kpiWarranty.value = safeData(warrantyRes, {})
-}
-
-onMounted(loadStats)
 
 function onUserSaved() {
   showUserForm.value = false
@@ -147,32 +114,32 @@ function onEditUser(user) {
 
 <style scoped>
 .admin-dashboard-page {
-  max-width: 1760px;
+  max-width: 1880px;
   margin: 0 auto;
 }
 
 .stats-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2.2rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: var(--admin-space-lg, 1.8rem);
+  margin-bottom: var(--admin-space-xl, 2.4rem);
 }
 
 .stat-card {
   background: var(--cds-white);
   border-radius: var(--cds-radius-lg);
-  padding: 2.2rem;
+  padding: var(--admin-space-xl, 2.4rem);
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--admin-space-md, 1.2rem);
   box-shadow: var(--cds-shadow-sm);
-  border: 1px solid var(--cds-light-2);
+  border: 1px solid var(--cds-border-card);
 }
 
 .stat-icon {
-  font-size: 3rem;
-  width: 5.2rem;
-  height: 5.2rem;
+  font-size: var(--cds-text-3xl);
+  width: 6rem;
+  height: 6rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,14 +153,14 @@ function onEditUser(user) {
 }
 
 .stat-value {
-  font-size: 3rem;
+  font-size: var(--cds-text-4xl);
   font-weight: 700;
   color: var(--cds-text-normal);
-  line-height: 1.2;
+  line-height: 1;
 }
 
 .stat-label {
-  font-size: 1.5rem;
+  font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -202,24 +169,24 @@ function onEditUser(user) {
 .content-section {
   background: var(--cds-white);
   border-radius: var(--cds-radius-lg);
-  padding: 2.2rem;
-  margin-bottom: 2.2rem;
+  padding: var(--admin-space-xl, 2.4rem);
+  margin-bottom: var(--admin-space-lg, 1.8rem);
   box-shadow: var(--cds-shadow-sm);
-  border: 1px solid var(--cds-light-2);
+  border: 1px solid var(--cds-border-card);
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.9rem;
+  margin-bottom: var(--admin-space-lg, 1.8rem);
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: var(--admin-space-md, 1.2rem);
 }
 
 .section-header h2 {
   margin: 0;
-  font-size: 1.65rem;
+  font-size: var(--cds-text-2xl);
   font-weight: 600;
   color: var(--cds-text-normal);
 }
@@ -228,7 +195,7 @@ function onEditUser(user) {
   color: var(--cds-primary);
   text-decoration: none;
   font-weight: 500;
-  font-size: 1.3rem;
+  font-size: var(--cds-text-base);
 }
 
 .btn-link:hover {
@@ -236,6 +203,7 @@ function onEditUser(user) {
 }
 
 .btn-primary {
+  min-height: var(--admin-control-min-height, 52px);
   padding: 0.95rem 1.9rem;
   background: var(--cds-primary);
   color: var(--cds-white);
@@ -243,7 +211,7 @@ function onEditUser(user) {
   border-radius: var(--cds-radius-md);
   cursor: pointer;
   font-weight: 500;
-  font-size: 1.3rem;
+  font-size: var(--cds-text-base);
   transition: background 0.2s;
 }
 
@@ -254,14 +222,14 @@ function onEditUser(user) {
 .form-panel {
   background: var(--cds-light-1);
   border-radius: var(--cds-radius-md);
-  padding: 2.2rem;
-  margin-bottom: 2.2rem;
-  border: 1px solid var(--cds-light-2);
+  padding: var(--admin-space-xl, 2.4rem);
+  margin-bottom: var(--admin-space-lg, 1.8rem);
+  border: 1px solid var(--cds-border-card);
 }
 
 .form-panel h3 {
-  margin: 0 0 1.5rem 0;
-  font-size: 1.5rem;
+  margin: 0 0 var(--admin-space-md, 1.2rem) 0;
+  font-size: var(--cds-text-xl);
   font-weight: 600;
   color: var(--cds-text-normal);
 }

@@ -1,3 +1,9 @@
+<script>
+export default {
+  inheritAttrs: false
+}
+</script>
+
 <template>
   <div class="base-textarea-wrapper" :class="wrapperClasses">
     <label v-if="label" :for="textareaId" class="base-textarea-label">
@@ -6,6 +12,7 @@
     </label>
     
     <textarea
+      ref="textareaRef"
       :id="textareaId"
       :value="modelValue"
       :placeholder="placeholder"
@@ -15,6 +22,7 @@
       :rows="rows"
       :maxlength="maxlength"
       :class="textareaClasses"
+      v-bind="attrs"
       @input="handleInput"
       @blur="handleBlur"
       @focus="$emit('focus', $event)"
@@ -32,7 +40,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, useAttrs } from 'vue'
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
@@ -56,6 +64,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'blur', 'focus', 'validate'])
+const attrs = useAttrs()
+const textareaRef = ref(null)
 
 const textareaId = computed(() => props.id || `textarea-${Math.random().toString(36).substr(2, 9)}`)
 
@@ -112,6 +122,11 @@ function autoResize(element) {
   element.style.height = 'auto'
   element.style.height = element.scrollHeight + 'px'
 }
+
+defineExpose({
+  focus: () => textareaRef.value?.focus(),
+  select: () => textareaRef.value?.select()
+})
 </script>
 
 <style scoped>
@@ -134,7 +149,7 @@ function autoResize(element) {
   width: 100%;
   min-height: 44px;
   padding: 0.65rem 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
+  border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-sm);
   background: var(--cds-white);
   color: var(--cds-text-normal);

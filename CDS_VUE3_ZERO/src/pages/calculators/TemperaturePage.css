@@ -44,7 +44,7 @@
 .thermo-column {
   width: 16px;
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--cds-radius-pill);
   border: 1px solid rgba(62, 60, 56, 0.28);
   background:
     linear-gradient(
@@ -82,7 +82,7 @@
   .thermo-column {
     width: 100%;
     height: 16px;
-    border-radius: 999px;
+    border-radius: var(--cds-radius-pill);
     background:
       linear-gradient(
         to right,

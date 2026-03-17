@@ -5,7 +5,7 @@
   display: grid;
   place-items: center;
   padding: 1rem;
-  background: linear-gradient(180deg, var(--cds-dark) 0%, #2f2b27 100%);
+  background: linear-gradient(180deg, var(--cds-dark) 0%, var(--cds-footer-bg-highlight-color) 100%);
 }
 
 .auth-card {
@@ -13,7 +13,7 @@
   padding: 1.25rem;
   border-radius: 1rem;
   background: color-mix(in srgb, var(--cds-white) 94%, transparent);
-  border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+  border: 1px solid var(--cds-border-card);
 }
 
 .auth-card--narrow {

@@ -56,10 +56,10 @@ const featuredInstruments = computed(() => resolveImageArray(featuredInstruments
 }
 
 .featured-card {
-  border-radius: 0.65rem;
+  border-radius: var(--cds-radius-sm);
   overflow: hidden;
   background: var(--cds-white);
-  box-shadow: 0 4px 12px rgba(62, 60, 56, 0.1);
+  box-shadow: var(--cds-shadow-sm);
 }
 
 .featured-card img {
@@ -71,7 +71,7 @@ const featuredInstruments = computed(() => resolveImageArray(featuredInstruments
 
 .featured-card p {
   margin: 0;
-  padding: 0.5rem 0.75rem;
+  padding: var(--cds-space-xs) var(--cds-space-sm);
   font-size: var(--cds-text-xs);
   font-weight: var(--cds-font-semibold);
   color: var(--cds-text-normal);

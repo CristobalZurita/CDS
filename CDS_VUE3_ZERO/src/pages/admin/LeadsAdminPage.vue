@@ -104,15 +104,6 @@ const {
 
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-.header-actions input {
-  min-height: 44px;
-  min-width: 260px;
-  padding: .65rem .75rem;
-  border-radius: .55rem;
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
-  font-size: var(--cds-text-base);
-}
-
 .td-id {
   color: var(--cds-text-muted);
   font-size: var(--cds-text-sm);
@@ -125,7 +116,7 @@ const {
 .status-badge {
   display: inline-block;
   padding: 0.2rem 0.55rem;
-  border-radius: 0.4rem;
+  border-radius: var(--cds-radius-sm);
   font-size: var(--cds-text-xs);
   font-weight: 600;
   text-transform: uppercase;
@@ -138,19 +129,19 @@ const {
 }
 
 .status-contacted {
-  background: color-mix(in srgb, #2563eb 10%, white);
-  color: #1d4ed8;
+  background: color-mix(in srgb, var(--cds-info) 10%, white);
+  color: var(--cds-info);
 }
 
 .status-converted {
-  background: color-mix(in srgb, #16a34a 10%, white);
-  color: #15803d;
+  background: color-mix(in srgb, var(--cds-success) 10%, white);
+  color: var(--cds-success);
 }
 
 .btn-advance {
   min-height: 32px;
   padding: 0.3rem 0.65rem;
-  border-radius: 0.4rem;
+  border-radius: var(--cds-radius-sm);
   border: 1px solid color-mix(in srgb, var(--cds-primary) 40%, white);
   background: color-mix(in srgb, var(--cds-primary) 8%, white);
   color: var(--cds-primary);

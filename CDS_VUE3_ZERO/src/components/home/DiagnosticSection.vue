@@ -73,9 +73,9 @@ const { resolveSlotOr } = useMediaBinding()
 .diagnostic-list li i { color: var(--cds-primary); flex-shrink: 0; }
 
 .diagnostic-image {
-  border-radius: 0.75rem;
+  border-radius: var(--cds-radius-md);
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(62, 60, 56, 0.15);
+  box-shadow: var(--cds-shadow-md);
 }
 
 .diagnostic-image img { width: 100%; height: auto; display: block; }

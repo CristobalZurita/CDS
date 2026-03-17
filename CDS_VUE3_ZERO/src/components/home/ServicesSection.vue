@@ -42,7 +42,6 @@ const services = [
   background: var(--cds-dark);
 }
 
-.home-services .section-title { color: var(--cds-white); }
 .home-services .section-lead  { color: rgba(255, 255, 255, 0.75); }
 
 .services-grid {
@@ -51,13 +50,7 @@ const services = [
   grid-template-columns: 1fr;
 }
 
-.service-card {
-  background: color-mix(in srgb, var(--cds-white) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--cds-white) 15%, transparent);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  color: var(--cds-white);
-}
+.service-card { color: var(--cds-white); }
 
 .service-icon {
   font-size: 1.8rem;

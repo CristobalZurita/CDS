@@ -56,6 +56,3 @@ const {
 </script>
 
 <style scoped src="./commonAdminPage.css"></style>
-<style scoped>
-.header-actions input { min-height: 44px; min-width: 250px; padding: .65rem .75rem; border-radius: .55rem; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); font-size: var(--cds-text-base); }
-</style>

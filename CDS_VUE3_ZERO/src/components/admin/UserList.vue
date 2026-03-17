@@ -4,6 +4,8 @@
       <span class="list-count">{{ users.length }} usuarios</span>
       <button class="btn-refresh" @click="fetchUsers">↻ Actualizar</button>
     </div>
+
+    <p v-if="error" class="list-error">{{ error }}</p>
     
     <div class="table-container">
       <table class="data-table">
@@ -35,15 +37,28 @@
         </tbody>
       </table>
     </div>
+
+    <BaseConfirmDialog
+      :open="Boolean(userPendingDelete)"
+      title="Eliminar usuario"
+      :message="userPendingDelete ? `¿Eliminar usuario ${userPendingDelete.email}?` : ''"
+      confirm-label="Eliminar"
+      :confirm-loading="isDeleting"
+      @cancel="cancelDelete"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import { BaseConfirmDialog } from '@/components/base'
 import { useUsers } from '@/composables/useUsers'
 
-const { users, fetchUsers, deleteUser } = useUsers()
+const { users, fetchUsers, deleteUser, error } = useUsers()
 const emit = defineEmits(['edit'])
+const userPendingDelete = ref(null)
+const isDeleting = ref(false)
 
 const formatRole = (role) => {
   const map = {
@@ -58,16 +73,34 @@ const editUser = (user) => {
   emit('edit', user)
 }
 
-const removeUser = async (user) => {
-  if (!confirm(`¿Eliminar usuario "${user.email}"?`)) return
-  await deleteUser(user.id)
+const removeUser = (user) => {
+  userPendingDelete.value = user
+}
+
+const cancelDelete = () => {
+  if (isDeleting.value) return
+  userPendingDelete.value = null
+}
+
+const confirmDelete = async () => {
+  if (!userPendingDelete.value || isDeleting.value) return
+  isDeleting.value = true
+  try {
+    await deleteUser(userPendingDelete.value.id)
+    userPendingDelete.value = null
+  } catch {
+    // El mensaje ya queda expuesto en error
+  } finally {
+    isDeleting.value = false
+  }
 }
 
 onMounted(fetchUsers)
 </script>
 
+<style scoped src="./commonAdminTable.css"></style>
+
 <style scoped>
-/* 35% larger */
 .users-list {
   width: 100%;
 }
@@ -76,108 +109,38 @@ onMounted(fetchUsers)
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.35rem;
+  margin-bottom: var(--admin-space-md, 1.2rem);
+  gap: var(--admin-space-sm, 0.96rem);
+  flex-wrap: wrap;
 }
 
 .list-count {
-  font-size: 1.2rem;
-  color: #6b7280;
-}
-
-.btn-refresh {
-  padding: 0.7rem 1.35rem;
-  background: #f8fafc;
-  border: 1px solid #e8ecf1;
-  border-radius: 11px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: #374151;
-}
-
-.btn-refresh:hover {
-  background: #e8ecf1;
-}
-
-.table-container {
-  overflow-x: auto;
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 1.4rem;
-}
-
-.data-table th {
-  text-align: left;
-  padding: 1rem;
-  font-weight: 600;
-  color: #6b7280;
-  border-bottom: 1px solid #e8ecf1;
-  font-size: 1.15rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.data-table td {
-  padding: 1.2rem 1rem;
-  border-bottom: 1px solid #f3f4f6;
-  color: #374151;
-}
-
-.data-table tr:hover td {
-  background: #f8fafc;
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-muted);
 }
 
 .role-pill {
   display: inline-block;
-  padding: 0.4rem 1rem;
-  border-radius: 999px;
-  font-size: 1.1rem;
+  padding: var(--cds-space-xs) var(--cds-space-md);
+  border-radius: var(--cds-radius-pill);
+  font-size: var(--cds-text-sm);
   font-weight: 600;
   text-transform: uppercase;
 }
 
 .role-pill.admin {
-  background: #ffedd5;
-  color: #9a3412;
+  background: var(--cds-warning-bg);
+  color: var(--cds-warning-text);
 }
 
 .role-pill.technician {
-  background: #dbeafe;
-  color: #1e40af;
+  background: color-mix(in srgb, var(--cds-info) 18%, white);
+  color: color-mix(in srgb, var(--cds-info) 85%, black);
 }
 
 .role-pill.client {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--cds-light-2);
+  color: var(--cds-light-7);
 }
 
-.actions {
-  text-align: right;
-}
-
-.btn-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  font-size: 1.35rem;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-
-.btn-icon:hover {
-  opacity: 1;
-}
-
-.btn-icon.danger:hover {
-  color: #dc2626;
-}
-
-.empty-cell {
-  text-align: center;
-  color: #6b7280;
-  padding: 2.7rem;
-}
 </style>

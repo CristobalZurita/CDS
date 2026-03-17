@@ -106,23 +106,30 @@
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue'
 import { useSiteImages } from '@/composables/useSiteImages'
+import { useMediaBinding } from '@/composables/useMediaBinding'
 
-const { resolveImageArray } = useSiteImages()
+const { resolveImageUrl } = useSiteImages()
+const { resolveSlotOr } = useMediaBinding()
 
 const historyEventsRaw = [
-  { year: '1999', title: 'Músico de Conservatorio', image: '/images/personales/marimba.webp',  description: 'Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido.' },
-  { year: '2008',  title: 'Cineasta',                 image: '/images/personales/cine.webp',    description: 'Experiencia en audiovisual, sonido para cine, post-producción y diseño de audio en contextos creativos.' },
-  { year: '2013',   title: 'Técnico en Electrónica',   image: '/images/personales/tecnico.webp',           description: 'Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos.' },
-  { year: '2014',   title: 'Síntesis y Diseño Sonoro',       image: '/images/personales/electronica.webp',        description: 'Clases particulares en Chile con varios especialistas. Integración de conocimientos musicales y técnicos.' },
-  { year: '2015',   title: 'El Origen del Taller',     image: '/images/personales/origen.webp',             description: 'Nace el espacio dedicado a la reparación especializada de equipos musicales electrónicos.' },
-  { year: '2016',   title: 'Luthería Electrónica',     image: '/images/personales/lutheria.webp',           description: 'Ampliación del taller: teclados, pianos eléctricos, sintetizadores, drum machines, procesadores de efecto.' },
-  { year: '2019',   title: 'Formación Continua', image: '/images/personales/ernesto.webp',            description: 'Estudios con Ernesto Romeo en Argentina. Síntesis sustractiva, FM, granular. Diseño sonoro avanzado.' },
-  { year: '2020',   title: 'Taller en Providencia',    image: '/images/personales/providencia..webp',       description: 'Local comercial en Providencia, Santiago. Consolidación de procesos con diversos modelos y estilos.' },
-  { year: '2021',   title: 'Marimbista Profesional',   image: '/images/personales/marimbista.webp',         description: 'Integración del trabajo como marimbista profesional. Música y técnica unidas.' },
-  { year: '2023',   title: 'Valparaíso',               image: '/images/personales/valparaiso.webp',         description: 'Cirujano de Sintetizadores en Valparaíso. Servicio especializado regional y nacional.' },
+  { year: '1999', slotKey: 'about.timeline.1999', title: 'Músico de Conservatorio', image: '/images/personales/marimba.webp',         description: 'Formación musical clásica desde temprana edad. Percusionista, marimbista, comprensión profunda del sonido.' },
+  { year: '2008', slotKey: 'about.timeline.2008', title: 'Cineasta',                image: '/images/personales/cine.webp',             description: 'Experiencia en audiovisual, sonido para cine, post-producción y diseño de audio en contextos creativos.' },
+  { year: '2013', slotKey: 'about.timeline.2013', title: 'Técnico en Electrónica',  image: '/images/personales/tecnico.webp',           description: 'Formación técnica en automatización industrial en Duoc. Base electrónica y entendimiento de circuitos.' },
+  { year: '2014', slotKey: 'about.timeline.2014', title: 'Síntesis y Diseño Sonoro',image: '/images/personales/electronica.webp',       description: 'Clases particulares en Chile con varios especialistas. Integración de conocimientos musicales y técnicos.' },
+  { year: '2015', slotKey: 'about.timeline.2015', title: 'El Origen del Taller',    image: '/images/personales/origen.webp',             description: 'Nace el espacio dedicado a la reparación especializada de equipos musicales electrónicos.' },
+  { year: '2016', slotKey: 'about.timeline.2016', title: 'Luthería Electrónica',    image: '/images/personales/lutheria.webp',           description: 'Ampliación del taller: teclados, pianos eléctricos, sintetizadores, drum machines, procesadores de efecto.' },
+  { year: '2019', slotKey: 'about.timeline.2019', title: 'Formación Continua',      image: '/images/personales/ernesto.webp',            description: 'Estudios con Ernesto Romeo en Argentina. Síntesis sustractiva, FM, granular. Diseño sonoro avanzado.' },
+  { year: '2020', slotKey: 'about.timeline.2020', title: 'Taller en Providencia',   image: '/images/personales/providencia..webp',       description: 'Local comercial en Providencia, Santiago. Consolidación de procesos con diversos modelos y estilos.' },
+  { year: '2021', slotKey: 'about.timeline.2021', title: 'Marimbista Profesional',  image: '/images/personales/marimbista.webp',         description: 'Integración del trabajo como marimbista profesional. Música y técnica unidas.' },
+  { year: '2023', slotKey: 'about.timeline.2023', title: 'Valparaíso',              image: '/images/personales/valparaiso.webp',         description: 'Cirujano de Sintetizadores en Valparaíso. Servicio especializado regional y nacional.' },
 ]
 
-const historyEvents = computed(() => resolveImageArray(historyEventsRaw))
+const historyEvents = computed(() =>
+  historyEventsRaw.map(ev => ({
+    ...ev,
+    image: resolveSlotOr(ev.slotKey, resolveImageUrl(ev.image))
+  }))
+)
 
 const activeHistoryIdx = ref(0)
 const nodeRefs = ref([])
@@ -181,8 +188,8 @@ watch(historyLightboxOpen, val => {
   position: relative;
   border-radius: 2.75rem;
   overflow: hidden;
-  border: 2px solid #111;
-  box-shadow: 0 10px 27px rgba(62, 60, 56, 0.18);
+  border: 2px solid var(--cds-dark);
+  box-shadow: var(--cds-shadow-md);
   width: min(100%, 650px);
   aspect-ratio: 3 / 2;
   max-width: 100%;
@@ -277,7 +284,7 @@ watch(historyLightboxOpen, val => {
   gap: 0.38rem;
   padding: 0.75rem 1.15rem;
   border: 1px solid var(--cds-border-soft);
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   background: var(--cds-white);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
@@ -329,7 +336,7 @@ watch(historyLightboxOpen, val => {
   width: min(96vw, 1280px);
   max-height: 90vh;
   object-fit: contain;
-  border-radius: 0.85rem;
+  border-radius: var(--cds-radius-md);
   background: var(--cds-white);
   box-shadow: 0 20px 44px rgba(0, 0, 0, 0.35);
 }
@@ -341,7 +348,7 @@ watch(historyLightboxOpen, val => {
   width: 44px;
   height: 44px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--cds-radius-pill);
   background: color-mix(in srgb, var(--cds-dark) 72%, black);
   color: var(--cds-white);
   display: inline-flex;

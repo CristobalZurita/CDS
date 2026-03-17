@@ -22,23 +22,23 @@
 .feedback {
   margin: 0;
   padding: 0.75rem;
-  border: 1px solid #f4c7c3;
+  border: 1px solid var(--cds-invalid-border);
   border-radius: 0.5rem;
-  background: #fef3f2;
-  color: #b42318;
+  background: var(--cds-invalid-bg);
+  color: var(--cds-invalid-text);
   font-size: var(--cds-text-sm);
 }
 
 .feedback--ok {
-  border-color: #84d2a7;
-  background: #ebfdf3;
-  color: #0f5132;
+  border-color: var(--cds-valid-border);
+  background: var(--cds-valid-bg);
+  color: var(--cds-valid-text);
 }
 
 .feedback--error {
-  border-color: #f4c7c3;
-  background: #fef3f2;
-  color: #b42318;
+  border-color: var(--cds-invalid-border);
+  background: var(--cds-invalid-bg);
+  color: var(--cds-invalid-text);
 }
 
 .auth-links,

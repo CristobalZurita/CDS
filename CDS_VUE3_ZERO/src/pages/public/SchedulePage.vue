@@ -237,8 +237,8 @@ const {
 .schedule-header,
 .schedule-step {
   background: var(--cds-white);
-  border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
-  border-radius: 0.9rem;
+  border: 1px solid var(--cds-border-card);
+  border-radius: var(--cds-radius-md);
   padding: 1rem;
 }
 
@@ -259,8 +259,8 @@ const {
 }
 
 .progress-step {
-  border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
-  border-radius: 0.8rem;
+  border: 1px solid var(--cds-border-card);
+  border-radius: var(--cds-radius-md);
   min-height: 64px;
   display: grid;
   place-items: center;
@@ -312,8 +312,8 @@ const {
 
 .calendar-day {
   min-height: 40px;
-  border-radius: 0.45rem;
-  border: 1px solid color-mix(in srgb, var(--cds-light) 60%, white);
+  border-radius: var(--cds-radius-sm);
+  border: 1px solid var(--cds-border-input);
   background: var(--cds-white);
   cursor: pointer;
 }
@@ -350,7 +350,7 @@ const {
 .btn-secondary {
   min-height: 44px;
   padding: 0.65rem 0.9rem;
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   font-size: var(--cds-text-base);
   text-decoration: none;
   display: inline-flex;
@@ -380,8 +380,8 @@ const {
 .confirmation-card {
   display: grid;
   gap: 0.7rem;
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
-  border-radius: 0.75rem;
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-md);
   padding: 0.9rem;
 }
 
@@ -389,7 +389,7 @@ const {
   display: flex;
   justify-content: space-between;
   gap: 0.75rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
+  border-bottom: 1px solid var(--cds-border-input);
   padding-bottom: 0.5rem;
 }
 
@@ -408,24 +408,24 @@ const {
 
 .checkbox-container {
   display: flex;
-  gap: 0.55rem;
+  gap: var(--cds-space-xs);
   align-items: flex-start;
   font-size: var(--cds-text-base);
 }
 
 .schedule-error {
   margin: 0;
-  border: 1px solid #f4c7c3;
-  background: #fef3f2;
-  color: #b42318;
-  border-radius: 0.5rem;
+  border: 1px solid var(--cds-invalid-border);
+  background: var(--cds-invalid-bg);
+  color: var(--cds-invalid-text);
+  border-radius: var(--cds-radius-sm);
   padding: 0.7rem;
 }
 
 .schedule-info,
 .schedule-warning {
   margin: 0;
-  border-radius: 0.5rem;
+  border-radius: var(--cds-radius-sm);
   padding: 0.7rem;
 }
 
@@ -436,9 +436,9 @@ const {
 }
 
 .schedule-warning {
-  border: 1px solid color-mix(in srgb, var(--cds-warning) 35%, white);
-  background: color-mix(in srgb, var(--cds-warning) 12%, white);
-  color: var(--cds-text-normal);
+  border: 1px solid var(--cds-warning-border);
+  background: var(--cds-warning-bg);
+  color: var(--cds-warning-text);
 }
 
 .success-step {
@@ -448,7 +448,7 @@ const {
 .success-icon {
   width: 64px;
   height: 64px;
-  border-radius: 999px;
+  border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
   margin: 0 auto;

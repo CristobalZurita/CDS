@@ -30,17 +30,9 @@ const reviews = [
 <style scoped>
 .home-reviews { background: var(--cds-dark); }
 
-.home-reviews .section-title { color: var(--cds-white); }
 .home-reviews .section-lead  { color: rgba(255, 255, 255, 0.7); }
 
 .reviews-grid { display: grid; gap: 1.25rem; }
-
-.review-card {
-  background: color-mix(in srgb, var(--cds-white) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--cds-white) 15%, transparent);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-}
 
 .review-stars {
   color: var(--cds-primary);

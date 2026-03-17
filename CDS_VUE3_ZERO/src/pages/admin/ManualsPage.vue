@@ -139,6 +139,4 @@ const {
 
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-/* Edición inline en tabla */
-table input, table select { min-height: 44px; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: .55rem; padding: .65rem .75rem; font-size: var(--cds-text-base); }
 </style>

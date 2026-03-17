@@ -107,7 +107,7 @@
         <button
           class="btn-primary"
           :disabled="!canContinueStep1 || loading"
-          @click="notFoundMode ? (step = 4) : (step = 2)"
+          @click="notFoundMode ? goToLeadStep() : (step = 2)"
         >
           Siguiente →
         </button>
@@ -150,6 +150,12 @@
           </span>
         </label>
       </div>
+
+      <TurnstileWidget
+        v-if="!loading"
+        :key="quoteTurnstileRenderKey"
+        @verify="onQuoteVerify"
+      />
 
       <div class="actions">
         <button class="btn-secondary" @click="step = 1">← Atrás</button>
@@ -209,7 +215,7 @@
 
       <div class="actions">
         <button class="btn-secondary" @click="step = 2">← Atrás</button>
-        <button class="btn-primary" @click="step = 4">
+        <button class="btn-primary" @click="goToLeadStep">
           Dejar mis datos →
         </button>
       </div>
@@ -259,7 +265,7 @@
           <span>Acepto las condiciones del servicio de cotización referencial</span>
         </label>
 
-        <TurnstileWidget @verify="onVerify" />
+        <TurnstileWidget :key="leadTurnstileRenderKey" @verify="onLeadVerify" />
 
         <div class="actions">
           <button class="btn-secondary" @click="notFoundMode ? (step = 1) : (step = 3)">← Atrás</button>
@@ -330,12 +336,16 @@ const {
   selectedBrandName,
   selectedModelName,
   selectedFaultNames,
+  quoteTurnstileRenderKey,
+  leadTurnstileRenderKey,
   onBrandSelect,
   onModelSelect,
   toggleFault,
   calculateQuote,
   submitLead,
-  onVerify,
+  onQuoteVerify,
+  onLeadVerify,
+  goToLeadStep,
   goToSchedule,
   resetAll,
   activateNotFoundMode,
@@ -384,7 +394,7 @@ function formatCLP(value) {
   padding: 0.75rem 1rem;
   background: color-mix(in srgb, var(--cds-primary) 10%, white);
   border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white);
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   color: var(--cds-primary);
   font-size: var(--cds-text-sm);
 }
@@ -395,8 +405,8 @@ function formatCLP(value) {
   margin: 0 auto;
   width: 100%;
   background: var(--cds-white);
-  border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
-  border-radius: 0.95rem;
+  border: 1px solid var(--cds-border-card);
+  border-radius: var(--cds-radius-md);
   padding: 1.25rem 1rem;
   display: grid;
   gap: 1rem;
@@ -449,9 +459,9 @@ function formatCLP(value) {
   width: 100%;
   min-height: 44px;
   padding: 0.65rem 0.8rem;
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
-  border-radius: 0.55rem;
-  font-size: 1rem;
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-sm);
+  font-size: var(--cds-text-base);
   background: var(--cds-white);
   color: var(--cds-text-normal);
   appearance: auto;
@@ -511,7 +521,7 @@ function formatCLP(value) {
 /* Grid de fallas */
 .faults-grid {
   display: grid;
-  gap: 0.55rem;
+  gap: var(--cds-space-xs);
 }
 
 .fault-card {
@@ -521,8 +531,8 @@ function formatCLP(value) {
   column-gap: 0.6rem;
   row-gap: 0.1rem;
   padding: 0.7rem 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
-  border-radius: 0.55rem;
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-sm);
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
 }
@@ -624,7 +634,7 @@ function formatCLP(value) {
 
 /* Disclaimer */
 .disclaimer {
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
+  border: 1px solid var(--cds-border-input);
   border-radius: 0.7rem;
   padding: 0.75rem;
   background: color-mix(in srgb, var(--cds-light) 14%, white);
@@ -694,7 +704,7 @@ function formatCLP(value) {
 .btn-secondary {
   min-height: 44px;
   padding: 0.65rem 1.1rem;
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   font-size: var(--cds-text-base);
   font-weight: 500;
   display: inline-flex;
@@ -722,7 +732,7 @@ function formatCLP(value) {
 }
 
 .btn-secondary {
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
+  border: 1px solid var(--cds-border-input);
   background: var(--cds-white);
   color: var(--cds-text-normal);
 }

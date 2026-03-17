@@ -33,9 +33,9 @@
 
   --cds-vintage-orange: #cc7d43;
   --cds-fluor-green: #d9ff4e;
-  --cds-vintage-beige: #d3d0c3;
-  --cds-vintage-black: #3e3c38;
-  --cds-orange-primary: #ec6b00;
+  --cds-vintage-beige: var(--cds-light);
+  --cds-vintage-black: var(--cds-dark);
+  --cds-orange-primary: var(--cds-primary);
   --cds-orange-pastel: #e8935a;
 
   --cds-background-color: #d3d0c3;
@@ -51,6 +51,8 @@
   --cds-text-muted: #5a5652;
   --cds-border-soft: rgba(62, 60, 56, 0.15);
   --cds-border-strong: rgba(62, 60, 56, 0.25);
+  --cds-border-card: color-mix(in srgb, var(--cds-light) 70%, white);
+  --cds-border-input: color-mix(in srgb, var(--cds-light) 65%, white);
   --cds-surface-1: rgba(255, 255, 255, 0.92);
   --cds-surface-2: rgba(255, 255, 255, 0.84);
   --cds-surface-dark: rgba(35, 34, 31, 0.92);
@@ -66,11 +68,11 @@
   --cds-light-7: #495057;
   --cds-light-shades-palette: var(--cds-light-1), var(--cds-light-2), var(--cds-light-3), var(--cds-light-4), var(--cds-light-5), var(--cds-light-6), var(--cds-light-7);
 
-  --cds-text-1: 1.05rem;
-  --cds-text-2: 1.1rem;
-  --cds-text-3: 1.15rem;
-  --cds-text-4: 1.2rem;
-  --cds-text-5: 1.3rem;
+  --cds-text-1: var(--cds-text-xs);
+  --cds-text-2: var(--cds-text-sm);
+  --cds-text-3: var(--cds-text-base);
+  --cds-text-4: var(--cds-text-lg);
+  --cds-text-5: var(--cds-text-xl);
 
   --cds-texts-breakpoint-multipliers: xxxxl 1.15, xxxl 1.1, xxl 1.0, xl 0.95, lg 0.95, md 1.0, sm 1.05;
   --cds-headings-breakpoint-multipliers: xxxxl 1.2, xxxl 1.15, xxl 1.0, xl 0.95, lg 0.95, md 0.95, sm 0.95;
@@ -88,6 +90,7 @@
   --cds-radius-md: 0.85rem;
   --cds-radius-lg: 1.1rem;
   --cds-radius-xl: 1.4rem;
+  --cds-radius-pill: 999px;
 
   --cds-shadow-sm: 0 10px 20px rgba(35, 34, 31, 0.08);
   --cds-shadow-md: 0 18px 34px rgba(35, 34, 31, 0.14);

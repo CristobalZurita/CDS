@@ -307,7 +307,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 .brand-logo {
   width: 80px;
   height: 80px;
-  border-radius: 0.35rem;
+  border-radius: var(--cds-radius-sm);
   flex-shrink: 0;
 }
 
@@ -362,8 +362,8 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   text-decoration: none;
   min-height: clamp(56px, 3vw, 62px);
   padding: var(--nav-link-pad-y) var(--nav-link-pad-x);
-  border-radius: 0.45rem;
-  font-size: calc(var(--nav-font-size) * 0.85);
+  border-radius: var(--cds-radius-sm);
+  font-size: calc(var(--nav-font-size) * 1.15);
   font-family: var(--cds-font-family-base), sans-serif;
   font-weight: var(--cds-font-medium);
   text-transform: lowercase;
@@ -392,7 +392,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   align-items: center;
   gap: 0.4rem;
   padding: 0.6rem 1.1rem;
-  border-radius: 0.45rem;
+  border-radius: var(--cds-radius-sm);
   background: var(--cds-primary);
   color: var(--cds-white);
   text-decoration: none;
@@ -428,7 +428,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   min-height: 52px;
   padding: 0.55rem 1.1rem;
   border: none;
-  border-radius: 0.45rem;
+  border-radius: var(--cds-radius-sm);
   background: color-mix(in srgb, var(--cds-white) 14%, transparent);
   color: var(--cds-white);
   font-size: var(--cds-text-base);
@@ -462,7 +462,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   min-width: 17px;
   height: 17px;
   padding: 0 4px;
-  border-radius: 999px;
+  border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
   font-size: 0.65rem;
@@ -482,7 +482,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   width: 52px;
   height: 52px;
   border: none;
-  border-radius: 0.4rem;
+  border-radius: var(--cds-radius-sm);
   background: transparent;
   color: var(--cds-white);
   font-size: 1.55rem;
@@ -565,8 +565,8 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 .footer-logo {
   width: 130px;
-  height: 130x;
-  border-radius: 0.4rem;
+  height: 130px;
+  border-radius: var(--cds-radius-sm);
   
 }
 
@@ -642,7 +642,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   width: min(240px, 100%);
   aspect-ratio: 16 / 9;
   border: 1px solid color-mix(in srgb, var(--cds-white) 18%, transparent);
-  border-radius: 0.45rem;
+  border-radius: var(--cds-radius-sm);
   background: rgba(10, 10, 10, 0.25);
   margin-left: 2.3rem;
 }

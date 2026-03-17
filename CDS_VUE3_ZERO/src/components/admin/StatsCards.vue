@@ -35,31 +35,31 @@ const formatNumber = (val) => {
 }
 
 .stat-card {
-  background: var(--color-white, #fff);
-  border-radius: 12px;
-  padding: 1.5rem;
+  background: var(--cds-white);
+  border-radius: var(--cds-radius-md);
+  padding: var(--cds-space-lg);
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--cds-shadow-sm);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--cds-shadow-md);
 }
 
 .stat-value {
   display: block;
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--color-primary, #ff6b35);
+  color: var(--cds-primary);
   line-height: 1;
   margin-bottom: 0.5rem;
 }
 
 .stat-label {
   font-size: 0.875rem;
-  color: var(--color-gray-600, #666);
+  color: var(--cds-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0;

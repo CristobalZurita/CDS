@@ -81,11 +81,10 @@ const {
 
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-.admin-success { margin: 0; border: 1px solid #bbf7d0; background: #f0fdf4; color: #166534; border-radius: .65rem; padding: .75rem; }
-.wizard-card { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); padding: .9rem; display: grid; gap: .55rem; }
+.wizard-card { padding: .9rem; display: grid; gap: .55rem; }
 .wizard-card h2 { margin: 0; font-size: var(--cds-text-xl); }
 .wizard-card p { margin: 0; color: var(--cds-text-muted); }
-.cards-grid { display: grid; gap: .75rem; grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.cards-grid { gap: .75rem; }
 .link-line { margin: 0; word-break: break-all; }
 @media (min-width: 900px) { .cards-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 </style>

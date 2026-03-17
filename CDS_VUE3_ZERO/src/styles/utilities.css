@@ -124,6 +124,7 @@
 .rounded-md { border-radius: var(--cds-radius-md); }
 .rounded-lg { border-radius: var(--cds-radius-lg); }
 .rounded-xl { border-radius: var(--cds-radius-xl); }
+.rounded-pill { border-radius: var(--cds-radius-pill); }
 
 .border { border: 1px solid var(--cds-border-soft); }
 .border-strong { border: 1px solid var(--cds-border-strong); }

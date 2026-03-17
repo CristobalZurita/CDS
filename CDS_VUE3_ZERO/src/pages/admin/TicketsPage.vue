@@ -147,11 +147,6 @@ async function submitMessage(ticket) {
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
 /* Filtro inline en filters-panel */
-.filters-panel label { display: grid; gap: .3rem; }
-.filters-panel span { font-size: var(--cds-text-sm); color: var(--cds-text-muted); }
-.filters-panel input { min-height: 44px; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: .55rem; padding: .65rem .75rem; font-size: var(--cds-text-base); }
-/* Select inline en tabla */
-table select { min-height: 44px; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: .55rem; padding: .65rem .75rem; font-size: var(--cds-text-base); }
 /* Mensaje rápido inline */
 .inline-message { display: grid; gap: .45rem; grid-template-columns: 1fr; }
 .message-row td { background: color-mix(in srgb, var(--cds-light) 7%, white); }

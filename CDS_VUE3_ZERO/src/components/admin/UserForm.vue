@@ -1,5 +1,7 @@
 <template>
   <form @submit.prevent="onSubmit" class="user-form" data-testid="user-form">
+    <p v-if="error" class="form-error">{{ error }}</p>
+
     <div class="form-row">
       <div class="form-group">
         <label>Email *</label>
@@ -53,7 +55,7 @@
 import { computed, ref, watch } from 'vue'
 import { useUsers } from '@/composables/useUsers'
 
-const { createUser, updateUser } = useUsers()
+const { createUser, updateUser, error } = useUsers()
 const emit = defineEmits(['saved'])
 
 const props = defineProps({
@@ -101,56 +103,66 @@ const onSubmit = async () => {
     form.value = emptyForm()
   } catch (e) {
     console.error('Error guardando usuario:', e)
-    alert('Error guardando usuario')
   }
 }
 </script>
 
 <style scoped>
-/* 35% larger */
 .user-form {
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
+  gap: var(--admin-space-md, 1.2rem);
+}
+
+.form-error {
+  margin: 0;
+  padding: var(--admin-space-sm, 0.96rem) var(--cds-space-md);
+  border-radius: var(--cds-radius-sm);
+  border: 1px solid var(--cds-invalid-border);
+  background: var(--cds-invalid-bg);
+  color: var(--cds-invalid-text);
+  font-size: var(--cds-text-sm);
 }
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 1.35rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--admin-space-md, 1.2rem);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.45rem;
 }
 
 .form-group label {
-  font-size: 1.2rem;
+  font-size: var(--cds-text-sm);
   font-weight: 600;
-  color: var(--color-dark, #1a1a2e);
+  color: var(--cds-dark);
 }
 
 .form-group input,
 .form-group select {
-  padding: 0.7rem 1rem;
-  border: 1px solid var(--color-light, #e0e0e0);
-  border-radius: 8px;
-  font-size: 1.35rem;
-  min-height: 40px;
+  min-height: var(--admin-control-min-height, 52px);
+  padding: var(--cds-space-sm) var(--cds-space-md);
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-sm);
+  font-size: var(--cds-text-base);
+  color: var(--cds-text-normal);
+  background: var(--cds-white);
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: var(--color-primary, #ff6b35);
-  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+  border-color: var(--cds-primary);
+  box-shadow: var(--cds-focus-ring);
 }
 
 .password-field {
   display: flex;
-  gap: 0.7rem;
+  gap: var(--admin-space-xs, 0.66rem);
 }
 
 .password-field input {
@@ -158,25 +170,27 @@ const onSubmit = async () => {
 }
 
 .toggle-password {
-  padding: 0.7rem 1rem;
-  background: var(--color-light, #e0e0e0);
+  min-height: var(--admin-control-min-height, 52px);
+  padding: var(--cds-space-sm) var(--cds-space-md);
+  background: var(--cds-light-2);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--cds-radius-sm);
   cursor: pointer;
-  font-size: 1.35rem;
+  font-size: var(--cds-text-base);
 }
 
 .form-actions {
-  margin-top: 0.7rem;
+  margin-top: var(--admin-space-xs, 0.66rem);
 }
 
 .btn-submit {
-  padding: 1rem 2rem;
-  background: var(--color-primary, #ff6b35);
-  color: var(--color-white, #fff);
+  min-height: var(--admin-control-min-height, 52px);
+  padding: var(--cds-space-md) var(--cds-space-xl);
+  background: var(--cds-primary);
+  color: var(--cds-white);
   border: none;
-  border-radius: 8px;
-  font-size: 1.35rem;
+  border-radius: var(--cds-radius-sm);
+  font-size: var(--cds-text-base);
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;

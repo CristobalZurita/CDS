@@ -291,7 +291,7 @@ provide('formValidation', {
   gap: 0.75rem;
   justify-content: flex-end;
   padding-top: 0.5rem;
-  border-top: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
+  border-top: 1px solid var(--cds-border-card);
 }
 
 .form-actions :deep(.base-button) {

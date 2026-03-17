@@ -101,25 +101,22 @@ const {
 
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-/* Botones extra de esta página */
-.btn-success { min-height: 44px; padding: .65rem .9rem; border-radius: .55rem; font-size: var(--cds-text-base); border: 1px solid #16a34a; background: #16a34a; color: #fff; cursor: pointer; }
 /* Filter chips */
-.filter-row { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); padding: .9rem; display: flex; flex-wrap: wrap; gap: .5rem; }
-.chip { min-height: 44px; padding: .65rem .9rem; border-radius: .55rem; font-size: var(--cds-text-base); border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); background: var(--cds-white); color: var(--cds-text-normal); cursor: pointer; }
+.filter-row { padding: .9rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { min-height: 44px; padding: .65rem .9rem; border-radius: var(--cds-radius-sm); font-size: var(--cds-text-base); border: 1px solid var(--cds-border-input); background: var(--cds-white); color: var(--cds-text-normal); cursor: pointer; }
 .chip.active { border-color: var(--cds-primary); background: color-mix(in srgb, var(--cds-primary) 14%, white); }
-.chip.warning.active { border-color: #ca8a04; background: #fef9c3; }
-.chip.success.active { border-color: #15803d; background: #dcfce7; }
-.chip.neutral.active { border-color: #4b5563; background: #e5e7eb; }
+.chip.warning.active { border-color: var(--cds-warning); background: var(--cds-warning-bg); color: var(--cds-warning-text); }
+.chip.success.active { border-color: var(--cds-success); background: var(--cds-valid-bg); color: var(--cds-valid-text); }
+.chip.neutral.active { border-color: var(--cds-light-6); background: var(--cds-light-2); color: var(--cds-light-7); }
 /* Cards de cita */
-.cards-grid { display: grid; gap: .7rem; }
-.appointment-card { border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white); border-radius: .9rem; background: var(--cds-white); padding: .9rem; display: grid; gap: .6rem; border-left: 4px solid var(--cds-primary); }
-.appointment-card.status-pendiente { border-left-color: #ca8a04; }
-.appointment-card.status-confirmado { border-left-color: #16a34a; }
-.appointment-card.status-cancelado { border-left-color: #4b5563; }
+.appointment-card { padding: .9rem; display: grid; gap: .6rem; border-left: 4px solid var(--cds-primary); }
+.appointment-card.status-pendiente { border-left-color: var(--cds-warning); }
+.appointment-card.status-confirmado { border-left-color: var(--cds-success); }
+.appointment-card.status-cancelado { border-left-color: var(--cds-light-6); }
 .appointment-head { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: space-between; }
 .appointment-head h2 { margin: 0; font-size: var(--cds-text-lg); }
 .appointment-head p { margin: .2rem 0 0; color: var(--cds-text-muted); }
-.status-badge { border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white); background: color-mix(in srgb, var(--cds-primary) 12%, white); border-radius: 999px; padding: .3rem .7rem; font-size: var(--cds-text-sm); align-self: flex-start; }
+.status-badge { border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white); background: color-mix(in srgb, var(--cds-primary) 12%, white); border-radius: var(--cds-radius-pill); padding: .3rem .7rem; font-size: var(--cds-text-sm); align-self: flex-start; }
 .appointment-body p { margin: 0; }
 .appointment-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
 /* Empty state específico (override del común) */

@@ -76,8 +76,3 @@ const {
 </script>
 
 <style scoped src="./commonAdminPage.css"></style>
-<style scoped>
-.panel-card label { display: grid; gap: .3rem; }
-.panel-card span { color: var(--cds-text-muted); font-size: var(--cds-text-sm); }
-.panel-card input { min-height: 44px; border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white); border-radius: .55rem; padding: .65rem .75rem; font-size: var(--cds-text-base); }
-</style>

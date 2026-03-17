@@ -214,7 +214,7 @@
 .mode-tab {
   min-height: 36px;
   padding: 0.35rem 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--cds-radius-pill);
   border: 1px solid rgba(62, 60, 56, 0.25);
   background: transparent;
   color: var(--cds-dark);

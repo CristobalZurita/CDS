@@ -155,7 +155,7 @@ function resolveCalculatorImage(image) {
   display: flex;
   flex-wrap: wrap;
   gap: 0;
-  border-bottom: 1px solid rgba(62, 60, 56, 0.3);
+  border-bottom: 1px solid var(--cds-border-strong);
 }
 
 .calc-tab {
@@ -179,7 +179,7 @@ function resolveCalculatorImage(image) {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 0.55rem;
+  gap: var(--cds-space-xs);
 }
 
 .search-icon {
@@ -194,8 +194,8 @@ function resolveCalculatorImage(image) {
 
 .search-input {
   width: 100%;
-  border: 1px solid rgba(62, 60, 56, 0.25);
-  border-radius: 999px;
+  border: 1px solid var(--cds-border-strong);
+  border-radius: var(--cds-radius-pill);
   padding: 0.72rem 1rem 0.72rem 2.45rem;
   font-size: var(--cds-text-base);
   background: rgba(255, 255, 255, 0.75);
@@ -210,7 +210,7 @@ function resolveCalculatorImage(image) {
 
 .search-button {
   border: none;
-  border-radius: 999px;
+  border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
   font-size: var(--cds-text-sm);
@@ -228,7 +228,7 @@ function resolveCalculatorImage(image) {
 
 .section-divider {
   margin-top: var(--cds-space-lg);
-  border-top: 1px solid rgba(62, 60, 56, 0.3);
+  border-top: 1px solid var(--cds-border-strong);
 }
 
 .calculators-grid {
@@ -238,7 +238,7 @@ function resolveCalculatorImage(image) {
 }
 
 .calculator-card {
-  border: 1px solid rgba(62, 60, 56, 0.25);
+  border: 1px solid var(--cds-border-strong);
   border-radius: var(--cds-radius-md);
   background: rgba(255, 255, 255, 0.22);
   text-decoration: none;
@@ -260,7 +260,7 @@ function resolveCalculatorImage(image) {
   width: 100%;
   aspect-ratio: 16 / 9;
   border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white);
-  border-radius: 0.6rem;
+  border-radius: var(--cds-radius-sm);
   overflow: hidden;
   background: rgba(255, 255, 255, 0.65);
   display: flex;
@@ -297,7 +297,7 @@ function resolveCalculatorImage(image) {
 }
 
 .calculator-card-content p {
-  margin: 0.55rem 0 0;
+  margin: var(--cds-space-xs) 0 0;
   font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
   line-height: 1.45;
@@ -322,11 +322,11 @@ function resolveCalculatorImage(image) {
   justify-content: center;
   min-height: 44px;
   padding: 0.7rem 1.1rem;
-  border-radius: 999px;
+  border-radius: var(--cds-radius-pill);
   border: 1px solid color-mix(in srgb, var(--cds-primary) 45%, transparent);
-  color: color-mix(in srgb, var(--cds-primary) 85%, #6b3000);
+  color: color-mix(in srgb, var(--cds-primary) 85%, var(--cds-dark));
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
   text-transform: uppercase;
 }

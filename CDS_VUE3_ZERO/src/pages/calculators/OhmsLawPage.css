@@ -95,7 +95,7 @@
 
 .formula-card {
   border: 1px solid rgba(62, 60, 56, 0.13);
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   background: rgba(255, 255, 255, 0.62);
   padding: 0.55rem 0.6rem;
   display: grid;
@@ -125,7 +125,7 @@
 
 .meter-card {
   border: 1px solid rgba(62, 60, 56, 0.1);
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   background: rgba(255, 255, 255, 0.62);
   padding: 0.5rem 0.6rem 0.55rem;
 }
@@ -150,7 +150,7 @@
 .meter-track {
   margin-top: 0.45rem;
   height: 10px;
-  border-radius: 999px;
+  border-radius: var(--cds-radius-pill);
   overflow: hidden;
   background: rgba(62, 60, 56, 0.12);
 }

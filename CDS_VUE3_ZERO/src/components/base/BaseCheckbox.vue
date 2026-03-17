@@ -1,12 +1,14 @@
 <template>
   <label class="base-checkbox" :class="wrapperClasses">
     <input
+      ref="checkboxRef"
       type="checkbox"
       :checked="modelValue"
       :value="trueValue"
       :disabled="disabled"
       :required="required"
       :class="checkboxClasses"
+      v-bind="attrs"
       @change="handleChange"
     />
     
@@ -28,7 +30,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, useAttrs } from 'vue'
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
@@ -47,6 +49,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
+const attrs = useAttrs()
+const checkboxRef = ref(null)
 
 const wrapperClasses = computed(() => ({
   'has-error': !!props.error,
@@ -66,6 +70,10 @@ function handleChange(event) {
   emit('update:modelValue', value)
   emit('change', value)
 }
+
+defineExpose({
+  focus: () => checkboxRef.value?.focus()
+})
 </script>
 
 <style scoped>

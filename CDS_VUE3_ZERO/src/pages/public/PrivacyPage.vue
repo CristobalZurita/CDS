@@ -171,78 +171,9 @@ import { usePrivacyPage } from '@/composables/usePrivacyPage'
 const { backToTerms, backToHome } = usePrivacyPage()
 </script>
 
+<style scoped src="./commonLegalPage.css"></style>
+
 <style scoped>
-.privacy-page {
-  padding: 1rem;
-}
-
-.privacy-container {
-  max-width: 980px;
-  margin: 0 auto;
-  background: var(--cds-white);
-  border: 1px solid color-mix(in srgb, var(--cds-light) 70%, white);
-  border-radius: 1rem;
-  padding: 1rem;
-}
-
-.privacy-header {
-  margin-bottom: 1rem;
-}
-
-.privacy-header h1 {
-  margin: 0;
-  font-size: var(--cds-text-3xl);
-  line-height: var(--cds-leading-tight);
-}
-
-.last-updated {
-  margin-top: 0.35rem;
-  color: var(--cds-text-muted);
-  font-size: var(--cds-text-sm);
-}
-
-.privacy-content {
-  display: grid;
-  gap: 1rem;
-}
-
-.privacy-section h2 {
-  margin: 0 0 0.6rem;
-  font-size: var(--cds-text-xl);
-}
-
-.privacy-section h3 {
-  margin: 0.8rem 0 0.4rem;
-  font-size: var(--cds-text-lg);
-}
-
-.privacy-section p,
-.privacy-section li {
-  font-size: var(--cds-text-base);
-  line-height: var(--cds-leading-normal);
-}
-
-.privacy-section ul {
-  margin: 0.35rem 0 0;
-  padding-left: 1.2rem;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
-
-.btn-back,
-.btn-next {
-  border-radius: 0.6rem;
-  min-height: 44px;
-  padding: 0.7rem 1rem;
-  font-size: var(--cds-text-base);
-  text-decoration: none;
-}
-
 .btn-back {
   color: var(--cds-primary);
   border: 1px solid color-mix(in srgb, var(--cds-primary) 40%, white);

@@ -142,16 +142,16 @@ async function submitContact() {
 
 .form-field label i {
   color: var(--cds-primary);
-  font-size: 0.85rem;
+  font-size: var(--cds-text-sm);
 }
 
 .form-field input,
 .form-field textarea {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--cds-border-strong);
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-sm);
+  font-size: var(--cds-text-base);
   font-family: inherit;
   color: var(--cds-text-normal);
   background: var(--cds-white);
@@ -170,15 +170,24 @@ async function submitContact() {
 .form-msg {
   margin: 0;
   padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
+  border-radius: var(--cds-radius-sm);
   font-size: var(--cds-text-sm);
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.form-msg-error  { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6cb; }
-.form-msg-success { background: #f0fff4; color: var(--cds-success); border: 1px solid #c3e6cb; }
+.form-msg-error {
+  background: var(--cds-invalid-bg);
+  color: var(--cds-invalid-text);
+  border: 1px solid var(--cds-invalid-border);
+}
+
+.form-msg-success {
+  background: var(--cds-valid-bg);
+  color: var(--cds-valid-text);
+  border: 1px solid var(--cds-valid-border);
+}
 
 .btn-submit {
   display: inline-flex;
@@ -188,7 +197,7 @@ async function submitContact() {
   min-height: 48px;
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 0.55rem;
+  border-radius: var(--cds-radius-sm);
   background: var(--cds-primary);
   color: var(--cds-white);
   font-size: var(--cds-text-base);
@@ -201,8 +210,8 @@ async function submitContact() {
 
 .contact-card {
   background: var(--cds-white);
-  border: 1px solid var(--cds-border-soft);
-  border-radius: 0.75rem;
+  border: 1px solid var(--cds-border-card);
+  border-radius: var(--cds-radius-md);
   padding: 1.5rem;
   display: grid;
   gap: 0.75rem;
@@ -211,7 +220,7 @@ async function submitContact() {
 }
 
 .contact-card p {
-  margin: 10.05px;
+  margin: 0;
   display: flex;
   align-items: flex-start;
   gap: 0.6rem;
@@ -243,10 +252,10 @@ async function submitContact() {
 .contact-channels a:hover { color: var(--cds-primary); }
 
 .contact-map {
-  border-radius: 0.75rem;
+  border-radius: var(--cds-radius-md);
   overflow: hidden;
   height: 300px;
-  box-shadow: 0 4px 14px rgba(62, 60, 56, 0.12);
+  box-shadow: var(--cds-shadow-sm);
 }
 
 .contact-map iframe {

@@ -9,6 +9,8 @@
       />
       <button class="btn-refresh" @click="fetchRepairs">↻ Actualizar</button>
     </div>
+
+    <p v-if="error" class="list-error">{{ error }}</p>
     
     <div class="table-container">
       <table class="data-table">
@@ -47,17 +49,30 @@
         </tbody>
       </table>
     </div>
+
+    <BaseConfirmDialog
+      :open="repairPendingDelete !== null"
+      title="Eliminar reparación"
+      message="¿Eliminar esta reparación?"
+      confirm-label="Eliminar"
+      :confirm-loading="isDeleting"
+      @cancel="cancelDelete"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { BaseConfirmDialog } from '@/components/base'
 import { useRepairs } from '@/composables/useRepairs'
 
-const { repairs, fetchRepairs, deleteRepair } = useRepairs()
+const { repairs, fetchRepairs, deleteRepair, error } = useRepairs()
 const router = useRouter()
 const searchQuery = ref('')
+const repairPendingDelete = ref(null)
+const isDeleting = ref(false)
 
 const filteredRepairs = computed(() => {
   const q = searchQuery.value.trim().toLowerCase()
@@ -89,90 +104,67 @@ const editRepair = (repair) => {
   router.push(`/admin/repairs/${repair.id}`)
 }
 
-const removeRepair = async (id) => {
-  if (!confirm('¿Eliminar esta reparación?')) return
-  await deleteRepair(id)
+const removeRepair = (id) => {
+  repairPendingDelete.value = id
+}
+
+const cancelDelete = () => {
+  if (isDeleting.value) return
+  repairPendingDelete.value = null
+}
+
+const confirmDelete = async () => {
+  if (repairPendingDelete.value === null || isDeleting.value) return
+  isDeleting.value = true
+  try {
+    await deleteRepair(repairPendingDelete.value)
+    repairPendingDelete.value = null
+  } catch {
+    // El mensaje queda expuesto en error
+  } finally {
+    isDeleting.value = false
+  }
 }
 
 onMounted(fetchRepairs)
 </script>
 
+<style scoped src="./commonAdminTable.css"></style>
+
 <style scoped>
-/* 35% larger */
 .repairs-list {
   width: 100%;
 }
 
 .list-toolbar {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.35rem;
+  gap: var(--admin-space-sm, 0.96rem);
+  margin-bottom: var(--admin-space-md, 1.2rem);
   flex-wrap: wrap;
 }
 
 .search-input {
   flex: 1;
-  min-width: 340px;
-  padding: 0.85rem 1.2rem;
-  border: 1px solid #e8ecf1;
-  border-radius: 11px;
-  font-size: 1.35rem;
+  min-width: 26rem;
+  min-height: var(--admin-control-min-height, 52px);
+  padding: var(--admin-space-sm, 0.96rem) var(--admin-space-md, 1.2rem);
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-md);
+  font-size: var(--cds-text-base);
+  color: var(--cds-text-normal);
+  background: var(--cds-white);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #ff6b35;
-}
-
-.btn-refresh {
-  padding: 0.85rem 1.35rem;
-  background: #f8fafc;
-  border: 1px solid #e8ecf1;
-  border-radius: 11px;
-  cursor: pointer;
-  font-size: 1.35rem;
-  color: #374151;
-}
-
-.btn-refresh:hover {
-  background: #e8ecf1;
-}
-
-.table-container {
-  overflow-x: auto;
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 1.4rem;
-}
-
-.data-table th {
-  text-align: left;
-  padding: 1rem;
-  font-weight: 600;
-  color: #6b7280;
-  border-bottom: 1px solid #e8ecf1;
-  font-size: 1.15rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.data-table td {
-  padding: 1.2rem 1rem;
-  border-bottom: 1px solid #f3f4f6;
-  color: #374151;
-}
-
-.data-table tr:hover td {
-  background: #f8fafc;
+  border-color: var(--cds-primary);
+  box-shadow: var(--cds-focus-ring);
 }
 
 .mono {
   font-family: ui-monospace, monospace;
-  font-size: 1.25rem;
-  color: #6b7280;
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-muted);
 }
 
 .client-cell {
@@ -183,73 +175,46 @@ onMounted(fetchRepairs)
 
 .client-name {
   font-weight: 500;
-  color: #1a1f36;
+  color: var(--cds-dark);
 }
 
 .client-code {
-  font-size: 1.15rem;
-  color: #6b7280;
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-muted);
 }
 
 .status-pill {
   display: inline-block;
-  padding: 0.4rem 1rem;
-  border-radius: 999px;
-  font-size: 1.1rem;
+  padding: var(--cds-space-xs) var(--cds-space-md);
+  border-radius: var(--cds-radius-pill);
+  font-size: var(--cds-text-sm);
   font-weight: 600;
   text-transform: uppercase;
 }
 
 .status-pill.pending {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--cds-warning-bg);
+  color: var(--cds-warning-text);
 }
 
 .status-pill.in_progress {
-  background: #dbeafe;
-  color: #1e40af;
+  background: color-mix(in srgb, var(--cds-info) 18%, white);
+  color: color-mix(in srgb, var(--cds-info) 85%, black);
 }
 
 .status-pill.completed {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--cds-valid-bg);
+  color: var(--cds-valid-text);
 }
 
 .status-pill.delivered {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--cds-light-2);
+  color: var(--cds-light-7);
 }
 
 .status-pill.cancelled {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--cds-invalid-bg);
+  color: var(--cds-invalid-text);
 }
 
-.actions {
-  text-align: right;
-}
-
-.btn-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  font-size: 1.35rem;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-
-.btn-icon:hover {
-  opacity: 1;
-}
-
-.btn-icon.danger:hover {
-  color: #dc2626;
-}
-
-.empty-cell {
-  text-align: center;
-  color: #6b7280;
-  padding: 2.7rem;
-}
 </style>

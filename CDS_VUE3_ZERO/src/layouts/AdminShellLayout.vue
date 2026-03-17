@@ -96,19 +96,34 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
-/* Layout principal - 35% larger */
 .admin-shell-layout {
+  --admin-scale: 1.2;
+  --admin-space-xs: 0.66rem;
+  --admin-space-sm: 0.96rem;
+  --admin-space-md: 1.2rem;
+  --admin-space-lg: 1.8rem;
+  --admin-space-xl: 2.4rem;
+  --admin-space-2xl: 3.3rem;
+  --admin-sidebar-width: clamp(22rem, 20rem + 4vw, 26rem);
+  --admin-sidebar-collapsed-width: 7.5rem;
+  --admin-control-min-height: 52px;
+  --cds-text-xs: clamp(1.32rem, 1.26rem + 0.3vw, 1.44rem);
+  --cds-text-sm: clamp(1.5rem, 1.44rem + 0.36vw, 1.68rem);
+  --cds-text-base: clamp(1.68rem, 1.62rem + 0.54vw, 1.98rem);
+  --cds-text-lg: clamp(1.8rem, 1.68rem + 0.72vw, 2.16rem);
+  --cds-text-xl: clamp(1.92rem, 1.62rem + 1.5vw, 2.52rem);
+  --cds-text-2xl: clamp(2.22rem, 1.74rem + 2.4vw, 3.06rem);
+  --cds-text-3xl: clamp(2.58rem, 1.86rem + 3.6vw, 3.72rem);
+  --cds-text-4xl: clamp(2.94rem, 1.98rem + 4.8vw, 4.32rem);
   display: flex;
   min-height: 100vh;
-  background: #f5f7fa;
-  font-size: 1.35rem;
+  background: var(--cds-background-color);
 }
 
-/* Sidebar - 35% larger */
 .admin-sidebar {
-  width: 351px;
-  background: #1a1f36;
-  color: #fff;
+  width: var(--admin-sidebar-width);
+  background: var(--cds-nav-background-color);
+  color: var(--cds-white);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -117,35 +132,35 @@ const handleLogout = () => {
 }
 
 .sidebar-brand {
-  padding: 2rem;
+  padding: var(--admin-space-lg) var(--admin-space-xl);
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--admin-space-md);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .brand-icon {
-  font-size: 2.4rem;
+  font-size: var(--cds-text-3xl);
 }
 
 .brand-text {
-  font-size: 1.7rem;
+  font-size: var(--cds-text-2xl);
   font-weight: 700;
   letter-spacing: -0.5px;
 }
 
 .sidebar-nav {
   flex: 1;
-  padding: 1.35rem 0;
+  padding: var(--admin-space-md) 0;
   overflow-y: auto;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
-  padding: 1.2rem 2rem;
-  color: rgba(255, 255, 255, 0.7);
+  gap: var(--admin-space-md);
+  padding: var(--admin-space-md) var(--admin-space-xl);
+  color: color-mix(in srgb, var(--cds-white) 70%, transparent);
   text-decoration: none;
   transition: all 0.2s;
   border-left: 3px solid transparent;
@@ -153,23 +168,24 @@ const handleLogout = () => {
   background: none;
   border: none;
   width: 100%;
-  font-size: 1.25rem;
+  font-size: var(--cds-text-base);
+  line-height: 1.2;
 }
 
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: color-mix(in srgb, var(--cds-white) 5%, transparent);
+  color: var(--cds-white);
 }
 
 .nav-item.active {
-  background: rgba(255, 107, 53, 0.15);
-  color: #ff6b35;
-  border-left-color: #ff6b35;
+  background: color-mix(in srgb, var(--cds-primary) 15%, transparent);
+  color: var(--cds-primary);
+  border-left-color: var(--cds-primary);
 }
 
 .nav-icon {
-  font-size: 1.7rem;
-  width: 2rem;
+  font-size: var(--cds-text-xl);
+  width: 2.4rem;
   text-align: center;
 }
 
@@ -178,44 +194,42 @@ const handleLogout = () => {
 }
 
 .sidebar-footer {
-  padding: 1.35rem 0;
+  padding: var(--admin-space-md) 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .back-link {
-  color: rgba(255, 255, 255, 0.6);
+  color: color-mix(in srgb, var(--cds-white) 60%, transparent);
 }
 
 .back-link:hover {
-  color: #fff;
+  color: var(--cds-white);
 }
 
 .logout-btn {
-  color: rgba(255, 100, 100, 0.8);
+  color: color-mix(in srgb, var(--cds-danger) 80%, var(--cds-white));
 }
 
 .logout-btn:hover {
-  background: rgba(255, 100, 100, 0.15);
-  color: #ff6464;
+  background: color-mix(in srgb, var(--cds-danger) 15%, transparent);
+  color: var(--cds-danger);
 }
 
-/* Main content - 35% larger */
 .admin-main {
   flex: 1;
-  margin-left: 351px;
+  margin-left: var(--admin-sidebar-width);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Topbar - 35% larger */
 .admin-topbar {
-  background: #fff;
-  padding: 1.7rem 2.7rem;
+  background: var(--cds-white);
+  padding: var(--admin-space-lg) var(--admin-space-2xl);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e8ecf1;
+  border-bottom: 1px solid var(--cds-border-card);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -223,30 +237,154 @@ const handleLogout = () => {
 
 .page-title {
   margin: 0;
-  font-size: 2rem;
+  font-size: var(--cds-text-3xl);
   font-weight: 700;
-  color: #1a1f36;
+  color: var(--cds-text-normal);
+  line-height: 1;
 }
 
 .page-subtitle {
-  margin: 0.35rem 0 0;
-  font-size: 1.2rem;
-  color: #6b7280;
+  margin: 0.5rem 0 0;
+  font-size: var(--cds-text-base);
+  color: var(--cds-text-muted);
+  line-height: 1.35;
 }
 
 .user-badge {
-  background: #f3f4f6;
-  padding: 0.7rem 1.35rem;
-  border-radius: 999px;
-  font-size: 1.2rem;
-  color: #374151;
+  background: color-mix(in srgb, var(--cds-light) 45%, white);
+  padding: var(--admin-space-sm, 0.96rem) var(--cds-space-lg);
+  border-radius: var(--cds-radius-pill);
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-normal);
 }
 
-/* Content area - 35% larger */
 .admin-content {
   flex: 1;
-  padding: 2.7rem;
+  padding: var(--admin-space-2xl);
   overflow-y: auto;
+}
+
+.admin-content :deep(.admin-page),
+.admin-content :deep(.admin-dashboard-page) {
+  font-size: var(--cds-text-base);
+}
+
+.admin-content :deep(.admin-success),
+.admin-content :deep(.admin-error),
+.admin-content :deep(.empty-state) {
+  padding: var(--admin-space-sm, 0.96rem) var(--cds-space-md);
+  font-size: var(--cds-text-sm);
+}
+
+.admin-content :deep(.panel-card),
+.admin-content :deep(.summary-card),
+.admin-content :deep(.stat-card),
+.admin-content :deep(.wizard-card),
+.admin-content :deep(.appointment-card),
+.admin-content :deep(.panel-nested),
+.admin-content :deep(.quote-card),
+.admin-content :deep(.binding-form),
+.admin-content :deep(.note-card),
+.admin-content :deep(.filter-row) {
+  padding: var(--admin-space-md);
+  gap: var(--admin-space-sm);
+}
+
+.admin-content :deep(.cards-grid),
+.admin-content :deep(.panel-grid),
+.admin-content :deep(.summary-grid),
+.admin-content :deep(.detail-grid),
+.admin-content :deep(.columns-grid),
+.admin-content :deep(.photos-grid),
+.admin-content :deep(.toolbar),
+.admin-content :deep(.filters-panel),
+.admin-content :deep(.catalog-filters),
+.admin-content :deep(.upload-extra-actions),
+.admin-content :deep(.binding-form-fields),
+.admin-content :deep(.inline-message),
+.admin-content :deep(.payment-box),
+.admin-content :deep(.row-actions) {
+  gap: var(--admin-space-sm);
+}
+
+.admin-content :deep(.panel-head),
+.admin-content :deep(.column-head),
+.admin-content :deep(.appointment-head),
+.admin-content :deep(.detail-head),
+.admin-content :deep(.item-head) {
+  gap: var(--admin-space-sm);
+}
+
+.admin-content :deep(.panel-card h2),
+.admin-content :deep(.section-header h2),
+.admin-content :deep(.panel-head h2),
+.admin-content :deep(.panel-head h3),
+.admin-content :deep(.column-head h3),
+.admin-content :deep(.alerts-header h3) {
+  font-size: var(--cds-text-2xl);
+  line-height: 1.1;
+}
+
+.admin-content :deep(.panel-card p),
+.admin-content :deep(.summary-card span),
+.admin-content :deep(.summary-card small),
+.admin-content :deep(.quote-meta),
+.admin-content :deep(.quote-problem),
+.admin-content :deep(.photo-meta),
+.admin-content :deep(.cell-stack small),
+.admin-content :deep(.list-count) {
+  font-size: var(--cds-text-sm);
+}
+
+.admin-content :deep(th),
+.admin-content :deep(td),
+.admin-content :deep(li),
+.admin-content :deep(.alert-text),
+.admin-content :deep(.binding-row),
+.admin-content :deep(.queue-item) {
+  font-size: var(--cds-text-base);
+  line-height: 1.45;
+}
+
+.admin-content :deep(input:not([type="checkbox"]):not([type="radio"]):not([type="file"])),
+.admin-content :deep(select),
+.admin-content :deep(textarea) {
+  min-height: var(--admin-control-min-height);
+  font-size: var(--cds-text-base);
+}
+
+.admin-content :deep(textarea) {
+  min-height: 120px;
+}
+
+.admin-content :deep(.btn-primary),
+.admin-content :deep(.btn-secondary),
+.admin-content :deep(.btn-danger),
+.admin-content :deep(.btn-success),
+.admin-content :deep(.btn-refresh),
+.admin-content :deep(.btn-submit),
+.admin-content :deep(.chip),
+.admin-content :deep(.status-chip),
+.admin-content :deep(.status-badge),
+.admin-content :deep(.role-pill),
+.admin-content :deep(.status-pill),
+.admin-content :deep(.flag-list span) {
+  font-size: var(--cds-text-sm);
+}
+
+.admin-content :deep(.btn-primary),
+.admin-content :deep(.btn-secondary),
+.admin-content :deep(.btn-danger),
+.admin-content :deep(.btn-success),
+.admin-content :deep(.btn-refresh),
+.admin-content :deep(.btn-submit) {
+  min-height: var(--admin-control-min-height);
+}
+
+.admin-content :deep(.btn-icon) {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  font-size: var(--cds-text-xl);
 }
 
 /* Transitions */
@@ -263,7 +401,7 @@ const handleLogout = () => {
 /* Responsive */
 @media (max-width: 1024px) {
   .admin-sidebar {
-    width: 95px;
+    width: var(--admin-sidebar-collapsed-width);
   }
 
   .brand-text,
@@ -273,12 +411,12 @@ const handleLogout = () => {
 
   .sidebar-brand {
     justify-content: center;
-    padding: 1.35rem;
+    padding: var(--admin-space-md);
   }
 
   .nav-item {
     justify-content: center;
-    padding: 1.35rem;
+    padding: var(--admin-space-md);
   }
 
   .nav-icon {
@@ -286,11 +424,11 @@ const handleLogout = () => {
   }
 
   .admin-main {
-    margin-left: 95px;
+    margin-left: var(--admin-sidebar-collapsed-width);
   }
 
   .admin-content {
-    padding: 2rem;
+    padding: var(--admin-space-xl);
   }
 }
 
@@ -301,12 +439,12 @@ const handleLogout = () => {
     position: relative;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 0.7rem;
+    padding: var(--admin-space-xs);
   }
 
   .sidebar-brand {
     border-bottom: none;
-    padding: 0.7rem 1.35rem;
+    padding: var(--admin-space-xs) var(--admin-space-md);
   }
 
   .sidebar-nav {
@@ -318,14 +456,14 @@ const handleLogout = () => {
   }
 
   .nav-item {
-    padding: 0.7rem 1.35rem;
+    padding: var(--admin-space-xs) var(--admin-space-md);
     border-left: none;
     border-bottom: 2px solid transparent;
   }
 
   .nav-item.active {
     border-left-color: transparent;
-    border-bottom-color: #ff6b35;
+    border-bottom-color: var(--cds-primary);
   }
 
   .sidebar-footer {
@@ -339,11 +477,11 @@ const handleLogout = () => {
   }
 
   .admin-topbar {
-    padding: 1.35rem;
+    padding: var(--admin-space-md);
   }
 
   .page-title {
-    font-size: 1.7rem;
+    font-size: var(--cds-text-2xl);
   }
 }
 </style>

@@ -1,3 +1,9 @@
+<script>
+export default {
+  inheritAttrs: false
+}
+</script>
+
 <template>
   <div class="base-select-wrapper" :class="wrapperClasses">
     <label v-if="label" :for="selectId" class="base-select-label">
@@ -7,11 +13,13 @@
     
     <div class="base-select-container">
       <select
+        ref="selectRef"
         :id="selectId"
         :value="modelValue"
         :disabled="disabled"
         :required="required"
         :class="selectClasses"
+        v-bind="attrs"
         @change="handleChange"
         @blur="$emit('blur', $event)"
       >
@@ -44,7 +52,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, useAttrs } from 'vue'
 
 const props = defineProps({
   modelValue: { type: [String, Number], default: '' },
@@ -70,6 +78,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'change', 'blur'])
+const attrs = useAttrs()
+const selectRef = ref(null)
 
 const selectId = computed(() => props.id || `select-${Math.random().toString(36).substr(2, 9)}`)
 
@@ -112,6 +122,10 @@ function handleChange(event) {
   emit('update:modelValue', value)
   emit('change', value)
 }
+
+defineExpose({
+  focus: () => selectRef.value?.focus()
+})
 </script>
 
 <style scoped>
@@ -138,7 +152,7 @@ function handleChange(event) {
   width: 100%;
   min-height: 44px;
   padding: 0.65rem 2.5rem 0.65rem 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--cds-light) 65%, white);
+  border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-sm);
   background: var(--cds-white);
   color: var(--cds-text-normal);

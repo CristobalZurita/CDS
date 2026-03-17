@@ -41,7 +41,7 @@ const faqs = [
 
 .faq-item {
   border: 1px solid var(--cds-border-soft);
-  border-radius: 0.6rem;
+  border-radius: var(--cds-radius-sm);
   background: var(--cds-white);
   overflow: hidden;
 }
