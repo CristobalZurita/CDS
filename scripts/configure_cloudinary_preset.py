@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
 """
-Configura upload preset de Cloudinary para no añadir hash único
-Uso: python configure_cloudinary_preset.py
+Configura un upload preset base para Cloudinary sin hardcodes de carpeta.
+
+Este helper no reemplaza el contrato canónico del repo:
+el public_id final debe seguir viniendo explícito desde ZERO/backend.
 """
+
+from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 
-# Agregar backend al path
-sys.path.insert(0, str(Path(__file__).parent.parent / "backend"))
+from dotenv import load_dotenv
+
+ROOT = Path(__file__).resolve().parents[1]
+BACKEND_ROOT = ROOT / "backend"
+
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
 
 try:
     import cloudinary
@@ -17,38 +27,61 @@ except ImportError:
     print("❌ Error: pip install cloudinary")
     sys.exit(1)
 
-# Configurar con variables de entorno
-cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME", "dgwwi77ic"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
-)
 
-def configure_preset():
-    preset_name = "cds_unsigned_upload"  # Nombre del preset
-    
+def _load_env() -> None:
+    backend_env = BACKEND_ROOT / ".env"
+    root_env = ROOT / ".env"
+    if backend_env.exists():
+        load_dotenv(backend_env)
+    elif root_env.exists():
+        load_dotenv(root_env)
+
+
+def _configure_cloudinary() -> None:
+    _load_env()
+    from app.services.cloudinary_service import resolve_cloudinary_config
+
+    config = resolve_cloudinary_config()
+    if not config:
+        print("❌ Configura CLOUDINARY_URL o CLOUDINARY_CLOUD_NAME/CLOUDINARY_API_KEY/CLOUDINARY_API_SECRET")
+        sys.exit(1)
+
+    cloudinary.config(
+        cloud_name=config["cloud_name"],
+        api_key=config["api_key"],
+        api_secret=config["api_secret"],
+    )
+
+
+def configure_preset() -> None:
+    _configure_cloudinary()
+
+    preset_name = os.getenv("CLOUDINARY_PRESET_NAME", "cds_media_library")
+    payload = {
+        "unsigned": False,
+        "use_filename": True,
+        "unique_filename": False,
+        "overwrite": True,
+        "invalidate": True,
+        "resource_type": "image",
+    }
+
     try:
-        # Crear o actualizar upload preset
-        result = cloudinary.api.create_upload_preset(
-            name=preset_name,
-            unsigned=True,
-            unique_filename=False,  # No añadir hash
-            overwrite=True,         # Permitir sobrescribir
-            folder="cirujano",
-            resource_type="image",
-        )
-        print(f"✅ Upload preset '{preset_name}' configurado:")
-        print(f"   - unique_filename: False")
-        print(f"   - overwrite: True")
-        print(f"   - folder: cirujano")
-        print()
-        print(f"Usa este preset en el frontend: {preset_name}")
-        
-    except Exception as e:
-        print(f"❌ Error: {e}")
-        print()
-        print("Configura manualmente en:")
-        print("https://cloudinary.com/console/settings/upload")
+        cloudinary.api.create_upload_preset(name=preset_name, **payload)
+        action = "creado"
+    except Exception:
+        cloudinary.api.update_upload_preset(preset_name, **payload)
+        action = "actualizado"
+
+    print(f"✅ Upload preset '{preset_name}' {action}")
+    print("   - signed")
+    print("   - use_filename: true")
+    print("   - unique_filename: false")
+    print("   - overwrite: true")
+    print("   - invalidate: true")
+    print()
+    print("Recuerda: el contrato final del repo depende del public_id explícito o de la ruta inicial, no de una carpeta fija del preset.")
+
 
 if __name__ == "__main__":
     configure_preset()

@@ -8,6 +8,7 @@ import logging
 import time
 from typing import Optional, Dict, Any, List
 from pathlib import Path
+from urllib.parse import urlparse, unquote
 from fastapi import UploadFile
 
 logger = logging.getLogger(__name__)
@@ -69,6 +70,44 @@ def _resolve_upload_target(destination: str, filename: Optional[str] = None, pub
     return full_public_id, asset_folder
 
 
+def resolve_cloudinary_config() -> Optional[Dict[str, str]]:
+    """
+    Resuelve la configuración efectiva de Cloudinary desde variables separadas
+    o desde CLOUDINARY_URL.
+    """
+    cloud_name = str(os.getenv("CLOUDINARY_CLOUD_NAME") or "").strip()
+    api_key = str(os.getenv("CLOUDINARY_API_KEY") or "").strip()
+    api_secret = str(os.getenv("CLOUDINARY_API_SECRET") or "").strip()
+
+    if cloud_name and api_key and api_secret:
+        return {
+            "cloud_name": cloud_name,
+            "api_key": api_key,
+            "api_secret": api_secret,
+        }
+
+    cloudinary_url = str(os.getenv("CLOUDINARY_URL") or "").strip()
+    if not cloudinary_url:
+        return None
+
+    parsed = urlparse(cloudinary_url)
+    if parsed.scheme != "cloudinary":
+        return None
+
+    parsed_api_key = unquote(parsed.username or "").strip()
+    parsed_api_secret = unquote(parsed.password or "").strip()
+    parsed_cloud_name = unquote(parsed.hostname or "").strip()
+
+    if not parsed_cloud_name or not parsed_api_key or not parsed_api_secret:
+        return None
+
+    return {
+        "cloud_name": cloud_name or parsed_cloud_name,
+        "api_key": api_key or parsed_api_key,
+        "api_secret": api_secret or parsed_api_secret,
+    }
+
+
 def _get_client():
     """Obtiene o inicializa el cliente de Cloudinary."""
     global _cloudinary_client
@@ -76,8 +115,8 @@ def _get_client():
     if _cloudinary_client is not None:
         return _cloudinary_client
     
-    cloudinary_url = os.getenv("CLOUDINARY_URL")
-    if not cloudinary_url:
+    config = resolve_cloudinary_config()
+    if not config:
         return None
     
     try:
@@ -85,11 +124,10 @@ def _get_client():
         import cloudinary.uploader
         import cloudinary.api
         
-        # cloudinary.config() automáticamente lee CLOUDINARY_URL del env
         cloudinary.config(
-            cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-            api_key=os.getenv("CLOUDINARY_API_KEY"),
-            api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+            cloud_name=config["cloud_name"],
+            api_key=config["api_key"],
+            api_secret=config["api_secret"],
         )
         
         _cloudinary_client = cloudinary
@@ -103,7 +141,7 @@ def _get_client():
 
 def is_cloudinary_enabled() -> bool:
     """Verifica si Cloudinary está disponible y configurado."""
-    return os.getenv("CLOUDINARY_URL") is not None and _get_client() is not None
+    return resolve_cloudinary_config() is not None and _get_client() is not None
 
 
 async def upload_image(
@@ -237,12 +275,12 @@ def generate_upload_signature(
     try:
         import cloudinary.utils
         
-        cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME")
-        api_key = os.getenv("CLOUDINARY_API_KEY")
-        api_secret = os.getenv("CLOUDINARY_API_SECRET")
-        
-        if not all([cloud_name, api_key, api_secret]):
+        config = resolve_cloudinary_config()
+        if not config:
             return None
+        cloud_name = config["cloud_name"]
+        api_key = config["api_key"]
+        api_secret = config["api_secret"]
         
         timestamp = int(time.time())
         resolved_public_id, asset_folder = _resolve_upload_target(

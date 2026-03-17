@@ -7,7 +7,7 @@ const localSrc = fileURLToPath(new URL('./src', import.meta.url))
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const cloudName = env.VITE_CLOUDINARY_CLOUD_NAME || 'dgwwi77ic'
+  const cloudName = String(env.VITE_CLOUDINARY_CLOUD_NAME || '').trim()
 
   return {
     plugins: [

@@ -9,7 +9,7 @@ import { localPathToBaseDeliveryUrl } from '../src/utils/cloudinaryContract.js'
  * Convierte una ruta local a URL de Cloudinary
  */
 function toCloudinaryUrl(localPath, cloudName) {
-  if (!localPath || !localPath.startsWith('/images/')) {
+  if (!localPath || !localPath.startsWith('/images/') || !cloudName) {
     return localPath
   }
 

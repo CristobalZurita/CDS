@@ -9,9 +9,11 @@ import { quality } from '@cloudinary/url-gen/actions/delivery'
 import { auto as autoQuality } from '@cloudinary/url-gen/qualifiers/quality'
 import { localPathToPublicId } from '@/utils/cloudinaryContract'
 
-const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dgwwi77ic'
+const CLOUDINARY_CLOUD_NAME = String(import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '').trim()
 
-const _cld = new Cloudinary({ cloud: { cloudName: CLOUDINARY_CLOUD_NAME } })
+const _cld = CLOUDINARY_CLOUD_NAME
+  ? new Cloudinary({ cloud: { cloudName: CLOUDINARY_CLOUD_NAME } })
+  : null
 
 /**
  * Construye una URL de Cloudinary desde un public_id usando el SDK.
@@ -23,6 +25,7 @@ const _cld = new Cloudinary({ cloud: { cloudName: CLOUDINARY_CLOUD_NAME } })
  */
 export function buildUrl(publicId, options = {}) {
   if (!publicId) return ''
+  if (!_cld || !CLOUDINARY_CLOUD_NAME) return ''
   const img = _cld.image(publicId)
   if (options.width || options.height) {
     const action = options.crop === 'thumb'
@@ -46,6 +49,7 @@ export function toCloudinaryUrl(localPath, options = {}) {
   if (!localPath) return ''
   if (localPath.startsWith('http')) return localPath
   const publicId = localPathToPublicId(localPath)
+  if (!CLOUDINARY_CLOUD_NAME) return localPath
   return buildUrl(publicId, options)
 }
 

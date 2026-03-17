@@ -3,9 +3,9 @@
  * Script de verificación y reparación de imágenes
  * 
  * Este script:
- * 1. Escanea todas las imágenes locales en public/images/
- * 2. Verifica si están disponibles en Cloudinary
- * 3. Genera un reporte de qué imágenes necesitan atención
+ * 1. Escanea todas las imágenes locales en CDS_VUE3_ZERO/public/images/
+ * 2. Verifica si están disponibles en Cloudinary usando el contrato canónico
+ * 3. Genera un reporte simple de qué imágenes necesitan atención
  * 
  * Uso: node scripts/verify_and_repair_images.js
  */
@@ -14,9 +14,46 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const CLOUD_NAME = 'dgwwi77ic';
+function readEnvValue(filePath, key) {
+  if (!fs.existsSync(filePath)) return '';
+  const content = fs.readFileSync(filePath, 'utf8');
+  const match = content.match(new RegExp(`^${key}=(.*)$`, 'm'));
+  if (!match) return '';
+  return String(match[1] || '').trim().replace(/^['"]|['"]$/g, '');
+}
+
+function resolveCloudName() {
+  const projectRoot = path.join(__dirname, '..');
+  const frontendDir = path.join(projectRoot, 'CDS_VUE3_ZERO');
+  const candidates = [
+    process.env.VITE_CLOUDINARY_CLOUD_NAME,
+    process.env.CLOUDINARY_CLOUD_NAME,
+    readEnvValue(path.join(frontendDir, '.env'), 'VITE_CLOUDINARY_CLOUD_NAME'),
+    readEnvValue(path.join(frontendDir, '.env.local'), 'VITE_CLOUDINARY_CLOUD_NAME'),
+    readEnvValue(path.join(frontendDir, '.env.example'), 'VITE_CLOUDINARY_CLOUD_NAME'),
+  ];
+
+  return candidates.find(Boolean) || '';
+}
+
+const CLOUD_NAME = resolveCloudName();
+if (!CLOUD_NAME) {
+  console.error('❌ No se encontró VITE_CLOUDINARY_CLOUD_NAME para verificar imágenes.');
+  process.exit(1);
+}
+
 const BASE_URL = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;
 const IMAGES_DIR = path.join(__dirname, '..', 'CDS_VUE3_ZERO', 'public', 'images');
+
+function localPathToPublicId(localPath) {
+  return String(localPath || '')
+    .replace(/^\/images\//, '')
+    .replace(/\.[^.]+$/, '');
+}
+
+function publicIdToCloudinaryUrl(publicId) {
+  return `${BASE_URL}/${publicId.split('/').map(encodeURIComponent).join('/')}`;
+}
 
 // Encontrar todas las imágenes
 function findImages(dir, basePath = '') {
@@ -30,9 +67,9 @@ function findImages(dir, basePath = '') {
     if (item.isDirectory()) {
       images.push(...findImages(fullPath, relativePath));
     } else if (/\.(webp|png|jpg|jpeg|gif)$/i.test(item.name)) {
-      images.push({
-        local: `/images/${relativePath}`,
-        cloudinary: `${BASE_URL}/images/${relativePath}`,
+        images.push({
+          local: `/images/${relativePath}`,
+          cloudinary: publicIdToCloudinaryUrl(localPathToPublicId(`/images/${relativePath}`)),
         filename: item.name,
         folder: basePath
       });
@@ -90,21 +127,6 @@ async function main() {
   
   console.log(`\n📊 RESULTADO MUESTRA: ${working} OK, ${failed} fallidas`);
   
-  // Generar archivo de mapeo
-  console.log('\n📝 Generando archivo de mapeo...');
-  
-  const mapping = images.map(img => ({
-    local: img.local,
-    cloudinary: img.cloudinary,
-    // URL alternativa sin versión (funciona si la imagen existe)
-    altUrl: img.cloudinary
-  }));
-  
-  const outputFile = path.join(__dirname, '..', 'image-mapping.json');
-  fs.writeFileSync(outputFile, JSON.stringify(mapping, null, 2));
-  
-  console.log(`   📄 Guardado en: ${outputFile}`);
-  
   // Instrucciones
   console.log(`
 ═══════════════════════════════════════════════════════════════
@@ -115,19 +137,19 @@ async function main() {
    https://cloudinary.com/console
 
 2. Asegúrate de que las imágenes estén en la carpeta correcta:
-   - images/personales/
-   - images/instrumentos/
-   - images/INVENTARIO/
-   - images/calculadoras/
-   - images/logo/
+   - personales/
+   - instrumentos/
+   - INVENTARIO/
+   - calculadoras/
+   - logo/
 
-3. Si las URLs tienen versión (v1234567890), usa este formato:
-   ${BASE_URL}/vVERSION/images/personales/foto.webp
+3. La URL canónica es:
+   ${BASE_URL}/personales/foto
 
-4. El código ya tiene fallback automático a local si Cloudinary falla.
+4. El runtime deriva public_id desde /images/... y no depende de image-mapping.json.
 
-5. Para subir imágenes faltantes, arrastra la carpeta completa
-   a Cloudinary Media Library.
+5. Para subir imágenes faltantes, arrastra el contenido dentro de images/
+   y no la carpeta raíz images/.
 
 ═══════════════════════════════════════════════════════════════
 `);
