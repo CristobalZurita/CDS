@@ -21,7 +21,7 @@ class Lead(Base):
     equipment_model = Column(String(255), nullable=True)   # nombre del modelo
     equipment_photo_url = Column(String(512), nullable=True)  # si eligió "Otro"
 
-    # Resultado de /diagnostic/calculate
+    # Resultado del flujo canónico público (/quotations/estimate)
     quote_result = Column(JSON, nullable=True)  # {final_cost, base_cost, faults, ...}
 
     # Metadatos

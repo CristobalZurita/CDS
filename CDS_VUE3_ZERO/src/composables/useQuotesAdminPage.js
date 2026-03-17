@@ -15,6 +15,7 @@ const COLUMN_DEFS = [
   { key: 'waiting_response', label: 'En espera de respuesta' },
   { key: 'closed', label: 'Cerradas' }
 ]
+const QUOTES_BASE_PATH = '/quotations/quotes'
 
 function normalizeBoardPayload(payload) {
   const board = payload?.board || {}
@@ -146,7 +147,7 @@ export function useQuotesAdminPage() {
 
       if (statusFilter.value) params.status = statusFilter.value
 
-      const response = await api.get('/diagnostic/quotes/board', { params })
+      const response = await api.get(`${QUOTES_BASE_PATH}/board`, { params })
       const normalized = normalizeBoardPayload(toPayload(response))
       board.value = normalized.board
       counts.value = normalized.counts
@@ -164,7 +165,7 @@ export function useQuotesAdminPage() {
     error.value = ''
 
     try {
-      await api.post(`/diagnostic/quotes/${quote.id}/send`, {
+      await api.post(`${QUOTES_BASE_PATH}/${quote.id}/send`, {
         send_whatsapp: Boolean(sendWhatsapp.value),
         message: String(customMessage.value || '').trim() || null
       })
@@ -181,7 +182,7 @@ export function useQuotesAdminPage() {
     error.value = ''
 
     try {
-      await api.post(`/diagnostic/quotes/${quote.id}/status`, {
+      await api.post(`${QUOTES_BASE_PATH}/${quote.id}/status`, {
         status,
         client_response: status === 'approved' ? 'Aprobada por administracion' : 'Rechazada por administracion'
       })
@@ -244,7 +245,7 @@ export function useQuotesAdminPage() {
     error.value = ''
 
     try {
-      await api.delete(`/diagnostic/quotes/${id}`)
+      await api.delete(`${QUOTES_BASE_PATH}/${id}`)
       await loadBoard()
     } catch (requestError) {
       error.value = extractErrorMessage(requestError)
@@ -257,7 +258,7 @@ export function useQuotesAdminPage() {
     error.value = ''
     
     try {
-      const response = await api.post('/diagnostic/quotes', {
+      const response = await api.post(QUOTES_BASE_PATH, {
         client_name: quoteData.client_name,
         client_email: quoteData.client_email,
         client_phone: quoteData.client_phone || null,

@@ -1,20 +1,15 @@
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 from typing import Any, Dict, List, Optional
-from app.services.event_system import event_bus, Events
 from app.core.ratelimit import limiter
 from app.core.config import settings
-from app.services.reference_catalog_service import (
-    get_applicable_faults_for_instrument,
-    get_catalog_brands,
-    get_catalog_faults,
-    get_catalog_instrument,
-    get_catalog_models_by_brand,
-    get_reference_catalog,
-)
+from app.services.reference_catalog_service import get_reference_catalog
 from app.services.quotation_engine import calculate_fault_estimate, estimate_guided_range
+from app.routers import quote_management_router, quotation_catalog_router
 
 router = APIRouter(prefix="/quotations", tags=["quotations"])
+router.include_router(quotation_catalog_router.build_router())
+router.include_router(quote_management_router.build_router(), prefix="/quotes")
 
 
 class QuotationRequest(BaseModel):
@@ -53,38 +48,6 @@ class QuotationResponse(BaseModel):
 
     disclaimer: str
     summary: Dict[str, Any]
-
-
-@router.get("/instruments/brands")
-async def get_quotation_brands():
-    return get_catalog_brands()
-
-
-@router.get("/instruments/models/{brand_id}")
-async def get_quotation_models_by_brand(brand_id: str):
-    return get_catalog_models_by_brand(brand_id)
-
-
-@router.get("/instruments/{instrument_id}")
-async def get_quotation_instrument(instrument_id: str):
-    instrument = get_catalog_instrument(instrument_id)
-    if instrument:
-        return instrument
-    raise HTTPException(status_code=404, detail="Instrumento no encontrado")
-
-
-@router.get("/faults")
-async def get_quotation_faults():
-    return get_catalog_faults()
-
-
-@router.get("/faults/applicable/{instrument_id}")
-async def get_quotation_applicable_faults(instrument_id: str):
-    applicable_faults = get_applicable_faults_for_instrument(instrument_id)
-    if not applicable_faults and not get_catalog_instrument(instrument_id):
-        raise HTTPException(status_code=404, detail="Instrumento no encontrado")
-    return applicable_faults
-
 
 @router.post("/estimate", response_model=QuotationResponse)
 @limiter.limit("10/minute")

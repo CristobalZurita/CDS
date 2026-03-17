@@ -2,6 +2,8 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
 
+const QUOTATION_BASE_PATH = '/quotations'
+
 export function useCotizadorIAPage() {
   const router = useRouter()
 
@@ -26,7 +28,10 @@ export function useCotizadorIAPage() {
   // ── Paso 4: Formulario de contacto (lead) ────────────────────────────────────
   const leadForm = ref({ nombre: '', email: '', telefono: '' })
   const acceptedDisclaimer = ref(false)
-  const turnstileToken = ref('')
+  const quoteTurnstileToken = ref('')
+  const quoteTurnstileRenderKey = ref(0)
+  const leadTurnstileToken = ref('')
+  const leadTurnstileRenderKey = ref(0)
   const leadSubmitted = ref(false)
 
   // ── Modo "instrumento no encontrado" ─────────────────────────────────────────
@@ -41,13 +46,16 @@ export function useCotizadorIAPage() {
       : Boolean(selectedBrand.value && selectedModel.value)
   )
 
-  const canContinueStep2 = computed(() => selectedFaultIds.value.length > 0)
+  const canContinueStep2 = computed(() =>
+    selectedFaultIds.value.length > 0 &&
+    String(quoteTurnstileToken.value || '').length > 0
+  )
 
   const canSubmitLead = computed(() =>
     String(leadForm.value.nombre || '').trim().length > 0 &&
     String(leadForm.value.email || '').trim().length > 0 &&
     acceptedDisclaimer.value &&
-    String(turnstileToken.value || '').length > 0
+    String(leadTurnstileToken.value || '').length > 0
   )
 
   const formattedFinalCost = computed(() => {
@@ -78,13 +86,13 @@ export function useCotizadorIAPage() {
       .map(f => f.name)
   )
 
-  // ── API ──────────────────────────────────────────────────────────────────────
+  // ── API pública canónica del cotizador ──────────────────────────────────────
 
   async function loadBrands() {
     loading.value = true
     error.value = ''
     try {
-      const { data } = await api.get('/diagnostic/instruments/brands')
+      const { data } = await api.get(`${QUOTATION_BASE_PATH}/instruments/brands`)
       brands.value = Array.isArray(data) ? data : []
     } catch (e) {
       error.value = extractErrorMessage(e)
@@ -100,10 +108,12 @@ export function useCotizadorIAPage() {
     faults.value = []
     selectedFaultIds.value = []
     if (!brandId) return
+    resetQuoteTurnstile()
+    resetLeadTurnstile()
     loading.value = true
     error.value = ''
     try {
-      const { data } = await api.get(`/diagnostic/instruments/models/${brandId}`)
+      const { data } = await api.get(`${QUOTATION_BASE_PATH}/instruments/models/${brandId}`)
       models.value = Array.isArray(data) ? data : []
     } catch (e) {
       error.value = extractErrorMessage(e)
@@ -117,10 +127,12 @@ export function useCotizadorIAPage() {
     faults.value = []
     selectedFaultIds.value = []
     if (!instrumentId) return
+    resetQuoteTurnstile()
+    resetLeadTurnstile()
     loading.value = true
     error.value = ''
     try {
-      const { data } = await api.get(`/diagnostic/faults/applicable/${instrumentId}`)
+      const { data } = await api.get(`${QUOTATION_BASE_PATH}/faults/applicable/${instrumentId}`)
       faults.value = Array.isArray(data) ? data : []
     } catch (e) {
       error.value = extractErrorMessage(e)
@@ -136,6 +148,25 @@ export function useCotizadorIAPage() {
     } else {
       selectedFaultIds.value = selectedFaultIds.value.filter(id => id !== faultId)
     }
+    resetQuoteTurnstile()
+    resetLeadTurnstile()
+  }
+
+  function normalizeQuotationEstimate(data) {
+    return {
+      equipment_info: {
+        brand: data?.brand_name || selectedBrandName.value,
+        model: selectedModelName.value,
+      },
+      base_cost: Number(data?.base_total || 0),
+      complexity_factor: Number(data?.summary?.complexity_factor || data?.multiplier || 1),
+      value_factor: Number(data?.summary?.value_factor || 1),
+      final_cost: Number(data?.summary?.final_cost || data?.max_price || data?.min_price || 0),
+      min_price: Number(data?.min_price || 0),
+      max_price: Number(data?.max_price || 0),
+      disclaimer: data?.disclaimer || '',
+      summary: data?.summary || {},
+    }
   }
 
   async function calculateQuote() {
@@ -143,17 +174,17 @@ export function useCotizadorIAPage() {
     error.value = ''
     quoteResult.value = null
     try {
-      const { data } = await api.post('/diagnostic/calculate', {
-        equipment: {
-          brand: selectedBrand.value,
-          model: selectedModel.value
-        },
-        faults: selectedFaultIds.value
+      const { data } = await api.post(`${QUOTATION_BASE_PATH}/estimate`, {
+        instrument_id: selectedModel.value,
+        faults: selectedFaultIds.value,
+        turnstile_token: quoteTurnstileToken.value,
       })
-      quoteResult.value = data
+      quoteResult.value = normalizeQuotationEstimate(data)
+      resetLeadTurnstile()
       step.value = 3
     } catch (e) {
       error.value = extractErrorMessage(e)
+      resetQuoteTurnstile()
     } finally {
       loading.value = false
     }
@@ -170,11 +201,12 @@ export function useCotizadorIAPage() {
         equipment_brand: selectedBrandName.value,
         equipment_model: selectedModelName.value,
         quote_result: quoteResult.value,
-        turnstile_token: turnstileToken.value
+        turnstile_token: leadTurnstileToken.value
       })
       leadSubmitted.value = true
     } catch (e) {
       error.value = extractErrorMessage(e)
+      resetLeadTurnstile()
     } finally {
       loading.value = false
     }
@@ -188,6 +220,8 @@ export function useCotizadorIAPage() {
     faults.value = []
     selectedFaultIds.value = []
     error.value = ''
+    resetQuoteTurnstile()
+    resetLeadTurnstile()
   }
 
   function deactivateNotFoundMode() {
@@ -195,10 +229,33 @@ export function useCotizadorIAPage() {
     manualBrand.value = ''
     manualModel.value = ''
     error.value = ''
+    resetQuoteTurnstile()
+    resetLeadTurnstile()
   }
 
-  function onVerify(token) {
-    turnstileToken.value = token
+  function onQuoteVerify(token) {
+    quoteTurnstileToken.value = token
+    error.value = ''
+  }
+
+  function onLeadVerify(token) {
+    leadTurnstileToken.value = token
+    error.value = ''
+  }
+
+  function resetQuoteTurnstile() {
+    quoteTurnstileToken.value = ''
+    quoteTurnstileRenderKey.value += 1
+  }
+
+  function resetLeadTurnstile() {
+    leadTurnstileToken.value = ''
+    leadTurnstileRenderKey.value += 1
+  }
+
+  function goToLeadStep() {
+    resetLeadTurnstile()
+    step.value = 4
   }
 
   function goToSchedule() {
@@ -215,7 +272,10 @@ export function useCotizadorIAPage() {
     quoteResult.value = null
     leadForm.value = { nombre: '', email: '', telefono: '' }
     acceptedDisclaimer.value = false
-    turnstileToken.value = ''
+    quoteTurnstileToken.value = ''
+    quoteTurnstileRenderKey.value = 0
+    leadTurnstileToken.value = ''
+    leadTurnstileRenderKey.value = 0
     leadSubmitted.value = false
     notFoundMode.value = false
     manualBrand.value = ''
@@ -250,12 +310,18 @@ export function useCotizadorIAPage() {
     selectedBrandName,
     selectedModelName,
     selectedFaultNames,
+    quoteTurnstileToken,
+    quoteTurnstileRenderKey,
+    leadTurnstileToken,
+    leadTurnstileRenderKey,
     onBrandSelect,
     onModelSelect,
     toggleFault,
     calculateQuote,
     submitLead,
-    onVerify,
+    onQuoteVerify,
+    onLeadVerify,
+    goToLeadStep,
     goToSchedule,
     resetAll,
     activateNotFoundMode,
