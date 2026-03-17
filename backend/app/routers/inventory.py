@@ -15,6 +15,12 @@ from app.core.dependencies import get_current_user, require_permission
 from app.models.inventory import Product
 from app.models.stock import Stock
 from app.models.category import Category
+from app.services.inventory_product_service import (
+    create_product_record,
+    delete_product_record,
+    get_product_or_404,
+    update_product_record,
+)
 
 # ADITIVO: Importar servicio de Cloudinary para resolver imágenes
 try:
@@ -420,35 +426,21 @@ def create_inventory_item(
         if not payload.get(field):
             raise HTTPException(status_code=400, detail=f"Missing field: {field}")
 
-    product = Product(
+    description = _merge_product_meta(
+        Product(description=payload.get("description")),
+        payload,
+    )
+    product = create_product_record(
+        db,
+        category_id=int(payload["category_id"]),
         name=payload["name"],
         sku=payload["sku"],
-        category_id=int(payload["category_id"]),
-        description=payload.get("description"),
+        description=description,
         price=int(payload.get("price") or 0),
         quantity=int(payload.get("stock") or payload.get("quantity") or 0),
         min_quantity=int(payload.get("min_quantity") or 5),
         image_url=payload.get("image_url"),
     )
-    product.description = _merge_product_meta(product, payload)
-    db.add(product)
-    db.commit()
-    db.refresh(product)
-    # Crear stock extendido si no existe
-    stock = db.query(Stock).filter(
-        Stock.component_table == "products",
-        Stock.component_id == product.id
-    ).first()
-    if not stock:
-        stock = Stock(
-            component_table="products",
-            component_id=product.id,
-            quantity=product.quantity,
-            minimum_stock=product.min_quantity
-        )
-        db.add(stock)
-        db.commit()
-    db.refresh(product)
     return _serialize_inventory_product(db, product)
 
 
@@ -460,66 +452,13 @@ def update_inventory_item(
     user: dict = Depends(require_permission("inventory", "update"))
 ):
     """Actualizar producto en inventario."""
-    product = db.query(Product).filter(Product.id == product_id).first()
-    if not product:
-        raise HTTPException(status_code=404, detail="Producto no encontrado")
-
-    if "name" in payload:
-        product.name = payload["name"]
-    if "sku" in payload:
-        product.sku = payload["sku"]
-    if "description" in payload:
-        product.description = payload["description"]
-    if "category_id" in payload and payload["category_id"] is not None:
-        product.category_id = int(payload["category_id"])
-    if "price" in payload and payload["price"] is not None:
-        product.price = int(payload["price"])
-    if "image_url" in payload:
-        product.image_url = payload.get("image_url")
-    if "stock" in payload or "quantity" in payload:
-        product.quantity = int(payload.get("stock") or payload.get("quantity") or 0)
-    if "min_quantity" in payload and payload["min_quantity"] is not None:
-        product.min_quantity = int(payload["min_quantity"])
-    product.description = _merge_product_meta(product, payload)
-
-    stock = db.query(Stock).filter(
-        Stock.component_table == "products",
-        Stock.component_id == product.id
-    ).first()
-    if not stock:
-        stock = Stock(
-            component_table="products",
-            component_id=product.id,
-            quantity=product.quantity,
-            minimum_stock=product.min_quantity
-        )
-        db.add(stock)
-
-    if "stock" in payload or "quantity" in payload:
-        stock.quantity = int(payload.get("stock") or payload.get("quantity") or 0)
-    if "min_quantity" in payload and payload["min_quantity"] is not None:
-        stock.minimum_stock = int(payload["min_quantity"])
-    if "quantity_reserved" in payload:
-        stock.quantity_reserved = int(payload.get("quantity_reserved") or 0)
-    if "quantity_in_transit" in payload:
-        stock.quantity_in_transit = int(payload.get("quantity_in_transit") or 0)
-    if "quantity_damaged" in payload:
-        stock.quantity_damaged = int(payload.get("quantity_damaged") or 0)
-    if "quantity_in_work" in payload:
-        stock.quantity_in_work = int(payload.get("quantity_in_work") or 0)
-    if "quantity_under_review" in payload:
-        stock.quantity_under_review = int(payload.get("quantity_under_review") or 0)
-    if "quantity_internal_use" in payload:
-        stock.quantity_internal_use = int(payload.get("quantity_internal_use") or 0)
-    if "supplier" in payload:
-        stock.supplier = payload.get("supplier")
-    if "bin_code" in payload:
-        stock.bin_code = payload.get("bin_code")
-    if "unit_cost" in payload:
-        stock.unit_cost = payload.get("unit_cost")
-
-    db.commit()
-    db.refresh(product)
+    product = get_product_or_404(db, product_id)
+    changes = dict(payload)
+    if "description" in payload or "enabled" in payload or "store_visible" in payload or "origin_status" in payload:
+        current_payload = dict(payload)
+        current_payload["description"] = payload.get("description", product.description)
+        changes["description"] = _merge_product_meta(product, current_payload)
+    product = update_product_record(db, product, changes)
     return _serialize_inventory_product(db, product)
 
 
@@ -530,11 +469,8 @@ def delete_inventory_item(
     user: dict = Depends(require_permission("inventory", "delete"))
 ):
     """Eliminar producto de inventario."""
-    product = db.query(Product).filter(Product.id == product_id).first()
-    if not product:
-        raise HTTPException(status_code=404, detail="Producto no encontrado")
-    db.delete(product)
-    db.commit()
+    product = get_product_or_404(db, product_id)
+    delete_product_record(db, product)
     return {"ok": True}
 
 
@@ -545,10 +481,7 @@ def get_inventory_item(
     user: dict = Depends(require_permission("inventory", "read"))
 ):
     """Obtiene detalle de un producto específico con su stock"""
-    product = db.query(Product).filter(Product.id == product_id).first()
-    if not product:
-        raise HTTPException(status_code=404, detail="Producto no encontrado")
-
+    product = get_product_or_404(db, product_id)
     return _serialize_inventory_product(db, product)
 
 

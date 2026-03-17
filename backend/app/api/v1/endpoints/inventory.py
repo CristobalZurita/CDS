@@ -1,91 +1,67 @@
 from fastapi import APIRouter, Query, HTTPException, Depends, status
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 from typing import List, Optional
-from functools import lru_cache
-import os
-import pandas as pd
 
 from app.schemas.inventory import ItemSummary, ProductCreate, ProductUpdate, ProductResponse
 from app.models.inventory import Product
+from app.models.category import Category
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
+from app.services.inventory_product_service import (
+	get_product_or_404,
+	create_product_record,
+	update_product_record,
+	delete_product_record,
+)
 
 router = APIRouter(prefix="/items", tags=["items"])
-REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', '..'))
-MASTER_EXCEL_PATH = os.path.join(REPO_ROOT, 'Inventario_Cirujanosintetizadores.xlsx')
 
 
-@lru_cache(maxsize=1)
-def _load_excel(path: Optional[str] = None):
-	if path is None:
-		path = os.getenv("INVENTORY_EXCEL_PATH") or MASTER_EXCEL_PATH
-	if not os.path.exists(path):
-		raise FileNotFoundError(f'Excel file not found: {path}')
-	df = pd.read_excel(path, sheet_name=0, dtype=object, engine='openpyxl')
-	return df.fillna('')
-
-
-def _row_to_item(idx: int, row: pd.Series) -> ItemSummary:
-	# For POC: pick first non-empty value among prioritized columns
-	priority = ["Ic's", 'Transistores', 'Resistencias', 'Diodos', 'Diodo Led', 'otros', 'herramientas taller', 'insumos taller']
-	name = None
-	category = None
-	for col in priority:
-		if col in row and str(row[col]).strip():
-			name = str(row[col]).strip()
-			category = col
-			break
-	if name is None:
-		# fallback: use the 'otros' column or the first non-empty
-		for c in row.index:
-			if str(row[c]).strip():
-				name = str(row[c]).strip()
-				category = str(c)
-				break
-	item = ItemSummary(
-		id=int(row.get('N°') or idx),
-		name=name or f'row-{idx}',
-		category=category or 'unknown',
-		stock=10,
-		sku=str(row.get('N°') or idx)
+def _serialize_item_summary(product: Product, category_name: Optional[str] = None) -> ItemSummary:
+	return ItemSummary(
+		id=product.id,
+		sku=product.sku,
+		name=product.name,
+		category=category_name or "unknown",
+		stock=int(product.quantity or 0),
 	)
-	return item
 
 
 @router.get('', response_model=List[ItemSummary])
-def list_items(limit: int = Query(20, ge=1, le=200), page: int = Query(1, ge=1), category: Optional[str] = None):
-	"""List items derived from the Excel master (POC - read-only, non-persistent)
+def list_items(
+	limit: int = Query(20, ge=1, le=200),
+	page: int = Query(1, ge=1),
+	category: Optional[str] = None,
+	db: Session = Depends(get_db),
+):
+	"""List items from the current database-backed inventory."""
+	query = db.query(Product, Category.name).join(Category, Product.category_id == Category.id)
+	if category:
+		query = query.filter(Category.name.ilike(f"%{category}%"))
 
-	This POC endpoint reads the Excel file and returns a flattened list of items for UI prototyping.
-	"""
-	try:
-		df = _load_excel()
-	except FileNotFoundError:
-		raise HTTPException(status_code=404, detail="Excel master file not found on server")
+	rows = (
+		query
+		.order_by(Product.name.asc())
+		.offset((page - 1) * limit)
+		.limit(limit)
+		.all()
+	)
 
-	items: List[ItemSummary] = []
-	for idx, row in df.iterrows():
-		item = _row_to_item(idx + 1, row)
-		if category and category.lower() not in item.category.lower():
-			continue
-		items.append(item)
-
-	start = (page - 1) * limit
-	end = start + limit
-	return items[start:end]
+	return [_serialize_item_summary(product, category_name) for product, category_name in rows]
 
 
 @router.get('/{item_id}', response_model=ItemSummary)
-def get_item(item_id: int):
-	try:
-		df = _load_excel()
-	except FileNotFoundError:
-		raise HTTPException(status_code=404, detail="Excel master file not found on server")
-	for idx, row in df.iterrows():
-		if int(row.get('N°') or (idx + 1)) == item_id:
-			return _row_to_item(idx + 1, row)
-	raise HTTPException(status_code=404, detail='Item not found')
+def get_item(item_id: int, db: Session = Depends(get_db)):
+	row = (
+		db.query(Product, Category.name)
+		.join(Category, Product.category_id == Category.id)
+		.filter(Product.id == item_id)
+		.first()
+	)
+	if not row:
+		raise HTTPException(status_code=404, detail='Item not found')
+	product, category_name = row
+	return _serialize_item_summary(product, category_name)
 
 
 # ============================================================================
@@ -104,36 +80,16 @@ def create_item(data: ProductCreate, db: Session = Depends(get_db), user: dict =
 	- **quantity**: Cantidad inicial (default: 0)
 	- **min_quantity**: Stock mínimo para alertas (default: 5)
 	"""
-	# Verificar SKU único
-	existing = db.query(Product).filter(Product.sku == data.sku).first()
-	if existing:
-		raise HTTPException(
-			status_code=status.HTTP_400_BAD_REQUEST,
-			detail=f"SKU '{data.sku}' ya existe"
-		)
-
-	product = Product(
+	return create_product_record(
+		db,
 		category_id=data.category_id,
 		name=data.name,
 		sku=data.sku,
 		description=data.description,
 		price=data.price,
 		quantity=data.quantity,
-		min_quantity=data.min_quantity
+		min_quantity=data.min_quantity,
 	)
-
-	try:
-		db.add(product)
-		db.commit()
-		db.refresh(product)
-	except IntegrityError as e:
-		db.rollback()
-		raise HTTPException(
-			status_code=status.HTTP_400_BAD_REQUEST,
-			detail="Error de integridad: verificar category_id existe"
-		)
-
-	return product
 
 
 @router.put('/{item_id}', response_model=ProductResponse)
@@ -143,40 +99,12 @@ def update_item(item_id: int, data: ProductUpdate, db: Session = Depends(get_db)
 
 	Solo se actualizan los campos proporcionados.
 	"""
-	product = db.query(Product).filter(Product.id == item_id).first()
-
-	if not product:
-		raise HTTPException(
-			status_code=status.HTTP_404_NOT_FOUND,
-			detail=f"Producto con ID {item_id} no encontrado"
-		)
-
-	# Verificar SKU único si se está cambiando
-	if data.sku and data.sku != product.sku:
-		existing = db.query(Product).filter(Product.sku == data.sku).first()
-		if existing:
-			raise HTTPException(
-				status_code=status.HTTP_400_BAD_REQUEST,
-				detail=f"SKU '{data.sku}' ya existe"
-			)
-
-	# Actualizar solo campos proporcionados
-	update_data = data.model_dump(exclude_unset=True)
-	for field, value in update_data.items():
-		if value is not None:
-			setattr(product, field, value)
-
-	try:
-		db.commit()
-		db.refresh(product)
-	except IntegrityError:
-		db.rollback()
-		raise HTTPException(
-			status_code=status.HTTP_400_BAD_REQUEST,
-			detail="Error de integridad: verificar category_id existe"
-		)
-
-	return product
+	product = get_product_or_404(
+		db,
+		item_id,
+		detail=f"Producto con ID {item_id} no encontrado"
+	)
+	return update_product_record(db, product, data.model_dump(exclude_unset=True))
 
 
 @router.delete('/{item_id}', status_code=status.HTTP_200_OK)
@@ -186,16 +114,10 @@ def delete_item(item_id: int, db: Session = Depends(get_db), user: dict = Depend
 
 	Retorna confirmación con ID del producto eliminado.
 	"""
-	# Usar delete directo para evitar lazy load de relaciones inconsistentes
-	from sqlalchemy import delete
-	result = db.execute(delete(Product).where(Product.id == item_id))
-
-	if result.rowcount == 0:
-		raise HTTPException(
-			status_code=status.HTTP_404_NOT_FOUND,
-			detail=f"Producto con ID {item_id} no encontrado"
-		)
-
-	db.commit()
-
+	product = get_product_or_404(
+		db,
+		item_id,
+		detail=f"Producto con ID {item_id} no encontrado"
+	)
+	delete_product_record(db, product)
 	return {"message": "Producto eliminado", "id": item_id}
