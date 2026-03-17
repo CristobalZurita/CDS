@@ -111,7 +111,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { BaseButton, BaseInput } from '@/components/ui'
+import { BaseButton, BaseInput } from '@/components/base'
 import { temperatureScales, useTemperatureCalculator } from '@/composables/useTemperatureCalculator'
 
 const { form, canConvert, result, allScales, reset } = useTemperatureCalculator()

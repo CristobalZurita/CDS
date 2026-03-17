@@ -24,7 +24,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { BaseInput, BaseButton } from '@/components/ui'
+import { BaseInput, BaseButton } from '@/components/base'
 import { useRegisterValidation } from '@/composables/useAuthForms'
 import TurnstileWidget from '@/components/widgets/TurnstileWidget.vue'
 

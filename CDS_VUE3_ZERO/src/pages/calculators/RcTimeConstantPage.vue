@@ -69,7 +69,7 @@
 
 <script setup>
 import { BaseCalculatorPage } from '@/components/base'
-import { BaseInput } from '@/components/ui'
+import { BaseInput } from '@/components/base'
 import {
   useRcTimeConstantCalculator,
   rcResistanceUnitOptions,

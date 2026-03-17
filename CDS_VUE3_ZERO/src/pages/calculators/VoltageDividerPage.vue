@@ -65,7 +65,7 @@
 
 <script setup>
 import { BaseCalculatorPage } from '@/components/base'
-import { BaseInput } from '@/components/ui'
+import { BaseInput } from '@/components/base'
 import { useVoltageDividerCalculator, voltageDividerResistanceUnits } from '@/composables/useVoltageDividerCalculator'
 
 const { form, canCalculate, result, reset } = useVoltageDividerCalculator()

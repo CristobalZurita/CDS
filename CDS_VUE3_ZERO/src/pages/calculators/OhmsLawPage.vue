@@ -98,7 +98,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { BaseButton, BaseInput } from '@/components/ui'
+import { BaseButton, BaseInput } from '@/components/base'
 import { useOhmsLawCalculator } from '@/composables/useOhmsLawCalculator'
 
 const { form, canCalculate, result, reset } = useOhmsLawCalculator()

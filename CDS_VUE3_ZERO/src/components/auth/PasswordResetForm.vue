@@ -35,7 +35,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { usePasswordResetValidation } from '@/composables/useAuthForms'
-import { BaseInput, BaseButton } from '@/components/ui'
+import { BaseInput, BaseButton } from '@/components/base'
 
 const route = useRoute()
 const authStore = useAuthStore()

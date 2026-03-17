@@ -63,7 +63,7 @@
 
 <script setup>
 import { BaseCalculatorPage, BaseButton } from '@/components/base'
-import { BaseInput } from '@/components/ui'
+import { BaseInput } from '@/components/base'
 import { numericBaseOptions, useNumberSystemCalculator } from '@/composables/useNumberSystemCalculator'
 
 const { form, isValid, result, reset } = useNumberSystemCalculator()

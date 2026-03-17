@@ -66,7 +66,7 @@
 
 <script setup>
 import { BaseCalculatorPage, BaseButton } from '@/components/base'
-import { BaseInput } from '@/components/ui'
+import { BaseInput } from '@/components/base'
 import { lengthUnits, useLengthCalculator } from '@/composables/useLengthCalculator'
 
 const { form, canConvert, result, reset } = useLengthCalculator()
