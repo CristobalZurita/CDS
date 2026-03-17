@@ -1,6 +1,4 @@
 from typing import List
-from pathlib import Path
-import json
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -8,24 +6,15 @@ from app.models.instrument import Instrument
 from app.core.database import get_db
 from app.core.dependencies import require_permission
 from app.schemas.instrument import InstrumentCreate, InstrumentRead, InstrumentUpdate, OkResponse
+from app.services.cloudinary_service import resolve_image_url
+from app.services.reference_catalog_service import get_reference_catalog
 
 router = APIRouter(prefix="/instruments", tags=["Instruments"])
-
-DATA_FILE = Path(__file__).resolve().parents[3] / "src" / "data" / "instruments.json"
-
-
-def load_instruments_data() -> dict:
-    if not DATA_FILE.exists():
-        return {"instruments": []}
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
 
 
 @router.get("/{instrument_id}")
 async def get_instrument(instrument_id: str):
-    data = load_instruments_data()
-    instruments = data.get("instruments", [])
-    inst = next((i for i in instruments if i.get("id") == instrument_id), None)
+    inst = get_reference_catalog().get("instruments_by_id", {}).get(instrument_id)
     if not inst:
         raise HTTPException(status_code=404, detail="Instrument not found")
     return inst
@@ -33,16 +22,16 @@ async def get_instrument(instrument_id: str):
 
 @router.get("/{instrument_id}/image")
 async def get_instrument_image(instrument_id: str):
-    data = load_instruments_data()
-    instruments = data.get("instruments", [])
-    inst = next((i for i in instruments if i.get("id") == instrument_id), None)
+    inst = get_reference_catalog().get("instruments_by_id", {}).get(instrument_id)
     if not inst:
         raise HTTPException(status_code=404, detail="Instrument not found")
-    img = inst.get("imagen_url") or (
-        f"/images/instrumentos/{inst.get('foto_principal')}.webp"
-        if inst.get("foto_principal")
-        else None
-    )
+    raw_image = inst.get("imagen_url")
+    if raw_image:
+        img = resolve_image_url(raw_image)
+    elif inst.get("foto_principal"):
+        img = resolve_image_url(f"/images/instrumentos/{inst.get('foto_principal')}.webp")
+    else:
+        img = None
     if not img:
         raise HTTPException(status_code=404, detail="No image for instrument")
     return {"imagen_url": img}
