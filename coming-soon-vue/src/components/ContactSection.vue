@@ -9,64 +9,99 @@
       </p>
 
       <!-- Formulario -->
-      <form class="contact-form" @submit.prevent="submitForm" novalidate>
+      <form
+        class="contact-form"
+        method="post"
+        action="mail.php"
+        accept-charset="UTF-8"
+        @submit.prevent="submitForm"
+        novalidate
+      >
 
         <div class="form-row">
           <div class="form-field">
-            <label for="cf-name">Nombre</label>
+            <label for="cf-name" class="form-label">Nombre</label>
             <input
               id="cf-name"
+              name="name"
               v-model="form.name"
               type="text"
               placeholder="Tu nombre"
               autocomplete="name"
+              class="form-input"
               :class="{ 'is-invalid': errors.name }"
+              :aria-invalid="String(Boolean(errors.name))"
+              :aria-describedby="errors.name ? 'cf-name-error' : undefined"
+              required
             />
-            <span v-if="errors.name" class="field-error">{{ errors.name }}</span>
+            <span v-if="errors.name" id="cf-name-error" class="field-error">{{ errors.name }}</span>
           </div>
 
           <div class="form-field">
-            <label for="cf-email">Correo electrónico</label>
+            <label for="cf-email" class="form-label">Correo electrónico</label>
             <input
               id="cf-email"
+              name="email"
               v-model="form.email"
               type="email"
               placeholder="tu@correo.cl"
               autocomplete="email"
+              inputmode="email"
+              class="form-input"
               :class="{ 'is-invalid': errors.email }"
+              :aria-invalid="String(Boolean(errors.email))"
+              :aria-describedby="errors.email ? 'cf-email-error' : undefined"
+              required
             />
-            <span v-if="errors.email" class="field-error">{{ errors.email }}</span>
+            <span v-if="errors.email" id="cf-email-error" class="field-error">{{ errors.email }}</span>
           </div>
         </div>
 
         <div class="form-field">
-          <label for="cf-instrument">Instrumento (opcional)</label>
+          <label for="cf-instrument" class="form-label">Instrumento (opcional)</label>
           <input
             id="cf-instrument"
+            name="instrument"
             v-model="form.instrument"
             type="text"
             placeholder="Ej: Juno-106, Korg MS-20, Prophet-5…"
+            class="form-input"
           />
         </div>
 
         <div class="form-field">
-          <label for="cf-message">Mensaje</label>
+          <label for="cf-message" class="form-label">Mensaje</label>
           <textarea
             id="cf-message"
+            name="message"
             v-model="form.message"
             rows="5"
             placeholder="Cuéntanos qué le pasa a tu instrumento, qué servicio necesitas, o cualquier consulta…"
+            class="form-textarea"
             :class="{ 'is-invalid': errors.message }"
+            :aria-invalid="String(Boolean(errors.message))"
+            :aria-describedby="errors.message ? 'cf-message-error' : undefined"
+            required
           ></textarea>
-          <span v-if="errors.message" class="field-error">{{ errors.message }}</span>
+          <span v-if="errors.message" id="cf-message-error" class="field-error">{{ errors.message }}</span>
         </div>
 
         <!-- Feedback de envío -->
-        <div v-if="status === 'success'" class="form-feedback form-feedback--ok">
+        <div
+          v-if="status === 'success'"
+          class="form-feedback form-feedback--ok"
+          role="status"
+          aria-live="polite"
+        >
           <i class="fas fa-circle-check"></i>
           Mensaje enviado. ¡Te respondemos pronto!
         </div>
-        <div v-if="status === 'error'" class="form-feedback form-feedback--err">
+        <div
+          v-if="status === 'error'"
+          class="form-feedback form-feedback--err"
+          role="alert"
+          aria-live="assertive"
+        >
           <i class="fas fa-circle-xmark"></i>
           Hubo un error al enviar. Intenta por WhatsApp o escríbenos directo al correo.
         </div>
@@ -131,8 +166,14 @@ async function submitForm() {
     body.append('instrument', form.instrument.trim())
     body.append('message',    form.message.trim())
 
-    const res = await fetch('/mail.php', { method: 'POST', body })
-    const json = await res.json()
+    const res = await fetch('mail.php', { method: 'POST', body })
+    let json = {}
+
+    try {
+      json = await res.json()
+    } catch {
+      json = {}
+    }
 
     if (res.ok && json.ok) {
       status.value = 'success'
@@ -203,7 +244,7 @@ async function submitForm() {
   gap: var(--cds-space-xs);
 }
 
-.form-field label {
+.form-label {
   font-size: var(--cds-text-md);
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.06em;
@@ -212,8 +253,8 @@ async function submitForm() {
   opacity: 0.75;
 }
 
-.form-field input,
-.form-field textarea {
+.form-input,
+.form-textarea {
   background: color-mix(in srgb, var(--cds-white) 6%, transparent);
   border: 1px solid color-mix(in srgb, var(--cds-light) 22%, transparent);
   border-radius: var(--cds-radius-sm);
@@ -225,20 +266,20 @@ async function submitForm() {
   resize: vertical;
 }
 
-.form-field input::placeholder,
-.form-field textarea::placeholder {
+.form-input::placeholder,
+.form-textarea::placeholder {
   color: color-mix(in srgb, var(--cds-light) 35%, transparent);
 }
 
-.form-field input:focus,
-.form-field textarea:focus {
+.form-input:focus,
+.form-textarea:focus {
   outline: none;
   border-color: var(--cds-primary);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--cds-primary) 20%, transparent);
 }
 
-.form-field input.is-invalid,
-.form-field textarea.is-invalid {
+.form-input.is-invalid,
+.form-textarea.is-invalid {
   border-color: var(--cds-danger);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--cds-danger) 15%, transparent);
 }
@@ -318,7 +359,7 @@ async function submitForm() {
   gap: var(--cds-space-xs);
   font-size: var(--cds-text-base);
   font-weight: var(--cds-font-semibold);
-  color: color-mix(in srgb, var(--cds-light) 72%, transparent);
+  color: color-mix(in srgb, var(--cds-light) 82%, transparent);
   text-decoration: none;
   transition: color 0.15s;
 }
@@ -327,6 +368,10 @@ async function submitForm() {
 
 .direct-link--wa { color: var(--cds-whatsapp); }
 .direct-link--wa:hover { color: color-mix(in srgb, var(--cds-whatsapp) 60%, var(--cds-white)); }
+
+@media (max-width: 899px) {
+  .direct-link { font-size: clamp(1.4rem, 4.7vw, 1.35rem); }
+}
 
 /* ── PC: 2 columnas — izquierda info, derecha formulario ── */
 @media (min-width: 900px) {

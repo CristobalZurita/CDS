@@ -4,13 +4,16 @@
  * Recibe POST desde Vue y envía a cirujanodesintetizadores@gmail.com
  */
 
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+
 // Solo POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Allow: POST');
     http_response_code(405);
+    echo json_encode(['ok' => false, 'error' => 'Método no permitido']);
     exit;
 }
-
-header('Content-Type: application/json; charset=utf-8');
 
 // Datos del formulario (sanitizados)
 $name       = trim(strip_tags($_POST['name']       ?? ''));
@@ -27,6 +30,7 @@ if (!$name || !$message || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 $to      = 'cirujanodesintetizadores@gmail.com';
 $subject = "=?UTF-8?B?" . base64_encode("Contacto web: $name") . "?=";
+$replyTo = str_replace(["\r", "\n"], '', $email);
 
 // Cuerpo del correo
 $body  = "Nombre:      $name\n";
@@ -39,7 +43,7 @@ $body .= "\n---\nEnviado desde cirujanodesintetizadores.cl";
 
 // Cabeceras
 $headers  = "From: noreply@cirujanodesintetizadores.cl\r\n";
-$headers .= "Reply-To: $email\r\n";
+$headers .= "Reply-To: $replyTo\r\n";
 $headers .= "MIME-Version: 1.0\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";

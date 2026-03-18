@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && cp public/mail.php dist/ && cp public/.htaccess dist/",
+    "package": "npm run build && rm -f cds-coming-soon.zip && cd dist && zip -rq ../cds-coming-soon.zip .",
     "preview": "vite preview"
   },
   "dependencies": {

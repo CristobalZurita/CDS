@@ -21,38 +21,38 @@
       </section>
 
       <section>
-        <h2>Servicios</h2>
+        <h2 class="footer-section-title">Servicios</h2>
         <div class="site-footer-links">
-          <a href="#contacto">Cotización</a>
-          <a href="#contacto">Modificaciones</a>
-          <a href="#contacto">Mantención preventiva</a>
-          <a href="#contacto">Reparación y restauración</a>
+          <a href="#contacto" class="footer-link">Cotización</a>
+          <a href="#contacto" class="footer-link">Modificaciones</a>
+          <a href="#contacto" class="footer-link">Mantención preventiva</a>
+          <a href="#contacto" class="footer-link">Reparación y restauración</a>
         </div>
       </section>
 
       <section>
-        <h2>Redes</h2>
+        <h2 class="footer-section-title">Redes</h2>
         <div class="site-footer-links">
-          <a href="https://www.instagram.com/cirujanodesintetizadores/" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.instagram.com/cirujanodesintetizadores/" target="_blank" rel="noopener noreferrer" class="footer-link">
             <i class="fa-brands fa-instagram"></i> Instagram
           </a>
-          <a href="https://www.facebook.com/Cirujanodesintetizadores/" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.facebook.com/Cirujanodesintetizadores/" target="_blank" rel="noopener noreferrer" class="footer-link">
             <i class="fa-brands fa-facebook"></i> Facebook
           </a>
-          <a href="https://wa.me/56982957538" target="_blank" rel="noopener noreferrer">
+          <a href="https://wa.me/56982957538" target="_blank" rel="noopener noreferrer" class="footer-link">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </a>
         </div>
       </section>
 
       <section>
-        <h2>Contacto</h2>
+        <h2 class="footer-section-title">Contacto</h2>
         <div class="site-footer-links">
-          <span><i class="fas fa-location-dot"></i> Valparaíso, Chile</span>
-          <a href="tel:+56982957538">
+          <span class="footer-link-span"><i class="fas fa-location-dot"></i> Valparaíso, Chile</span>
+          <a href="tel:+56982957538" class="footer-link">
             <i class="fas fa-phone"></i> +56 9 8295 7538
           </a>
-          <a href="mailto:cirujanodesintetizadores@gmail.com">
+          <a href="mailto:cirujanodesintetizadores@gmail.com" class="footer-link">
             <i class="fas fa-envelope"></i> cirujanodesintetizadores@gmail.com
           </a>
         </div>
@@ -74,17 +74,17 @@
     </div>
 
     <div class="site-footer-legal">
-      <span>© 2026 Cirujano de Sintetizadores</span>
-      <span>·</span>
+      <span class="footer-legal-text">© 2026 Cirujano de Sintetizadores</span>
+      <span class="footer-legal-sep">·</span>
       <span class="footer-credit">Valparaíso, Chile</span>
-      <span>·</span>
-      <a href="mailto:cirujanodesintetizadores@gmail.com">cirujanodesintetizadores@gmail.com</a>
-      <span>·</span>
+      <span class="footer-legal-sep">·</span>
+      <a href="mailto:cirujanodesintetizadores@gmail.com" class="footer-legal-link">cirujanodesintetizadores@gmail.com</a>
+      <span class="footer-legal-sep">·</span>
       <span class="footer-credit">Creado por Cristóbal Zurita Quintanilla</span>
-      <a href="https://github.com/CristobalZurita" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+      <a href="https://github.com/CristobalZurita" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="footer-legal-link">
         <i class="fa-brands fa-github"></i>
       </a>
-      <a href="https://www.linkedin.com/in/crist%C3%B3bal-nicol%C3%A1s-zurita-quintanilla-baa320115/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+      <a href="https://www.linkedin.com/in/crist%C3%B3bal-nicol%C3%A1s-zurita-quintanilla-baa320115/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="footer-legal-link">
         <i class="fa-brands fa-linkedin"></i>
       </a>
     </div>
@@ -109,20 +109,13 @@
   grid-template-columns: 1fr;
 }
 
-.site-footer h2 {
+.footer-section-title {
   margin: 0 0 0.75rem;
   font-size: clamp(1.15rem, 1.4vw, 1.33rem);
   font-weight: var(--cds-font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: color-mix(in srgb, var(--cds-white) 55%, transparent);
-}
-
-.site-footer p {
-  margin: 0;
-  font-size: clamp(1.33rem, 2.1vw, 1.47rem);
-  line-height: var(--cds-leading-normal);
-  color: color-mix(in srgb, var(--cds-white) 70%, transparent);
 }
 
 .footer-brand {
@@ -132,26 +125,31 @@
 }
 
 .footer-logo {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: auto;
   border-radius: var(--cds-radius-sm);
 }
 
 .footer-brand-name {
-  font-size: clamp(1.54rem, 2.8vw, 1.82rem) !important;
+  margin: 0;
+  font-size: clamp(1.54rem, 2.8vw, 1.82rem);
   font-weight: var(--cds-font-semibold);
-  color: var(--cds-white) !important;
+  color: var(--cds-white);
   line-height: 1.2;
 }
 
 .footer-brand-tagline {
-  color: color-mix(in srgb, var(--cds-white) 60%, transparent) !important;
+  margin: 0;
+  font-size: clamp(1.65rem, 1.8vw, 1.33rem);
   line-height: 1.5;
+  color: color-mix(in srgb, var(--cds-white) 60%, transparent);
 }
 
 .footer-brand-summary {
-  color: color-mix(in srgb, var(--cds-white) 65%, transparent) !important;
+  margin: 0;
+  font-size: clamp(1.66rem, 1.8vw, 1.33rem);
   line-height: 1.45;
+  color: color-mix(in srgb, var(--cds-white) 65%, transparent);
 }
 
 .site-footer-links {
@@ -159,7 +157,7 @@
   gap: 0.5rem;
 }
 
-.site-footer a {
+.footer-link {
   color: color-mix(in srgb, var(--cds-white) 72%, transparent);
   font-size: clamp(1.26rem, 2.1vw, 1.4rem);
   text-decoration: none;
@@ -169,9 +167,9 @@
   transition: color 0.15s;
 }
 
-.site-footer a:hover { color: var(--cds-white); }
+.footer-link:hover { color: var(--cds-white); }
 
-.site-footer-links span {
+.footer-link-span {
   color: color-mix(in srgb, var(--cds-white) 60%, transparent);
   font-size: clamp(1.26rem, 2.1vw, 1.4rem);
   display: inline-flex;
@@ -210,23 +208,43 @@
   gap: 0.7rem;
   align-items: center;
   text-align: center;
+}
+
+.footer-legal-text {
   font-size: clamp(1.09rem, 1.68vw, 1.23rem);
   color: color-mix(in srgb, var(--cds-white) 45%, transparent);
 }
 
-.site-footer-legal a {
-  color: color-mix(in srgb, var(--cds-white) 48%, transparent);
-  font-size: inherit;
+.footer-legal-sep {
+  font-size: clamp(1.09rem, 1.68vw, 1.23rem);
+  color: color-mix(in srgb, var(--cds-white) 30%, transparent);
 }
 
-.site-footer-legal a:hover { color: var(--cds-white); }
+.footer-legal-link {
+  font-size: clamp(1.09rem, 1.68vw, 1.23rem);
+  color: color-mix(in srgb, var(--cds-white) 48%, transparent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.15s;
+}
+
+.footer-legal-link:hover { color: var(--cds-white); }
 
 .footer-credit {
+  font-size: clamp(1.09rem, 1.68vw, 1.23rem);
   color: color-mix(in srgb, var(--cds-white) 58%, transparent);
 }
 
 @media (max-width: 599px) {
-  .footer-map-column { margin-left: 0; justify-content: center; }
+  .footer-brand          { text-align: center; align-items: center; }
+  .site-footer-grid      { text-align: center; }
+  .site-footer-links     { justify-items: center; }
+  .footer-section-title  { font-size: 1.55rem; }
+  .footer-link           { font-size: 1.70rem; }
+  .footer-link-span      { font-size: 1.70rem; }
+  .footer-map-column     { margin-left: 0; justify-content: center; }
 }
 
 @media (min-width: 600px) {
@@ -238,13 +256,5 @@
     grid-template-columns: 2fr repeat(3, minmax(0, 1fr)) minmax(230px, 260px);
     align-items: start;
   }
-
-  /* En desktop: escala usando tokens, no hardcodeado */
-  .site-footer h2          { font-size: var(--cds-text-sm); }
-  .site-footer p           { font-size: var(--cds-text-sm); }
-  .footer-brand-name       { font-size: var(--cds-text-base) !important; }
-  .site-footer a,
-  .site-footer-links span  { font-size: var(--cds-text-sm); }
-  .site-footer-legal       { font-size: clamp(1rem, 1.5vw, 1.4rem); }
 }
 </style>

@@ -35,7 +35,7 @@
       <div class="hero-body">
         <p class="hero-body-sub">
           <strong class="url-line">www.cirujanodesintetizadores.cl</strong>
-          <span class="body-tagline">—  Próximamente el quirófano abre pronto —</span>
+          <span class="body-tagline">—  El Quirófano Electrónico abre pronto —</span>
         </p>
       </div>
 
@@ -586,7 +586,7 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
 /* ─── Titular ───────────────────────────────────── */
 .hero-title {
   font-family: var(--cds-headings-font-family);
-  font-size: clamp(5vw, 6.5vw, 6.5rem);
+  font-size: clamp(2.8rem, 7vw, 6.5rem);
   font-weight: var(--cds-font-semibold);
   line-height: 0.95;
   text-transform: uppercase;
@@ -606,7 +606,7 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
   top:  -.32em;
   left: 70%;
   transform: translateX(-50%);
-  font-size:      0.62em;
+  font-size:      0.7em;
   line-height:    1;
   pointer-events: none;
   user-select:    none;
@@ -621,14 +621,14 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
   align-items: baseline;
   gap: 0.4em 0.6em;
   font-family: var(--cds-font-family-base);
-  font-size: clamp(1.6rem, 3.6vw, 2.1rem);
+  font-size: clamp(2rem, 3.6vw, 2.1rem);
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--cds-primary);
   animation: fadeUp 0.6s 0.30s ease both;
 }
-.services-type .sep {
+.sep {
   color: var(--cds-dark);
   opacity: 0.3;
 }
@@ -640,20 +640,14 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
   gap: 0.6rem;
   animation: fadeUp 0.6s 0.42s ease both;
 }
-.hero-body p {
-  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+.hero-body-sub {
+  font-size: clamp(1.4rem, 5.5vw, 2.8rem);
   font-weight: var(--cds-font-medium);
   line-height: 1.3;
   color: var(--cds-black);
   opacity: 0.75;
 }
-.hero-body-sub {
-  font-size: clamp(2rem, 3.5vw, 2.8rem) !important;
-}
-.hero-body strong {
-  font-weight: var(--cds-font-bold);
-}
-.url-line    { display: block; }
+.url-line     { display: block; font-weight: var(--cds-font-bold); }
 .body-tagline { display: block; }
 
 /* ─── Botones ───────────────────────────────────── */
@@ -692,18 +686,24 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
 
 /* ─── Tablet (600–899px) ────────────────────────── */
 @media (min-width: 600px) and (max-width: 899px) {
-  .hero-title { white-space: normal; font-size: clamp(5vw, 7vw, 4.5rem); }
+  .hero-title { white-space: normal; }
 }
 
 /* ─── Mobile (<600px) ───────────────────────────── */
 @media (max-width: 599px) {
-  .hero-title    { white-space: normal; font-size: clamp(9vw, 12vw, 5rem); }
-  .hero-actions  { flex-direction: column; align-items: center; }
-  .services-type { letter-spacing: 0.12em; }
-  .hero-logo     { width: 85vw; }
-  .hero-content  { padding-bottom: clamp(5.5rem, 14vw, 10rem); }
-  .hero-body  { text-align: center; width: 100%; }
-  .url-line   { white-space: nowrap; }
-  .ct-mark    { font-size: 0.72em; }
+  .hero                    { justify-content: flex-start; }
+  .hero-title              { white-space: normal; }
+  .hero-actions            { flex-direction: column; align-items: center; }
+  .services-type           { letter-spacing: 0.12em; flex-direction: column; align-items: center; }
+  .services-type .sep      { display: none; }
+  .services-type .ct-mark  { font-size: 1.1em; }
+  .hero-logo               { width: 95vw; }
+  .hero-content            { margin-top: 0; padding-top: clamp(1.2rem, 3vw, 2rem); padding-bottom: clamp(5.5rem, 14vw, 10rem); }
+  .hero-body               { text-align: center; width: 100%; }
+}
+
+/* ─── Landscape móvil ───────────────────────────── */
+@media (max-width: 900px) and (orientation: landscape) {
+  .hero-logo { width: auto; max-height: 28vh; }
 }
 </style>

@@ -43,6 +43,7 @@ function onScroll() { scrollY.value = window.scrollY }
 function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
 onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
+onMounted(() => onScroll())
 onUnmounted(() => window.removeEventListener('scroll', onScroll))
 </script>
 
@@ -66,7 +67,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.55rem;
+  font-size: clamp(1.15rem, 3vw, 1.75rem);
   text-decoration: none;
   z-index: 999;
   box-shadow: 0 4px 14px color-mix(in srgb, var(--cds-whatsapp) 45%, transparent);
@@ -92,7 +93,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   cursor: pointer;
   z-index: 999;
   box-shadow: 0 4px 14px color-mix(in srgb, var(--cds-primary) 35%, transparent);
@@ -105,8 +106,8 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 }
 
 @media (max-width: 599px) {
-  .floating-whatsapp { width: 38px; height: 38px; font-size: 1.15rem; }
-  .scroll-top        { width: 36px; height: 36px; font-size: 0.85rem; }
+  .floating-whatsapp { width: 38px; height: 38px; }
+  .scroll-top        { width: 36px; height: 36px; }
 }
 
 @media (min-width: 768px) {
@@ -115,7 +116,6 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
     bottom: 1.5rem;
     width: 54px;
     height: 54px;
-    font-size: 1.75rem;
   }
   .scroll-top {
     right: 1.5rem;
