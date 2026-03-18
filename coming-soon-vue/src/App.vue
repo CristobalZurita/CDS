@@ -104,6 +104,11 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
   box-shadow: 0 6px 20px color-mix(in srgb, var(--cds-primary) 50%, transparent);
 }
 
+@media (max-width: 599px) {
+  .floating-whatsapp { width: 38px; height: 38px; font-size: 1.15rem; }
+  .scroll-top        { width: 36px; height: 36px; font-size: 0.85rem; }
+}
+
 @media (min-width: 768px) {
   .floating-whatsapp {
     left: 1.5rem;

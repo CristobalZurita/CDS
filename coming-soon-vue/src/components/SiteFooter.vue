@@ -192,7 +192,7 @@
 }
 
 .footer-map {
-  width: min(300px, 120%);
+  width: min(300px, 100%);
   aspect-ratio: 16 / 9;
   border: 8px solid color-mix(in srgb, var(--cds-white) 15%, transparent);
   border-radius: var(--cds-radius-sm);
@@ -223,6 +223,10 @@
 
 .footer-credit {
   color: color-mix(in srgb, var(--cds-white) 58%, transparent);
+}
+
+@media (max-width: 599px) {
+  .footer-map-column { margin-left: 0; justify-content: center; }
 }
 
 @media (min-width: 600px) {

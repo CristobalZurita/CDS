@@ -34,8 +34,8 @@
 
       <div class="hero-body">
         <p class="hero-body-sub">
-          Próximamente en <strong>www.cirujanodesintetizadores.cl</strong>
-          &nbsp;—&nbsp; <strong>el quirófano abre pronto.</strong>
+          <strong class="url-line">www.cirujanodesintetizadores.cl</strong>
+          <span class="body-tagline">—  Próximamente el quirófano abre pronto —</span>
         </p>
       </div>
 
@@ -550,11 +550,11 @@ onUnmounted(() => { if (raf) cancelAnimationFrame(raf) })
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 5vw, 3rem) clamp(6rem, 14vw, 11rem);
+  padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 5vw, 3em) clamp(6rem, 14vw, 8rem);
   gap: clamp(1.2rem, 2.5vw, 1.8rem);
   width: 100%;
   max-width: 1440px;
-margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio quede pegado */
+margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio quede pegado */
 }
 
 /* ─── Canvas osciloscopio — franja inferior ──────── */
@@ -576,7 +576,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
 
 /* ─── Logo ──────────────────────────────────────── */
 .hero-logo {
-  width: 58.5vw;
+  width: 50vw;
   max-width: none;
   height: auto;
   animation: fadeUp 0.7s 0.05s ease both;
@@ -606,7 +606,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
   top:  -.32em;
   left: 70%;
   transform: translateX(-50%);
-  font-size:      0.4em;
+  font-size:      0.62em;
   line-height:    1;
   pointer-events: none;
   user-select:    none;
@@ -653,6 +653,8 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
 .hero-body strong {
   font-weight: var(--cds-font-bold);
 }
+.url-line    { display: block; }
+.body-tagline { display: block; }
 
 /* ─── Botones ───────────────────────────────────── */
 .hero-actions {
@@ -698,5 +700,10 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
   .hero-title    { white-space: normal; font-size: clamp(9vw, 12vw, 5rem); }
   .hero-actions  { flex-direction: column; align-items: center; }
   .services-type { letter-spacing: 0.12em; }
+  .hero-logo     { width: 85vw; }
+  .hero-content  { padding-bottom: clamp(5.5rem, 14vw, 10rem); }
+  .hero-body  { text-align: center; width: 100%; }
+  .url-line   { white-space: nowrap; }
+  .ct-mark    { font-size: 0.72em; }
 }
 </style>
