@@ -1,8 +1,13 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
-
-const QUOTATION_BASE_PATH = '/quotations'
+import {
+  listApplicableQuotationFaults,
+  listQuotationBrands,
+  listQuotationModelsByBrand,
+  normalizeQuotationEstimate,
+  requestQuotationEstimate,
+} from '@/services/quotationService'
 
 export function useCotizadorIAPage() {
   const router = useRouter()
@@ -92,8 +97,7 @@ export function useCotizadorIAPage() {
     loading.value = true
     error.value = ''
     try {
-      const { data } = await api.get(`${QUOTATION_BASE_PATH}/instruments/brands`)
-      brands.value = Array.isArray(data) ? data : []
+      brands.value = await listQuotationBrands()
     } catch (e) {
       error.value = extractErrorMessage(e)
     } finally {
@@ -113,8 +117,7 @@ export function useCotizadorIAPage() {
     loading.value = true
     error.value = ''
     try {
-      const { data } = await api.get(`${QUOTATION_BASE_PATH}/instruments/models/${brandId}`)
-      models.value = Array.isArray(data) ? data : []
+      models.value = await listQuotationModelsByBrand(brandId)
     } catch (e) {
       error.value = extractErrorMessage(e)
     } finally {
@@ -132,8 +135,7 @@ export function useCotizadorIAPage() {
     loading.value = true
     error.value = ''
     try {
-      const { data } = await api.get(`${QUOTATION_BASE_PATH}/faults/applicable/${instrumentId}`)
-      faults.value = Array.isArray(data) ? data : []
+      faults.value = await listApplicableQuotationFaults(instrumentId)
     } catch (e) {
       error.value = extractErrorMessage(e)
     } finally {
@@ -152,34 +154,20 @@ export function useCotizadorIAPage() {
     resetLeadTurnstile()
   }
 
-  function normalizeQuotationEstimate(data) {
-    return {
-      equipment_info: {
-        brand: data?.brand_name || selectedBrandName.value,
-        model: selectedModelName.value,
-      },
-      base_cost: Number(data?.base_total || 0),
-      complexity_factor: Number(data?.summary?.complexity_factor || data?.multiplier || 1),
-      value_factor: Number(data?.summary?.value_factor || 1),
-      final_cost: Number(data?.summary?.final_cost || data?.max_price || data?.min_price || 0),
-      min_price: Number(data?.min_price || 0),
-      max_price: Number(data?.max_price || 0),
-      disclaimer: data?.disclaimer || '',
-      summary: data?.summary || {},
-    }
-  }
-
   async function calculateQuote() {
     loading.value = true
     error.value = ''
     quoteResult.value = null
     try {
-      const { data } = await api.post(`${QUOTATION_BASE_PATH}/estimate`, {
-        instrument_id: selectedModel.value,
-        faults: selectedFaultIds.value,
-        turnstile_token: quoteTurnstileToken.value,
+      const data = await requestQuotationEstimate({
+        instrumentId: selectedModel.value,
+        faultIds: selectedFaultIds.value,
+        turnstileToken: quoteTurnstileToken.value,
       })
-      quoteResult.value = normalizeQuotationEstimate(data)
+      quoteResult.value = normalizeQuotationEstimate(data, {
+        selectedBrandName: selectedBrandName.value,
+        selectedModelName: selectedModelName.value,
+      })
       resetLeadTurnstile()
       step.value = 3
     } catch (e) {

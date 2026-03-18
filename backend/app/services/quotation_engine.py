@@ -42,6 +42,12 @@ _RANGE_BANDS = (
     (11, 999, (110000, 150000)),
 )
 
+CANONICAL_QUOTATION_DISCLAIMER = (
+    "Esta cotización es solamente referencial y no representa en ningún caso el valor final real. "
+    "Los equipos pueden fallar por causas distintas a las visibles o descritas por el cliente, "
+    "y el valor definitivo sólo se confirma después de la revisión física en taller."
+)
+
 
 def _safe_int(value: Any, default: int = 0) -> int:
     try:
@@ -101,6 +107,75 @@ def resolve_tier_multiplier(tier: str, service_multipliers: Optional[Dict[str, f
     if service_multipliers and normalized_tier in service_multipliers:
         return float(service_multipliers[normalized_tier])
     return float(FALLBACK_TIER_MULTIPLIERS.get(normalized_tier, 1.0))
+
+
+def resolve_catalog_instrument_brand(
+    *,
+    catalog: Dict[str, Any],
+    instrument_id: str,
+    brand_id: Optional[str] = None,
+) -> tuple[Optional[dict], Optional[dict]]:
+    instrument = (catalog.get("instruments_by_id") or {}).get(instrument_id)
+    if not instrument:
+        return None, None
+
+    resolved_brand_id = brand_id or instrument.get("brand")
+    brand = (catalog.get("brands_by_id") or {}).get(resolved_brand_id)
+    return instrument, brand
+
+
+def build_canonical_quotation_payload(
+    *,
+    instrument_id: str,
+    instrument: dict,
+    brand: dict,
+    estimate: Dict[str, Any],
+    disclaimer: str = CANONICAL_QUOTATION_DISCLAIMER,
+) -> Dict[str, Any]:
+    summary = estimate.get("summary") or {}
+    base_total = _safe_int(estimate.get("base_total"))
+    final_cost = _safe_int(summary.get("final_cost"), _safe_int(estimate.get("final_cost")))
+    complexity_factor = float(summary.get("complexity_factor") or estimate.get("complexity_factor") or 1.0)
+    value_factor = float(summary.get("value_factor") or estimate.get("value_factor") or 1.0)
+    combined_multiplier = round(complexity_factor * value_factor, 2) if base_total > 0 else float(estimate.get("multiplier") or 1.0)
+    min_price = _safe_int(estimate.get("min_price"), int(final_cost * 0.8) if final_cost else 0)
+    max_price = _safe_int(estimate.get("max_price"), int(final_cost * 1.3) if final_cost else 0)
+    model_name = str(instrument.get("model") or instrument.get("modelo") or instrument_id)
+    brand_name = str(brand.get("name") or brand.get("id") or "")
+
+    return {
+        "instrument_id": instrument_id,
+        "instrument_name": f"{brand_name} {model_name}".strip(),
+        "model_name": model_name,
+        "brand_name": brand_name,
+        "tier": str(estimate.get("tier") or brand.get("tier") or "standard"),
+        "base_total": base_total,
+        "multiplier": combined_multiplier,
+        "min_price": min_price,
+        "max_price": max_price,
+        "breakdown": estimate.get("breakdown") or [],
+        "instrument_value_avg": _safe_int(estimate.get("instrument_value_avg")),
+        "max_recommended": _safe_int(estimate.get("max_recommended")),
+        "exceeds_recommendation": bool(estimate.get("exceeds_recommendation")),
+        "disclaimer": disclaimer,
+        "summary": summary,
+    }
+
+
+def build_legacy_diagnostic_payload(canonical_payload: Dict[str, Any]) -> Dict[str, Any]:
+    summary = canonical_payload.get("summary") or {}
+    return {
+        "equipment_info": {
+            "brand": canonical_payload.get("brand_name"),
+            "model": canonical_payload.get("model_name"),
+            "value": canonical_payload.get("instrument_value_avg"),
+        },
+        "faults": summary.get("effective_faults") or [],
+        "base_cost": canonical_payload.get("base_total", 0),
+        "complexity_factor": summary.get("complexity_factor", canonical_payload.get("multiplier", 1.0)),
+        "value_factor": summary.get("value_factor", 1.0),
+        "final_cost": summary.get("final_cost", canonical_payload.get("max_price", 0)),
+    }
 
 
 def calculate_fault_estimate(

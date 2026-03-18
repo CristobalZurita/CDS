@@ -4,7 +4,12 @@ from typing import Any, Dict, List, Optional
 from app.core.ratelimit import limiter
 from app.core.config import settings
 from app.services.reference_catalog_service import get_reference_catalog
-from app.services.quotation_engine import calculate_fault_estimate, estimate_guided_range
+from app.services.quotation_engine import (
+    build_canonical_quotation_payload,
+    calculate_fault_estimate,
+    estimate_guided_range,
+    resolve_catalog_instrument_brand,
+)
 from app.routers import quote_management_router, quotation_catalog_router
 
 router = APIRouter(prefix="/quotations", tags=["quotations"])
@@ -59,11 +64,12 @@ async def estimate_quotation(
     if not payload.turnstile_token or not verify_turnstile(payload.turnstile_token):
         raise HTTPException(status_code=400, detail="Captcha inválido")
     catalog = get_reference_catalog()
-    instrument = catalog["instruments_by_id"].get(payload.instrument_id)
+    instrument, brand = resolve_catalog_instrument_brand(
+        catalog=catalog,
+        instrument_id=payload.instrument_id,
+    )
     if not instrument:
         raise HTTPException(status_code=404, detail="Instrumento no encontrado")
-
-    brand = catalog["brands_by_id"].get(instrument.get('brand'))
     if not brand:
         raise HTTPException(status_code=404, detail="Marca no encontrada")
 
@@ -89,6 +95,18 @@ async def estimate_quotation(
         max_recommended = guided_estimate["max_recommended"]
         exceeds = guided_estimate["exceeds_recommendation"]
         summary = guided_estimate["summary"]
+        estimate_payload = {
+            "tier": tier,
+            "multiplier": multiplier,
+            "breakdown": breakdown,
+            "base_total": base_total,
+            "min_price": min_price,
+            "max_price": max_price,
+            "instrument_value_avg": valor_avg,
+            "max_recommended": max_recommended,
+            "exceeds_recommendation": exceeds,
+            "summary": summary,
+        }
     else:
         fault_estimate = calculate_fault_estimate(
             instrument=instrument,
@@ -97,44 +115,12 @@ async def estimate_quotation(
             faults_catalog=catalog["faults"],
             service_multipliers=settings.service_multipliers,
         )
-        tier = fault_estimate["tier"]
-        breakdown = [
-            FaultBreakdown(
-                fault_id=item["fault_id"],
-                name=item["name"],
-                base_price=item["base_price"],
-            )
-            for item in fault_estimate["breakdown"]
-        ]
-        base_total = fault_estimate["base_total"]
-        combined_factor = fault_estimate["complexity_factor"] * fault_estimate["value_factor"]
-        multiplier = round(combined_factor, 2) if base_total > 0 else 1.0
-        min_price = int(fault_estimate["final_cost"] * 0.8)
-        max_price = int(fault_estimate["final_cost"] * 1.3)
-        valor_avg = fault_estimate["instrument_value_avg"]
-        max_recommended = fault_estimate["max_recommended"]
-        exceeds = fault_estimate["exceeds_recommendation"]
-        summary = fault_estimate["summary"]
+        estimate_payload = fault_estimate
 
-    disclaimer_text = (
-        "Esta cotización es solamente referencial y no representa en ningún caso el valor final real. "
-        "Los equipos pueden fallar por causas distintas a las visibles o descritas por el cliente, "
-        "y el valor definitivo sólo se confirma después de la revisión física en taller."
-    )
-
-    return QuotationResponse(
+    canonical_payload = build_canonical_quotation_payload(
         instrument_id=payload.instrument_id,
-        instrument_name=f"{brand.get('name')} {instrument.get('model')}",
-        brand_name=brand.get('name'),
-        tier=tier,
-        base_total=base_total,
-        multiplier=multiplier,
-        min_price=min_price,
-        max_price=max_price,
-        breakdown=breakdown,
-        instrument_value_avg=valor_avg,
-        max_recommended=max_recommended,
-        exceeds_recommendation=exceeds,
-        disclaimer=disclaimer_text,
-        summary=summary,
+        instrument=instrument,
+        brand=brand,
+        estimate=estimate_payload,
     )
+    return QuotationResponse(**canonical_payload)

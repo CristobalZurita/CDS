@@ -6,19 +6,23 @@ Este router mantiene cálculo legacy, CRUD de diagnósticos y compatibilidad
 de rutas históricas bajo /diagnostic.
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
 # Avoid importing application schemas directly to keep router import lightweight in tests
 from app.core.config import get_settings, Settings
 from app.core.database import get_db
-from app.core.ratelimit import limiter
 from app.core.dependencies import require_permission
 from app.models.diagnostic import Diagnostic
 from app.services.logging_service import create_audit
 from app.services.reference_catalog_service import get_reference_catalog
-from app.services.quotation_engine import calculate_fault_estimate
+from app.services.quotation_engine import (
+    build_canonical_quotation_payload,
+    build_legacy_diagnostic_payload,
+    calculate_fault_estimate,
+    resolve_catalog_instrument_brand,
+)
 from app.routers import quote_management_router, quotation_catalog_router
 
 router = APIRouter(prefix="/diagnostic", tags=["diagnostic"])
@@ -30,10 +34,8 @@ def _reference_catalog() -> dict:
     return get_reference_catalog()
 
 @router.post("/calculate", deprecated=True)
-@limiter.limit("10/minute")
 async def calculate_diagnostic(
     diagnostic: dict,
-    request: Request,
     settings: Settings = Depends(get_settings)
 ):
     """
@@ -50,13 +52,16 @@ async def calculate_diagnostic(
     """
 
     catalog = _reference_catalog()
-    instrument = catalog["instruments_by_id"].get(diagnostic.get("equipment", {}).get("model"))
+    instrument_id = diagnostic.get("equipment", {}).get("model")
+    brand_id = diagnostic.get("equipment", {}).get("brand")
+    instrument, brand = resolve_catalog_instrument_brand(
+        catalog=catalog,
+        instrument_id=instrument_id,
+        brand_id=brand_id,
+    )
 
     if not instrument:
         raise HTTPException(status_code=404, detail="Instrument not found")
-
-    brand = catalog["brands_by_id"].get(diagnostic.get("equipment", {}).get("brand"))
-
     if not brand:
         raise HTTPException(status_code=404, detail="Brand not found")
 
@@ -67,8 +72,6 @@ async def calculate_diagnostic(
         faults_catalog=catalog["faults"],
         service_multipliers=settings.service_multipliers,
     )
-    equipment_value = estimate["instrument_value_avg"]
-
     # Audit the diagnostic calculation (non-fatal)
     try:
         create_audit(
@@ -85,14 +88,13 @@ async def calculate_diagnostic(
     except Exception:
         pass
 
-    return {
-        "equipment_info": {"brand": brand["name"], "model": instrument["model"], "value": equipment_value},
-        "faults": estimate["effective_faults"],
-        "base_cost": estimate["base_total"],
-        "complexity_factor": estimate["complexity_factor"],
-        "value_factor": estimate["value_factor"],
-        "final_cost": estimate["final_cost"],
-    }
+    canonical_payload = build_canonical_quotation_payload(
+        instrument_id=instrument_id,
+        instrument=instrument,
+        brand=brand,
+        estimate=estimate,
+    )
+    return build_legacy_diagnostic_payload(canonical_payload)
 
 
 @router.get("/")

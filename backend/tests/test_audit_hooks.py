@@ -1,6 +1,7 @@
 import io
 import os
 import pytest
+import anyio
 from pathlib import Path
 from fastapi.testclient import TestClient
 import importlib
@@ -103,15 +104,15 @@ def test_upload_image_creates_audit(tmp_path, customer_token):
 
 
 def test_diagnostic_calculate_creates_audit():
-    importlib.reload(_main)
-    client = TestClient(_main.app)
+    from app.core.config import get_settings
+    from app.routers.diagnostic import calculate_diagnostic
 
     payload = {
         "equipment": {"brand": "access", "model": "access_virus_c"},
         "faults": ["CONNECTOR_LOOSE"],
     }
-    res = client.post("/api/v1/diagnostic/calculate", json=payload)
-    assert res.status_code == 200
+    result = anyio.run(calculate_diagnostic, payload, get_settings())
+    assert result["equipment_info"]["model"] == "VIRUS C"
     rec = _latest_audit("diagnostic.calculate")
     assert rec is not None
     assert rec.details and rec.details.get("model") == "access_virus_c"
