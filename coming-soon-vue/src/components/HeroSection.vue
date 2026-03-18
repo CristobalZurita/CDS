@@ -576,7 +576,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
 
 /* ─── Logo ──────────────────────────────────────── */
 .hero-logo {
-  width: 65vw;
+  width: 58.5vw;
   max-width: none;
   height: auto;
   animation: fadeUp 0.7s 0.05s ease both;
@@ -666,11 +666,11 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  min-height: 106px;
-  padding: 1.65rem 3.3rem;
+  min-height: 83.6px;
+  padding: 1.14rem 2.47rem;
   border-radius: var(--cds-radius-pill);
   font-family: var(--cds-font-family-base);
-  font-size: 2.2rem;
+  font-size: 1.76rem;
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.07em;
   text-transform: uppercase;
