@@ -6,7 +6,8 @@
  * pero no manda la resolución real de imágenes.
  * La fuente de verdad para URLs es cloudinary.js + cloudinaryContract.js.
  *
- * Este archivo se mantiene sólo para imports antiguos todavía posibles.
+ * Este archivo se mantiene sólo como shim para imports legacy todavía posibles.
+ * Código nuevo debe importar desde cloudinary.js o useCloudinary.ts.
  */
 
 export const instrumentImagePaths = []

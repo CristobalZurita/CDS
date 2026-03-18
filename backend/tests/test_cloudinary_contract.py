@@ -42,3 +42,28 @@ def test_local_path_to_public_id_preserves_folder_contract():
         cloudinary_service.local_path_to_public_id("/images/INVENTARIO/NE555_AS.webp")
         == "INVENTARIO/NE555_AS"
     )
+
+
+def test_build_legacy_local_path_normalizes_relative_contract():
+    assert (
+        cloudinary_service.build_legacy_local_path("INVENTARIO/NE555_AS.webp")
+        == "/images/INVENTARIO/NE555_AS.webp"
+    )
+    assert (
+        cloudinary_service.build_legacy_local_path("/instrumentos/KORG_M1.webp")
+        == "/images/instrumentos/KORG_M1.webp"
+    )
+
+
+def test_extract_filename_from_local_path_supports_expected_prefix():
+    assert (
+        cloudinary_service.extract_filename_from_local_path(
+            "/images/INVENTARIO/AUDIO_JACK_CHASIS_MONO_6_3.webp",
+            expected_relative_prefix="INVENTARIO",
+        )
+        == "AUDIO_JACK_CHASIS_MONO_6_3.webp"
+    )
+    assert (
+        cloudinary_service.extract_filename_from_local_path("https://cdn.example.com/path/file.webp")
+        == "file.webp"
+    )

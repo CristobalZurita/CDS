@@ -1,10 +1,15 @@
 """
-Router para resolver imágenes desde Cloudinary.
-ADITIVO: No modifica la BD, solo consulta Cloudinary API.
+Router legacy de compatibilidad para resolución de imágenes.
+
+No es fuente de verdad de runtime:
+- ZERO resuelve imágenes desde cloudinary.js/cloudinaryContract.js
+- el dashboard gestiona assets/bindings desde /media
+
+Este router se mantiene deprecated sólo para compatibilidad y diagnóstico.
 """
 
-from fastapi import APIRouter, Depends, Query
-from typing import List, Optional
+from fastapi import APIRouter, Query
+from typing import List
 from app.services.cloudinary_service import (
     fetch_all_images,
     resolve_image_url,
@@ -17,8 +22,8 @@ router = APIRouter(prefix="/images", tags=["images"])
 @router.get("/catalog", deprecated=True)
 def get_image_catalog():
     """
-    Obtiene catálogo completo de imágenes desde Cloudinary.
-    Cacheado en memoria para performance.
+    Endpoint legacy de diagnóstico.
+    No debe usarse como catálogo principal de runtime.
     """
     images = fetch_all_images()
     return {
@@ -32,8 +37,8 @@ def resolve_image(
     path: str = Query(..., description="Ruta local de la imagen, ej: /images/INVENTARIO/foto.webp")
 ):
     """
-    Resuelve una ruta local a URL de Cloudinary.
-    Ej: /images/INVENTARIO/BOTON_GRANDE_B_MPC.webp → https://res.cloudinary.com/...
+    Wrapper deprecated de resolve_image_url().
+    Se mantiene por compatibilidad externa; el front actual no depende de esta ruta.
     """
     url = resolve_image_url(path)
     return {
@@ -46,9 +51,8 @@ def resolve_image(
 @router.post("/resolve-batch", deprecated=True)
 def resolve_images_batch(paths: List[str]):
     """
-    Resuelve múltiples rutas locales a URLs de Cloudinary.
-    Útil para cargar muchas imágenes a la vez usando la convención canónica
-    /images/... -> public_id.
+    Wrapper deprecated por lotes.
+    La resolución activa del front deriva el public_id localmente sin pasar por aquí.
     """
     results = {}
     for path in paths:
@@ -65,7 +69,8 @@ def search_image(
     name: str = Query(..., description="Nombre base de la imagen sin extensión")
 ):
     """
-    Busca una imagen por nombre (sin hash ni extensión).
+    Búsqueda legacy por nombre.
+    Útil sólo para diagnóstico o compatibilidad antigua.
     """
     url = find_image_by_name(name)
     return {

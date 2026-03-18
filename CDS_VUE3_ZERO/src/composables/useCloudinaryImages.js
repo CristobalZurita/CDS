@@ -1,14 +1,14 @@
 /**
- * Composable para resolver imágenes desde Cloudinary vía API.
- * ADITIVO: No modifica rutas, consulta al backend.
+ * Composable legacy de compatibilidad para resolver imágenes Cloudinary.
+ * Ya no consulta el backend ni usa image-mapping.json.
+ * Mantiene firma async sólo para no romper imports antiguos.
  *
- * @deprecated Sin consumidores activos. Definido pero no importado fuera de este archivo.
- * Alternativa activa: useSiteImages.js (resolución sincrónica vía toCloudinaryUrl).
- * Mantener hasta confirmar que el endpoint /images/resolve no se retomará.
+ * @deprecated Sin consumidores activos. La resolución canónica vive en
+ * useCloudinary.ts + cloudinary.js.
  */
 
-import { ref, onMounted } from 'vue'
-import api from '@/services/api'
+import { ref } from 'vue'
+import { toCloudinaryUrl } from '@/utils/cloudinary'
 
 // Cache local de mapeos ruta → URL
 const imageCache = new Map()
@@ -20,28 +20,15 @@ const imageCache = new Map()
  */
 export async function resolveImage(localPath) {
   if (!localPath) return ''
-  
-  // Si ya es URL completa, devolverla
+
   if (localPath.startsWith('http')) return localPath
-  
-  // Revisar cache
   if (imageCache.has(localPath)) {
     return imageCache.get(localPath)
   }
-  
-  try {
-    const { data } = await api.get('/images/resolve', {
-      params: { path: localPath }
-    })
-    
-    const url = data?.cloudinary_url || localPath
-    imageCache.set(localPath, url)
-    return url
-    
-  } catch (e) {
-    console.warn('Error resolving image:', localPath, e)
-    return localPath
-  }
+
+  const url = toCloudinaryUrl(localPath) || localPath
+  imageCache.set(localPath, url)
+  return url
 }
 
 /**
@@ -51,30 +38,26 @@ export async function resolveImage(localPath) {
  */
 export async function resolveImagesBatch(paths) {
   if (!paths?.length) return {}
-  
-  // Filtrar solo las que no están en cache
-  const toResolve = paths.filter(p => !imageCache.has(p) && !p.startsWith('http'))
-  
-  if (toResolve.length === 0) {
-    // Todas en cache
-    return Object.fromEntries(paths.map(p => [p, imageCache.get(p) || p]))
+
+  const mappings = {}
+  for (const path of paths) {
+    if (path?.startsWith?.('http')) {
+      mappings[path] = path
+      continue
+    }
+
+    const cached = imageCache.get(path)
+    if (cached) {
+      mappings[path] = cached
+      continue
+    }
+
+    const url = toCloudinaryUrl(path) || path
+    imageCache.set(path, url)
+    mappings[path] = url
   }
-  
-  try {
-    const { data } = await api.post('/images/resolve-batch', toResolve)
-    
-    // Guardar en cache
-    Object.entries(data?.mappings || {}).forEach(([path, url]) => {
-      imageCache.set(path, url)
-    })
-    
-    // Retornar todas (cacheadas + nuevas)
-    return Object.fromEntries(paths.map(p => [p, imageCache.get(p) || p]))
-    
-  } catch (e) {
-    console.warn('Error resolving batch:', e)
-    return Object.fromEntries(paths.map(p => [p, p]))
-  }
+
+  return mappings
 }
 
 /**

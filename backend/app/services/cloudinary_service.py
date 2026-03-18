@@ -55,6 +55,34 @@ def local_path_to_public_id(local_path: str) -> str:
     return _normalize_public_id_candidate(candidate)
 
 
+def build_legacy_local_path(relative_path: str) -> str:
+    """
+    Construye una ruta legacy /images/... normalizada desde una ruta relativa.
+    Ej: 'INVENTARIO/NE555_AS.webp' -> '/images/INVENTARIO/NE555_AS.webp'
+    """
+    normalized = str(relative_path or "").replace("\\", "/").strip().strip("/")
+    if not normalized:
+        return LEGACY_IMAGE_PREFIX.rstrip("/")
+    return f"{LEGACY_IMAGE_PREFIX}{normalized}"
+
+
+def extract_filename_from_local_path(local_path: str, expected_relative_prefix: Optional[str] = None) -> str:
+    """
+    Extrae el nombre de archivo desde una ruta legacy /images/... o cualquier path local/URL.
+    Si se informa expected_relative_prefix, primero intenta cortar ese prefijo exacto.
+    """
+    value = str(local_path or "").strip()
+    if not value:
+        return ""
+
+    if expected_relative_prefix:
+        prefix = build_legacy_local_path(expected_relative_prefix).rstrip("/") + "/"
+        if value.startswith(prefix):
+            return value.split(prefix, 1)[1].strip()
+
+    return Path(value).name.strip()
+
+
 def _canonical_prefix_for_destination(destination: str) -> str:
     target = (destination or "uploads").strip()
     return DESTINATION_PUBLIC_ID_PREFIXES.get(target, "general")

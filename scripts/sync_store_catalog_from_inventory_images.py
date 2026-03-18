@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Sincroniza el catalogo de tienda usando la carpeta CDS_VUE3_ZERO/public/images/INVENTARIO.
+Sincroniza el catalogo de tienda usando media_assets como fuente primaria
+y CDS_VUE3_ZERO/public/images/INVENTARIO solo como fallback controlado.
 
 - Reutiliza productos existentes cuando el nombre/SKU calza con la imagen.
 - Si no existe un producto razonable, crea uno derivado del nombre del archivo.
@@ -34,9 +35,11 @@ from app.models.category import Category  # type: ignore  # noqa: E402
 from app.models.inventory import Product  # type: ignore  # noqa: E402
 from app.models.media import MediaAsset  # type: ignore  # noqa: E402
 from app.models.stock import Stock  # type: ignore  # noqa: E402
+from app.services.cloudinary_service import build_legacy_local_path, extract_filename_from_local_path  # type: ignore  # noqa: E402
 
 
 IMAGE_DIR = ROOT / "CDS_VUE3_ZERO" / "public" / "images" / "INVENTARIO"
+INVENTORY_LEGACY_PREFIX = build_legacy_local_path("INVENTARIO")
 GENERIC_PRICE = 1000
 STEM_PREFIXES = (
     "CONECTOR_",
@@ -316,7 +319,7 @@ def _normalized_stem_from_filename(filename: str) -> str:
 
 
 def _inventory_image_url(filename: str) -> str:
-    return f"/images/INVENTARIO/{filename}"
+    return build_legacy_local_path(f"INVENTARIO/{filename}")
 
 
 def _media_asset_filename(asset: MediaAsset) -> str:
@@ -376,13 +379,7 @@ def load_inventory_images(session) -> list[CatalogImage]:
 
 
 def extract_inventory_image_name(image_url: str | None) -> str:
-    value = str(image_url or "").strip()
-    if not value:
-        return ""
-    marker = "/images/INVENTARIO/"
-    if marker in value:
-        return value.split(marker, 1)[1].strip()
-    return Path(value).name.strip()
+    return extract_filename_from_local_path(image_url or "", expected_relative_prefix="INVENTARIO")
 
 
 def find_best_image_match(filename: str, images: list[CatalogImage]) -> CatalogImage | None:
@@ -399,7 +396,7 @@ def build_catalog_status() -> dict:
     try:
         images = load_inventory_images(session)
         files = sorted(image.name for image in images)
-        products = session.query(Product).filter(Product.image_url.like("/images/INVENTARIO/%")).all()
+        products = session.query(Product).filter(Product.image_url.like(f"{INVENTORY_LEGACY_PREFIX}/%")).all()
 
         linked_images = []
         explicit_store_visible = 0
@@ -550,7 +547,7 @@ def sync_catalog(apply_changes: bool) -> dict:
             used_product_ids.add(int(product.id))
 
         image_names = {image.name for image in images}
-        linked_products = session.query(Product).filter(Product.image_url.like("/images/INVENTARIO/%")).all()
+        linked_products = session.query(Product).filter(Product.image_url.like(f"{INVENTORY_LEGACY_PREFIX}/%")).all()
         for product in linked_products:
             current_name = extract_inventory_image_name(product.image_url)
             if not current_name or current_name in image_names:
@@ -600,7 +597,7 @@ def sync_catalog(apply_changes: bool) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Sincroniza catalogo de tienda desde media_assets (fallback local: CDS_VUE3_ZERO/public/images/INVENTARIO)")
+    parser = argparse.ArgumentParser(description="Sincroniza catalogo de tienda desde media_assets con fallback local controlado de inventario")
     parser.add_argument("--apply", action="store_true", help="Aplica cambios sobre la DB")
     parser.add_argument(
         "--database-url",

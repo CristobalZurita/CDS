@@ -57,13 +57,15 @@ async function uploadDirectToCloudinary(file, signatureData) {
   return cloudRes.json()
 }
 
-async function uploadViaBackend(file) {
+async function uploadViaBackend(file, destination = 'uploads') {
   const formData = new FormData()
   formData.append('file', file)
-  const response = await api.post('/uploads/images', formData, {
+  const response = await api.post(`/uploads/images?destination=${encodeURIComponent(destination)}`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
-  return response?.data?.path || null
+  // Mantener una sola semántica de URL consumible por el front:
+  // Cloudinary devuelve secure_url y el fallback backend expone public_path.
+  return response?.data?.public_path || response?.data?.path || null
 }
 
 function folderFromPublicId(publicId, destination = 'uploads') {
@@ -122,7 +124,7 @@ export async function uploadImageWithMeta(file, destination = 'uploads', explici
   }
 
   // Fallback: backend tradicional
-  const path = await uploadViaBackend(file)
+  const path = await uploadViaBackend(file, destination)
   if (!path) return null
   const fallbackPublicId = resolvedPublicId || file.name.replace(/\.[^.]+$/, '')
   return {
