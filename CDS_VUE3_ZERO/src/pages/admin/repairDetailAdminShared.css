@@ -1,0 +1,149 @@
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.detail-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.detail-grid p {
+  margin: 0.25rem 0;
+}
+
+.field-actions {
+  display: flex;
+  align-items: end;
+}
+
+.action-grid {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.link-line {
+  margin: 0;
+  word-break: break-all;
+}
+
+.panel-nested {
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.photos-grid {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.photo-card {
+  border: 1px solid var(--cds-border-card);
+  border-radius: var(--cds-radius-md);
+  background: var(--cds-white);
+  overflow: hidden;
+}
+
+.photo-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-meta {
+  padding: 0.6rem;
+  display: grid;
+  gap: 0.2rem;
+  font-size: var(--cds-text-sm);
+}
+
+.notes-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.note-card {
+  border: 1px solid var(--cds-border-card);
+  border-radius: var(--cds-radius-md);
+  background: var(--cds-white);
+  padding: 0.65rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.note-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+
+.note-card p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.note-internal {
+  border-left: 4px solid var(--cds-light-6);
+}
+
+.note-public {
+  border-left: 4px solid var(--cds-info);
+}
+
+.note-technical {
+  border-left: 4px solid var(--cds-warning-text);
+}
+
+.status-pending {
+  color: var(--cds-warning-text);
+}
+
+.status-progress {
+  color: var(--cds-info);
+}
+
+.status-success {
+  color: var(--cds-success);
+}
+
+.status-archived {
+  color: var(--cds-light-7);
+}
+
+.status-neutral {
+  color: var(--cds-text-normal);
+}
+
+.priority-high {
+  color: var(--cds-danger);
+}
+
+.priority-normal {
+  color: var(--cds-info);
+}
+
+.priority-low {
+  color: var(--cds-success);
+}
+
+@media (min-width: 900px) {
+  .summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .photos-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

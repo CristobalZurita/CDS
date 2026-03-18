@@ -1,0 +1,51 @@
+.stat-label {
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-muted);
+}
+
+.stat-value {
+  font-size: var(--cds-text-2xl);
+}
+
+.stats-panel-title {
+  margin: 0 0 0.45rem;
+}
+
+.stats-panel-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.stats-panel-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.55rem;
+}
+
+.charts-grid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  margin-top: 0.7rem;
+}
+
+.chart-card {
+  overflow: hidden;
+}
+
+@media (min-width: 760px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .panel-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .charts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

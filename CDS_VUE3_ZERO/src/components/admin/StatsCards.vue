@@ -1,24 +1,27 @@
 <template>
   <div class="stats-cards">
-    <div class="stat-card">
-      <p class="stat-label">Usuarios</p>
-      <strong class="stat-value">{{ formatNumber(stats.users) }}</strong>
-    </div>
-    <div class="stat-card">
-      <p class="stat-label">Clientes</p>
-      <strong class="stat-value">{{ formatNumber(stats.clients) }}</strong>
-    </div>
-    <div class="stat-card">
-      <p class="stat-label">Reparaciones</p>
-      <strong class="stat-value">{{ formatNumber(stats.repairs) }}</strong>
-    </div>
+    <article v-for="card in cards" :key="card.key" class="stat-card">
+      <div class="stat-icon" aria-hidden="true">{{ card.icon }}</div>
+      <div class="stat-info">
+        <strong class="stat-value">{{ formatNumber(card.value) }}</strong>
+        <p class="stat-label">{{ card.label }}</p>
+      </div>
+    </article>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   stats: { type: Object, default: () => ({}) }
 })
+
+const cards = computed(() => ([
+  { key: 'users', label: 'Usuarios', icon: '👤', value: props.stats?.users },
+  { key: 'clients', label: 'Clientes', icon: '🏢', value: props.stats?.clients },
+  { key: 'repairs', label: 'Reparaciones', icon: '🔧', value: props.stats?.repairs }
+]))
 
 const formatNumber = (val) => {
   const num = Number(val)
@@ -29,45 +32,51 @@ const formatNumber = (val) => {
 <style scoped>
 .stats-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--admin-space-lg, 1.8rem);
+  margin-bottom: var(--admin-space-xl, 2.4rem);
 }
 
 .stat-card {
   background: var(--cds-white);
-  border-radius: var(--cds-radius-md);
-  padding: var(--cds-space-lg);
-  text-align: center;
+  border-radius: var(--cds-radius-lg);
+  padding: var(--admin-space-xl, 2.4rem);
+  display: flex;
+  align-items: center;
+  gap: var(--admin-space-md, 1.2rem);
   box-shadow: var(--cds-shadow-sm);
-  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--cds-border-card);
 }
 
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--cds-shadow-md);
+.stat-icon {
+  font-size: var(--cds-text-3xl);
+  width: 6rem;
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--cds-primary) 0%, var(--cds-orange-pastel) 100%);
+  border-radius: var(--cds-radius-lg);
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .stat-value {
   display: block;
-  font-size: 2.5rem;
+  font-size: var(--cds-text-4xl);
   font-weight: 700;
-  color: var(--cds-primary);
+  color: var(--cds-text-normal);
   line-height: 1;
-  margin-bottom: 0.5rem;
 }
 
 .stat-label {
-  font-size: 0.875rem;
+  font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0;
-}
-
-@media (max-width: 768px) {
-  .stat-value {
-    font-size: 2rem;
-  }
 }
 </style>

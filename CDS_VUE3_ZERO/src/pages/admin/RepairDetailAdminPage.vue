@@ -17,175 +17,89 @@
     <template v-else>
       <p v-if="error" class="admin-error">{{ error }}</p>
 
-      <section class="summary-grid">
-        <article class="summary-card">
-          <span>Estado</span>
-          <strong :class="statusClass">{{ statusLabel }}</strong>
-        </article>
-        <article class="summary-card">
-          <span>Prioridad</span>
-          <strong :class="priorityClass">{{ priorityLabel }}</strong>
-        </article>
-        <article class="summary-card">
-          <span>Total OT</span>
-          <strong>{{ formatCurrency(repair.total_cost) }}</strong>
-        </article>
-        <article class="summary-card">
-          <span>Abonado</span>
-          <strong>{{ formatCurrency(repair.paid_amount) }}</strong>
-        </article>
-      </section>
+      <RepairDetailSummaryCards
+        :repair="repair"
+        :status-label="statusLabel"
+        :status-class="statusClass"
+        :priority-label="priorityLabel"
+        :priority-class="priorityClass"
+        :format-currency="formatCurrency"
+      />
 
-      <section class="panel-card">
-        <h2>Informacion general</h2>
-        <div class="detail-grid">
-          <article>
-            <p><strong>Cliente:</strong> {{ repair.client?.name || '—' }}</p>
-            <p><strong>Codigo cliente:</strong> {{ repair.client?.client_code || '—' }}</p>
-            <p><strong>Instrumento:</strong> {{ repair.device?.model || '—' }}</p>
-            <p><strong>Serial:</strong> {{ repair.device?.serial_number || '—' }}</p>
-          </article>
-          <article>
-            <p><strong>Problema:</strong> {{ repair.problem_reported || '—' }}</p>
-            <p><strong>Diagnostico:</strong> {{ repair.diagnosis || '—' }}</p>
-            <p><strong>Trabajo:</strong> {{ repair.work_performed || '—' }}</p>
-            <p><strong>Archivada:</strong> {{ isArchived ? 'Si' : 'No' }}</p>
-          </article>
-        </div>
-      </section>
+      <RepairDetailInfoPanel
+        :repair="repair"
+        :is-archived="isArchived"
+      />
 
-      <section class="panel-card">
-        <h2>Estado y costos</h2>
-        <div class="form-grid two-cols">
-          <label>
-            <span>Estado OT</span>
-            <select v-model.number="statusDraft">
-              <option v-for="status in statusOptions" :key="status.id" :value="status.id">{{ status.id }} - {{ status.label }}</option>
-            </select>
-          </label>
-          <div class="field-actions">
-            <button class="btn-primary" :disabled="updatingStatus" @click="updateStatus">
-              {{ updatingStatus ? 'Guardando...' : 'Actualizar estado' }}
-            </button>
-          </div>
+      <RepairDetailTechnicalPanel
+        :status-options="statusOptions"
+        :status-draft="statusDraft"
+        :edit-form="editForm"
+        :updating-status="updatingStatus"
+        :saving-repair="savingRepair"
+        @update-status-draft="statusDraft = $event"
+        @update-edit-field="updateEditField"
+        @update-status="updateStatus"
+        @save-repair-fields="saveRepairFields"
+      />
 
-          <label class="full"><span>Diagnostico</span><textarea v-model.trim="editForm.diagnosis" rows="3"></textarea></label>
-          <label class="full"><span>Trabajo realizado</span><textarea v-model.trim="editForm.work_performed" rows="3"></textarea></label>
+      <RepairDetailSignaturePanel
+        :repair="repair"
+        :performing-action="performingAction"
+        :signature-link="signatureLink"
+        :photo-upload-link="photoUploadLink"
+        @request-signature="requestSignature"
+        @request-photo-upload="requestPhotoUpload"
+      />
 
-          <label><span>Costo partes</span><input v-model.number="editForm.parts_cost" type="number" min="0" /></label>
-          <label><span>Costo mano de obra</span><input v-model.number="editForm.labor_cost" type="number" min="0" /></label>
-          <label><span>Costo adicional</span><input v-model.number="editForm.additional_cost" type="number" min="0" /></label>
-          <label><span>Descuento</span><input v-model.number="editForm.discount" type="number" min="0" /></label>
-          <label><span>Total</span><input v-model.number="editForm.total_cost" type="number" min="0" /></label>
-          <label><span>Abonado</span><input v-model.number="editForm.paid_amount" type="number" min="0" /></label>
-          <label>
-            <span>Medio de pago</span>
-            <select v-model="editForm.payment_method">
-              <option value="">Sin definir</option>
-              <option value="cash">Efectivo</option>
-              <option value="web">Web</option>
-              <option value="transfer">Transferencia</option>
-            </select>
-          </label>
-        </div>
-        <div class="panel-actions">
-          <button class="btn-primary" :disabled="savingRepair" @click="saveRepairFields">
-            {{ savingRepair ? 'Guardando...' : 'Guardar cambios tecnicos' }}
-          </button>
-        </div>
-      </section>
+      <RepairDetailPhotosPanel
+        :photos="photos"
+        :show-photo-upload="showPhotoUpload"
+        :selected-file="selectedFile"
+        :new-photo-caption="newPhotoCaption"
+        :new-photo-type="newPhotoType"
+        :uploading-photo="uploadingPhoto"
+        :format-date="formatDate"
+        @toggle-upload="showPhotoUpload = !showPhotoUpload"
+        @file-selected="onFileSelected"
+        @update-photo-field="updatePhotoField"
+        @upload-photo="uploadPhoto"
+      />
 
-      <section class="panel-card">
-        <h2>Firma y foto de cliente</h2>
-        <div class="action-grid">
-          <button class="btn-secondary" :disabled="performingAction" @click="requestSignature('ingreso')">Solicitar firma ingreso</button>
-          <button class="btn-secondary" :disabled="performingAction" @click="requestSignature('retiro')">Solicitar firma retiro</button>
-          <button class="btn-secondary" :disabled="performingAction" @click="requestPhotoUpload">Solicitar foto cliente</button>
-        </div>
-        <p><strong>Firma ingreso:</strong> {{ repair.signature_ingreso_path ? 'OK' : 'Pendiente' }}</p>
-        <p><strong>Firma retiro:</strong> {{ repair.signature_retiro_path ? 'OK' : 'Pendiente' }}</p>
-        <p v-if="signatureLink" class="link-line"><strong>Link firma:</strong> <a :href="signatureLink" target="_blank" rel="noopener">{{ signatureLink }}</a></p>
-        <p v-if="photoUploadLink" class="link-line"><strong>Link foto:</strong> <a :href="photoUploadLink" target="_blank" rel="noopener">{{ photoUploadLink }}</a></p>
-      </section>
+      <RepairDetailNotesPanel
+        :notes="notes"
+        :show-note-form="showNoteForm"
+        :new-note="newNote"
+        :new-note-type="newNoteType"
+        :saving-note="savingNote"
+        :note-type-class="noteTypeClass"
+        :format-date="formatDate"
+        @toggle-note-form="showNoteForm = !showNoteForm"
+        @update-note-field="updateNoteField"
+        @add-note="addNote"
+      />
 
-      <section class="panel-card">
-        <div class="panel-head">
-          <h2>Fotos ({{ photos.length }})</h2>
-          <button class="btn-secondary" @click="showPhotoUpload = !showPhotoUpload">
-            {{ showPhotoUpload ? 'Cerrar carga' : 'Agregar foto' }}
-          </button>
-        </div>
-
-        <div v-if="showPhotoUpload" class="form-grid two-cols panel-nested">
-          <label class="full"><span>Archivo</span><input type="file" accept="image/*" @change="onFileSelected" /></label>
-          <label><span>Tipo</span><select v-model="newPhotoType"><option value="general">general</option><option value="before">before</option><option value="after">after</option><option value="damage">damage</option><option value="component">component</option><option value="client">client</option></select></label>
-          <label><span>Descripcion</span><input v-model.trim="newPhotoCaption" type="text" placeholder="Descripcion opcional" /></label>
-          <div class="field-actions full">
-            <button class="btn-primary" :disabled="uploadingPhoto || !selectedFile" @click="uploadPhoto">
-              {{ uploadingPhoto ? 'Subiendo...' : 'Subir foto' }}
-            </button>
-          </div>
-        </div>
-
-        <p v-if="photos.length === 0" class="empty-state">Sin fotos registradas.</p>
-        <div v-else class="photos-grid">
-          <article v-for="photo in photos" :key="photo.id" class="photo-card">
-            <img :src="photo.resolved_photo_url" :alt="photo.caption || 'Foto OT'" />
-            <div class="photo-meta">
-              <span>{{ photo.photo_type }}</span>
-              <small>{{ photo.caption || 'Sin descripcion' }}</small>
-              <small>{{ formatDate(photo.created_at) }}</small>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel-card">
-        <div class="panel-head">
-          <h2>Notas ({{ notes.length }})</h2>
-          <button class="btn-secondary" @click="showNoteForm = !showNoteForm">
-            {{ showNoteForm ? 'Cerrar nota' : 'Agregar nota' }}
-          </button>
-        </div>
-
-        <div v-if="showNoteForm" class="form-grid panel-nested">
-          <label><span>Tipo</span><select v-model="newNoteType"><option value="internal">internal</option><option value="public">public</option><option value="technical">technical</option></select></label>
-          <label><span>Nota</span><textarea v-model.trim="newNote" rows="3"></textarea></label>
-          <div class="field-actions">
-            <button class="btn-primary" :disabled="savingNote" @click="addNote">
-              {{ savingNote ? 'Guardando...' : 'Guardar nota' }}
-            </button>
-          </div>
-        </div>
-
-        <p v-if="notes.length === 0" class="empty-state">Sin notas registradas.</p>
-        <div v-else class="notes-list">
-          <article v-for="note in notes" :key="note.id" class="note-card" :class="noteTypeClass(note.note_type)">
-            <header>
-              <strong>{{ note.note_type }}</strong>
-              <small>{{ formatDate(note.created_at) }}</small>
-            </header>
-            <p>{{ note.note }}</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel-card">
-        <h2>Acciones</h2>
-        <div class="action-grid">
-          <button class="btn-secondary" :disabled="performingAction" @click="notifyClient">Enviar resumen al cliente</button>
-          <button class="btn-secondary" :disabled="downloadingClosurePdf" @click="downloadClosurePdf">
-            {{ downloadingClosurePdf ? 'Generando PDF...' : 'Descargar cierre OT' }}
-          </button>
-          <button v-if="!isArchived" class="btn-danger" :disabled="performingAction" @click="archiveRepair">Archivar OT</button>
-          <button v-else class="btn-primary" :disabled="performingAction" @click="reactivateRepair">Reactivar OT</button>
-        </div>
-      </section>
+      <RepairDetailActionsPanel
+        :performing-action="performingAction"
+        :downloading-closure-pdf="downloadingClosurePdf"
+        :is-archived="isArchived"
+        @notify-client="notifyClient"
+        @download-closure-pdf="downloadClosurePdf"
+        @archive-repair="archiveRepair"
+        @reactivate-repair="reactivateRepair"
+      />
     </template>
   </main>
 </template>
 
 <script setup>
+import RepairDetailActionsPanel from '@/components/admin/RepairDetailActionsPanel.vue'
+import RepairDetailInfoPanel from '@/components/admin/RepairDetailInfoPanel.vue'
+import RepairDetailNotesPanel from '@/components/admin/RepairDetailNotesPanel.vue'
+import RepairDetailPhotosPanel from '@/components/admin/RepairDetailPhotosPanel.vue'
+import RepairDetailSignaturePanel from '@/components/admin/RepairDetailSignaturePanel.vue'
+import RepairDetailSummaryCards from '@/components/admin/RepairDetailSummaryCards.vue'
+import RepairDetailTechnicalPanel from '@/components/admin/RepairDetailTechnicalPanel.vue'
 import { useRepairDetailAdminPage } from '@/composables/useRepairDetailAdminPage'
 
 const {
@@ -234,43 +148,21 @@ const {
   goToPurchaseRequests,
   goBack
 } = useRepairDetailAdminPage()
+
+function updatePhotoField({ field, value }) {
+  if (field === 'newPhotoCaption') newPhotoCaption.value = value
+  if (field === 'newPhotoType') newPhotoType.value = value
+}
+
+function updateNoteField({ field, value }) {
+  if (field === 'newNote') newNote.value = value
+  if (field === 'newNoteType') newNoteType.value = value
+}
+
+function updateEditField({ field, value }) {
+  editForm.value[field] = value
+}
 </script>
 
 <style scoped src="./commonAdminPage.css"></style>
-<style scoped>
-/* Status / priority color utilities */
-.status-pending { color: var(--cds-warning-text); }
-.status-progress { color: var(--cds-info); }
-.status-success { color: var(--cds-success); }
-.status-archived { color: var(--cds-light-7); }
-.status-neutral { color: var(--cds-text-normal); }
-.priority-high { color: var(--cds-danger); }
-.priority-normal { color: var(--cds-info); }
-.priority-low { color: var(--cds-success); }
-/* Layout helpers */
-.panel-head { display: flex; justify-content: space-between; align-items: center; gap: .65rem; flex-wrap: wrap; }
-.detail-grid { display: grid; gap: .8rem; grid-template-columns: repeat(1, minmax(0, 1fr)); }
-.detail-grid p { margin: .25rem 0; }
-.field-actions { display: flex; align-items: end; }
-.action-grid { display: flex; gap: .45rem; flex-wrap: wrap; }
-.link-line { margin: 0; word-break: break-all; }
-/* Photos */
-.panel-nested { padding: .75rem; display: grid; gap: .6rem; }
-.photos-grid { display: grid; gap: .65rem; grid-template-columns: repeat(1, minmax(0, 1fr)); }
-.photo-card { border: 1px solid var(--cds-border-card); border-radius: var(--cds-radius-md); background: var(--cds-white); overflow: hidden; }
-.photo-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
-.photo-meta { padding: .6rem; display: grid; gap: .2rem; font-size: var(--cds-text-sm); }
-/* Notes */
-.notes-list { display: grid; gap: .5rem; }
-.note-card { border: 1px solid var(--cds-border-card); border-radius: var(--cds-radius-md); background: var(--cds-white); padding: .65rem; display: grid; gap: .35rem; }
-.note-card header { display: flex; justify-content: space-between; gap: .45rem; }
-.note-card p { margin: 0; white-space: pre-wrap; }
-.note-internal { border-left: 4px solid var(--cds-light-6); }
-.note-public { border-left: 4px solid var(--cds-info); }
-.note-technical { border-left: 4px solid var(--cds-warning-text); }
-@media (min-width: 900px) {
-  .summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .photos-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-</style>
+<style scoped src="./repairDetailAdminShared.css"></style>
