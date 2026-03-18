@@ -829,14 +829,14 @@ onUnmounted(() => {
   .hero {
     --hero-mask-height: 64%;
     --hero-pad-top: 1rem;
-    --hero-pad-bottom: 3.8rem;
-    --hero-gap: 0.1rem;
+    --hero-pad-bottom: 7rem;
+    --hero-gap: 3rem;
     --hero-osc-height: 5.75rem;
-    --hero-content-justify: space-between;
+    --hero-content-justify: center;
     --hero-logo-width: min(94vw, 330px);
     --hero-logo-max-height: 17svh;
     --hero-title-size: clamp(2.5rem, 7.7vw, 2.5rem);
-    --hero-title-offset-y: -0.3rem;
+    --hero-title-offset-y: -0.9rem;
     --hero-service-size: clamp(1.52rem, 4.7vw, 1.32rem);
     --hero-body-size: clamp(1.4rem, 3.35vw, 0.95rem);
     --hero-btn-width: min(92vw, 15.6rem);
