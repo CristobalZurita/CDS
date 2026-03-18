@@ -2,7 +2,12 @@
   <section class="hero">
 
     <!-- Capa PCB: trazas crecientes, ICs, pads — detrás de todo -->
-    <canvas ref="pcbCanvas" class="pcb-canvas" aria-hidden="true"></canvas>
+    <canvas
+      v-if="showPcb"
+      ref="pcbCanvas"
+      class="pcb-canvas"
+      aria-hidden="true"
+    ></canvas>
 
     <!-- Máscara: queso del sánguche — protege el texto de las animaciones -->
     <div class="hero-mask" aria-hidden="true"></div>
@@ -71,6 +76,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 // ── Refs ──────────────────────────────────────────────────────
 const pcbCanvas = ref(null)
 const oscCanvas = ref(null)
+const showPcb = ref(false)
 let raf       = null
 let startTime = null
 
@@ -83,6 +89,20 @@ function toRgba(hex, alpha) {
   const g = parseInt(hex.slice(3, 5), 16)
   const b = parseInt(hex.slice(5, 7), 16)
   return `rgba(${r},${g},${b},${alpha})`
+}
+
+function shouldShowPcb(width = window.innerWidth, height = window.innerHeight) {
+  return width >= 768 || (width >= 430 && height >= 820)
+}
+
+function updateViewportBehavior() {
+  showPcb.value = shouldShowPcb()
+
+  if (!showPcb.value) {
+    traces = []
+    chips = []
+    pcbTick = 0
+  }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -478,7 +498,7 @@ function loop(ts) {
   const darkHex    = cssVar('--cds-dark')    || '#5a5a5a'
 
   const pcb = pcbCanvas.value
-  if (pcb && pcb.offsetWidth > 0) {
+  if (showPcb.value && pcb && pcb.offsetWidth > 0) {
     const ctx = pcb.getContext('2d')
     const W   = (pcb.width  = pcb.offsetWidth)
     const H   = (pcb.height = pcb.offsetHeight)
@@ -497,15 +517,50 @@ function loop(ts) {
   raf = requestAnimationFrame(loop)
 }
 
-onMounted(() => { buildSH(8); raf = requestAnimationFrame(loop) })
-onUnmounted(() => { if (raf) cancelAnimationFrame(raf) })
+onMounted(() => {
+  buildSH(8)
+  updateViewportBehavior()
+  window.addEventListener('resize', updateViewportBehavior, { passive: true })
+  raf = requestAnimationFrame(loop)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateViewportBehavior)
+  if (raf) cancelAnimationFrame(raf)
+})
 </script>
 
 <style scoped>
 /* ─── Sección ───────────────────────────────────── */
 .hero {
+  --hero-mask-width: min(92vw, 1040px);
+  --hero-mask-height: 74%;
+  --hero-pad-top: clamp(3rem, 6vw, 5rem);
+  --hero-pad-inline: clamp(1.25rem, 5vw, 3rem);
+  --hero-pad-bottom: clamp(6rem, 14vw, 8rem);
+  --hero-gap: clamp(1.2rem, 2.5vw, 1.8rem);
+  --hero-offset-y: -4.5rem;
+  --hero-osc-height: clamp(5rem, 12vw, 9rem);
+  --hero-content-min-height: auto;
+  --hero-content-justify: center;
+  --hero-logo-width: 50vw;
+  --hero-logo-max-height: none;
+  --hero-logo-margin-bottom: -0.5rem;
+  --hero-title-size: clamp(2.8rem, 7vw, 6.5rem);
+  --hero-title-offset-y: 0;
+  --hero-service-size: clamp(2rem, 3.6vw, 2.1rem);
+  --hero-service-gap: 0.4em 0.6em;
+  --hero-service-letter: 0.22em;
+  --hero-body-size: clamp(1.4rem, 5.5vw, 2.8rem);
+  --hero-body-line-height: 1.3;
+  --hero-btn-width: auto;
+  --hero-btn-min-height: 83.6px;
+  --hero-btn-pad-block: 1.14rem;
+  --hero-btn-pad-inline: 2.47rem;
+  --hero-btn-font-size: 1.76rem;
   background: var(--cds-light);
   min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -533,8 +588,8 @@ onUnmounted(() => { if (raf) cancelAnimationFrame(raf) })
   top: 50%;
   left: 50%;
   transform: translate(-50%, -52%);
-  width: min(92vw, 1040px);
-  height: 74%;
+  width: var(--hero-mask-width);
+  height: var(--hero-mask-height);
   background: var(--cds-light);
   border-radius: 2.5rem;
   box-shadow: 0 0 70px 70px var(--cds-light);
@@ -549,12 +604,14 @@ onUnmounted(() => { if (raf) cancelAnimationFrame(raf) })
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: var(--hero-content-justify);
   text-align: center;
-  padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 5vw, 3em) clamp(6rem, 14vw, 8rem);
-  gap: clamp(1.2rem, 2.5vw, 1.8rem);
+  padding: var(--hero-pad-top) var(--hero-pad-inline) var(--hero-pad-bottom);
+  gap: var(--hero-gap);
+  min-height: var(--hero-content-min-height);
   width: 100%;
   max-width: 1440px;
-margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio quede pegado */
+  margin-top: var(--hero-offset-y);
 }
 
 /* ─── Canvas osciloscopio — franja inferior ──────── */
@@ -563,7 +620,7 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
   bottom: 0;
   left: 0;
   right: 0;
-  height: clamp(5rem, 12vw, 9rem);
+  height: var(--hero-osc-height);
   pointer-events: none;
   z-index: 2;
 }
@@ -576,17 +633,19 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
 
 /* ─── Logo ──────────────────────────────────────── */
 .hero-logo {
-  width: 50vw;
+  width: var(--hero-logo-width);
   max-width: none;
+  max-height: var(--hero-logo-max-height);
   height: auto;
+  object-fit: contain;
   animation: fadeUp 0.7s 0.05s ease both;
-  margin-bottom: -0.5rem;
+  margin-bottom: var(--hero-logo-margin-bottom);
 }
 
 /* ─── Titular ───────────────────────────────────── */
 .hero-title {
   font-family: var(--cds-headings-font-family);
-  font-size: clamp(2.8rem, 7vw, 6.5rem);
+  font-size: var(--hero-title-size);
   font-weight: var(--cds-font-semibold);
   line-height: 0.95;
   text-transform: uppercase;
@@ -594,6 +653,7 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
   color: var(--cds-black);
   white-space: nowrap;
   animation: fadeUp 0.65s 0.18s ease both;
+  transform: translateY(var(--hero-title-offset-y));
 }
 
 /* ── Regla exclusiva del acento ─────────────────── */
@@ -619,11 +679,11 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
   flex-wrap: wrap;
   justify-content: center;
   align-items: baseline;
-  gap: 0.4em 0.6em;
+  gap: var(--hero-service-gap);
   font-family: var(--cds-font-family-base);
-  font-size: clamp(2rem, 3.6vw, 2.1rem);
+  font-size: var(--hero-service-size);
   font-weight: var(--cds-font-semibold);
-  letter-spacing: 0.22em;
+  letter-spacing: var(--hero-service-letter);
   text-transform: uppercase;
   color: var(--cds-primary);
   animation: fadeUp 0.6s 0.30s ease both;
@@ -641,9 +701,9 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
   animation: fadeUp 0.6s 0.42s ease both;
 }
 .hero-body-sub {
-  font-size: clamp(1.4rem, 5.5vw, 2.8rem);
+  font-size: var(--hero-body-size);
   font-weight: var(--cds-font-medium);
-  line-height: 1.3;
+  line-height: var(--hero-body-line-height);
   color: var(--cds-black);
   opacity: 0.75;
 }
@@ -661,12 +721,15 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  min-height: 83.6px;
-  padding: 1.14rem 2.47rem;
+  width: var(--hero-btn-width);
+  max-width: 100%;
+  min-height: var(--hero-btn-min-height);
+  padding: var(--hero-btn-pad-block) var(--hero-btn-pad-inline);
   border-radius: var(--cds-radius-pill);
   font-family: var(--cds-font-family-base);
-  font-size: 1.76rem;
+  font-size: var(--hero-btn-font-size);
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -686,24 +749,118 @@ margin-top: -4.5rem; /* compensa el padding inferior para que el osciloscopio qu
 
 /* ─── Tablet (600–899px) ────────────────────────── */
 @media (min-width: 600px) and (max-width: 899px) {
+  .hero {
+    --hero-offset-y: -2rem;
+    --hero-logo-width: min(72vw, 560px);
+    --hero-title-size: clamp(2.9rem, 6vw, 4.8rem);
+  }
+
   .hero-title { white-space: normal; }
 }
 
 /* ─── Mobile (<600px) ───────────────────────────── */
 @media (max-width: 599px) {
-  .hero                    { justify-content: flex-start; }
-  .hero-title              { white-space: normal; }
-  .hero-actions            { flex-direction: column; align-items: center; }
-  .services-type           { letter-spacing: 0.12em; flex-direction: column; align-items: center; }
-  .services-type .sep      { display: none; }
-  .services-type .ct-mark  { font-size: 1.1em; }
-  .hero-logo               { width: 95vw; }
-  .hero-content            { margin-top: 0; padding-top: clamp(1.2rem, 3vw, 2rem); padding-bottom: clamp(5.5rem, 14vw, 10rem); }
-  .hero-body               { text-align: center; width: 100%; }
+  .hero {
+    --hero-mask-width: min(94vw, 640px);
+    --hero-mask-height: 70%;
+    --hero-pad-top: clamp(0.9rem, 4vw, 1.35rem);
+    --hero-pad-inline: clamp(1rem, 4.5vw, 1.4rem);
+    --hero-pad-bottom: clamp(0.9rem, 3vw, 1.35rem);
+    --hero-gap: clamp(0.75rem, 2.6vw, 1rem);
+    --hero-offset-y: 0;
+    --hero-osc-height: clamp(3.6rem, 11vw, 4.5rem);
+    --hero-content-min-height: calc(100dvh - var(--hero-osc-height) - env(safe-area-inset-bottom));
+    --hero-content-justify: space-evenly;
+    --hero-logo-width: min(92vw, 430px);
+    --hero-logo-max-height: 27svh;
+    --hero-logo-margin-bottom: 0;
+    --hero-title-size: clamp(2.45rem, 10.4vw, 4.2rem);
+    --hero-title-offset-y: -0.18rem;
+    --hero-service-size: clamp(1.55rem, 6vw, 1.95rem);
+    --hero-service-gap: 0.12rem;
+    --hero-service-letter: 0.08em;
+    --hero-body-size: clamp(1.02rem, 4.1vw, 1.35rem);
+    --hero-body-line-height: 1.16;
+    --hero-btn-width: min(92vw, 19rem);
+    --hero-btn-min-height: 3.7rem;
+    --hero-btn-pad-block: 0.88rem;
+    --hero-btn-pad-inline: 1.25rem;
+    --hero-btn-font-size: clamp(1.02rem, 4.2vw, 1.28rem);
+  }
+
+  .hero-title             { white-space: normal; }
+  .hero-actions           { flex-direction: column; align-items: center; width: 100%; gap: 0.7rem; }
+  .services-type          { flex-direction: column; align-items: center; line-height: 1.02; }
+  .services-type .sep     { display: none; }
+  .services-type .ct-mark { font-size: 1.05em; }
+  .hero-body              { text-align: center; width: 100%; }
+  .url-line               { white-space: nowrap; }
+}
+
+@media (max-width: 389px), (max-width: 430px) and (max-height: 740px) {
+  .hero {
+    --hero-mask-height: 67%;
+    --hero-pad-top: 0.65rem;
+    --hero-pad-bottom: 0.95rem;
+    --hero-gap: 0.5rem;
+    --hero-offset-y: 0;
+    --hero-osc-height: 3rem;
+    --hero-content-justify: space-between;
+    --hero-logo-width: min(92vw, 360px);
+    --hero-logo-max-height: 19svh;
+    --hero-title-size: clamp(1.98rem, 8.4vw, 2.95rem);
+    --hero-title-offset-y: -0.26rem;
+    --hero-service-size: clamp(1.28rem, 5.2vw, 1.5rem);
+    --hero-body-size: clamp(0.94rem, 3.7vw, 1.06rem);
+    --hero-btn-width: min(90vw, 16.8rem);
+    --hero-btn-min-height: 3.2rem;
+    --hero-btn-pad-block: 0.68rem;
+    --hero-btn-pad-inline: 0.95rem;
+    --hero-btn-font-size: clamp(0.94rem, 3.8vw, 1.06rem);
+  }
+
+  .hero-content  { max-width: 28rem; }
+  .hero-actions  { gap: 0.45rem; }
+  .services-type { gap: 0.06rem; }
+  .hero-body     { gap: 0.22rem; }
+}
+
+@media (max-width: 359px), (max-width: 390px) and (max-height: 667px) {
+  .hero {
+    --hero-mask-height: 64%;
+    --hero-pad-top: 1rem;
+    --hero-pad-bottom: 3.8rem;
+    --hero-gap: 0.1rem;
+    --hero-osc-height: 5.75rem;
+    --hero-content-justify: space-between;
+    --hero-logo-width: min(94vw, 330px);
+    --hero-logo-max-height: 17svh;
+    --hero-title-size: clamp(2.5rem, 7.7vw, 2.5rem);
+    --hero-title-offset-y: -0.3rem;
+    --hero-service-size: clamp(1.52rem, 4.7vw, 1.32rem);
+    --hero-body-size: clamp(1.4rem, 3.35vw, 0.95rem);
+    --hero-btn-width: min(92vw, 15.6rem);
+    --hero-btn-min-height: 3rem;
+    --hero-btn-pad-block: 0.5rem;
+    --hero-btn-pad-inline: 0.9rem;
+    --hero-btn-font-size: clamp(0.86rem, 3.4vw, 0.96rem);
+  }
+
+  .hero-actions  { gap: 0.5rem; }
+  .services-type { gap: 0.08rem; }
+  .hero-body     { gap: 0.35rem; }
+  .hero-title    { line-height: 0.9; }
 }
 
 /* ─── Landscape móvil ───────────────────────────── */
 @media (max-width: 900px) and (orientation: landscape) {
+  .hero {
+    --hero-offset-y: 0;
+    --hero-pad-top: 1rem;
+    --hero-pad-bottom: 3.8rem;
+    --hero-osc-height: 2.8rem;
+  }
+
   .hero-logo { width: auto; max-height: 28vh; }
 }
 </style>

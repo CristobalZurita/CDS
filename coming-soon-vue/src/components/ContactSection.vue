@@ -132,6 +132,18 @@
           <i class="fa-brands fa-instagram"></i>
           @cirujanodesintetizadores
         </a>
+        <a href="https://www.youtube.com/channel/UCijs35uOWNzQqjuoW9rmb_Q" target="_blank" rel="noopener noreferrer" class="direct-link">
+          <i class="fa-brands fa-youtube"></i>
+          Canal de YouTube
+        </a>
+        <a href="https://www.tiktok.com/@cirujano.de.sinte" target="_blank" rel="noopener noreferrer" class="direct-link">
+          <i class="fa-brands fa-tiktok"></i>
+          @cirujano.de.sinte
+        </a>
+        <a href="https://x.com/Cirujano_Sintes" target="_blank" rel="noopener noreferrer" class="direct-link">
+          <i class="fa-brands fa-x-twitter"></i>
+          @Cirujano_Sintes
+        </a>
       </div>
 
     </div>

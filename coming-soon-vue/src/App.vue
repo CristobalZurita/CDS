@@ -7,6 +7,7 @@
 
     <!-- Botón flotante WhatsApp -->
     <a
+      v-show="showFloatingWhatsapp"
       class="floating-whatsapp"
       href="https://wa.me/56982957538"
       target="_blank"
@@ -37,14 +38,29 @@ import ContactSection from './components/ContactSection.vue'
 import SiteFooter from './components/SiteFooter.vue'
 
 const scrollY = ref(0)
+const isCompactViewport = ref(false)
 const showScrollTop = computed(() => scrollY.value > 300)
+const showFloatingWhatsapp = computed(() => (
+  !isCompactViewport.value || scrollY.value > window.innerHeight * 0.72
+))
 
 function onScroll() { scrollY.value = window.scrollY }
 function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }) }
+function onResize() {
+  isCompactViewport.value = window.innerWidth <= 430 || window.innerHeight <= 720
+}
 
-onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
-onMounted(() => onScroll())
-onUnmounted(() => window.removeEventListener('scroll', onScroll))
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', onResize, { passive: true })
+  onResize()
+  onScroll()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll)
+  window.removeEventListener('resize', onResize)
+})
 </script>
 
 <style>
@@ -58,7 +74,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .floating-whatsapp {
   position: fixed;
   left: 1rem;
-  bottom: 1.25rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -83,7 +99,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 .scroll-top {
   position: fixed;
   right: 1rem;
-  bottom: 1.25rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -108,6 +124,20 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 @media (max-width: 599px) {
   .floating-whatsapp { width: 38px; height: 38px; }
   .scroll-top        { width: 36px; height: 36px; }
+}
+
+@media (max-width: 420px), (max-height: 720px) {
+  .floating-whatsapp {
+    bottom: calc(3.35rem + env(safe-area-inset-bottom));
+    width: 34px;
+    height: 34px;
+  }
+
+  .scroll-top {
+    bottom: calc(3.35rem + env(safe-area-inset-bottom));
+    width: 32px;
+    height: 32px;
+  }
 }
 
 @media (min-width: 768px) {

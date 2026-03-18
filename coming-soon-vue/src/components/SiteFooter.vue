@@ -42,6 +42,15 @@
           <a href="https://wa.me/56982957538" target="_blank" rel="noopener noreferrer" class="footer-link">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </a>
+          <a href="https://www.youtube.com/channel/UCijs35uOWNzQqjuoW9rmb_Q" target="_blank" rel="noopener noreferrer" class="footer-link">
+            <i class="fa-brands fa-youtube"></i> YouTube
+          </a>
+          <a href="https://www.tiktok.com/@cirujano.de.sinte" target="_blank" rel="noopener noreferrer" class="footer-link">
+            <i class="fa-brands fa-tiktok"></i> TikTok
+          </a>
+          <a href="https://x.com/Cirujano_Sintes" target="_blank" rel="noopener noreferrer" class="footer-link">
+            <i class="fa-brands fa-x-twitter"></i> X
+          </a>
         </div>
       </section>
 
