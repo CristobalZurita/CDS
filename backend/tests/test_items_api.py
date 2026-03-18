@@ -1,5 +1,6 @@
 import sys
 import os
+import uuid
 import pytest
 from fastapi.testclient import TestClient
 import httpx
@@ -12,6 +13,13 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 from app.main import app
+from app.models.category import Category
+from app.models.inventory import Product
+from app.models.stock import Stock
+from app.services.inventory_product_service import (
+    get_item_summary_or_404,
+    list_item_summaries,
+)
 
 
 client = TestClient(app)
@@ -44,3 +52,40 @@ def test_get_item():
     assert r.status_code == 200
     item = r.json()
     assert item['id'] == item_id
+
+
+def test_item_summary_compat_uses_canonical_stock_projection(db):
+    slug = uuid.uuid4().hex[:8]
+    category = Category(name=f"Compat {slug}", description="Categoria compat")
+    db.add(category)
+    db.flush()
+
+    product = Product(
+        category_id=category.id,
+        name=f"Producto Compat {slug}",
+        sku=f"COMPAT-{slug.upper()}",
+        description="Compat test",
+        price=12345,
+        quantity=2,
+        min_quantity=1,
+    )
+    db.add(product)
+    db.flush()
+
+    stock = Stock(
+        component_table="products",
+        component_id=product.id,
+        quantity=9,
+        minimum_stock=1,
+    )
+    db.add(stock)
+    db.commit()
+
+    summaries = list_item_summaries(db, limit=200, page=1, category=category.name)
+    summary = next(item for item in summaries if item.id == product.id)
+    assert summary.category == category.name
+    assert summary.stock == 9
+
+    detail = get_item_summary_or_404(db, product.id)
+    assert detail.id == product.id
+    assert detail.stock == 9

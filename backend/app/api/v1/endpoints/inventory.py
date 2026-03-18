@@ -1,67 +1,41 @@
-from fastapi import APIRouter, Query, HTTPException, Depends, status
+from fastapi import APIRouter, Query, Depends, status
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from app.schemas.inventory import ItemSummary, ProductCreate, ProductUpdate, ProductResponse
-from app.models.inventory import Product
-from app.models.category import Category
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.services.inventory_product_service import (
-	get_product_or_404,
-	create_product_record,
-	update_product_record,
-	delete_product_record,
+    create_product_record,
+    delete_product_record,
+    get_item_summary_or_404,
+    get_product_or_404,
+    list_item_summaries,
+    update_product_record,
 )
 
 router = APIRouter(prefix="/items", tags=["items"])
 
 
-def _serialize_item_summary(product: Product, category_name: Optional[str] = None) -> ItemSummary:
-	return ItemSummary(
-		id=product.id,
-		sku=product.sku,
-		name=product.name,
-		category=category_name or "unknown",
-		stock=int(product.quantity or 0),
-	)
-
-
 @router.get('', response_model=List[ItemSummary], deprecated=True)
 def list_items(
-	limit: int = Query(20, ge=1, le=200),
-	page: int = Query(1, ge=1),
-	category: Optional[str] = None,
-	db: Session = Depends(get_db),
+    limit: int = Query(20, ge=1, le=200),
+    page: int = Query(1, ge=1),
+    category: Optional[str] = None,
+    db: Session = Depends(get_db),
 ):
-	"""Compatibility list endpoint. Canonical inventory flow lives under /inventory."""
-	query = db.query(Product, Category.name).join(Category, Product.category_id == Category.id)
-	if category:
-		query = query.filter(Category.name.ilike(f"%{category}%"))
-
-	rows = (
-		query
-		.order_by(Product.name.asc())
-		.offset((page - 1) * limit)
-		.limit(limit)
-		.all()
-	)
-
-	return [_serialize_item_summary(product, category_name) for product, category_name in rows]
+    """Compatibility list endpoint. Canonical inventory flow lives under /inventory."""
+    return list_item_summaries(
+        db,
+        limit=limit,
+        page=page,
+        category=category,
+    )
 
 
 @router.get('/{item_id}', response_model=ItemSummary, deprecated=True)
 def get_item(item_id: int, db: Session = Depends(get_db)):
-	row = (
-		db.query(Product, Category.name)
-		.join(Category, Product.category_id == Category.id)
-		.filter(Product.id == item_id)
-		.first()
-	)
-	if not row:
-		raise HTTPException(status_code=404, detail='Item not found')
-	product, category_name = row
-	return _serialize_item_summary(product, category_name)
+    return get_item_summary_or_404(db, item_id)
 
 
 # ============================================================================

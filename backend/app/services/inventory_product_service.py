@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 from fastapi import HTTPException, status
+from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.models.category import Category
 from app.models.inventory import Product
 from app.models.stock import Stock
+from app.schemas.inventory import ItemSummary
 
 
 def get_product_or_404(
@@ -52,6 +55,89 @@ def ensure_product_stock(db: Session, product: Product) -> Stock:
     db.add(stock)
     db.flush()
     return stock
+
+
+def build_item_summary(
+    product: Product,
+    *,
+    category_name: str | None = None,
+    stock_quantity: int | None = None,
+) -> ItemSummary:
+    return ItemSummary(
+        id=product.id,
+        sku=product.sku,
+        name=product.name,
+        category=category_name or "unknown",
+        stock=int((stock_quantity if stock_quantity is not None else product.quantity) or 0),
+    )
+
+
+def list_item_summaries(
+    db: Session,
+    *,
+    limit: int = 20,
+    page: int = 1,
+    category: str | None = None,
+) -> list[ItemSummary]:
+    query = (
+        db.query(Product, Category.name, Stock.quantity)
+        .outerjoin(Category, Product.category_id == Category.id)
+        .outerjoin(
+            Stock,
+            and_(
+                Stock.component_table == "products",
+                Stock.component_id == Product.id,
+            ),
+        )
+    )
+    if category:
+        query = query.filter(Category.name.ilike(f"%{category}%"))
+
+    rows = (
+        query
+        .order_by(Product.name.asc())
+        .offset((page - 1) * limit)
+        .limit(limit)
+        .all()
+    )
+    return [
+        build_item_summary(
+            product,
+            category_name=category_name,
+            stock_quantity=stock_quantity,
+        )
+        for product, category_name, stock_quantity in rows
+    ]
+
+
+def get_item_summary_or_404(
+    db: Session,
+    product_id: int,
+    *,
+    detail: str = "Item not found",
+) -> ItemSummary:
+    row = (
+        db.query(Product, Category.name, Stock.quantity)
+        .outerjoin(Category, Product.category_id == Category.id)
+        .outerjoin(
+            Stock,
+            and_(
+                Stock.component_table == "products",
+                Stock.component_id == Product.id,
+            ),
+        )
+        .filter(Product.id == product_id)
+        .first()
+    )
+    if not row:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
+
+    product, category_name, stock_quantity = row
+    return build_item_summary(
+        product,
+        category_name=category_name,
+        stock_quantity=stock_quantity,
+    )
 
 
 def create_product_record(
