@@ -167,7 +167,6 @@
   align-items: center;
   gap: 0.45rem;
   transition: color 0.15s;
-  overflow-wrap: anywhere;
 }
 
 .site-footer a:hover { color: var(--cds-white); }
@@ -184,6 +183,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+  margin-left: 14.5%;
 }
 
 .footer-map-wrap {
@@ -192,7 +192,7 @@
 }
 
 .footer-map {
-  width: min(300px, 100%);
+  width: min(300px, 120%);
   aspect-ratio: 16 / 9;
   border: 8px solid color-mix(in srgb, var(--cds-white) 15%, transparent);
   border-radius: var(--cds-radius-sm);
@@ -234,7 +234,6 @@
     grid-template-columns: 2fr repeat(3, minmax(0, 1fr)) minmax(230px, 260px);
     align-items: start;
   }
-  .footer-map-column { margin-left: 14.5%; }
 
   /* En desktop: escala usando tokens, no hardcodeado */
   .site-footer h2          { font-size: var(--cds-text-sm); }

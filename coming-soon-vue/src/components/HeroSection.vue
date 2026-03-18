@@ -33,13 +33,9 @@
       </ul>
 
       <div class="hero-body">
-        <p>
-          Se trabajan sintetizadores, órganos, drum machines y teclados analógicos.
-          Los abrimos, diagnosticamos, calibramos y devolvemos a la vida.
-        </p>
         <p class="hero-body-sub">
-          Pronto disponible en <strong>www.cirujanodesintetizadores.cl</strong>
-          &nbsp;—&nbsp; Valparaíso, Chile.
+          Próximamente en <strong>www.cirujanodesintetizadores.cl</strong>
+          &nbsp;—&nbsp; <strong>el quirófano abre pronto.</strong>
         </p>
       </div>
 
@@ -418,16 +414,12 @@ function drawWave(ctx, W, H, elapsed, primaryHex) {
   // PWM duty continuo
   const duty = 0.5 + 0.35 * Math.sin(elapsed * 1.2)
 
-  // Noise y S&H: estables por episodio
-  // shValues NO se regeneran cuando el episodio que arranca ES sh —
-  // los valores del episodio anterior ya fueron usados en el morph → continuidad perfecta
-  const isNewEp = oscEpStart !== oscPrevEpStart || !oscEpisodeNoise
-  if (isNewEp || (oscEpisodeNoise && oscEpisodeNoise.length !== W)) {
+  // Noise y S&H: estables por episodio — se regeneran solo al cambiar de onda
+  const isNewEp = oscEpStart !== oscPrevEpStart || !oscEpisodeNoise || oscEpisodeNoise.length !== W
+  if (isNewEp) {
     oscPrevEpStart  = oscEpStart
     oscEpisodeNoise = Float32Array.from({ length: W }, () => Math.random() * 2 - 1)
-  }
-  if (isNewEp && WAVEFORMS[oscCurIdx].id !== 'sh') {
-    oscEpisodeShN = Math.max(4, Math.round(freq * 4))
+    oscEpisodeShN   = Math.max(4, Math.round(freq * 4))
     buildSH(oscEpisodeShN)
   }
   const shN      = oscEpisodeShN
@@ -452,16 +444,16 @@ function drawWave(ctx, W, H, elapsed, primaryHex) {
   ctx.lineJoin = isSharp ? 'miter' : 'round'
   ctx.lineCap  = 'round'
 
-  // scroll: triangle wave lineal — cada tramo dura lo mismo (izq→cent→der→cent→izq)
-  const _tN   = (elapsed * 0.35 / (Math.PI * 2)) % 1
-  const scroll = (_tN < 0.5 ? _tN * 2 - 0.5 : 1.5 - _tN * 2)
   ctx.beginPath()
   for (let x = 0; x <= W; x++) {
-    const p  = (((x / W) + scroll) * freq % 1 + 1) % 1
-    const yA = waveY(curType,  p, duty, shN, noiseArr)
-    const yB = waveY(nextType, p, duty, shN, noiseArr)
-    const yn = lerp(yA, yB, morphT)
-    const y  = H / 2 - yn * amp
+    const dist = Math.abs(x - W / 2) / (W / 2)   // 0 en centro → 1 en bordes
+    const t    = dist * freq
+    const p    = t % 1
+    const pRaw = (x / W * freq) % 1  // lineal + freq, sin simetría — noise y S&H
+    const yA  = waveY(curType,  (curType  === 'noise' || curType  === 'sh') ? pRaw : p, duty, shN, noiseArr)
+    const yB  = waveY(nextType, (nextType === 'noise' || nextType === 'sh') ? pRaw : p, duty, shN, noiseArr)
+    const yn  = lerp(yA, yB, morphT)
+    const y   = H / 2 - yn * amp
     x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
   }
   ctx.stroke()
@@ -584,7 +576,8 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
 
 /* ─── Logo ──────────────────────────────────────── */
 .hero-logo {
-  width: min(80vw, 60rem);
+  width: 65vw;
+  max-width: none;
   height: auto;
   animation: fadeUp 0.7s 0.05s ease both;
   margin-bottom: -0.5rem;
@@ -593,7 +586,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
 /* ─── Titular ───────────────────────────────────── */
 .hero-title {
   font-family: var(--cds-headings-font-family);
-  font-size: clamp(6vw, 8vw, 8rem);
+  font-size: clamp(5vw, 6.5vw, 6.5rem);
   font-weight: var(--cds-font-semibold);
   line-height: 0.95;
   text-transform: uppercase;
@@ -655,7 +648,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
   opacity: 0.75;
 }
 .hero-body-sub {
-  font-size: clamp(1.56rem, 2.8vw, 1.9rem) !important;
+  font-size: clamp(2rem, 3.5vw, 2.8rem) !important;
 }
 .hero-body strong {
   font-weight: var(--cds-font-bold);
@@ -673,11 +666,11 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  min-height: 48px;
-  padding: 0.75rem 1.5rem;
+  min-height: 106px;
+  padding: 1.65rem 3.3rem;
   border-radius: var(--cds-radius-pill);
   font-family: var(--cds-font-family-base);
-  font-size: 1rem;
+  font-size: 2.2rem;
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -687,7 +680,7 @@ margin-top: -3rem; /* compensa el padding inferior para que el osciloscopio qued
 .btn:hover  { transform: translateY(-2px); opacity: 0.88; }
 .btn:active { transform: translateY(0); }
 .btn-wa   { background: var(--cds-whatsapp); color: var(--cds-white); }
-.btn-dark { background: var(--cds-dark);         color: var(--cds-light); }
+.btn-dark { background: var(--cds-primary);     color: var(--cds-light); }
 
 /* ─── Entrada ───────────────────────────────────── */
 @keyframes fadeUp {
