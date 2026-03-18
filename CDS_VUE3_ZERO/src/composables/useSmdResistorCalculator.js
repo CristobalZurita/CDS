@@ -138,6 +138,23 @@ export function useSmdResistorCalculator() {
     return '—'
   })
 
+  const examplesByType = {
+    EIA3: ['103', '472', '221'],
+    EIA4: ['1001', '4702', '2493'],
+    EIA96: ['01C', '24B', '68X']
+  }
+
+  const activeExamples = computed(() => examplesByType[form.type] || examplesByType.EIA3)
+
+  const displayCode = computed(() => {
+    const normalized = String(form.code || '').trim().toUpperCase()
+    return normalized || 'SMD'
+  })
+
+  function applyExample(example) {
+    form.code = example
+  }
+
   function reset() {
     form.code = ''
     form.type = 'EIA3'
@@ -151,6 +168,9 @@ export function useSmdResistorCalculator() {
     formattedResistance,
     formulaText,
     modeLabel,
+    activeExamples,
+    applyExample,
+    displayCode,
     reset
   }
 }

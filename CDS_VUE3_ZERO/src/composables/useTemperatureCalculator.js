@@ -65,6 +65,64 @@ export function useTemperatureCalculator() {
     }
   })
 
+  const displayScales = computed(() => (
+    allScales.value || {
+      C: 0,
+      F: 32,
+      K: 273.15,
+      R: 491.67
+    }
+  ))
+
+  const thermoItems = computed(() => ([
+    {
+      key: 'C',
+      label: 'Celsius',
+      unit: '°C',
+      value: displayScales.value.C,
+      min: -50,
+      max: 150,
+      tone: 'hot'
+    },
+    {
+      key: 'F',
+      label: 'Fahrenheit',
+      unit: '°F',
+      value: displayScales.value.F,
+      min: -58,
+      max: 302,
+      tone: 'warm'
+    },
+    {
+      key: 'K',
+      label: 'Kelvin',
+      unit: 'K',
+      value: displayScales.value.K,
+      min: 223.15,
+      max: 423.15,
+      tone: 'cool'
+    }
+  ]))
+
+  function fillPercent(item) {
+    if (!Number.isFinite(item.value)) return 0
+    const span = item.max - item.min
+    if (!(span > 0)) return 0
+    const ratio = ((item.value - item.min) / span) * 100
+    return Math.min(100, Math.max(0, ratio))
+  }
+
+  function formatScale(value, unit) {
+    if (!Number.isFinite(value)) return `- ${unit}`
+    return `${value.toFixed(2)} ${unit}`
+  }
+
+  function swapScales() {
+    const nextFrom = form.to
+    form.to = form.from
+    form.from = nextFrom
+  }
+
   function reset() {
     form.value = ''
     form.from = 'C'
@@ -76,6 +134,11 @@ export function useTemperatureCalculator() {
     canConvert,
     result,
     allScales,
-    reset
+    displayScales,
+    fillPercent,
+    formatScale,
+    thermoItems,
+    reset,
+    swapScales
   }
 }

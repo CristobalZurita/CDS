@@ -60,7 +60,7 @@ const { resolveSlotOr } = useMediaBinding()
 }
 
 .hero-logo {
-  width: clamp(1500px, 50vw, 500px);
+  width: clamp(1400px, 40vw, 400px);
   height: auto;
 }
 

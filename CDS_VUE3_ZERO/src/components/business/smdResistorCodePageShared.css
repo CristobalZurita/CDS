@@ -1,0 +1,20 @@
+.chip-preview {
+  min-height: 64px;
+  border-radius: var(--cds-radius-md);
+  border: 1px solid var(--cds-border-strong);
+  background: linear-gradient(135deg, #292a2d, #17181a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip-preview--active {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cds-primary) 45%, transparent) inset;
+}
+
+.chip-text {
+  color: var(--cds-white);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}

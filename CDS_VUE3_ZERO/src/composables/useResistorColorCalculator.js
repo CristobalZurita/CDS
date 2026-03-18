@@ -122,8 +122,29 @@ export function useResistorColorCalculator() {
     }
   })
 
+  const previewBands = computed(() => form.colors.slice(0, form.bands))
+
   function setBands(nextBands) {
     form.bands = nextBands
+  }
+
+  function applyBands(bands) {
+    setBands(bands)
+    if (bands === 4) {
+      form.colors.splice(0, form.colors.length, 'brown', 'black', 'red', 'gold', 'brown', 'brown')
+    }
+    if (bands === 5 || bands === 6) {
+      form.colors.splice(0, form.colors.length, 'brown', 'black', 'black', 'red', 'brown', 'brown')
+    }
+  }
+
+  function resetBands() {
+    applyBands(4)
+  }
+
+  function bandClass(color) {
+    const normalized = String(color || '').toLowerCase()
+    return normalized ? `band-${normalized}` : 'band-default'
   }
 
   return {
@@ -132,7 +153,11 @@ export function useResistorColorCalculator() {
     multiplierIndex,
     toleranceIndex,
     tempcoIndex,
+    previewBands,
     result,
+    applyBands,
+    bandClass,
+    resetBands,
     setBands
   }
 }

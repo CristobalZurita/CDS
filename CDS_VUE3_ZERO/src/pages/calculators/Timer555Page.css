@@ -255,6 +255,21 @@
   opacity: 0.55;
 }
 
+.diagram-led--astable {
+  left: 80.09%;
+  top: 44%;
+}
+
+.diagram-led--monostable {
+  left: 80.5%;
+  top: 44.68%;
+}
+
+.diagram-led--bistable {
+  left: 94.5%;
+  top: 49.5%;
+}
+
 .diagram-led--on {
   background: var(--cds-primary);
   opacity: 1;

@@ -1,0 +1,28 @@
+.cap-visual-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.2rem 0 0.35rem;
+}
+
+.cap-visual-inline img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.cap-visual-inline p {
+  margin: 0;
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-muted);
+}
+
+.form-grid-wide {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 580px) {
+  .form-grid-wide {
+    grid-template-columns: 1fr;
+  }
+}

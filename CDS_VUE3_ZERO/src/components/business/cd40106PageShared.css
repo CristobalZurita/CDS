@@ -1,0 +1,46 @@
+.cd40106-output {
+  --smd-panel-fill: rgba(245, 243, 238, 0.85);
+  --smd-stroke: #3e3c38;
+  --smd-chip-fill: #3e3c38;
+  --smd-chip-text: #ffffff;
+  --smd-led-on: #ec6b00;
+  --smd-led-off: #c4c0b4;
+  --smd-led-glow: rgba(236, 107, 0, 0.4);
+}
+
+.pinout-card {
+  border-radius: var(--cds-radius-md);
+  overflow: hidden;
+  background: rgba(62, 60, 56, 0.04);
+  border: 1px solid rgba(62, 60, 56, 0.1);
+}
+
+.pinout-image {
+  width: 100%;
+  display: block;
+}
+
+.circuit-card {
+  background: rgba(62, 60, 56, 0.04);
+  border: 1px solid rgba(62, 60, 56, 0.1);
+  border-radius: var(--cds-radius-md);
+  overflow: hidden;
+  text-align: center;
+}
+
+.circuit-canvas {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.circuit-label {
+  padding: 0.4rem 0.75rem 0.6rem;
+  font-size: var(--cds-text-sm);
+  font-weight: var(--cds-font-semibold);
+  color: var(--cds-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

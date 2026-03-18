@@ -74,10 +74,24 @@ export function useSmdCapacitorCalculator() {
     form.f = normalize(pf / 1000000000000)
   }
 
+  function resetConversion() {
+    form.pf = null
+    form.nf = null
+    form.uf = null
+    form.f = null
+  }
+
+  function resetCode() {
+    form.code = ''
+    form.type = 'EIA3'
+  }
+
   return {
     form,
     decoded,
     isValidCode,
-    convertFrom
+    convertFrom,
+    resetCode,
+    resetConversion
   }
 }
