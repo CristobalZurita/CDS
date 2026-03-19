@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from app.models.client import Client
 from app.models.quote import Quote, QuoteItem, QuoteRecipient, QuoteStatus
 from app.services.email_service import EmailService, build_email_html
+from app.services.logging_service import create_audit
 
 _PART_ITEM_TYPES = {"part", "repuesto", "material", "component"}
 _LABOR_ITEM_TYPES = {"labor", "service", "mano_obra", "diagnostic"}
@@ -376,6 +377,33 @@ def build_quote_saved_event_payload(
         "min_price": quote.estimated_total or 0,
         "max_price": quote.estimated_total or 0,
     }
+
+
+def extract_quote_actor_id(user: dict[str, Any] | None) -> int | None:
+    if not user or not user.get("user_id"):
+        return None
+    try:
+        return int(user.get("user_id"))
+    except (TypeError, ValueError):
+        return None
+
+
+def safe_create_quote_audit(
+    *,
+    event_type: str,
+    user: dict[str, Any] | None,
+    details: dict[str, Any],
+    message: str,
+) -> None:
+    try:
+        create_audit(
+            event_type=event_type,
+            user_id=extract_quote_actor_id(user),
+            details=details,
+            message=message,
+        )
+    except Exception:
+        pass
 
 
 def _serialize_item(item: QuoteItem) -> dict[str, Any]:

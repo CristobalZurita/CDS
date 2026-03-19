@@ -14,7 +14,6 @@ from app.models.quote import Quote, QuoteItem, QuoteRecipient, QuoteStatus
 from app.models.repair import Repair
 from app.services.email_service import EmailService
 from app.services.event_system import Events, event_bus
-from app.services.logging_service import create_audit
 from app.services.quote_management import (
     build_quote_board_response,
     build_quote_delivery_content,
@@ -36,6 +35,7 @@ from app.services.quote_management import (
     replace_quote_items,
     replace_quote_recipients,
     resolve_quote_client,
+    safe_create_quote_audit,
     send_quote_email_batch,
     serialize_quote,
     serialize_quote_with_client,
@@ -215,20 +215,17 @@ async def create_quote(
     db.commit()
     db.refresh(new_quote)
 
-    try:
-        create_audit(
-            event_type="quote.created",
-            user_id=user_id,
-            details={
-                "quote_id": new_quote.id,
-                "quote_number": quote_number,
-                "client_id": client.id,
-                "estimated_total": new_quote.estimated_total,
-            },
-            message=f"Quote {quote_number} created",
-        )
-    except Exception:
-        pass
+    safe_create_quote_audit(
+        event_type="quote.created",
+        user=user,
+        details={
+            "quote_id": new_quote.id,
+            "quote_number": quote_number,
+            "client_id": client.id,
+            "estimated_total": new_quote.estimated_total,
+        },
+        message=f"Quote {quote_number} created",
+    )
 
     return serialize_quote(new_quote, client)
 
@@ -327,20 +324,16 @@ async def update_quote(
     db.commit()
     db.refresh(quote)
 
-    try:
-        user_id = int(user.get("user_id")) if user and user.get("user_id") else None
-        create_audit(
-            event_type="quote.updated",
-            user_id=user_id,
-            details={
-                "quote_id": quote.id,
-                "quote_number": quote.quote_number,
-                "status_changed": status_changed,
-            },
-            message=f"Quote {quote.quote_number} updated",
-        )
-    except Exception:
-        pass
+    safe_create_quote_audit(
+        event_type="quote.updated",
+        user=user,
+        details={
+            "quote_id": quote.id,
+            "quote_number": quote.quote_number,
+            "status_changed": status_changed,
+        },
+        message=f"Quote {quote.quote_number} updated",
+    )
 
     return serialize_quote_with_client(db, quote)
 
@@ -392,20 +385,16 @@ async def update_quote_status(
     db.refresh(quote)
     client = get_quote_client(db, quote)
 
-    try:
-        user_id = int(user.get("user_id")) if user and user.get("user_id") else None
-        create_audit(
-            event_type="quote.status_changed",
-            user_id=user_id,
-            details={
-                "quote_id": quote.id,
-                "quote_number": quote.quote_number,
-                "status": quote.status,
-            },
-            message=f"Quote {quote.quote_number} status changed to {quote.status}",
-        )
-    except Exception:
-        pass
+    safe_create_quote_audit(
+        event_type="quote.status_changed",
+        user=user,
+        details={
+            "quote_id": quote.id,
+            "quote_number": quote.quote_number,
+            "status": quote.status,
+        },
+        message=f"Quote {quote.quote_number} status changed to {quote.status}",
+    )
 
     return serialize_quote_with_client(db, quote)
 
@@ -454,22 +443,18 @@ async def send_quote(
     db.commit()
     db.refresh(quote)
 
-    try:
-        user_id = int(user.get("user_id")) if user and user.get("user_id") else None
-        create_audit(
-            event_type="quote.sent",
-            user_id=user_id,
-            details={
-                "quote_id": quote.id,
-                "quote_number": quote.quote_number,
-                "sent_to": sent_to,
-                "failed_to": failed_to,
-                "whatsapp_queued": whatsapp_queued,
-            },
-            message=f"Quote {quote.quote_number} sent",
-        )
-    except Exception:
-        pass
+    safe_create_quote_audit(
+        event_type="quote.sent",
+        user=user,
+        details={
+            "quote_id": quote.id,
+            "quote_number": quote.quote_number,
+            "sent_to": sent_to,
+            "failed_to": failed_to,
+            "whatsapp_queued": whatsapp_queued,
+        },
+        message=f"Quote {quote.quote_number} sent",
+    )
 
     try:
         event_bus.emit(
