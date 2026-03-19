@@ -51,10 +51,34 @@ defineProps({
   grid-template-columns: 1fr;
 }
 
+.calc-layout > * {
+  min-width: 0;
+}
+
 @media (min-width: 920px) {
   .calc-layout {
     grid-template-columns: var(--layout-calculator-layout-columns-desktop, minmax(320px, 1fr) minmax(360px, 1.2fr));
     align-items: start;
+  }
+}
+
+@media (max-width: 767px) {
+  .calc-page {
+    padding: var(--cds-space-lg) var(--cds-space-sm) var(--cds-space-2xl);
+  }
+
+  .calc-container {
+    gap: 1rem;
+  }
+
+  .calc-header h1 {
+    font-size: var(--cds-text-2xl);
+  }
+}
+
+@media (max-width: 520px) {
+  .back-link {
+    width: 100%;
   }
 }
 

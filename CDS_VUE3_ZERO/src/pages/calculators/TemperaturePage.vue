@@ -7,21 +7,28 @@
       </header>
 
       <div class="calc-layout">
-        <TemperatureParametersPanel
-          :form="form"
-          :temperature-scales="temperatureScales"
-          @reset="reset"
-          @swap="swapScales"
-        />
+        <div class="calc-side-stack">
+          <TemperatureParametersPanel
+            :form="form"
+            :temperature-scales="temperatureScales"
+            @reset="reset"
+            @swap="swapScales"
+          />
 
-        <TemperatureResultPanel
-          :can-convert="canConvert"
-          :display-scales="displayScales"
-          :fill-percent="fillPercent"
-          :form="form"
-          :format-scale="formatScale"
-          :result="result"
-          :thermo-items="thermoItems"
+          <TemperatureResultPanel
+            :can-convert="canConvert"
+            :display-scales="displayScales"
+            :fill-percent="fillPercent"
+            :form="form"
+            :format-scale="formatScale"
+            :result="result"
+            :thermo-items="thermoItems"
+          />
+        </div>
+
+        <CalculatorReferencePanel
+          image-path="/images/calculadoras/temperatura.webp"
+          alt="Referencia visual de conversión de temperatura"
         />
       </div>
 
@@ -31,6 +38,7 @@
 </template>
 
 <script setup>
+import CalculatorReferencePanel from '@/components/business/CalculatorReferencePanel.vue'
 import TemperatureParametersPanel from '@/components/business/TemperatureParametersPanel.vue'
 import TemperatureResultPanel from '@/components/business/TemperatureResultPanel.vue'
 import { temperatureScales, useTemperatureCalculator } from '@/composables/useTemperatureCalculator'

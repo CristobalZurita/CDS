@@ -209,6 +209,16 @@
   }
 }
 
+@media (max-width: 640px) {
+  .panel-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-tab {
+    white-space: normal;
+  }
+}
+
 .output-panel {
   display: flex;
   flex-direction: column;

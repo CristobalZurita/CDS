@@ -77,22 +77,6 @@ export function useOhmsLawCalculator() {
     return null
   })
 
-  const solvedVariableLabel = computed(() => {
-    if (solvedVariable.value === 'V') return 'Voltaje (V)'
-    if (solvedVariable.value === 'I') return 'Corriente (I)'
-    if (solvedVariable.value === 'R') return 'Resistencia (R)'
-    return '-'
-  })
-
-  const displayResult = computed(() => (
-    result.value || {
-      voltage_v: '-',
-      current_a: '-',
-      resistance_ohm: '-',
-      power_w: '-'
-    }
-  ))
-
   const numericResult = computed(() => (
     result.value || {
       voltage_v: 0,
@@ -157,11 +141,9 @@ export function useOhmsLawCalculator() {
     form,
     canCalculate,
     result,
-    displayResult,
     formulaCards,
     highlightedFormulas,
     meterItems,
-    reset,
-    solvedVariableLabel
+    reset
   }
 }

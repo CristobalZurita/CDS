@@ -7,15 +7,17 @@
       </header>
 
       <div class="calc-layout">
-        <OhmsLawParametersPanel :form="form" @reset="reset" />
+        <div class="ohm-side-stack">
+          <OhmsLawParametersPanel :form="form" @reset="reset" />
+          <OhmsLawSummaryPanel
+            :can-calculate="canCalculate"
+            :meter-items="meterItems"
+          />
+        </div>
 
         <OhmsLawOutputPanel
-          :can-calculate="canCalculate"
-          :display-result="displayResult"
           :formula-cards="formulaCards"
           :highlighted-formulas="highlightedFormulas"
-          :meter-items="meterItems"
-          :solved-variable-label="solvedVariableLabel"
         />
       </div>
 
@@ -27,9 +29,10 @@
 <script setup>
 import OhmsLawOutputPanel from '@/components/business/OhmsLawOutputPanel.vue'
 import OhmsLawParametersPanel from '@/components/business/OhmsLawParametersPanel.vue'
+import OhmsLawSummaryPanel from '@/components/business/OhmsLawSummaryPanel.vue'
 import { useOhmsLawCalculator } from '@/composables/useOhmsLawCalculator'
 
-const { form, canCalculate, displayResult, formulaCards, highlightedFormulas, meterItems, reset, solvedVariableLabel } = useOhmsLawCalculator()
+const { form, canCalculate, formulaCards, highlightedFormulas, meterItems, reset } = useOhmsLawCalculator()
 </script>
 
 <style scoped src="./commonCalculatorPage.css"></style>
