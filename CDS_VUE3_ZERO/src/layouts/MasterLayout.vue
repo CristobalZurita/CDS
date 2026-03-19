@@ -83,8 +83,9 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
 
 <style scoped>
 .master-layout {
-  --cds-header-height: 96px;
-  --cds-anchor-gap: 12px;
+  --layout-header-height: 96px;
+  --layout-anchor-gap: 12px;
+  --layout-content-max: 1440px;
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;

@@ -89,3 +89,37 @@
   font-size: var(--cds-text-base);
   text-decoration: none;
 }
+
+.btn-back {
+  color: var(--cds-primary);
+  border: 1px solid var(--cds-primary);
+}
+
+.btn-next {
+  border: 1px solid var(--cds-primary);
+  background: var(--cds-primary);
+  color: var(--cds-white);
+}
+
+.btn-next:disabled {
+  opacity: 0.5;
+}
+
+.acceptance-box {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-md);
+  background: var(--cds-surface-2);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: start;
+  gap: var(--cds-space-sm);
+  font-size: var(--cds-text-base);
+}
+
+.checkbox-input {
+  margin-top: 0.15rem;
+}

@@ -37,8 +37,8 @@
 }
 
 .timer555-panel {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(233, 236, 230, 0.7));
-  border: 1px solid rgba(62, 60, 56, 0.13);
+  background: var(--cds-surface-1);
+  border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-lg);
   box-shadow: var(--cds-shadow-sm);
   overflow: hidden;
@@ -238,7 +238,7 @@
 .diagram-image {
   width: 100%;
   display: block;
-  background: color-mix(in srgb, var(--cds-white) 74%, transparent);
+  background: var(--cds-surface-2);
 }
 
 .diagram-led {
@@ -249,7 +249,7 @@
   border-radius: 50%;
   transform: translate(-50%, -50%);
   background: #8d887d;
-  border: 1.6px solid color-mix(in srgb, var(--cds-dark) 75%, black);
+  border: 1.6px solid var(--cds-dark);
   transition: background 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
   pointer-events: none;
   opacity: 0.55;
@@ -316,7 +316,7 @@
 }
 
 .wave-axis {
-  stroke: color-mix(in srgb, var(--cds-dark) 60%, transparent);
+  stroke: var(--cds-text-muted);
   stroke-width: 1.8;
 }
 
@@ -329,7 +329,7 @@
 }
 
 .wave-path-output {
-  stroke: color-mix(in srgb, var(--cds-dark) 80%, white);
+  stroke: var(--cds-dark);
   stroke-width: 3.2;
   transition: stroke 0.18s ease;
 }
@@ -349,9 +349,9 @@
   gap: 0.25rem;
   margin-bottom: 0.25rem;
   padding: 0.7rem 0.8rem;
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 26%, rgba(62, 60, 56, 0.18));
+  border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-sm);
-  background: color-mix(in srgb, var(--cds-primary) 7%, var(--cds-white));
+  background: var(--cds-surface-2);
 }
 
 .bistable-guide h3 {
@@ -371,7 +371,7 @@
 }
 
 .bistable-guide-note {
-  color: var(--cds-primary) !important;
+  color: var(--cds-primary);
   font-weight: var(--cds-font-semibold);
 }
 
@@ -396,7 +396,7 @@
 .bistable-btn:not(:disabled):hover {
   border-color: var(--cds-primary);
   color: var(--cds-primary);
-  background: color-mix(in srgb, var(--cds-primary) 7%, white);
+  background: var(--cds-surface-2);
 }
 
 .bistable-btn:disabled {
@@ -406,7 +406,7 @@
 .bistable-btn--active {
   border-color: var(--cds-primary);
   color: var(--cds-primary);
-  background: color-mix(in srgb, var(--cds-primary) 10%, white);
+  background: var(--cds-surface-2);
 }
 
 .push-trigger {
@@ -424,7 +424,7 @@
 
 .push-trigger:hover {
   border-color: var(--cds-primary);
-  background: color-mix(in srgb, var(--cds-primary) 6%, white);
+  background: var(--cds-surface-2);
 }
 
 .push-trigger--pressed {

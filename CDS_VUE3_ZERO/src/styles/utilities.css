@@ -135,8 +135,15 @@
 .shadow-lg { box-shadow: var(--cds-shadow-lg); }
 
 /* Estados de validación */
-.is-valid { border-color: var(--cds-success) !important; }
-.is-invalid { border-color: var(--cds-danger, #dc2626) !important; }
+.is-valid,
+.is-valid:focus {
+  border-color: var(--cds-success);
+}
+
+.is-invalid,
+.is-invalid:focus {
+  border-color: var(--cds-danger);
+}
 .is-disabled { opacity: 0.6; pointer-events: none; }
 
 /* Utilidades de accesibilidad */
@@ -160,7 +167,7 @@
 /* Contenedor */
 .container {
   width: 100%;
-  max-width: var(--cds-content-max, 1280px);
+  max-width: var(--layout-content-max, var(--cds-content-max, 1280px));
   margin-left: auto;
   margin-right: auto;
   padding-left: var(--cds-space-md);

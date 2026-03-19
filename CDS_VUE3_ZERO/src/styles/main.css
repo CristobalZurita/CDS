@@ -28,11 +28,7 @@ body {
   font-size: var(--cds-text-base);
   line-height: var(--cds-leading-normal);
   color: var(--cds-text-normal);
-  background:
-    radial-gradient(circle at top left, var(--cds-glow-primary), transparent 28%),
-    radial-gradient(circle at top right, var(--cds-glow-success), transparent 25%),
-    linear-gradient(180deg, #d7d4c7 0%, #cec9b8 100%);
-  background-attachment: fixed;
+  background: var(--cds-background-color);
 }
 
 input, select, textarea, button {

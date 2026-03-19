@@ -42,36 +42,50 @@ const services = [
   background: var(--cds-dark);
 }
 
-.home-services .section-lead  { color: rgba(255, 255, 255, 0.75); }
-
 .services-grid {
   display: grid;
-  gap: 1.25rem;
+  gap: 1rem;
   grid-template-columns: 1fr;
 }
 
-.service-card { color: var(--cds-white); }
+.service-card {
+  color: var(--cds-white);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: #4a4641;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 34px rgba(10, 10, 10, 0.18);
+}
 
 .service-icon {
-  font-size: 1.8rem;
+  width: 3.25rem;
+  height: 3.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--cds-radius-pill);
+  font-size: 1.4rem;
   color: var(--cds-primary);
-  margin-bottom: 0.75rem;
+  background: rgba(236, 107, 0, 0.12);
 }
 
 .service-card h3 {
-  margin: 0 0 0.5rem;
+  margin: 0;
   font-size: clamp(1.1rem, 1.05rem + 0.5vw, 1.35rem);
   color: var(--cds-white);
+  line-height: 1.05;
 }
 
 .service-card p {
   margin: 0;
-  font-size: var(--cds-text-sm);
-  line-height: var(--cds-leading-relaxed);
+  font-size: clamp(0.96rem, 0.88rem + 0.32vw, 1.14rem);
+  line-height: 1.62;
   color: rgba(255, 255, 255, 0.78);
 }
 
 .home-services .btn-section-outline {
+  background: transparent;
   color: var(--cds-white);
   border-color: rgba(255, 255, 255, 0.5);
 }

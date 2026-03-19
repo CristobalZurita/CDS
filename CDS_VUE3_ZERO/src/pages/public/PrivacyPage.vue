@@ -172,16 +172,3 @@ const { backToTerms, backToHome } = usePrivacyPage()
 </script>
 
 <style scoped src="./commonLegalPage.css"></style>
-
-<style scoped>
-.btn-back {
-  color: var(--cds-primary);
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 40%, white);
-}
-
-.btn-next {
-  border: 1px solid var(--cds-primary);
-  background: var(--cds-primary);
-  color: var(--cds-white);
-}
-</style>

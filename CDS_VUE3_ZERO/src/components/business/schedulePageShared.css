@@ -43,7 +43,7 @@
 }
 
 .progress-step.active {
-  border-color: color-mix(in srgb, var(--cds-primary) 50%, white);
+  border-color: var(--cds-primary);
 }
 
 .step-number {
@@ -95,7 +95,7 @@
 
 .calendar-day.selected {
   border-color: var(--cds-primary);
-  background: color-mix(in srgb, var(--cds-primary) 15%, white);
+  background: var(--cds-surface-1);
 }
 
 .calendar-day.disabled,
@@ -135,7 +135,7 @@
 
 .timeslot,
 .btn-secondary {
-  border: 1px solid color-mix(in srgb, var(--cds-light) 60%, white);
+  border: 1px solid var(--cds-border-card);
   background: var(--cds-white);
   color: var(--cds-text-normal);
 }
@@ -205,8 +205,8 @@
 }
 
 .schedule-info {
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 20%, white);
-  background: color-mix(in srgb, var(--cds-primary) 8%, white);
+  border: 1px solid var(--cds-primary);
+  background: var(--cds-surface-1);
   color: var(--cds-text-normal);
 }
 

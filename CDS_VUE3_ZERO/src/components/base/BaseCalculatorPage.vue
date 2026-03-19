@@ -23,9 +23,7 @@ defineProps({
 <style scoped>
 .calc-page {
   padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
-  background:
-    radial-gradient(circle at top left, rgba(236, 107, 0, 0.1), transparent 35%),
-    radial-gradient(circle at bottom right, rgba(3, 134, 0, 0.06), transparent 28%);
+  background: var(--cds-background-color);
 }
 
 .calc-container {
@@ -66,7 +64,7 @@ defineProps({
   justify-content: center;
   min-height: 44px;
   padding: 0.65rem 1rem;
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, transparent);
+  border: 1px solid var(--cds-primary);
   border-radius: 0.6rem;
   text-decoration: none;
   color: var(--cds-primary);

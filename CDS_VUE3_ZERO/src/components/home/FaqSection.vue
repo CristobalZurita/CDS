@@ -37,25 +37,39 @@ const faqs = [
 <style scoped>
 .home-faq { background: var(--cds-background-color); }
 
-.faq-list { display: grid; gap: 0.75rem; }
+.faq-list {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 56rem;
+}
 
 .faq-item {
-  border: 1px solid var(--cds-border-soft);
-  border-radius: var(--cds-radius-sm);
+  border: 1px solid var(--cds-border-card);
+  border-radius: var(--cds-radius-lg);
   background: var(--cds-white);
   overflow: hidden;
+  box-shadow: var(--cds-shadow-sm);
 }
 
 .faq-question {
-  padding: 1rem 1.25rem;
+  padding: 1.05rem 1.3rem;
   cursor: pointer;
-  font-size: var(--cds-text-base);
+  font-size: clamp(1rem, 0.92rem + 0.4vw, 1.2rem);
   font-weight: var(--cds-font-semibold);
   color: var(--cds-dark);
   list-style: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+}
+
+.faq-question::after {
+  content: '+';
+  flex-shrink: 0;
+  font-size: 1.1em;
+  line-height: 1;
+  color: var(--cds-primary);
 }
 
 .faq-question::-webkit-details-marker { display: none; }
@@ -65,11 +79,15 @@ const faqs = [
   color: var(--cds-primary);
 }
 
+.faq-item[open] .faq-question::after {
+  content: '−';
+}
+
 .faq-answer {
   margin: 0;
-  padding: 1rem 1.25rem;
-  font-size: var(--cds-text-base);
-  line-height: var(--cds-leading-relaxed);
+  padding: 0 1.3rem 1.15rem;
+  font-size: clamp(0.98rem, 0.9rem + 0.34vw, 1.14rem);
+  line-height: 1.65;
   color: var(--cds-text-normal);
 }
 </style>

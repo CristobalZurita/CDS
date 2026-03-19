@@ -113,8 +113,8 @@
 }
 
 .formula-card--active {
-  border-color: color-mix(in srgb, var(--cds-primary) 55%, transparent);
-  background: color-mix(in srgb, var(--cds-primary) 12%, white);
+  border-color: var(--cds-primary);
+  background: var(--cds-surface-2);
 }
 
 .meter-grid {

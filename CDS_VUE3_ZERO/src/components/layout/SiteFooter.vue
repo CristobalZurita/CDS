@@ -10,23 +10,14 @@
           height="56"
         />
         <p class="footer-brand-name">Cirujano de Sintetizadores</p>
-        <p class="footer-brand-tagline">
-          Reparación, restauración y modificación
-          de sintetizadores, teclados y más.
-        </p>
-        <p class="footer-brand-summary">
-          Agenda revisión, cotiza tu instrumento y consulta calculadoras técnicas.
-        </p>
       </section>
 
       <section>
         <h2>Servicios</h2>
         <div class="site-footer-links">
-          <router-link to="/cotizador">Cotizador</router-link>
-          <router-link to="/calculadoras">Calculadoras</router-link>
-          <a href="#services">Modificaciones</a>
-          <a href="#services">Mantención preventiva</a>
-          <a href="#services">Reparación y restauración</a>
+          <router-link to="/cotizador">Cotiza</router-link>
+          <router-link to="/calculadoras">Calcula</router-link>
+          <a href="#services">Modifica tus Máquinas</a>
         </div>
       </section>
 
@@ -72,6 +63,8 @@
       </section>
     </div>
 
+
+
     <div class="site-footer-legal">
       <span>© 2026 Cirujano de Sintetizadores</span>
       <span>·</span>
@@ -101,25 +94,26 @@ defineProps({
 .site-footer {
   background: var(--cds-footer-bg-highlight-color);
   color: var(--cds-white);
-  --footer-safe-left: clamp(1rem, 12vw, calc(1rem + 50px + 0.75rem));
-  --footer-safe-right: clamp(1rem, 12vw, calc(1rem + 46px + 0.75rem));
   padding-top: clamp(3rem, 3vw, 4rem);
-  padding-right: var(--footer-safe-right);
+  padding-right: clamp(0.75rem, 2vw, 1.5rem);
   padding-bottom: clamp(1.4rem, 1.8vw, 2rem);
-  padding-left: var(--footer-safe-left);
+  padding-left: clamp(0.75rem, 2vw, 1.5rem);
 }
 
 .site-footer-grid {
-  width: min(100%, var(--cds-content-max));
+  width: 90%;
+  max-width: none;
   margin-inline: auto;
   display: grid;
-  gap: clamp(2rem, 2.2vw, 2.8rem);
+  row-gap: clamp(2rem, 2.2vw, 2.8rem);
+  column-gap: clamp(2.4rem, 3vw, 4rem);
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr));
   align-items: start;
 }
 
 .site-footer-grid > section {
   min-width: 0;
+    margin-right: 40px;
 }
 
 .site-footer h2 {
@@ -128,20 +122,35 @@ defineProps({
   font-weight: var(--cds-font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: color-mix(in srgb, var(--cds-white) 60%, transparent);
+  color: #d8d2ca;
 }
 
 .site-footer p {
   margin: 0;
   font-size: var(--cds-text-sm);
   line-height: var(--cds-leading-normal);
-  color: color-mix(in srgb, var(--cds-white) 75%, transparent);
+  color: #e4ddd4;
 }
 
 .footer-brand {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  align-items: center;
+  justify-self: center;
+  width: min(100%, 16rem);
+  text-align: center;
+}
+
+.footer-brand-summary {
+  width: 100%;
+  margin: clamp(1.5rem, 2vw, 2.2rem) auto 0;
+  padding: 0.2rem 0.75rem 0;
+  text-align: center;
+  font-size: var(--cds-text-xl);
+  color: #d6cec5;
+  line-height: 1.5;
+  text-wrap: balance;
 }
 
 .footer-logo {
@@ -155,20 +164,7 @@ defineProps({
   font-weight: var(--cds-font-semibold);
   color: var(--cds-white);
   margin: 0;
-  line-height: 1.2;
-}
-
-.footer-brand .footer-brand-tagline {
-  font-size: var(--cds-text-base);
-  color: color-mix(in srgb, var(--cds-white) 65%, transparent);
-  line-height: 1.5;
-}
-
-.footer-brand .footer-brand-summary {
-  font-size: var(--cds-text-sm);
-  color: color-mix(in srgb, var(--cds-white) 72%, transparent);
-  line-height: 1.45;
-  margin: 0;
+  line-height: 1;
 }
 
 .site-footer-links {
@@ -177,7 +173,7 @@ defineProps({
 }
 
 .site-footer a {
-  color: color-mix(in srgb, var(--cds-white) 75%, transparent);
+  color: #e4ddd4;
   font-size: var(--cds-text-sm);
   text-decoration: none;
   display: inline-flex;
@@ -191,39 +187,42 @@ defineProps({
 }
 
 .site-footer-links span {
-  color: color-mix(in srgb, var(--cds-white) 65%, transparent);
+  color: #d6cec5;
   font-size: var(--cds-text-sm);
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: .45rem;
 }
 
 .footer-map-column {
   display: flex;
-  justify-content: stretch;
+  justify-content: center;
   align-items: flex-start;
+  margin-right: 60px;
 }
 
 .footer-map-wrap {
   display: grid;
   gap: 0.45rem;
-  width: min(100%, 18rem);
+  width: 100%;
+  max-width: 18rem;
   justify-items: stretch;
 }
 
 .footer-map {
   width: 100%;
   aspect-ratio: 16 / 9;
-  border: 1px solid color-mix(in srgb, var(--cds-white) 18%, transparent);
+  border: 1px solid #5e5953;
   border-radius: var(--cds-radius-md);
-  background: rgba(10, 10, 10, 0.25);
+  background: #2c2926;
 }
 
 .site-footer-legal {
-  width: min(100%, var(--cds-content-max));
+  width: 100%;
+  max-width: none;
   margin: clamp(2rem, 2.3vw, 2.8rem) auto 0;
   padding-top: 1.2rem;
-  border-top: 1px solid color-mix(in srgb, var(--cds-white) 12%, transparent);
+  border-top: 1px solid #5e5953;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -231,16 +230,16 @@ defineProps({
   align-items: center;
   text-align: center;
   font-size: var(--cds-text-xs);
-  color: color-mix(in srgb, var(--cds-white) 50%, transparent);
+  color: #c8c0b6;
 }
 
 .site-footer-legal a {
-  color: color-mix(in srgb, var(--cds-white) 50%, transparent);
+  color: #c8c0b6;
   font-size: inherit;
 }
 
 .footer-credit {
-  color: color-mix(in srgb, var(--cds-white) 62%, transparent);
+  color: #d4ccbf;
 }
 
 .site-footer-legal a:hover {
@@ -255,25 +254,23 @@ defineProps({
 
 @media (min-width: 960px) {
   .site-footer-grid {
-    grid-template-columns: minmax(0, 1.25fr) repeat(3, minmax(0, 0.9fr)) minmax(14rem, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .site-footer-grid {
+    grid-template-columns:
+      minmax(15rem, 1.15fr)
+      minmax(11rem, 0.9fr)
+      minmax(11rem, 0.9fr)
+      minmax(14rem, 1.05fr)
+      minmax(18rem, 1.1fr);
+    align-items: start;
   }
 
   .footer-map-column {
-    justify-content: flex-end;
-  }
-}
-
-@media (min-width: 768px) {
-  .site-footer {
-    --footer-safe-left: clamp(1.5rem, 8vw, calc(1.5rem + 54px + 0.9rem));
-    --footer-safe-right: clamp(1.5rem, 8vw, calc(1.5rem + 50px + 0.9rem));
-  }
-}
-
-@media (min-width: 1024px) {
-  .site-footer-grid {
-    grid-template-columns: 2fr repeat(3, minmax(0, 1fr)) minmax(250px, 265px);
-    align-items: start;
+    justify-content: center;
   }
 }
 </style>

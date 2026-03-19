@@ -28,11 +28,19 @@ const reviews = [
 <style scoped src="./homeShared.css"></style>
 
 <style scoped>
-.home-reviews { background: var(--cds-dark); }
-
-.home-reviews .section-lead  { color: rgba(255, 255, 255, 0.7); }
+.home-reviews {
+  background: var(--cds-dark);
+}
 
 .reviews-grid { display: grid; gap: 1.25rem; }
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  background: #4a4641;
+  border: 1px solid #5f5a54;
+  box-shadow: 0 18px 34px rgba(10, 10, 10, 0.18);
+}
 
 .review-stars {
   color: var(--cds-primary);
@@ -44,15 +52,16 @@ const reviews = [
 
 .review-text {
   margin: 0 0 1rem;
-  font-size: var(--cds-text-base);
-  line-height: var(--cds-leading-relaxed);
-  color: rgba(255, 255, 255, 0.85);
+  flex: 1;
+  font-size: clamp(1.7rem, 0.92rem + 0.34vw, 1.16rem);
+  line-height: 1.65;
+  color: #f2eee7;
   font-style: italic;
 }
 
 .review-author {
   font-size: var(--cds-text-sm);
-  color: rgba(255, 255, 255, 0.6);
+  color: #cdc5bb;
   font-weight: var(--cds-font-semibold);
 }
 

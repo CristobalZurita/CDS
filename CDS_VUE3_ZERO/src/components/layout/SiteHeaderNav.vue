@@ -44,7 +44,7 @@
           class="site-nav-link"
           @click="emit('close-menu')"
         >
-          Dashboard
+          Iniciar Sesión
         </router-link>
         <router-link
           v-else
@@ -127,44 +127,45 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   top: 0;
   z-index: 100;
   background: var(--cds-dark);
-  border-bottom: 1px solid color-mix(in srgb, var(--cds-light) 20%, var(--cds-dark));
-  --nav-font-size: clamp(1.14rem, 1.02rem + 0.32vw, 1.3rem);
-  --nav-link-pad-y: clamp(0.72rem, 0.18vw + 0.66rem, 0.86rem);
-  --nav-link-pad-x: clamp(1rem, 0.22vw + 0.92rem, 1.22rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  --nav-font-size: clamp(2rem, 1rem + 0.24vw, 1.2rem);
+  --nav-link-pad-y: clamp(0.56rem, 0.14vw + 0.52rem, 0.68rem);
+  --nav-link-pad-x: clamp(0.68rem, 0.14vw + 0.64rem, 0.82rem);
 }
 
 .site-header-inner {
   width: 100%;
   max-width: none;
-  padding: 0 1rem;
-  min-height: var(--cds-header-height, 96px);
+  padding: 0 0.85rem;
+  min-height: var(--layout-header-height, var(--cds-header-height, 96px));
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .brand-link {
   color: var(--cds-white);
   text-decoration: none;
   font-weight: var(--cds-font-semibold);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.45rem;
 }
 
 .brand-logo {
-  width: 80px;
-  height: 80px;
+  width: clamp(54px, 4.6vw, 66px);
+  height: clamp(54px, 4.6vw, 66px);
   border-radius: var(--cds-radius-sm);
   flex-shrink: 0;
 }
 
 .brand-name {
-  font-size: var(--cds-text-base);
-  line-height: 1.2;
+  font-size: clamp(1.5rem, 0.92rem + 0.22vw, 1.12rem);
+  line-height: 1.1;
+  text-transform: uppercase;
   display: none;
 }
 
@@ -177,7 +178,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 .site-nav {
   display: none;
   flex-wrap: nowrap;
-  gap: 0.2rem;
+  gap: 0.05rem;
   align-items: center;
   flex: 1;
   min-width: 0;
@@ -187,7 +188,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
   flex-shrink: 0;
   margin-left: auto;
 }
@@ -202,14 +203,14 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   right: 0;
   background: var(--cds-dark);
   padding: 0.75rem 1rem 1rem;
-  border-top: 1px solid color-mix(in srgb, var(--cds-light) 15%, var(--cds-dark));
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
   z-index: 99;
 }
 
 .site-nav-link {
   color: var(--cds-white);
   text-decoration: none;
-  min-height: clamp(56px, 3vw, 62px);
+  min-height: 50px;
   padding: var(--nav-link-pad-y) var(--nav-link-pad-x);
   border-radius: var(--cds-radius-sm);
   font-size: var(--nav-font-size);
@@ -225,7 +226,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 
 .site-nav-link:hover,
 .site-nav-link.router-link-active:hover {
-  background: color-mix(in srgb, var(--cds-primary) 22%, transparent);
+  background: rgba(236, 107, 0, 0.2);
   letter-spacing: 0.03em;
 }
 
@@ -236,13 +237,13 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 .nav-cotizar {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.1rem;
+  gap: 0.35rem;
+  padding: 0.52rem 0.82rem;
   border-radius: var(--cds-radius-sm);
   background: var(--cds-primary);
   color: var(--cds-white);
   text-decoration: none;
-  font-size: var(--cds-text-base);
+  font-size: 0.96rem;
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -251,7 +252,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 }
 
 .nav-cotizar:hover {
-  background: color-mix(in srgb, var(--cds-primary) 85%, black);
+  background: #d86100;
   transform: translateY(-1px);
 }
 
@@ -269,14 +270,14 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  min-height: 52px;
-  padding: 0.55rem 1.1rem;
+  gap: 0.35rem;
+  min-height: 48px;
+  padding: 0.5rem 0.8rem;
   border: none;
   border-radius: var(--cds-radius-sm);
-  background: color-mix(in srgb, var(--cds-white) 14%, transparent);
+  background: rgba(255, 255, 255, 0.12);
   color: var(--cds-white);
-  font-size: var(--cds-text-base);
+  font-size: 0.96rem;
   font-weight: var(--cds-font-semibold);
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -286,7 +287,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 }
 
 .nav-cart-btn:hover {
-  background: color-mix(in srgb, var(--cds-white) 24%, transparent);
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
 }
 
@@ -323,8 +324,8 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border: none;
   border-radius: var(--cds-radius-sm);
   background: transparent;
@@ -335,22 +336,48 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 }
 
 .nav-toggle:hover {
-  background: color-mix(in srgb, var(--cds-white) 15%, transparent);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 @media (min-width: 1200px) {
+  .site-header-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.35rem;
+  }
+
   .site-nav {
     display: flex;
     position: static;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
     overflow: visible;
     padding: 0;
     border-top: none;
+    gap: 0.05rem;
+  }
+
+  .nav-actions {
+    margin-left: 0;
+    padding-left: 0.25rem;
   }
 
   .nav-toggle {
     display: none;
+  }
+}
+
+@media (max-width: 1199px) {
+  .site-header-inner {
+    gap: 0.5rem;
+  }
+
+  .site-nav.is-open {
+    display: flex;
   }
 }
 </style>

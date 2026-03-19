@@ -159,7 +159,6 @@ watch(historyLightboxOpen, val => {
 </script>
 
 <style scoped src="./homeShared.css"></style>
-
 <style scoped>
 .home-about {
   background: var(--cds-background-color);
@@ -167,33 +166,44 @@ watch(historyLightboxOpen, val => {
 
 .about-grid {
   display: grid;
-  gap: 2rem;
+  gap: clamp(1.4rem, 3vw, 2.6rem);
   align-items: start;
 }
 
+.about-text {
+  display: grid;
+  gap: 0.95rem;
+  padding: clamp(1.25rem, 2vw, 2rem);
+  border-radius: clamp(1.1rem, 2vw, 1.7rem);
+  background: var(--cds-white);
+  border: 1px solid var(--cds-border-card);
+  box-shadow: var(--cds-shadow-sm);
+}
+
 .about-text h3 {
-  margin: 0 0 1.75rem;
+  margin: 0;
   font-size: var(--cds-text-xl);
   color: var(--cds-primary);
 }
 
 .about-text p {
-  margin: 0 0 1rem;
-  font-size: var(--cds-text-lg);
-  line-height: var(--cds-leading-relaxed);
+  margin: 0;
+  font-size: clamp(1rem, 0.92rem + 0.42vw, 1.3rem);
+  line-height: 1.68;
   color: var(--cds-text-normal);
 }
 
 .about-image-wrap {
   position: relative;
-  border-radius: 2.75rem;
+  border-radius: clamp(1.25rem, 2vw, 2rem);
   overflow: hidden;
-  border: 2px solid var(--cds-dark);
+  border: 1px solid var(--cds-border-card);
   box-shadow: var(--cds-shadow-md);
   width: min(100%, 650px);
   aspect-ratio: 3 / 2;
   max-width: 100%;
   margin: 0 auto;
+  background: var(--cds-white);
 }
 
 .about-image-wrap::after {
@@ -225,16 +235,17 @@ watch(historyLightboxOpen, val => {
 }
 
 .history-block {
-  width: min(1549px, calc(100vw - 2rem));
-  margin-top: 2.75rem;
-  margin-left: 50%;
-  padding-top: 2.25rem;
-  transform: translateX(-50%);
-  border-top: 1px solid var(--cds-border-soft);
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: clamp(1.3rem, 2.3vw, 2rem);
+  border-radius: clamp(1.1rem, 2vw, 1.7rem);
+  background: var(--cds-white);
+  border: 1px solid var(--cds-border-card);
+  box-shadow: var(--cds-shadow-sm);
 }
 
 .history-title {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1rem;
   font-size: var(--cds-text-xl);
   color: var(--cds-dark);
   text-align: center;
@@ -243,7 +254,7 @@ watch(historyLightboxOpen, val => {
 .timeline-wrap {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.85rem;
   width: 100%;
   margin: 0 auto;
 }
@@ -270,7 +281,7 @@ watch(historyLightboxOpen, val => {
   scroll-behavior: smooth;
   scrollbar-width: none;
   flex: 1;
-  padding: 0.45rem 0;
+  padding: 0.35rem 0;
 }
 
 .timeline-track::-webkit-scrollbar { display: none; }
@@ -283,20 +294,25 @@ watch(historyLightboxOpen, val => {
   justify-content: center;
   gap: 0.38rem;
   padding: 0.75rem 1.15rem;
-  border: 1px solid var(--cds-border-soft);
+  border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-sm);
   background: var(--cds-white);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
   text-align: center;
   min-width: 112px;
   min-height: 96px;
+}
+
+.timeline-node:hover {
+  transform: translateY(-1px);
 }
 
 .timeline-node.active {
   background: var(--cds-primary);
   border-color: var(--cds-primary);
   color: var(--cds-white);
+  box-shadow: 0 16px 28px rgba(236, 107, 0, 0.18);
 }
 
 .node-year {
@@ -311,9 +327,10 @@ watch(historyLightboxOpen, val => {
 }
 
 .history-desc {
-  margin: 1.25rem 0 0;
-  font-size: var(--cds-text-base);
-  line-height: var(--cds-leading-relaxed);
+  max-width: 56rem;
+  margin: 1.35rem auto 0;
+  font-size: clamp(1rem, 0.92rem + 0.38vw, 1.25rem);
+  line-height: 1.65;
   color: var(--cds-text-normal);
   text-align: center;
 }
@@ -326,9 +343,7 @@ watch(historyLightboxOpen, val => {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: color-mix(in srgb, var(--cds-dark) 35%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(35, 34, 31, 0.82);
   outline: none;
 }
 
@@ -349,7 +364,7 @@ watch(historyLightboxOpen, val => {
   height: 44px;
   border: none;
   border-radius: var(--cds-radius-pill);
-  background: color-mix(in srgb, var(--cds-dark) 72%, black);
+  background: var(--cds-dark);
   color: var(--cds-white);
   display: inline-flex;
   align-items: center;

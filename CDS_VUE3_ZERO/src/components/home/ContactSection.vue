@@ -115,11 +115,23 @@ async function submitContact() {
 </script>
 
 <style scoped src="./homeShared.css"></style>
-
 <style scoped>
 .home-contact { background: var(--cds-background-color); }
 
-.contact-layout { display: grid; gap: 2rem; align-items: start; }
+.contact-layout {
+  display: grid;
+  gap: clamp(1.4rem, 2.8vw, 2.4rem);
+  align-items: start;
+}
+
+.contact-form-wrap,
+.contact-info-wrap {
+  padding: clamp(1.3rem, 2vw, 2rem);
+  border-radius: clamp(1.15rem, 2vw, 1.7rem);
+  background: var(--cds-white);
+  border: 1px solid var(--cds-border-card);
+  box-shadow: var(--cds-shadow-sm);
+}
 
 .contact-form-wrap h3 {
   margin: 0 0 1.25rem;
@@ -148,10 +160,11 @@ async function submitContact() {
 .form-field input,
 .form-field textarea {
   width: 100%;
-  padding: 0.75rem 1rem;
+  min-height: 52px;
+  padding: 0.85rem 1rem;
   border: 1px solid var(--cds-border-input);
-  border-radius: var(--cds-radius-sm);
-  font-size: var(--cds-text-base);
+  border-radius: var(--cds-radius-md);
+  font-size: clamp(1rem, 0.92rem + 0.34vw, 1.18rem);
   font-family: inherit;
   color: var(--cds-text-normal);
   background: var(--cds-white);
@@ -165,7 +178,10 @@ async function submitContact() {
   border-color: var(--cds-primary);
 }
 
-.form-field textarea { resize: vertical; min-height: 120px; }
+.form-field textarea {
+  resize: vertical;
+  min-height: 140px;
+}
 
 .form-msg {
   margin: 0;
@@ -195,28 +211,37 @@ async function submitContact() {
   justify-content: center;
   gap: 0.5rem;
   min-height: 48px;
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.5rem;
   border: none;
-  border-radius: var(--cds-radius-sm);
+  border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
-  font-size: var(--cds-text-base);
+  font-size: clamp(1rem, 0.92rem + 0.34vw, 1.16rem);
   font-weight: var(--cds-font-semibold);
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.btn-submit:not(:disabled):hover {
+  transform: translateY(-1px);
 }
 
 .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
 
+.contact-info-wrap {
+  display: grid;
+  gap: 1rem;
+}
+
 .contact-card {
-  background: var(--cds-white);
+  background: var(--cds-light);
   border: 1px solid var(--cds-border-card);
-  border-radius: var(--cds-radius-md);
-  padding: 1.5rem;
+  border-radius: var(--cds-radius-lg);
+  padding: 1.25rem;
   display: grid;
   gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  width: 98.15%;
+  margin: 0;
+  width: 100%;
 }
 
 .contact-card p {
@@ -236,7 +261,7 @@ async function submitContact() {
   flex-wrap: wrap;
   gap: 0.75rem;
   padding-top: 1rem;
-  border-top: 4px solid var(--cds-border-soft);
+  border-top: 1px solid var(--cds-border-soft);
 }
 
 .contact-channels a {
@@ -252,14 +277,15 @@ async function submitContact() {
 .contact-channels a:hover { color: var(--cds-primary); }
 
 .contact-map {
-  border-radius: var(--cds-radius-md);
+  border-radius: var(--cds-radius-lg);
   overflow: hidden;
-  height: 300px;
+  height: 320px;
+  border: 1px solid var(--cds-border-card);
   box-shadow: var(--cds-shadow-sm);
 }
 
 .contact-map iframe {
-  width: 98%;
+  width: 100%;
   height: 100%;
   border: none;
   display: block;

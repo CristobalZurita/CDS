@@ -6,13 +6,15 @@
   --cds-headings-font-family: "Steelfish", "Cervo Neue", "Oswald", serif;
 
   --cds-primary: #ec6b00;
-  --cds-dark: #3e3c38;
+  --cds-dark: #484745;
   --cds-success: #038600;
   --cds-danger: #dc2626;
   --cds-warning: #f59e0b;
   --cds-info: #0ea5e9;
   --cds-light: #d3d0c3;
   --cds-white: white;
+              
+
   
   /* Estados de validación */
   --cds-valid-bg: #f0fdf4;
@@ -37,7 +39,7 @@
   --cds-background-color: #d3d0c3;
   --cds-nav-background-color: var(--cds-dark);
   --cds-footer-bg-color: var(--cds-dark);
-  --cds-footer-bg-highlight-color: color-mix(in srgb, var(--cds-dark) 96%, black);
+  --cds-footer-bg-highlight-color: #393734;
 
   --cds-navbar-height: 71px;
 
@@ -47,11 +49,11 @@
   --cds-text-muted: #5a5652;
   --cds-border-soft: rgba(62, 60, 56, 0.15);
   --cds-border-strong: rgba(62, 60, 56, 0.25);
-  --cds-border-card: color-mix(in srgb, var(--cds-light) 70%, white);
-  --cds-border-input: color-mix(in srgb, var(--cds-light) 65%, white);
-  --cds-surface-1: rgba(255, 255, 255, 0.92);
-  --cds-surface-2: rgba(255, 255, 255, 0.84);
-  --cds-surface-dark: rgba(35, 34, 31, 0.92);
+  --cds-border-card: #beb7a8;
+  --cds-border-input: #c7c0b4;
+  --cds-surface-1: #f7f5f0;
+  --cds-surface-2: #f1eee8;
+  --cds-surface-dark: #23221f;
   --cds-glow-primary: rgba(236, 107, 0, 0.18);
   --cds-glow-success: rgba(3, 134, 0, 0.14);
 

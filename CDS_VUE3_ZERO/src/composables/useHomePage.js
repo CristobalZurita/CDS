@@ -13,6 +13,7 @@ export function useHomePage() {
     { id: 'hero', name: 'Inicio', icon: '' },
     { id: 'about', name: 'Nosotros', icon: 'pi pi-box' },
     { id: 'services', name: 'Servicios', icon: 'pi pi-wrench' },
+    { id: 'diagnostic', name: 'Cotiza', icon: 'pi pi-calculator' },
     { id: 'featured', name: 'Trabajos', icon: 'pi pi-qrcode' },
     { id: 'faq', name: 'Preguntas', icon: 'pi pi-question-circle' },
     { id: 'reviews', name: 'Opiniones', icon: 'fa-regular fa-comment' },

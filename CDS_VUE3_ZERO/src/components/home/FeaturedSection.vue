@@ -47,44 +47,45 @@ const featuredInstruments = computed(() => resolveImageArray(featuredInstruments
 <style scoped src="./homeShared.css"></style>
 
 <style scoped>
-.home-featured { background: var(--cds-light); }
+.home-featured {
+  background: var(--cds-light);
+}
 
 .featured-grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
 }
 
 .featured-card {
-  border-radius: var(--cds-radius-sm);
+  border-radius: var(--cds-radius-lg);
   overflow: hidden;
+  border: 1px solid var(--cds-border-card);
   background: var(--cds-white);
   box-shadow: var(--cds-shadow-sm);
 }
 
 .featured-card img {
   width: 100%;
-  height: 130px;
+  height: clamp(180px, 21vw, 240px);
   object-fit: cover;
   display: block;
 }
 
 .featured-card p {
   margin: 0;
-  padding: var(--cds-space-xs) var(--cds-space-sm);
-  font-size: var(--cds-text-xs);
+  padding: 0.95rem 1rem 1.05rem;
+  font-size: var(--cds-text-sm);
   font-weight: var(--cds-font-semibold);
   color: var(--cds-text-normal);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.3;
 }
 
 @media (min-width: 640px) {
-  .featured-grid { grid-template-columns: repeat(3, 1fr); }
+  .featured-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .featured-grid { grid-template-columns: repeat(3, 1fr); }
 }
 </style>

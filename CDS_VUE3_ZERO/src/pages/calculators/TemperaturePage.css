@@ -49,8 +49,8 @@
   background:
     linear-gradient(
       to top,
-      color-mix(in srgb, var(--thermo-color) 85%, black) 0%,
-      color-mix(in srgb, var(--thermo-color) 85%, black) var(--thermo-fill),
+      var(--thermo-color) 0%,
+      var(--thermo-color) var(--thermo-fill),
       rgba(255, 255, 255, 0.75) var(--thermo-fill),
       rgba(255, 255, 255, 0.75) 100%
     );
@@ -64,7 +64,7 @@
   height: 26px;
   border-radius: 50%;
   border: 1px solid rgba(62, 60, 56, 0.35);
-  background: color-mix(in srgb, var(--thermo-color) 85%, black);
+  background: var(--thermo-color);
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.22);
 }
 
@@ -86,8 +86,8 @@
     background:
       linear-gradient(
         to right,
-        color-mix(in srgb, var(--thermo-color) 85%, black) 0%,
-        color-mix(in srgb, var(--thermo-color) 85%, black) var(--thermo-fill),
+        var(--thermo-color) 0%,
+        var(--thermo-color) var(--thermo-fill),
         rgba(255, 255, 255, 0.75) var(--thermo-fill),
         rgba(255, 255, 255, 0.75) 100%
       );

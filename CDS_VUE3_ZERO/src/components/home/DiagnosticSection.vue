@@ -43,42 +43,63 @@ const { resolveSlotOr } = useMediaBinding()
 
 .diagnostic-layout {
   display: grid;
-  gap: 2rem;
-  align-items: center;
+  gap: clamp(1.35rem, 2.5vw, 2.4rem);
+  align-items: stretch;
+}
+
+.diagnostic-text {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: clamp(1.25rem, 2vw, 2rem);
+  border-radius: clamp(1.1rem, 2vw, 1.7rem);
+  background: var(--cds-white);
+  border: 1px solid var(--cds-border-card);
+  box-shadow: var(--cds-shadow-sm);
 }
 
 .diagnostic-text p {
-  font-size: var(--cds-text-base);
-  line-height: var(--cds-leading-relaxed);
+  font-size: clamp(1rem, 0.92rem + 0.38vw, 1.22rem);
+  line-height: 1.65;
   color: var(--cds-text-normal);
-  margin: 0 0 1.25rem;
+  margin: 0;
 }
 
 .diagnostic-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 1.5rem;
+  margin: 0;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .diagnostic-list li {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.6rem;
-  font-size: var(--cds-text-base);
+  font-size: clamp(1rem, 0.92rem + 0.32vw, 1.16rem);
   color: var(--cds-text-normal);
+  line-height: 1.5;
 }
 
 .diagnostic-list li i { color: var(--cds-primary); flex-shrink: 0; }
 
 .diagnostic-image {
-  border-radius: var(--cds-radius-md);
+  min-height: 100%;
+  border-radius: clamp(1.1rem, 2vw, 1.7rem);
   overflow: hidden;
+  border: 1px solid var(--cds-border-card);
+  background: var(--cds-white);
   box-shadow: var(--cds-shadow-md);
 }
 
-.diagnostic-image img { width: 100%; height: auto; display: block; }
+.diagnostic-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  display: block;
+  object-fit: cover;
+}
 
 @media (min-width: 900px) {
   .diagnostic-layout { grid-template-columns: 1fr 1fr; }

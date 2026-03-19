@@ -189,39 +189,3 @@ const { accepted, canContinue, goToPrivacy } = useTermsPage()
 </script>
 
 <style scoped src="./commonLegalPage.css"></style>
-
-<style scoped>
-.acceptance-box {
-  margin-top: 1rem;
-  padding: 0.8rem;
-  border: 1px solid var(--cds-border-input);
-  border-radius: var(--cds-radius-md);
-  background: color-mix(in srgb, var(--cds-light) 15%, white);
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: start;
-  gap: var(--cds-space-sm);
-  font-size: var(--cds-text-base);
-}
-
-.checkbox-input {
-  margin-top: 0.15rem;
-}
-
-.btn-back {
-  color: var(--cds-primary);
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 40%, white);
-}
-
-.btn-next {
-  border: 1px solid var(--cds-primary);
-  background: var(--cds-primary);
-  color: var(--cds-white);
-}
-
-.btn-next:disabled {
-  opacity: 0.5;
-}
-</style>
