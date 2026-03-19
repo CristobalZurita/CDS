@@ -3,6 +3,18 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# Asegura que Apache sirva index.html antes que cualquier index.php previo
+DirectoryIndex index.html
+
+# Evita servir HTML/CSS/JS cacheados después de reemplazar el ZIP en cPanel
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|css|js|json)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>
+
 # Redirige todo al index.html (SPA) excepto archivos y mail.php
 Options -MultiViews
 RewriteCond %{REQUEST_FILENAME} !-f

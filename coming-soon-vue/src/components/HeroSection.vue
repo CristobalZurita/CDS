@@ -799,30 +799,31 @@ onUnmounted(() => {
 
 @media (max-width: 389px), (max-width: 430px) and (max-height: 740px) {
   .hero {
-    --hero-mask-height: 67%;
-    --hero-pad-top: 0.65rem;
-    --hero-pad-bottom: 0.95rem;
-    --hero-gap: 0.5rem;
+    --hero-mask-height: 64%;
+    --hero-pad-top: 1rem;
+    --hero-pad-bottom: 7rem;
+    --hero-gap: 2rem;
     --hero-offset-y: 0;
-    --hero-osc-height: 3rem;
-    --hero-content-justify: space-between;
-    --hero-logo-width: min(92vw, 360px);
-    --hero-logo-max-height: 19svh;
-    --hero-title-size: clamp(1.98rem, 8.4vw, 2.95rem);
-    --hero-title-offset-y: -0.26rem;
-    --hero-service-size: clamp(1.28rem, 5.2vw, 1.5rem);
-    --hero-body-size: clamp(0.94rem, 3.7vw, 1.06rem);
-    --hero-btn-width: min(90vw, 16.8rem);
-    --hero-btn-min-height: 3.2rem;
-    --hero-btn-pad-block: 0.68rem;
-    --hero-btn-pad-inline: 0.95rem;
-    --hero-btn-font-size: clamp(0.94rem, 3.8vw, 1.06rem);
+    --hero-osc-height: 5.75rem;
+    --hero-content-justify: center;
+    --hero-logo-width: min(94vw, 330px);
+    --hero-logo-max-height: 17svh;
+    --hero-title-size: clamp(2.5rem, 7.7vw, 2.5rem);
+    --hero-title-offset-y: -0.9rem;
+    --hero-service-size: clamp(1.52rem, 4.7vw, 1.32rem);
+    --hero-body-size: clamp(1.4rem, 3.35vw, 0.95rem);
+    --hero-btn-width: min(92vw, 15.6rem);
+    --hero-btn-min-height: 3rem;
+    --hero-btn-pad-block: 0.5rem;
+    --hero-btn-pad-inline: 0.9rem;
+    --hero-btn-font-size: clamp(0.86rem, 3.4vw, 0.96rem);
   }
 
   .hero-content  { max-width: 28rem; }
-  .hero-actions  { gap: 0.45rem; }
-  .services-type { gap: 0.06rem; }
-  .hero-body     { gap: 0.22rem; }
+  .hero-actions  { gap: 0.5rem; }
+  .services-type { gap: 0.08rem; }
+  .hero-body     { gap: 0.35rem; }
+  .hero-title    { line-height: 0.9; }
 }
 
 @media (max-width: 359px), (max-width: 390px) and (max-height: 667px) {
@@ -830,7 +831,7 @@ onUnmounted(() => {
     --hero-mask-height: 64%;
     --hero-pad-top: 1rem;
     --hero-pad-bottom: 7rem;
-    --hero-gap: 3rem;
+    --hero-gap: 2rem;
     --hero-osc-height: 5.75rem;
     --hero-content-justify: center;
     --hero-logo-width: min(94vw, 330px);

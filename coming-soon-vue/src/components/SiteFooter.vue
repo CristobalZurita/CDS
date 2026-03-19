@@ -4,7 +4,7 @@
 
       <section class="footer-brand">
         <img
-          src="/images/logo/logo_square_004.webp"
+          src="/images/logo/logo-nuevo.jpg"
           alt="Cirujano de Sintetizadores"
           class="footer-logo"
           width="56"
