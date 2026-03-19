@@ -161,10 +161,10 @@ async function submitContact() {
 .form-field textarea {
   width: 100%;
   min-height: 52px;
-  padding: 0.85rem 1rem;
+  padding: 0.3rem 1rem;
   border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-md);
-  font-size: clamp(1rem, 0.92rem + 0.34vw, 1.18rem);
+  font-size: clamp(1rem, 1.5rem + 0.34vw, 1.5rem);
   font-family: inherit;
   color: var(--cds-text-normal);
   background: var(--cds-white);
@@ -279,7 +279,7 @@ async function submitContact() {
 .contact-map {
   border-radius: var(--cds-radius-lg);
   overflow: hidden;
-  height: 320px;
+  height: 537px;
   border: 1px solid var(--cds-border-card);
   box-shadow: var(--cds-shadow-sm);
 }
