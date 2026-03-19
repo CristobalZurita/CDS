@@ -17,7 +17,7 @@ import re
 from typing import List
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import IntegrityError
 
 
@@ -29,7 +29,8 @@ def _strip_version(url: str) -> str:
         return url
     return re.sub(r'/v\d+/', '/', url)
 
-from app.core.database import SessionLocal
+from app.core.database import get_db
+from app.core.dependencies import require_permission
 from app.models.media import MediaAsset, MediaBinding
 from app.schemas.media import (
     MediaAssetCreate, MediaAssetOut,
@@ -40,25 +41,45 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/media", tags=["media"])
 
+def _list_bindings_query(db: Session):
+    return (
+        db.query(MediaBinding)
+        .options(joinedload(MediaBinding.asset))
+        .order_by(MediaBinding.slot_key)
+        .all()
+    )
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+
+def _serialize_bindings(bindings: list[MediaBinding]) -> list[MediaBindingOut]:
+    return [MediaBindingOut.model_validate(binding) for binding in bindings]
+
+
+def _load_binding_with_asset(db: Session, slot_key: str) -> MediaBinding | None:
+    return (
+        db.query(MediaBinding)
+        .options(joinedload(MediaBinding.asset))
+        .filter(MediaBinding.slot_key == slot_key)
+        .first()
+    )
 
 
 # ─── ASSETS ──────────────────────────────────────────────────────────────────
 
 @router.get("/assets", response_model=List[MediaAssetOut])
-def list_assets(db: Session = Depends(get_db)):
+def list_assets(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("media", "read")),
+):
     """Devuelve todos los assets registrados en la BD."""
     return db.query(MediaAsset).order_by(MediaAsset.uploaded_at.desc()).all()
 
 
 @router.post("/assets", response_model=MediaAssetOut, status_code=status.HTTP_201_CREATED)
-def register_asset(data: MediaAssetCreate, db: Session = Depends(get_db)):
+def register_asset(
+    data: MediaAssetCreate,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("media", "create")),
+):
     """
     Registra un asset en la BD después de que el frontend lo subió a Cloudinary.
     Si el public_id ya existe, actualiza sus datos (overwrite en Cloudinary).
@@ -112,7 +133,10 @@ def register_asset(data: MediaAssetCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/assets/import-from-cloudinary")
-def import_from_cloudinary(db: Session = Depends(get_db)):
+def import_from_cloudinary(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("media", "create")),
+):
     """
     Importa masivamente todos los assets de Cloudinary a media_assets.
     Hace upsert por public_id: actualiza si ya existe, inserta si es nuevo.
@@ -170,7 +194,12 @@ def import_from_cloudinary(db: Session = Depends(get_db)):
 
 
 @router.delete("/assets/{asset_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_asset(asset_id: int, from_cloudinary: bool = False, db: Session = Depends(get_db)):
+def delete_asset(
+    asset_id: int,
+    from_cloudinary: bool = False,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("media", "delete")),
+):
     """
     Elimina un asset de la BD.
     Si from_cloudinary=true también lo borra de Cloudinary.
@@ -207,17 +236,34 @@ def delete_asset(asset_id: int, from_cloudinary: bool = False, db: Session = Dep
 
 # ─── BINDINGS ────────────────────────────────────────────────────────────────
 
+@router.get("/public/bindings", response_model=List[MediaBindingOut])
+async def list_public_bindings(db: Session = Depends(get_db)):
+    """
+    Devuelve bindings activos para render público del sitio.
+    No expone catálogo ni operaciones mutables.
+    """
+    return _serialize_bindings(_list_bindings_query(db))
+
+
 @router.get("/bindings", response_model=List[MediaBindingOut])
-def list_bindings(db: Session = Depends(get_db)):
+async def list_bindings(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("media", "read")),
+):
     """
     Devuelve todos los bindings activos (slot_key → asset).
     Este endpoint lo consume el front para renderizar imágenes dinámicas.
     """
-    return db.query(MediaBinding).order_by(MediaBinding.slot_key).all()
+    return _serialize_bindings(_list_bindings_query(db))
 
 
 @router.put("/bindings/{slot_key:path}", response_model=MediaBindingOut)
-def upsert_binding(slot_key: str, data: MediaBindingUpsert, db: Session = Depends(get_db)):
+def upsert_binding(
+    slot_key: str,
+    data: MediaBindingUpsert,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("media", "update")),
+):
     """
     Asigna un asset a un slot (crea o actualiza).
     Ej: PUT /media/bindings/home.hero.bg   body: {"asset_id": 5}
@@ -249,11 +295,18 @@ def upsert_binding(slot_key: str, data: MediaBindingUpsert, db: Session = Depend
             detail="No se pudo guardar el slot por un conflicto de concurrencia.",
         )
     db.refresh(binding)
-    return binding
+    hydrated = _load_binding_with_asset(db, slot_key)
+    if not hydrated:
+        raise HTTPException(status_code=404, detail="Binding no encontrado")
+    return MediaBindingOut.model_validate(hydrated)
 
 
 @router.delete("/bindings/{slot_key:path}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_binding(slot_key: str, db: Session = Depends(get_db)):
+def delete_binding(
+    slot_key: str,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("media", "delete")),
+):
     """Quita el binding de un slot (el asset no se elimina)."""
     binding = db.query(MediaBinding).filter(MediaBinding.slot_key == slot_key).first()
     if not binding:

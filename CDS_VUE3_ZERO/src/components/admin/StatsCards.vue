@@ -32,7 +32,7 @@ const formatNumber = (val) => {
 <style scoped>
 .stats-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(var(--admin-dashboard-stats-card-min, 320px), 1fr));
   gap: var(--admin-space-lg, 1.8rem);
   margin-bottom: var(--admin-space-xl, 2.4rem);
 }
@@ -49,9 +49,9 @@ const formatNumber = (val) => {
 }
 
 .stat-icon {
-  font-size: var(--cds-text-3xl);
-  width: 6rem;
-  height: 6rem;
+  font-size: var(--admin-text-3xl, var(--cds-text-3xl));
+  width: calc(6rem * var(--admin-dashboard-scale, 1));
+  height: calc(6rem * var(--admin-dashboard-scale, 1));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,14 +66,14 @@ const formatNumber = (val) => {
 
 .stat-value {
   display: block;
-  font-size: var(--cds-text-4xl);
+  font-size: var(--admin-text-4xl, var(--cds-text-4xl));
   font-weight: 700;
   color: var(--cds-text-normal);
   line-height: 1;
 }
 
 .stat-label {
-  font-size: var(--cds-text-sm);
+  font-size: var(--admin-text-sm, var(--cds-text-sm));
   color: var(--cds-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;

@@ -96,6 +96,8 @@ class PermissionService:
                 "diagnostics:read", "diagnostics:create", "diagnostics:update", "diagnostics:delete",
                 # Payments
                 "payments:read", "payments:create",
+                # Media
+                "media:read", "media:create", "media:update", "media:delete",
                 # Repair Statuses
                 "repair_statuses:read", "repair_statuses:create", "repair_statuses:update", "repair_statuses:delete",
                 # Stock Movements

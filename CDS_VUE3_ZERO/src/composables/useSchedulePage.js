@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import api, { extractErrorMessage } from '@/services/api'
@@ -10,6 +10,21 @@ function normalizeAppointmentName(value) {
     .trim()
 
   return cleaned || 'Cliente'
+}
+
+function normalizeScheduleContact(source) {
+  return {
+    fullName: String(source?.full_name || source?.fullName || '').trim(),
+    email: String(source?.email || '').trim(),
+    phone: String(source?.phone || source?.telefono || '').trim(),
+  }
+}
+
+function formatAppointmentNumber(value) {
+  const raw = String(value || '').trim()
+  if (!raw) return `CIT-${Date.now().toString().slice(-8)}`
+  if (raw.toUpperCase().startsWith('CIT-')) return raw.toUpperCase()
+  return `CIT-${raw.padStart(6, '0')}`
 }
 
 export function useSchedulePage() {
@@ -28,6 +43,7 @@ export function useSchedulePage() {
   const isLoadingAvailability = ref(false)
   const submissionError = ref('')
   const availabilityError = ref('')
+  const contactDetails = ref(normalizeScheduleContact(authStore.user))
 
   const currentMonth = ref(new Date().getMonth())
   const currentYear = ref(new Date().getFullYear())
@@ -58,8 +74,8 @@ export function useSchedulePage() {
 
   const dateSelected = computed(() => selectedDate.value !== null)
   const contactDetailsComplete = computed(() => {
-    const email = String(authStore.user?.email || '').trim()
-    const phone = String(authStore.user?.phone || '').trim()
+    const email = String(contactDetails.value.email || '').trim()
+    const phone = String(contactDetails.value.phone || '').trim()
     return Boolean(email && phone)
   })
   const timeSelected = computed(() => {
@@ -140,6 +156,37 @@ export function useSchedulePage() {
     return occupiedSlots.value.includes(String(time || ''))
   }
 
+  function mergeContactDetails(source) {
+    const nextContact = normalizeScheduleContact(source)
+    contactDetails.value = {
+      fullName: nextContact.fullName || contactDetails.value.fullName,
+      email: nextContact.email || contactDetails.value.email,
+      phone: nextContact.phone || contactDetails.value.phone,
+    }
+  }
+
+  async function hydrateContactDetails() {
+    mergeContactDetails(authStore.user)
+
+    if (contactDetailsComplete.value) return
+
+    try {
+      const refreshedUser = await authStore.checkAuth()
+      mergeContactDetails(refreshedUser || authStore.user)
+    } catch {
+      // Ignore session refresh failures here; the route guard already handles auth redirects.
+    }
+
+    if (contactDetailsComplete.value) return
+
+    try {
+      const response = await api.get('/client/profile')
+      mergeContactDetails(response?.data || {})
+    } catch {
+      // Keep the schedule page usable even if profile hydration fails.
+    }
+  }
+
   async function loadAvailability(date = selectedDate.value) {
     if (!(date instanceof Date)) {
       occupiedSlots.value = []
@@ -194,15 +241,15 @@ export function useSchedulePage() {
       appointmentDate.setHours(Number(hours), Number(minutes), 0, 0)
 
       const response = await api.post('/appointments/', {
-        nombre: normalizeAppointmentName(authStore.user?.full_name),
-        email: authStore.user?.email || '',
-        telefono: authStore.user?.phone || '',
+        nombre: normalizeAppointmentName(contactDetails.value.fullName),
+        email: contactDetails.value.email || '',
+        telefono: contactDetails.value.phone || '',
         fecha: appointmentDate.toISOString(),
         mensaje: 'Cita de diagnóstico',
         turnstile_token: turnstileToken.value
       })
 
-      appointmentNumber.value = String(response?.data?.id || `CIT-${Date.now().toString().slice(-8)}`)
+      appointmentNumber.value = formatAppointmentNumber(response?.data?.id)
       step.value = 4
     } catch (error) {
       submissionError.value = extractErrorMessage(error)
@@ -216,9 +263,17 @@ export function useSchedulePage() {
     router.push('/')
   }
 
+  onMounted(() => {
+    hydrateContactDetails()
+  })
+
   watch(selectedDate, (date) => {
     loadAvailability(date)
   })
+
+  watch(() => authStore.user, (nextUser) => {
+    mergeContactDetails(nextUser)
+  }, { deep: true })
 
   watch(selectedTime, (time, previous) => {
     if (time && time !== previous) {

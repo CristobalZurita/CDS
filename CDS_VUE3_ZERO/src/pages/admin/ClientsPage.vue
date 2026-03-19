@@ -48,6 +48,8 @@
           :show-repair-form="showRepairForm"
           :edit-form="editForm"
           :device-form="deviceForm"
+          :editing-device-id="editingDeviceId"
+          :editing-device-form="editingDeviceForm"
           :repair-form="repairForm"
           :devices="devices"
           :repairs="repairs"
@@ -57,9 +59,14 @@
           @delete-client="deleteSelectedClient"
           @update-client="updateSelectedClient"
           @create-device="createDeviceForSelectedClient"
+          @start-device-edit="startDeviceEdit"
+          @cancel-device-edit="cancelDeviceEdit"
+          @save-device="saveDeviceForSelectedClient"
+          @delete-device="deleteDeviceForSelectedClient"
           @create-repair="createRepairForSelectedClient"
           @update-edit-field="updateEditField"
           @update-device-field="updateDeviceField"
+          @update-editing-device-field="updateEditingDeviceField"
           @update-repair-field="updateRepairField"
         />
       </div>
@@ -93,6 +100,8 @@ const {
   createForm,
   editForm,
   deviceForm,
+  editingDeviceId,
+  editingDeviceForm,
   repairForm,
   selectClient,
   toggleCreateForm,
@@ -104,6 +113,10 @@ const {
   updateSelectedClient,
   deleteSelectedClient,
   createDeviceForSelectedClient,
+  startDeviceEdit,
+  cancelDeviceEdit,
+  saveDeviceForSelectedClient,
+  deleteDeviceForSelectedClient,
   createRepairForSelectedClient
 } = useClientsPage()
 
@@ -131,6 +144,10 @@ function updateEditField({ field, value }) {
 
 function updateDeviceField({ field, value }) {
   deviceForm.value[field] = value
+}
+
+function updateEditingDeviceField({ field, value }) {
+  editingDeviceForm.value[field] = value
 }
 
 function updateRepairField({ field, value }) {

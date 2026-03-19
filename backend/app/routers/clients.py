@@ -165,7 +165,17 @@ def delete_client(
 @router.get("/{client_id}/devices", response_model=List[Dict])
 def list_client_devices(client_id: int, db: Session = Depends(get_db), user: dict = Depends(require_permission("clients", "read"))):
     devices = db.query(Device).filter(Device.client_id == client_id).all()
-    return [{"id": d.id, "model": d.model, "serial_number": d.serial_number} for d in devices]
+    return [
+        {
+            "id": d.id,
+            "model": d.model,
+            "serial_number": d.serial_number,
+            "brand_other": d.brand_other,
+            "description": d.description,
+            "condition_notes": d.condition_notes,
+        }
+        for d in devices
+    ]
 
 
 @router.get("/{client_id}/repairs", response_model=List[Dict])

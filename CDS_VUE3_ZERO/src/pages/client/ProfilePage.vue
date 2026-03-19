@@ -103,7 +103,7 @@
         </div>
         <div class="stat-row">
           <span>Promedio reparacion</span>
-          <strong>{{ avgRepairDays }} dias</strong>
+          <strong>{{ avgRepairDays != null ? `${avgRepairDays} dias` : '—' }}</strong>
         </div>
       </article>
 

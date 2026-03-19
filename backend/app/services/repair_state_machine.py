@@ -66,6 +66,20 @@ STATE_NAMES: Dict[int, str] = {
 }
 
 
+STATE_CODES: Dict[int, str] = {
+    RepairStateID.INGRESO: "ingreso",
+    RepairStateID.DIAGNOSTICO: "diagnostico",
+    RepairStateID.PRESUPUESTO: "presupuesto",
+    RepairStateID.APROBADO: "aprobado",
+    RepairStateID.EN_TRABAJO: "en_trabajo",
+    RepairStateID.LISTO: "listo",
+    RepairStateID.ENTREGADO: "entregado",
+    RepairStateID.NOVENTENA: "noventena",
+    RepairStateID.ARCHIVADO: "archivado",
+    RepairStateID.RECHAZADO: "rechazado",
+}
+
+
 # Porcentaje de progreso por estado (para notificaciones)
 STATE_PROGRESS: Dict[int, int] = {
     RepairStateID.INGRESO: 0,
@@ -142,6 +156,11 @@ def validate_transition(current_state_id: int, new_state_id: int) -> None:
 def get_state_name(state_id: int) -> str:
     """Obtiene el nombre legible de un estado"""
     return STATE_NAMES.get(state_id, f"Estado {state_id}")
+
+
+def get_state_code(state_id: int) -> str:
+    """Obtiene el código canónico de un estado."""
+    return STATE_CODES.get(state_id, "ingreso")
 
 
 def get_state_progress(state_id: int) -> int:

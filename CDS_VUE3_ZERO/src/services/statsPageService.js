@@ -17,6 +17,7 @@ export function createEmptyStatsBundle() {
     kpiWarranty: {},
     repairsTimeline: [],
     revenueTimeline: [],
+    technicianPerformance: [],
     kpiTurnaround: {},
     kpiOverdue: {},
     kpiLeadConversion: {},
@@ -36,6 +37,7 @@ export async function fetchStatsPageBundle() {
     warrantyRes,
     repairsTimelineRes,
     revenueTimelineRes,
+    techniciansRes,
     turnaroundRes,
     overdueRes,
     leadConvRes,
@@ -51,6 +53,7 @@ export async function fetchStatsPageBundle() {
     api.get('/analytics/warranties'),
     api.get('/analytics/repairs/timeline', { params: { days: 30, group_by: 'day' } }),
     api.get('/analytics/revenue/timeline', { params: { months: 12 } }),
+    api.get('/analytics/technicians'),
     api.get('/analytics/kpis/turnaround'),
     api.get('/analytics/kpis/overdue'),
     api.get('/analytics/kpis/lead-conversion'),
@@ -68,6 +71,7 @@ export async function fetchStatsPageBundle() {
     kpiWarranty: pickSettledData(warrantyRes, {}),
     repairsTimeline: pickSettledData(repairsTimelineRes, []),
     revenueTimeline: pickSettledData(revenueTimelineRes, []),
+    technicianPerformance: pickSettledData(techniciansRes, []),
     kpiTurnaround: pickSettledData(turnaroundRes, {}),
     kpiOverdue: pickSettledData(overdueRes, {}),
     kpiLeadConversion: pickSettledData(leadConvRes, {}),
@@ -199,6 +203,7 @@ export function buildStatsSummaryPanels(bundle) {
 export function buildStatsChartPanels(bundle) {
   const repairsTimeline = Array.isArray(bundle?.repairsTimeline) ? bundle.repairsTimeline : []
   const revenueTimeline = Array.isArray(bundle?.revenueTimeline) ? bundle.revenueTimeline : []
+  const technicianPerformance = Array.isArray(bundle?.technicianPerformance) ? bundle.technicianPerformance : []
   const topModels = Array.isArray(bundle?.kpiTopModels) ? bundle.kpiTopModels : []
 
   return [
@@ -258,6 +263,35 @@ export function buildStatsChartPanels(bundle) {
           ]
         }
       : null,
+    technicianPerformance.length > 0
+      ? {
+          key: 'technicians',
+          title: 'Productividad por tecnico',
+          type: 'bar',
+          options: {
+            chart: { toolbar: { show: false } },
+            colors: ['var(--cds-primary)', 'var(--cds-light-5)'],
+            plotOptions: { bar: { borderRadius: 4, horizontal: true, barHeight: '62%' } },
+            xaxis: {
+              labels: { style: { fontSize: '11px' } }
+            },
+            yaxis: {
+              categories: technicianPerformance.map((entry) => entry.name),
+              labels: { style: { fontSize: '11px' } }
+            },
+            legend: { position: 'top' },
+            tooltip: {
+              y: {
+                formatter: (value, { seriesIndex }) => seriesIndex === 0 ? `${value} OTs` : `${value}%`
+              }
+            },
+          },
+          series: [
+            { name: 'OTs asignadas', data: technicianPerformance.map((entry) => entry.total_repairs) },
+            { name: '% completadas', data: technicianPerformance.map((entry) => entry.completion_rate) },
+          ]
+        }
+      : null,
     topModels.length > 0
       ? {
           key: 'top-models',
@@ -280,4 +314,20 @@ export function buildStatsChartPanels(bundle) {
         }
       : null,
   ].filter(Boolean)
+}
+
+export async function downloadRepairsExportCsv() {
+  const response = await api.get('/analytics/repairs/export', {
+    responseType: 'blob'
+  })
+
+  const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8' })
+  const blobUrl = window.URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = blobUrl
+  link.download = 'repairs_export.csv'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  window.URL.revokeObjectURL(blobUrl)
 }

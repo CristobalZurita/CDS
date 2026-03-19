@@ -1,5 +1,7 @@
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
 
 function normalizeProfilePayload(payload) {
   return {
@@ -10,12 +12,15 @@ function normalizeProfilePayload(payload) {
     joinDate: payload?.member_since || null,
     stats: {
       totalRepairs: Number(payload?.stats?.total_repairs || 0),
-      totalSpent: Number(payload?.stats?.total_spent || 0)
+      totalSpent: Number(payload?.stats?.total_spent || 0),
+      avgRepairDays: payload?.stats?.avg_repair_days == null ? null : Number(payload.stats.avg_repair_days)
     }
   }
 }
 
 export function useProfilePage() {
+  const router = useRouter()
+  const authStore = useAuthStore()
   const editMode = ref(false)
   const isLoading = ref(false)
   const error = ref('')
@@ -38,7 +43,8 @@ export function useProfilePage() {
 
   const stats = ref({
     totalRepairs: 0,
-    totalSpent: 0
+    totalSpent: 0,
+    avgRepairDays: null
   })
 
   const preferences = ref({
@@ -84,7 +90,11 @@ export function useProfilePage() {
     }).format(amount)
   })
 
-  const avgRepairDays = computed(() => 10)
+  const avgRepairDays = computed(() => {
+    if (stats.value.avgRepairDays == null) return null
+    const nextValue = Number(stats.value.avgRepairDays)
+    return Number.isFinite(nextValue) ? nextValue : null
+  })
 
   function resetMessages() {
     error.value = ''
@@ -118,7 +128,8 @@ export function useProfilePage() {
 
       stats.value = {
         totalRepairs: normalized.stats.totalRepairs,
-        totalSpent: normalized.stats.totalSpent
+        totalSpent: normalized.stats.totalSpent,
+        avgRepairDays: normalized.stats.avgRepairDays
       }
 
       syncFormData()
@@ -154,7 +165,8 @@ export function useProfilePage() {
 
       stats.value = {
         totalRepairs: normalized.stats.totalRepairs,
-        totalSpent: normalized.stats.totalSpent
+        totalSpent: normalized.stats.totalSpent,
+        avgRepairDays: normalized.stats.avgRepairDays
       }
 
       syncFormData()
@@ -187,7 +199,7 @@ export function useProfilePage() {
     success.value = 'Preferencias guardadas localmente.'
   }
 
-  function changePassword() {
+  async function changePassword() {
     resetMessages()
 
     if (!passwordForm.value.current || !passwordForm.value.next || !passwordForm.value.confirm) {
@@ -200,16 +212,38 @@ export function useProfilePage() {
       return
     }
 
-    error.value = 'El cambio de contraseña no está disponible en esta versión. Usa "Olvidé mi contraseña" desde el inicio de sesión.'
-    showChangePassword.value = false
-    passwordForm.value = { current: '', next: '', confirm: '' }
-    showPassword.value = false
+    isLoading.value = true
+
+    try {
+      await api.post('/client/profile/change-password', {
+        current_password: passwordForm.value.current,
+        new_password: passwordForm.value.next
+      })
+      success.value = 'Contraseña actualizada exitosamente.'
+      showChangePassword.value = false
+      passwordForm.value = { current: '', next: '', confirm: '' }
+      showPassword.value = false
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+    } finally {
+      isLoading.value = false
+    }
   }
 
-  function deleteAccount() {
+  async function deleteAccount() {
     resetMessages()
-    error.value = 'La eliminación de cuenta no está disponible en esta versión. Contáctanos directamente.'
-    showDeleteAccount.value = false
+    isLoading.value = true
+
+    try {
+      await api.delete('/client/profile')
+      authStore.clearSession()
+      showDeleteAccount.value = false
+      await router.push({ name: 'login' })
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+    } finally {
+      isLoading.value = false
+    }
   }
 
   onMounted(loadProfile)

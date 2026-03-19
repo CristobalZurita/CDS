@@ -177,6 +177,12 @@ DEFAULT_PERMISSIONS = [
     ("payments", "read", "Ver pagos"),
     ("payments", "create", "Registrar pagos"),
 
+    # Media
+    ("media", "read", "Ver catálogo de medios"),
+    ("media", "create", "Registrar/importar medios"),
+    ("media", "update", "Actualizar bindings de medios"),
+    ("media", "delete", "Eliminar medios o bindings"),
+
     # Repair Statuses
     ("repair_statuses", "read", "Ver estados de reparación"),
     ("repair_statuses", "create", "Crear estados de reparación"),
@@ -255,7 +261,7 @@ DEFAULT_ROLES = {
         "permissions": [
             "repairs:*", "clients:*", "appointments:*", "inventory:*",
             "invoices:*", "quotes:*", "tools:*", "users:read", "users:update",
-            "reports:*"
+            "reports:*", "media:*"
         ]
     },
     "technician": {

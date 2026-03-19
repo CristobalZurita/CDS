@@ -104,6 +104,8 @@ def test_repair_lifecycle_create_update_archive_reactivate(api_client, admin_tok
     detail = detail_response.json()
     assert detail["id"] == repair_id
     assert detail["client"]["id"] == customer_account["client"].id
+    assert detail["status_code"] == "ingreso"
+    assert detail["allowed_status_ids"] == [1, 2, 10]
 
     update_response = api_client.put(
         f"/api/v1/repairs/{repair_id}",
@@ -119,6 +121,12 @@ def test_repair_lifecycle_create_update_archive_reactivate(api_client, admin_tok
     assert updated["diagnosis"] == f"Diagnostico {slug}"
     assert updated["work_performed"] == f"Trabajo {slug}"
     assert updated["status_id"] == 2
+
+    updated_detail_response = api_client.get(f"/api/v1/repairs/{repair_id}", headers=_auth_headers(admin_token))
+    assert updated_detail_response.status_code == 200, updated_detail_response.text
+    updated_detail = updated_detail_response.json()
+    assert updated_detail["status_code"] == "diagnostico"
+    assert updated_detail["allowed_status_ids"] == [2, 3, 10]
 
     archive_response = api_client.post(f"/api/v1/repairs/{repair_id}/archive", headers=_auth_headers(admin_token))
     assert archive_response.status_code == 200, archive_response.text

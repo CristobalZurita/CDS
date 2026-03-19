@@ -1,6 +1,6 @@
 /**
  * Composable para resolver slots de medios dinámicos desde la BD.
- * Lee GET /api/v1/media/bindings una sola vez (caché de módulo),
+ * Lee GET /api/v1/media/public/bindings una sola vez (caché de módulo),
  * y expone resolveSlot(slotKey) → secure_url o null.
  */
 
@@ -17,7 +17,7 @@ const _error = ref(null)
 function _fetchBindings() {
   if (_promise) return _promise
   _promise = api
-    .get('/media/bindings')
+    .get('/media/public/bindings')
     .then(({ data }) => {
       const entries = Array.isArray(data) ? data : (data?.data ?? [])
       const map = {}

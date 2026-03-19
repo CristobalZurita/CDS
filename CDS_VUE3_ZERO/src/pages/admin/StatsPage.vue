@@ -5,9 +5,14 @@
         <h1>Estadisticas</h1>
         <p>Indicadores y metricas del sistema.</p>
       </div>
-      <button class="btn-secondary" :disabled="isLoading" @click="load">
-        {{ isLoading ? 'Actualizando...' : 'Actualizar' }}
-      </button>
+      <div class="header-actions">
+        <button class="btn-secondary" :disabled="isLoading" @click="load">
+          {{ isLoading ? 'Actualizando...' : 'Actualizar' }}
+        </button>
+        <button class="btn-secondary" :disabled="isExporting" @click="exportRepairsCsv">
+          {{ isExporting ? 'Exportando...' : 'Exportar CSV OT' }}
+        </button>
+      </div>
     </header>
 
     <p v-if="error" class="admin-error">{{ error }}</p>
@@ -50,11 +55,13 @@ const StatsChartPanel = defineAsyncComponent(() => import('@/components/admin/St
 
 const {
   isLoading,
+  isExporting,
   error,
   cards,
   summaryPanels,
   chartPanels,
-  load
+  load,
+  exportRepairsCsv
 } = useStatsPage()
 </script>
 

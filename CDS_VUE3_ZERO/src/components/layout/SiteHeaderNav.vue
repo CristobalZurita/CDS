@@ -167,6 +167,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   line-height: 1.1;
   text-transform: uppercase;
   display: none;
+  margin-top: 5px;
 }
 
 @media (min-width: 480px) {

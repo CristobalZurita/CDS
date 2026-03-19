@@ -9,7 +9,9 @@ from app.core.dependencies import require_permission
 from app.services.client_portal_service import (
     audit_client_closure_pdf_download,
     build_client_closure_pdf_payload,
+    change_profile_password_payload,
     create_store_purchase_request_record,
+    deactivate_profile_account_payload,
     get_dashboard_payload,
     get_profile_payload,
     get_repair_details_payload,
@@ -93,6 +95,23 @@ def update_profile(
     user: dict = Depends(require_permission("repairs", "read")),
 ):
     return update_profile_payload(db, int(user["user_id"]), payload)
+
+
+@router.post("/profile/change-password")
+def change_profile_password(
+    payload: Dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read")),
+):
+    return change_profile_password_payload(db, int(user["user_id"]), payload)
+
+
+@router.delete("/profile")
+def deactivate_profile_account(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read")),
+):
+    return deactivate_profile_account_payload(db, int(user["user_id"]))
 
 
 @router.get("/purchase-requests")

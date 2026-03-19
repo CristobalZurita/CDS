@@ -43,6 +43,18 @@
         @save-repair-fields="saveRepairFields"
       />
 
+      <RepairDetailCommercialPanel
+        :warranty="warranty"
+        :invoice="invoice"
+        :performing-action="performingAction"
+        :can-create-warranty="canCreateWarranty"
+        :can-create-invoice="canCreateInvoice"
+        :format-date="formatDate"
+        :format-currency="formatCurrency"
+        @create-warranty="createWarranty"
+        @create-invoice="createInvoice"
+      />
+
       <RepairDetailSignaturePanel
         :repair="repair"
         :performing-action="performingAction"
@@ -94,6 +106,7 @@
 
 <script setup>
 import RepairDetailActionsPanel from '@/components/admin/RepairDetailActionsPanel.vue'
+import RepairDetailCommercialPanel from '@/components/admin/RepairDetailCommercialPanel.vue'
 import RepairDetailInfoPanel from '@/components/admin/RepairDetailInfoPanel.vue'
 import RepairDetailNotesPanel from '@/components/admin/RepairDetailNotesPanel.vue'
 import RepairDetailPhotosPanel from '@/components/admin/RepairDetailPhotosPanel.vue'
@@ -106,6 +119,8 @@ const {
   repair,
   photos,
   notes,
+  warranty,
+  invoice,
   loading,
   error,
   statusOptions,
@@ -127,6 +142,8 @@ const {
   signatureLink,
   photoUploadLink,
   isArchived,
+  canCreateWarranty,
+  canCreateInvoice,
   statusLabel,
   statusClass,
   priorityLabel,
@@ -150,6 +167,8 @@ const {
   updateNoteField,
   addNote,
   downloadClosurePdf,
+  createWarranty,
+  createInvoice,
   goToPurchaseRequests,
   goBack
 } = useRepairDetailAdminPage()

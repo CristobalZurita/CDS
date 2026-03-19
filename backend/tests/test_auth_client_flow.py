@@ -231,6 +231,40 @@ def test_auth_and_client_flow():
         repairs = client.get("/api/v1/client/repairs", headers=_auth_headers(token))
         assert repairs.status_code == 200, repairs.text
 
+        profile = client.get("/api/v1/client/profile", headers=_auth_headers(token))
+        assert profile.status_code == 200, profile.text
+        profile_payload = profile.json()
+        assert "avg_repair_days" in profile_payload["stats"]
+        assert profile_payload["stats"]["avg_repair_days"] is None
+
+        change_password = client.post(
+            "/api/v1/client/profile/change-password",
+            headers=_auth_headers(token),
+            json={
+                "current_password": register_payload["password"],
+                "new_password": "newpass123",
+            },
+        )
+        assert change_password.status_code == 200, change_password.text
+        assert change_password.json()["ok"] is True
+
+        relogin = client.post("/api/v1/auth/login", json={
+            "email": email,
+            "password": "newpass123"
+        })
+        assert relogin.status_code == 200, relogin.text
+        new_token = relogin.json()["access_token"]
+
+        deactivate = client.delete("/api/v1/client/profile", headers=_auth_headers(new_token))
+        assert deactivate.status_code == 200, deactivate.text
+        assert deactivate.json()["ok"] is True
+
+        blocked_login = client.post("/api/v1/auth/login", json={
+            "email": email,
+            "password": "newpass123"
+        })
+        assert blocked_login.status_code == 403, blocked_login.text
+
         # Forgot/reset password
         forgot = client.post("/api/v1/auth/forgot-password", json={"email": email})
         assert forgot.status_code == 200, forgot.text

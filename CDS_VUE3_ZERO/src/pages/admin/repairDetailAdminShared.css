@@ -27,6 +27,18 @@
   flex-wrap: wrap;
 }
 
+.commercial-grid {
+  align-items: start;
+}
+
+.commercial-card h3 {
+  margin: 0;
+}
+
+.commercial-card p {
+  margin: 0.2rem 0;
+}
+
 .link-line {
   margin: 0;
   word-break: break-all;

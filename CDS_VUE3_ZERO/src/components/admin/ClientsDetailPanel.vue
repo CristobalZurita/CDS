@@ -67,6 +67,23 @@
         </div>
       </section>
 
+      <section v-if="editingDeviceId" class="panel-nested">
+        <h4>Editar dispositivo</h4>
+        <div class="form-grid two-cols">
+          <label><span>Modelo *</span><input :value="editingDeviceForm.model" type="text" @input="updateEditingDeviceField('model', $event.target.value)" /></label>
+          <label><span>Marca</span><input :value="editingDeviceForm.brand_other" type="text" @input="updateEditingDeviceField('brand_other', $event.target.value)" /></label>
+          <label><span>Serial</span><input :value="editingDeviceForm.serial_number" type="text" @input="updateEditingDeviceField('serial_number', $event.target.value)" /></label>
+          <label class="full"><span>Descripcion</span><textarea :value="editingDeviceForm.description" rows="2" @input="updateEditingDeviceField('description', $event.target.value)"></textarea></label>
+          <label class="full"><span>Condicion</span><textarea :value="editingDeviceForm.condition_notes" rows="2" @input="updateEditingDeviceField('condition_notes', $event.target.value)"></textarea></label>
+        </div>
+        <div class="panel-actions">
+          <button class="btn-primary" :disabled="contextLoading" @click="emit('save-device')">
+            {{ contextLoading ? 'Guardando...' : 'Guardar cambios' }}
+          </button>
+          <button class="btn-secondary" :disabled="contextLoading" @click="emit('cancel-device-edit')">Cancelar</button>
+        </div>
+      </section>
+
       <section v-if="showRepairForm" class="panel-nested">
         <h4>Nueva orden de trabajo</h4>
         <div class="form-grid two-cols">
@@ -120,13 +137,17 @@
         <p v-if="devices.length === 0" class="empty-state">No hay dispositivos registrados.</p>
         <div v-else class="table-wrap">
           <table>
-            <thead><tr><th>ID</th><th>Modelo</th><th>Marca</th><th>Serial</th></tr></thead>
+            <thead><tr><th>ID</th><th>Modelo</th><th>Marca</th><th>Serial</th><th>Acciones</th></tr></thead>
             <tbody>
               <tr v-for="device in devices" :key="device.id">
                 <td>{{ device.id }}</td>
                 <td>{{ device.model || '—' }}</td>
                 <td>{{ device.brand_other || '—' }}</td>
                 <td>{{ device.serial_number || '—' }}</td>
+                <td class="row-actions">
+                  <button class="btn-secondary" :disabled="contextLoading" @click="emit('start-device-edit', device)">Editar</button>
+                  <button class="btn-danger" :disabled="contextLoading" @click="emit('delete-device', device)">Eliminar</button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -192,6 +213,14 @@ defineProps({
     type: Object,
     required: true
   },
+  editingDeviceId: {
+    type: Number,
+    default: 0
+  },
+  editingDeviceForm: {
+    type: Object,
+    required: true
+  },
   repairForm: {
     type: Object,
     required: true
@@ -216,9 +245,14 @@ const emit = defineEmits([
   'delete-client',
   'update-client',
   'create-device',
+  'start-device-edit',
+  'cancel-device-edit',
+  'save-device',
+  'delete-device',
   'create-repair',
   'update-edit-field',
   'update-device-field',
+  'update-editing-device-field',
   'update-repair-field'
 ])
 
@@ -228,6 +262,10 @@ function updateEditField(field, value) {
 
 function updateDeviceField(field, value) {
   emit('update-device-field', { field, value })
+}
+
+function updateEditingDeviceField(field, value) {
+  emit('update-editing-device-field', { field, value })
 }
 
 function updateRepairField(field, value) {

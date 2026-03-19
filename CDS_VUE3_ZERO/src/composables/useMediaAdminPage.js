@@ -326,7 +326,7 @@ export function useMediaAdminPage() {
     queuePath,
     formatBytes,
     statusLabel,
-    normalizeAssetGroup,
+    normalizeAssetGroup: normalizeMediaAssetGroup,
     setError,
     clearStatus,
   }

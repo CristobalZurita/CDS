@@ -5,11 +5,13 @@ import {
   buildStatsChartPanels,
   buildStatsSummaryPanels,
   createEmptyStatsBundle,
+  downloadRepairsExportCsv,
   fetchStatsPageBundle
 } from '@/services/statsPageService'
 
 export function useStatsPage() {
   const isLoading = ref(false)
+  const isExporting = ref(false)
   const error = ref('')
   const bundle = ref(createEmptyStatsBundle())
 
@@ -26,6 +28,7 @@ export function useStatsPage() {
   const kpiWarranty = computed(() => bundle.value.kpiWarranty)
   const repairsTimeline = computed(() => bundle.value.repairsTimeline)
   const revenueTimeline = computed(() => bundle.value.revenueTimeline)
+  const technicianPerformance = computed(() => bundle.value.technicianPerformance)
   const kpiTurnaround = computed(() => bundle.value.kpiTurnaround)
   const kpiOverdue = computed(() => bundle.value.kpiOverdue)
   const kpiLeadConversion = computed(() => bundle.value.kpiLeadConversion)
@@ -45,10 +48,24 @@ export function useStatsPage() {
     }
   }
 
+  async function exportRepairsCsv() {
+    isExporting.value = true
+    error.value = ''
+
+    try {
+      await downloadRepairsExportCsv()
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+    } finally {
+      isExporting.value = false
+    }
+  }
+
   onMounted(load)
 
   return {
     isLoading,
+    isExporting,
     error,
     cards,
     summaryPanels,
@@ -62,11 +79,13 @@ export function useStatsPage() {
     kpiWarranty,
     repairsTimeline,
     revenueTimeline,
+    technicianPerformance,
     kpiTurnaround,
     kpiOverdue,
     kpiLeadConversion,
     kpiTopModels,
     kpiClientReturn,
-    load
+    load,
+    exportRepairsCsv
   }
 }

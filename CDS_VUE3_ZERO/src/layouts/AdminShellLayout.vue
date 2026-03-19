@@ -1,5 +1,8 @@
 <template>
-  <div class="admin-shell-layout">
+  <div
+    class="admin-shell-layout"
+    :class="{ 'admin-shell-layout--dashboard': isDashboardRoute }"
+  >
     <!-- Sidebar fijo siempre visible -->
     <aside class="admin-sidebar">
       <div class="sidebar-brand">
@@ -42,6 +45,7 @@
           <p v-if="pageSubtitle" class="page-subtitle">{{ pageSubtitle }}</p>
         </div>
         <div class="topbar-actions">
+          <AdminGlobalSearch />
           <span class="user-badge">👤 {{ userName }}</span>
         </div>
       </header>
@@ -63,6 +67,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import AdminGlobalSearch from '@/components/admin/AdminGlobalSearch.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
@@ -73,6 +78,7 @@ const userName = computed(() => authStore.user?.full_name || authStore.user?.ema
 
 const pageTitle    = computed(() => route.meta.title    || 'Panel Admin')
 const pageSubtitle = computed(() => route.meta.subtitle || '')
+const isDashboardRoute = computed(() => route.path === '/admin')
 
 const menuItems = [
   { to: '/admin', label: 'Dashboard',     icon: '📊', exact: true },
@@ -142,6 +148,68 @@ const handleLogout = () => {
   display: flex;
   min-height: 100vh;
   background: var(--cds-background-color);
+}
+
+.admin-shell-layout--dashboard {
+  --admin-dashboard-scale: 0.65;
+  --admin-space-3xs: calc(0.35rem * var(--admin-dashboard-scale));
+  --admin-space-2xs: calc(0.6rem * var(--admin-dashboard-scale));
+  --admin-space-xs: calc(0.66rem * var(--admin-dashboard-scale));
+  --admin-space-sm-compact: calc(0.7rem * var(--admin-dashboard-scale));
+  --admin-space-sm: calc(0.96rem * var(--admin-dashboard-scale));
+  --admin-space-md-compact: calc(0.9rem * var(--admin-dashboard-scale));
+  --admin-space-md: calc(1.2rem * var(--admin-dashboard-scale));
+  --admin-space-lg-compact: calc(1.25rem * var(--admin-dashboard-scale));
+  --admin-space-lg: calc(1.8rem * var(--admin-dashboard-scale));
+  --admin-space-xl: calc(2.4rem * var(--admin-dashboard-scale));
+  --admin-space-2xl: calc(3.3rem * var(--admin-dashboard-scale));
+  --admin-sidebar-width: clamp(
+    calc(22rem * var(--admin-dashboard-scale)),
+    calc((20rem + 4vw) * var(--admin-dashboard-scale)),
+    calc(26rem * var(--admin-dashboard-scale))
+  );
+  --admin-control-min-height-sm: calc(40px * var(--admin-dashboard-scale));
+  --admin-control-min-height: calc(52px * var(--admin-dashboard-scale));
+  --admin-text-xs: clamp(
+    calc(1.32rem * var(--admin-dashboard-scale)),
+    calc((1.26rem + 0.3vw) * var(--admin-dashboard-scale)),
+    calc(1.44rem * var(--admin-dashboard-scale))
+  );
+  --admin-text-sm: clamp(
+    calc(1.5rem * var(--admin-dashboard-scale)),
+    calc((1.44rem + 0.36vw) * var(--admin-dashboard-scale)),
+    calc(1.68rem * var(--admin-dashboard-scale))
+  );
+  --admin-text-base: clamp(
+    calc(1.68rem * var(--admin-dashboard-scale)),
+    calc((1.62rem + 0.54vw) * var(--admin-dashboard-scale)),
+    calc(1.98rem * var(--admin-dashboard-scale))
+  );
+  --admin-text-lg: clamp(
+    calc(1.8rem * var(--admin-dashboard-scale)),
+    calc((1.68rem + 0.72vw) * var(--admin-dashboard-scale)),
+    calc(2.16rem * var(--admin-dashboard-scale))
+  );
+  --admin-text-xl: clamp(
+    calc(1.92rem * var(--admin-dashboard-scale)),
+    calc((1.62rem + 1.5vw) * var(--admin-dashboard-scale)),
+    calc(2.52rem * var(--admin-dashboard-scale))
+  );
+  --admin-text-2xl: clamp(
+    calc(2.22rem * var(--admin-dashboard-scale)),
+    calc((1.74rem + 2.4vw) * var(--admin-dashboard-scale)),
+    calc(3.06rem * var(--admin-dashboard-scale))
+  );
+  --admin-text-3xl: clamp(
+    calc(2.58rem * var(--admin-dashboard-scale)),
+    calc((1.86rem + 3.6vw) * var(--admin-dashboard-scale)),
+    calc(3.72rem * var(--admin-dashboard-scale))
+  );
+  --admin-text-4xl: clamp(
+    calc(2.94rem * var(--admin-dashboard-scale)),
+    calc((1.98rem + 4.8vw) * var(--admin-dashboard-scale)),
+    calc(4.32rem * var(--admin-dashboard-scale))
+  );
 }
 
 .admin-sidebar {
@@ -272,6 +340,13 @@ const handleLogout = () => {
   font-size: var(--admin-text-base);
   color: var(--cds-text-muted);
   line-height: 1.35;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-space-sm);
+  min-width: min(42rem, 100%);
 }
 
 .user-badge {
@@ -453,6 +528,15 @@ const handleLogout = () => {
 
   .admin-content {
     padding: var(--admin-space-xl);
+  }
+
+  .admin-topbar {
+    flex-wrap: wrap;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    min-width: 0;
   }
 }
 

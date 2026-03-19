@@ -1,7 +1,51 @@
 /* Common styles for client pages */
 
 /* Page layout */
-.dashboard-page,
+.dashboard-page {
+  --dashboard-client-scale: 0.65;
+  --dashboard-client-page-padding: calc(var(--cds-client-page-padding, 1rem) * var(--dashboard-client-scale));
+  --dashboard-client-page-gap: calc(var(--cds-client-page-gap, 1rem) * var(--dashboard-client-scale));
+  --dashboard-client-surface-padding: calc(var(--cds-client-surface-padding, 0.9rem) * var(--dashboard-client-scale));
+  --dashboard-client-panel-padding: calc(var(--cds-client-panel-padding, 1rem) * var(--dashboard-client-scale));
+  --dashboard-client-feedback-padding: calc(var(--cds-client-feedback-padding, 0.75rem) * var(--dashboard-client-scale));
+  --dashboard-client-gap-sm: calc(0.75rem * var(--dashboard-client-scale));
+  --dashboard-client-gap-xs: calc(0.5rem * var(--dashboard-client-scale));
+  --dashboard-client-meta-gap: calc(0.3rem * var(--dashboard-client-scale));
+  --dashboard-client-text-sm: clamp(
+    calc(1.25rem * var(--dashboard-client-scale)),
+    calc((1.2rem + 0.3vw) * var(--dashboard-client-scale)),
+    calc(1.4rem * var(--dashboard-client-scale))
+  );
+  --dashboard-client-text-base: clamp(
+    calc(1.4rem * var(--dashboard-client-scale)),
+    calc((1.35rem + 0.45vw) * var(--dashboard-client-scale)),
+    calc(1.65rem * var(--dashboard-client-scale))
+  );
+  --dashboard-client-text-lg: clamp(
+    calc(1.5rem * var(--dashboard-client-scale)),
+    calc((1.4rem + 0.6vw) * var(--dashboard-client-scale)),
+    calc(1.8rem * var(--dashboard-client-scale))
+  );
+  --dashboard-client-text-xl: clamp(
+    calc(1.6rem * var(--dashboard-client-scale)),
+    calc((1.35rem + 1.25vw) * var(--dashboard-client-scale)),
+    calc(2.1rem * var(--dashboard-client-scale))
+  );
+  --dashboard-client-text-2xl: clamp(
+    calc(1.85rem * var(--dashboard-client-scale)),
+    calc((1.45rem + 2vw) * var(--dashboard-client-scale)),
+    calc(2.55rem * var(--dashboard-client-scale))
+  );
+  --dashboard-client-text-3xl: clamp(
+    calc(2.15rem * var(--dashboard-client-scale)),
+    calc((1.55rem + 3vw) * var(--dashboard-client-scale)),
+    calc(3.1rem * var(--dashboard-client-scale))
+  );
+  padding: var(--dashboard-client-page-padding);
+  display: grid;
+  gap: var(--dashboard-client-page-gap);
+}
+
 .repairs-page,
 .ot-payments-page,
 .profile-page,
@@ -54,6 +98,11 @@
   align-items: center;
 }
 
+.dashboard-page .dashboard-header {
+  padding: var(--dashboard-client-surface-padding);
+  gap: var(--dashboard-client-gap-sm);
+}
+
 .dashboard-header h1,
 .repairs-header h1,
 .page-header h1,
@@ -63,6 +112,10 @@
   font-size: var(--cds-text-3xl);
 }
 
+.dashboard-page .dashboard-header h1 {
+  font-size: var(--dashboard-client-text-3xl);
+}
+
 .welcome-text,
 .subtitle,
 .muted {
@@ -70,11 +123,20 @@
   color: var(--cds-text-muted);
 }
 
+.dashboard-page .welcome-text {
+  margin-top: var(--dashboard-client-meta-gap);
+  font-size: var(--dashboard-client-text-base);
+}
+
 /* Header actions */
 .header-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+.dashboard-page .header-actions {
+  gap: var(--dashboard-client-gap-xs);
 }
 
 /* Buttons */
@@ -93,6 +155,16 @@
   align-items: center;
   justify-content: center;
   text-decoration: none;
+}
+
+.dashboard-page .btn-primary,
+.dashboard-page .btn-secondary,
+.dashboard-page .btn-inline,
+.dashboard-page .action-card,
+.dashboard-page .notification-close {
+  min-height: calc(44px * var(--dashboard-client-scale));
+  padding: calc(0.65rem * var(--dashboard-client-scale)) calc(0.9rem * var(--dashboard-client-scale));
+  font-size: var(--dashboard-client-text-base);
 }
 
 .btn-primary {
@@ -145,6 +217,11 @@
   padding: var(--cds-client-feedback-padding, 0.75rem);
 }
 
+.dashboard-page .dashboard-error {
+  padding: var(--dashboard-client-feedback-padding);
+  font-size: var(--dashboard-client-text-base);
+}
+
 .profile-success {
   margin: 0;
   border: 1px solid var(--cds-valid-border);
@@ -161,10 +238,19 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+.dashboard-page .stats-grid {
+  gap: var(--dashboard-client-gap-sm);
+}
+
 .stat-card {
   padding: var(--cds-client-surface-padding, 0.9rem);
   display: grid;
   gap: 0.3rem;
+}
+
+.dashboard-page .stat-card {
+  padding: var(--dashboard-client-surface-padding);
+  gap: var(--dashboard-client-meta-gap);
 }
 
 .stat-title {
@@ -172,9 +258,17 @@
   color: var(--cds-text-muted);
 }
 
+.dashboard-page .stat-title {
+  font-size: var(--dashboard-client-text-sm);
+}
+
 .stat-value {
   font-size: var(--cds-text-2xl);
   color: var(--cds-text-normal);
+}
+
+.dashboard-page .stat-value {
+  font-size: var(--dashboard-client-text-2xl);
 }
 
 /* Dashboard grid */
@@ -185,8 +279,16 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+.dashboard-page .dashboard-grid {
+  gap: var(--dashboard-client-gap-sm);
+}
+
 .panel-card {
   padding: var(--cds-client-panel-padding, 1rem);
+}
+
+.dashboard-page .panel-card {
+  padding: var(--dashboard-client-panel-padding);
 }
 
 .panel-head {
@@ -201,6 +303,11 @@
   font-size: var(--cds-text-xl);
 }
 
+.dashboard-page .panel-card h2,
+.dashboard-page .notifications-title {
+  font-size: var(--dashboard-client-text-xl);
+}
+
 /* Repairs list */
 .repairs-list,
 .quick-actions,
@@ -211,11 +318,23 @@
   gap: 0.6rem;
 }
 
+.dashboard-page .repairs-list,
+.dashboard-page .quick-actions,
+.dashboard-page .notifications-list {
+  margin-top: var(--dashboard-client-gap-sm);
+  gap: calc(0.6rem * var(--dashboard-client-scale));
+}
+
 .repair-card,
 .request-card {
   padding: var(--cds-client-surface-padding, 0.9rem);
   display: grid;
   gap: 0.6rem;
+}
+
+.dashboard-page .repair-card {
+  padding: var(--dashboard-client-surface-padding);
+  gap: calc(0.6rem * var(--dashboard-client-scale));
 }
 
 .repair-header,
@@ -234,12 +353,21 @@
   font-size: var(--cds-text-lg);
 }
 
+.dashboard-page .repair-header h3 {
+  font-size: var(--dashboard-client-text-lg);
+}
+
 .repair-id,
 .repair-ticket,
 .request-subtitle {
   margin: 0.2rem 0 0;
   font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
+}
+
+.dashboard-page .repair-id {
+  margin-top: var(--dashboard-client-meta-gap);
+  font-size: var(--dashboard-client-text-sm);
 }
 
 .repair-status,
@@ -250,6 +378,11 @@
   border: 1px solid var(--cds-primary);
   background: var(--cds-surface-1);
   align-self: flex-start;
+}
+
+.dashboard-page .repair-status {
+  padding: calc(0.28rem * var(--dashboard-client-scale)) calc(0.65rem * var(--dashboard-client-scale));
+  font-size: var(--dashboard-client-text-sm);
 }
 
 /* Progress */
@@ -276,6 +409,10 @@
   color: var(--cds-text-muted);
 }
 
+.dashboard-page .progress-text {
+  font-size: var(--dashboard-client-text-sm);
+}
+
 /* Empty state */
 .empty-state {
   display: grid;
@@ -291,6 +428,10 @@
   margin-top: 1rem;
 }
 
+.dashboard-page .notifications-title {
+  margin-top: var(--dashboard-client-page-gap);
+}
+
 .notification-card {
   border: 1px solid var(--cds-border-input);
   border-radius: 0.75rem;
@@ -298,6 +439,11 @@
   display: flex;
   gap: 0.5rem;
   justify-content: space-between;
+}
+
+.dashboard-page .notification-card {
+  padding: calc(0.65rem * var(--dashboard-client-scale));
+  gap: var(--dashboard-client-gap-xs);
 }
 
 .notification-main {
@@ -316,6 +462,15 @@
   font-weight: var(--cds-font-semibold);
 }
 
+.dashboard-page .notification-type,
+.dashboard-page .notification-time {
+  font-size: var(--dashboard-client-text-sm);
+}
+
+.dashboard-page .notification-message {
+  font-size: var(--dashboard-client-text-base);
+}
+
 .notification-time {
   font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
@@ -325,6 +480,10 @@
 .quick-actions {
   display: grid;
   gap: 0.5rem;
+}
+
+.dashboard-page .quick-actions {
+  gap: var(--dashboard-client-gap-xs);
 }
 
 .action-card {

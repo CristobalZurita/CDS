@@ -67,6 +67,7 @@ export function useClientsPage() {
 
   watch(selectedClientId, async () => {
     clientMgr.resetEditForm()
+    deviceMgr.cancelDeviceEdit()
     await loadSelectedClientContext()
   })
 
@@ -100,8 +101,14 @@ export function useClientsPage() {
     devices: deviceMgr.devices,
     showDeviceForm: deviceMgr.showDeviceForm,
     deviceForm: deviceMgr.deviceForm,
+    editingDeviceId: deviceMgr.editingDeviceId,
+    editingDeviceForm: deviceMgr.editingDeviceForm,
     toggleDeviceForm: deviceMgr.toggleDeviceForm,
     createDeviceForSelectedClient: deviceMgr.createDeviceForSelectedClient,
+    startDeviceEdit: deviceMgr.startDeviceEdit,
+    cancelDeviceEdit: deviceMgr.cancelDeviceEdit,
+    saveDeviceForSelectedClient: deviceMgr.saveDeviceForSelectedClient,
+    deleteDeviceForSelectedClient: deviceMgr.deleteDeviceForSelectedClient,
     // repair
     repairs: repairMgr.repairs,
     showRepairForm: repairMgr.showRepairForm,

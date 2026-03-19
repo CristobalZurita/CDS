@@ -31,6 +31,10 @@ from app.services.repair_helpers import (
     auto_archive_repairs as _auto_archive_repairs,
     resolved_repair_code as _resolved_repair_code,
 )
+from app.services.repair_state_machine import (
+    get_allowed_transitions,
+    get_state_code,
+)
 
 
 class RepairReadService:
@@ -199,6 +203,12 @@ class RepairReadService:
 
         device, client = self._get_repair_device_client(repair)
         repair_code = _resolved_repair_code(repair, client.id if client else None)
+        current_status_code = (
+            repair.status_obj.code
+            if repair.status_obj and repair.status_obj.code
+            else get_state_code(repair.status_id)
+        )
+        allowed_status_ids = [repair.status_id, *sorted(get_allowed_transitions(repair.status_id))]
         intake_sheet = (
             self.db.query(RepairIntakeSheet)
             .filter(RepairIntakeSheet.repair_id == repair.id)
@@ -224,6 +234,8 @@ class RepairReadService:
             else None,
             "status_id": repair.status_id,
             "status": repair.status,
+            "status_code": current_status_code,
+            "allowed_status_ids": allowed_status_ids,
             "ot_parent_id": repair.ot_parent_id,
             "ot_sequence": repair.ot_sequence,
             "priority": repair.priority,

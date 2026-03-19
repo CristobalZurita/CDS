@@ -97,24 +97,51 @@ async function createRepair(form, deviceId) {
   return repairResponse.data?.id
 }
 
-async function attachRepairMaterials(repairId, materials) {
+async function resolveRepairMaterials(materials) {
+  const resolvedMaterials = []
+  const unresolvedSkus = []
+
   for (const material of materials) {
-    if (!material.sku || material.quantity <= 0) continue
+    const sku = String(material?.sku || '').trim()
+    const quantity = Number(material?.quantity || 0)
+    if (!sku || quantity <= 0) continue
 
     try {
-      const products = await searchInventoryProducts(material.sku)
-      const product = products.find((entry) => entry.sku === material.sku)
-      if (!product) continue
+      const products = await searchInventoryProducts(sku)
+      const product = products.find((entry) => String(entry?.sku || '').trim().toLowerCase() === sku.toLowerCase())
+      if (!product?.id) {
+        unresolvedSkus.push(sku)
+        continue
+      }
 
-      await api.post(`/repairs/${repairId}/components`, {
-        component_table: 'products',
-        component_id: product.id,
-        quantity: material.quantity,
+      resolvedMaterials.push({
+        sku,
+        productId: product.id,
+        quantity,
         notes: material.notes || null
       })
     } catch (error) {
-      console.warn('No se pudo agregar material:', material.sku, error)
+      console.warn('No se pudo validar material:', sku, error)
+      unresolvedSkus.push(sku)
     }
+  }
+
+  if (unresolvedSkus.length > 0) {
+    const uniqueSkus = [...new Set(unresolvedSkus)]
+    throw new Error(`No se pudieron validar materiales para los SKU: ${uniqueSkus.join(', ')}`)
+  }
+
+  return resolvedMaterials
+}
+
+async function attachRepairMaterials(repairId, materials) {
+  for (const material of materials) {
+    await api.post(`/repairs/${repairId}/components`, {
+      component_table: 'products',
+      component_id: material.productId,
+      quantity: material.quantity,
+      notes: material.notes || null
+    })
   }
 }
 
@@ -156,8 +183,13 @@ export async function getNextClientCode() {
 }
 
 export async function getNextOtCode(clientId = null) {
+  const numericClientId = Number(clientId || 0)
+  if (!Number.isFinite(numericClientId) || numericClientId <= 0) {
+    return DEFAULT_OT_CODE
+  }
+
   try {
-    const params = clientId ? { client_id: clientId } : {}
+    const params = { client_id: numericClientId }
     const response = await api.get('/repairs/next-code', { params })
     return response.data?.repair_code || DEFAULT_OT_CODE
   } catch {
@@ -179,6 +211,7 @@ export async function searchInventoryProducts(query) {
 }
 
 export async function submitIntakeWizard(form, { useExistingClient = false } = {}) {
+  const resolvedMaterials = await resolveRepairMaterials(form.materials)
   const clientId = await createClientIfNeeded(form, useExistingClient)
   if (!clientId) {
     throw new Error('No se pudo crear el cliente')
@@ -195,7 +228,7 @@ export async function submitIntakeWizard(form, { useExistingClient = false } = {
   }
 
   await api.post(`/repairs/${repairId}/intake-sheet`, buildIntakePayload(form, clientId, deviceId))
-  await attachRepairMaterials(repairId, form.materials)
+  await attachRepairMaterials(repairId, resolvedMaterials)
   await attachRepairPhotos(repairId, form.device.photos)
 
   return {

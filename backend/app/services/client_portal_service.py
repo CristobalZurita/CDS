@@ -9,6 +9,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.core.security import hash_password, verify_password
 from app.models.client import Client
 from app.models.category import Category
 from app.models.device import Device
@@ -606,9 +607,36 @@ def audit_client_closure_pdf_download(repair_id: int, filename: str, user_id: in
         pass
 
 
+def get_client_avg_repair_days(db: Session, client_id: int) -> float | None:
+    completed_repairs = (
+        db.query(Repair)
+        .join(Device, Repair.device_id == Device.id)
+        .filter(
+            Device.client_id == client_id,
+            Repair.completion_date.isnot(None),
+            Repair.intake_date.isnot(None),
+            Repair.status_id.in_([7, 8]),
+        )
+        .all()
+    )
+    if not completed_repairs:
+        return None
+
+    days_list = [
+        (repair.completion_date - repair.intake_date).days
+        for repair in completed_repairs
+        if repair.completion_date and repair.intake_date and repair.completion_date >= repair.intake_date
+    ]
+    if not days_list:
+        return None
+
+    return round(sum(days_list) / len(days_list), 1)
+
+
 def get_profile_payload(db: Session, user_id: int) -> dict:
     user_obj = get_client_user_or_404(db, user_id)
     client = ensure_client(db, user_obj)
+    avg_repair_days = get_client_avg_repair_days(db, client.id)
     return {
         "email": user_obj.email,
         "full_name": user_obj.full_name,
@@ -618,6 +646,7 @@ def get_profile_payload(db: Session, user_id: int) -> dict:
         "stats": {
             "total_repairs": client.total_repairs,
             "total_spent": client.total_spent,
+            "avg_repair_days": avg_repair_days,
         },
     }
 
@@ -656,6 +685,7 @@ def update_profile_payload(db: Session, user_id: int, payload: Dict) -> dict:
     db.commit()
     db.refresh(user_obj)
     db.refresh(client)
+    avg_repair_days = get_client_avg_repair_days(db, client.id)
 
     return {
         "email": user_obj.email,
@@ -666,8 +696,66 @@ def update_profile_payload(db: Session, user_id: int, payload: Dict) -> dict:
         "stats": {
             "total_repairs": client.total_repairs,
             "total_spent": client.total_spent,
+            "avg_repair_days": avg_repair_days,
         },
     }
+
+
+def change_profile_password_payload(db: Session, user_id: int, payload: Dict) -> dict:
+    user_obj = get_client_user_or_404(db, user_id)
+    current_password = str(payload.get("current_password") or "")
+    new_password = str(payload.get("new_password") or "")
+
+    if not current_password or not new_password:
+        raise HTTPException(status_code=400, detail="current_password y new_password son requeridos")
+
+    if len(new_password) < 8:
+        raise HTTPException(status_code=400, detail="La nueva contraseña debe tener al menos 8 caracteres")
+
+    if not verify_password(current_password, user_obj.hashed_password):
+        raise HTTPException(status_code=400, detail="La contraseña actual es incorrecta")
+
+    if current_password == new_password:
+        raise HTTPException(status_code=400, detail="La nueva contraseña debe ser distinta a la actual")
+
+    user_obj.hashed_password = hash_password(new_password)
+    db.add(user_obj)
+    db.commit()
+
+    try:
+        create_audit(
+            event_type="client.profile.password_changed",
+            user_id=user_obj.id,
+            details={"email": user_obj.email},
+            message="Client changed password from profile",
+        )
+    except Exception:
+        pass
+
+    return {"ok": True}
+
+
+def deactivate_profile_account_payload(db: Session, user_id: int) -> dict:
+    user_obj = get_client_user_or_404(db, user_id)
+
+    if not user_obj.is_active:
+        return {"ok": True}
+
+    user_obj.is_active = 0
+    db.add(user_obj)
+    db.commit()
+
+    try:
+        create_audit(
+            event_type="client.profile.account_deactivated",
+            user_id=user_obj.id,
+            details={"email": user_obj.email},
+            message="Client deactivated account from profile",
+        )
+    except Exception:
+        pass
+
+    return {"ok": True}
 
 
 def list_client_purchase_requests_payload(db: Session, user_id: int) -> list[Dict]:

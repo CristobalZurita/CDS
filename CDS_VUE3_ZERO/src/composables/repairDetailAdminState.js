@@ -1,6 +1,6 @@
 import {
   baseRepairDetailEditForm,
-  REPAIR_DETAIL_STATUS_OPTIONS
+  buildFallbackRepairStatusOption
 } from '@/services/repairDetailAdminService'
 import { extractErrorMessage } from '@/services/api'
 
@@ -32,6 +32,8 @@ export function buildRepairDetailBundleState(payload) {
     repair,
     photos: Array.isArray(payload?.photos) ? payload.photos : [],
     notes: Array.isArray(payload?.notes) ? payload.notes : [],
+    warranty: payload?.warranty || null,
+    invoice: payload?.invoice || null,
     ...buildRepairDetailScreenDrafts(repair)
   }
 }
@@ -116,17 +118,42 @@ export function resolveRepairNoteSubmission(noteDraft) {
   }
 }
 
-export function resolveRepairStatusLabel(repair) {
-  const match = REPAIR_DETAIL_STATUS_OPTIONS.find((option) => option.id === Number(repair?.status_id || 0))
+export function mergeRepairStatusCatalog(statusOptions, repair) {
+  const catalog = Array.isArray(statusOptions) ? [...statusOptions] : []
+  const fallbackOption = buildFallbackRepairStatusOption(repair)
+  if (!fallbackOption) return catalog
+
+  const alreadyPresent = catalog.some((option) => option?.id === fallbackOption.id)
+  if (!alreadyPresent) {
+    catalog.push(fallbackOption)
+  }
+  return catalog.sort((a, b) => Number(a?.id || 0) - Number(b?.id || 0))
+}
+
+export function buildRepairDetailVisibleStatusOptions(statusCatalog, repair) {
+  const catalog = mergeRepairStatusCatalog(statusCatalog, repair)
+  const allowedIds = Array.isArray(repair?.allowed_status_ids)
+    ? repair.allowed_status_ids.map((value) => Number(value || 0)).filter((value) => value > 0)
+    : []
+
+  if (!allowedIds.length) return catalog
+
+  const visible = new Set(allowedIds)
+  return catalog.filter((option) => visible.has(Number(option?.id || 0)))
+}
+
+export function resolveRepairStatusLabel(repair, statusOptions = []) {
+  const match = mergeRepairStatusCatalog(statusOptions, repair)
+    .find((option) => option.id === Number(repair?.status_id || 0))
   return match?.label || String(repair?.status || 'Sin estado')
 }
 
 export function resolveRepairStatusClass(repair) {
-  const statusId = Number(repair?.status_id || 0)
-  if ([1, 2, 3].includes(statusId)) return 'status-pending'
-  if ([4, 5, 6].includes(statusId)) return 'status-progress'
-  if ([7, 8].includes(statusId)) return 'status-success'
-  if (statusId === 9) return 'status-archived'
+  const statusCode = String(repair?.status_code || '').trim().toLowerCase()
+  if (['ingreso', 'diagnostico', 'presupuesto'].includes(statusCode)) return 'status-pending'
+  if (['aprobado', 'en_trabajo', 'listo'].includes(statusCode)) return 'status-progress'
+  if (['entregado', 'noventena'].includes(statusCode)) return 'status-success'
+  if (statusCode === 'archivado') return 'status-archived'
   return 'status-neutral'
 }
 

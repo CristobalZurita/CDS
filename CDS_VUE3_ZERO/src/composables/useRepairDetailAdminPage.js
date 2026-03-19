@@ -2,9 +2,11 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { extractErrorMessage } from '@/services/api'
 import {
+  buildRepairDetailVisibleStatusOptions,
   buildRepairDetailBundleState,
   createNoteDraft,
   createPhotoDraft,
+  mergeRepairStatusCatalog,
   resolveRepairNoteSubmission,
   resolveRepairPriorityClass,
   resolveRepairPriorityLabel,
@@ -23,11 +25,13 @@ import {
   addRepairNote,
   archiveRepairById,
   baseRepairDetailEditForm,
+  createRepairInvoice,
+  createRepairWarranty,
   downloadRepairClosurePdf,
   fetchRepairDetailBundle,
+  fetchRepairStatusOptions,
   noteTypeClass,
   notifyRepairClient,
-  REPAIR_DETAIL_STATUS_OPTIONS,
   reactivateRepairById,
   requestRepairPhotoUploadLink,
   requestRepairSignatureLink,
@@ -48,6 +52,9 @@ export function useRepairDetailAdminPage() {
   const repair = ref(null)
   const photos = ref([])
   const notes = ref([])
+  const warranty = ref(null)
+  const invoice = ref(null)
+  const statusCatalog = ref([])
 
   const statusDraft = ref(1)
   const editForm = ref(baseRepairDetailEditForm())
@@ -66,9 +73,29 @@ export function useRepairDetailAdminPage() {
   const photoUploadLink = ref('')
 
   const isArchived = computed(() => Boolean(repair.value?.archived_at))
-  const isTerminalStatus = computed(() => Number(repair.value?.status_id || 0) === 9)
+  const isTerminalStatus = computed(() => {
+    const statusCode = String(repair.value?.status_code || '').trim().toLowerCase()
+    return ['archivado', 'rechazado'].includes(statusCode)
+  })
+  const canCreateWarranty = computed(() => {
+    const statusCode = String(repair.value?.status_code || '').trim().toLowerCase()
+    return Boolean(
+      repair.value
+      && !warranty.value
+      && ['entregado', 'noventena', 'archivado'].includes(statusCode)
+    )
+  })
+  const canCreateInvoice = computed(() => {
+    const statusCode = String(repair.value?.status_code || '').trim().toLowerCase()
+    return Boolean(
+      repair.value
+      && !invoice.value
+      && ['listo', 'entregado', 'noventena', 'archivado'].includes(statusCode)
+    )
+  })
 
-  const statusLabel = computed(() => resolveRepairStatusLabel(repair.value))
+  const statusOptions = computed(() => buildRepairDetailVisibleStatusOptions(statusCatalog.value, repair.value))
+  const statusLabel = computed(() => resolveRepairStatusLabel(repair.value, statusCatalog.value))
   const statusClass = computed(() => resolveRepairStatusClass(repair.value))
   const priorityLabel = computed(() => resolveRepairPriorityLabel(repair.value))
   const priorityClass = computed(() => resolveRepairPriorityClass(repair.value))
@@ -77,12 +104,15 @@ export function useRepairDetailAdminPage() {
     repair.value = nextState.repair
     photos.value = nextState.photos
     notes.value = nextState.notes
+    warranty.value = nextState.warranty
+    invoice.value = nextState.invoice
     statusDraft.value = nextState.statusDraft
     editForm.value = nextState.editForm
   }
 
   function resetRepairData() {
     applyRepairScreenState(buildRepairDetailBundleState(null))
+    statusCatalog.value = []
   }
 
   function applyRepairBundle(payload) {
@@ -126,13 +156,24 @@ export function useRepairDetailAdminPage() {
       return
     }
 
-    const payload = await runRepairDetailTask(loading, error, () => fetchRepairDetailBundle(id))
+    const payload = await runRepairDetailTask(loading, error, async () => {
+      const [bundle, nextStatusCatalog] = await Promise.all([
+        fetchRepairDetailBundle(id),
+        fetchRepairStatusOptions().catch(() => [])
+      ])
+
+      return {
+        bundle,
+        statusCatalog: nextStatusCatalog
+      }
+    })
     if (error.value) {
       resetRepairData()
       return
     }
 
-    applyRepairBundle(payload)
+    applyRepairBundle(payload?.bundle)
+    statusCatalog.value = mergeRepairStatusCatalog(payload?.statusCatalog, payload?.bundle?.repair)
   }
 
   async function updateStatus() {
@@ -274,6 +315,36 @@ export function useRepairDetailAdminPage() {
     router.push({ name: 'admin-repairs' })
   }
 
+  async function createWarranty() {
+    if (!repair.value || !canCreateWarranty.value) return
+
+    await runRepairDetailSuccessTask(
+      performingAction,
+      error,
+      () => createRepairWarranty(repairId.value),
+      {
+        onSuccess: (nextWarranty) => {
+          warranty.value = nextWarranty || null
+        }
+      }
+    )
+  }
+
+  async function createInvoice() {
+    if (!repair.value || !canCreateInvoice.value) return
+
+    await runRepairDetailSuccessTask(
+      performingAction,
+      error,
+      () => createRepairInvoice(repairId.value),
+      {
+        onSuccess: (nextInvoice) => {
+          invoice.value = nextInvoice || null
+        }
+      }
+    )
+  }
+
   onMounted(loadRepair)
 
   return {
@@ -281,9 +352,11 @@ export function useRepairDetailAdminPage() {
     repair,
     photos,
     notes,
+    warranty,
+    invoice,
     loading,
     error,
-    statusOptions: REPAIR_DETAIL_STATUS_OPTIONS,
+    statusOptions,
     statusDraft,
     editForm,
     updatingStatus,
@@ -303,6 +376,8 @@ export function useRepairDetailAdminPage() {
     photoUploadLink,
     isArchived,
     isTerminalStatus,
+    canCreateWarranty,
+    canCreateInvoice,
     statusLabel,
     statusClass,
     priorityLabel,
@@ -327,6 +402,8 @@ export function useRepairDetailAdminPage() {
     updateNoteField,
     addNote,
     downloadClosurePdf,
+    createWarranty,
+    createInvoice,
     goToPurchaseRequests,
     goBack
   }
