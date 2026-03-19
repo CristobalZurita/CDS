@@ -52,7 +52,7 @@
 }
 
 .drop-zone {
-  border: 2px dashed color-mix(in srgb, var(--cds-primary) 40%, transparent);
+  border: 2px dashed var(--cds-primary);
   border-radius: var(--cds-radius-md);
   padding: 2rem 1rem;
   text-align: center;
@@ -65,7 +65,7 @@
 
 .drop-zone:hover,
 .drop-zone--active {
-  background: color-mix(in srgb, var(--cds-primary) 6%, white);
+  background: var(--cds-surface-1);
 }
 
 .drop-zone i {
@@ -243,7 +243,7 @@
 }
 
 .binding-slot-input--readonly {
-  background: color-mix(in srgb, var(--cds-light) 18%, white);
+  background: var(--cds-surface-2);
   cursor: not-allowed;
 }
 
@@ -285,7 +285,7 @@
 }
 
 .picker-tile:hover {
-  border-color: color-mix(in srgb, var(--cds-primary) 40%, transparent);
+  border-color: var(--cds-primary);
 }
 
 .picker-tile--selected {

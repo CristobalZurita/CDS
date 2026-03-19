@@ -1,41 +1,20 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '@/services/api'
 import { useAuth } from '@/composables/useAuth'
 import { useShopCartStore } from '@/stores/shopCart'
-import { useCloudinaryImage } from '@/composables/useCloudinary'
 import { formatCurrency } from '@/utils/format'
-
-const STORE_CATALOG_CACHE_KEY = 'cds_store_catalog_cache_v1'
-
-function normalizeSearchText(value) {
-  return String(value || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[_-]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
-function readCatalogCache() {
-  try {
-    const raw = localStorage.getItem(STORE_CATALOG_CACHE_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw)
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
-
-function writeCatalogCache(rows) {
-  try {
-    localStorage.setItem(STORE_CATALOG_CACHE_KEY, JSON.stringify(Array.isArray(rows) ? rows : []))
-  } catch {
-    // noop
-  }
-}
+import {
+  clearStoreCatalogCache,
+  describeStoreProduct,
+  fetchStoreCatalog,
+  filterStoreCatalog,
+  formatStoreLinePrice,
+  formatStoreSummaryAmount,
+  listStoreCategories,
+  readStoreCatalogCache,
+  resolveStoreProductImage,
+  writeStoreCatalogCache
+} from '@/services/storeCatalogService'
 
 export function useStorePage() {
   const { isAuthenticated, isAdmin } = useAuth()
@@ -49,7 +28,6 @@ export function useStorePage() {
   const selectedCategory = ref('')
   const selectedAvailability = ref('all')
 
-  // Shipping synced to Pinia store
   const selectedShippingKey = computed({
     get: () => shopCart.selectedShippingKey,
     set: (value) => shopCart.setShippingKey(value),
@@ -67,81 +45,28 @@ export function useStorePage() {
     return 'Enviar solicitud'
   })
 
-  const availableCategories = computed(() => {
-    const values = new Set(
-      catalog.value
-        .map((product) => String(product.category || '').trim())
-        .filter(Boolean)
-    )
-    return Array.from(values).sort((a, b) => a.localeCompare(b, 'es'))
-  })
+  const availableCategories = computed(() => listStoreCategories(catalog.value))
 
-  const indexedCatalog = computed(() =>
-    catalog.value.map((product) => ({
-      ...product,
-      _searchIndex: normalizeSearchText(
-        [product.name, product.sku, product.family, product.category, describeProduct(product)]
-          .filter(Boolean)
-          .join(' ')
-      ),
-    }))
-  )
+  const filteredProducts = computed(() => filterStoreCatalog(catalog.value, {
+    searchTerm: searchTerm.value,
+    selectedCategory: selectedCategory.value,
+    selectedAvailability: selectedAvailability.value,
+  }))
 
-  const filteredProducts = computed(() => {
-    const normalizedSearch = normalizeSearchText(searchTerm.value)
-    return indexedCatalog.value
-      .filter((product) => {
-        if (selectedCategory.value && product.category !== selectedCategory.value) return false
-        if (selectedAvailability.value === 'sellable' && Number(product.sellable_stock || 0) <= 0) return false
-        if (
-          selectedAvailability.value === 'reserved' &&
-          !(Number(product.available_stock || 0) > 0 && Number(product.sellable_stock || 0) <= 0)
-        ) return false
-        if (selectedAvailability.value === 'out' && Number(product.available_stock || 0) > 0) return false
-        if (!normalizedSearch) return true
-        return product._searchIndex.includes(normalizedSearch)
-      })
-      .sort((a, b) =>
-        String(a.name || '').localeCompare(String(b.name || ''), 'es', { sensitivity: 'base' })
-      )
-  })
-
-  function parseDescriptionMeta(rawDescription) {
-    const text = String(rawDescription || '').trim()
-    if (!text.startsWith('{')) return { text }
-    try {
-      const payload = JSON.parse(text)
-      return typeof payload === 'object' && payload ? payload : {}
-    } catch {
-      return { text }
-    }
+  function productImageSrc(product) {
+    return resolveStoreProductImage(product)
   }
 
   function describeProduct(product) {
-    const meta = parseDescriptionMeta(product?.description)
-    if (meta.text && meta.text !== 'Importado desde Excel (N°)') return meta.text
-    const parts = [meta.family || product?.family, meta.source, meta.origin_status || product?.origin_status]
-      .map((part) => String(part || '').replaceAll('_', ' ').trim())
-      .filter(Boolean)
-    return parts.join(' · ') || 'Repuesto disponible'
-  }
-
-  function productImageSrc(product) {
-    const value = String(product?.image_url || '').trim()
-    if (!value) return ''
-    if (/^https?:\/\//i.test(value)) return value
-    const normalized = value.startsWith('/') ? value : `/${value.replace(/^\/+/, '')}`
-    return useCloudinaryImage(normalized)
+    return describeStoreProduct(product)
   }
 
   function formatLinePrice(value) {
-    const amount = Number(value || 0)
-    return amount > 0 ? formatCurrency(amount) : 'Por cotizar'
+    return formatStoreLinePrice(value)
   }
 
   function formatSummaryAmount(value) {
-    const amount = Number(value || 0)
-    return totals.value.hasQuotedAmount && amount > 0 ? formatCurrency(amount) : 'Por cotizar'
+    return formatStoreSummaryAmount(value, totals.value)
   }
 
   function canAddProduct(product) {
@@ -157,13 +82,22 @@ export function useStorePage() {
     return 'Agregar a lista'
   }
 
+  function clearTransientError(delay = 3000) {
+    window.setTimeout(() => {
+      error.value = ''
+    }, delay)
+  }
+
+  function syncCatalog(rows) {
+    catalog.value = Array.isArray(rows) ? rows : []
+    shopCart.syncCatalog(catalog.value)
+  }
+
   function addToCart(product) {
     if (!product || !shopCart.addProduct(product)) {
       error.value = `${product?.name || 'Producto'} no se puede agregar desde el catálogo actual.`
-      setTimeout(() => { error.value = '' }, 3000)
-      return
+      clearTransientError()
     }
-    // feedback visual via cart badge update
   }
 
   function removeFromCart(productId) {
@@ -174,47 +108,35 @@ export function useStorePage() {
     shopCart.changeQty(productId, delta)
   }
 
-  function normalizeCatalogPayload(payload) {
-    if (Array.isArray(payload)) return payload
-    if (Array.isArray(payload?.data)) return payload.data
-    if (Array.isArray(payload?.items)) return payload.items
-    if (Array.isArray(payload?.results)) return payload.results
-    return []
+  function closeCartDrawer() {
+    shopCart.closeCart()
+  }
+
+  function onDrawerChangeQty({ id, delta }) {
+    changeQty(id, delta)
   }
 
   async function loadCatalog() {
     loading.value = true
     error.value = ''
-    try {
-      // Si hay sesión activa usamos el endpoint completo (inventory.read), que devuelve
-      // todos los productos. Sin sesión usamos el público pero sin filtros de stock.
-      const endpoint = isAuthenticated.value
-        ? '/inventory/'
-        : '/inventory/public/'
-      const params = isAuthenticated.value
-        ? { limit: 5000 }
-        : { limit: 5000, enabled_only: false, in_stock_only: false }
 
-      const res = await api.get(endpoint, { params })
-      const rows = normalizeCatalogPayload(res?.data)
+    try {
+      const rows = await fetchStoreCatalog({ isAuthenticated: isAuthenticated.value })
       if (rows.length > 0) {
-        catalog.value = rows
-        writeCatalogCache(rows)
+        syncCatalog(rows)
+        writeStoreCatalogCache(rows)
       } else {
-        // Respuesta vacía: limpiar caché stale y mostrar vacío
-        localStorage.removeItem(STORE_CATALOG_CACHE_KEY)
-        catalog.value = []
+        clearStoreCatalogCache()
+        syncCatalog([])
       }
-      shopCart.syncCatalog(catalog.value)
     } catch (err) {
-      const cached = readCatalogCache()
+      const cached = readStoreCatalogCache()
       if (cached.length > 0) {
-        catalog.value = cached
-        shopCart.syncCatalog(catalog.value)
+        syncCatalog(cached)
         error.value = 'No se pudo actualizar desde backend. Mostrando la última copia local del catálogo.'
       } else {
         error.value = err?.response?.data?.detail || 'No se pudo cargar el catálogo.'
-        catalog.value = []
+        syncCatalog([])
       }
     } finally {
       loading.value = false
@@ -224,12 +146,12 @@ export function useStorePage() {
   async function submitCheckout() {
     if (!cartItems.value.length) {
       error.value = 'El carrito está vacío.'
-      setTimeout(() => { error.value = '' }, 3000)
+      clearTransientError()
       return
     }
     if (isAdmin.value) {
       error.value = 'La solicitud de tienda está disponible para cuentas cliente.'
-      setTimeout(() => { error.value = '' }, 3000)
+      clearTransientError()
       return
     }
     if (!isAuthenticated.value) {
@@ -242,17 +164,15 @@ export function useStorePage() {
       return request
     } catch (err) {
       error.value = err?.response?.data?.detail || err?.message || 'No se pudo enviar la solicitud.'
-      setTimeout(() => { error.value = '' }, 4000)
+      clearTransientError(4000)
     }
   }
 
   onMounted(async () => {
     shopCart.hydrate()
-    // Pre-cargar desde caché local mientras llega la respuesta del backend
-    const cached = readCatalogCache()
+    const cached = readStoreCatalogCache()
     if (cached.length > 0) {
-      catalog.value = cached
-      shopCart.syncCatalog(catalog.value)
+      syncCatalog(cached)
     }
     await loadCatalog()
   })
@@ -285,6 +205,8 @@ export function useStorePage() {
     addToCart,
     removeFromCart,
     changeQty,
+    closeCartDrawer,
+    onDrawerChangeQty,
     submitCheckout,
   }
 }

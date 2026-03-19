@@ -19,6 +19,7 @@
             autocomplete="name"
             placeholder="Tu nombre"
           />
+          <small v-if="firstError('nombre')" class="field-error">{{ firstError('nombre') }}</small>
         </label>
 
         <label class="field">
@@ -29,6 +30,7 @@
             autocomplete="email"
             placeholder="correo@dominio.com"
           />
+          <small v-if="firstError('email')" class="field-error">{{ firstError('email') }}</small>
         </label>
 
         <label class="field">
@@ -39,6 +41,7 @@
             autocomplete="tel"
             placeholder="+56 9 1234 5678"
           />
+          <small v-if="firstError('telefono')" class="field-error">{{ firstError('telefono') }}</small>
         </label>
       </div>
 
@@ -46,6 +49,9 @@
         <input v-model="acceptedDisclaimerModel" type="checkbox" />
         <span>Acepto las condiciones del servicio de cotización referencial</span>
       </label>
+      <small v-if="firstError('acceptedDisclaimer')" class="field-error">
+        {{ firstError('acceptedDisclaimer') }}
+      </small>
 
       <TurnstileWidget
         :key="leadTurnstileRenderKey"
@@ -56,8 +62,8 @@
         <button class="btn-secondary" @click="emit('back')">← Atrás</button>
         <button
           class="btn-primary"
-          :disabled="!canSubmitLead || loading"
-          @click="emit('submit')"
+          :disabled="!canSubmitValidated || loading"
+          @click="handleSubmit"
         >
           <span v-if="loading"><span class="spinner spinner--sm"></span> Enviando…</span>
           <span v-else>Enviar y agendar</span>
@@ -83,10 +89,11 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import CotizadorLeadSuccess from '@/components/business/CotizadorLeadSuccess.vue'
 import CotizadorStepHeader from '@/components/business/CotizadorStepHeader.vue'
 import TurnstileWidget from '@/components/widgets/TurnstileWidget.vue'
+import { quotationLeadSchema } from '@/validation/schemas/quotationLeadSchema'
 
 const props = defineProps({
   leadSubmitted: {
@@ -164,8 +171,42 @@ const acceptedDisclaimerModel = computed({
   get: () => props.acceptedDisclaimer,
   set: (value) => emit('update:acceptedDisclaimer', value)
 })
+
+const validationResult = computed(() => quotationLeadSchema.safeParse({
+  nombre: props.leadForm?.nombre,
+  email: props.leadForm?.email,
+  telefono: props.leadForm?.telefono,
+  acceptedDisclaimer: props.acceptedDisclaimer,
+}))
+
+const submitAttempted = ref(false)
+
+const fieldErrors = computed(() => {
+  if (validationResult.value.success) return {}
+  return validationResult.value.error.flatten().fieldErrors
+})
+
+const visibleFieldErrors = computed(() => (submitAttempted.value ? fieldErrors.value : {}))
+const canSubmitValidated = computed(() => props.canSubmitLead && validationResult.value.success)
+
+function firstError(fieldName) {
+  return visibleFieldErrors.value?.[fieldName]?.[0] || ''
+}
+
+function handleSubmit() {
+  submitAttempted.value = true
+  if (!canSubmitValidated.value) return
+  emit('submit')
+}
 </script>
 
 <style scoped>
 @import './cotizadorStepShared.css';
+
+.field-error {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: var(--cds-text-xs);
+  color: var(--cds-primary);
+}
 </style>

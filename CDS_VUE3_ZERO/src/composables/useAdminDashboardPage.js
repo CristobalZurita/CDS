@@ -5,24 +5,33 @@
  * Reutiliza los endpoints ya presentes en la page legacy, sin duplicarlos.
  */
 
-import { computed, onMounted, ref } from 'vue'
-import api, { extractErrorMessage } from '@/services/api'
-import { pickSettledData } from '@/utils/api-helpers'
+import { computed } from 'vue'
+import { useQuery } from '@tanstack/vue-query'
+import { extractErrorMessage } from '@/services/api'
+import {
+  ADMIN_DASHBOARD_QUERY_KEY,
+  fetchAdminDashboardSnapshot,
+} from '@/services/adminDashboardService'
 
 export function useAdminDashboardPage() {
-  const isLoading = ref(false)
-  const error = ref('')
-  
-  // Datos de stats (contadores simples)
-  const stats = ref({})
-  
-  // KPIs detallados
-  const kpiSummary = ref({})
-  const kpiDashboard = ref({})
-  const kpiRevenue = ref({})
-  const kpiInventory = ref({})
-  const kpiClients = ref({})
-  const kpiWarranty = ref({})
+  const dashboardQuery = useQuery({
+    queryKey: ADMIN_DASHBOARD_QUERY_KEY,
+    queryFn: fetchAdminDashboardSnapshot,
+  })
+
+  const isLoading = computed(() => dashboardQuery.isPending.value)
+  const error = computed(() => {
+    if (!dashboardQuery.error.value) return ''
+    return extractErrorMessage(dashboardQuery.error.value)
+  })
+
+  const stats = computed(() => dashboardQuery.data.value?.stats || {})
+  const kpiSummary = computed(() => dashboardQuery.data.value?.kpiSummary || {})
+  const kpiDashboard = computed(() => dashboardQuery.data.value?.kpiDashboard || {})
+  const kpiRevenue = computed(() => dashboardQuery.data.value?.kpiRevenue || {})
+  const kpiInventory = computed(() => dashboardQuery.data.value?.kpiInventory || {})
+  const kpiClients = computed(() => dashboardQuery.data.value?.kpiClients || {})
+  const kpiWarranty = computed(() => dashboardQuery.data.value?.kpiWarranty || {})
 
   const normalizedAlerts = computed(() => {
     const summaryAlerts = Array.isArray(kpiSummary.value?.alerts) ? kpiSummary.value.alerts : []
@@ -100,45 +109,9 @@ export function useAdminDashboardPage() {
     }
   ]))
   
-  // Cards del dashboard
   async function loadDashboard() {
-    isLoading.value = true
-    error.value = ''
-
-    try {
-      const [
-        statsRes,
-        summaryRes,
-        dashboardRes,
-        revenueRes,
-        inventoryRes,
-        clientsRes,
-        warrantyRes
-      ] = await Promise.allSettled([
-        api.get('/stats', { params: { extended: true } }),
-        api.get('/analytics/kpis/summary'),
-        api.get('/analytics/dashboard'),
-        api.get('/analytics/revenue'),
-        api.get('/analytics/inventory'),
-        api.get('/analytics/clients'),
-        api.get('/analytics/warranties')
-      ])
-
-      stats.value = pickSettledData(statsRes, {})
-      kpiSummary.value = pickSettledData(summaryRes, {})
-      kpiDashboard.value = pickSettledData(dashboardRes, {})
-      kpiRevenue.value = pickSettledData(revenueRes, {})
-      kpiInventory.value = pickSettledData(inventoryRes, {})
-      kpiClients.value = pickSettledData(clientsRes, {})
-      kpiWarranty.value = pickSettledData(warrantyRes, {})
-    } catch (err) {
-      error.value = extractErrorMessage(err)
-    } finally {
-      isLoading.value = false
-    }
+    await dashboardQuery.refetch()
   }
-
-  onMounted(loadDashboard)
 
   function asInt(value, fallback = 0) {
     const raw = value != null ? value : fallback

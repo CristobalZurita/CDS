@@ -53,7 +53,7 @@ defineProps({
 
 <style scoped>
 .result-box {
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 25%, white);
+  border: 1px solid var(--cds-border-card);
   border-radius: 0.7rem;
   padding: 0.9rem;
   display: grid;
@@ -73,7 +73,7 @@ defineProps({
 .fault-tag {
   font-size: var(--cds-text-xs);
   padding: 0.2rem 0.5rem;
-  background: color-mix(in srgb, var(--cds-light) 40%, white);
+  background: var(--cds-surface-2);
   border-radius: 0.35rem;
   color: var(--cds-text-normal);
 }
@@ -81,7 +81,7 @@ defineProps({
 .result-breakdown {
   display: grid;
   gap: 0.3rem;
-  border-top: 1px solid color-mix(in srgb, var(--cds-light) 55%, white);
+  border-top: 1px solid var(--cds-border-soft);
   padding-top: 0.65rem;
 }
 
@@ -96,7 +96,7 @@ defineProps({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 2px solid color-mix(in srgb, var(--cds-primary) 30%, white);
+  border-top: 2px solid var(--cds-primary);
   padding-top: 0.65rem;
   font-size: var(--cds-text-base);
 }

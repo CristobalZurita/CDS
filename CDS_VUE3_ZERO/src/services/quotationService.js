@@ -26,6 +26,25 @@ export async function requestQuotationEstimate({ instrumentId, faultIds, turnsti
   return data
 }
 
+export async function submitQuotationLead({
+  leadForm,
+  selectedBrandName,
+  selectedModelName,
+  quoteResult,
+  turnstileToken,
+}) {
+  const { data } = await api.post('/leads', {
+    nombre: leadForm?.nombre,
+    email: leadForm?.email,
+    telefono: leadForm?.telefono || null,
+    equipment_brand: selectedBrandName,
+    equipment_model: selectedModelName,
+    quote_result: quoteResult,
+    turnstile_token: turnstileToken,
+  })
+  return data
+}
+
 export function normalizeQuotationEstimate(data, { selectedBrandName = '', selectedModelName = '' } = {}) {
   return {
     equipment_info: {

@@ -60,7 +60,7 @@
         :new-photo-type="newPhotoType"
         :uploading-photo="uploadingPhoto"
         :format-date="formatDate"
-        @toggle-upload="showPhotoUpload = !showPhotoUpload"
+        @toggle-upload="togglePhotoUpload"
         @file-selected="onFileSelected"
         @update-photo-field="updatePhotoField"
         @upload-photo="uploadPhoto"
@@ -74,7 +74,7 @@
         :saving-note="savingNote"
         :note-type-class="noteTypeClass"
         :format-date="formatDate"
-        @toggle-note-form="showNoteForm = !showNoteForm"
+        @toggle-note-form="toggleNoteForm"
         @update-note-field="updateNoteField"
         @add-note="addNote"
       />
@@ -141,27 +141,18 @@ const {
   notifyClient,
   requestSignature,
   requestPhotoUpload,
+  updateEditField,
+  togglePhotoUpload,
   onFileSelected,
+  updatePhotoField,
   uploadPhoto,
+  toggleNoteForm,
+  updateNoteField,
   addNote,
   downloadClosurePdf,
   goToPurchaseRequests,
   goBack
 } = useRepairDetailAdminPage()
-
-function updatePhotoField({ field, value }) {
-  if (field === 'newPhotoCaption') newPhotoCaption.value = value
-  if (field === 'newPhotoType') newPhotoType.value = value
-}
-
-function updateNoteField({ field, value }) {
-  if (field === 'newNote') newNote.value = value
-  if (field === 'newNoteType') newNoteType.value = value
-}
-
-function updateEditField({ field, value }) {
-  editForm.value[field] = value
-}
 </script>
 
 <style scoped src="./commonAdminPage.css"></style>

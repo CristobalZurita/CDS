@@ -1,50 +1,30 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api, { extractErrorMessage } from '@/services/api'
+import { extractErrorMessage } from '@/services/api'
+import {
+  COLUMN_DEFS,
+  createEmptyQuoteDraft,
+  createQuoteDraft,
+  createRepairFromQuoteData,
+  fetchQuotesBoard,
+  formatQuoteCurrency,
+  formatQuoteDate,
+  removeQuoteById,
+  sendQuoteToClient,
+  STATUS_OPTIONS,
+  updateQuoteStatus
+} from '@/services/quotesAdminService'
 
-const STATUS_OPTIONS = [
-  { value: 'pending', label: 'Pendiente' },
-  { value: 'sent', label: 'Enviada' },
-  { value: 'approved', label: 'Aprobada' },
-  { value: 'denied', label: 'Rechazada' },
-  { value: 'canceled', label: 'Cancelada' }
-]
+function createEmptyBoard() {
+  return { draft_pending: [], waiting_response: [], closed: [] }
+}
 
-const COLUMN_DEFS = [
-  { key: 'draft_pending', label: 'Borrador / Pendiente' },
-  { key: 'waiting_response', label: 'En espera de respuesta' },
-  { key: 'closed', label: 'Cerradas' }
-]
-const QUOTES_BASE_PATH = '/quotations/quotes'
+function createEmptyCounts() {
+  return { draft_pending: 0, waiting_response: 0, closed: 0, total: 0 }
+}
 
-function normalizeBoardPayload(payload) {
-  const board = payload?.board || {}
-  const counts = payload?.counts || {}
-  const metrics = payload?.metrics || {}
-
-  return {
-    board: {
-      draft_pending: Array.isArray(board.draft_pending) ? board.draft_pending : [],
-      waiting_response: Array.isArray(board.waiting_response) ? board.waiting_response : [],
-      closed: Array.isArray(board.closed) ? board.closed : []
-    },
-    counts: {
-      draft_pending: Number(counts.draft_pending || 0),
-      waiting_response: Number(counts.waiting_response || 0),
-      closed: Number(counts.closed || 0),
-      total: Number(counts.total || 0)
-    },
-    metrics: {
-      pending: Number(metrics.pending || 0),
-      sent: Number(metrics.sent || 0),
-      approved: Number(metrics.approved || 0),
-      denied: Number(metrics.denied || 0),
-      canceled: Number(metrics.canceled || 0),
-      expired_open: Number(metrics.expired_open || 0),
-      expiring_3d: Number(metrics.expiring_3d || 0),
-      open_total: Number(metrics.open_total || 0)
-    }
-  }
+function createEmptyMetrics() {
+  return { pending: 0, sent: 0, approved: 0, denied: 0, canceled: 0, expired_open: 0, expiring_3d: 0, open_total: 0 }
 }
 
 export function useQuotesAdminPage() {
@@ -59,14 +39,42 @@ export function useQuotesAdminPage() {
   const sendWhatsapp = ref(true)
   const busyIds = ref(new Set())
 
-  const board = ref({ draft_pending: [], waiting_response: [], closed: [] })
-  const counts = ref({ draft_pending: 0, waiting_response: 0, closed: 0, total: 0 })
-  const metrics = ref({ pending: 0, sent: 0, approved: 0, denied: 0, canceled: 0, expired_open: 0, expiring_3d: 0, open_total: 0 })
+  const board = ref(createEmptyBoard())
+  const counts = ref(createEmptyCounts())
+  const metrics = ref(createEmptyMetrics())
+
+  const showCreateModal = ref(false)
+  const isCreating = ref(false)
+  const newQuote = reactive(createEmptyQuoteDraft())
 
   const highlightedQuoteId = computed(() => {
     const value = Number(route.query?.quote_id || 0)
     return Number.isFinite(value) && value > 0 ? value : null
   })
+
+  function resetBoard() {
+    board.value = createEmptyBoard()
+    counts.value = createEmptyCounts()
+    metrics.value = createEmptyMetrics()
+  }
+
+  function resetCreateForm() {
+    Object.assign(newQuote, createEmptyQuoteDraft())
+  }
+
+  function openCreateModal() {
+    showCreateModal.value = true
+  }
+
+  function closeCreateModal() {
+    showCreateModal.value = false
+    resetCreateForm()
+  }
+
+  function updateNewQuoteField({ field, value }) {
+    if (!field || !(field in newQuote)) return
+    newQuote[field] = value
+  }
 
   function isBusy(quoteId) {
     return busyIds.value.has(Number(quoteId))
@@ -81,13 +89,6 @@ export function useQuotesAdminPage() {
       next.delete(id)
     }
     busyIds.value = next
-  }
-
-  function toPayload(response) {
-    if (!response) return {}
-    if (response?.data?.data) return response.data.data
-    if (response?.data) return response.data
-    return response
   }
 
   function filterBySearch(items) {
@@ -118,43 +119,21 @@ export function useQuotesAdminPage() {
     return getColumnItems(columnKey).length
   }
 
-  function formatCurrency(value) {
-    const amount = Number(value || 0)
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount)
-  }
-
-  function formatDate(value) {
-    if (!value) return 'SIN_DATO'
-    const date = new Date(value)
-    if (Number.isNaN(date.getTime())) return 'SIN_DATO'
-    return new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium' }).format(date)
-  }
-
   async function loadBoard() {
     loading.value = true
     error.value = ''
 
     try {
-      const params = { limit: 300 }
-
-      const q = String(searchQuery.value || '').trim()
-      if (q) params.q = q
-
-      if (statusFilter.value) params.status = statusFilter.value
-
-      const response = await api.get(`${QUOTES_BASE_PATH}/board`, { params })
-      const normalized = normalizeBoardPayload(toPayload(response))
+      const normalized = await fetchQuotesBoard({
+        searchQuery: searchQuery.value,
+        statusFilter: statusFilter.value,
+      })
       board.value = normalized.board
       counts.value = normalized.counts
       metrics.value = normalized.metrics
     } catch (requestError) {
       error.value = extractErrorMessage(requestError)
-      board.value = { draft_pending: [], waiting_response: [], closed: [] }
+      resetBoard()
     } finally {
       loading.value = false
     }
@@ -165,9 +144,9 @@ export function useQuotesAdminPage() {
     error.value = ''
 
     try {
-      await api.post(`${QUOTES_BASE_PATH}/${quote.id}/send`, {
-        send_whatsapp: Boolean(sendWhatsapp.value),
-        message: String(customMessage.value || '').trim() || null
+      await sendQuoteToClient(quote.id, {
+        sendWhatsapp: sendWhatsapp.value,
+        message: customMessage.value,
       })
       await loadBoard()
     } catch (requestError) {
@@ -182,10 +161,7 @@ export function useQuotesAdminPage() {
     error.value = ''
 
     try {
-      await api.post(`${QUOTES_BASE_PATH}/${quote.id}/status`, {
-        status,
-        client_response: status === 'approved' ? 'Aprobada por administracion' : 'Rechazada por administracion'
-      })
+      await updateQuoteStatus(quote.id, status)
       await loadBoard()
     } catch (requestError) {
       error.value = extractErrorMessage(requestError)
@@ -204,21 +180,7 @@ export function useQuotesAdminPage() {
     error.value = ''
 
     try {
-      const payload = {
-        client_id: Number(quote.client_id),
-        quote_id: Number(quote.id),
-        title: quote.quote_number ? `OT ${quote.quote_number}` : `OT ${quote.id}`,
-        description: String(quote.problem_description || 'Sin descripcion'),
-        model: String(quote.device_model || quote?.device?.model || quote?.client?.name || 'SIN_MODELO'),
-        diagnosis: quote.diagnosis || null,
-        parts_cost: Number(quote.estimated_parts_cost || 0),
-        labor_cost: Number(quote.estimated_labor_cost || 0),
-        total_cost: Number(quote.estimated_total || 0)
-      }
-
-      const response = await api.post('/repairs/', payload)
-      const repairId = Number(response?.data?.id || 0)
-
+      const repairId = await createRepairFromQuoteData(quote)
       await loadBoard()
 
       if (repairId > 0) {
@@ -245,7 +207,7 @@ export function useQuotesAdminPage() {
     error.value = ''
 
     try {
-      await api.delete(`${QUOTES_BASE_PATH}/${id}`)
+      await removeQuoteById(id)
       await loadBoard()
     } catch (requestError) {
       error.value = extractErrorMessage(requestError)
@@ -254,27 +216,22 @@ export function useQuotesAdminPage() {
     }
   }
 
-  async function createQuote(quoteData) {
+  async function submitNewQuote() {
+    if (isCreating.value) return { success: false, error: null }
+
+    isCreating.value = true
     error.value = ''
-    
+
     try {
-      const response = await api.post(QUOTES_BASE_PATH, {
-        client_name: quoteData.client_name,
-        client_email: quoteData.client_email,
-        client_phone: quoteData.client_phone || null,
-        problem_description: quoteData.problem_description,
-        estimated_total: Number(quoteData.estimated_total) || 0,
-        estimated_parts_cost: Number(quoteData.estimated_parts_cost) || 0,
-        estimated_labor_cost: Number(quoteData.estimated_labor_cost) || 0,
-        diagnosis: quoteData.diagnosis || null,
-        valid_until: quoteData.valid_until || null
-      })
-      
+      const data = await createQuoteDraft(newQuote)
       await loadBoard()
-      return { success: true, data: response.data }
+      closeCreateModal()
+      return { success: true, data }
     } catch (requestError) {
       error.value = extractErrorMessage(requestError)
       return { success: false, error: error.value }
+    } finally {
+      isCreating.value = false
     }
   }
 
@@ -292,17 +249,23 @@ export function useQuotesAdminPage() {
     counts,
     metrics,
     highlightedQuoteId,
+    showCreateModal,
+    isCreating,
+    newQuote,
     isBusy,
     getColumnItems,
     getColumnCount,
-    formatCurrency,
-    formatDate,
+    formatCurrency: formatQuoteCurrency,
+    formatDate: formatQuoteDate,
     loadBoard,
     sendQuote,
     changeStatus,
     createRepairFromQuote,
     openRepair,
     deleteQuote,
-    createQuote
+    openCreateModal,
+    closeCreateModal,
+    updateNewQuoteField,
+    submitNewQuote
   }
 }

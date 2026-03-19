@@ -2,6 +2,20 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { extractErrorMessage } from '@/services/api'
 import {
+  buildRepairDetailScreenDrafts,
+  createNoteDraft,
+  createPhotoDraft,
+  resolveRepairPriorityClass,
+  resolveRepairPriorityLabel,
+  resolveRepairStatusClass,
+  resolveRepairStatusLabel,
+  setRepairPhotoDraftFile,
+  toggleRepairNoteDraft,
+  toggleRepairPhotoDraft,
+  updateRepairNoteDraft,
+  updateRepairPhotoDraft
+} from '@/composables/repairDetailAdminState'
+import {
   addRepairNote,
   archiveRepairById,
   baseRepairDetailEditForm,
@@ -41,14 +55,8 @@ export function useRepairDetailAdminPage() {
   const savingNote = ref(false)
   const downloadingClosurePdf = ref(false)
 
-  const showPhotoUpload = ref(false)
-  const selectedFile = ref(null)
-  const newPhotoCaption = ref('')
-  const newPhotoType = ref('general')
-
-  const showNoteForm = ref(false)
-  const newNote = ref('')
-  const newNoteType = ref('internal')
+  const photoDraft = ref(createPhotoDraft())
+  const noteDraft = ref(createNoteDraft())
 
   const signatureLink = ref('')
   const photoUploadLink = ref('')
@@ -56,33 +64,10 @@ export function useRepairDetailAdminPage() {
   const isArchived = computed(() => Boolean(repair.value?.archived_at))
   const isTerminalStatus = computed(() => Number(repair.value?.status_id || 0) === 9)
 
-  const statusLabel = computed(() => {
-    const match = REPAIR_DETAIL_STATUS_OPTIONS.find((option) => option.id === Number(repair.value?.status_id || 0))
-    return match?.label || String(repair.value?.status || 'Sin estado')
-  })
-
-  const statusClass = computed(() => {
-    const statusId = Number(repair.value?.status_id || 0)
-    if ([1, 2, 3].includes(statusId)) return 'status-pending'
-    if ([4, 5, 6].includes(statusId)) return 'status-progress'
-    if ([7, 8].includes(statusId)) return 'status-success'
-    if (statusId === 9) return 'status-archived'
-    return 'status-neutral'
-  })
-
-  const priorityLabel = computed(() => {
-    const priority = Number(repair.value?.priority || 2)
-    if (priority === 1) return 'Alta'
-    if (priority === 3) return 'Baja'
-    return 'Normal'
-  })
-
-  const priorityClass = computed(() => {
-    const priority = Number(repair.value?.priority || 2)
-    if (priority === 1) return 'priority-high'
-    if (priority === 3) return 'priority-low'
-    return 'priority-normal'
-  })
+  const statusLabel = computed(() => resolveRepairStatusLabel(repair.value))
+  const statusClass = computed(() => resolveRepairStatusClass(repair.value))
+  const priorityLabel = computed(() => resolveRepairPriorityLabel(repair.value))
+  const priorityClass = computed(() => resolveRepairPriorityClass(repair.value))
 
   function syncDraftFromRepair() {
     if (!repair.value) {
@@ -91,18 +76,33 @@ export function useRepairDetailAdminPage() {
       return
     }
 
-    statusDraft.value = Number(repair.value.status_id || 1)
+    const nextDrafts = buildRepairDetailScreenDrafts(repair.value)
+    statusDraft.value = nextDrafts.statusDraft
+    editForm.value = nextDrafts.editForm
+  }
+
+  function updateEditField({ field, value }) {
+    if (!field) return
     editForm.value = {
-      diagnosis: String(repair.value.diagnosis || ''),
-      work_performed: String(repair.value.work_performed || ''),
-      parts_cost: Number(repair.value.parts_cost || 0),
-      labor_cost: Number(repair.value.labor_cost || 0),
-      additional_cost: Number(repair.value.additional_cost || 0),
-      discount: Number(repair.value.discount || 0),
-      total_cost: Number(repair.value.total_cost || 0),
-      paid_amount: Number(repair.value.paid_amount || 0),
-      payment_method: String(repair.value.payment_method || 'cash')
+      ...editForm.value,
+      [field]: value
     }
+  }
+
+  function togglePhotoUpload() {
+    photoDraft.value = toggleRepairPhotoDraft(photoDraft.value)
+  }
+
+  function updatePhotoField(payload) {
+    photoDraft.value = updateRepairPhotoDraft(photoDraft.value, payload)
+  }
+
+  function toggleNoteForm() {
+    noteDraft.value = toggleRepairNoteDraft(noteDraft.value)
+  }
+
+  function updateNoteField(payload) {
+    noteDraft.value = updateRepairNoteDraft(noteDraft.value, payload)
   }
 
   async function loadRepair() {
@@ -248,26 +248,22 @@ export function useRepairDetailAdminPage() {
   }
 
   function onFileSelected(event) {
-    const file = event?.target?.files?.[0] || null
-    selectedFile.value = file
+    photoDraft.value = setRepairPhotoDraftFile(photoDraft.value, event)
   }
 
   async function uploadPhoto() {
-    if (!selectedFile.value || !repair.value) return
+    if (!photoDraft.value.file || !repair.value) return
 
     uploadingPhoto.value = true
     error.value = ''
 
     try {
-      photos.value = await uploadRepairPhoto(repairId.value, selectedFile.value, {
-        photoType: newPhotoType.value,
-        caption: newPhotoCaption.value
+      photos.value = await uploadRepairPhoto(repairId.value, photoDraft.value.file, {
+        photoType: photoDraft.value.type,
+        caption: photoDraft.value.caption
       })
 
-      selectedFile.value = null
-      newPhotoCaption.value = ''
-      newPhotoType.value = 'general'
-      showPhotoUpload.value = false
+      photoDraft.value = createPhotoDraft()
     } catch (requestError) {
       error.value = requestError?.message || extractErrorMessage(requestError)
     } finally {
@@ -278,7 +274,7 @@ export function useRepairDetailAdminPage() {
   async function addNote() {
     if (!repair.value) return
 
-    const note = String(newNote.value || '').trim()
+    const note = String(noteDraft.value.text || '').trim()
     if (!note) {
       error.value = 'La nota no puede estar vacia.'
       return
@@ -290,12 +286,10 @@ export function useRepairDetailAdminPage() {
     try {
       notes.value = await addRepairNote(repairId.value, {
         note,
-        noteType: newNoteType.value
+        noteType: noteDraft.value.type
       })
 
-      newNote.value = ''
-      newNoteType.value = 'internal'
-      showNoteForm.value = false
+      noteDraft.value = createNoteDraft()
     } catch (requestError) {
       error.value = extractErrorMessage(requestError)
     } finally {
@@ -345,13 +339,13 @@ export function useRepairDetailAdminPage() {
     uploadingPhoto,
     savingNote,
     downloadingClosurePdf,
-    showPhotoUpload,
-    selectedFile,
-    newPhotoCaption,
-    newPhotoType,
-    showNoteForm,
-    newNote,
-    newNoteType,
+    showPhotoUpload: computed(() => photoDraft.value.open),
+    selectedFile: computed(() => photoDraft.value.file),
+    newPhotoCaption: computed(() => photoDraft.value.caption),
+    newPhotoType: computed(() => photoDraft.value.type),
+    showNoteForm: computed(() => noteDraft.value.open),
+    newNote: computed(() => noteDraft.value.text),
+    newNoteType: computed(() => noteDraft.value.type),
     signatureLink,
     photoUploadLink,
     isArchived,
@@ -371,8 +365,13 @@ export function useRepairDetailAdminPage() {
     notifyClient,
     requestSignature,
     requestPhotoUpload,
+    updateEditField,
+    togglePhotoUpload,
     onFileSelected,
+    updatePhotoField,
     uploadPhoto,
+    toggleNoteForm,
+    updateNoteField,
     addNote,
     downloadClosurePdf,
     goToPurchaseRequests,
