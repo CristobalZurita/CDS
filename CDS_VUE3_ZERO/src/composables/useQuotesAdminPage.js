@@ -2,6 +2,15 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { extractErrorMessage } from '@/services/api'
 import {
+  createEmptyQuotesBoard,
+  createEmptyQuotesCounts,
+  createEmptyQuotesMetrics,
+  filterQuotesBySearch,
+  isQuoteBusy,
+  setQuoteBusyState,
+  updateQuoteDraftField
+} from '@/composables/quotesAdminState'
+import {
   COLUMN_DEFS,
   createEmptyQuoteDraft,
   createQuoteDraft,
@@ -15,18 +24,6 @@ import {
   updateQuoteStatus
 } from '@/services/quotesAdminService'
 
-function createEmptyBoard() {
-  return { draft_pending: [], waiting_response: [], closed: [] }
-}
-
-function createEmptyCounts() {
-  return { draft_pending: 0, waiting_response: 0, closed: 0, total: 0 }
-}
-
-function createEmptyMetrics() {
-  return { pending: 0, sent: 0, approved: 0, denied: 0, canceled: 0, expired_open: 0, expiring_3d: 0, open_total: 0 }
-}
-
 export function useQuotesAdminPage() {
   const route = useRoute()
   const router = useRouter()
@@ -39,9 +36,9 @@ export function useQuotesAdminPage() {
   const sendWhatsapp = ref(true)
   const busyIds = ref(new Set())
 
-  const board = ref(createEmptyBoard())
-  const counts = ref(createEmptyCounts())
-  const metrics = ref(createEmptyMetrics())
+  const board = ref(createEmptyQuotesBoard())
+  const counts = ref(createEmptyQuotesCounts())
+  const metrics = ref(createEmptyQuotesMetrics())
 
   const showCreateModal = ref(false)
   const isCreating = ref(false)
@@ -53,9 +50,9 @@ export function useQuotesAdminPage() {
   })
 
   function resetBoard() {
-    board.value = createEmptyBoard()
-    counts.value = createEmptyCounts()
-    metrics.value = createEmptyMetrics()
+    board.value = createEmptyQuotesBoard()
+    counts.value = createEmptyQuotesCounts()
+    metrics.value = createEmptyQuotesMetrics()
   }
 
   function resetCreateForm() {
@@ -72,47 +69,19 @@ export function useQuotesAdminPage() {
   }
 
   function updateNewQuoteField({ field, value }) {
-    if (!field || !(field in newQuote)) return
-    newQuote[field] = value
+    updateQuoteDraftField(newQuote, { field, value })
   }
 
   function isBusy(quoteId) {
-    return busyIds.value.has(Number(quoteId))
+    return isQuoteBusy(busyIds.value, quoteId)
   }
 
   function setBusy(quoteId, value) {
-    const id = Number(quoteId)
-    const next = new Set(busyIds.value)
-    if (value) {
-      next.add(id)
-    } else {
-      next.delete(id)
-    }
-    busyIds.value = next
-  }
-
-  function filterBySearch(items) {
-    const query = String(searchQuery.value || '').trim().toLowerCase()
-    if (!query) return items
-
-    return items.filter((quote) => {
-      const text = [
-        quote?.quote_number,
-        quote?.client?.name,
-        quote?.client_name,
-        quote?.problem_description,
-        quote?.status
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase()
-
-      return text.includes(query)
-    })
+    busyIds.value = setQuoteBusyState(busyIds.value, quoteId, value)
   }
 
   function getColumnItems(columnKey) {
-    return filterBySearch(board.value[columnKey] || [])
+    return filterQuotesBySearch(board.value[columnKey] || [], searchQuery.value)
   }
 
   function getColumnCount(columnKey) {

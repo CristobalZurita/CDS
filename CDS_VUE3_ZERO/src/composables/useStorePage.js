@@ -1,19 +1,22 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
+import {
+  resolveStoreAddButtonLabel,
+  resolveStoreCheckoutGuard,
+  resolveStoreCheckoutLabel
+} from '@/composables/storePageState'
 import { useShopCartStore } from '@/stores/shopCart'
 import { formatCurrency } from '@/utils/format'
 import {
-  clearStoreCatalogCache,
   describeStoreProduct,
-  fetchStoreCatalog,
   filterStoreCatalog,
   formatStoreLinePrice,
   formatStoreSummaryAmount,
   listStoreCategories,
+  loadStoreCatalogSnapshot,
   readStoreCatalogCache,
   resolveStoreProductImage,
-  writeStoreCatalogCache
 } from '@/services/storeCatalogService'
 
 export function useStorePage() {
@@ -39,10 +42,11 @@ export function useStorePage() {
   const totals = computed(() => shopCart.totals)
 
   const checkoutLabel = computed(() => {
-    if (isAdmin.value) return 'Cuenta admin no compra'
-    if (!isAuthenticated.value) return 'Inicia sesión para solicitar'
-    if (shopCart.submitting) return 'Enviando solicitud...'
-    return 'Enviar solicitud'
+    return resolveStoreCheckoutLabel({
+      isAdmin: isAdmin.value,
+      isAuthenticated: isAuthenticated.value,
+      submitting: shopCart.submitting
+    })
   })
 
   const availableCategories = computed(() => listStoreCategories(catalog.value))
@@ -74,12 +78,7 @@ export function useStorePage() {
   }
 
   function addButtonLabel(product) {
-    if (!canAddProduct(product)) {
-      if (Number(product.available_stock || 0) <= 0) return 'Sin stock'
-      return Number(product.sellable_stock || 0) <= 0 ? 'Reservado taller' : 'No disponible'
-    }
-    if (Number(product.sellable_stock || 0) > 0 && Number(product.price || 0) > 0) return 'Agregar'
-    return 'Agregar a lista'
+    return resolveStoreAddButtonLabel(product, canAddProduct(product))
   }
 
   function clearTransientError(delay = 3000) {
@@ -121,40 +120,31 @@ export function useStorePage() {
     error.value = ''
 
     try {
-      const rows = await fetchStoreCatalog({ isAuthenticated: isAuthenticated.value })
-      if (rows.length > 0) {
-        syncCatalog(rows)
-        writeStoreCatalogCache(rows)
-      } else {
-        clearStoreCatalogCache()
-        syncCatalog([])
-      }
-    } catch (err) {
-      const cached = readStoreCatalogCache()
-      if (cached.length > 0) {
-        syncCatalog(cached)
-        error.value = 'No se pudo actualizar desde backend. Mostrando la última copia local del catálogo.'
-      } else {
-        error.value = err?.response?.data?.detail || 'No se pudo cargar el catálogo.'
-        syncCatalog([])
-      }
+      const snapshot = await loadStoreCatalogSnapshot({
+        isAuthenticated: isAuthenticated.value
+      })
+
+      syncCatalog(snapshot.rows)
+      error.value = snapshot.error
     } finally {
       loading.value = false
     }
   }
 
   async function submitCheckout() {
-    if (!cartItems.value.length) {
-      error.value = 'El carrito está vacío.'
+    const checkoutGuard = resolveStoreCheckoutGuard({
+      cartItemsCount: cartItems.value.length,
+      isAdmin: isAdmin.value,
+      isAuthenticated: isAuthenticated.value
+    })
+
+    if (checkoutGuard.kind === 'error') {
+      error.value = checkoutGuard.message
       clearTransientError()
       return
     }
-    if (isAdmin.value) {
-      error.value = 'La solicitud de tienda está disponible para cuentas cliente.'
-      clearTransientError()
-      return
-    }
-    if (!isAuthenticated.value) {
+
+    if (checkoutGuard.kind === 'login') {
       await router.push({ name: 'login', query: { redirect: '/tienda' } })
       return
     }

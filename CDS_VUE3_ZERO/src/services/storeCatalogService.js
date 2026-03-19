@@ -1,4 +1,4 @@
-import api from '@/services/api'
+import api, { extractErrorMessage } from '@/services/api'
 import { useCloudinaryImage } from '@/composables/useCloudinary'
 import { formatCurrency } from '@/utils/format'
 
@@ -137,4 +137,42 @@ export async function fetchStoreCatalog({ isAuthenticated = false } = {}) {
 
   const response = await api.get(endpoint, { params })
   return normalizeStoreCatalogPayload(response?.data)
+}
+
+export async function loadStoreCatalogSnapshot({ isAuthenticated = false } = {}) {
+  try {
+    const rows = await fetchStoreCatalog({ isAuthenticated })
+
+    if (rows.length > 0) {
+      writeStoreCatalogCache(rows)
+      return {
+        rows,
+        error: '',
+        fromCache: false
+      }
+    }
+
+    clearStoreCatalogCache()
+    return {
+      rows: [],
+      error: '',
+      fromCache: false
+    }
+  } catch (requestError) {
+    const cached = readStoreCatalogCache()
+
+    if (cached.length > 0) {
+      return {
+        rows: cached,
+        error: 'No se pudo actualizar desde backend. Mostrando la última copia local del catálogo.',
+        fromCache: true
+      }
+    }
+
+    return {
+      rows: [],
+      error: extractErrorMessage(requestError),
+      fromCache: false
+    }
+  }
 }
