@@ -101,7 +101,7 @@ defineProps({
 }
 
 .site-footer-grid {
-  width: 90%;
+  width: 100%;
   max-width: none;
   margin-inline: auto;
   display: grid;
@@ -113,7 +113,6 @@ defineProps({
 
 .site-footer-grid > section {
   min-width: 0;
-    margin-right: 40px;
 }
 
 .site-footer h2 {
@@ -198,7 +197,6 @@ defineProps({
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin-right: 60px;
 }
 
 .footer-map-wrap {

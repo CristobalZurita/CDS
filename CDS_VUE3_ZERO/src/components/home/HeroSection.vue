@@ -74,7 +74,7 @@ const { resolveSlotOr } = useMediaBinding()
   justify-content: center;
   text-align: center;
   width: 100%;
-  max-width: 1440px;
+  max-width: var(--layout-content-max, var(--cds-content-max));
   margin-inline: auto;
   padding:
     var(--hero-pad-top)
