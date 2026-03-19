@@ -1,6 +1,6 @@
 <template>
   <section id="reviews" class="home-section home-reviews">
-    <div class="section-inner">
+    <div class="section-inner container">
       <h2 class="section-title">Opiniones</h2>
       <p class="section-lead">Lo que dicen nuestros clientes sobre el servicio.</p>
 

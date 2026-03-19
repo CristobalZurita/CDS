@@ -1,6 +1,6 @@
 <template>
   <section id="faq" class="home-section home-faq">
-    <div class="section-inner">
+    <div class="section-inner container">
       <h2 class="section-title">Preguntas Frecuentes</h2>
 
       <div class="faq-list">

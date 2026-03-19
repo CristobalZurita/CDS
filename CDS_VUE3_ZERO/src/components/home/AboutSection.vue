@@ -1,6 +1,6 @@
 <template>
   <section id="about" class="home-section home-about">
-    <div class="section-inner">
+    <div class="section-inner container">
       <h2 class="section-title">Quiénes somos</h2>
 
       <div class="about-grid">

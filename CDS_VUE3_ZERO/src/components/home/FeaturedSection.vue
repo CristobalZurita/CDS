@@ -1,6 +1,6 @@
 <template>
   <section id="featured" class="home-section home-featured">
-    <div class="section-inner">
+    <div class="section-inner container">
       <h2 class="section-title">Trabajos Realizados</h2>
       <p class="section-lead">Una muestra de los equipos que han pasado por el taller.</p>
 

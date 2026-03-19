@@ -1,6 +1,6 @@
 <template>
   <section id="contact" class="home-section home-contact">
-    <div class="section-inner">
+    <div class="section-inner container">
       <h2 class="section-title">Contacto</h2>
 
       <div class="contact-layout">

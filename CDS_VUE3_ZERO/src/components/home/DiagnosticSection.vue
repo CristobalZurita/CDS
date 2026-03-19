@@ -1,6 +1,6 @@
 <template>
   <section id="diagnostic" class="home-section home-diagnostic">
-    <div class="section-inner diagnostic-layout">
+    <div class="section-inner container diagnostic-layout">
       <div class="diagnostic-text">
         <h2 class="section-title">Cotiza tu instrumento</h2>
         <p>Usa nuestro cotizador IA para obtener una estimación preliminar antes de traer tu equipo al taller. Rápido, gratuito y sin compromiso.</p>

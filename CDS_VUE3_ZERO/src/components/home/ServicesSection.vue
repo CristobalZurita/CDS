@@ -1,6 +1,6 @@
 <template>
   <section id="services" class="home-section home-services">
-    <div class="section-inner">
+    <div class="section-inner container">
       <h2 class="section-title">Nuestros Servicios</h2>
       <p class="section-lead">Atención técnica especializada para instrumentos electrónicos, desde la revisión inicial hasta la calibración final.</p>
 
