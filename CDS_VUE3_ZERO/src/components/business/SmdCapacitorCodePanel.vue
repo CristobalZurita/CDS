@@ -8,10 +8,14 @@
     </div>
 
     <div class="panel-body">
-      <div class="cap-visual-inline">
-        <img src="/images/calculadoras/CAP_C.webp" alt="Capacitor ceramico" />
-        <p>Ceramico (Cap C)</p>
+      <div class="diagram-card cap-visual-card">
+        <img
+          class="cap-visual-card__image cap-visual-card__image--ceramic"
+          src="/images/calculadoras/CAP_C.webp"
+          alt="Capacitor ceramico"
+        />
       </div>
+      <p class="cap-visual-caption">Ceramico (Cap C)</p>
 
       <div class="form-grid">
         <label class="form-field">

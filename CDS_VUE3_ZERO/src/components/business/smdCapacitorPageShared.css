@@ -1,20 +1,33 @@
-.cap-visual-inline {
+.cap-visual-card {
+  width: min(100%, 12.6rem);
+  min-height: clamp(6.15rem, 11.2vw, 8.05rem);
   display: flex;
   align-items: center;
-  gap: var(--cds-cap-visual-gap, 0.7rem);
-  padding: 0.2rem 0 0.35rem;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 0.5rem 0.6rem;
 }
 
-.cap-visual-inline img {
-  width: var(--cds-cap-visual-image-size, 48px);
-  height: var(--cds-cap-visual-image-size, 48px);
+.cap-visual-card__image {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  transform-origin: center center;
 }
 
-.cap-visual-inline p {
-  margin: 0;
+.cap-visual-card__image--electrolytic {
+  transform: scale(1.16);
+}
+
+.cap-visual-card__image--ceramic {
+  transform: scale(1.04);
+}
+
+.cap-visual-caption {
+  margin: 0 0 0.45rem;
   font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
+  text-align: center;
 }
 
 .form-grid-wide {
@@ -24,5 +37,11 @@
 @media (max-width: 580px) {
   .form-grid-wide {
     grid-template-columns: 1fr;
+  }
+
+  .cap-visual-card {
+    width: min(100%, 10.5rem);
+    min-height: 5.95rem;
+    padding: 0.45rem 0.5rem;
   }
 }

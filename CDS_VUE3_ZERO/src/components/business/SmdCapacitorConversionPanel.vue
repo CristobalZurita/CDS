@@ -8,10 +8,14 @@
     </div>
 
     <div class="panel-body">
-      <div class="cap-visual-inline">
-        <img src="/images/calculadoras/CAP_E.webp" alt="Capacitor electrolitico" />
-        <p>Electrolitico (Cap E)</p>
+      <div class="diagram-card cap-visual-card">
+        <img
+          class="cap-visual-card__image cap-visual-card__image--electrolytic"
+          src="/images/calculadoras/CAP_E.webp"
+          alt="Capacitor electrolitico"
+        />
       </div>
+      <p class="cap-visual-caption">Electrolitico (Cap E)</p>
 
       <div class="form-grid form-grid-wide">
         <label class="form-field">

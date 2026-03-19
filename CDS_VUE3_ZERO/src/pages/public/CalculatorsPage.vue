@@ -15,13 +15,6 @@
         @search-submit="applySearch"
       />
 
-      <template v-if="showPopular">
-        <h2 class="section-label">Más populares</h2>
-        <CalculatorsGrid :items="popularItems.slice(0, 4)" />
-
-        <div class="section-divider" aria-hidden="true"></div>
-        <h2 class="section-label">Todas las calculadoras</h2>
-      </template>
 
       <CalculatorsGrid :items="filteredItems" />
 
