@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Any
+
+from fastapi import HTTPException
+from sqlalchemy.orm import Session
 
 from app.models.client import Client
 from app.models.quote import Quote, QuoteItem, QuoteRecipient, QuoteStatus
@@ -53,6 +56,74 @@ def normalize_status(value: str | None) -> str:
     return normalized if normalized in QuoteStatus.ALL else QuoteStatus.PENDING
 
 
+def default_quote_valid_until() -> date:
+    return datetime.utcnow().date() + timedelta(days=30)
+
+
+def generate_quote_number(db: Session) -> str:
+    year = datetime.utcnow().strftime("%Y")
+    last_quote = (
+        db.query(Quote)
+        .filter(Quote.quote_number.like(f"COT-{year}-%"))
+        .order_by(Quote.id.desc())
+        .first()
+    )
+
+    if last_quote:
+        try:
+            last_num = int(last_quote.quote_number.split("-")[-1])
+            next_num = last_num + 1
+        except (ValueError, IndexError):
+            next_num = 1
+    else:
+        next_num = 1
+
+    return f"COT-{year}-{next_num:04d}"
+
+
+def get_quote_or_404(db: Session, quote_id: int) -> Quote:
+    quote = db.query(Quote).filter(Quote.id == quote_id).first()
+    if not quote:
+        raise HTTPException(status_code=404, detail="Quote not found")
+    return quote
+
+
+def resolve_quote_client(db: Session, payload: dict[str, Any]) -> Client:
+    client_id = payload.get("client_id")
+    if client_id:
+        client = db.query(Client).filter(Client.id == client_id).first()
+        if not client:
+            raise HTTPException(status_code=404, detail="Client not found")
+        return client
+
+    client_email = str(payload.get("client_email") or "").strip().lower()
+    client_name = str(payload.get("client_name") or "").strip()
+
+    if not client_email:
+        raise HTTPException(
+            status_code=400, detail="Campo requerido: client_email o client_id"
+        )
+    if not client_name:
+        raise HTTPException(status_code=400, detail="Campo requerido: client_name")
+
+    client = db.query(Client).filter(Client.email == client_email).first()
+    if client:
+        if not client.name and client_name:
+            client.name = client_name
+        if payload.get("client_phone") and not client.phone:
+            client.phone = payload.get("client_phone")
+        return client
+
+    client = Client(
+        name=client_name,
+        email=client_email,
+        phone=payload.get("client_phone"),
+    )
+    db.add(client)
+    db.flush()
+    return client
+
+
 def can_transition_status(current: str | None, new_status: str | None) -> bool:
     source = normalize_status(current)
     target = normalize_status(new_status)
@@ -93,6 +164,42 @@ def build_quote_recipient(payload: dict[str, Any], index: int = 0) -> QuoteRecip
     )
 
 
+def replace_quote_items(quote: Quote, payload_items: list[dict[str, Any]]) -> None:
+    quote.items.clear()
+    for idx, payload in enumerate(payload_items):
+        quote.items.append(build_quote_item(payload, sort_order=idx))
+
+
+def replace_quote_recipients(quote: Quote, payload_recipients: list[dict[str, Any]]) -> None:
+    quote.recipients.clear()
+    for idx, payload in enumerate(payload_recipients):
+        recipient = build_quote_recipient(payload, index=idx)
+        if recipient.email:
+            quote.recipients.append(recipient)
+
+
+def ensure_default_recipient(quote: Quote, client: Client | None) -> None:
+    if quote.recipients:
+        return
+    if client and client.email:
+        quote.recipients.append(
+            QuoteRecipient(
+                name=client.name,
+                email=client.email.strip().lower(),
+                is_primary=True,
+            )
+        )
+
+
+def quote_bucket(status: str | None) -> str:
+    current = normalize_status(status)
+    if current == QuoteStatus.PENDING:
+        return "draft_pending"
+    if current == QuoteStatus.SENT:
+        return "waiting_response"
+    return "closed"
+
+
 def recalculate_quote_totals(quote: Quote) -> None:
     parts_total = 0.0
     labor_total = 0.0
@@ -114,6 +221,71 @@ def recalculate_quote_totals(quote: Quote) -> None:
     quote.estimated_parts_cost = round(parts_total, 2)
     quote.estimated_labor_cost = round(labor_total, 2)
     quote.estimated_total = round(max(grand_total, 0.0), 2)
+
+
+def build_quote_board_response(
+    quotes: list[Quote],
+    clients_by_id: dict[int, Client],
+    linked_repairs_by_quote_id: dict[int, Any],
+) -> dict[str, Any]:
+    board = {
+        "draft_pending": [],
+        "waiting_response": [],
+        "closed": [],
+    }
+    status_counts = {
+        QuoteStatus.PENDING: 0,
+        QuoteStatus.SENT: 0,
+        QuoteStatus.APPROVED: 0,
+        QuoteStatus.DENIED: 0,
+        QuoteStatus.CANCELED: 0,
+    }
+    expired_open = 0
+    expiring_3d = 0
+    today = datetime.utcnow().date()
+
+    for quote in quotes:
+        bucket = quote_bucket(quote.status)
+        serialized = serialize_quote(quote, clients_by_id.get(quote.client_id))
+        linked_repair = linked_repairs_by_quote_id.get(quote.id)
+        if linked_repair:
+            serialized["linked_repair_id"] = linked_repair.id
+            serialized["linked_repair_number"] = linked_repair.repair_number
+        else:
+            serialized["linked_repair_id"] = None
+            serialized["linked_repair_number"] = None
+        board[bucket].append(serialized)
+
+        normalized = normalize_status(quote.status)
+        if normalized in status_counts:
+            status_counts[normalized] += 1
+
+        if quote.valid_until and normalized in (QuoteStatus.PENDING, QuoteStatus.SENT):
+            if quote.valid_until < today:
+                expired_open += 1
+            elif quote.valid_until <= (today + timedelta(days=3)):
+                expiring_3d += 1
+
+    return {
+        "counts": {
+            "draft_pending": len(board["draft_pending"]),
+            "waiting_response": len(board["waiting_response"]),
+            "closed": len(board["closed"]),
+            "total": len(quotes),
+        },
+        "metrics": {
+            "pending": status_counts[QuoteStatus.PENDING],
+            "sent": status_counts[QuoteStatus.SENT],
+            "approved": status_counts[QuoteStatus.APPROVED],
+            "denied": status_counts[QuoteStatus.DENIED],
+            "canceled": status_counts[QuoteStatus.CANCELED],
+            "expired_open": expired_open,
+            "expiring_3d": expiring_3d,
+            "open_total": status_counts[QuoteStatus.PENDING]
+            + status_counts[QuoteStatus.SENT],
+        },
+        "board": board,
+    }
 
 
 def _serialize_item(item: QuoteItem) -> dict[str, Any]:

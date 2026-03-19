@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
@@ -16,12 +16,20 @@ from app.services.email_service import EmailService, build_email_html
 from app.services.event_system import Events, event_bus
 from app.services.logging_service import create_audit
 from app.services.quote_management import (
+    build_quote_board_response,
     build_quote_item,
     build_quote_recipient,
     can_transition_status,
+    default_quote_valid_until,
+    ensure_default_recipient,
+    generate_quote_number,
+    get_quote_or_404,
     normalize_status,
     parse_iso_date,
     recalculate_quote_totals,
+    replace_quote_items,
+    replace_quote_recipients,
+    resolve_quote_client,
     serialize_quote,
     to_float,
 )
@@ -62,107 +70,6 @@ def require_quote_permission(action: str):
         )
 
     return checker
-
-
-def _generate_quote_number(db: Session) -> str:
-    year = datetime.utcnow().strftime("%Y")
-    last_quote = (
-        db.query(Quote)
-        .filter(Quote.quote_number.like(f"COT-{year}-%"))
-        .order_by(Quote.id.desc())
-        .first()
-    )
-
-    if last_quote:
-        try:
-            last_num = int(last_quote.quote_number.split("-")[-1])
-            next_num = last_num + 1
-        except (ValueError, IndexError):
-            next_num = 1
-    else:
-        next_num = 1
-
-    return f"COT-{year}-{next_num:04d}"
-
-
-def _get_quote_or_404(db: Session, quote_id: int) -> Quote:
-    quote = db.query(Quote).filter(Quote.id == quote_id).first()
-    if not quote:
-        raise HTTPException(status_code=404, detail="Quote not found")
-    return quote
-
-
-def _resolve_quote_client(db: Session, payload: dict) -> Client:
-    client_id = payload.get("client_id")
-    if client_id:
-        client = db.query(Client).filter(Client.id == client_id).first()
-        if not client:
-            raise HTTPException(status_code=404, detail="Client not found")
-        return client
-
-    client_email = str(payload.get("client_email") or "").strip().lower()
-    client_name = str(payload.get("client_name") or "").strip()
-
-    if not client_email:
-        raise HTTPException(
-            status_code=400, detail="Campo requerido: client_email o client_id"
-        )
-    if not client_name:
-        raise HTTPException(status_code=400, detail="Campo requerido: client_name")
-
-    client = db.query(Client).filter(Client.email == client_email).first()
-    if client:
-        if not client.name and client_name:
-            client.name = client_name
-        if payload.get("client_phone") and not client.phone:
-            client.phone = payload.get("client_phone")
-        return client
-
-    client = Client(
-        name=client_name,
-        email=client_email,
-        phone=payload.get("client_phone"),
-    )
-    db.add(client)
-    db.flush()
-    return client
-
-
-def _replace_quote_items(quote: Quote, payload_items: list[dict]) -> None:
-    quote.items.clear()
-    for idx, payload in enumerate(payload_items):
-        quote.items.append(build_quote_item(payload, sort_order=idx))
-
-
-def _replace_quote_recipients(quote: Quote, payload_recipients: list[dict]) -> None:
-    quote.recipients.clear()
-    for idx, payload in enumerate(payload_recipients):
-        recipient = build_quote_recipient(payload, index=idx)
-        if recipient.email:
-            quote.recipients.append(recipient)
-
-
-def _ensure_default_recipient(quote: Quote, client: Client | None) -> None:
-    if quote.recipients:
-        return
-    if client and client.email:
-        quote.recipients.append(
-            QuoteRecipient(
-                name=client.name,
-                email=client.email.strip().lower(),
-                is_primary=True,
-            )
-        )
-
-
-def _quote_bucket(status: str | None) -> str:
-    current = normalize_status(status)
-    if current == QuoteStatus.PENDING:
-        return "draft_pending"
-    if current == QuoteStatus.SENT:
-        return "waiting_response"
-    return "closed"
-
 
 @router.get("")
 async def list_quotes(
@@ -244,64 +151,7 @@ async def quote_board(
             if repair.quote_id and repair.quote_id not in linked_repairs:
                 linked_repairs[repair.quote_id] = repair
 
-    board = {
-        "draft_pending": [],
-        "waiting_response": [],
-        "closed": [],
-    }
-    status_counts = {
-        QuoteStatus.PENDING: 0,
-        QuoteStatus.SENT: 0,
-        QuoteStatus.APPROVED: 0,
-        QuoteStatus.DENIED: 0,
-        QuoteStatus.CANCELED: 0,
-    }
-    expired_open = 0
-    expiring_3d = 0
-    today = datetime.utcnow().date()
-
-    for quote in quotes:
-        bucket = _quote_bucket(quote.status)
-        serialized = serialize_quote(quote, clients.get(quote.client_id))
-        linked_repair = linked_repairs.get(quote.id)
-        if linked_repair:
-            serialized["linked_repair_id"] = linked_repair.id
-            serialized["linked_repair_number"] = linked_repair.repair_number
-        else:
-            serialized["linked_repair_id"] = None
-            serialized["linked_repair_number"] = None
-        board[bucket].append(serialized)
-
-        normalized = normalize_status(quote.status)
-        if normalized in status_counts:
-            status_counts[normalized] += 1
-
-        if quote.valid_until and normalized in (QuoteStatus.PENDING, QuoteStatus.SENT):
-            if quote.valid_until < today:
-                expired_open += 1
-            elif quote.valid_until <= (today + timedelta(days=3)):
-                expiring_3d += 1
-
-    return {
-        "counts": {
-            "draft_pending": len(board["draft_pending"]),
-            "waiting_response": len(board["waiting_response"]),
-            "closed": len(board["closed"]),
-            "total": len(quotes),
-        },
-        "metrics": {
-            "pending": status_counts[QuoteStatus.PENDING],
-            "sent": status_counts[QuoteStatus.SENT],
-            "approved": status_counts[QuoteStatus.APPROVED],
-            "denied": status_counts[QuoteStatus.DENIED],
-            "canceled": status_counts[QuoteStatus.CANCELED],
-            "expired_open": expired_open,
-            "expiring_3d": expiring_3d,
-            "open_total": status_counts[QuoteStatus.PENDING]
-            + status_counts[QuoteStatus.SENT],
-        },
-        "board": board,
-    }
+    return build_quote_board_response(quotes, clients, linked_repairs)
 
 
 @router.post("")
@@ -320,8 +170,8 @@ async def create_quote(
             detail="Campo requerido: estimated_total o items",
         )
 
-    client = _resolve_quote_client(db, quote_data)
-    quote_number = _generate_quote_number(db)
+    client = resolve_quote_client(db, quote_data)
+    quote_number = generate_quote_number(db)
     user_id = int(user.get("user_id")) if user and user.get("user_id") else None
 
     new_quote = Quote(
@@ -337,7 +187,7 @@ async def create_quote(
         estimated_total=to_float(quote_data.get("estimated_total"), 0),
         status=normalize_status(quote_data.get("status")),
         valid_until=parse_iso_date(quote_data.get("valid_until"))
-        or (datetime.utcnow().date() + timedelta(days=30)),
+        or default_quote_valid_until(),
         created_by=user_id,
     )
 
@@ -345,13 +195,13 @@ async def create_quote(
     db.flush()
 
     if isinstance(items_payload, list) and items_payload:
-        _replace_quote_items(new_quote, items_payload)
+        replace_quote_items(new_quote, items_payload)
         recalculate_quote_totals(new_quote)
 
     recipients_payload = quote_data.get("recipients") or []
     if isinstance(recipients_payload, list) and recipients_payload:
-        _replace_quote_recipients(new_quote, recipients_payload)
-    _ensure_default_recipient(new_quote, client)
+        replace_quote_recipients(new_quote, recipients_payload)
+    ensure_default_recipient(new_quote, client)
 
     db.commit()
     db.refresh(new_quote)
@@ -380,7 +230,7 @@ async def get_quote(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("read")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
     client = db.query(Client).filter(Client.id == quote.client_id).first()
     return serialize_quote(quote, client)
 
@@ -392,7 +242,7 @@ async def update_quote(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("update")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
 
     if "client_id" in quote_data and quote_data.get("client_id"):
         client = db.query(Client).filter(Client.id == quote_data.get("client_id")).first()
@@ -442,15 +292,15 @@ async def update_quote(
 
     items_replaced = False
     if "items" in quote_data and isinstance(quote_data.get("items"), list):
-        _replace_quote_items(quote, quote_data.get("items"))
+        replace_quote_items(quote, quote_data.get("items"))
         recalculate_quote_totals(quote)
         items_replaced = True
 
     if "recipients" in quote_data and isinstance(quote_data.get("recipients"), list):
-        _replace_quote_recipients(quote, quote_data.get("recipients"))
+        replace_quote_recipients(quote, quote_data.get("recipients"))
 
     client = db.query(Client).filter(Client.id == quote.client_id).first()
-    _ensure_default_recipient(quote, client)
+    ensure_default_recipient(quote, client)
 
     if not items_replaced:
         if "estimated_parts_cost" in quote_data:
@@ -493,7 +343,7 @@ async def delete_quote(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("update")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
     linked_repairs = db.query(Repair).filter(Repair.quote_id == quote.id).count()
     if linked_repairs:
         raise HTTPException(
@@ -512,7 +362,7 @@ async def update_quote_status(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("approve")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
     raw_status = str(payload.get("status") or "").strip().lower()
     if raw_status not in QuoteStatus.ALL:
         raise HTTPException(status_code=400, detail="Invalid quote status")
@@ -560,9 +410,9 @@ async def send_quote(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("update")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
     client = db.query(Client).filter(Client.id == quote.client_id).first()
-    _ensure_default_recipient(quote, client)
+    ensure_default_recipient(quote, client)
 
     recipient_emails = []
     for recipient in quote.recipients:
@@ -681,7 +531,7 @@ async def add_quote_item(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("update")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
     sort_order = len(quote.items)
     quote.items.append(build_quote_item(payload, sort_order=sort_order))
     recalculate_quote_totals(quote)
@@ -700,7 +550,7 @@ async def update_quote_item(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("update")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
     item = (
         db.query(QuoteItem)
         .filter(QuoteItem.id == item_id, QuoteItem.quote_id == quote.id)
@@ -743,7 +593,7 @@ async def delete_quote_item(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("update")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
     item = (
         db.query(QuoteItem)
         .filter(QuoteItem.id == item_id, QuoteItem.quote_id == quote.id)
@@ -769,7 +619,7 @@ async def add_quote_recipient(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("update")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
     recipient = build_quote_recipient(payload, index=len(quote.recipients))
     if not recipient.email:
         raise HTTPException(status_code=400, detail="Campo requerido: email")
@@ -805,7 +655,7 @@ async def delete_quote_recipient(
     db.flush()
     if not quote.recipients:
         client = db.query(Client).filter(Client.id == quote.client_id).first()
-        _ensure_default_recipient(quote, client)
+        ensure_default_recipient(quote, client)
     else:
         primary_exists = any(bool(r.is_primary) for r in quote.recipients)
         if not primary_exists and quote.recipients:
