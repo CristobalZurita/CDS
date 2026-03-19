@@ -173,7 +173,7 @@ function formatSummaryAmount(value) {
   align-items: center;
   justify-content: space-between;
   padding: 1.1rem 1.25rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--cds-dark) 12%, white);
+  border-bottom: 1px solid var(--cds-footer-bg-highlight-color);
   background: var(--cds-dark);
   color: var(--cds-white);
   flex-shrink: 0;
@@ -332,12 +332,12 @@ function formatSummaryAmount(value) {
 
 .cart-drawer-footer {
   padding: 1rem 1.25rem;
-  border-top: 1px solid color-mix(in srgb, var(--cds-dark) 12%, white);
+  border-top: 1px solid var(--cds-border-card);
   display: flex;
   flex-direction: column;
   gap: var(--cds-space-sm);
   flex-shrink: 0;
-  background: color-mix(in srgb, var(--cds-light) 28%, white);
+  background: var(--cds-surface-2);
 }
 
 .cart-summary {
@@ -355,7 +355,7 @@ function formatSummaryAmount(value) {
 
 .summary-row--total {
   padding-top: var(--cds-space-xs);
-  border-top: 1px solid color-mix(in srgb, var(--cds-dark) 12%, white);
+  border-top: 1px solid var(--cds-border-card);
   font-size: 1rem;
 }
 
@@ -374,7 +374,7 @@ function formatSummaryAmount(value) {
 }
 
 .btn-checkout:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--cds-primary) 85%, black);
+  background: #d86100;
 }
 
 .btn-checkout:disabled {

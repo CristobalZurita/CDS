@@ -1,0 +1,73 @@
+.admin-page {
+  --inventory-summary-gap: 0.7rem;
+  --inventory-summary-pad: 0.75rem;
+  --inventory-filters-columns: repeat(1, minmax(0, 1fr));
+  --inventory-form-columns: 1fr;
+  --inventory-checkbox-gap: 0.5rem;
+  --inventory-flag-gap: 0.35rem;
+  --inventory-flag-pad-block: 0.2rem;
+  --inventory-flag-pad-inline: 0.55rem;
+}
+
+.summary-grid {
+  gap: var(--inventory-summary-gap);
+}
+
+.summary-card {
+  padding: var(--inventory-summary-pad);
+}
+
+.summary-card strong {
+  font-size: var(--cds-text-2xl);
+}
+
+.filters-panel {
+  grid-template-columns: var(--inventory-filters-columns);
+}
+
+.filters-panel .checkbox-row,
+.form-grid .checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: var(--inventory-checkbox-gap);
+}
+
+.flag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--inventory-flag-gap);
+}
+
+.flag-list span {
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-pill);
+  padding: var(--inventory-flag-pad-block) var(--inventory-flag-pad-inline);
+  font-size: var(--cds-text-sm);
+}
+
+.flag-warn {
+  border-color: var(--cds-warning-border);
+  background: var(--cds-warning-bg);
+  color: var(--cds-warning-text);
+}
+
+.flag-ok {
+  border-color: var(--cds-valid-border);
+  background: var(--cds-valid-bg);
+  color: var(--cds-valid-text);
+}
+
+@media (min-width: 860px) {
+  .admin-page {
+    --inventory-filters-columns: repeat(2, minmax(0, 1fr));
+    --inventory-form-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .form-grid {
+    grid-template-columns: var(--inventory-form-columns);
+  }
+}

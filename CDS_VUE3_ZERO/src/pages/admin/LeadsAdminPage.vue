@@ -59,21 +59,27 @@
               </td>
               <td>{{ formatFinalCost(lead.quote_result) }}</td>
               <td>
-                <span class="status-badge" :class="`status-${lead.status}`">
-                  {{ statusLabel(lead.status) }}
-                </span>
+                <StatusBadge
+                  :label="statusLabel(lead.status)"
+                  :variant="statusVariant(lead.status)"
+                  size="sm"
+                  rounded
+                />
               </td>
               <td>{{ formatDate(lead.created_at) }}</td>
               <td>
-                <button
+                <BaseButton
                   v-if="nextStatus(lead.status)"
-                  class="btn-advance"
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  class="lead-advance-button"
                   :disabled="isBusy(lead.id)"
                   @click="advanceStatus(lead)"
                 >
                   <span v-if="isBusy(lead.id)">…</span>
                   <span v-else>→ {{ statusLabel(nextStatus(lead.status)) }}</span>
-                </button>
+                </BaseButton>
                 <span v-else class="muted">Finalizado</span>
               </td>
             </tr>
@@ -85,6 +91,8 @@
 </template>
 
 <script setup>
+import { BaseButton } from '@/components/base'
+import { StatusBadge } from '@/components/composite'
 import { useLeadsAdminPage } from '@/composables/useLeadsAdminPage'
 
 const {
@@ -100,63 +108,13 @@ const {
   formatDate,
   formatFinalCost
 } = useLeadsAdminPage()
+
+function statusVariant(status) {
+  if (status === 'contacted') return 'info'
+  if (status === 'converted') return 'success'
+  return 'primary'
+}
 </script>
 
 <style scoped src="./commonAdminPage.css"></style>
-<style scoped>
-.td-id {
-  color: var(--cds-text-muted);
-  font-size: var(--cds-text-sm);
-}
-
-.muted {
-  color: var(--cds-text-muted);
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--cds-radius-sm);
-  font-size: var(--cds-text-xs);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.status-new {
-  background: color-mix(in srgb, var(--cds-primary) 12%, white);
-  color: var(--cds-primary);
-}
-
-.status-contacted {
-  background: color-mix(in srgb, var(--cds-info) 10%, white);
-  color: var(--cds-info);
-}
-
-.status-converted {
-  background: color-mix(in srgb, var(--cds-success) 10%, white);
-  color: var(--cds-success);
-}
-
-.btn-advance {
-  min-height: 32px;
-  padding: 0.3rem 0.65rem;
-  border-radius: var(--cds-radius-sm);
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 40%, white);
-  background: color-mix(in srgb, var(--cds-primary) 8%, white);
-  color: var(--cds-primary);
-  font-size: var(--cds-text-xs);
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.btn-advance:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-advance:not(:disabled):hover {
-  background: color-mix(in srgb, var(--cds-primary) 15%, white);
-}
-</style>
+<style scoped src="./leadsAdminPageShared.css"></style>

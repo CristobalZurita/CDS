@@ -1,0 +1,31 @@
+.admin-page {
+  --lead-advance-min-height: 32px;
+  --lead-advance-pad-block: 0.3rem;
+  --lead-advance-pad-inline: 0.65rem;
+  --lead-advance-font-size: var(--cds-text-xs);
+  --lead-advance-bg: rgba(236, 107, 0, 0.08);
+  --lead-advance-border: rgba(236, 107, 0, 0.4);
+  --lead-advance-hover-bg: rgba(236, 107, 0, 0.15);
+}
+
+.td-id {
+  color: var(--cds-text-muted);
+  font-size: var(--cds-text-sm);
+}
+
+.muted {
+  color: var(--cds-text-muted);
+}
+
+.lead-advance-button {
+  --button-min-height: var(--lead-advance-min-height);
+  --button-pad-block: var(--lead-advance-pad-block);
+  --button-pad-inline: var(--lead-advance-pad-inline);
+  --button-font-size: var(--lead-advance-font-size);
+  --button-bg: var(--lead-advance-bg);
+  --button-border: var(--lead-advance-border);
+  --button-text: var(--cds-primary);
+  --button-hover-bg: var(--lead-advance-hover-bg);
+  --button-hover-border: var(--lead-advance-border);
+  white-space: nowrap;
+}

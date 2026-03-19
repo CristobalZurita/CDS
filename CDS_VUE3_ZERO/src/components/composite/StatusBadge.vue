@@ -71,119 +71,121 @@ const badgeClasses = computed(() => ({
 
 <style scoped>
 .status-badge {
+  --badge-pad-block: 0.35rem;
+  --badge-pad-inline: 0.75rem;
+  --badge-font-size: var(--cds-text-base);
+  --badge-radius: var(--cds-radius-pill);
+  --badge-bg: var(--cds-light-2);
+  --badge-text: var(--cds-text-normal);
+  --badge-border-width: 0;
+  --badge-border-color: transparent;
+  --badge-outline-border: var(--cds-light-4);
+  --badge-outline-text: var(--cds-text-normal);
+  --badge-dot-size: 0.5rem;
+  --badge-dismiss-size: 1rem;
+  --badge-dismiss-opacity: 0.6;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-weight: 500;
+  padding: var(--badge-pad-block) var(--badge-pad-inline);
+  border: var(--badge-border-width) solid var(--badge-border-color);
+  border-radius: var(--badge-radius);
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: var(--badge-font-size);
+  font-weight: var(--cds-font-medium);
   white-space: nowrap;
   transition: all 0.2s ease;
 }
 
 /* Tamaños */
 .size-sm {
-  padding: 0.2rem 0.6rem;
-  font-size: var(--cds-text-sm);
-  border-radius: 0.25rem;
+  --badge-pad-block: 0.2rem;
+  --badge-pad-inline: 0.6rem;
+  --badge-font-size: var(--cds-text-sm);
+  --badge-radius: 0.25rem;
 }
 
 .size-md {
-  padding: 0.35rem 0.75rem;
-  font-size: var(--cds-text-base);
-  border-radius: 9999px;
+  --badge-pad-block: 0.35rem;
+  --badge-pad-inline: 0.75rem;
+  --badge-font-size: var(--cds-text-base);
+  --badge-radius: var(--cds-radius-pill);
 }
 
 .size-lg {
-  padding: 0.5rem 1rem;
-  font-size: var(--cds-text-lg);
-  border-radius: 9999px;
+  --badge-pad-block: 0.5rem;
+  --badge-pad-inline: 1rem;
+  --badge-font-size: var(--cds-text-lg);
+  --badge-radius: var(--cds-radius-pill);
 }
 
 /* Bordes redondeados completos */
 .is-rounded.size-sm {
-  border-radius: 9999px;
+  --badge-radius: var(--cds-radius-pill);
 }
 
 /* Variantes */
 .variant-default {
-  background: var(--cds-light-2);
-  color: var(--cds-text-normal);
-}
-
-.variant-default.is-outlined {
-  background: transparent;
-  border: 1px solid var(--cds-light-4);
+  --badge-bg: var(--cds-light-2);
+  --badge-text: var(--cds-text-normal);
+  --badge-outline-border: var(--cds-light-4);
+  --badge-outline-text: var(--cds-text-normal);
 }
 
 .variant-primary {
-  background: color-mix(in srgb, var(--cds-primary) 15%, white);
-  color: color-mix(in srgb, var(--cds-primary) 70%, black);
-}
-
-.variant-primary.is-outlined {
-  background: transparent;
-  border: 1px solid var(--cds-primary);
-  color: var(--cds-primary);
+  --badge-bg: rgba(236, 107, 0, 0.14);
+  --badge-text: #9a4500;
+  --badge-outline-border: rgba(236, 107, 0, 0.38);
+  --badge-outline-text: var(--cds-primary);
 }
 
 .variant-success {
-  background: color-mix(in srgb, var(--cds-success) 15%, white);
-  color: color-mix(in srgb, var(--cds-success) 70%, black);
-}
-
-.variant-success.is-outlined {
-  background: transparent;
-  border: 1px solid var(--cds-success);
-  color: var(--cds-success);
+  --badge-bg: var(--cds-valid-bg);
+  --badge-text: var(--cds-valid-text);
+  --badge-outline-border: var(--cds-valid-border);
+  --badge-outline-text: var(--cds-valid-text);
 }
 
 .variant-warning {
-  background: color-mix(in srgb, var(--cds-warning) 20%, white);
-  color: color-mix(in srgb, var(--cds-warning) 60%, black);
-}
-
-.variant-warning.is-outlined {
-  background: transparent;
-  border: 1px solid var(--cds-warning);
-  color: color-mix(in srgb, var(--cds-warning) 80%, black);
+  --badge-bg: var(--cds-warning-bg);
+  --badge-text: var(--cds-warning-text);
+  --badge-outline-border: var(--cds-warning-border);
+  --badge-outline-text: var(--cds-warning-text);
 }
 
 .variant-danger {
-  background: color-mix(in srgb, var(--cds-danger) 15%, white);
-  color: var(--cds-danger);
-}
-
-.variant-danger.is-outlined {
-  background: transparent;
-  border: 1px solid var(--cds-danger);
-  color: var(--cds-danger);
+  --badge-bg: var(--cds-invalid-bg);
+  --badge-text: var(--cds-invalid-text);
+  --badge-outline-border: var(--cds-invalid-border);
+  --badge-outline-text: var(--cds-invalid-text);
 }
 
 .variant-info {
-  background: color-mix(in srgb, var(--cds-info) 15%, white);
-  color: color-mix(in srgb, var(--cds-info) 70%, black);
-}
-
-.variant-info.is-outlined {
-  background: transparent;
-  border: 1px solid var(--cds-info);
-  color: var(--cds-info);
+  --badge-bg: rgba(14, 165, 233, 0.14);
+  --badge-text: #0c4a6e;
+  --badge-outline-border: rgba(14, 165, 233, 0.32);
+  --badge-outline-text: var(--cds-info);
 }
 
 .variant-neutral {
-  background: var(--cds-dark);
-  color: var(--cds-white);
+  --badge-bg: var(--cds-dark);
+  --badge-text: var(--cds-white);
+  --badge-outline-border: var(--cds-dark);
+  --badge-outline-text: var(--cds-dark);
 }
 
-.variant-neutral.is-outlined {
-  background: transparent;
-  border: 1px solid var(--cds-dark);
-  color: var(--cds-dark);
+.status-badge.is-outlined {
+  --badge-bg: transparent;
+  --badge-border-width: 1px;
+  --badge-border-color: var(--badge-outline-border);
+  --badge-text: var(--badge-outline-text);
 }
 
 /* Dot indicator */
 .badge-dot {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: var(--badge-dot-size);
+  height: var(--badge-dot-size);
   border-radius: 50%;
   background: currentColor;
   opacity: 0.8;
@@ -201,8 +203,8 @@ const badgeClasses = computed(() => ({
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1rem;
-  height: 1rem;
+  width: var(--badge-dismiss-size);
+  height: var(--badge-dismiss-size);
   margin-left: 0.25rem;
   padding: 0;
   border: none;
@@ -211,7 +213,7 @@ const badgeClasses = computed(() => ({
   font-size: 1.1em;
   line-height: 1;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: var(--badge-dismiss-opacity);
   transition: opacity 0.2s ease;
 }
 

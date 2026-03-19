@@ -1,0 +1,111 @@
+.admin-page {
+  --appointments-filter-pad: 0.9rem;
+  --appointments-filter-gap: 0.5rem;
+  --appointments-chip-min-height: 44px;
+  --appointments-chip-pad-block: 0.65rem;
+  --appointments-chip-pad-inline: 0.9rem;
+  --appointments-chip-active-bg: rgba(236, 107, 0, 0.14);
+  --appointments-card-pad: 0.9rem;
+  --appointments-card-gap: 0.6rem;
+  --appointments-card-border-size: 4px;
+  --appointments-empty-min-height: 160px;
+}
+
+.filter-row {
+  padding: var(--appointments-filter-pad);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--appointments-filter-gap);
+}
+
+.chip {
+  min-height: var(--appointments-chip-min-height);
+  padding: var(--appointments-chip-pad-block) var(--appointments-chip-pad-inline);
+  border-radius: var(--cds-radius-sm);
+  font-size: var(--cds-text-base);
+  border: 1px solid var(--cds-border-input);
+  background: var(--cds-white);
+  color: var(--cds-text-normal);
+  cursor: pointer;
+}
+
+.chip.active {
+  border-color: var(--cds-primary);
+  background: var(--appointments-chip-active-bg);
+}
+
+.chip.warning.active {
+  border-color: var(--cds-warning-border);
+  background: var(--cds-warning-bg);
+  color: var(--cds-warning-text);
+}
+
+.chip.success.active {
+  border-color: var(--cds-valid-border);
+  background: var(--cds-valid-bg);
+  color: var(--cds-valid-text);
+}
+
+.chip.neutral.active {
+  border-color: var(--cds-light-6);
+  background: var(--cds-light-2);
+  color: var(--cds-light-7);
+}
+
+.appointment-card {
+  padding: var(--appointments-card-pad);
+  display: grid;
+  gap: var(--appointments-card-gap);
+  border-left: var(--appointments-card-border-size) solid var(--cds-primary);
+}
+
+.appointment-card.status-pendiente {
+  border-left-color: var(--cds-warning);
+}
+
+.appointment-card.status-confirmado {
+  border-left-color: var(--cds-success);
+}
+
+.appointment-card.status-cancelado {
+  border-left-color: var(--cds-light-6);
+}
+
+.appointment-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: space-between;
+}
+
+.appointment-head h2 {
+  margin: 0;
+  font-size: var(--cds-text-lg);
+}
+
+.appointment-head p {
+  margin: 0.2rem 0 0;
+  color: var(--cds-text-muted);
+}
+
+.appointment-head :deep(.status-badge) {
+  align-self: flex-start;
+}
+
+.appointment-body p {
+  margin: 0;
+}
+
+.appointment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.empty-state {
+  border: none;
+  display: grid;
+  place-items: center;
+  min-height: var(--appointments-empty-min-height);
+  text-align: center;
+}

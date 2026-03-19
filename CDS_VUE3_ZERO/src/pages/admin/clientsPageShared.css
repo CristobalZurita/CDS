@@ -39,8 +39,8 @@
 }
 
 .list-item.active {
-  border-color: color-mix(in srgb, var(--cds-primary) 40%, white);
-  background: color-mix(in srgb, var(--cds-primary) 8%, white);
+  border-color: var(--cds-primary);
+  background: var(--cds-surface-1);
 }
 
 .item-head {
@@ -70,10 +70,10 @@
   color: var(--cds-text-muted);
 }
 
-.checkbox-row {
-  display: flex !important;
+.detail-panel .checkbox-row {
+  display: flex;
   align-items: center;
-  gap: 0.5rem !important;
+  gap: 0.5rem;
 }
 
 @media (min-width: 1024px) {

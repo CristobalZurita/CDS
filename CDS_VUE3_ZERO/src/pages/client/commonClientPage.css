@@ -122,7 +122,7 @@
 }
 
 .btn-admin:hover {
-  background: color-mix(in srgb, var(--cds-dark) 80%, black);
+  background: var(--cds-footer-bg-highlight-color);
 }
 
 .btn-danger {
@@ -247,8 +247,8 @@
   border-radius: var(--cds-radius-pill);
   padding: 0.28rem 0.65rem;
   font-size: var(--cds-text-sm);
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white);
-  background: color-mix(in srgb, var(--cds-primary) 12%, white);
+  border: 1px solid var(--cds-primary);
+  background: var(--cds-surface-1);
   align-self: flex-start;
 }
 
@@ -451,8 +451,9 @@
   border-radius: var(--cds-radius-pill);
   display: grid;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 40%, white);
-  background: color-mix(in srgb, var(--cds-primary) 12%, white);
+  border: 1px solid var(--cds-primary);
+  background: var(--cds-surface-1);
+  color: var(--cds-primary);
   font-weight: var(--cds-font-bold);
 }
 

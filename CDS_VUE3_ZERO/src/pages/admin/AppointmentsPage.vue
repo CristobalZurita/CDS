@@ -35,7 +35,12 @@
             <p>{{ appointment.email }}</p>
             <p>{{ appointment.telefono }}</p>
           </div>
-          <span class="status-badge">{{ getStatusLabel(appointment.estado) }}</span>
+          <StatusBadge
+            :label="getStatusLabel(appointment.estado)"
+            :variant="appointmentStatusVariant(appointment.estado)"
+            size="sm"
+            rounded
+          />
         </header>
 
         <div class="appointment-body">
@@ -82,6 +87,7 @@
 </template>
 
 <script setup>
+import { StatusBadge } from '@/components/composite'
 import { useAppointmentsPage } from '@/composables/useAppointmentsPage'
 
 const {
@@ -97,28 +103,13 @@ const {
   cancelAppointment,
   deleteAppointment
 } = useAppointmentsPage()
+
+function appointmentStatusVariant(status) {
+  if (status === 'confirmado') return 'success'
+  if (status === 'cancelado') return 'neutral'
+  return 'warning'
+}
 </script>
 
 <style scoped src="./commonAdminPage.css"></style>
-<style scoped>
-/* Filter chips */
-.filter-row { padding: .9rem; display: flex; flex-wrap: wrap; gap: .5rem; }
-.chip { min-height: 44px; padding: .65rem .9rem; border-radius: var(--cds-radius-sm); font-size: var(--cds-text-base); border: 1px solid var(--cds-border-input); background: var(--cds-white); color: var(--cds-text-normal); cursor: pointer; }
-.chip.active { border-color: var(--cds-primary); background: color-mix(in srgb, var(--cds-primary) 14%, white); }
-.chip.warning.active { border-color: var(--cds-warning); background: var(--cds-warning-bg); color: var(--cds-warning-text); }
-.chip.success.active { border-color: var(--cds-success); background: var(--cds-valid-bg); color: var(--cds-valid-text); }
-.chip.neutral.active { border-color: var(--cds-light-6); background: var(--cds-light-2); color: var(--cds-light-7); }
-/* Cards de cita */
-.appointment-card { padding: .9rem; display: grid; gap: .6rem; border-left: 4px solid var(--cds-primary); }
-.appointment-card.status-pendiente { border-left-color: var(--cds-warning); }
-.appointment-card.status-confirmado { border-left-color: var(--cds-success); }
-.appointment-card.status-cancelado { border-left-color: var(--cds-light-6); }
-.appointment-head { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: space-between; }
-.appointment-head h2 { margin: 0; font-size: var(--cds-text-lg); }
-.appointment-head p { margin: .2rem 0 0; color: var(--cds-text-muted); }
-.status-badge { border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white); background: color-mix(in srgb, var(--cds-primary) 12%, white); border-radius: var(--cds-radius-pill); padding: .3rem .7rem; font-size: var(--cds-text-sm); align-self: flex-start; }
-.appointment-body p { margin: 0; }
-.appointment-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
-/* Empty state específico (override del común) */
-.empty-state { border: none; display: grid; place-items: center; min-height: 160px; text-align: center; }
-</style>
+<style scoped src="./appointmentsPageShared.css"></style>

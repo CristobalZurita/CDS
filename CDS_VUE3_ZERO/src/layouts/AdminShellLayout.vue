@@ -97,7 +97,6 @@ const handleLogout = () => {
 
 <style scoped>
 .admin-shell-layout {
-  --admin-scale: 1.2;
   --admin-space-xs: 0.66rem;
   --admin-space-sm: 0.96rem;
   --admin-space-md: 1.2rem;
@@ -107,14 +106,22 @@ const handleLogout = () => {
   --admin-sidebar-width: clamp(22rem, 20rem + 4vw, 26rem);
   --admin-sidebar-collapsed-width: 7.5rem;
   --admin-control-min-height: 52px;
-  --cds-text-xs: clamp(1.32rem, 1.26rem + 0.3vw, 1.44rem);
-  --cds-text-sm: clamp(1.5rem, 1.44rem + 0.36vw, 1.68rem);
-  --cds-text-base: clamp(1.68rem, 1.62rem + 0.54vw, 1.98rem);
-  --cds-text-lg: clamp(1.8rem, 1.68rem + 0.72vw, 2.16rem);
-  --cds-text-xl: clamp(1.92rem, 1.62rem + 1.5vw, 2.52rem);
-  --cds-text-2xl: clamp(2.22rem, 1.74rem + 2.4vw, 3.06rem);
-  --cds-text-3xl: clamp(2.58rem, 1.86rem + 3.6vw, 3.72rem);
-  --cds-text-4xl: clamp(2.94rem, 1.98rem + 4.8vw, 4.32rem);
+  --admin-text-xs: clamp(1.32rem, 1.26rem + 0.3vw, 1.44rem);
+  --admin-text-sm: clamp(1.5rem, 1.44rem + 0.36vw, 1.68rem);
+  --admin-text-base: clamp(1.68rem, 1.62rem + 0.54vw, 1.98rem);
+  --admin-text-lg: clamp(1.8rem, 1.68rem + 0.72vw, 2.16rem);
+  --admin-text-xl: clamp(1.92rem, 1.62rem + 1.5vw, 2.52rem);
+  --admin-text-2xl: clamp(2.22rem, 1.74rem + 2.4vw, 3.06rem);
+  --admin-text-3xl: clamp(2.58rem, 1.86rem + 3.6vw, 3.72rem);
+  --admin-text-4xl: clamp(2.94rem, 1.98rem + 4.8vw, 4.32rem);
+  --admin-sidebar-divider: rgba(255, 255, 255, 0.1);
+  --admin-nav-text-muted: rgba(255, 255, 255, 0.72);
+  --admin-nav-hover-bg: rgba(255, 255, 255, 0.05);
+  --admin-nav-active-bg: rgba(236, 107, 0, 0.15);
+  --admin-back-link-color: rgba(255, 255, 255, 0.6);
+  --admin-logout-text: #f2b7b7;
+  --admin-logout-hover-bg: rgba(220, 38, 38, 0.15);
+  --admin-user-badge-bg: var(--cds-surface-1);
   display: flex;
   min-height: 100vh;
   background: var(--cds-background-color);
@@ -136,16 +143,16 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   gap: var(--admin-space-md);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--admin-sidebar-divider);
 }
 
 .brand-icon {
-  font-size: var(--cds-text-3xl);
+  font-size: var(--admin-text-3xl);
 }
 
 .brand-text {
-  font-size: var(--cds-text-2xl);
-  font-weight: 700;
+  font-size: var(--admin-text-2xl);
+  font-weight: var(--cds-font-bold);
   letter-spacing: -0.5px;
 }
 
@@ -160,7 +167,7 @@ const handleLogout = () => {
   align-items: center;
   gap: var(--admin-space-md);
   padding: var(--admin-space-md) var(--admin-space-xl);
-  color: color-mix(in srgb, var(--cds-white) 70%, transparent);
+  color: var(--admin-nav-text-muted);
   text-decoration: none;
   transition: all 0.2s;
   border-left: 3px solid transparent;
@@ -168,38 +175,38 @@ const handleLogout = () => {
   background: none;
   border: none;
   width: 100%;
-  font-size: var(--cds-text-base);
+  font-size: var(--admin-text-base);
   line-height: 1.2;
 }
 
 .nav-item:hover {
-  background: color-mix(in srgb, var(--cds-white) 5%, transparent);
+  background: var(--admin-nav-hover-bg);
   color: var(--cds-white);
 }
 
 .nav-item.active {
-  background: color-mix(in srgb, var(--cds-primary) 15%, transparent);
+  background: var(--admin-nav-active-bg);
   color: var(--cds-primary);
   border-left-color: var(--cds-primary);
 }
 
 .nav-icon {
-  font-size: var(--cds-text-xl);
+  font-size: var(--admin-text-xl);
   width: 2.4rem;
   text-align: center;
 }
 
 .nav-label {
-  font-weight: 500;
+  font-weight: var(--cds-font-medium);
 }
 
 .sidebar-footer {
   padding: var(--admin-space-md) 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--admin-sidebar-divider);
 }
 
 .back-link {
-  color: color-mix(in srgb, var(--cds-white) 60%, transparent);
+  color: var(--admin-back-link-color);
 }
 
 .back-link:hover {
@@ -207,11 +214,11 @@ const handleLogout = () => {
 }
 
 .logout-btn {
-  color: color-mix(in srgb, var(--cds-danger) 80%, var(--cds-white));
+  color: var(--admin-logout-text);
 }
 
 .logout-btn:hover {
-  background: color-mix(in srgb, var(--cds-danger) 15%, transparent);
+  background: var(--admin-logout-hover-bg);
   color: var(--cds-danger);
 }
 
@@ -237,24 +244,24 @@ const handleLogout = () => {
 
 .page-title {
   margin: 0;
-  font-size: var(--cds-text-3xl);
-  font-weight: 700;
+  font-size: var(--admin-text-3xl);
+  font-weight: var(--cds-font-bold);
   color: var(--cds-text-normal);
   line-height: 1;
 }
 
 .page-subtitle {
-  margin: 0.5rem 0 0;
-  font-size: var(--cds-text-base);
+  margin: var(--admin-space-xs) 0 0;
+  font-size: var(--admin-text-base);
   color: var(--cds-text-muted);
   line-height: 1.35;
 }
 
 .user-badge {
-  background: color-mix(in srgb, var(--cds-light) 45%, white);
-  padding: var(--admin-space-sm, 0.96rem) var(--cds-space-lg);
+  background: var(--admin-user-badge-bg);
+  padding: var(--admin-space-sm) var(--cds-space-lg);
   border-radius: var(--cds-radius-pill);
-  font-size: var(--cds-text-sm);
+  font-size: var(--admin-text-sm);
   color: var(--cds-text-normal);
 }
 
@@ -266,14 +273,14 @@ const handleLogout = () => {
 
 .admin-content :deep(.admin-page),
 .admin-content :deep(.admin-dashboard-page) {
-  font-size: var(--cds-text-base);
+  font-size: var(--admin-text-base);
 }
 
 .admin-content :deep(.admin-success),
 .admin-content :deep(.admin-error),
 .admin-content :deep(.empty-state) {
-  padding: var(--admin-space-sm, 0.96rem) var(--cds-space-md);
-  font-size: var(--cds-text-sm);
+  padding: var(--admin-space-sm) var(--cds-space-md);
+  font-size: var(--admin-text-sm);
 }
 
 .admin-content :deep(.panel-card),
@@ -321,7 +328,7 @@ const handleLogout = () => {
 .admin-content :deep(.panel-head h3),
 .admin-content :deep(.column-head h3),
 .admin-content :deep(.alerts-header h3) {
-  font-size: var(--cds-text-2xl);
+  font-size: var(--admin-text-2xl);
   line-height: 1.1;
 }
 
@@ -333,7 +340,7 @@ const handleLogout = () => {
 .admin-content :deep(.photo-meta),
 .admin-content :deep(.cell-stack small),
 .admin-content :deep(.list-count) {
-  font-size: var(--cds-text-sm);
+  font-size: var(--admin-text-sm);
 }
 
 .admin-content :deep(th),
@@ -342,7 +349,7 @@ const handleLogout = () => {
 .admin-content :deep(.alert-text),
 .admin-content :deep(.binding-row),
 .admin-content :deep(.queue-item) {
-  font-size: var(--cds-text-base);
+  font-size: var(--admin-text-base);
   line-height: 1.45;
 }
 
@@ -350,7 +357,7 @@ const handleLogout = () => {
 .admin-content :deep(select),
 .admin-content :deep(textarea) {
   min-height: var(--admin-control-min-height);
-  font-size: var(--cds-text-base);
+  font-size: var(--admin-text-base);
 }
 
 .admin-content :deep(textarea) {
@@ -369,7 +376,7 @@ const handleLogout = () => {
 .admin-content :deep(.role-pill),
 .admin-content :deep(.status-pill),
 .admin-content :deep(.flag-list span) {
-  font-size: var(--cds-text-sm);
+  font-size: var(--admin-text-sm);
 }
 
 .admin-content :deep(.btn-primary),
@@ -384,7 +391,7 @@ const handleLogout = () => {
 .admin-content :deep(.btn-icon) {
   min-width: 2.75rem;
   min-height: 2.75rem;
-  font-size: var(--cds-text-xl);
+  font-size: var(--admin-text-xl);
 }
 
 /* Transitions */
@@ -481,7 +488,7 @@ const handleLogout = () => {
   }
 
   .page-title {
-    font-size: var(--cds-text-2xl);
+    font-size: var(--admin-text-2xl);
   }
 }
 </style>

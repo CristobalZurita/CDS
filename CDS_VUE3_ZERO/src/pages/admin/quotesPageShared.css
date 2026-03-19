@@ -2,8 +2,11 @@
 .btn-secondary,
 .btn-danger,
 .btn-success {
-  min-height: 40px;
-  padding: 0.6rem 0.9rem;
+  --quotes-btn-min-height: 40px;
+  --quotes-btn-pad-block: 0.6rem;
+  --quotes-btn-pad-inline: 0.9rem;
+  min-height: var(--quotes-btn-min-height);
+  padding: var(--quotes-btn-pad-block) var(--quotes-btn-pad-inline);
   font-size: var(--cds-text-sm);
 }
 
@@ -21,10 +24,10 @@
   grid-column: 1 / -1;
 }
 
-.checkbox-row {
-  display: flex !important;
+.toolbar-grid .checkbox-row {
+  display: flex;
   align-items: center;
-  gap: 0.5rem !important;
+  gap: 0.5rem;
 }
 
 .summary-card.warning {
@@ -74,17 +77,20 @@
 }
 
 .quote-card {
+  --quotes-card-bg: var(--cds-surface-2);
+  --quotes-card-highlight-border: rgba(236, 107, 0, 0.45);
+  --quotes-card-highlight-ring: rgba(236, 107, 0, 0.14);
   border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-md);
-  background: color-mix(in srgb, var(--cds-light) 9%, white);
+  background: var(--quotes-card-bg);
   padding: 0.7rem;
   display: grid;
   gap: 0.45rem;
 }
 
 .quote-card.highlighted {
-  border-color: color-mix(in srgb, var(--cds-primary) 45%, white);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--cds-primary) 14%, transparent);
+  border-color: var(--quotes-card-highlight-border);
+  box-shadow: 0 0 0 2px var(--quotes-card-highlight-ring);
 }
 
 .quote-head {

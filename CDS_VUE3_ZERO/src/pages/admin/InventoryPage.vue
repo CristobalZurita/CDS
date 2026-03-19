@@ -143,15 +143,4 @@ const {
 </script>
 
 <style scoped src="./commonAdminPage.css"></style>
-<style scoped>
-.summary-card { padding: .75rem; }
-.summary-card strong { font-size: var(--cds-text-2xl); }
-.summary-grid { gap: .7rem; }
-.filters-panel { grid-template-columns: repeat(1,minmax(0,1fr)); }
-.checkbox-row { display: flex !important; align-items: center; gap: .5rem !important; }
-.flag-list { display: flex; flex-wrap: wrap; gap: .35rem; }
-.flag-list span { border: 1px solid var(--cds-border-input); border-radius: var(--cds-radius-pill); padding: .2rem .55rem; font-size: var(--cds-text-sm); }
-.flag-warn { border-color: var(--cds-warning) !important; background: var(--cds-warning-bg); color: var(--cds-warning-text); }
-.flag-ok { border-color: var(--cds-success) !important; background: var(--cds-valid-bg); color: var(--cds-valid-text); }
-@media (min-width: 860px) { .summary-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } .filters-panel { grid-template-columns: repeat(2,minmax(0,1fr)); } .form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
-</style>
+<style scoped src="./inventoryPageShared.css"></style>

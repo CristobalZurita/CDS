@@ -129,25 +129,16 @@ const {
   addButtonLabel,
   addToCart,
   removeFromCart,
-  changeQty,
+  closeCartDrawer,
+  onDrawerChangeQty,
   submitCheckout,
 } = useStorePage()
-
-function closeCartDrawer() {
-  shopCart.closeCart()
-}
-
-function onDrawerChangeQty({ id, delta }) {
-  changeQty(id, delta)
-}
 </script>
 
 <style scoped>
 .store-page {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(236, 107, 0, 0.12), transparent 30%),
-    linear-gradient(180deg, #f8f9f6 0%, #ece9df 100%);
+  background: var(--cds-background-color);
   padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
 }
 
@@ -167,8 +158,8 @@ function onDrawerChangeQty({ id, delta }) {
   gap: var(--cds-space-lg);
   padding: var(--cds-space-xl);
   border-radius: var(--cds-radius-lg);
-  border: 1px solid var(--cds-border-soft);
-  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid var(--cds-border-card);
+  background: var(--cds-white);
   box-shadow: var(--cds-shadow-md);
 }
 
@@ -196,8 +187,8 @@ function onDrawerChangeQty({ id, delta }) {
   gap: var(--cds-space-md);
   padding: var(--cds-space-lg);
   border-radius: var(--cds-radius-lg);
-  border: 1px solid var(--cds-border-soft);
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--cds-border-card);
+  background: var(--cds-white);
   box-shadow: var(--cds-shadow-sm);
 }
 
@@ -212,7 +203,7 @@ function onDrawerChangeQty({ id, delta }) {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: var(--cds-font-bold);
-  color: color-mix(in srgb, var(--cds-dark) 82%, white);
+  color: var(--cds-dark);
 }
 
 .field input,
@@ -221,7 +212,7 @@ function onDrawerChangeQty({ id, delta }) {
   padding: 0.65rem 0.8rem;
   border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-sm);
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--cds-white);
   font-size: var(--cds-text-base);
 }
 
@@ -262,9 +253,9 @@ function onDrawerChangeQty({ id, delta }) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid color-mix(in srgb, var(--cds-dark) 18%, white);
-  background: rgba(255, 255, 255, 0.9);
-  color: color-mix(in srgb, var(--cds-dark) 92%, white);
+  border: 1px solid var(--cds-border-card);
+  background: var(--cds-white);
+  color: var(--cds-dark);
   cursor: pointer;
 }
 
