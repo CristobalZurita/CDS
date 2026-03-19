@@ -69,6 +69,45 @@ export function useRepairDetailAdminPage() {
   const priorityLabel = computed(() => resolveRepairPriorityLabel(repair.value))
   const priorityClass = computed(() => resolveRepairPriorityClass(repair.value))
 
+  function resetRepairData() {
+    repair.value = null
+    photos.value = []
+    notes.value = []
+  }
+
+  function applyRepairBundle(payload) {
+    repair.value = payload?.repair || null
+    photos.value = Array.isArray(payload?.photos) ? payload.photos : []
+    notes.value = Array.isArray(payload?.notes) ? payload.notes : []
+
+    if (!repair.value) {
+      error.value = 'No se encontro la reparacion solicitada.'
+    }
+
+    syncDraftFromRepair()
+  }
+
+  async function runFlaggedTask(flagRef, task, { resolveError = extractErrorMessage } = {}) {
+    flagRef.value = true
+    error.value = ''
+
+    try {
+      return await task()
+    } catch (requestError) {
+      error.value = resolveError(requestError)
+      return null
+    } finally {
+      flagRef.value = false
+    }
+  }
+
+  async function runReloadingTask(flagRef, task, options) {
+    const result = await runFlaggedTask(flagRef, task, options)
+    if (error.value) return result
+    await loadRepair()
+    return result
+  }
+
   function syncDraftFromRepair() {
     if (!repair.value) {
       statusDraft.value = 1
@@ -112,138 +151,62 @@ export function useRepairDetailAdminPage() {
       return
     }
 
-    loading.value = true
-    error.value = ''
-
-    try {
-      const payload = await fetchRepairDetailBundle(id)
-      repair.value = payload.repair
-      photos.value = payload.photos
-      notes.value = payload.notes
-
-      if (!repair.value) {
-        error.value = 'No se encontro la reparacion solicitada.'
-      }
-
-      syncDraftFromRepair()
-    } catch (requestError) {
-      repair.value = null
-      photos.value = []
-      notes.value = []
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      loading.value = false
+    const payload = await runFlaggedTask(loading, () => fetchRepairDetailBundle(id))
+    if (error.value) {
+      resetRepairData()
+      return
     }
+
+    applyRepairBundle(payload)
   }
 
   async function updateStatus() {
     if (!repair.value) return
 
-    updatingStatus.value = true
-    error.value = ''
-
-    try {
-      await updateRepairStatus(repairId.value, statusDraft.value)
-      await loadRepair()
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      updatingStatus.value = false
-    }
+    await runReloadingTask(updatingStatus, () => updateRepairStatus(repairId.value, statusDraft.value))
   }
 
   async function saveRepairFields() {
     if (!repair.value) return
 
-    savingRepair.value = true
-    error.value = ''
-
-    try {
-      await saveRepairDetailFields(repairId.value, editForm.value)
-      await loadRepair()
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      savingRepair.value = false
-    }
+    await runReloadingTask(savingRepair, () => saveRepairDetailFields(repairId.value, editForm.value))
   }
 
   async function archiveRepair() {
     if (!repair.value || isArchived.value) return
 
-    performingAction.value = true
-    error.value = ''
-
-    try {
-      await archiveRepairById(repairId.value)
-      await loadRepair()
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      performingAction.value = false
-    }
+    await runReloadingTask(performingAction, () => archiveRepairById(repairId.value))
   }
 
   async function reactivateRepair() {
     if (!repair.value || !isArchived.value) return
 
-    performingAction.value = true
-    error.value = ''
-
-    try {
-      await reactivateRepairById(repairId.value)
-      await loadRepair()
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      performingAction.value = false
-    }
+    await runReloadingTask(performingAction, () => reactivateRepairById(repairId.value))
   }
 
   async function notifyClient() {
     if (!repair.value) return
 
-    performingAction.value = true
-    error.value = ''
-
-    try {
-      await notifyRepairClient(repairId.value)
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      performingAction.value = false
-    }
+    await runFlaggedTask(performingAction, () => notifyRepairClient(repairId.value))
   }
 
   async function requestSignature(type) {
     if (!repair.value) return
 
-    performingAction.value = true
-    error.value = ''
     signatureLink.value = ''
-
-    try {
-      signatureLink.value = await requestRepairSignatureLink(repairId.value, type)
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      performingAction.value = false
+    const nextLink = await runFlaggedTask(performingAction, () => requestRepairSignatureLink(repairId.value, type))
+    if (!error.value) {
+      signatureLink.value = nextLink || ''
     }
   }
 
   async function requestPhotoUpload() {
     if (!repair.value) return
 
-    performingAction.value = true
-    error.value = ''
     photoUploadLink.value = ''
-
-    try {
-      photoUploadLink.value = await requestRepairPhotoUploadLink(repairId.value)
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      performingAction.value = false
+    const nextLink = await runFlaggedTask(performingAction, () => requestRepairPhotoUploadLink(repairId.value))
+    if (!error.value) {
+      photoUploadLink.value = nextLink || ''
     }
   }
 
@@ -254,20 +217,18 @@ export function useRepairDetailAdminPage() {
   async function uploadPhoto() {
     if (!photoDraft.value.file || !repair.value) return
 
-    uploadingPhoto.value = true
-    error.value = ''
-
-    try {
-      photos.value = await uploadRepairPhoto(repairId.value, photoDraft.value.file, {
+    const nextPhotos = await runFlaggedTask(
+      uploadingPhoto,
+      () => uploadRepairPhoto(repairId.value, photoDraft.value.file, {
         photoType: photoDraft.value.type,
         caption: photoDraft.value.caption
-      })
+      }),
+      { resolveError: (requestError) => requestError?.message || extractErrorMessage(requestError) }
+    )
 
+    if (!error.value) {
+      photos.value = nextPhotos || []
       photoDraft.value = createPhotoDraft()
-    } catch (requestError) {
-      error.value = requestError?.message || extractErrorMessage(requestError)
-    } finally {
-      uploadingPhoto.value = false
     }
   }
 
@@ -280,36 +241,21 @@ export function useRepairDetailAdminPage() {
       return
     }
 
-    savingNote.value = true
-    error.value = ''
-
-    try {
-      notes.value = await addRepairNote(repairId.value, {
+    const nextNotes = await runFlaggedTask(savingNote, () => addRepairNote(repairId.value, {
         note,
         noteType: noteDraft.value.type
-      })
+      }))
 
+    if (!error.value) {
+      notes.value = nextNotes || []
       noteDraft.value = createNoteDraft()
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      savingNote.value = false
     }
   }
 
   async function downloadClosurePdf() {
     if (!repair.value) return
 
-    downloadingClosurePdf.value = true
-    error.value = ''
-
-    try {
-      await downloadRepairClosurePdf(repairId.value, repair.value)
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      downloadingClosurePdf.value = false
-    }
+    await runFlaggedTask(downloadingClosurePdf, () => downloadRepairClosurePdf(repairId.value, repair.value))
   }
 
   function goToPurchaseRequests() {

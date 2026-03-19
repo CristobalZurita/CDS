@@ -88,6 +88,55 @@ export function useQuotesAdminPage() {
     return getColumnItems(columnKey).length
   }
 
+  function applyBoardState(normalized) {
+    board.value = normalized?.board || createEmptyQuotesBoard()
+    counts.value = normalized?.counts || createEmptyQuotesCounts()
+    metrics.value = normalized?.metrics || createEmptyQuotesMetrics()
+  }
+
+  async function runBusyQuoteTask(quoteId, task, { reload = true, onSuccess = null } = {}) {
+    setBusy(quoteId, true)
+    error.value = ''
+
+    try {
+      const result = await task()
+
+      if (reload) {
+        await loadBoard()
+      }
+
+      if (typeof onSuccess === 'function') {
+        await onSuccess(result)
+      }
+
+      return result
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+      return null
+    } finally {
+      setBusy(quoteId, false)
+    }
+  }
+
+  async function runCreateQuoteTask(task) {
+    if (isCreating.value) return { success: false, error: null }
+
+    isCreating.value = true
+    error.value = ''
+
+    try {
+      const data = await task()
+      await loadBoard()
+      closeCreateModal()
+      return { success: true, data }
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+      return { success: false, error: error.value }
+    } finally {
+      isCreating.value = false
+    }
+  }
+
   async function loadBoard() {
     loading.value = true
     error.value = ''
@@ -97,9 +146,7 @@ export function useQuotesAdminPage() {
         searchQuery: searchQuery.value,
         statusFilter: statusFilter.value,
       })
-      board.value = normalized.board
-      counts.value = normalized.counts
-      metrics.value = normalized.metrics
+      applyBoardState(normalized)
     } catch (requestError) {
       error.value = extractErrorMessage(requestError)
       resetBoard()
@@ -109,34 +156,14 @@ export function useQuotesAdminPage() {
   }
 
   async function sendQuote(quote) {
-    setBusy(quote.id, true)
-    error.value = ''
-
-    try {
-      await sendQuoteToClient(quote.id, {
+    await runBusyQuoteTask(quote.id, () => sendQuoteToClient(quote.id, {
         sendWhatsapp: sendWhatsapp.value,
         message: customMessage.value,
-      })
-      await loadBoard()
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      setBusy(quote.id, false)
-    }
+      }))
   }
 
   async function changeStatus(quote, status) {
-    setBusy(quote.id, true)
-    error.value = ''
-
-    try {
-      await updateQuoteStatus(quote.id, status)
-      await loadBoard()
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      setBusy(quote.id, false)
-    }
+    await runBusyQuoteTask(quote.id, () => updateQuoteStatus(quote.id, status))
   }
 
   async function createRepairFromQuote(quote) {
@@ -145,21 +172,13 @@ export function useQuotesAdminPage() {
       return
     }
 
-    setBusy(quote.id, true)
-    error.value = ''
-
-    try {
-      const repairId = await createRepairFromQuoteData(quote)
-      await loadBoard()
-
-      if (repairId > 0) {
-        router.push({ name: 'admin-repair-detail', params: { id: repairId } })
+    await runBusyQuoteTask(quote.id, () => createRepairFromQuoteData(quote), {
+      onSuccess: async (repairId) => {
+        if (repairId > 0) {
+          await router.push({ name: 'admin-repair-detail', params: { id: repairId } })
+        }
       }
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      setBusy(quote.id, false)
-    }
+    })
   }
 
   function openRepair(repairId) {
@@ -172,36 +191,11 @@ export function useQuotesAdminPage() {
     const id = Number(quote?.id || 0)
     if (!id) return
 
-    setBusy(id, true)
-    error.value = ''
-
-    try {
-      await removeQuoteById(id)
-      await loadBoard()
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-    } finally {
-      setBusy(id, false)
-    }
+    await runBusyQuoteTask(id, () => removeQuoteById(id))
   }
 
   async function submitNewQuote() {
-    if (isCreating.value) return { success: false, error: null }
-
-    isCreating.value = true
-    error.value = ''
-
-    try {
-      const data = await createQuoteDraft(newQuote)
-      await loadBoard()
-      closeCreateModal()
-      return { success: true, data }
-    } catch (requestError) {
-      error.value = extractErrorMessage(requestError)
-      return { success: false, error: error.value }
-    } finally {
-      isCreating.value = false
-    }
+    return runCreateQuoteTask(() => createQuoteDraft(newQuote))
   }
 
   onMounted(loadBoard)
