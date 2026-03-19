@@ -2,9 +2,10 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { extractErrorMessage } from '@/services/api'
 import {
-  buildRepairDetailScreenDrafts,
+  buildRepairDetailBundleState,
   createNoteDraft,
   createPhotoDraft,
+  resolveRepairNoteSubmission,
   resolveRepairPriorityClass,
   resolveRepairPriorityLabel,
   resolveRepairStatusClass,
@@ -69,55 +70,26 @@ export function useRepairDetailAdminPage() {
   const priorityLabel = computed(() => resolveRepairPriorityLabel(repair.value))
   const priorityClass = computed(() => resolveRepairPriorityClass(repair.value))
 
+  function applyRepairScreenState(nextState) {
+    repair.value = nextState.repair
+    photos.value = nextState.photos
+    notes.value = nextState.notes
+    statusDraft.value = nextState.statusDraft
+    editForm.value = nextState.editForm
+  }
+
   function resetRepairData() {
-    repair.value = null
-    photos.value = []
-    notes.value = []
+    applyRepairScreenState(buildRepairDetailBundleState(null))
   }
 
   function applyRepairBundle(payload) {
-    repair.value = payload?.repair || null
-    photos.value = Array.isArray(payload?.photos) ? payload.photos : []
-    notes.value = Array.isArray(payload?.notes) ? payload.notes : []
+    const nextState = buildRepairDetailBundleState(payload)
+    applyRepairScreenState(nextState)
 
-    if (!repair.value) {
+    if (!nextState.repair) {
       error.value = 'No se encontro la reparacion solicitada.'
-    }
-
-    syncDraftFromRepair()
-  }
-
-  async function runFlaggedTask(flagRef, task, { resolveError = extractErrorMessage } = {}) {
-    flagRef.value = true
-    error.value = ''
-
-    try {
-      return await task()
-    } catch (requestError) {
-      error.value = resolveError(requestError)
-      return null
-    } finally {
-      flagRef.value = false
-    }
-  }
-
-  async function runReloadingTask(flagRef, task, options) {
-    const result = await runFlaggedTask(flagRef, task, options)
-    if (error.value) return result
-    await loadRepair()
-    return result
-  }
-
-  function syncDraftFromRepair() {
-    if (!repair.value) {
-      statusDraft.value = 1
-      editForm.value = baseRepairDetailEditForm()
       return
     }
-
-    const nextDrafts = buildRepairDetailScreenDrafts(repair.value)
-    statusDraft.value = nextDrafts.statusDraft
-    editForm.value = nextDrafts.editForm
   }
 
   function updateEditField({ field, value }) {
@@ -142,6 +114,34 @@ export function useRepairDetailAdminPage() {
 
   function updateNoteField(payload) {
     noteDraft.value = updateRepairNoteDraft(noteDraft.value, payload)
+  }
+
+  async function runFlaggedTask(flagRef, task, { resolveError = extractErrorMessage } = {}) {
+    flagRef.value = true
+    error.value = ''
+
+    try {
+      return await task()
+    } catch (requestError) {
+      error.value = resolveError(requestError)
+      return null
+    } finally {
+      flagRef.value = false
+    }
+  }
+
+  async function runReloadingTask(flagRef, task, options) {
+    const result = await runFlaggedTask(flagRef, task, options)
+    if (error.value) return result
+    await loadRepair()
+    return result
+  }
+
+  async function runSuccessfulTask(flagRef, task, { onSuccess, ...options } = {}) {
+    const result = await runFlaggedTask(flagRef, task, options)
+    if (error.value) return result
+    onSuccess?.(result)
+    return result
   }
 
   async function loadRepair() {
@@ -194,20 +194,22 @@ export function useRepairDetailAdminPage() {
     if (!repair.value) return
 
     signatureLink.value = ''
-    const nextLink = await runFlaggedTask(performingAction, () => requestRepairSignatureLink(repairId.value, type))
-    if (!error.value) {
-      signatureLink.value = nextLink || ''
-    }
+    await runSuccessfulTask(
+      performingAction,
+      () => requestRepairSignatureLink(repairId.value, type),
+      { onSuccess: (nextLink) => { signatureLink.value = nextLink || '' } }
+    )
   }
 
   async function requestPhotoUpload() {
     if (!repair.value) return
 
     photoUploadLink.value = ''
-    const nextLink = await runFlaggedTask(performingAction, () => requestRepairPhotoUploadLink(repairId.value))
-    if (!error.value) {
-      photoUploadLink.value = nextLink || ''
-    }
+    await runSuccessfulTask(
+      performingAction,
+      () => requestRepairPhotoUploadLink(repairId.value),
+      { onSuccess: (nextLink) => { photoUploadLink.value = nextLink || '' } }
+    )
   }
 
   function onFileSelected(event) {
@@ -217,39 +219,41 @@ export function useRepairDetailAdminPage() {
   async function uploadPhoto() {
     if (!photoDraft.value.file || !repair.value) return
 
-    const nextPhotos = await runFlaggedTask(
+    await runSuccessfulTask(
       uploadingPhoto,
       () => uploadRepairPhoto(repairId.value, photoDraft.value.file, {
         photoType: photoDraft.value.type,
         caption: photoDraft.value.caption
       }),
-      { resolveError: (requestError) => requestError?.message || extractErrorMessage(requestError) }
+      {
+        resolveError: (requestError) => requestError?.message || extractErrorMessage(requestError),
+        onSuccess: (nextPhotos) => {
+          photos.value = nextPhotos || []
+          photoDraft.value = createPhotoDraft()
+        }
+      }
     )
-
-    if (!error.value) {
-      photos.value = nextPhotos || []
-      photoDraft.value = createPhotoDraft()
-    }
   }
 
   async function addNote() {
     if (!repair.value) return
 
-    const note = String(noteDraft.value.text || '').trim()
-    if (!note) {
-      error.value = 'La nota no puede estar vacia.'
+    const noteSubmission = resolveRepairNoteSubmission(noteDraft.value)
+    if (!noteSubmission.isValid) {
+      error.value = noteSubmission.error
       return
     }
 
-    const nextNotes = await runFlaggedTask(savingNote, () => addRepairNote(repairId.value, {
-        note,
-        noteType: noteDraft.value.type
-      }))
-
-    if (!error.value) {
-      notes.value = nextNotes || []
-      noteDraft.value = createNoteDraft()
-    }
+    await runSuccessfulTask(
+      savingNote,
+      () => addRepairNote(repairId.value, noteSubmission),
+      {
+        onSuccess: (nextNotes) => {
+          notes.value = nextNotes || []
+          noteDraft.value = createNoteDraft()
+        }
+      }
+    )
   }
 
   async function downloadClosurePdf() {

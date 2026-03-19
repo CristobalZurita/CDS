@@ -25,6 +25,16 @@ export function buildRepairDetailScreenDrafts(repair) {
   }
 }
 
+export function buildRepairDetailBundleState(payload) {
+  const repair = payload?.repair || null
+  return {
+    repair,
+    photos: Array.isArray(payload?.photos) ? payload.photos : [],
+    notes: Array.isArray(payload?.notes) ? payload.notes : [],
+    ...buildRepairDetailScreenDrafts(repair)
+  }
+}
+
 export function createPhotoDraft() {
   return {
     file: null,
@@ -93,6 +103,16 @@ export function updateRepairNoteDraft(noteDraft, payload) {
   }
 
   return nextDraft
+}
+
+export function resolveRepairNoteSubmission(noteDraft) {
+  const note = String(noteDraft?.text || '').trim()
+  return {
+    note,
+    noteType: String(noteDraft?.type || 'internal'),
+    isValid: Boolean(note),
+    error: note ? '' : 'La nota no puede estar vacia.'
+  }
 }
 
 export function resolveRepairStatusLabel(repair) {
