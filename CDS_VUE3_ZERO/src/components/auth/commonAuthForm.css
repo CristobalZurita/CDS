@@ -3,7 +3,7 @@
 .auth-form,
 .flow {
   display: grid;
-  gap: 0.9rem;
+  gap: var(--cds-auth-form-gap, 0.9rem);
 }
 
 .auth-toggle,
@@ -21,7 +21,7 @@
 .auth-error,
 .feedback {
   margin: 0;
-  padding: 0.75rem;
+  padding: var(--cds-auth-feedback-padding, 0.75rem);
   border: 1px solid var(--cds-invalid-border);
   border-radius: 0.5rem;
   background: var(--cds-invalid-bg);
@@ -46,7 +46,7 @@
 .back-link {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: var(--cds-auth-links-gap, 0.4rem);
   text-align: center;
   margin: 0;
   font-size: var(--cds-text-sm);
@@ -73,17 +73,17 @@
 /* PasswordResetForm specific */
 .reset-form {
   display: grid;
-  gap: 1rem;
+  gap: var(--cds-auth-reset-gap, 1rem);
 }
 
 .mode-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  gap: var(--cds-auth-mode-toggle-gap, 0.5rem);
 }
 
 .mode-toggle__btn {
-  min-height: 44px;
+  min-height: var(--cds-auth-control-min-height, 44px);
   border: 2px solid var(--cds-light-4);
   border-radius: 0.5rem;
   background: var(--cds-white);

@@ -1,23 +1,23 @@
 /* Common styles for auth pages */
 
 .auth-page {
-  min-height: 100vh;
+  min-height: var(--cds-auth-page-min-height, 100vh);
   display: grid;
   place-items: center;
-  padding: 1rem;
+  padding: var(--cds-auth-page-padding, 1rem);
   background: linear-gradient(180deg, var(--cds-dark) 0%, var(--cds-footer-bg-highlight-color) 100%);
 }
 
 .auth-card {
-  width: min(100%, 620px);
-  padding: 1.25rem;
+  width: var(--cds-auth-card-width, min(100%, 620px));
+  padding: var(--cds-auth-card-padding, 1.25rem);
   border-radius: 1rem;
   background: color-mix(in srgb, var(--cds-white) 94%, transparent);
   border: 1px solid var(--cds-border-card);
 }
 
 .auth-card--narrow {
-  width: min(100%, 520px);
+  width: var(--cds-auth-card-width-narrow, min(100%, 520px));
 }
 
 .auth-title {

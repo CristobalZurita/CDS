@@ -35,7 +35,7 @@
 .panel-nested {
   padding: 0.75rem;
   display: grid;
-  gap: 0.6rem;
+  gap: var(--admin-space-2xs, 0.6rem);
 }
 
 .photos-grid {

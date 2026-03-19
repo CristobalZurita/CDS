@@ -30,13 +30,13 @@ defineEmits(['navigate'])
 <style scoped>
 .wizard-nav {
   position: fixed;
-  right: 2rem;
+  right: var(--intake-nav-offset-inline, 2rem);
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding: 0.5rem;
+  padding: var(--intake-nav-padding, 0.5rem);
   background: var(--cds-white);
   border-radius: var(--cds-radius-lg);
   box-shadow: var(--cds-shadow-md);
@@ -44,7 +44,7 @@ defineEmits(['navigate'])
 }
 
 .wizard-nav a {
-  padding: 0.5rem 0.75rem;
+  padding: var(--intake-nav-link-pad-block, 0.5rem) var(--intake-nav-link-pad-inline, 0.75rem);
   font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
   text-decoration: none;

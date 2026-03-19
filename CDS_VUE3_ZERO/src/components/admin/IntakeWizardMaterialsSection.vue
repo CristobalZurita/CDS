@@ -72,17 +72,17 @@ defineEmits(['add-material', 'remove-material'])
 .form-section {
   background: var(--cds-white);
   border-radius: var(--cds-radius-lg);
-  padding: 1.5rem;
+  padding: var(--intake-section-padding, 1.5rem);
   box-shadow: var(--cds-shadow-sm);
-  scroll-margin-top: 120px;
+  scroll-margin-top: var(--intake-section-scroll-margin-top, 120px);
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: var(--intake-section-header-margin-bottom, 1.5rem);
+  padding-bottom: var(--intake-section-header-padding-bottom, 0.75rem);
   border-bottom: 2px solid var(--cds-light-2);
 }
 
@@ -94,7 +94,7 @@ defineEmits(['add-material', 'remove-material'])
 
 .empty-materials {
   text-align: center;
-  padding: 2rem;
+  padding: var(--intake-empty-padding, 2rem);
   color: var(--cds-text-muted);
 }
 
@@ -105,18 +105,18 @@ defineEmits(['add-material', 'remove-material'])
 
 .material-item {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--intake-material-item-gap, 0.75rem);
   align-items: flex-end;
-  padding: 1rem;
+  padding: var(--intake-material-item-padding, 1rem);
   background: var(--cds-light-1);
   border-radius: var(--cds-radius-md);
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--intake-material-item-gap, 0.75rem);
 }
 
 .material-fields {
   display: grid;
   grid-template-columns: 2fr 1fr 2fr;
-  gap: 0.75rem;
+  gap: var(--intake-material-item-gap, 0.75rem);
   flex: 1;
 }
 

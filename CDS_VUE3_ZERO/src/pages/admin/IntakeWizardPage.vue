@@ -218,9 +218,41 @@ onUnmounted(() => _cleanupAddressAc())
 
 <style scoped>
 .intake-wizard-page {
-  padding: 1rem;
-  padding-bottom: 4rem;
-  max-width: 900px;
+  --intake-page-padding: var(--cds-space-md);
+  --intake-page-padding-mobile: 0.5rem;
+  --intake-page-padding-bottom: 4rem;
+  --intake-page-max-width: 900px;
+  --intake-form-gap: var(--cds-space-xl);
+  --intake-section-padding: var(--cds-space-lg);
+  --intake-section-scroll-margin-top: 120px;
+  --intake-section-header-margin-bottom: var(--cds-space-lg);
+  --intake-section-header-padding-bottom: 0.75rem;
+  --intake-subsection-offset: var(--cds-space-lg);
+  --intake-field-gap: var(--cds-space-md);
+  --intake-field-margin-bottom: var(--cds-space-md);
+  --intake-toggle-gap: 0.5rem;
+  --intake-header-padding: 1.25rem;
+  --intake-header-margin-bottom: var(--cds-space-lg);
+  --intake-header-gap: var(--cds-space-md);
+  --intake-progress-gap: 0.75rem;
+  --intake-code-box-padding-block: 0.5rem;
+  --intake-code-box-padding-inline: var(--cds-space-md);
+  --intake-error-gap: 0.75rem;
+  --intake-error-padding: var(--cds-space-md);
+  --intake-error-margin-bottom: var(--cds-space-md);
+  --intake-form-actions-gap: var(--cds-space-md);
+  --intake-form-actions-padding: var(--cds-space-md);
+  --intake-form-actions-offset: -1rem;
+  --intake-material-item-gap: 0.75rem;
+  --intake-material-item-padding: var(--cds-space-md);
+  --intake-empty-padding: var(--cds-space-xl);
+  --intake-nav-offset-inline: var(--cds-space-xl);
+  --intake-nav-padding: 0.5rem;
+  --intake-nav-link-pad-block: 0.5rem;
+  --intake-nav-link-pad-inline: 0.75rem;
+  padding: var(--intake-page-padding, 1rem);
+  padding-bottom: var(--intake-page-padding-bottom, 4rem);
+  max-width: var(--intake-page-max-width, 900px);
   margin: 0 auto;
 }
 
@@ -228,13 +260,13 @@ onUnmounted(() => _cleanupAddressAc())
 .wizard-form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--intake-form-gap, 2rem);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .intake-wizard-page {
-    padding: 0.5rem;
+    padding: var(--intake-page-padding-mobile, 0.5rem);
   }
 }
 </style>

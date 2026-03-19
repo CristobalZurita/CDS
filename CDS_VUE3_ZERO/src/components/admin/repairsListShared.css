@@ -4,14 +4,14 @@
 
 .list-toolbar {
   display: flex;
-  gap: var(--admin-space-sm, 0.96rem);
-  margin-bottom: var(--admin-space-md, 1.2rem);
+  gap: var(--admin-list-toolbar-gap, var(--admin-space-sm, 0.96rem));
+  margin-bottom: var(--admin-list-toolbar-margin-bottom, var(--admin-space-md, 1.2rem));
   flex-wrap: wrap;
 }
 
 .search-input {
   flex: 1;
-  min-width: 26rem;
+  min-width: var(--admin-list-search-min-width, 26rem);
   min-height: var(--admin-control-min-height, 52px);
   padding: var(--admin-space-sm, 0.96rem) var(--admin-space-md, 1.2rem);
   border: 1px solid var(--cds-border-input);
@@ -28,7 +28,7 @@
 }
 
 .mono {
-  font-family: ui-monospace, monospace;
+  font-family: var(--admin-list-mono-font-family, ui-monospace, monospace);
   font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
 }
@@ -51,7 +51,7 @@
 
 .status-pill {
   display: inline-block;
-  padding: var(--cds-space-xs) var(--cds-space-md);
+  padding: var(--admin-list-pill-pad-block, var(--cds-space-xs)) var(--admin-list-pill-pad-inline, var(--cds-space-md));
   border-radius: var(--cds-radius-pill);
   font-size: var(--cds-text-sm);
   font-weight: var(--cds-font-semibold);
@@ -64,8 +64,8 @@
 }
 
 .status-pill.in_progress {
-  background: rgba(14, 165, 233, 0.14);
-  color: #0c4a6e;
+  background: var(--admin-list-info-bg, rgba(14, 165, 233, 0.14));
+  color: var(--admin-list-info-color, #0c4a6e);
 }
 
 .status-pill.completed {

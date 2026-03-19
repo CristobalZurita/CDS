@@ -42,15 +42,15 @@ defineEmits(['reset'])
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  padding-top: 1rem;
+  gap: var(--intake-form-actions-gap, 1rem);
+  padding-top: var(--intake-form-actions-padding, 1rem);
   border-top: 2px solid var(--cds-light-2);
   position: sticky;
   bottom: 0;
   background: var(--cds-surface-1);
   backdrop-filter: blur(8px);
-  padding: 1rem;
-  margin: 0 -1rem -1rem;
+  padding: var(--intake-form-actions-padding, 1rem);
+  margin: 0 var(--intake-form-actions-offset, -1rem) var(--intake-form-actions-offset, -1rem);
   border-radius: var(--cds-radius-lg) var(--cds-radius-lg) 0 0;
 }
 

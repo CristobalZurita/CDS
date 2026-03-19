@@ -1,5 +1,5 @@
 .admin-page {
-  --inventory-summary-gap: 0.7rem;
+  --inventory-summary-gap: var(--admin-space-sm-compact, 0.7rem);
   --inventory-summary-pad: 0.75rem;
   --inventory-filters-columns: repeat(1, minmax(0, 1fr));
   --inventory-form-columns: 1fr;

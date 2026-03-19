@@ -140,11 +140,11 @@ const {
 .store-page {
   min-height: 100vh;
   background: var(--cds-background-color);
-  padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
+  padding: var(--layout-store-page-padding, var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl));
 }
 
 .store-shell {
-  max-width: min(1440px, 98vw);
+  max-width: var(--layout-store-shell-max, min(1440px, 98vw));
   margin: 0 auto;
   display: grid;
   gap: var(--cds-space-lg);

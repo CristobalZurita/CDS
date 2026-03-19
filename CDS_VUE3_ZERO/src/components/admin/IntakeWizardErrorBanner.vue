@@ -21,9 +21,9 @@ defineEmits(['close'])
 .error-banner {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--intake-error-gap, 0.75rem);
+  padding: var(--intake-error-padding, 1rem);
+  margin-bottom: var(--intake-error-margin-bottom, 1rem);
   background: var(--cds-invalid-bg);
   border: 1px solid var(--cds-invalid-border);
   border-radius: var(--cds-radius-md);

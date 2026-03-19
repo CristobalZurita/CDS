@@ -31,13 +31,13 @@
 .circuit-canvas {
   display: block;
   width: 100%;
-  max-width: 420px;
+  max-width: var(--cds-circuit-canvas-max-width, 420px);
   height: auto;
   margin: 0 auto;
 }
 
 .circuit-label {
-  padding: 0.4rem 0.75rem 0.6rem;
+  padding: var(--cds-circuit-label-pad-top, 0.4rem) var(--cds-circuit-label-pad-inline, 0.75rem) var(--cds-circuit-label-pad-bottom, 0.6rem);
   font-size: var(--cds-text-sm);
   font-weight: var(--cds-font-semibold);
   color: var(--cds-text-muted);

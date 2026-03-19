@@ -51,13 +51,13 @@
 
 .cards-grid {
   display: grid;
-  gap: .7rem;
+  gap: var(--admin-space-sm-compact, 0.7rem);
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
 .panel-grid {
   display: grid;
-  gap: .7rem;
+  gap: var(--admin-space-sm-compact, 0.7rem);
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
@@ -84,7 +84,7 @@
 }
 
 .summary-card {
-  padding: .7rem;
+  padding: var(--admin-space-sm-compact, 0.7rem);
   display: grid;
   gap: .2rem;
 }
@@ -196,7 +196,7 @@ th {
 .row-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: .6rem;
+  gap: var(--admin-space-2xs, 0.6rem);
 }
 
 .panel-actions {

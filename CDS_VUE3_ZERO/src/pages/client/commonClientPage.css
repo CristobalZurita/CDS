@@ -6,9 +6,9 @@
 .ot-payments-page,
 .profile-page,
 .repair-detail-page {
-  padding: 1rem;
+  padding: var(--cds-client-page-padding, 1rem);
   display: grid;
-  gap: 1rem;
+  gap: var(--cds-client-page-gap, 1rem);
 }
 
 /* Cards and containers */
@@ -39,7 +39,7 @@
 .empty-state,
 .card,
 .detail-card {
-  padding: 0.9rem;
+  padding: var(--cds-client-surface-padding, 0.9rem);
 }
 
 .dashboard-header,
@@ -142,7 +142,7 @@
   background: var(--cds-invalid-bg);
   color: var(--cds-invalid-text);
   border-radius: 0.6rem;
-  padding: 0.75rem;
+  padding: var(--cds-client-feedback-padding, 0.75rem);
 }
 
 .profile-success {
@@ -151,7 +151,7 @@
   background: var(--cds-valid-bg);
   color: var(--cds-valid-text);
   border-radius: 0.6rem;
-  padding: 0.75rem;
+  padding: var(--cds-client-feedback-padding, 0.75rem);
 }
 
 /* Stats grid */
@@ -162,7 +162,7 @@
 }
 
 .stat-card {
-  padding: 0.9rem;
+  padding: var(--cds-client-surface-padding, 0.9rem);
   display: grid;
   gap: 0.3rem;
 }
@@ -186,7 +186,7 @@
 }
 
 .panel-card {
-  padding: 1rem;
+  padding: var(--cds-client-panel-padding, 1rem);
 }
 
 .panel-head {
@@ -213,7 +213,7 @@
 
 .repair-card,
 .request-card {
-  padding: 0.9rem;
+  padding: var(--cds-client-surface-padding, 0.9rem);
   display: grid;
   gap: 0.6rem;
 }
@@ -508,15 +508,15 @@
   background: rgba(0, 0, 0, 0.45);
   display: grid;
   place-items: center;
-  padding: 1rem;
+  padding: var(--cds-client-modal-overlay-padding, 1rem);
 }
 
 .modal {
   border: 1px solid var(--cds-border-card);
   border-radius: 0.9rem;
   background: var(--cds-white);
-  padding: 0.95rem;
-  width: min(100%, 520px);
+  padding: var(--cds-client-detail-padding, 0.95rem);
+  width: var(--cds-client-modal-width, min(100%, 520px));
   display: grid;
   gap: 0.65rem;
 }
@@ -535,7 +535,7 @@
 
 /* Detail page specific */
 .detail-card {
-  padding: 0.95rem;
+  padding: var(--cds-client-detail-padding, 0.95rem);
 }
 
 .detail-card h2 {
@@ -591,7 +591,7 @@
 
 /* Redirect notice */
 .redirect-notice {
-  min-height: 100vh;
+  min-height: var(--cds-client-notice-min-height, 100vh);
   display: flex;
   align-items: center;
   justify-content: center;

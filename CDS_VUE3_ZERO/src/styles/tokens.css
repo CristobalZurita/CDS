@@ -88,5 +88,43 @@
   --cds-shadow-md: 0 18px 34px rgba(35, 34, 31, 0.14);
   --cds-shadow-lg: 0 28px 52px rgba(35, 34, 31, 0.2);
 
+  --cds-auth-page-min-height: 100vh;
+  --cds-auth-page-padding: var(--cds-space-md);
+  --cds-auth-card-width: min(100%, 620px);
+  --cds-auth-card-width-narrow: min(100%, 520px);
+  --cds-auth-card-padding: 1.25rem;
+  --cds-auth-form-gap: 0.9rem;
+  --cds-auth-feedback-padding: 0.75rem;
+  --cds-auth-links-gap: 0.4rem;
+  --cds-auth-reset-gap: var(--cds-space-md);
+  --cds-auth-mode-toggle-gap: 0.5rem;
+  --cds-auth-control-min-height: 44px;
+
+  --cds-client-page-padding: var(--cds-space-md);
+  --cds-client-page-gap: var(--cds-space-md);
+  --cds-client-surface-padding: 0.9rem;
+  --cds-client-feedback-padding: 0.75rem;
+  --cds-client-panel-padding: var(--cds-space-md);
+  --cds-client-detail-padding: 0.95rem;
+  --cds-client-modal-overlay-padding: var(--cds-space-md);
+  --cds-client-modal-width: min(100%, 520px);
+  --cds-client-notice-min-height: 100vh;
+
+  --cds-chip-preview-min-height: 64px;
+  --cds-chip-preview-text-size: 1.2rem;
+  --cds-cap-visual-gap: 0.7rem;
+  --cds-cap-visual-image-size: 48px;
+  --cds-resistor-visual-pad-top: 0.2rem;
+  --cds-resistor-visual-pad-bottom: 0.5rem;
+  --cds-resistor-body-max-width: 380px;
+  --cds-resistor-body-min-height: 64px;
+  --cds-resistor-body-band-width: 18px;
+  --cds-resistor-body-band-gap: 10px;
+  --cds-resistor-body-pad-inline: 1.2rem;
+  --cds-circuit-canvas-max-width: 420px;
+  --cds-circuit-label-pad-top: 0.4rem;
+  --cds-circuit-label-pad-inline: 0.75rem;
+  --cds-circuit-label-pad-bottom: 0.6rem;
+
   --cds-content-max: 1280px;
 }

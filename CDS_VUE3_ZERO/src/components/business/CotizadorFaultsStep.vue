@@ -105,9 +105,9 @@ const emit = defineEmits(['toggle-fault', 'quote-verify', 'back', 'continue'])
   display: grid;
   grid-template-columns: 2rem 1fr;
   grid-template-rows: auto auto auto;
-  column-gap: 0.6rem;
-  row-gap: 0.1rem;
-  padding: 0.7rem 0.85rem;
+  column-gap: var(--layout-quotation-fault-card-column-gap, 0.6rem);
+  row-gap: var(--layout-quotation-fault-card-row-gap, 0.1rem);
+  padding: var(--layout-quotation-fault-card-pad-block, 0.7rem) var(--layout-quotation-fault-card-pad-inline, 0.85rem);
   border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-sm);
   cursor: pointer;

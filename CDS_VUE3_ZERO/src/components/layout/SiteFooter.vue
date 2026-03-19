@@ -94,10 +94,10 @@ defineProps({
 .site-footer {
   background: var(--cds-footer-bg-highlight-color);
   color: var(--cds-white);
-  padding-top: clamp(3rem, 3vw, 4rem);
-  padding-right: clamp(0.75rem, 2vw, 1.5rem);
-  padding-bottom: clamp(1.4rem, 1.8vw, 2rem);
-  padding-left: clamp(0.75rem, 2vw, 1.5rem);
+  padding-top: var(--layout-footer-padding-top, clamp(3rem, 3vw, 4rem));
+  padding-right: var(--layout-footer-padding-inline, clamp(0.75rem, 2vw, 1.5rem));
+  padding-bottom: var(--layout-footer-padding-bottom, clamp(1.4rem, 1.8vw, 2rem));
+  padding-left: var(--layout-footer-padding-inline, clamp(0.75rem, 2vw, 1.5rem));
 }
 
 .site-footer-grid {
@@ -105,9 +105,9 @@ defineProps({
   max-width: none;
   margin-inline: auto;
   display: grid;
-  row-gap: clamp(2rem, 2.2vw, 2.8rem);
-  column-gap: clamp(2.4rem, 3vw, 4rem);
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr));
+  row-gap: var(--layout-footer-grid-row-gap, clamp(2rem, 2.2vw, 2.8rem));
+  column-gap: var(--layout-footer-grid-column-gap, clamp(2.4rem, 3vw, 4rem));
+  grid-template-columns: var(--layout-footer-grid-template-columns, repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr)));
   align-items: start;
 }
 
@@ -137,13 +137,13 @@ defineProps({
   gap: 0.6rem;
   align-items: center;
   justify-self: center;
-  width: min(100%, 16rem);
+  width: var(--layout-footer-brand-width, min(100%, 16rem));
   text-align: center;
 }
 
 .footer-brand-summary {
   width: 100%;
-  margin: clamp(1.5rem, 2vw, 2.2rem) auto 0;
+  margin: var(--layout-footer-brand-summary-margin-top, clamp(1.5rem, 2vw, 2.2rem)) auto 0;
   padding: 0.2rem 0.75rem 0;
   text-align: center;
   font-size: var(--cds-text-xl);
@@ -153,8 +153,8 @@ defineProps({
 }
 
 .footer-logo {
-  width: clamp(96px, 12vw, 130px);
-  height: clamp(96px, 12vw, 130px);
+  width: var(--layout-footer-logo-size, clamp(96px, 12vw, 130px));
+  height: var(--layout-footer-logo-size, clamp(96px, 12vw, 130px));
   border-radius: var(--cds-radius-sm);
 }
 
@@ -203,8 +203,9 @@ defineProps({
   display: grid;
   gap: 0.45rem;
   width: 100%;
-  max-width: 18rem;
+  max-width: var(--layout-footer-map-max-width, 18rem);
   justify-items: stretch;
+  margin-right: var(--layout-footer-map-offset-inline, 70px);
 }
 
 .footer-map {
@@ -218,7 +219,7 @@ defineProps({
 .site-footer-legal {
   width: 100%;
   max-width: none;
-  margin: clamp(2rem, 2.3vw, 2.8rem) auto 0;
+  margin: var(--layout-footer-legal-margin-top, clamp(2rem, 2.3vw, 2.8rem)) auto 0;
   padding-top: 1.2rem;
   border-top: 1px solid #5e5953;
   display: flex;
@@ -245,26 +246,25 @@ defineProps({
 }
 
 @media (min-width: 600px) {
-  .site-footer-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .site-footer {
+    --layout-footer-grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 960px) {
-  .site-footer-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .site-footer {
+    --layout-footer-grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1280px) {
-  .site-footer-grid {
-    grid-template-columns:
+  .site-footer {
+    --layout-footer-grid-template-columns:
       minmax(15rem, 1.15fr)
       minmax(11rem, 0.9fr)
       minmax(11rem, 0.9fr)
       minmax(14rem, 1.05fr)
       minmax(18rem, 1.1fr);
-    align-items: start;
   }
 
   .footer-map-column {

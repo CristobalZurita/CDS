@@ -1,18 +1,18 @@
 .legal-page,
 .privacy-page,
 .terms-page {
-  padding: 1rem;
+  padding: var(--layout-legal-page-padding, 1rem);
 }
 
 .legal-card,
 .privacy-container,
 .terms-container {
-  max-width: 980px;
+  max-width: var(--layout-legal-container-max, 980px);
   margin: 0 auto;
   background: var(--cds-white);
   border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-md);
-  padding: 1rem;
+  padding: var(--layout-legal-card-padding, 1rem);
 }
 
 .legal-header,

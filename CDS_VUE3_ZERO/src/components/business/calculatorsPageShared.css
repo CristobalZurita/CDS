@@ -1,11 +1,11 @@
 .calculators-page {
   min-height: 100vh;
-  padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
+  padding: var(--layout-catalog-page-padding, var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl));
   background-color: var(--cds-background-color);
 }
 
 .calculators-container {
-  max-width: var(--layout-content-max, var(--cds-content-max));
+  max-width: var(--layout-catalog-container-max, var(--layout-content-max, var(--cds-content-max)));
   margin: 0 auto;
 }
 

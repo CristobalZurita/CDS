@@ -59,15 +59,15 @@ const progressScale = computed(() => {
   background: var(--cds-surface-1);
   backdrop-filter: blur(8px);
   border-radius: var(--cds-radius-lg);
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
+  padding: var(--intake-header-padding, 1.25rem);
+  margin-bottom: var(--intake-header-margin-bottom, 1.5rem);
   box-shadow: var(--cds-shadow-sm);
 }
 
 .header-content {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--intake-header-gap, 1rem);
   align-items: center;
   justify-content: space-between;
 }
@@ -86,7 +86,7 @@ const progressScale = computed(() => {
 .progress-section {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--intake-progress-gap, 0.75rem);
   min-width: 200px;
 }
 
@@ -115,14 +115,14 @@ const progressScale = computed(() => {
 
 .codes-display {
   display: flex;
-  gap: 1rem;
+  gap: var(--intake-header-gap, 1rem);
 }
 
 .code-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: var(--intake-code-box-padding-block, 0.5rem) var(--intake-code-box-padding-inline, 1rem);
   background: var(--cds-light-1);
   border-radius: var(--cds-radius-md);
   min-width: 80px;

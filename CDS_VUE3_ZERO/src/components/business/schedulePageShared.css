@@ -1,12 +1,12 @@
 .schedule-page {
-  padding: 1rem;
+  padding: var(--layout-schedule-page-padding, 1rem);
 }
 
 .schedule-container {
-  max-width: 1040px;
+  max-width: var(--layout-schedule-container-max, 1040px);
   margin: 0 auto;
   display: grid;
-  gap: 1rem;
+  gap: var(--layout-schedule-container-gap, 1rem);
 }
 
 .schedule-header,
@@ -14,7 +14,7 @@
   background: var(--cds-white);
   border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-md);
-  padding: 1rem;
+  padding: var(--layout-schedule-card-padding, 1rem);
 }
 
 .schedule-header h1 {
@@ -23,20 +23,20 @@
 }
 
 .schedule-header p {
-  margin: 0.4rem 0 0;
+  margin: var(--layout-schedule-header-copy-margin-top, 0.4rem) 0 0;
   color: var(--cds-text-muted);
 }
 
 .progress-bar {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--layout-schedule-progress-gap, 0.5rem);
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .progress-step {
   border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-md);
-  min-height: 64px;
+  min-height: var(--layout-schedule-progress-step-min-height, 64px);
   display: grid;
   place-items: center;
   background: var(--cds-white);
@@ -56,14 +56,14 @@
 
 .schedule-step {
   display: grid;
-  gap: 0.9rem;
+  gap: var(--layout-schedule-step-gap, 0.9rem);
 }
 
 .calendar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: var(--layout-schedule-calendar-header-gap, 0.5rem);
 }
 
 .calendar-header h3 {
@@ -74,11 +74,11 @@
 .calendar-days {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 0.35rem;
+  gap: var(--layout-schedule-calendar-grid-gap, 0.35rem);
 }
 
 .weekday {
-  min-height: 32px;
+  min-height: var(--layout-schedule-weekday-min-height, 32px);
   display: grid;
   place-items: center;
   font-size: var(--cds-text-sm);
@@ -86,7 +86,7 @@
 }
 
 .calendar-day {
-  min-height: 40px;
+  min-height: var(--layout-schedule-day-min-height, 40px);
   border-radius: var(--cds-radius-sm);
   border: 1px solid var(--cds-border-input);
   background: var(--cds-white);
@@ -106,25 +106,25 @@
 
 .timeslots-container {
   display: grid;
-  gap: 0.9rem;
+  gap: var(--layout-schedule-step-gap, 0.9rem);
 }
 
 .timeslot-group h3 {
-  margin: 0 0 0.45rem;
+  margin: 0 0 var(--layout-schedule-timeslot-heading-margin-bottom, 0.45rem);
   font-size: var(--cds-text-base);
 }
 
 .timeslots {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: var(--layout-schedule-timeslot-list-gap, 0.45rem);
 }
 
 .timeslot,
 .btn-primary,
 .btn-secondary {
-  min-height: 44px;
-  padding: 0.65rem 0.9rem;
+  min-height: var(--layout-schedule-control-min-height, 44px);
+  padding: var(--layout-schedule-control-pad-block, 0.65rem) var(--layout-schedule-control-pad-inline, 0.9rem);
   border-radius: var(--cds-radius-sm);
   font-size: var(--cds-text-base);
   text-decoration: none;
@@ -154,18 +154,18 @@
 
 .confirmation-card {
   display: grid;
-  gap: 0.7rem;
+  gap: var(--layout-schedule-confirmation-gap, 0.7rem);
   border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-md);
-  padding: 0.9rem;
+  padding: var(--layout-schedule-confirmation-padding, 0.9rem);
 }
 
 .confirmation-section {
   display: flex;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: var(--layout-schedule-confirmation-section-gap, 0.75rem);
   border-bottom: 1px solid var(--cds-border-input);
-  padding-bottom: 0.5rem;
+  padding-bottom: var(--layout-schedule-confirmation-section-padding-bottom, 0.5rem);
 }
 
 .label {
@@ -177,7 +177,7 @@
 }
 
 .confirmation-info p {
-  margin: 0.3rem 0;
+  margin: var(--layout-schedule-info-copy-margin-block, 0.3rem) 0;
   font-size: var(--cds-text-base);
 }
 
@@ -194,14 +194,14 @@
   background: var(--cds-invalid-bg);
   color: var(--cds-invalid-text);
   border-radius: var(--cds-radius-sm);
-  padding: 0.7rem;
+  padding: var(--layout-schedule-feedback-padding, 0.7rem);
 }
 
 .schedule-info,
 .schedule-warning {
   margin: 0;
   border-radius: var(--cds-radius-sm);
-  padding: 0.7rem;
+  padding: var(--layout-schedule-feedback-padding, 0.7rem);
 }
 
 .schedule-info {
@@ -221,8 +221,8 @@
 }
 
 .success-icon {
-  width: 64px;
-  height: 64px;
+  width: var(--layout-schedule-success-icon-size, 64px);
+  height: var(--layout-schedule-success-icon-size, 64px);
   border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
@@ -242,7 +242,7 @@
 
 .step-actions {
   display: flex;
-  gap: 0.6rem;
+  gap: var(--layout-schedule-action-gap, 0.6rem);
   flex-wrap: wrap;
   justify-content: flex-end;
 }

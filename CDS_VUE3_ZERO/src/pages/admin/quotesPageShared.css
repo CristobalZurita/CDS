@@ -2,7 +2,7 @@
 .btn-secondary,
 .btn-danger,
 .btn-success {
-  --quotes-btn-min-height: 40px;
+  --quotes-btn-min-height: var(--admin-control-min-height-sm, 40px);
   --quotes-btn-pad-block: 0.6rem;
   --quotes-btn-pad-inline: 0.9rem;
   min-height: var(--quotes-btn-min-height);
@@ -11,9 +11,9 @@
 }
 
 .panel-card {
-  padding: 0.9rem;
+  padding: var(--admin-space-md-compact, 0.9rem);
   display: grid;
-  gap: 0.6rem;
+  gap: var(--admin-space-2xs, 0.6rem);
 }
 
 .toolbar-grid {
@@ -155,7 +155,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem;
+  padding: var(--admin-space-lg-compact, 1.25rem);
   border-bottom: 1px solid var(--cds-border-card);
 }
 
@@ -178,7 +178,7 @@
 }
 
 .modal-form {
-  padding: 1.25rem;
+  padding: var(--admin-space-lg-compact, 1.25rem);
 }
 
 .form-grid {

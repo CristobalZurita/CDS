@@ -138,11 +138,19 @@ function formatSize(bytes) {
 
 <style scoped>
 .photo-upload {
+  --photo-upload-description-margin-bottom: 1rem;
+  --photo-upload-grid-gap: 1rem;
+  --photo-upload-item-gap: 0.5rem;
+  --photo-upload-remove-offset: 0.5rem;
+  --photo-upload-caption-padding: 0.5rem;
+  --photo-upload-add-gap: 0.5rem;
+  --photo-upload-error-margin-top: 0.75rem;
+  --photo-upload-error-padding: 0.75rem;
   width: 100%;
 }
 
 .upload-description {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--photo-upload-description-margin-bottom, 1rem);
   color: var(--cds-text-muted);
   font-size: var(--cds-text-sm);
 }
@@ -150,13 +158,13 @@ function formatSize(bytes) {
 .photos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
+  gap: var(--photo-upload-grid-gap, 1rem);
 }
 
 .photo-item {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--photo-upload-item-gap, 0.5rem);
 }
 
 .photo-preview {
@@ -175,8 +183,8 @@ function formatSize(bytes) {
 
 .photo-remove {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  top: var(--photo-upload-remove-offset, 0.5rem);
+  right: var(--photo-upload-remove-offset, 0.5rem);
   width: 28px;
   height: 28px;
   display: flex;
@@ -212,7 +220,7 @@ function formatSize(bytes) {
 
 .photo-caption {
   width: 100%;
-  padding: 0.5rem;
+  padding: var(--photo-upload-caption-padding, 0.5rem);
   border: 1px solid var(--cds-light-3);
   border-radius: var(--cds-radius-sm);
   font-size: var(--cds-text-sm);
@@ -230,7 +238,7 @@ function formatSize(bytes) {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--photo-upload-add-gap, 0.5rem);
   background: transparent;
   border: 2px dashed var(--cds-light-4);
   border-radius: var(--cds-radius-md);
@@ -259,8 +267,8 @@ function formatSize(bytes) {
 }
 
 .upload-error {
-  margin-top: 0.75rem;
-  padding: 0.75rem;
+  margin-top: var(--photo-upload-error-margin-top, 0.75rem);
+  padding: var(--photo-upload-error-padding, 0.75rem);
   background: var(--cds-invalid-bg);
   border: 1px solid var(--cds-invalid-border);
   border-radius: var(--cds-radius-sm);

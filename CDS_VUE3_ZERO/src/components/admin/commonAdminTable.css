@@ -10,7 +10,7 @@
 
 .btn-refresh {
   min-height: var(--admin-control-min-height, 52px);
-  padding: var(--admin-space-sm, 0.96rem) 1.35rem;
+  padding: var(--admin-space-sm, 0.96rem) var(--admin-table-refresh-pad-inline, 1.35rem);
   background: var(--cds-light-1);
   border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-md);
@@ -35,7 +35,7 @@
 
 .data-table th {
   text-align: left;
-  padding: var(--admin-space-md, 1.2rem);
+  padding: var(--admin-table-cell-padding, var(--admin-space-md, 1.2rem));
   font-weight: 600;
   color: var(--cds-text-muted);
   border-bottom: 1px solid var(--cds-border-card);
@@ -45,7 +45,7 @@
 }
 
 .data-table td {
-  padding: var(--admin-space-md, 1.2rem);
+  padding: var(--admin-table-cell-padding, var(--admin-space-md, 1.2rem));
   border-bottom: 1px solid var(--cds-border-card);
   color: var(--cds-light-7);
 }
@@ -62,7 +62,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: var(--admin-table-icon-padding, 0.5rem);
   font-size: var(--cds-text-xl);
   opacity: 0.7;
   transition: opacity 0.2s;

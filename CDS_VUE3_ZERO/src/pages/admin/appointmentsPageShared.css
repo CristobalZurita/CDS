@@ -1,12 +1,12 @@
 .admin-page {
-  --appointments-filter-pad: 0.9rem;
+  --appointments-filter-pad: var(--admin-space-md-compact, 0.9rem);
   --appointments-filter-gap: 0.5rem;
   --appointments-chip-min-height: 44px;
   --appointments-chip-pad-block: 0.65rem;
   --appointments-chip-pad-inline: 0.9rem;
   --appointments-chip-active-bg: rgba(236, 107, 0, 0.14);
-  --appointments-card-pad: 0.9rem;
-  --appointments-card-gap: 0.6rem;
+  --appointments-card-pad: var(--admin-space-md-compact, 0.9rem);
+  --appointments-card-gap: var(--admin-space-2xs, 0.6rem);
   --appointments-card-border-size: 4px;
   --appointments-empty-min-height: 160px;
 }
@@ -74,7 +74,7 @@
 .appointment-head {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: var(--admin-space-2xs, 0.6rem);
   justify-content: space-between;
 }
 

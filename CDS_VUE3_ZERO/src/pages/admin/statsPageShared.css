@@ -27,9 +27,9 @@
 
 .charts-grid {
   display: grid;
-  gap: 0.7rem;
+  gap: var(--admin-space-sm-compact, 0.7rem);
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  margin-top: 0.7rem;
+  margin-top: var(--admin-space-sm-compact, 0.7rem);
 }
 
 .chart-card {

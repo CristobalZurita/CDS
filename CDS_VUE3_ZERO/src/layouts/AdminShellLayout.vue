@@ -97,14 +97,31 @@ const handleLogout = () => {
 
 <style scoped>
 .admin-shell-layout {
+  --admin-space-3xs: 0.35rem;
+  --admin-space-2xs: 0.6rem;
   --admin-space-xs: 0.66rem;
+  --admin-space-sm-compact: 0.7rem;
   --admin-space-sm: 0.96rem;
+  --admin-space-md-compact: 0.9rem;
   --admin-space-md: 1.2rem;
+  --admin-space-lg-compact: 1.25rem;
   --admin-space-lg: 1.8rem;
   --admin-space-xl: 2.4rem;
   --admin-space-2xl: 3.3rem;
+  --admin-list-toolbar-gap: var(--admin-space-sm, 0.96rem);
+  --admin-list-toolbar-margin-bottom: var(--admin-space-md, 1.2rem);
+  --admin-list-pill-pad-block: var(--cds-space-xs);
+  --admin-list-pill-pad-inline: var(--cds-space-md);
+  --admin-list-search-min-width: 26rem;
+  --admin-list-mono-font-family: ui-monospace, monospace;
+  --admin-list-info-bg: rgba(14, 165, 233, 0.14);
+  --admin-list-info-color: #0c4a6e;
+  --admin-table-cell-padding: var(--admin-space-md, 1.2rem);
+  --admin-table-refresh-pad-inline: 1.35rem;
+  --admin-table-icon-padding: 0.5rem;
   --admin-sidebar-width: clamp(22rem, 20rem + 4vw, 26rem);
   --admin-sidebar-collapsed-width: 7.5rem;
+  --admin-control-min-height-sm: 40px;
   --admin-control-min-height: 52px;
   --admin-text-xs: clamp(1.32rem, 1.26rem + 0.3vw, 1.44rem);
   --admin-text-sm: clamp(1.5rem, 1.44rem + 0.36vw, 1.68rem);

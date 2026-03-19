@@ -6,8 +6,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--admin-space-md, 1.2rem);
-  gap: var(--admin-space-sm, 0.96rem);
+  margin-bottom: var(--admin-list-toolbar-margin-bottom, var(--admin-space-md, 1.2rem));
+  gap: var(--admin-list-toolbar-gap, var(--admin-space-sm, 0.96rem));
   flex-wrap: wrap;
 }
 
@@ -18,7 +18,7 @@
 
 .role-pill {
   display: inline-block;
-  padding: var(--cds-space-xs) var(--cds-space-md);
+  padding: var(--admin-list-pill-pad-block, var(--cds-space-xs)) var(--admin-list-pill-pad-inline, var(--cds-space-md));
   border-radius: var(--cds-radius-pill);
   font-size: var(--cds-text-sm);
   font-weight: var(--cds-font-semibold);
@@ -31,8 +31,8 @@
 }
 
 .role-pill.technician {
-  background: rgba(14, 165, 233, 0.14);
-  color: #0c4a6e;
+  background: var(--admin-list-info-bg, rgba(14, 165, 233, 0.14));
+  color: var(--admin-list-info-color, #0c4a6e);
 }
 
 .role-pill.client {

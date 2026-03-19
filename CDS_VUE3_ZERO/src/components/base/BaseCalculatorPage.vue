@@ -22,15 +22,15 @@ defineProps({
 
 <style scoped>
 .calc-page {
-  padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
+  padding: var(--layout-calculator-page-padding, var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl));
   background: var(--cds-background-color);
 }
 
 .calc-container {
-  max-width: 1160px;
+  max-width: var(--layout-calculator-container-max, 1160px);
   margin: 0 auto;
   display: grid;
-  gap: 1.2rem;
+  gap: var(--layout-calculator-content-gap, 1.2rem);
 }
 
 .calc-header h1 {
@@ -47,13 +47,13 @@ defineProps({
 
 .calc-layout {
   display: grid;
-  gap: 1rem;
+  gap: var(--layout-calculator-layout-gap, 1rem);
   grid-template-columns: 1fr;
 }
 
 @media (min-width: 920px) {
   .calc-layout {
-    grid-template-columns: minmax(320px, 1fr) minmax(360px, 1.2fr);
+    grid-template-columns: var(--layout-calculator-layout-columns-desktop, minmax(320px, 1fr) minmax(360px, 1.2fr));
     align-items: start;
   }
 }

@@ -158,18 +158,18 @@ function updateLeadField({ field, value }) {
 @import '@/components/business/cotizadorStepShared.css';
 
 .cotizador-page {
-  padding: 0.5rem 1rem 2rem;
+  padding: var(--layout-quotation-page-padding, 0.5rem 1rem 2rem);
   display: grid;
-  gap: 1rem;
+  gap: var(--layout-quotation-page-gap, 1rem);
 }
 
 /* Barra de progreso */
 .progress-bar {
-  height: 4px;
+  height: var(--layout-quotation-progress-height, 4px);
   background: color-mix(in srgb, var(--cds-light) 60%, white);
-  border-radius: 4px;
+  border-radius: var(--layout-quotation-progress-radius, 4px);
   overflow: hidden;
-  max-width: 920px;
+  max-width: var(--layout-quotation-shell-max, 920px);
   margin: 0 auto;
   width: 100%;
 }
@@ -184,10 +184,10 @@ function updateLeadField({ field, value }) {
 
 /* Alerta de error */
 .alert-error {
-  max-width: 920px;
+  max-width: var(--layout-quotation-shell-max, 920px);
   margin: 0 auto;
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: var(--layout-quotation-alert-padding-block, 0.75rem) var(--layout-quotation-alert-padding-inline, 1rem);
   background: color-mix(in srgb, var(--cds-primary) 10%, white);
   border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white);
   border-radius: var(--cds-radius-sm);
@@ -197,7 +197,7 @@ function updateLeadField({ field, value }) {
 
 @media (min-width: 640px) {
   .cotizador-page {
-    padding: 1rem 1.5rem 2.5rem;
+    padding: var(--layout-quotation-page-padding-md, 1rem 1.5rem 2.5rem);
   }
 }
 </style>

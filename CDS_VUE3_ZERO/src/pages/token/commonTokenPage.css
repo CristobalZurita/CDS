@@ -4,7 +4,7 @@
 .signature-page {
   min-height: 100vh;
   background: var(--cds-light);
-  padding: 1rem;
+  padding: var(--layout-token-page-padding, 1rem);
   display: grid;
   place-items: center;
 }
@@ -17,17 +17,17 @@
   background: var(--cds-white);
   border: 1px solid var(--cds-border-card);
   border-radius: 0.8rem;
-  padding: 1rem;
+  padding: var(--layout-token-card-padding, 1rem);
   display: grid;
   gap: 0.9rem;
 }
 
 .card--narrow {
-  width: min(640px, 100%);
+  width: var(--layout-token-card-narrow-width, min(640px, 100%));
 }
 
 .card--wide {
-  width: min(760px, 100%);
+  width: var(--layout-token-card-wide-width, min(760px, 100%));
 }
 
 .card h1 {

@@ -1,17 +1,17 @@
 .form-section {
   background: var(--cds-white);
   border-radius: var(--cds-radius-lg);
-  padding: 1.5rem;
+  padding: var(--intake-section-padding, 1.5rem);
   box-shadow: var(--cds-shadow-sm);
-  scroll-margin-top: 120px;
+  scroll-margin-top: var(--intake-section-scroll-margin-top, 120px);
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: var(--intake-section-header-margin-bottom, 1.5rem);
+  padding-bottom: var(--intake-section-header-padding-bottom, 0.75rem);
   border-bottom: 2px solid var(--cds-light-2);
 }
 
@@ -24,27 +24,27 @@
 .toggle-existing {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--intake-toggle-gap, 0.5rem);
   font-size: var(--cds-text-sm);
   cursor: pointer;
 }
 
 .subsection {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  margin-top: var(--intake-subsection-offset, 1.5rem);
+  padding-top: var(--intake-subsection-offset, 1.5rem);
   border-top: 1px solid var(--cds-light-2);
 }
 
 .subsection h3 {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--intake-field-margin-bottom, 1rem);
   font-size: var(--cds-text-base);
   color: var(--cds-text-muted);
 }
 
 .field-grid {
   display: grid;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--intake-field-gap, 1rem);
+  margin-bottom: var(--intake-field-margin-bottom, 1rem);
 }
 
 .field-grid.cols-2 {
@@ -56,7 +56,7 @@
 }
 
 .field-group {
-  margin-bottom: 1rem;
+  margin-bottom: var(--intake-field-margin-bottom, 1rem);
 }
 
 @media (max-width: 768px) {

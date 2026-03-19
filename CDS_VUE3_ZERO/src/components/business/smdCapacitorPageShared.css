@@ -1,13 +1,13 @@
 .cap-visual-inline {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: var(--cds-cap-visual-gap, 0.7rem);
   padding: 0.2rem 0 0.35rem;
 }
 
 .cap-visual-inline img {
-  width: 48px;
-  height: 48px;
+  width: var(--cds-cap-visual-image-size, 48px);
+  height: var(--cds-cap-visual-image-size, 48px);
   object-fit: contain;
 }
 

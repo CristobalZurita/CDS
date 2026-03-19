@@ -54,10 +54,10 @@ defineProps({
 <style scoped>
 .result-box {
   border: 1px solid var(--cds-border-card);
-  border-radius: 0.7rem;
-  padding: 0.9rem;
+  border-radius: var(--layout-quotation-summary-radius, 0.7rem);
+  padding: var(--layout-quotation-summary-padding, 0.9rem);
   display: grid;
-  gap: 0.75rem;
+  gap: var(--layout-quotation-summary-gap, 0.75rem);
 }
 
 .result-equipment {
@@ -67,14 +67,14 @@ defineProps({
 .result-faults {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: var(--layout-quotation-tag-gap, 0.4rem);
 }
 
 .fault-tag {
   font-size: var(--cds-text-xs);
-  padding: 0.2rem 0.5rem;
+  padding: var(--layout-quotation-tag-pad-block, 0.2rem) var(--layout-quotation-tag-pad-inline, 0.5rem);
   background: var(--cds-surface-2);
-  border-radius: 0.35rem;
+  border-radius: var(--layout-quotation-chip-radius, 0.35rem);
   color: var(--cds-text-normal);
 }
 
@@ -82,7 +82,7 @@ defineProps({
   display: grid;
   gap: 0.3rem;
   border-top: 1px solid var(--cds-border-soft);
-  padding-top: 0.65rem;
+  padding-top: var(--layout-quotation-summary-divider-padding-top, 0.65rem);
 }
 
 .breakdown-row {
@@ -97,7 +97,7 @@ defineProps({
   justify-content: space-between;
   align-items: center;
   border-top: 2px solid var(--cds-primary);
-  padding-top: 0.65rem;
+  padding-top: var(--layout-quotation-summary-divider-padding-top, 0.65rem);
   font-size: var(--cds-text-base);
 }
 
