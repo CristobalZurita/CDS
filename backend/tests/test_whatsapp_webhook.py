@@ -125,6 +125,52 @@ def test_receive_text_message():
     assert res.json() == {"ok": True}
 
 
+def test_receive_text_message_triggers_autoreply(monkeypatch):
+    import app.routers.whatsapp_webhook as wh_mod
+
+    sent = {}
+
+    def fake_send_session_text(*, to_phone, message):
+        sent["to_phone"] = to_phone
+        sent["message"] = message
+        return True
+
+    monkeypatch.setattr(
+        wh_mod.WhatsAppService,
+        "send_session_text",
+        lambda self, to_phone, message: fake_send_session_text(to_phone=to_phone, message=message),
+    )
+
+    client = _make_client()
+    payload = {
+        "entry": [
+            {
+                "changes": [
+                    {
+                        "value": {
+                            "messages": [
+                                {
+                                    "id": "wamid.001",
+                                    "from": "56912345678",
+                                    "type": "text",
+                                    "text": {"body": "Hola, cuanto sale?"},
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+
+    res = client.post("/api/v1/webhooks/whatsapp", json=payload)
+
+    assert res.status_code == 200
+    assert res.json() == {"ok": True}
+    assert sent["to_phone"] == "56912345678"
+    assert "agendar revision" in sent["message"].lower()
+
+
 def test_receive_status_update():
     """Actualización de estado de mensaje → 200 {"ok": True}."""
     client = _make_client()

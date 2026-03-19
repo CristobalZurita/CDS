@@ -15,6 +15,8 @@ import logging
 from fastapi import APIRouter, Query, Request, Response
 
 from app.core.config import settings
+from app.services.whatsapp_bot_service import WhatsAppBotService
+from app.services.whatsapp_service import WhatsAppService
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +105,7 @@ def _handle_message(message: dict, value: dict) -> None:
             "WhatsApp inbound text | from=%s msg_id=%s body=%r",
             from_phone, msg_id, body_text,
         )
+        _handle_text_autoreply(from_phone=from_phone, body_text=body_text)
     elif msg_type in ("image", "audio", "video", "document", "sticker"):
         media_id = (message.get(msg_type) or {}).get("id", "")
         logger.info(
@@ -114,6 +117,23 @@ def _handle_message(message: dict, value: dict) -> None:
             "WhatsApp inbound %s | from=%s msg_id=%s",
             msg_type, from_phone, msg_id,
         )
+
+
+def _handle_text_autoreply(from_phone: str, body_text: str) -> None:
+    if not from_phone or not body_text.strip():
+        return
+
+    reply = WhatsAppBotService().build_reply(body_text)
+    if not reply.text:
+        return
+
+    sent = WhatsAppService().send_session_text(to_phone=from_phone, message=reply.text)
+    logger.info(
+        "WhatsApp auto-reply | to=%s intent=%s sent=%s",
+        from_phone,
+        reply.intent,
+        sent,
+    )
 
 
 def _handle_status(status: dict) -> None:

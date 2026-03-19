@@ -22,6 +22,12 @@ class WhatsAppService:
         self.enabled = bool(requests and self.token and self.phone_id)
 
     def send_text(self, to_phone: str, message: str) -> bool:
+        return self._send_text_or_template(to_phone=to_phone, message=message, force_text=False)
+
+    def send_session_text(self, to_phone: str, message: str) -> bool:
+        return self._send_text_or_template(to_phone=to_phone, message=message, force_text=True)
+
+    def _send_text_or_template(self, to_phone: str, message: str, force_text: bool) -> bool:
         if not self.token or not self.phone_id:
             logger.info("WhatsApp not configured. Skipping send.")
             return False
@@ -36,7 +42,7 @@ class WhatsAppService:
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json"
         }
-        if self.template_name:
+        if self.template_name and not force_text:
             payload = {
                 "messaging_product": "whatsapp",
                 "to": to_phone,

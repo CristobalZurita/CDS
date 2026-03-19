@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "business_name": "Cirujano de Sintetizadores",
+  "language": "es-CL",
+  "timezone": "America/Santiago",
+  "human_handoff_url": "https://wa.me/56982957538",
+  "scheduling_url": "https://wa.me/56982957538?text=Hola%2C%20quiero%20consultar%20sobre%20una%20reparacion",
+  "greeting_message": "Hola. Bienvenido/a al Cirujano de Sintetizadores. Soy el asistente de Cristobal. Puedo ayudarte con servicios, precios, agenda, horario y ubicacion.",
+  "fallback_message": "No tengo una respuesta exacta para eso. Pero Cristobal puede ayudarte directamente. WhatsApp: https://wa.me/56982957538 . Email: cirujanodesintetizadores@gmail.com .",
+  "outside_hours_message": "Recibimos tu mensaje. El horario de atencion es de 9:00 a 18:00 hrs. Si escribes fuera de ese horario, te responderemos apenas sea posible.",
+  "human_handoff_message": "Para esta consulta es mejor hablar directamente con Cristobal.",
+  "schedule_push_message": "Para avanzar, lo mejor es coordinar la revision por WhatsApp.",
+  "collect_fields": [
+    "marca",
+    "modelo",
+    "problema",
+    "fue_abierto_antes",
+    "enciende"
+  ],
+  "handoff_keywords": [
+    "humano",
+    "persona",
+    "contigo",
+    "urgente",
+    "reclamo",
+    "garantia",
+    "pago",
+    "factura",
+    "boleta",
+    "comprar",
+    "vender",
+    "cotizar",
+    "negociar",
+    "precio especial",
+    "presupuesto detallado",
+    "caso especial",
+    "caso complicado"
+  ],
+  "agenda_keywords": [
+    "agendar",
+    "agenda",
+    "reservar",
+    "hora",
+    "revision",
+    "cita",
+    "turno",
+    "llevar",
+    "dejar",
+    "como reservo"
+  ],
+  "disallowed_behaviors": [
+    "No inventar precios ni plazos exactos",
+    "No prometer urgencias como si fueran disponibilidad normal",
+    "No inventar compatibilidades ni repuestos",
+    "No responder como confirmada una evaluacion tecnica no realizada"
+  ]
+}
