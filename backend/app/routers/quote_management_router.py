@@ -26,17 +26,21 @@ from app.services.quote_management import (
     default_quote_valid_until,
     ensure_default_recipient,
     generate_quote_number,
+    get_quote_client,
     get_quote_or_404,
     mark_quote_as_sent,
     normalize_status,
     parse_iso_date,
     recalculate_quote_totals,
+    rebalance_quote_recipients,
     replace_quote_items,
     replace_quote_recipients,
     resolve_quote_client,
     send_quote_email_batch,
     serialize_quote,
+    serialize_quote_with_client,
     to_float,
+    update_quote_item_fields,
 )
 from app.services.whatsapp_service import WhatsAppService
 
@@ -236,8 +240,7 @@ async def get_quote(
     user: dict = Depends(require_quote_permission("read")),
 ):
     quote = get_quote_or_404(db, quote_id)
-    client = db.query(Client).filter(Client.id == quote.client_id).first()
-    return serialize_quote(quote, client)
+    return serialize_quote_with_client(db, quote)
 
 
 @router.put("/{quote_id}")
@@ -304,7 +307,7 @@ async def update_quote(
     if "recipients" in quote_data and isinstance(quote_data.get("recipients"), list):
         replace_quote_recipients(quote, quote_data.get("recipients"))
 
-    client = db.query(Client).filter(Client.id == quote.client_id).first()
+    client = get_quote_client(db, quote)
     ensure_default_recipient(quote, client)
 
     if not items_replaced:
@@ -339,7 +342,7 @@ async def update_quote(
     except Exception:
         pass
 
-    return serialize_quote(quote, client)
+    return serialize_quote_with_client(db, quote)
 
 
 @router.delete("/{quote_id}")
@@ -387,7 +390,7 @@ async def update_quote_status(
 
     db.commit()
     db.refresh(quote)
-    client = db.query(Client).filter(Client.id == quote.client_id).first()
+    client = get_quote_client(db, quote)
 
     try:
         user_id = int(user.get("user_id")) if user and user.get("user_id") else None
@@ -404,7 +407,7 @@ async def update_quote_status(
     except Exception:
         pass
 
-    return serialize_quote(quote, client)
+    return serialize_quote_with_client(db, quote)
 
 
 @router.post("/{quote_id}/send")
@@ -498,8 +501,7 @@ async def add_quote_item(
 
     db.commit()
     db.refresh(quote)
-    client = db.query(Client).filter(Client.id == quote.client_id).first()
-    return serialize_quote(quote, client)
+    return serialize_quote_with_client(db, quote)
 
 
 @router.put("/{quote_id}/items/{item_id}")
@@ -519,31 +521,11 @@ async def update_quote_item(
     if not item:
         raise HTTPException(status_code=404, detail="Quote item not found")
 
-    if "item_type" in payload:
-        item.item_type = str(payload.get("item_type") or item.item_type).strip().lower()
-    if "sku" in payload:
-        item.sku = payload.get("sku")
-    if "name" in payload:
-        item.name = str(payload.get("name") or item.name).strip()
-    if "description" in payload:
-        item.description = payload.get("description")
-    if "quantity" in payload:
-        item.quantity = to_float(payload.get("quantity"), item.quantity)
-    if "unit_price" in payload:
-        item.unit_price = to_float(payload.get("unit_price"), item.unit_price)
-    if "line_total" in payload:
-        item.line_total = to_float(payload.get("line_total"), item.line_total)
-    else:
-        item.recalculate_line_total()
-
-    if "sort_order" in payload:
-        item.sort_order = int(payload.get("sort_order") or item.sort_order)
-
+    update_quote_item_fields(item, payload)
     recalculate_quote_totals(quote)
     db.commit()
     db.refresh(quote)
-    client = db.query(Client).filter(Client.id == quote.client_id).first()
-    return serialize_quote(quote, client)
+    return serialize_quote_with_client(db, quote)
 
 
 @router.delete("/{quote_id}/items/{item_id}")
@@ -566,10 +548,8 @@ async def delete_quote_item(
     db.flush()
     recalculate_quote_totals(quote)
     db.commit()
-
-    client = db.query(Client).filter(Client.id == quote.client_id).first()
     db.refresh(quote)
-    return serialize_quote(quote, client)
+    return serialize_quote_with_client(db, quote)
 
 
 @router.post("/{quote_id}/recipients")
@@ -591,8 +571,7 @@ async def add_quote_recipient(
     quote.recipients.append(recipient)
     db.commit()
     db.refresh(quote)
-    client = db.query(Client).filter(Client.id == quote.client_id).first()
-    return serialize_quote(quote, client)
+    return serialize_quote_with_client(db, quote)
 
 
 @router.delete("/{quote_id}/recipients/{recipient_id}")
@@ -602,7 +581,7 @@ async def delete_quote_recipient(
     db: Session = Depends(get_db),
     user: dict = Depends(require_quote_permission("update")),
 ):
-    quote = _get_quote_or_404(db, quote_id)
+    quote = get_quote_or_404(db, quote_id)
     recipient = (
         db.query(QuoteRecipient)
         .filter(QuoteRecipient.id == recipient_id, QuoteRecipient.quote_id == quote.id)
@@ -613,18 +592,12 @@ async def delete_quote_recipient(
 
     db.delete(recipient)
     db.flush()
-    if not quote.recipients:
-        client = db.query(Client).filter(Client.id == quote.client_id).first()
-        ensure_default_recipient(quote, client)
-    else:
-        primary_exists = any(bool(r.is_primary) for r in quote.recipients)
-        if not primary_exists and quote.recipients:
-            quote.recipients[0].is_primary = True
+    client = get_quote_client(db, quote)
+    rebalance_quote_recipients(quote, client)
 
     db.commit()
     db.refresh(quote)
-    client = db.query(Client).filter(Client.id == quote.client_id).first()
-    return serialize_quote(quote, client)
+    return serialize_quote_with_client(db, quote)
 
 
 def build_router(*, deprecated: bool = False) -> APIRouter:

@@ -428,3 +428,46 @@ def serialize_quote(quote: Quote, client: Client | None) -> dict[str, Any]:
         "items": [_serialize_item(item) for item in (quote.items or [])],
         "recipients": [_serialize_recipient(recipient) for recipient in (quote.recipients or [])],
     }
+
+
+def get_quote_client(db: Session, quote: Quote) -> Client | None:
+    if not quote.client_id:
+        return None
+    return db.query(Client).filter(Client.id == quote.client_id).first()
+
+
+def serialize_quote_with_client(db: Session, quote: Quote) -> dict[str, Any]:
+    return serialize_quote(quote, get_quote_client(db, quote))
+
+
+def update_quote_item_fields(item: QuoteItem, payload: dict[str, Any]) -> None:
+    if "item_type" in payload:
+        item.item_type = str(payload.get("item_type") or item.item_type).strip().lower()
+    if "sku" in payload:
+        item.sku = payload.get("sku")
+    if "name" in payload:
+        item.name = str(payload.get("name") or item.name).strip()
+    if "description" in payload:
+        item.description = payload.get("description")
+    if "quantity" in payload:
+        item.quantity = to_float(payload.get("quantity"), item.quantity)
+    if "unit_price" in payload:
+        item.unit_price = to_float(payload.get("unit_price"), item.unit_price)
+    if "line_total" in payload:
+        item.line_total = to_float(payload.get("line_total"), item.line_total)
+    else:
+        item.recalculate_line_total()
+
+    if "sort_order" in payload:
+        item.sort_order = int(payload.get("sort_order") or item.sort_order)
+
+
+def rebalance_quote_recipients(quote: Quote, client: Client | None) -> None:
+    if not quote.recipients:
+        ensure_default_recipient(quote, client)
+        return
+
+    if any(bool(recipient.is_primary) for recipient in quote.recipients):
+        return
+
+    quote.recipients[0].is_primary = True
