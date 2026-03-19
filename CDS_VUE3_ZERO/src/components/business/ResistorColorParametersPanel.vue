@@ -21,59 +21,65 @@
 
     <div class="panel-body">
       <div class="form-grid">
-        <label class="form-field">
+        <div class="form-field">
           <span>1ra banda</span>
-          <select v-model="form.colors[0]">
-            <option v-for="color in digitColorOptions" :key="`d1-${color.value}`" :value="color.value">
-              {{ color.label }}
-            </option>
-          </select>
-        </label>
+          <ResistorColorSelect
+            :model-value="form.colors[0]"
+            :options="digitColorOptions"
+            :neutral="!fieldTouched[0]"
+            @update:modelValue="updateColor(0, $event)"
+          />
+        </div>
 
-        <label class="form-field">
+        <div class="form-field">
           <span>2da banda</span>
-          <select v-model="form.colors[1]">
-            <option v-for="color in digitColorOptions" :key="`d2-${color.value}`" :value="color.value">
-              {{ color.label }}
-            </option>
-          </select>
-        </label>
+          <ResistorColorSelect
+            :model-value="form.colors[1]"
+            :options="digitColorOptions"
+            :neutral="!fieldTouched[1]"
+            @update:modelValue="updateColor(1, $event)"
+          />
+        </div>
 
-        <label v-if="form.bands >= 5" class="form-field">
+        <div v-if="form.bands >= 5" class="form-field">
           <span>3ra banda</span>
-          <select v-model="form.colors[2]">
-            <option v-for="color in digitColorOptions" :key="`d3-${color.value}`" :value="color.value">
-              {{ color.label }}
-            </option>
-          </select>
-        </label>
+          <ResistorColorSelect
+            :model-value="form.colors[2]"
+            :options="digitColorOptions"
+            :neutral="!fieldTouched[2]"
+            @update:modelValue="updateColor(2, $event)"
+          />
+        </div>
 
-        <label class="form-field">
+        <div class="form-field">
           <span>Multiplicador</span>
-          <select v-model="form.colors[multiplierIndex]">
-            <option v-for="color in multiplierColorOptions" :key="`m-${color.value}`" :value="color.value">
-              {{ color.label }}
-            </option>
-          </select>
-        </label>
+          <ResistorColorSelect
+            :model-value="form.colors[multiplierIndex]"
+            :options="multiplierColorOptions"
+            :neutral="!fieldTouched[multiplierIndex]"
+            @update:modelValue="updateColor(multiplierIndex, $event)"
+          />
+        </div>
 
-        <label class="form-field">
+        <div class="form-field">
           <span>Tolerancia</span>
-          <select v-model="form.colors[toleranceIndex]">
-            <option v-for="color in toleranceColorOptions" :key="`t-${color.value}`" :value="color.value">
-              {{ color.label }}
-            </option>
-          </select>
-        </label>
+          <ResistorColorSelect
+            :model-value="form.colors[toleranceIndex]"
+            :options="toleranceColorOptions"
+            :neutral="!fieldTouched[toleranceIndex]"
+            @update:modelValue="updateColor(toleranceIndex, $event)"
+          />
+        </div>
 
-        <label v-if="form.bands === 6" class="form-field">
+        <div v-if="form.bands === 6" class="form-field">
           <span>Tempco</span>
-          <select v-model="form.colors[tempcoIndex]">
-            <option v-for="color in tempcoColorOptions" :key="`tc-${color.value}`" :value="color.value">
-              {{ color.label }}
-            </option>
-          </select>
-        </label>
+          <ResistorColorSelect
+            :model-value="form.colors[tempcoIndex]"
+            :options="tempcoColorOptions"
+            :neutral="!fieldTouched[tempcoIndex]"
+            @update:modelValue="updateColor(tempcoIndex, $event)"
+          />
+        </div>
       </div>
 
       <div class="form-actions">
@@ -87,7 +93,10 @@
 </template>
 
 <script setup>
-defineProps({
+import { reactive, watch } from 'vue'
+import ResistorColorSelect from '@/components/business/ResistorColorSelect.vue'
+
+const props = defineProps({
   digitColorOptions: { type: Array, required: true },
   form: { type: Object, required: true },
   multiplierColorOptions: { type: Array, required: true },
@@ -99,6 +108,17 @@ defineProps({
 })
 
 defineEmits(['apply-bands', 'reset-bands'])
+
+const fieldTouched = reactive([false, false, false, false, false, false])
+
+watch(() => props.form.bands, () => {
+  fieldTouched.fill(false)
+})
+
+function updateColor(index, value) {
+  props.form.colors[index] = value
+  fieldTouched[index] = true
+}
 </script>
 
 <style scoped src="../../pages/calculators/commonCalculatorPage.css"></style>

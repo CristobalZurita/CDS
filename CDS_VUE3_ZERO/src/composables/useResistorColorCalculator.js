@@ -63,19 +63,51 @@ const colorLabels = {
   silver: 'Plata'
 }
 
+const colorPalette = {
+  black: { swatch: '#111111', textColor: '#ffffff', borderColor: '#111111' },
+  brown: { swatch: '#6f4a2a', textColor: '#ffffff', borderColor: '#6f4a2a' },
+  red: { swatch: '#d83a22', textColor: '#ffffff', borderColor: '#d83a22' },
+  orange: { swatch: '#df7a43', textColor: '#ffffff', borderColor: '#df7a43' },
+  yellow: { swatch: '#efd35a', textColor: '#2d2414', borderColor: '#d1b53d' },
+  green: { swatch: '#4a8b58', textColor: '#ffffff', borderColor: '#4a8b58' },
+  blue: { swatch: '#2f63a7', textColor: '#ffffff', borderColor: '#2f63a7' },
+  violet: { swatch: '#6e67ca', textColor: '#ffffff', borderColor: '#6e67ca' },
+  gray: { swatch: '#8b8b8b', textColor: '#ffffff', borderColor: '#8b8b8b' },
+  white: { swatch: '#ffffff', textColor: '#202020', borderColor: '#b8b8b8' },
+  gold: { swatch: '#cfab46', textColor: '#20180b', borderColor: '#b7922e' },
+  silver: { swatch: '#c5ccd7', textColor: '#1e293b', borderColor: '#9aa5b1' }
+}
+
 const digitColorKeys = ['black', 'brown', 'red', 'orange', 'yellow', 'green', 'blue', 'violet', 'gray', 'white']
 const multiplierColorKeys = ['silver', 'gold', ...digitColorKeys]
 const toleranceColorKeys = ['brown', 'red', 'green', 'blue', 'violet', 'gray', 'gold', 'silver']
 const tempcoColorKeys = ['brown', 'red', 'orange', 'yellow', 'blue', 'violet']
 
-function createOption(value) {
-  return { value, label: colorLabels[value] || value }
+function formatMultiplierBadge(value) {
+  if (value === 0.01) return 'x0.01'
+  if (value === 0.1) return 'x0.1'
+  if (value >= 1000000000) return `x${value / 1000000000}G`
+  if (value >= 1000000) return `x${value / 1000000}M`
+  if (value >= 1000) return `x${value / 1000}k`
+  return `x${value}`
 }
 
-export const digitColorOptions = digitColorKeys.map(createOption)
-export const multiplierColorOptions = multiplierColorKeys.map(createOption)
-export const toleranceColorOptions = toleranceColorKeys.map(createOption)
-export const tempcoColorOptions = tempcoColorKeys.map(createOption)
+function createOption(value, badgeResolver = null) {
+  const palette = colorPalette[value] || {}
+  return {
+    value,
+    label: colorLabels[value] || value,
+    badge: badgeResolver ? badgeResolver(value) : '',
+    swatch: palette.swatch,
+    textColor: palette.textColor,
+    borderColor: palette.borderColor
+  }
+}
+
+export const digitColorOptions = digitColorKeys.map((value) => createOption(value, (color) => String(digitMap[color] ?? '')))
+export const multiplierColorOptions = multiplierColorKeys.map((value) => createOption(value, (color) => formatMultiplierBadge(multiplierMap[color] ?? 1)))
+export const toleranceColorOptions = toleranceColorKeys.map((value) => createOption(value, (color) => `±${toleranceMap[color] ?? 5}%`))
+export const tempcoColorOptions = tempcoColorKeys.map((value) => createOption(value, (color) => `${tempcoMap[color] ?? '—'} ppm`))
 
 function formatResistance(valueOhm) {
   if (!Number.isFinite(valueOhm)) return '—'
@@ -124,6 +156,51 @@ export function useResistorColorCalculator() {
 
   const previewBands = computed(() => form.colors.slice(0, form.bands))
 
+  const bandSummaries = computed(() => {
+    const summaries = []
+    const digitLabels = digitsCount.value === 2
+      ? ['1ra cifra', '2da cifra']
+      : ['1ra cifra', '2da cifra', '3ra cifra']
+
+    for (let index = 0; index < digitsCount.value; index += 1) {
+      const color = form.colors[index]
+      summaries.push({
+        roleLabel: digitLabels[index],
+        valueText: String(digitMap[color] ?? '—'),
+        color,
+        ...(colorPalette[color] || {})
+      })
+    }
+
+    const multiplierColor = form.colors[multiplierIndex.value]
+    summaries.push({
+      roleLabel: 'Multiplicador',
+      valueText: formatMultiplierBadge(multiplierMap[multiplierColor] ?? 1),
+      color: multiplierColor,
+      ...(colorPalette[multiplierColor] || {})
+    })
+
+    const toleranceColor = form.colors[toleranceIndex.value]
+    summaries.push({
+      roleLabel: 'Tolerancia',
+      valueText: `±${toleranceMap[toleranceColor] ?? 5}%`,
+      color: toleranceColor,
+      ...(colorPalette[toleranceColor] || {})
+    })
+
+    if (form.bands === 6) {
+      const tempcoColor = form.colors[tempcoIndex.value]
+      summaries.push({
+        roleLabel: 'Tempco',
+        valueText: `${tempcoMap[tempcoColor] ?? '—'} ppm`,
+        color: tempcoColor,
+        ...(colorPalette[tempcoColor] || {})
+      })
+    }
+
+    return summaries
+  })
+
   function setBands(nextBands) {
     form.bands = nextBands
   }
@@ -154,6 +231,7 @@ export function useResistorColorCalculator() {
     toleranceIndex,
     tempcoIndex,
     previewBands,
+    bandSummaries,
     result,
     applyBands,
     bandClass,

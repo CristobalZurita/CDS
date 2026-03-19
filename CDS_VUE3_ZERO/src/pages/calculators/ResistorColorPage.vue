@@ -18,6 +18,7 @@
 
     <ResistorColorResultPanel
       :band-class="bandClass"
+      :band-summaries="bandSummaries"
       :preview-bands="previewBands"
       :result="result"
     />
@@ -36,7 +37,7 @@ import {
   useResistorColorCalculator,
 } from '@/composables/useResistorColorCalculator'
 
-const { applyBands, bandClass, form, multiplierIndex, previewBands, resetBands, result, tempcoIndex, toleranceIndex } = useResistorColorCalculator()
+const { applyBands, bandClass, bandSummaries, form, multiplierIndex, previewBands, resetBands, result, tempcoIndex, toleranceIndex } = useResistorColorCalculator()
 </script>
 
 <style scoped src="./commonCalculatorPage.css"></style>

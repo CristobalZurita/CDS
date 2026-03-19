@@ -1,40 +1,68 @@
 .resistor-visual {
   display: flex;
   justify-content: center;
-  padding: var(--cds-resistor-visual-pad-top, 0.2rem) 0 var(--cds-resistor-visual-pad-bottom, 0.5rem);
+  padding: 0.45rem 0 0.2rem;
 }
 
-.resistor-body {
-  width: min(100%, var(--cds-resistor-body-max-width, 380px));
-  min-height: var(--cds-resistor-body-min-height, 64px);
-  border-radius: var(--cds-radius-pill);
-  background: linear-gradient(135deg, #f1d9a8, #e8c98d);
-  border: 1px solid var(--cds-border-strong);
+.resistor-illustration {
+  width: min(100%, 26rem);
+  height: auto;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 8px 16px rgba(62, 60, 56, 0.12));
+}
+
+.resistor-illustration__lead {
+  stroke: url(#resistorLeadGradient);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.resistor-illustration__body {
+  fill: url(#resistorBodyGradient);
+  stroke: rgba(95, 71, 39, 0.72);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+
+.resistor-illustration__shine {
+  fill: rgba(255, 255, 255, 0.32);
+}
+
+.resistor-illustration__shadow {
+  fill: rgba(145, 105, 42, 0.18);
+}
+
+.resistor-illustration__cap-line {
+  stroke: rgba(101, 76, 40, 0.62);
+  stroke-width: 2;
+}
+
+.band-summary-grid {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: var(--cds-resistor-body-band-width, 18px);
-  justify-content: center;
-  align-items: stretch;
-  gap: var(--cds-resistor-body-band-gap, 10px);
-  padding: 0 var(--cds-resistor-body-pad-inline, 1.2rem);
+  gap: 0.55rem;
+  grid-template-columns: repeat(auto-fit, minmax(5.2rem, 1fr));
+  margin-bottom: 0.35rem;
 }
 
-.band {
-  border-radius: 4px;
-  margin: 8px 0;
-  border: 1px solid var(--cds-border-strong);
+.band-summary-item {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  text-align: center;
 }
 
-.band-black { background: #1f1f1f; }
-.band-brown { background: #6f4a2a; }
-.band-red { background: #b8392c; }
-.band-orange { background: #d88321; }
-.band-yellow { background: #e4bf31; }
-.band-green { background: #3f7d4c; }
-.band-blue { background: #2d5fb0; }
-.band-violet { background: #6e4ca3; }
-.band-gray { background: #9e9e9e; }
-.band-white { background: #f2f2f2; }
-.band-gold { background: #d2ae3d; }
-.band-silver { background: #c4c4c4; }
-.band-default { background: #8c8c8c; }
+.band-summary-chip {
+  min-width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.45rem;
+  font-size: var(--cds-text-sm);
+  font-weight: var(--cds-font-bold);
+  box-sizing: border-box;
+}
+
+.band-summary-label {
+  font-size: var(--cds-text-xs);
+  color: var(--cds-text-muted);
+}
