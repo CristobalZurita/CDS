@@ -10,6 +10,14 @@ export function createEmptyQuotesMetrics() {
   return { pending: 0, sent: 0, approved: 0, denied: 0, canceled: 0, expired_open: 0, expiring_3d: 0, open_total: 0 }
 }
 
+export function buildQuotesBoardState(normalized) {
+  return {
+    board: normalized?.board || createEmptyQuotesBoard(),
+    counts: normalized?.counts || createEmptyQuotesCounts(),
+    metrics: normalized?.metrics || createEmptyQuotesMetrics()
+  }
+}
+
 export function setQuoteBusyState(busyIds, quoteId, value) {
   const id = Number(quoteId)
   const next = new Set(busyIds)
@@ -45,6 +53,24 @@ export function filterQuotesBySearch(items, searchQuery) {
 
     return text.includes(query)
   })
+}
+
+export function getQuotesColumnItems(board, columnKey, searchQuery) {
+  return filterQuotesBySearch(board?.[columnKey] || [], searchQuery)
+}
+
+export function resolveQuoteRepairCreationGuard(quote) {
+  if (!quote?.id || !quote?.client_id) {
+    return {
+      isValid: false,
+      error: 'No se pudo crear OT: faltan datos de cliente o cotizacion.'
+    }
+  }
+
+  return {
+    isValid: true,
+    error: ''
+  }
 }
 
 export function updateQuoteDraftField(draft, payload) {

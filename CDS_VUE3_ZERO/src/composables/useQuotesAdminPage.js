@@ -2,11 +2,13 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { extractErrorMessage } from '@/services/api'
 import {
+  buildQuotesBoardState,
   createEmptyQuotesBoard,
   createEmptyQuotesCounts,
   createEmptyQuotesMetrics,
-  filterQuotesBySearch,
+  getQuotesColumnItems,
   isQuoteBusy,
+  resolveQuoteRepairCreationGuard,
   setQuoteBusyState,
   updateQuoteDraftField
 } from '@/composables/quotesAdminState'
@@ -50,9 +52,7 @@ export function useQuotesAdminPage() {
   })
 
   function resetBoard() {
-    board.value = createEmptyQuotesBoard()
-    counts.value = createEmptyQuotesCounts()
-    metrics.value = createEmptyQuotesMetrics()
+    applyBoardState(null)
   }
 
   function resetCreateForm() {
@@ -81,7 +81,7 @@ export function useQuotesAdminPage() {
   }
 
   function getColumnItems(columnKey) {
-    return filterQuotesBySearch(board.value[columnKey] || [], searchQuery.value)
+    return getQuotesColumnItems(board.value, columnKey, searchQuery.value)
   }
 
   function getColumnCount(columnKey) {
@@ -89,9 +89,10 @@ export function useQuotesAdminPage() {
   }
 
   function applyBoardState(normalized) {
-    board.value = normalized?.board || createEmptyQuotesBoard()
-    counts.value = normalized?.counts || createEmptyQuotesCounts()
-    metrics.value = normalized?.metrics || createEmptyQuotesMetrics()
+    const nextState = buildQuotesBoardState(normalized)
+    board.value = nextState.board
+    counts.value = nextState.counts
+    metrics.value = nextState.metrics
   }
 
   async function runBusyQuoteTask(quoteId, task, { reload = true, onSuccess = null } = {}) {
@@ -167,8 +168,9 @@ export function useQuotesAdminPage() {
   }
 
   async function createRepairFromQuote(quote) {
-    if (!quote?.id || !quote?.client_id) {
-      error.value = 'No se pudo crear OT: faltan datos de cliente o cotizacion.'
+    const repairCreationGuard = resolveQuoteRepairCreationGuard(quote)
+    if (!repairCreationGuard.isValid) {
+      error.value = repairCreationGuard.error
       return
     }
 
