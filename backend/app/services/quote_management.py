@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.models.client import Client
 from app.models.quote import Quote, QuoteItem, QuoteRecipient, QuoteStatus
+from app.services.email_service import EmailService, build_email_html
 
 _PART_ITEM_TYPES = {"part", "repuesto", "material", "component"}
 _LABOR_ITEM_TYPES = {"labor", "service", "mano_obra", "diagnostic"}
@@ -285,6 +286,95 @@ def build_quote_board_response(
             + status_counts[QuoteStatus.SENT],
         },
         "board": board,
+    }
+
+
+def collect_quote_recipient_emails(quote: Quote) -> list[str]:
+    recipient_emails: list[str] = []
+    for recipient in quote.recipients:
+        email = str(recipient.email or "").strip().lower()
+        if email and email not in recipient_emails:
+            recipient_emails.append(email)
+    return recipient_emails
+
+
+def build_quote_delivery_content(
+    quote: Quote,
+    client: Client | None,
+    custom_message: str = "",
+) -> dict[str, str]:
+    subject = f"Cotización {quote.quote_number} - Cirujano de Sintetizadores"
+    item_rows = "".join(
+        f"<tr><td>{item.name}</td><td>{item.quantity}</td><td>${item.unit_price:,.0f}</td><td>${item.line_total:,.0f}</td></tr>"
+        for item in (quote.items or [])
+    )
+    if not item_rows:
+        item_rows = "<tr><td colspan='4'>Sin ítems detallados</td></tr>"
+
+    html_content = build_email_html(
+        f"""
+        <h2>Cotización {quote.quote_number}</h2>
+        <p><strong>Cliente:</strong> {client.name if client else 'SIN_DATO'}</p>
+        <p><strong>Problema reportado:</strong> {quote.problem_description}</p>
+        <p><strong>Diagnóstico:</strong> {quote.diagnosis or 'SIN_DATO'}</p>
+        <p><strong>Total estimado:</strong> ${quote.estimated_total or 0:,.0f} CLP</p>
+        <p><strong>Válida hasta:</strong> {quote.valid_until.isoformat() if quote.valid_until else 'SIN_DATO'}</p>
+        {f"<p>{custom_message}</p>" if custom_message else ""}
+        <table class="email-table">
+            <thead>
+                <tr><th>Ítem</th><th>Cantidad</th><th>Unitario</th><th>Total</th></tr>
+            </thead>
+            <tbody>{item_rows}</tbody>
+        </table>
+        """,
+    )
+
+    return {
+        "subject": subject,
+        "html_content": html_content,
+    }
+
+
+def send_quote_email_batch(
+    email_service: EmailService,
+    recipient_emails: list[str],
+    subject: str,
+    html_content: str,
+) -> tuple[list[str], list[str]]:
+    sent_to: list[str] = []
+    failed_to: list[str] = []
+
+    for email in recipient_emails:
+        ok = email_service.send_email(
+            to_email=email,
+            subject=subject,
+            html_content=html_content,
+        )
+        if ok:
+            sent_to.append(email)
+        else:
+            failed_to.append(email)
+
+    return sent_to, failed_to
+
+
+def mark_quote_as_sent(quote: Quote) -> None:
+    if quote.status == QuoteStatus.PENDING:
+        quote.status = QuoteStatus.SENT
+
+
+def build_quote_saved_event_payload(
+    quote: Quote,
+    client: Client | None,
+    sent_to: list[str],
+) -> dict[str, Any]:
+    return {
+        "customer_email": sent_to[0] if sent_to else (client.email if client else None),
+        "customer_name": client.name if client else "Cliente",
+        "quotation_id": quote.quote_number,
+        "instrument": "Servicio técnico",
+        "min_price": quote.estimated_total or 0,
+        "max_price": quote.estimated_total or 0,
     }
 
 

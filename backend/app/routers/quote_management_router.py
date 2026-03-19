@@ -12,24 +12,29 @@ from app.core.dependencies import get_current_user
 from app.models.client import Client
 from app.models.quote import Quote, QuoteItem, QuoteRecipient, QuoteStatus
 from app.models.repair import Repair
-from app.services.email_service import EmailService, build_email_html
+from app.services.email_service import EmailService
 from app.services.event_system import Events, event_bus
 from app.services.logging_service import create_audit
 from app.services.quote_management import (
     build_quote_board_response,
+    build_quote_delivery_content,
     build_quote_item,
+    build_quote_saved_event_payload,
     build_quote_recipient,
     can_transition_status,
+    collect_quote_recipient_emails,
     default_quote_valid_until,
     ensure_default_recipient,
     generate_quote_number,
     get_quote_or_404,
+    mark_quote_as_sent,
     normalize_status,
     parse_iso_date,
     recalculate_quote_totals,
     replace_quote_items,
     replace_quote_recipients,
     resolve_quote_client,
+    send_quote_email_batch,
     serialize_quote,
     to_float,
 )
@@ -414,55 +419,20 @@ async def send_quote(
     client = db.query(Client).filter(Client.id == quote.client_id).first()
     ensure_default_recipient(quote, client)
 
-    recipient_emails = []
-    for recipient in quote.recipients:
-        email = str(recipient.email or "").strip().lower()
-        if email and email not in recipient_emails:
-            recipient_emails.append(email)
-
+    recipient_emails = collect_quote_recipient_emails(quote)
     if not recipient_emails:
         raise HTTPException(status_code=400, detail="Quote has no recipients")
 
     custom_message = str(payload.get("message") or "").strip()
-    subject = f"Cotización {quote.quote_number} - Cirujano de Sintetizadores"
-    item_rows = "".join(
-        f"<tr><td>{item.name}</td><td>{item.quantity}</td><td>${item.unit_price:,.0f}</td><td>${item.line_total:,.0f}</td></tr>"
-        for item in (quote.items or [])
-    )
-    if not item_rows:
-        item_rows = "<tr><td colspan='4'>Sin ítems detallados</td></tr>"
-
-    html_content = build_email_html(
-        f"""
-        <h2>Cotización {quote.quote_number}</h2>
-        <p><strong>Cliente:</strong> {client.name if client else 'SIN_DATO'}</p>
-        <p><strong>Problema reportado:</strong> {quote.problem_description}</p>
-        <p><strong>Diagnóstico:</strong> {quote.diagnosis or 'SIN_DATO'}</p>
-        <p><strong>Total estimado:</strong> ${quote.estimated_total or 0:,.0f} CLP</p>
-        <p><strong>Válida hasta:</strong> {quote.valid_until.isoformat() if quote.valid_until else 'SIN_DATO'}</p>
-        {f"<p>{custom_message}</p>" if custom_message else ""}
-        <table class="email-table">
-            <thead>
-                <tr><th>Ítem</th><th>Cantidad</th><th>Unitario</th><th>Total</th></tr>
-            </thead>
-            <tbody>{item_rows}</tbody>
-        </table>
-        """,
-    )
+    delivery_content = build_quote_delivery_content(quote, client, custom_message)
 
     email_service = EmailService()
-    sent_to = []
-    failed_to = []
-    for email in recipient_emails:
-        ok = email_service.send_email(
-            to_email=email,
-            subject=subject,
-            html_content=html_content,
-        )
-        if ok:
-            sent_to.append(email)
-        else:
-            failed_to.append(email)
+    sent_to, failed_to = send_quote_email_batch(
+        email_service,
+        recipient_emails,
+        delivery_content["subject"],
+        delivery_content["html_content"],
+    )
 
     whatsapp_queued = False
     if payload.get("send_whatsapp", False) and client and client.phone:
@@ -476,8 +446,7 @@ async def send_quote(
         )
         whatsapp_queued = True
 
-    if quote.status == QuoteStatus.PENDING:
-        quote.status = QuoteStatus.SENT
+    mark_quote_as_sent(quote)
 
     db.commit()
     db.refresh(quote)
@@ -502,16 +471,7 @@ async def send_quote(
     try:
         event_bus.emit(
             Events.QUOTATION_SAVED,
-            {
-                "customer_email": (
-                    sent_to[0] if sent_to else (client.email if client else None)
-                ),
-                "customer_name": client.name if client else "Cliente",
-                "quotation_id": quote.quote_number,
-                "instrument": "Servicio técnico",
-                "min_price": quote.estimated_total or 0,
-                "max_price": quote.estimated_total or 0,
-            },
+            build_quote_saved_event_payload(quote, client, sent_to),
         )
     except Exception:
         pass
