@@ -10,6 +10,9 @@ import {
   resolveRepairPriorityLabel,
   resolveRepairStatusClass,
   resolveRepairStatusLabel,
+  runRepairDetailReloadTask,
+  runRepairDetailSuccessTask,
+  runRepairDetailTask,
   setRepairPhotoDraftFile,
   toggleRepairNoteDraft,
   toggleRepairPhotoDraft,
@@ -116,34 +119,6 @@ export function useRepairDetailAdminPage() {
     noteDraft.value = updateRepairNoteDraft(noteDraft.value, payload)
   }
 
-  async function runFlaggedTask(flagRef, task, { resolveError = extractErrorMessage } = {}) {
-    flagRef.value = true
-    error.value = ''
-
-    try {
-      return await task()
-    } catch (requestError) {
-      error.value = resolveError(requestError)
-      return null
-    } finally {
-      flagRef.value = false
-    }
-  }
-
-  async function runReloadingTask(flagRef, task, options) {
-    const result = await runFlaggedTask(flagRef, task, options)
-    if (error.value) return result
-    await loadRepair()
-    return result
-  }
-
-  async function runSuccessfulTask(flagRef, task, { onSuccess, ...options } = {}) {
-    const result = await runFlaggedTask(flagRef, task, options)
-    if (error.value) return result
-    onSuccess?.(result)
-    return result
-  }
-
   async function loadRepair() {
     const id = repairId.value
     if (!id) {
@@ -151,7 +126,7 @@ export function useRepairDetailAdminPage() {
       return
     }
 
-    const payload = await runFlaggedTask(loading, () => fetchRepairDetailBundle(id))
+    const payload = await runRepairDetailTask(loading, error, () => fetchRepairDetailBundle(id))
     if (error.value) {
       resetRepairData()
       return
@@ -163,39 +138,60 @@ export function useRepairDetailAdminPage() {
   async function updateStatus() {
     if (!repair.value) return
 
-    await runReloadingTask(updatingStatus, () => updateRepairStatus(repairId.value, statusDraft.value))
+    await runRepairDetailReloadTask(
+      updatingStatus,
+      error,
+      () => updateRepairStatus(repairId.value, statusDraft.value),
+      loadRepair
+    )
   }
 
   async function saveRepairFields() {
     if (!repair.value) return
 
-    await runReloadingTask(savingRepair, () => saveRepairDetailFields(repairId.value, editForm.value))
+    await runRepairDetailReloadTask(
+      savingRepair,
+      error,
+      () => saveRepairDetailFields(repairId.value, editForm.value),
+      loadRepair
+    )
   }
 
   async function archiveRepair() {
     if (!repair.value || isArchived.value) return
 
-    await runReloadingTask(performingAction, () => archiveRepairById(repairId.value))
+    await runRepairDetailReloadTask(
+      performingAction,
+      error,
+      () => archiveRepairById(repairId.value),
+      loadRepair
+    )
   }
 
   async function reactivateRepair() {
     if (!repair.value || !isArchived.value) return
 
-    await runReloadingTask(performingAction, () => reactivateRepairById(repairId.value))
+    await runRepairDetailReloadTask(
+      performingAction,
+      error,
+      () => reactivateRepairById(repairId.value),
+      loadRepair
+    )
   }
 
   async function notifyClient() {
     if (!repair.value) return
 
-    await runFlaggedTask(performingAction, () => notifyRepairClient(repairId.value))
+    await runRepairDetailTask(performingAction, error, () => notifyRepairClient(repairId.value))
   }
 
   async function requestSignature(type) {
     if (!repair.value) return
 
     signatureLink.value = ''
-    await runSuccessfulTask(
+    await runRepairDetailSuccessTask(
       performingAction,
+      error,
       () => requestRepairSignatureLink(repairId.value, type),
       { onSuccess: (nextLink) => { signatureLink.value = nextLink || '' } }
     )
@@ -205,8 +201,9 @@ export function useRepairDetailAdminPage() {
     if (!repair.value) return
 
     photoUploadLink.value = ''
-    await runSuccessfulTask(
+    await runRepairDetailSuccessTask(
       performingAction,
+      error,
       () => requestRepairPhotoUploadLink(repairId.value),
       { onSuccess: (nextLink) => { photoUploadLink.value = nextLink || '' } }
     )
@@ -219,8 +216,9 @@ export function useRepairDetailAdminPage() {
   async function uploadPhoto() {
     if (!photoDraft.value.file || !repair.value) return
 
-    await runSuccessfulTask(
+    await runRepairDetailSuccessTask(
       uploadingPhoto,
+      error,
       () => uploadRepairPhoto(repairId.value, photoDraft.value.file, {
         photoType: photoDraft.value.type,
         caption: photoDraft.value.caption
@@ -244,8 +242,9 @@ export function useRepairDetailAdminPage() {
       return
     }
 
-    await runSuccessfulTask(
+    await runRepairDetailSuccessTask(
       savingNote,
+      error,
       () => addRepairNote(repairId.value, noteSubmission),
       {
         onSuccess: (nextNotes) => {
@@ -259,7 +258,11 @@ export function useRepairDetailAdminPage() {
   async function downloadClosurePdf() {
     if (!repair.value) return
 
-    await runFlaggedTask(downloadingClosurePdf, () => downloadRepairClosurePdf(repairId.value, repair.value))
+    await runRepairDetailTask(
+      downloadingClosurePdf,
+      error,
+      () => downloadRepairClosurePdf(repairId.value, repair.value)
+    )
   }
 
   function goToPurchaseRequests() {

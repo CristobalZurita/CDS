@@ -15,6 +15,8 @@ import {
   createIntakeWizardFormState,
   createIntakeWizardMaterial,
   INTAKE_WIZARD_VALIDATION_CONFIG,
+  resolveIntakeWizardCanSubmit,
+  resolveIntakeWizardProgress,
   resetIntakeWizardFormState
 } from './intakeWizardFormState'
 import {
@@ -48,28 +50,14 @@ export function useIntakeWizard() {
   const isValid = computed(() => validation.isValid.value)
   const errors = computed(() => validation.errors.value)
   
-  const canSubmit = computed(() => {
-    return !isSubmitting.value && 
-           !isLoading.value && 
-           validation.isValid.value &&
-           form.client.name &&
-           form.device.model &&
-           form.repair.problem_reported
-  })
+  const canSubmit = computed(() => resolveIntakeWizardCanSubmit({
+    isSubmitting: isSubmitting.value,
+    isLoading: isLoading.value,
+    isValid: validation.isValid.value,
+    form
+  }))
   
-  const progress = computed(() => {
-    const sections = ['client', 'device', 'repair', 'intake']
-    const completed = sections.filter(section => {
-      switch(section) {
-        case 'client': return !!form.client.name && !!form.client.email
-        case 'device': return !!form.device.brand_other && !!form.device.model
-        case 'repair': return !!form.repair.problem_reported
-        case 'intake': return !!form.intake.equipment_name
-        default: return false
-      }
-    }).length
-    return Math.round((completed / sections.length) * 100)
-  })
+  const progress = computed(() => resolveIntakeWizardProgress(form))
   
   // ==================== API CALLS ====================
   

@@ -1,17 +1,16 @@
 import { computed, ref } from 'vue'
-
-function createLeadForm() {
-  return { nombre: '', email: '', telefono: '' }
-}
-
-function formatQuotationCost(value) {
-  return new Intl.NumberFormat('es-CL', {
-    style: 'currency',
-    currency: 'CLP',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(Number(value || 0))
-}
+import {
+  activateCotizadorNotFoundMode,
+  createCotizadorLeadForm,
+  deactivateCotizadorNotFoundMode,
+  formatCotizadorCost,
+  resetCotizadorFlowState,
+  resetCotizadorLeadTurnstile,
+  resetCotizadorQuoteTurnstile,
+  setCotizadorBrandSelection,
+  setCotizadorModelSelection,
+  toggleCotizadorFaultSelection
+} from './cotizadorFlowStateSupport'
 
 export function useCotizadorFlowState() {
   const step = ref(1)
@@ -22,7 +21,7 @@ export function useCotizadorFlowState() {
   const faults = ref([])
   const selectedFaultIds = ref([])
   const quoteResult = ref(null)
-  const leadForm = ref(createLeadForm())
+  const leadForm = ref(createCotizadorLeadForm())
   const acceptedDisclaimer = ref(false)
   const quoteTurnstileToken = ref('')
   const quoteTurnstileRenderKey = ref(0)
@@ -53,7 +52,7 @@ export function useCotizadorFlowState() {
 
   const formattedFinalCost = computed(() => {
     if (!quoteResult.value) return '—'
-    return formatQuotationCost(quoteResult.value.final_cost)
+    return formatCotizadorCost(quoteResult.value.final_cost)
   })
 
   const selectedBrandName = computed(() => {
@@ -75,13 +74,17 @@ export function useCotizadorFlowState() {
   )
 
   function resetQuoteTurnstile() {
-    quoteTurnstileToken.value = ''
-    quoteTurnstileRenderKey.value += 1
+    resetCotizadorQuoteTurnstile({
+      quoteTurnstileToken,
+      quoteTurnstileRenderKey
+    })
   }
 
   function resetLeadTurnstile() {
-    leadTurnstileToken.value = ''
-    leadTurnstileRenderKey.value += 1
+    resetCotizadorLeadTurnstile({
+      leadTurnstileToken,
+      leadTurnstileRenderKey
+    })
   }
 
   function onQuoteVerify(token) {
@@ -93,51 +96,66 @@ export function useCotizadorFlowState() {
   }
 
   function setBrandSelection(brandId) {
-    selectedBrand.value = brandId
-    selectedModel.value = ''
-    models.value = []
-    faults.value = []
-    selectedFaultIds.value = []
-    if (!brandId) return
-    resetQuoteTurnstile()
-    resetLeadTurnstile()
+    setCotizadorBrandSelection({
+      selectedBrand,
+      selectedModel,
+      models,
+      faults,
+      selectedFaultIds,
+      quoteTurnstileToken,
+      quoteTurnstileRenderKey,
+      leadTurnstileToken,
+      leadTurnstileRenderKey
+    }, brandId)
   }
 
   function setModelSelection(instrumentId) {
-    selectedModel.value = instrumentId
-    faults.value = []
-    selectedFaultIds.value = []
-    if (!instrumentId) return
-    resetQuoteTurnstile()
-    resetLeadTurnstile()
+    setCotizadorModelSelection({
+      selectedModel,
+      faults,
+      selectedFaultIds,
+      quoteTurnstileToken,
+      quoteTurnstileRenderKey,
+      leadTurnstileToken,
+      leadTurnstileRenderKey
+    }, instrumentId)
   }
 
   function toggleFaultSelection(faultId) {
-    const idx = selectedFaultIds.value.indexOf(faultId)
-    selectedFaultIds.value = idx === -1
-      ? [...selectedFaultIds.value, faultId]
-      : selectedFaultIds.value.filter((id) => id !== faultId)
-    resetQuoteTurnstile()
-    resetLeadTurnstile()
+    toggleCotizadorFaultSelection({
+      selectedFaultIds,
+      quoteTurnstileToken,
+      quoteTurnstileRenderKey,
+      leadTurnstileToken,
+      leadTurnstileRenderKey
+    }, faultId)
   }
 
   function activateNotFoundMode() {
-    notFoundMode.value = true
-    selectedBrand.value = ''
-    selectedModel.value = ''
-    models.value = []
-    faults.value = []
-    selectedFaultIds.value = []
-    resetQuoteTurnstile()
-    resetLeadTurnstile()
+    activateCotizadorNotFoundMode({
+      notFoundMode,
+      selectedBrand,
+      selectedModel,
+      models,
+      faults,
+      selectedFaultIds,
+      quoteTurnstileToken,
+      quoteTurnstileRenderKey,
+      leadTurnstileToken,
+      leadTurnstileRenderKey
+    })
   }
 
   function deactivateNotFoundMode() {
-    notFoundMode.value = false
-    manualBrand.value = ''
-    manualModel.value = ''
-    resetQuoteTurnstile()
-    resetLeadTurnstile()
+    deactivateCotizadorNotFoundMode({
+      notFoundMode,
+      manualBrand,
+      manualModel,
+      leadTurnstileToken,
+      leadTurnstileRenderKey,
+      quoteTurnstileToken,
+      quoteTurnstileRenderKey
+    })
   }
 
   function goToLeadStep() {
@@ -146,23 +164,25 @@ export function useCotizadorFlowState() {
   }
 
   function resetAll() {
-    step.value = 1
-    selectedBrand.value = ''
-    selectedModel.value = ''
-    models.value = []
-    faults.value = []
-    selectedFaultIds.value = []
-    quoteResult.value = null
-    leadForm.value = createLeadForm()
-    acceptedDisclaimer.value = false
-    quoteTurnstileToken.value = ''
-    quoteTurnstileRenderKey.value = 0
-    leadTurnstileToken.value = ''
-    leadTurnstileRenderKey.value = 0
-    leadSubmitted.value = false
-    notFoundMode.value = false
-    manualBrand.value = ''
-    manualModel.value = ''
+    resetCotizadorFlowState({
+      step,
+      selectedBrand,
+      selectedModel,
+      models,
+      faults,
+      selectedFaultIds,
+      quoteResult,
+      leadForm,
+      acceptedDisclaimer,
+      quoteTurnstileToken,
+      quoteTurnstileRenderKey,
+      leadTurnstileToken,
+      leadTurnstileRenderKey,
+      leadSubmitted,
+      notFoundMode,
+      manualBrand,
+      manualModel
+    })
   }
 
   return {

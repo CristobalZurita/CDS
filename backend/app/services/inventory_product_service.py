@@ -9,6 +9,7 @@ from app.models.category import Category
 from app.models.inventory import Product
 from app.models.stock import Stock
 from app.schemas.inventory import ItemSummary
+from app.services.inventory_catalog_service import merge_product_meta
 
 
 def get_product_or_404(
@@ -55,6 +56,45 @@ def ensure_product_stock(db: Session, product: Product) -> Stock:
     db.add(stock)
     db.flush()
     return stock
+
+
+def build_create_product_changes(payload: dict) -> dict:
+    required = ("name", "sku", "category_id", "price")
+    for field in required:
+        if not payload.get(field):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Missing field: {field}",
+            )
+
+    description = merge_product_meta(
+        Product(description=payload.get("description")),
+        payload,
+    )
+    return {
+        "category_id": int(payload["category_id"]),
+        "name": payload["name"],
+        "sku": payload["sku"],
+        "description": description,
+        "price": int(payload.get("price") or 0),
+        "quantity": int(payload.get("stock") or payload.get("quantity") or 0),
+        "min_quantity": int(payload.get("min_quantity") or 5),
+        "image_url": payload.get("image_url"),
+    }
+
+
+def build_update_product_changes(product: Product, payload: dict) -> dict:
+    changes = dict(payload)
+    if {
+        "description",
+        "enabled",
+        "store_visible",
+        "origin_status",
+    }.intersection(payload):
+        current_payload = dict(payload)
+        current_payload["description"] = payload.get("description", product.description)
+        changes["description"] = merge_product_meta(product, current_payload)
+    return changes
 
 
 def build_item_summary(

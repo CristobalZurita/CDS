@@ -2,6 +2,7 @@ import {
   baseRepairDetailEditForm,
   REPAIR_DETAIL_STATUS_OPTIONS
 } from '@/services/repairDetailAdminService'
+import { extractErrorMessage } from '@/services/api'
 
 export function buildRepairDetailEditDraft(repair) {
   if (!repair) return baseRepairDetailEditForm()
@@ -141,4 +142,43 @@ export function resolveRepairPriorityClass(repair) {
   if (priority === 1) return 'priority-high'
   if (priority === 3) return 'priority-low'
   return 'priority-normal'
+}
+
+export async function runRepairDetailTask(flagRef, errorRef, task, { resolveError = extractErrorMessage } = {}) {
+  flagRef.value = true
+  errorRef.value = ''
+
+  try {
+    return await task()
+  } catch (requestError) {
+    errorRef.value = resolveError(requestError)
+    return null
+  } finally {
+    flagRef.value = false
+  }
+}
+
+export async function runRepairDetailReloadTask(
+  flagRef,
+  errorRef,
+  task,
+  reloadTask,
+  options = {}
+) {
+  const result = await runRepairDetailTask(flagRef, errorRef, task, options)
+  if (errorRef.value) return result
+  await reloadTask()
+  return result
+}
+
+export async function runRepairDetailSuccessTask(
+  flagRef,
+  errorRef,
+  task,
+  { onSuccess, ...options } = {}
+) {
+  const result = await runRepairDetailTask(flagRef, errorRef, task, options)
+  if (errorRef.value) return result
+  onSuccess?.(result)
+  return result
 }

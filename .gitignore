@@ -99,6 +99,7 @@ playwright-report/
 tests/e2e/.auth/
 CDS_VUE3_ZERO/tests/e2e/.auth/
 coverage/
+.pytest_cache/
 backend/tests/e2e_runtime/
 backend/test-results*.xml
 
@@ -131,3 +132,9 @@ postgres_data/
 /public/image/
 /CDS_VUE3_ZERO/public/imagess/
 backend/app/data/.sync_metadata.json
+
+# Local operator/agent workspaces
+.claude/
+.mediador/
+MICROS.md
+dash.md

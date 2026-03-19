@@ -195,6 +195,40 @@ export function buildIntakeWizardValidationValues(form) {
   }
 }
 
+export function resolveIntakeWizardCanSubmit({
+  isSubmitting = false,
+  isLoading = false,
+  isValid = false,
+  form
+} = {}) {
+  return !isSubmitting &&
+    !isLoading &&
+    isValid &&
+    form?.client?.name &&
+    form?.device?.model &&
+    form?.repair?.problem_reported
+}
+
+export function resolveIntakeWizardProgress(form) {
+  const sections = ['client', 'device', 'repair', 'intake']
+  const completed = sections.filter((section) => {
+    switch (section) {
+      case 'client':
+        return !!form.client.name && !!form.client.email
+      case 'device':
+        return !!form.device.brand_other && !!form.device.model
+      case 'repair':
+        return !!form.repair.problem_reported
+      case 'intake':
+        return !!form.intake.equipment_name
+      default:
+        return false
+    }
+  }).length
+
+  return Math.round((completed / sections.length) * 100)
+}
+
 export function createIntakeWizardMaterial() {
   return {
     id: Date.now(),

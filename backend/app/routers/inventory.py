@@ -10,19 +10,18 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.dependencies import require_permission
-from app.models.inventory import Product
 from app.services.inventory_catalog_service import (
-    store_visible_from_meta as _store_visible_from_meta,
     get_store_catalog_status_payload,
     inventory_alerts_summary,
     list_inventory_payloads,
     list_public_catalog_payload,
     low_stock_alerts_payload,
-    merge_product_meta,
     serialize_inventory_product,
     sync_store_catalog_payload,
 )
 from app.services.inventory_product_service import (
+    build_create_product_changes,
+    build_update_product_changes,
     create_product_record,
     delete_product_record,
     get_product_or_404,
@@ -119,26 +118,7 @@ def create_inventory_item(
     user: dict = Depends(require_permission("inventory", "create"))
 ):
     """Crear producto en inventario."""
-    required = ("name", "sku", "category_id", "price")
-    for field in required:
-        if not payload.get(field):
-            raise HTTPException(status_code=400, detail=f"Missing field: {field}")
-
-    description = merge_product_meta(
-        Product(description=payload.get("description")),
-        payload,
-    )
-    product = create_product_record(
-        db,
-        category_id=int(payload["category_id"]),
-        name=payload["name"],
-        sku=payload["sku"],
-        description=description,
-        price=int(payload.get("price") or 0),
-        quantity=int(payload.get("stock") or payload.get("quantity") or 0),
-        min_quantity=int(payload.get("min_quantity") or 5),
-        image_url=payload.get("image_url"),
-    )
+    product = create_product_record(db, **build_create_product_changes(payload))
     return serialize_inventory_product(db, product)
 
 
@@ -151,12 +131,7 @@ def update_inventory_item(
 ):
     """Actualizar producto en inventario."""
     product = get_product_or_404(db, product_id)
-    changes = dict(payload)
-    if "description" in payload or "enabled" in payload or "store_visible" in payload or "origin_status" in payload:
-        current_payload = dict(payload)
-        current_payload["description"] = payload.get("description", product.description)
-        changes["description"] = merge_product_meta(product, current_payload)
-    product = update_product_record(db, product, changes)
+    product = update_product_record(db, product, build_update_product_changes(product, payload))
     return serialize_inventory_product(db, product)
 
 
