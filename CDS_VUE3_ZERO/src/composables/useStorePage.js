@@ -37,6 +37,8 @@ export function useStorePage() {
   })
 
   const shippingOptions = shopCart.shippingOptions
+  const cartOpen = computed(() => shopCart.cartOpen)
+  const cartSubmitting = computed(() => shopCart.submitting)
   const cartItems = computed(() => shopCart.items)
   const currentShipping = computed(() => shopCart.currentShipping)
   const totals = computed(() => shopCart.totals)
@@ -177,13 +179,14 @@ export function useStorePage() {
     selectedAvailability,
     selectedShippingKey,
     shippingOptions,
+    cartOpen,
+    cartSubmitting,
     availableCategories,
     filteredProducts,
     cartItems,
     currentShipping,
     totals,
     checkoutLabel,
-    shopCart,
     loadCatalog,
     formatCurrency,
     formatLinePrice,

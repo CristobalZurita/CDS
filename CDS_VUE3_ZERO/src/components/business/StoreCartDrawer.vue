@@ -88,6 +88,7 @@
 </template>
 
 <script setup>
+import { formatStoreLinePrice, formatStoreSummaryAmount } from '@/services/storeCatalogService'
 import { formatCurrency } from '@/utils/format'
 
 const props = defineProps({
@@ -124,13 +125,11 @@ const props = defineProps({
 defineEmits(['close', 'change-qty', 'remove', 'checkout'])
 
 function formatLinePrice(value) {
-  const amount = Number(value || 0)
-  return amount > 0 ? formatCurrency(amount) : 'Por cotizar'
+  return formatStoreLinePrice(value)
 }
 
 function formatSummaryAmount(value) {
-  const amount = Number(value || 0)
-  return props.totals?.hasQuotedAmount && amount > 0 ? formatCurrency(amount) : 'Por cotizar'
+  return formatStoreSummaryAmount(value, props.totals)
 }
 </script>
 

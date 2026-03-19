@@ -85,12 +85,12 @@
     </div><!-- /store-shell -->
 
     <StoreCartDrawer
-      :open="shopCart.cartOpen"
+      :open="cartOpen"
       :items="cartItems"
       :totals="totals"
       :current-shipping="currentShipping"
       :checkout-label="checkoutLabel"
-      :submitting="shopCart.submitting"
+      :submitting="cartSubmitting"
       :can-add-product="canAddProduct"
       @close="closeCartDrawer"
       @change-qty="onDrawerChangeQty"
@@ -117,10 +117,11 @@ const {
   availableCategories,
   filteredProducts,
   cartItems,
+  cartOpen,
+  cartSubmitting,
   currentShipping,
   totals,
   checkoutLabel,
-  shopCart,
   loadCatalog,
   formatCurrency,
   productImageSrc,
