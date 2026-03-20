@@ -31,8 +31,12 @@ from app.schemas.appointment import (
 )
 from app.services.email_service import send_appointment_confirmation
 try:
-    from app.services.google_calendar_service import sync_to_google_calendar
+    from app.services.google_calendar_service import (
+        get_calendar_service,
+        sync_to_google_calendar,
+    )
 except Exception:
+    get_calendar_service = None
     sync_to_google_calendar = None
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
@@ -58,6 +62,55 @@ async def _bg_sync_calendar(appointment_id: int) -> None:
         print(f"Error syncing to Google Calendar (background): {e}")
     finally:
         db.close()
+
+
+def _appointment_end_time(appointment) -> datetime:
+    if getattr(appointment, "fecha_fin", None):
+        return appointment.fecha_fin
+    duration_minutes = int(getattr(appointment, "duration_minutes", 30) or 30)
+    return appointment.fecha + timedelta(minutes=duration_minutes)
+
+
+async def _bg_update_calendar(appointment_id: int) -> None:
+    if not get_calendar_service:
+        return
+    db = SessionLocal()
+    try:
+        appointment = await get_appointment(db, appointment_id)
+        if not appointment or not appointment.google_calendar_id:
+            return
+
+        service = get_calendar_service()
+        if not service:
+            return
+
+        calendar_id = os.getenv('GOOGLE_CALENDAR_ID', 'primary')
+        service.update_event(
+            calendar_id=calendar_id,
+            event_id=appointment.google_calendar_id,
+            title=f"Cita: {appointment.nombre}",
+            description=f"Cita de agendamiento en Cirujano de Sintetizadores\n\n{appointment.mensaje or ''}",
+            start_time=appointment.fecha,
+            end_time=_appointment_end_time(appointment),
+            attendee_email=appointment.email,
+        )
+    except Exception as e:
+        print(f"Error updating Google Calendar event (background): {e}")
+    finally:
+        db.close()
+
+
+async def _bg_delete_calendar_event(event_id: str) -> None:
+    if not event_id or not get_calendar_service:
+        return
+    try:
+        service = get_calendar_service()
+        if not service:
+            return
+        calendar_id = os.getenv('GOOGLE_CALENDAR_ID', 'primary')
+        service.delete_event(calendar_id=calendar_id, event_id=event_id)
+    except Exception as e:
+        print(f"Error deleting Google Calendar event (background): {e}")
 
 
 def _should_skip_turnstile() -> bool:
@@ -201,26 +254,47 @@ async def get_appointments_by_email_endpoint(
 async def update_appointment_endpoint(
     appointment_id: int,
     appointment_update: AppointmentUpdate,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("appointments", "update"))
 ):
     """Update an appointment"""
+    current_appointment = await get_appointment(db, appointment_id)
+    if not current_appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+
+    existing_event_id = current_appointment.google_calendar_id
+    fecha_changed = appointment_update.fecha is not None and appointment_update.fecha != current_appointment.fecha
     db_appointment = await update_appointment(db, appointment_id, appointment_update)
     if not db_appointment:
         raise HTTPException(status_code=404, detail="Appointment not found")
+
+    if existing_event_id and db_appointment.estado == "cancelado":
+        background_tasks.add_task(_bg_delete_calendar_event, existing_event_id)
+    elif existing_event_id and (fecha_changed or appointment_update.mensaje is not None):
+        background_tasks.add_task(_bg_update_calendar, appointment_id)
+
     return db_appointment
 
 
 @router.delete("/{appointment_id}", status_code=204)
 async def delete_appointment_endpoint(
     appointment_id: int,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     user: dict = Depends(require_permission("appointments", "delete"))
 ):
     """Delete an appointment"""
+    current_appointment = await get_appointment(db, appointment_id)
+    if not current_appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+
+    existing_event_id = current_appointment.google_calendar_id
     success = await delete_appointment(db, appointment_id)
     if not success:
         raise HTTPException(status_code=404, detail="Appointment not found")
+    if existing_event_id:
+        background_tasks.add_task(_bg_delete_calendar_event, existing_event_id)
     return None
 
 

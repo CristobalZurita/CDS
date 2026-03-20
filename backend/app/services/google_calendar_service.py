@@ -7,8 +7,6 @@ import os
 import logging
 from typing import Optional
 from datetime import datetime
-from google.auth.transport.requests import Request
-from google.oauth2.service_account import Credentials
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
@@ -90,6 +88,34 @@ class GoogleCalendarService:
         except Exception as e:
             logger.error(f"Error creating Google Calendar event: {str(e)}")
             return None
+
+    def _build_event_update(
+        self,
+        event: dict,
+        *,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        start_time: Optional[datetime] = None,
+        end_time: Optional[datetime] = None,
+        attendee_email: Optional[str] = None,
+    ) -> dict:
+        if title is not None:
+            event['summary'] = title
+        if description is not None:
+            event['description'] = description
+        if start_time is not None:
+            event['start'] = {
+                'dateTime': start_time.isoformat(),
+                'timeZone': 'America/Santiago',
+            }
+        if end_time is not None:
+            event['end'] = {
+                'dateTime': end_time.isoformat(),
+                'timeZone': 'America/Santiago',
+            }
+        if attendee_email is not None:
+            event['attendees'] = [{'email': attendee_email}]
+        return event
     
     def update_event(
         self,
@@ -108,11 +134,8 @@ class GoogleCalendarService:
                 calendarId=calendar_id,
                 eventId=event_id
             ).execute()
-            
-            # Update fields
-            for key, value in kwargs.items():
-                if hasattr(event, key):
-                    event[key] = value
+
+            event = self._build_event_update(event, **kwargs)
             
             self.service.events().update(
                 calendarId=calendar_id,

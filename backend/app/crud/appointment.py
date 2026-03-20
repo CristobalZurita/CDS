@@ -5,7 +5,7 @@ Database operations for appointments
 
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.models.appointment import Appointment
 from app.schemas.appointment import AppointmentCreate, AppointmentUpdate
 from typing import List, Optional
@@ -18,6 +18,7 @@ async def create_appointment(db: Session, appointment: AppointmentCreate) -> App
         email=appointment.email,
         telefono=appointment.telefono,
         fecha=appointment.fecha,
+        fecha_fin=appointment.fecha + timedelta(minutes=30),
         mensaje=appointment.mensaje,
         estado="pendiente"
     )
@@ -77,6 +78,21 @@ async def update_appointment(
         return None
     
     update_data = appointment_update.model_dump(exclude_unset=True)
+    previous_fecha = db_appointment.fecha
+    previous_status = db_appointment.estado
+
+    if "fecha" in update_data and update_data["fecha"] and update_data["fecha"] != previous_fecha:
+        if not db_appointment.original_fecha:
+            db_appointment.original_fecha = previous_fecha
+        db_appointment.reschedule_count = int(db_appointment.reschedule_count or 0) + 1
+        duration_minutes = int(db_appointment.duration_minutes or 30)
+        db_appointment.fecha_fin = update_data["fecha"] + timedelta(minutes=duration_minutes)
+
+    if update_data.get("estado") == "cancelado" and previous_status != "cancelado":
+        db_appointment.cancelled_at = datetime.utcnow()
+    elif update_data.get("estado") and update_data.get("estado") != "cancelado":
+        db_appointment.cancelled_at = None
+
     for field, value in update_data.items():
         setattr(db_appointment, field, value)
     

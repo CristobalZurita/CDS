@@ -8,7 +8,21 @@ from typing import Optional
 from datetime import datetime
 import re
 
-from app.core.timezone import now_utc, to_utc
+from app.core.timezone import now_utc, to_local, to_utc
+
+
+def _build_allowed_appointment_slots() -> set[str]:
+    slots = []
+    for hour in (9, 10, 11):
+        for minute in (0, 30):
+            slots.append(f"{hour:02d}:{minute:02d}")
+    for hour in (14, 15, 16, 17):
+        for minute in (0, 30):
+            slots.append(f"{hour:02d}:{minute:02d}")
+    return set(slots)
+
+
+ALLOWED_APPOINTMENT_SLOTS = _build_allowed_appointment_slots()
 
 
 class AppointmentCreate(BaseModel):
@@ -56,6 +70,13 @@ class AppointmentCreate(BaseModel):
         normalized = to_utc(v)
         if normalized <= now_utc():
             raise ValueError('La fecha debe ser en el futuro')
+        local_datetime = to_local(normalized)
+        if local_datetime.weekday() >= 5:
+            raise ValueError('Solo se permiten citas de lunes a viernes')
+
+        slot = local_datetime.strftime("%H:%M")
+        if slot not in ALLOWED_APPOINTMENT_SLOTS:
+            raise ValueError('La hora debe coincidir con un bloque disponible del calendario')
         return normalized
 
     @field_validator('mensaje')
@@ -80,8 +101,35 @@ class AppointmentUpdate(BaseModel):
     )
 
     estado: Optional[str] = None
+    fecha: Optional[datetime] = None
+    mensaje: Optional[str] = Field(None, max_length=1000)
+    cancellation_reason: Optional[str] = Field(None, max_length=1000)
     google_calendar_id: Optional[str] = None
     notificacion_enviada: Optional[bool] = None
+
+    @field_validator('fecha')
+    @classmethod
+    def validate_fecha(cls, v):
+        if v is None:
+            return v
+        normalized = to_utc(v)
+        if normalized <= now_utc():
+            raise ValueError('La fecha debe ser en el futuro')
+        local_datetime = to_local(normalized)
+        if local_datetime.weekday() >= 5:
+            raise ValueError('Solo se permiten citas de lunes a viernes')
+
+        slot = local_datetime.strftime("%H:%M")
+        if slot not in ALLOWED_APPOINTMENT_SLOTS:
+            raise ValueError('La hora debe coincidir con un bloque disponible del calendario')
+        return normalized
+
+    @field_validator('mensaje', 'cancellation_reason')
+    @classmethod
+    def validate_optional_text(cls, value):
+        if value:
+            return value.strip()
+        return value
 
 
 class AppointmentResponse(BaseModel):
