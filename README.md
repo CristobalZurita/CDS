@@ -100,17 +100,56 @@ La dirección actual del backend es:
 - primer gran pase de modularización visual en `ZERO`,
 - lifecycle base de Google Calendar.
 
+#### Tronco B — Pago (B0 · B1 · B2 cerrados)
+
+- `B0`: `unit_price` del navegador ya no manda; precio recalculado server-side al crear solicitud.
+- `B1`: expiración real por `payment_due_date`, stock insuficiente rechaza con `409`, cliente no puede subir comprobante sin `Payment` solicitado.
+- `B2`: `Payment` canonizado como contrato de intento de pago; checkout gateway congela snapshot, webhook sincroniza estado, rechazo no cierra falsamente la solicitud.
+
+La tienda hoy opera como `purchase_request + reserva + comprobante manual`. El checkout online real (pasarela → webhook → conciliación) sigue pendiente en `B3`.
+
 ### Frentes todavía abiertos
 
-- confianza transaccional y pago hegémonico,
+- pasarela de pago online real (`B3`): Mercado Pago o Flow como primera opción,
+- idempotencia fuerte de checkout y scheduler de expiración de reservas,
 - cotizador mostrable sin disculpas,
 - persistencia canónica de coordenadas,
 - foundation real de mapas,
 - Google Auth,
-- GA4,
+- GA4 o retiro de declaración falsa de privacidad (decisión pendiente),
 - dashboard cliente como producto móvil fuerte,
 - salida completa de hardcodes hacia capas configurables,
 - separación clara entre `core reusable`, `domain pack` y `tenant CDS`.
+
+## Auditorías completadas
+
+### Visual / estilos (`2026-03-18`)
+
+Pase de autoridad visual en `ZERO`:
+
+- se cerró mezcla de `scoped shared + local` en componentes base, shells y páginas admin/cliente,
+- se eliminaron redefiniciones de `--cds-*` fuera de capa hegemónica,
+- métricas del corte: componentes mixtos `22 → 15`, archivos con `color-mix/gradientes` `45 → 25`.
+
+Cuellos de botella residuales: calculadoras individuales (`Timer555`, `Temperature`, `OhmsLaw`) y componentes mixtos del frente público.
+
+### Integraciones Google (`2026-03-20`)
+
+Auditoría completa de Google Suite documentada en `GOOGLE.md`:
+
+- `Google Calendar` integrado con Service Account, funcional, con 3 bugs documentados (duración fija, CALENDAR_ID fuera de settings, timezone duplicado).
+- `Google Places / Maps` integrado parcialmente en admin, bloqueado por CSP en producción.
+- `GA4` no implementado aunque la política de privacidad lo declara — decisión pendiente.
+- `D0` listo para ejecutar: correcciones de Calendar, Maps CSP y Places DOM frágil.
+
+### Componentes Vue huérfanos (`2026-03-20`)
+
+Auditoría completa de 178 archivos `.vue`:
+
+- 6 huérfanos directos: `AboutSection.vue` (no está en el barrel ni en el render), `ui/BaseButton.vue`, `ui/BaseInput.vue` (carpeta `ui/` vestigial), `BaseForm.vue`, `InventoryTable.vue`, `DataTable.vue`.
+- 2 huérfanos secundarios: `BaseCard.vue` y `BaseTable.vue` (solo usados por `DataTable.vue`).
+- El anchor `#about` del nav apunta a una sección que no se renderiza.
+- El resto del árbol de componentes está vivo y conectado.
 
 ## Generalización en curso
 
@@ -168,8 +207,11 @@ Lo visual, growth, `NEO`, tipografía y SEO pueden correr en paralelo sólo si n
 
 Los siguientes bloques correctos son:
 
-- cerrar `Fase 1` backend completa,
-- abrir `Fase 1` frontend con una capa canónica de negocio y contenido,
+- elegir pasarela y ejecutar `B3` (Mercado Pago como camino más rápido),
+- correr en paralelo `D0` Google base (Calendar bugs + CSP Maps + Places DOM),
+- resolver decisión `D2` sobre GA4 vs retiro de declaración de privacidad,
+- cerrar `Fase 1` backend completa (G),
+- abrir `Fase 1` frontend con capa canónica de negocio y contenido (G),
 - sacar `footer`, `contact`, `home`, legal y copy comercial desde componentes inline,
 - introducir feature flags reales para módulos opcionales,
 - resolver `OT_PREFIX` como decisión de config más compatibilidad/migración,
