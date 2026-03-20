@@ -29,6 +29,7 @@
       <RepairDetailInfoPanel
         :repair="repair"
         :is-archived="isArchived"
+        :format-date="formatDate"
       />
 
       <RepairDetailTechnicalPanel
@@ -46,22 +47,42 @@
       <RepairDetailCommercialPanel
         :warranty="warranty"
         :invoice="invoice"
+        :claims="claims"
+        :payments="payments"
         :performing-action="performingAction"
         :can-create-warranty="canCreateWarranty"
         :can-create-invoice="canCreateInvoice"
+        :can-submit-warranty-claim="canSubmitWarrantyClaim"
+        :can-record-invoice-payment="canRecordInvoicePayment"
+        :show-claim-form="showClaimForm"
+        :claim-problem-description="claimProblemDescription"
+        :claim-fault-type="claimFaultType"
+        :show-payment-form="showPaymentForm"
+        :payment-amount="paymentAmount"
+        :payment-method="paymentMethod"
+        :payment-transaction-id="paymentTransactionId"
         :format-date="formatDate"
         :format-currency="formatCurrency"
         @create-warranty="createWarranty"
         @create-invoice="createInvoice"
+        @toggle-claim-form="toggleClaimForm"
+        @update-claim-field="updateClaimField"
+        @submit-warranty-claim="submitWarrantyClaim"
+        @toggle-payment-form="togglePaymentForm"
+        @update-payment-field="updatePaymentField"
+        @submit-invoice-payment="submitInvoicePayment"
       />
 
       <RepairDetailSignaturePanel
         :repair="repair"
         :performing-action="performingAction"
         :signature-link="signatureLink"
+        :signature-request="signatureRequest"
         :photo-upload-link="photoUploadLink"
+        :photo-upload-request="photoUploadRequest"
         @request-signature="requestSignature"
         @request-photo-upload="requestPhotoUpload"
+        @cancel-signature="cancelSignature"
       />
 
       <RepairDetailPhotosPanel
@@ -91,6 +112,11 @@
         @add-note="addNote"
       />
 
+      <RepairDetailAuditPanel
+        :audit="audit"
+        :format-date="formatDate"
+      />
+
       <RepairDetailActionsPanel
         :performing-action="performingAction"
         :downloading-closure-pdf="downloadingClosurePdf"
@@ -106,6 +132,7 @@
 
 <script setup>
 import RepairDetailActionsPanel from '@/components/admin/RepairDetailActionsPanel.vue'
+import RepairDetailAuditPanel from '@/components/admin/RepairDetailAuditPanel.vue'
 import RepairDetailCommercialPanel from '@/components/admin/RepairDetailCommercialPanel.vue'
 import RepairDetailInfoPanel from '@/components/admin/RepairDetailInfoPanel.vue'
 import RepairDetailNotesPanel from '@/components/admin/RepairDetailNotesPanel.vue'
@@ -119,8 +146,11 @@ const {
   repair,
   photos,
   notes,
+  audit,
   warranty,
   invoice,
+  claims,
+  payments,
   loading,
   error,
   statusOptions,
@@ -140,10 +170,14 @@ const {
   newNote,
   newNoteType,
   signatureLink,
+  signatureRequest,
   photoUploadLink,
+  photoUploadRequest,
   isArchived,
   canCreateWarranty,
   canCreateInvoice,
+  canSubmitWarrantyClaim,
+  canRecordInvoicePayment,
   statusLabel,
   statusClass,
   priorityLabel,
@@ -151,6 +185,13 @@ const {
   formatDate,
   formatCurrency,
   noteTypeClass,
+  showClaimForm,
+  claimProblemDescription,
+  claimFaultType,
+  showPaymentForm,
+  paymentAmount,
+  paymentMethod,
+  paymentTransactionId,
   updateStatus,
   saveRepairFields,
   archiveRepair,
@@ -158,6 +199,7 @@ const {
   notifyClient,
   requestSignature,
   requestPhotoUpload,
+  cancelSignature,
   updateEditField,
   togglePhotoUpload,
   onFileSelected,
@@ -166,6 +208,12 @@ const {
   toggleNoteForm,
   updateNoteField,
   addNote,
+  toggleClaimForm,
+  updateClaimField,
+  submitWarrantyClaim,
+  togglePaymentForm,
+  updatePaymentField,
+  submitInvoicePayment,
   downloadClosurePdf,
   createWarranty,
   createInvoice,

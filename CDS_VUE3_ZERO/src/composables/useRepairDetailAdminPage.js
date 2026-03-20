@@ -1,13 +1,17 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { extractErrorMessage } from '@/services/api'
 import {
   buildRepairDetailVisibleStatusOptions,
   buildRepairDetailBundleState,
+  createClaimDraft,
   createNoteDraft,
+  createPaymentDraft,
   createPhotoDraft,
   mergeRepairStatusCatalog,
+  resolveRepairClaimSubmission,
   resolveRepairNoteSubmission,
+  resolveRepairPaymentSubmission,
   resolveRepairPriorityClass,
   resolveRepairPriorityLabel,
   resolveRepairStatusClass,
@@ -16,22 +20,29 @@ import {
   runRepairDetailSuccessTask,
   runRepairDetailTask,
   setRepairPhotoDraftFile,
+  toggleRepairClaimDraft,
+  toggleRepairPaymentDraft,
   toggleRepairNoteDraft,
   toggleRepairPhotoDraft,
+  updateRepairClaimDraft,
   updateRepairNoteDraft,
+  updateRepairPaymentDraft,
   updateRepairPhotoDraft
 } from '@/composables/repairDetailAdminState'
 import {
   addRepairNote,
   archiveRepairById,
   baseRepairDetailEditForm,
+  cancelRepairSignatureRequest,
   createRepairInvoice,
+  createWarrantyClaim,
   createRepairWarranty,
   downloadRepairClosurePdf,
   fetchRepairDetailBundle,
   fetchRepairStatusOptions,
   noteTypeClass,
   notifyRepairClient,
+  recordInvoicePayment,
   reactivateRepairById,
   requestRepairPhotoUploadLink,
   requestRepairSignatureLink,
@@ -39,6 +50,7 @@ import {
   updateRepairStatus,
   uploadRepairPhoto
 } from '@/services/repairDetailAdminService'
+import { openSignatureRequestStream } from '@/services/tokenRequestService'
 import { formatDate, formatCurrency } from '@/utils/format'
 
 export function useRepairDetailAdminPage() {
@@ -52,8 +64,11 @@ export function useRepairDetailAdminPage() {
   const repair = ref(null)
   const photos = ref([])
   const notes = ref([])
+  const audit = ref([])
   const warranty = ref(null)
   const invoice = ref(null)
+  const claims = ref([])
+  const payments = ref([])
   const statusCatalog = ref([])
 
   const statusDraft = ref(1)
@@ -68,9 +83,15 @@ export function useRepairDetailAdminPage() {
 
   const photoDraft = ref(createPhotoDraft())
   const noteDraft = ref(createNoteDraft())
+  const claimDraft = ref(createClaimDraft())
+  const paymentDraft = ref(createPaymentDraft())
 
   const signatureLink = ref('')
   const photoUploadLink = ref('')
+  const signatureRequest = ref(null)
+  const photoUploadRequest = ref(null)
+
+  let stopSignatureStream = () => {}
 
   const isArchived = computed(() => Boolean(repair.value?.archived_at))
   const isTerminalStatus = computed(() => {
@@ -93,6 +114,16 @@ export function useRepairDetailAdminPage() {
       && ['listo', 'entregado', 'noventena', 'archivado'].includes(statusCode)
     )
   })
+  const canSubmitWarrantyClaim = computed(() => {
+    if (!warranty.value?.id) return false
+    if (!warranty.value.is_active) return false
+    return Number(warranty.value.claims_used || 0) < Number(warranty.value.max_claims || 0)
+  })
+  const canRecordInvoicePayment = computed(() => {
+    if (!invoice.value?.id) return false
+    if (String(invoice.value.status || '').toLowerCase() === 'void') return false
+    return Number(invoice.value.amount_due || 0) > 0
+  })
 
   const statusOptions = computed(() => buildRepairDetailVisibleStatusOptions(statusCatalog.value, repair.value))
   const statusLabel = computed(() => resolveRepairStatusLabel(repair.value, statusCatalog.value))
@@ -104,8 +135,11 @@ export function useRepairDetailAdminPage() {
     repair.value = nextState.repair
     photos.value = nextState.photos
     notes.value = nextState.notes
+    audit.value = nextState.audit
     warranty.value = nextState.warranty
     invoice.value = nextState.invoice
+    claims.value = nextState.claims
+    payments.value = nextState.payments
     statusDraft.value = nextState.statusDraft
     editForm.value = nextState.editForm
   }
@@ -123,6 +157,59 @@ export function useRepairDetailAdminPage() {
       error.value = 'No se encontro la reparacion solicitada.'
       return
     }
+
+    if (signatureRequest.value) {
+      const signaturePath = signatureRequest.value.request_type === 'retiro'
+        ? nextState.repair?.signature_retiro_path
+        : nextState.repair?.signature_ingreso_path
+
+      if (signaturePath) {
+        signatureRequest.value = {
+          ...signatureRequest.value,
+          status: 'signed',
+          url: ''
+        }
+        signatureLink.value = ''
+        stopSignatureStream()
+        stopSignatureStream = () => {}
+      }
+    }
+  }
+
+  function resetSignatureStream() {
+    stopSignatureStream()
+    stopSignatureStream = () => {}
+  }
+
+  function connectSignatureStream(token) {
+    resetSignatureStream()
+
+    if (!token) return
+
+    stopSignatureStream = openSignatureRequestStream(token, {
+      onEvent: async (eventName) => {
+        if (eventName === 'signature_received') {
+          signatureRequest.value = signatureRequest.value
+            ? { ...signatureRequest.value, status: 'signed', url: '' }
+            : null
+          signatureLink.value = ''
+          resetSignatureStream()
+          await loadRepair()
+          return
+        }
+
+        if (eventName === 'signature_cancelled') {
+          signatureRequest.value = signatureRequest.value
+            ? { ...signatureRequest.value, status: 'cancelled', url: '' }
+            : null
+          signatureLink.value = ''
+          resetSignatureStream()
+        }
+      },
+      onError: () => {
+        stopSignatureStream = () => {}
+      }
+    })
   }
 
   function updateEditField({ field, value }) {
@@ -147,6 +234,22 @@ export function useRepairDetailAdminPage() {
 
   function updateNoteField(payload) {
     noteDraft.value = updateRepairNoteDraft(noteDraft.value, payload)
+  }
+
+  function toggleClaimForm() {
+    claimDraft.value = toggleRepairClaimDraft(claimDraft.value)
+  }
+
+  function updateClaimField(payload) {
+    claimDraft.value = updateRepairClaimDraft(claimDraft.value, payload)
+  }
+
+  function togglePaymentForm() {
+    paymentDraft.value = toggleRepairPaymentDraft(paymentDraft.value)
+  }
+
+  function updatePaymentField(payload) {
+    paymentDraft.value = updateRepairPaymentDraft(paymentDraft.value, payload)
   }
 
   async function loadRepair() {
@@ -234,7 +337,13 @@ export function useRepairDetailAdminPage() {
       performingAction,
       error,
       () => requestRepairSignatureLink(repairId.value, type),
-      { onSuccess: (nextLink) => { signatureLink.value = nextLink || '' } }
+      {
+        onSuccess: (nextRequest) => {
+          signatureRequest.value = nextRequest || null
+          signatureLink.value = nextRequest?.url || ''
+          connectSignatureStream(nextRequest?.token || '')
+        }
+      }
     )
   }
 
@@ -246,7 +355,32 @@ export function useRepairDetailAdminPage() {
       performingAction,
       error,
       () => requestRepairPhotoUploadLink(repairId.value),
-      { onSuccess: (nextLink) => { photoUploadLink.value = nextLink || '' } }
+      {
+        onSuccess: (nextRequest) => {
+          photoUploadRequest.value = nextRequest || null
+          photoUploadLink.value = nextRequest?.url || ''
+        }
+      }
+    )
+  }
+
+  async function cancelSignature() {
+    const requestId = Number(signatureRequest.value?.id || 0)
+    if (!requestId) return
+
+    await runRepairDetailSuccessTask(
+      performingAction,
+      error,
+      () => cancelRepairSignatureRequest(requestId),
+      {
+        onSuccess: () => {
+          signatureRequest.value = signatureRequest.value
+            ? { ...signatureRequest.value, status: 'cancelled', url: '' }
+            : null
+          signatureLink.value = ''
+          resetSignatureStream()
+        }
+      }
     )
   }
 
@@ -345,15 +479,61 @@ export function useRepairDetailAdminPage() {
     )
   }
 
+  async function submitWarrantyClaim() {
+    if (!warranty.value?.id || !canSubmitWarrantyClaim.value) return
+
+    const claimSubmission = resolveRepairClaimSubmission(claimDraft.value)
+    if (!claimSubmission.isValid) {
+      error.value = claimSubmission.error
+      return
+    }
+
+    await runRepairDetailReloadTask(
+      performingAction,
+      error,
+      () => createWarrantyClaim(warranty.value.id, claimSubmission),
+      async () => {
+        claimDraft.value = createClaimDraft()
+        await loadRepair()
+      }
+    )
+  }
+
+  async function submitInvoicePayment() {
+    if (!invoice.value?.id || !canRecordInvoicePayment.value) return
+
+    const paymentSubmission = resolveRepairPaymentSubmission(paymentDraft.value)
+    if (!paymentSubmission.isValid) {
+      error.value = paymentSubmission.error
+      return
+    }
+
+    await runRepairDetailReloadTask(
+      performingAction,
+      error,
+      () => recordInvoicePayment(invoice.value.id, paymentSubmission),
+      async () => {
+        paymentDraft.value = createPaymentDraft()
+        await loadRepair()
+      }
+    )
+  }
+
   onMounted(loadRepair)
+  onBeforeUnmount(() => {
+    resetSignatureStream()
+  })
 
   return {
     repairId,
     repair,
     photos,
     notes,
+    audit,
     warranty,
     invoice,
+    claims,
+    payments,
     loading,
     error,
     statusOptions,
@@ -372,12 +552,23 @@ export function useRepairDetailAdminPage() {
     showNoteForm: computed(() => noteDraft.value.open),
     newNote: computed(() => noteDraft.value.text),
     newNoteType: computed(() => noteDraft.value.type),
+    showClaimForm: computed(() => claimDraft.value.open),
+    claimProblemDescription: computed(() => claimDraft.value.problemDescription),
+    claimFaultType: computed(() => claimDraft.value.faultType),
+    showPaymentForm: computed(() => paymentDraft.value.open),
+    paymentAmount: computed(() => paymentDraft.value.amount),
+    paymentMethod: computed(() => paymentDraft.value.paymentMethod),
+    paymentTransactionId: computed(() => paymentDraft.value.transactionId),
     signatureLink,
     photoUploadLink,
+    signatureRequest,
+    photoUploadRequest,
     isArchived,
     isTerminalStatus,
     canCreateWarranty,
     canCreateInvoice,
+    canSubmitWarrantyClaim,
+    canRecordInvoicePayment,
     statusLabel,
     statusClass,
     priorityLabel,
@@ -393,6 +584,7 @@ export function useRepairDetailAdminPage() {
     notifyClient,
     requestSignature,
     requestPhotoUpload,
+    cancelSignature,
     updateEditField,
     togglePhotoUpload,
     onFileSelected,
@@ -401,6 +593,12 @@ export function useRepairDetailAdminPage() {
     toggleNoteForm,
     updateNoteField,
     addNote,
+    toggleClaimForm,
+    updateClaimField,
+    submitWarrantyClaim,
+    togglePaymentForm,
+    updatePaymentField,
+    submitInvoicePayment,
     downloadClosurePdf,
     createWarranty,
     createInvoice,

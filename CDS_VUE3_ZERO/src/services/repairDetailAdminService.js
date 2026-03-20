@@ -52,6 +52,25 @@ function normalizeNote(entry) {
   }
 }
 
+function normalizeAuditEntry(entry) {
+  const details = entry?.details && typeof entry.details === 'object' ? entry.details : {}
+  return {
+    id: Number(entry?.id || 0),
+    event_type: String(entry?.event_type || ''),
+    user_id: entry?.user_id || null,
+    ip_address: String(entry?.ip_address || ''),
+    message: String(entry?.message || ''),
+    created_at: entry?.created_at || null,
+    details,
+    fields: Array.isArray(details?.fields)
+      ? details.fields.map((value) => String(value || '').trim()).filter(Boolean)
+      : [],
+    from_status: String(details?.from_status || ''),
+    to_status: String(details?.to_status || ''),
+    status_notes: String(details?.notes || '').trim()
+  }
+}
+
 function sortNotes(entries) {
   return entries.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
 }
@@ -62,6 +81,8 @@ function normalizeRepair(entry) {
     id: Number(entry?.id || 0),
     repair_code: String(entry?.repair_code || entry?.repair_number || ''),
     repair_number: String(entry?.repair_number || ''),
+    ot_parent_id: Number(entry?.ot_parent_id || 0),
+    ot_sequence: Number(entry?.ot_sequence || 0),
     status_id: Number(entry?.status_id || 0),
     status: String(entry?.status || ''),
     status_code: String(entry?.status_code || ''),
@@ -83,6 +104,12 @@ function normalizeRepair(entry) {
     payment_method: String(entry?.payment_method || ''),
     warranty_days: Number(entry?.warranty_days || 0),
     warranty_until: entry?.warranty_until || null,
+    intake_date: entry?.intake_date || null,
+    diagnosis_date: entry?.diagnosis_date || null,
+    approval_date: entry?.approval_date || null,
+    start_date: entry?.start_date || null,
+    completion_date: entry?.completion_date || null,
+    delivery_date: entry?.delivery_date || null,
     signature_ingreso_path: String(entry?.signature_ingreso_path || ''),
     signature_retiro_path: String(entry?.signature_retiro_path || ''),
     client: entry?.client || null,
@@ -142,6 +169,46 @@ function normalizeInvoice(entry) {
   }
 }
 
+function normalizeWarrantyClaim(entry) {
+  if (!entry || typeof entry !== 'object') return null
+
+  return {
+    id: Number(entry?.id || 0),
+    warranty_id: Number(entry?.warranty_id || 0),
+    new_repair_id: Number(entry?.new_repair_id || 0),
+    claim_number: String(entry?.claim_number || ''),
+    status: String(entry?.status || ''),
+    problem_description: String(entry?.problem_description || ''),
+    fault_type: String(entry?.fault_type || ''),
+    is_covered: entry?.is_covered == null ? null : Boolean(entry.is_covered),
+    rejection_reason: String(entry?.rejection_reason || ''),
+    evaluation_notes: String(entry?.evaluation_notes || ''),
+    estimated_cost: Number(entry?.estimated_cost || 0),
+    actual_cost: Number(entry?.actual_cost || 0),
+    customer_copay: Number(entry?.customer_copay || 0),
+    submitted_at: entry?.submitted_at || null,
+    evaluated_at: entry?.evaluated_at || null,
+    resolved_at: entry?.resolved_at || null
+  }
+}
+
+function normalizeRepairPayment(entry) {
+  if (!entry || typeof entry !== 'object') return null
+
+  return {
+    id: Number(entry?.id || 0),
+    invoice_id: Number(entry?.invoice_id || 0),
+    repair_id: Number(entry?.repair_id || 0),
+    amount: Number(entry?.amount || 0),
+    payment_method: String(entry?.payment_method || ''),
+    transaction_id: String(entry?.transaction_id || ''),
+    status: String(entry?.status || ''),
+    notes: String(entry?.notes || ''),
+    created_at: entry?.created_at || null,
+    updated_at: entry?.updated_at || null
+  }
+}
+
 function normalizeRepairStatusOption(entry) {
   if (!entry || typeof entry !== 'object') return null
 
@@ -177,6 +244,7 @@ export function baseRepairDetailEditForm() {
     discount: 0,
     total_cost: 0,
     paid_amount: 0,
+    payment_status: 'pending',
     payment_method: ''
   }
 }
@@ -189,31 +257,34 @@ export function noteTypeClass(noteType) {
 }
 
 export async function fetchRepairDetailBundle(repairId) {
-  const [repairResponse, photosResponse, notesResponse, warranty, invoice] = await Promise.all([
-    api.get(`/repairs/${repairId}`).catch(() => null),
+  const repairResponse = await api.get(`/repairs/${repairId}`)
+  const [photosResponse, notesResponse, auditResponse, warranty, invoice, payments] = await Promise.all([
     api.get(`/repairs/${repairId}/photos`).catch(() => ({ data: [] })),
     api.get(`/repairs/${repairId}/notes`).catch(() => ({ data: [] })),
+    api.get(`/repairs/${repairId}/audit`).catch(() => ({ data: [] })),
     fetchRepairWarranty(repairId).catch(() => null),
-    fetchRepairInvoice(repairId).catch(() => null)
+    fetchRepairInvoice(repairId).catch(() => null),
+    fetchRepairPayments(repairId).catch(() => [])
   ])
 
-  let repair = repairResponse?.data ? normalizeRepair(repairResponse.data) : null
-  if (!repair) {
-    const listResponse = await api.get('/repairs/')
-    const listPayload = Array.isArray(listResponse?.data) ? listResponse.data : []
-    const found = listPayload.find((entry) => Number(entry?.id || 0) === Number(repairId || 0))
-    repair = normalizeRepair(found)
-  }
+  const repair = normalizeRepair(repairResponse?.data)
 
   const photosPayload = Array.isArray(photosResponse?.data) ? photosResponse.data : []
   const notesPayload = Array.isArray(notesResponse?.data) ? notesResponse.data : []
+  const auditPayload = Array.isArray(auditResponse?.data) ? auditResponse.data : []
+  const claims = warranty?.id
+    ? await fetchWarrantyClaims(warranty.id).catch(() => [])
+    : []
 
   return {
     repair,
     photos: photosPayload.map(normalizePhoto),
     notes: sortNotes(notesPayload.map(normalizeNote)),
+    audit: auditPayload.map(normalizeAuditEntry),
     warranty,
-    invoice
+    invoice,
+    claims,
+    payments
   }
 }
 
@@ -239,6 +310,7 @@ export async function saveRepairDetailFields(repairId, editForm) {
     discount: Number(editForm.discount || 0),
     total_cost: Number(editForm.total_cost || 0),
     paid_amount: Number(editForm.paid_amount || 0),
+    payment_status: String(editForm.payment_status || 'pending').trim() || 'pending',
     payment_method: String(editForm.payment_method || '').trim() || null
   }
 
@@ -270,6 +342,20 @@ export async function createRepairWarranty(repairId) {
   return normalizeWarranty(response?.data)
 }
 
+export async function fetchWarrantyClaims(warrantyId) {
+  const response = await api.get(`/warranties/${warrantyId}/claims`)
+  const payload = Array.isArray(response?.data) ? response.data : []
+  return payload.map(normalizeWarrantyClaim).filter(Boolean)
+}
+
+export async function createWarrantyClaim(warrantyId, claimDraft) {
+  const response = await api.post(`/warranties/${warrantyId}/claims`, {
+    problem_description: String(claimDraft?.problemDescription || '').trim(),
+    fault_type: String(claimDraft?.faultType || '').trim() || null
+  })
+  return normalizeWarrantyClaim(response?.data)
+}
+
 export async function fetchRepairInvoice(repairId) {
   const response = await api.get('/invoices/', {
     params: {
@@ -286,32 +372,78 @@ export async function createRepairInvoice(repairId) {
   return normalizeInvoice(response?.data)
 }
 
+export async function fetchRepairPayments(repairId) {
+  const response = await api.get('/payments/', {
+    params: {
+      repair_id: Number(repairId || 0)
+    }
+  })
+  const payload = Array.isArray(response?.data) ? response.data : []
+  return payload.map(normalizeRepairPayment).filter(Boolean)
+}
+
+export async function recordInvoicePayment(invoiceId, paymentDraft) {
+  const response = await api.post(`/invoices/${invoiceId}/payments`, {
+    amount: Number(paymentDraft?.amount || 0),
+    payment_method: String(paymentDraft?.paymentMethod || 'cash').trim() || 'cash',
+    transaction_id: String(paymentDraft?.transactionId || '').trim() || null
+  })
+  return normalizeRepairPayment(response?.data)
+}
+
 export async function notifyRepairClient(repairId) {
   await api.post(`/repairs/${repairId}/notify`)
 }
 
-export async function requestRepairSignatureLink(repairId, type) {
+export async function requestRepairSignatureLink(repairId, type, { expiresMinutes = 5 } = {}) {
   const response = await api.post('/signatures/requests', {
     repair_id: Number(repairId),
     request_type: String(type || 'ingreso'),
-    expires_minutes: 5
+    expires_minutes: Number(expiresMinutes || 5)
   })
 
-  const token = response?.data?.token || response?.token || ''
-  return token ? buildAppUrl(`/signature/${token}`) : ''
+  const payload = response?.data || response || {}
+  const token = payload?.token || ''
+
+  return {
+    id: Number(payload?.id || 0),
+    repair_id: Number(payload?.repair_id || repairId || 0),
+    request_type: String(payload?.request_type || type || ''),
+    status: String(payload?.status || 'pending'),
+    token,
+    expires_at: payload?.expires_at || null,
+    url: token ? buildAppUrl(`/signature/${token}`) : ''
+  }
 }
 
-export async function requestRepairPhotoUploadLink(repairId) {
+export async function requestRepairPhotoUploadLink(
+  repairId,
+  { photoType = 'client', expiresMinutes = 10 } = {}
+) {
   const response = await api.post('/photo-requests/', null, {
     params: {
       repair_id: Number(repairId),
-      photo_type: 'client',
-      expires_minutes: 10
+      photo_type: String(photoType || 'client'),
+      expires_minutes: Number(expiresMinutes || 10)
     }
   })
 
-  const token = response?.data?.token || response?.token || ''
-  return token ? buildAppUrl(`/photo-upload/${token}`) : ''
+  const payload = response?.data || response || {}
+  const token = payload?.token || ''
+
+  return {
+    id: Number(payload?.id || 0),
+    repair_id: Number(payload?.repair_id || repairId || 0),
+    photo_type: String(payload?.photo_type || photoType || 'client'),
+    status: String(payload?.status || 'pending'),
+    token,
+    expires_at: payload?.expires_at || null,
+    url: token ? buildAppUrl(`/photo-upload/${token}`) : ''
+  }
+}
+
+export async function cancelRepairSignatureRequest(requestId) {
+  await api.post(`/signatures/requests/${requestId}/cancel`)
 }
 
 export async function uploadRepairPhoto(repairId, file, { photoType = 'general', caption = '' } = {}) {

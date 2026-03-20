@@ -15,6 +15,7 @@ export function buildRepairDetailEditDraft(repair) {
     discount: Number(repair.discount || 0),
     total_cost: Number(repair.total_cost || 0),
     paid_amount: Number(repair.paid_amount || 0),
+    payment_status: String(repair.payment_status || 'pending'),
     payment_method: String(repair.payment_method || 'cash')
   }
 }
@@ -32,8 +33,11 @@ export function buildRepairDetailBundleState(payload) {
     repair,
     photos: Array.isArray(payload?.photos) ? payload.photos : [],
     notes: Array.isArray(payload?.notes) ? payload.notes : [],
+    audit: Array.isArray(payload?.audit) ? payload.audit : [],
     warranty: payload?.warranty || null,
     invoice: payload?.invoice || null,
+    claims: Array.isArray(payload?.claims) ? payload.claims : [],
+    payments: Array.isArray(payload?.payments) ? payload.payments : [],
     ...buildRepairDetailScreenDrafts(repair)
   }
 }
@@ -82,6 +86,94 @@ export function createNoteDraft() {
     text: '',
     type: 'internal',
     open: false
+  }
+}
+
+export function createClaimDraft() {
+  return {
+    problemDescription: '',
+    faultType: '',
+    open: false
+  }
+}
+
+export function toggleRepairClaimDraft(claimDraft) {
+  return {
+    ...claimDraft,
+    open: !claimDraft?.open
+  }
+}
+
+export function updateRepairClaimDraft(claimDraft, payload) {
+  const nextDraft = {
+    ...claimDraft
+  }
+
+  if (payload?.field === 'problemDescription') {
+    nextDraft.problemDescription = payload.value
+  }
+
+  if (payload?.field === 'faultType') {
+    nextDraft.faultType = payload.value
+  }
+
+  return nextDraft
+}
+
+export function resolveRepairClaimSubmission(claimDraft) {
+  const problemDescription = String(claimDraft?.problemDescription || '').trim()
+  return {
+    problemDescription,
+    faultType: String(claimDraft?.faultType || '').trim(),
+    isValid: Boolean(problemDescription),
+    error: problemDescription ? '' : 'La descripcion del reclamo no puede estar vacia.'
+  }
+}
+
+export function createPaymentDraft() {
+  return {
+    amount: '',
+    paymentMethod: 'cash',
+    transactionId: '',
+    open: false
+  }
+}
+
+export function toggleRepairPaymentDraft(paymentDraft) {
+  return {
+    ...paymentDraft,
+    open: !paymentDraft?.open
+  }
+}
+
+export function updateRepairPaymentDraft(paymentDraft, payload) {
+  const nextDraft = {
+    ...paymentDraft
+  }
+
+  if (payload?.field === 'amount') {
+    nextDraft.amount = payload.value
+  }
+
+  if (payload?.field === 'paymentMethod') {
+    nextDraft.paymentMethod = payload.value
+  }
+
+  if (payload?.field === 'transactionId') {
+    nextDraft.transactionId = payload.value
+  }
+
+  return nextDraft
+}
+
+export function resolveRepairPaymentSubmission(paymentDraft) {
+  const amount = Number(paymentDraft?.amount || 0)
+  return {
+    amount,
+    paymentMethod: String(paymentDraft?.paymentMethod || 'cash').trim() || 'cash',
+    transactionId: String(paymentDraft?.transactionId || '').trim(),
+    isValid: Number.isFinite(amount) && amount > 0,
+    error: Number.isFinite(amount) && amount > 0 ? '' : 'El monto del pago debe ser mayor a cero.'
   }
 }
 
@@ -154,6 +246,7 @@ export function resolveRepairStatusClass(repair) {
   if (['aprobado', 'en_trabajo', 'listo'].includes(statusCode)) return 'status-progress'
   if (['entregado', 'noventena'].includes(statusCode)) return 'status-success'
   if (statusCode === 'archivado') return 'status-archived'
+  if (statusCode === 'rechazado') return 'status-rejected'
   return 'status-neutral'
 }
 
