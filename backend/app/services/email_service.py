@@ -16,6 +16,7 @@ from typing import List, Dict, Any
 from datetime import datetime
 import logging
 from email.message import EmailMessage
+from urllib.parse import quote, urlsplit
 
 from app.core.config import settings
 
@@ -29,12 +30,60 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
-SENDGRID_FROM_EMAIL = os.getenv('SENDGRID_FROM_EMAIL', 'noreply@cirujanodesintetizadores.cl')
+SENDGRID_FROM_EMAIL = os.getenv('SENDGRID_FROM_EMAIL')
 EMAIL_STYLESHEET_PATH = "/static/email.css"
 
 
+def build_public_url(path: str = "") -> str:
+    base_url = settings.public_base_url.rstrip("/")
+    normalized_path = str(path or "").strip()
+    if not normalized_path:
+        return base_url
+    if normalized_path.startswith(("http://", "https://")):
+        return normalized_path
+    return f"{base_url}/{normalized_path.lstrip('/')}"
+
+
+def _public_site_label() -> str:
+    parsed = urlsplit(build_public_url())
+    return parsed.netloc or build_public_url()
+
+
+def _build_mailto_href(email_address: str | None, subject: str | None = None) -> str | None:
+    if not email_address:
+        return None
+    href = f"mailto:{email_address}"
+    if subject:
+        href = f"{href}?subject={quote(subject)}"
+    return href
+
+
+def _build_email_button(href: str | None, label: str, button_class: str = "email-btn-primary") -> str:
+    if not href:
+        return ""
+    return (
+        f'<p><a href="{href}" class="email-btn {button_class}">'
+        f"{label}"
+        "</a></p>"
+    )
+
+
+def _build_email_footer(contact_email: str | None, divider_class: str = "email-divider") -> str:
+    lines = []
+    if contact_email:
+        lines.append(f'<a href="mailto:{contact_email}" class="email-link-orange">{contact_email}</a>')
+    lines.append(f'<a href="{build_public_url()}" class="email-link-orange">{_public_site_label()}</a>')
+    footer_lines = "<br>\n            ".join(lines)
+    return f"""
+        <hr class="{divider_class}">
+        <p class="email-footnote">
+            {footer_lines}
+        </p>
+    """
+
+
 def build_email_html(content: str, extra_css: str = "") -> str:
-    stylesheet_url = f"{settings.public_base_url.rstrip('/')}{EMAIL_STYLESHEET_PATH}"
+    stylesheet_url = build_public_url(EMAIL_STYLESHEET_PATH)
     if extra_css:
         logger.warning("build_email_html recibió extra_css y será ignorado para cumplir política sin CSS embebido")
     return f"""
@@ -78,6 +127,7 @@ class EmailService:
         Envía email cuando una cotización es guardada
         """
         subject = f"Tu cotización #{quotation_id} ha sido generada"
+        quotation_url = build_public_url(f"/cotizaciones/{quotation_id}")
         
         content = f"""
         <h2>¡Hola {customer_name}!</h2>
@@ -93,16 +143,11 @@ class EmailService:
         
         <p>Esta cotización es indicativa y válida por 30 días. El precio final puede variar según el diagnóstico detallado.</p>
         
-        <p><a href="https://cirujanodesintetizadores.cl/cotizaciones/{quotation_id}" class="email-btn email-btn-primary">
+        <p><a href="{quotation_url}" class="email-btn email-btn-primary">
             Ver cotización completa
         </a></p>
         
-        <hr class="email-divider">
-        <p class="email-footnote">
-            Cirujano de Sintetizadores<br>
-            Valparaíso, Chile<br>
-            +56 9 8295 7538
-        </p>
+        {_build_email_footer(self.from_email)}
         """
         html_content = build_email_html(content)
         
@@ -115,6 +160,7 @@ class EmailService:
         Envía email cuando una reparación es creada
         """
         subject = f"Tu reparación #{repair_id} ha sido registrada"
+        repair_url = build_public_url(f"/reparaciones/{repair_id}")
         
         content = f"""
         <h2>¡Hola {customer_name}!</h2>
@@ -130,16 +176,11 @@ class EmailService:
         
         <p>Recibirás actualizaciones sobre el estado de tu reparación a través de email y WhatsApp.</p>
         
-        <p><a href="https://cirujanodesintetizadores.cl/reparaciones/{repair_id}" class="email-btn email-btn-primary">
+        <p><a href="{repair_url}" class="email-btn email-btn-primary">
             Seguimiento de reparación
         </a></p>
         
-        <hr class="email-divider">
-        <p class="email-footnote">
-            Cirujano de Sintetizadores<br>
-            Valparaíso, Chile<br>
-            +56 9 8295 7538
-        </p>
+        {_build_email_footer(self.from_email)}
         """
         html_content = build_email_html(content)
         
@@ -164,6 +205,7 @@ class EmailService:
         }
         
         subject = f"Actualización: Tu reparación {repair_id} - {status_labels.get(status, status)}"
+        repair_url = build_public_url(f"/reparaciones/{repair_id}")
         
         progress_value = 0
         if progress is not None:
@@ -189,16 +231,11 @@ class EmailService:
         
         {f'<p><strong>Notas:</strong> {notes}</p>' if notes else ''}
         
-        <p><a href="https://cirujanodesintetizadores.cl/reparaciones/{repair_id}" class="email-btn email-btn-primary">
+        <p><a href="{repair_url}" class="email-btn email-btn-primary">
             Ver detalles completos
         </a></p>
         
-        <hr class="email-divider">
-        <p class="email-footnote">
-            Cirujano de Sintetizadores<br>
-            Valparaíso, Chile<br>
-            +56 9 8295 7538
-        </p>
+        {_build_email_footer(self.from_email)}
         """
         html_content = build_email_html(content)
         
@@ -210,6 +247,7 @@ class EmailService:
         Envía recordatorio de cita 24 horas antes
         """
         subject = f"Recordatorio: Tu cita está programada para {appointment_date}"
+        reply_href = _build_mailto_href(self.from_email, f"Confirmacion de cita {appointment_date}")
         
         content = f"""
         <h2>¡Hola {customer_name}!</h2>
@@ -229,16 +267,9 @@ class EmailService:
             <li>Si no puedes asistir, notifica con 24 horas de anticipación</li>
         </ul>
         
-        <p><a href="https://wa.me/56982957538?text=Hola,%20tengo%20una%20cita%20programada" class="email-btn email-btn-whatsapp">
-            Confirmar por WhatsApp
-        </a></p>
+        {_build_email_button(reply_href, "Responder por email")}
         
-        <hr class="email-divider email-divider-spaced">
-        <p class="email-footnote">
-            Cirujano de Sintetizadores<br>
-            Valparaíso, Chile<br>
-            +56 9 8295 7538
-        </p>
+        {_build_email_footer(self.from_email, "email-divider email-divider-spaced")}
         """
         html_content = build_email_html(content)
         
@@ -261,6 +292,7 @@ class EmailService:
         Envía email cuando la reparación está lista para recoger
         """
         subject = f"¡Tu {instrument} está listo para recoger!"
+        reply_href = _build_mailto_href(self.from_email, f"Coordinar retiro reparacion {repair_id}")
         
         content = f"""
         <h2>¡Hola {customer_name}!</h2>
@@ -283,16 +315,9 @@ class EmailService:
             <li>Retira tu instrumento</li>
         </ol>
         
-        <p><a href="https://wa.me/56982957538?text=Hola,%20vengo%20a%20recoger%20mi%20reparaci%C3%B3n" class="email-btn email-btn-whatsapp">
-            Coordinar retiro por WhatsApp
-        </a></p>
+        {_build_email_button(reply_href, "Coordinar retiro por email")}
         
-        <hr class="email-divider">
-        <p class="email-footnote">
-            Cirujano de Sintetizadores<br>
-            Valparaíso, Chile<br>
-            +56 9 8295 7538
-        </p>
+        {_build_email_footer(self.from_email)}
         """
         html_content = build_email_html(content)
         
@@ -313,9 +338,12 @@ class EmailService:
             return self._send_smtp_email(to_email, subject, html_content)
         
         if self.sendgrid_enabled:
+            if not self.from_email:
+                logger.error("Email service missing from_email. Skipping SendGrid send.")
+                return False
             try:
                 message = Mail(
-                    from_email=SENDGRID_FROM_EMAIL,
+                    from_email=self.from_email,
                     to_emails=to_email,
                     subject=subject,
                     html_content=html_content
@@ -372,6 +400,7 @@ async def send_appointment_confirmation(
     
     # Format fecha
     fecha_formateada = fecha.strftime("%d de %B de %Y a las %H:%M")
+    service = EmailService()
     
     content = f"""
     <div class="email-container">
@@ -393,18 +422,11 @@ async def send_appointment_confirmation(
             Si necesitas cambiar o cancelar tu cita, por favor responde a este correo.
         </p>
         
-        <hr class="email-divider">
-        
-        <p class="email-text-muted-small">
-            <strong>Cirujano de Sintetizadores</strong><br>
-            Especialistas en reparación y mantenimiento de sintetizadores<br>
-            <a href="https://www.cirujanodesintetizadores.cl" class="email-link-orange">www.cirujanodesintetizadores.cl</a>
-        </p>
+        {_build_email_footer(service.from_email)}
     </div>
     """
     html_content = build_email_html(content)
     
-    service = EmailService()
     return service.send_email(
         to_email=email,
         subject="Confirmación de cita - Cirujano de Sintetizadores",
