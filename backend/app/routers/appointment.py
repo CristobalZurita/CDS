@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime, timedelta
 
+from app.core.business_config import business_config
 from app.core.database import get_db, SessionLocal
 from app.core.ratelimit import limiter
 from app.core.dependencies import require_permission
@@ -88,8 +89,8 @@ async def _bg_update_calendar(appointment_id: int) -> None:
         service.update_event(
             calendar_id=calendar_id,
             event_id=appointment.google_calendar_id,
-            title=f"Cita: {appointment.nombre}",
-            description=f"Cita de agendamiento en Cirujano de Sintetizadores\n\n{appointment.mensaje or ''}",
+            title=business_config.appointment_event_title(appointment.nombre),
+            description=business_config.appointment_event_description(appointment.mensaje),
             start_time=appointment.fecha,
             end_time=_appointment_end_time(appointment),
             attendee_email=appointment.email,

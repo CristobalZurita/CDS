@@ -11,6 +11,8 @@ from datetime import date, datetime
 from textwrap import wrap
 from typing import Any, Dict, Iterable, List
 
+from app.core.business_config import business_config
+
 
 PDF_PAGE_WIDTH = 595
 PDF_PAGE_HEIGHT = 842
@@ -128,7 +130,7 @@ def build_repair_closure_lines(data: Dict[str, Any]) -> List[str]:
     now = datetime.utcnow()
 
     lines.extend([
-        "CIRUJANO DE SINTETIZADORES - INFORME DE CIERRE OT",
+        business_config.repair_closure_pdf_title(),
         f"Generado UTC: {_as_text(now)}",
         "",
         "IDENTIFICACION",
@@ -137,7 +139,7 @@ def build_repair_closure_lines(data: Dict[str, Any]) -> List[str]:
         f"Cliente: {_as_text(data.get('client_name'))}",
         f"Email cliente: {_as_text(data.get('client_email'))}",
         f"Telefono cliente: {_as_text(data.get('client_phone'))}",
-        f"Instrumento: {_as_text(data.get('device_model'))}",
+        f"{business_config.item_caption()} {_as_text(data.get('device_model'))}",
         f"Serial: {_as_text(data.get('device_serial'))}",
         f"Estado actual: {_as_text(data.get('status_name'))}",
         "",

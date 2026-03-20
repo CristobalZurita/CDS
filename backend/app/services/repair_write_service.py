@@ -15,6 +15,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core.business_config import business_config
 from app.core.config import settings
 from app.models.audit import AuditLog
 from app.models.client import Client
@@ -439,7 +440,7 @@ class RepairWriteService:
         summary_html = f"""
         <h2>Resumen de tu OT {repair.repair_number}</h2>
         <p><strong>Cliente:</strong> {client.name}</p>
-        <p><strong>Instrumento:</strong> {device.model if device else 'SIN_DATO'}</p>
+        <p><strong>{business_config.item_label}:</strong> {device.model if device else 'SIN_DATO'}</p>
         <p><strong>Problema:</strong> {repair.problem_reported or 'SIN_DATO'}</p>
         <p><strong>Diagnóstico:</strong> {repair.diagnosis or 'SIN_DATO'}</p>
         <p><strong>Trabajo:</strong> {repair.work_performed or 'SIN_DATO'}</p>

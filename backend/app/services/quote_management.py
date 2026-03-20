@@ -9,6 +9,7 @@ from fastapi import BackgroundTasks, HTTPException
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
+from app.core.business_config import business_config
 from app.models.client import Client
 from app.models.quote import Quote, QuoteItem, QuoteRecipient, QuoteStatus
 from app.models.repair import Repair
@@ -497,7 +498,7 @@ def build_quote_delivery_content(
     client: Client | None,
     custom_message: str = "",
 ) -> dict[str, str]:
-    subject = f"Cotización {quote.quote_number} - Cirujano de Sintetizadores"
+    subject = business_config.quote_delivery_subject(quote.quote_number)
     item_rows = "".join(
         f"<tr><td>{item.name}</td><td>{item.quantity}</td><td>${item.unit_price:,.0f}</td><td>${item.line_total:,.0f}</td></tr>"
         for item in (quote.items or [])
@@ -566,7 +567,7 @@ def build_quote_saved_event_payload(
         "customer_email": sent_to[0] if sent_to else (client.email if client else None),
         "customer_name": client.name if client else "Cliente",
         "quotation_id": quote.quote_number,
-        "instrument": "Servicio técnico",
+        "instrument": business_config.quote_default_item_name,
         "min_price": quote.estimated_total or 0,
         "max_price": quote.estimated_total or 0,
     }

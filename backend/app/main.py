@@ -18,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi.responses import JSONResponse
 
+from app.core.business_config import business_config
 from app.core.config import settings
 from app.core.security import verify_crypto_dependencies
 from app.core.database import init_db, close_db
@@ -147,9 +148,9 @@ async def _testing_lifespan(app: FastAPI):
 _is_test_env = settings.environment and settings.environment.lower() in ("test", "testing")
 _use_light_test_lifespan = _is_test_env and os.getenv("ENABLE_FULL_STARTUP_IN_TESTS", "false").lower() != "true"
 app = FastAPI(
-    title="Cirujano de Sintetizadores API",
-    description="Sistema integral de gestión para taller de reparación de sintetizadores",
-    version="1.0.0",
+    title=settings.api_title,
+    description=business_config.system_description,
+    version=settings.api_version,
     lifespan=_testing_lifespan if _use_light_test_lifespan else lifespan,
     docs_url="/docs" if settings.enable_api_docs else None,
     redoc_url="/redoc" if settings.enable_api_docs else None,
@@ -322,7 +323,7 @@ async def health_check():
     """
     health = {
         "status": "ok",
-        "message": "Cirujano de Sintetizadores API is running",
+        "message": business_config.health_message,
         "environment": settings.environment,
     }
     checks = {}
@@ -366,8 +367,8 @@ async def health_check():
 @app.get("/")
 async def root():
     return {
-        "service": "Cirujano de Sintetizadores",
-        "version": "1.0.0",
+        "service": business_config.display_name,
+        "version": settings.api_version,
         "environment": settings.environment,
         "docs": "/docs",
         "openapi": "/openapi.json"

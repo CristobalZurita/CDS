@@ -18,6 +18,7 @@ import logging
 from email.message import EmailMessage
 from urllib.parse import quote, urlsplit
 
+from app.core.business_config import business_config
 from app.core.config import settings
 
 try:
@@ -136,7 +137,7 @@ class EmailService:
         <div class="email-panel">
             <h3>Detalles de la cotización:</h3>
             <p><strong>ID:</strong> {quotation_id}</p>
-            <p><strong>Instrumento:</strong> {instrument}</p>
+            <p><strong>{business_config.item_label}:</strong> {instrument}</p>
             <p><strong>Rango estimado:</strong> ${min_price:,.0f} - ${max_price:,.0f} CLP</p>
             <p><strong>Generada:</strong> {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
         </div>
@@ -169,7 +170,7 @@ class EmailService:
         <div class="email-panel">
             <h3>Detalles de la reparación:</h3>
             <p><strong>Ticket:</strong> {repair_id}</p>
-            <p><strong>Instrumento:</strong> {instrument}</p>
+            <p><strong>{business_config.item_label}:</strong> {instrument}</p>
             <p><strong>Falla reportada:</strong> {fault_description}</p>
             <p><strong>Estimado de finalización:</strong> {estimated_completion}</p>
         </div>
@@ -257,7 +258,7 @@ class EmailService:
             <h3>📅 Detalles de tu cita:</h3>
             <p><strong>Fecha:</strong> {appointment_date}</p>
             <p><strong>Hora:</strong> {appointment_time}</p>
-            <p><strong>Ubicación:</strong> Valparaíso, Chile</p>
+            <p><strong>Ubicación:</strong> {business_config.location_label}</p>
         </div>
         
         <h4>Por favor recuerda:</h4>
@@ -276,7 +277,7 @@ class EmailService:
         return self._send_email(email, subject, html_content)
 
     def send_two_factor_code(self, email: str, code: str):
-        subject = "Código de verificación CDS"
+        subject = business_config.two_factor_email_subject
         content = f"""
         <h2>Tu código de verificación</h2>
         <p>Usa este código para completar el inicio de sesión:</p>
@@ -300,7 +301,7 @@ class EmailService:
         
         <div class="email-success-panel">
             <h3 class="email-success-title">✓ Reparación Completada</h3>
-            <p class="email-success-row"><strong>Instrumento:</strong> {instrument}</p>
+            <p class="email-success-row"><strong>{business_config.item_label}:</strong> {instrument}</p>
             <p class="email-success-row-spaced"><strong>Ticket:</strong> {repair_id}</p>
         </div>
         
@@ -408,7 +409,7 @@ async def send_appointment_confirmation(
         
         <p>Hola <strong>{nombre}</strong>,</p>
         
-        <p>Tu cita ha sido agendada correctamente en nuestro taller de reparación de sintetizadores.</p>
+        <p>{business_config.appointment_confirmation_intro()}</p>
         
         <div class="email-panel-orange">
             <h3 class="email-panel-orange-title">Detalles de tu cita:</h3>
@@ -429,7 +430,7 @@ async def send_appointment_confirmation(
     
     return service.send_email(
         to_email=email,
-        subject="Confirmación de cita - Cirujano de Sintetizadores",
+        subject=business_config.appointment_confirmation_subject(),
         html_content=html_content
     )
 

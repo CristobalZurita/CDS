@@ -1,122 +1,183 @@
 # Cirujano de Sintetizadores
 
-Repositorio principal del sistema web de Cirujano de Sintetizadores.
+Repositorio principal del sistema web y operativo de `CDS`.
 
-Este proyecto concentra el frontend público y administrativo, el backend principal y las utilidades internas que sostienen la operación del sitio, el taller y los flujos asociados.
+Este repo concentra el frontend público y administrativo, el backend principal y las piezas de soporte que hoy sostienen la operación del taller, el portal cliente, la agenda, la tienda, inventario, media, cotizaciones y OT.
+
+## Estado actual
+
+Fecha base de este README: `2026-03-20`.
+
+El proyecto ya no está en fase de armar estructura. Está en fase de:
+
+- estabilización funcional,
+- cierre operativo del taller,
+- consolidación de contratos canónicos,
+- salida progresiva de branding duro hacia capas configurables,
+- preparación de `CDS` como vertical viva sobre un core reusable.
+
+La guía operativa única del repo es [CDS_UNIFICADO.md](CDS_UNIFICADO.md). Este `README` resume el estado técnico y cómo entrar al proyecto; no reemplaza ese documento.
 
 ## Qué es este repo
 
-El repositorio está siendo trabajado como un monolito modular:
+La arquitectura vigente es un `monolito modular serio`:
 
-- un frontend principal en Vue 3
-- un backend principal en FastAPI
-- utilidades y scripts de soporte
-- piezas temporales o satélite, mantenidas separadas del núcleo canónico
+- frontend principal en `Vue 3`,
+- backend principal en `FastAPI`,
+- utilidades y scripts de soporte,
+- piezas temporales o satélite separadas del runtime canónico.
 
-La dirección de trabajo no es reescribir desde cero, sino deconstruir piezas grandes, extraer contratos compartidos y reducir duplicación sin romper compatibilidad donde todavía se necesita.
+La regla de trabajo sigue siendo:
 
-## Estructura general
+- cambios aditivos antes que destructivos,
+- deconstrucción antes que reescritura completa,
+- reutilizar capas reales antes de crear otras nuevas,
+- no duplicar contratos ni lógica si el repo ya tiene una fuente válida.
+
+## Estructura principal
 
 ```text
 cirujano-front_CLEAN/
-├── CDS_VUE3_ZERO/    frontend Vue 3 principal
-├── backend/          API FastAPI y lógica principal
-├── scripts/          utilidades de soporte y sincronización
-├── coming-soon-vue/  landing temporal separada del frontend principal
-└── .github/          automatizaciones del repositorio
+├── CDS_VUE3_ZERO/       frontend Vue 3 principal
+├── backend/             API FastAPI y lógica de negocio principal
+├── scripts/             utilidades y soporte operativo
+├── coming-soon-vue/     landing temporal separada del frontend canónico
+├── CDS_UNIFICADO.md     documento rector de trabajo
+└── .github/             automatizaciones del repositorio
 ```
 
-## Arquitectura actual
+## Qué existe de verdad
 
-### Frontend principal
+Hoy están conectados de forma real:
 
-`CDS_VUE3_ZERO/` es la aplicación principal del proyecto.
+- home pública,
+- cotizador,
+- panel administrativo,
+- portal cliente,
+- agenda pública y admin,
+- OT y reparación,
+- inventario,
+- media,
+- tienda,
+- `purchase requests`,
+- pagos manuales parciales,
+- Google Calendar en backend,
+- Google Places parcial en frontend.
 
-Incluye, entre otros:
+## Arquitectura viva
 
-- home pública
-- cotizador público
-- panel administrativo
-- portal de cliente
-- inventario y tienda
-- agenda
-- media
-- calculadoras electrónicas
+### Frontend
 
-La dirección actual del frontend es seguir partiendo lógica grande en composables, servicios y componentes más finos, manteniendo contratos existentes mientras todavía haya consumo legacy.
+`CDS_VUE3_ZERO/` es la aplicación principal.
 
-### Backend principal
+La dirección actual del frontend es:
+
+- seguir partiendo lógica grande en composables y servicios,
+- sacar contenido de negocio desde componentes hacia capas canónicas,
+- mantener `mobile first`,
+- evitar dashboards paralelos y fachadas visuales sin backend real.
+
+### Backend
 
 `backend/` contiene la API principal y la mayor parte de la lógica operativa.
 
-Incluye, entre otros:
+La dirección actual del backend es:
 
-- autenticación
-- clientes, equipos y reparaciones
-- cotizaciones
-- inventario
-- agenda
-- media
-- pagos
-- portal cliente
-- utilidades de reporting y soporte
+- consolidar contratos canónicos,
+- sacar branding y copy repetido desde servicios hacia una capa única,
+- mantener compatibilidad donde todavía exista consumo real,
+- no abrir microservicios ni duplicar dominios.
 
-La dirección actual del backend es reducir routers con demasiadas responsabilidades, consolidar contratos canónicos y empujar reglas compartidas hacia capas reutilizables.
+## Estado de consolidación
 
-## Hegemonías actuales del sistema
+### Ya asumido como base cerrada
 
-Estas son las fuentes de verdad que hoy se están consolidando:
+- cotizador canónico bajo `quotation`,
+- Cloudinary como contrato runtime real,
+- agenda pública y admin conectadas,
+- cliente portal base conectado,
+- tienda pública conectada a catálogo y `purchase requests`,
+- primer gran pase de modularización visual en `ZERO`,
+- lifecycle base de Google Calendar.
 
-- cotizador público: contrato canónico bajo `quotation`
-- media runtime: contrato canónico orientado a Cloudinary
-- inventario: contrato canónico bajo `/inventory`
-- compatibilidad legacy: se conserva sólo donde todavía hace falta, pero ya no debe gobernar el runtime
+### Frentes todavía abiertos
 
-En particular:
+- confianza transaccional y pago hegémonico,
+- cotizador mostrable sin disculpas,
+- persistencia canónica de coordenadas,
+- foundation real de mapas,
+- Google Auth,
+- GA4,
+- dashboard cliente como producto móvil fuerte,
+- salida completa de hardcodes hacia capas configurables,
+- separación clara entre `core reusable`, `domain pack` y `tenant CDS`.
 
-- `image-mapping.json` ya no debe ser fuente de verdad de runtime
-- `/items` existe por compatibilidad, pero la dirección canónica es `/inventory`
-- wrappers legacy deben comportarse como compatibilidad, no como sistemas paralelos
+## Generalización en curso
 
-## Estado técnico resumido
+La hipótesis activa del repo es esta:
 
-El repositorio ya avanzó bastante en modularización visual y de contratos. La deuda principal ya no está tanto en páginas enteras renderizando todo, sino en lógica concentrada en algunos composables, routers y servicios grandes.
+`CDS` es la primera vertical viva sobre un `core` configurable.
 
-Frentes que ya han sido fuertemente deconstruidos:
+Eso significa:
 
-- home pública
-- shell público
-- cotizador público
-- intake wizard
-- repair detail admin
-- dashboard y varias vistas admin
-- integración media/Cloudinary
-- compatibilidad `/items` vs `/inventory`
+- lo reusable debe quedar en capas neutrales,
+- lo específico del rubro debe quedar en el domain pack,
+- lo propio del taller debe terminar como configuración o contenido del tenant.
 
-Frentes todavía pesados:
+### Fase 0 completada
 
-- `MediaPage.vue`
-- `AdminShellLayout.vue`
-- `quote_management_router.py`
-- `repair.py`
-- `client_portal.py`
-- algunos servicios de reporting y reparación
+Se cerró el primer bloque de desacople visible en backend email:
 
-## Cómo se ha trabajado
+- los links públicos ya salen desde `PUBLIC_BASE_URL`,
+- el remitente efectivo ya sale desde configuración existente,
+- se eliminó el hardcode de `wa.me` fijo en esos templates,
+- se agregaron tests dirigidos para blindar ese comportamiento.
 
-La disciplina aplicada al repo sigue estas reglas:
+### Fase 1 backend iniciada
 
-- cambios aditivos, no destructivos por defecto
-- deconstrucción antes que reescritura total
-- reutilizar piezas existentes antes de crear otras nuevas
-- no duplicar contratos ni lógica si ya existe una capa válida
-- mantener compatibilidad legacy sólo donde todavía sea necesaria
-- validar con build y/o tests antes de dar por cerrado un corte
-- no documentar secretos ni detalles sensibles en archivos públicos
+Ya existe una capa canónica de identidad/copy backend en:
+
+- [backend/app/core/business_config.py](backend/app/core/business_config.py)
+
+Desde ahí ya se alimentan piezas visibles de runtime en:
+
+- `config.py`,
+- `main.py`,
+- `appointment.py`,
+- `google_calendar_service.py`,
+- `pdf_generator.py`,
+- `quote_management.py`,
+- `email_service.py`,
+- `repair_write_service.py`.
+
+Esto no termina la generalización, pero sí deja de repartir branding duro en múltiples servicios backend.
+
+## Prioridad vigente
+
+El orden rector hoy es:
+
+1. operación nuclear CDS,
+2. pago seguro y confianza transaccional,
+3. cotizador digno,
+4. Google fundacional con base real,
+5. definición de producto vendible.
+
+Lo visual, growth, `NEO`, tipografía y SEO pueden correr en paralelo sólo si no rompen esa serie.
+
+## Qué viene después
+
+Los siguientes bloques correctos son:
+
+- cerrar `Fase 1` backend completa,
+- abrir `Fase 1` frontend con una capa canónica de negocio y contenido,
+- sacar `footer`, `contact`, `home`, legal y copy comercial desde componentes inline,
+- introducir feature flags reales para módulos opcionales,
+- resolver `OT_PREFIX` como decisión de config más compatibilidad/migración,
+- seguir separando `CDS tenant` de `core reusable` sin romper operación real.
 
 ## Desarrollo local
 
-### Frontend principal
+### Frontend
 
 ```bash
 cd CDS_VUE3_ZERO
@@ -136,14 +197,35 @@ npm run build
 ```bash
 cd backend
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
+
+## Variables de entorno
+
+Las bases de configuración están en:
+
+- [.env.example](.env.example)
+- [backend/.env.example](backend/.env.example)
+
+Puntos relevantes hoy:
+
+- `PUBLIC_BASE_URL`
+- `FROM_EMAIL`
+- `SMTP_FROM_EMAIL`
+- `SENDGRID_FROM_EMAIL`
+- `GOOGLE_CALENDAR_CREDENTIALS_FILE`
+- `GOOGLE_CALENDAR_ID`
+- `WHATSAPP_*`
+- `ENABLE_INSTRUMENT_AUTO_SYNC`
+- `INSTRUMENT_SYNC_ON_STARTUP`
+- `INSTRUMENT_SYNC_INTERVAL_MINUTES`
+- `VITE_GOOGLE_MAPS_API_KEY`
 
 ## Validación
 
 ### Frontend
 
-La validación mínima del frontend hoy es:
+Validación mínima:
 
 ```bash
 cd CDS_VUE3_ZERO
@@ -152,33 +234,53 @@ npm run build
 
 ### Backend
 
-La validación del backend depende del frente que se esté tocando. La base general es:
+Base general:
 
 ```bash
 cd backend
 pytest tests/ --verbose
 ```
 
-Cuando un corte es temático, se prefieren corridas focalizadas sobre los tests realmente afectados.
+Cuando el corte es temático, se prefieren corridas focalizadas sobre lo realmente tocado.
 
-## Documentación
+Ejemplos reales usados en este repo:
 
-Este `README.md` está pensado como resumen técnico y seguro de alto nivel.
+```bash
+pytest tests/test_email_service.py -q
+pytest tests/test_business_config.py tests/test_quote_routes.py tests/test_health.py -q
+```
 
-No debe contener:
+## Documentación viva
 
-- credenciales
-- tokens
-- passwords
-- correos privados
-- rutas locales sensibles
-- configuraciones de producción
-- datos de clientes
+### Documento rector
 
-La planificación operativa detallada y el seguimiento fino del avance se mantienen en documentos de trabajo separados, sin tratarlos como documentación pública canónica del proyecto.
+- [CDS_UNIFICADO.md](CDS_UNIFICADO.md)
+
+### Documentos históricos
+
+Se mantienen como contexto, no como backlog vivo principal:
+
+- `NEGO_GANT.md`
+- `NEGO_CHECKLIST.md`
+- `CDS_GANT.md`
+- `ESTADO.md`
+- `NEO_DASH.md`
+- `LETRAS.md`
+- `COMPRAS.md`
+- `gant.md`
+- `dash.md`
+- `APIREST.md`
 
 ## Seguridad
 
-- No se versionan secretos reales en este archivo.
-- La configuración sensible debe resolverse vía variables de entorno o canales internos controlados.
-- Ningún README del proyecto debe exponer claves, tokens, secretos de servicios externos ni datos operativos sensibles.
+Este `README` no debe contener:
+
+- credenciales,
+- tokens,
+- passwords,
+- correos privados,
+- rutas locales sensibles,
+- configuraciones productivas sensibles,
+- datos de clientes.
+
+La configuración sensible debe resolverse por variables de entorno y canales internos controlados.

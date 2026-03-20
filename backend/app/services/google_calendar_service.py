@@ -10,6 +10,8 @@ from datetime import datetime
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
+from app.core.business_config import business_config
+
 logger = logging.getLogger(__name__)
 
 # Scopes required for Google Calendar API
@@ -208,8 +210,8 @@ async def sync_to_google_calendar(appointment) -> Optional[str]:
         # Create calendar event
         event_id = service.create_event(
             calendar_id=calendar_id,
-            title=f"Cita: {appointment.nombre}",
-            description=f"Cita de agendamiento en Cirujano de Sintetizadores\n\n{appointment.mensaje or ''}",
+            title=business_config.appointment_event_title(appointment.nombre),
+            description=business_config.appointment_event_description(appointment.mensaje),
             start_time=appointment.fecha,
             end_time=end_time,
             attendee_email=appointment.email

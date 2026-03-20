@@ -8,6 +8,8 @@ from typing import Optional
 import os
 from dotenv import load_dotenv
 
+from app.core.business_config import business_config
+
 
 def _load_dotenv_for_env() -> None:
     """Load a .env file from backend/.env (preferred) or repo root .env."""
@@ -37,7 +39,7 @@ class Settings(BaseModel):
     model_config = ConfigDict(case_sensitive=False)
 
     # API Configuration
-    api_title: str = "Cirujano de Sintetizadores API"
+    api_title: str = business_config.api_title
     api_version: str = "1.0.0"
     debug: bool = os.getenv("DEBUG", "false").lower() == "true"
     environment: str = os.getenv("ENVIRONMENT", "development")
