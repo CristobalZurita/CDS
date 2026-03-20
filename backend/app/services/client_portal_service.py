@@ -26,7 +26,11 @@ from app.models.stock import Stock
 from app.models.user import User
 from app.services.inventory_catalog_service import store_visible_from_meta
 from app.services.logging_service import create_audit
-from app.services.purchase_request_service import _apply_request_stock_state
+from app.services.purchase_request_service import (
+    _apply_request_stock_state,
+    _request_total,
+    request_client_payment_for_request,
+)
 from app.services.repair_helpers import (
     resolved_repair_code as _resolved_repair_code,
     safe_pdf_filename as _safe_pdf_filename,
@@ -58,6 +62,8 @@ _STATUS_ALIASES = {
     "archivado": "archivado",
     "rechazado": "rechazado",
 }
+
+_CONTACT_PREFERENCES = {"whatsapp", "email", "sms", "phone"}
 
 
 def ensure_client(db: Session, user: User) -> Client:
@@ -104,6 +110,25 @@ def status_code(repair: Repair) -> str:
 def normalize_status_code(code: str | None) -> str:
     value = str(code or "").strip().lower()
     return _STATUS_ALIASES.get(value, value or "ingreso")
+
+
+def normalize_contact_preference(value: str | None, fallback: str = "whatsapp") -> str:
+    normalized = str(value or "").strip().lower()
+    if normalized in _CONTACT_PREFERENCES:
+        return normalized
+    return fallback
+
+
+def build_profile_preferences_payload(client: Client) -> dict:
+    preferred_contact = normalize_contact_preference(getattr(client, "preferred_contact", None))
+    service_preference = normalize_contact_preference(
+        getattr(client, "service_preference", None),
+        fallback=preferred_contact,
+    )
+    return {
+        "preferred_contact": preferred_contact,
+        "service_preference": service_preference,
+    }
 
 
 def status_progress(code: str) -> int:
@@ -206,10 +231,7 @@ def build_client_purchase_request_payload(
     latest_payment: Payment | None,
     client_id: int | None = None,
 ) -> Dict:
-    total_items_amount = round(
-        sum(float(item.quantity or 0) * float(item.unit_price or 0) for item in (req.items or [])),
-        2,
-    )
+    total_items_amount = _request_total(req)
     payment_notes = parse_payment_notes(latest_payment.notes if latest_payment else None)
     resolved_client_id = int(client_id or req.client_id or 0) or None
     resolved_repair_code = _resolved_repair_code(req.repair, resolved_client_id)
@@ -637,12 +659,14 @@ def get_profile_payload(db: Session, user_id: int) -> dict:
     user_obj = get_client_user_or_404(db, user_id)
     client = ensure_client(db, user_obj)
     avg_repair_days = get_client_avg_repair_days(db, client.id)
+    preferences = build_profile_preferences_payload(client)
     return {
         "email": user_obj.email,
         "full_name": user_obj.full_name,
         "phone": user_obj.phone,
         "address": client.address,
         "member_since": user_obj.created_at,
+        **preferences,
         "stats": {
             "total_repairs": client.total_repairs,
             "total_spent": client.total_spent,
@@ -659,6 +683,8 @@ def update_profile_payload(db: Session, user_id: int, payload: Dict) -> dict:
     full_name = payload.get("full_name")
     phone = payload.get("phone")
     address = payload.get("address")
+    preferred_contact = payload.get("preferred_contact")
+    service_preference = payload.get("service_preference")
 
     if email and email != user_obj.email:
         existing = db.query(User).filter(User.email == email).first()
@@ -680,12 +706,23 @@ def update_profile_payload(db: Session, user_id: int, payload: Dict) -> dict:
     if address is not None:
         client.address = address
 
+    if preferred_contact is not None:
+        client.preferred_contact = normalize_contact_preference(preferred_contact)
+
+    if service_preference is not None:
+        fallback = normalize_contact_preference(
+            client.preferred_contact or preferred_contact,
+            fallback="whatsapp",
+        )
+        client.service_preference = normalize_contact_preference(service_preference, fallback=fallback)
+
     db.add(user_obj)
     db.add(client)
     db.commit()
     db.refresh(user_obj)
     db.refresh(client)
     avg_repair_days = get_client_avg_repair_days(db, client.id)
+    preferences = build_profile_preferences_payload(client)
 
     return {
         "email": user_obj.email,
@@ -693,6 +730,7 @@ def update_profile_payload(db: Session, user_id: int, payload: Dict) -> dict:
         "phone": user_obj.phone,
         "address": client.address,
         "member_since": user_obj.created_at,
+        **preferences,
         "stats": {
             "total_repairs": client.total_repairs,
             "total_spent": client.total_spent,
@@ -826,18 +864,8 @@ def create_store_purchase_request_record(db: Session, user_id: int, payload: Dic
     if client_note:
         note_parts.append(f"Nota cliente: {client_note}")
 
-    req = PurchaseRequest(
-        client_id=client.id,
-        repair_id=None,
-        created_by=user_obj.id,
-        status="requested",
-        notes=" | ".join(note_parts),
-    )
-    db.add(req)
-    db.flush()
-
+    prepared_items = []
     total_items = 0
-    pending_availability = []
     for raw_item in raw_items:
         product_id = int(raw_item.get("product_id") or 0)
         quantity = int(raw_item.get("quantity") or 0)
@@ -857,36 +885,53 @@ def create_store_purchase_request_record(db: Session, user_id: int, payload: Dic
 
         sellable_stock = product_sellable_stock(db, product)
         if sellable_stock < quantity:
-            pending_availability.append(f"{product.sku} ({sellable_stock} vendible)")
-
-        unit_price = float(raw_item.get("unit_price") or product.price or 0)
-        db.add(
-            PurchaseRequestItem(
-                request_id=req.id,
-                product_id=product.id,
-                sku=product.sku,
-                name=product.name,
-                quantity=quantity,
-                unit_price=unit_price,
-                status="suggested",
+            raise HTTPException(
+                status_code=409,
+                detail=f"Stock insuficiente para {product.sku}: disponibles {sellable_stock}, solicitados {quantity}",
             )
+
+        prepared_items.append(
+            {
+                "product_id": product.id,
+                "sku": product.sku,
+                "name": product.name,
+                "quantity": quantity,
+                "unit_price": float(product.price or 0),
+            }
         )
         total_items += quantity
 
-    if pending_availability:
-        note_parts.append("Revisar disponibilidad taller: " + ", ".join(pending_availability[:6]))
-        req.notes = " | ".join(note_parts)
+    req = PurchaseRequest(
+        client_id=client.id,
+        repair_id=None,
+        created_by=user_obj.id,
+        status="draft",
+        notes=" | ".join(note_parts),
+    )
+    db.add(req)
+    db.flush()
+
+    for item in prepared_items:
+        db.add(
+            PurchaseRequestItem(
+                request_id=req.id,
+                product_id=item["product_id"],
+                sku=item["sku"],
+                name=item["name"],
+                quantity=item["quantity"],
+                unit_price=item["unit_price"],
+                status="suggested",
+            )
+        )
 
     db.flush()
-    _apply_request_stock_state(
+
+    payment_request = request_client_payment_for_request(
+        req.id,
+        {},
         db,
-        req,
-        previous_status="draft",
-        next_status=req.status,
-        user_id=user_obj.id,
+        {"user_id": str(user_obj.id), "role": getattr(user_obj, "role", None)},
     )
-    db.commit()
-    db.refresh(req)
 
     try:
         create_audit(
@@ -905,7 +950,7 @@ def create_store_purchase_request_record(db: Session, user_id: int, payload: Dic
 
     return {
         "ok": True,
-        "request": build_client_purchase_request_payload(req, None, client.id),
+        "request": payment_request["request"],
     }
 
 
@@ -933,7 +978,7 @@ def submit_client_deposit_proof_record(
     if req.client_id is None and client.id not in allowed_client_ids:
         raise HTTPException(status_code=403, detail="No autorizado para esta solicitud de compra")
 
-    if req.status not in {"pending_payment", "requested", "proof_submitted"}:
+    if req.status not in {"pending_payment", "proof_submitted"}:
         raise HTTPException(status_code=400, detail="La solicitud no está en estado de pago")
 
     payment = (
@@ -946,36 +991,59 @@ def submit_client_deposit_proof_record(
         .first()
     )
 
-    requested_amount = payload.get("amount")
-    if requested_amount is None:
-        requested_amount = int(
-            round(sum(float(item.quantity or 0) * float(item.unit_price or 0) for item in (req.items or [])))
+    proof_path = str(payload.get("proof_path") or "").strip()
+    if not proof_path:
+        raise HTTPException(status_code=400, detail="Debes adjuntar un comprobante de pago")
+
+    if not payment:
+        raise HTTPException(status_code=400, detail="La solicitud no tiene un cobro solicitado")
+
+    if payment.payment_due_date and payment.payment_due_date < datetime.utcnow() and req.status == "pending_payment":
+        previous_status = req.status
+        req.status = "cancelled"
+        req.notes = " | ".join(
+            [
+                part
+                for part in [
+                    str(req.notes or "").strip(),
+                    f"Reserva vencida: pago no recibido antes de {payment.payment_due_date.strftime('%Y-%m-%d %H:%M')}",
+                ]
+                if part
+            ]
         )
-    amount = int(round(float(requested_amount)))
+        payment_notes = parse_payment_notes(payment.notes)
+        payment_notes["expired_at"] = datetime.utcnow().isoformat()
+        payment_notes["expiry_reason"] = "payment_due_date_exceeded"
+        payment.status = PaymentStatus.FAILED
+        payment.notes = json.dumps(payment_notes, ensure_ascii=False)
+        _apply_request_stock_state(
+            db,
+            req,
+            previous_status=previous_status,
+            next_status=req.status,
+            user_id=user_obj.id,
+        )
+        db.commit()
+        try:
+            create_audit(
+                event_type="purchase_request.expired",
+                user_id=user_obj.id,
+                details={"request_id": req.id},
+                message=f"Purchase request #{req.id} expired by overdue payment",
+            )
+        except Exception:
+            pass
+        raise HTTPException(status_code=410, detail="La solicitud venció y ya no admite comprobante")
+
+    amount = int(payment.amount or 0)
     if amount <= 0:
         raise HTTPException(status_code=400, detail="Monto inválido")
 
-    if not payment:
-        payment = Payment(
-            user_id=user_obj.id,
-            repair_id=req.repair_id,
-            purchase_request_id=req.id,
-            amount=amount,
-            payment_method="transfer",
-            status=PaymentStatus.PENDING,
-            transaction_id=f"DEP-{req.id}-{int(datetime.utcnow().timestamp())}",
-            payment_processor="manual",
-            currency="CLP",
-        )
-        db.add(payment)
-        db.flush()
-    else:
-        payment.amount = amount
-        if not payment.transaction_id:
-            payment.transaction_id = f"DEP-{req.id}-{int(datetime.utcnow().timestamp())}"
+    if not payment.transaction_id:
+        payment.transaction_id = f"DEP-{req.id}-{int(datetime.utcnow().timestamp())}"
 
     payment_notes = parse_payment_notes(payment.notes)
-    payment_notes["proof_path"] = payload.get("proof_path")
+    payment_notes["proof_path"] = proof_path
     payment_notes["deposit_reference"] = payload.get("deposit_reference")
     payment_notes["depositor_name"] = payload.get("depositor_name") or user_obj.full_name
     payment_notes["client_notes"] = payload.get("client_notes")
@@ -1003,7 +1071,7 @@ def submit_client_deposit_proof_record(
                 "request_id": req.id,
                 "payment_id": payment.id,
                 "amount": payment.amount,
-                "proof_path": payload.get("proof_path"),
+                "proof_path": proof_path,
             },
             message=f"Deposit proof submitted for purchase request #{req.id}",
         )

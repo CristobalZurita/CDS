@@ -349,6 +349,18 @@ def _serialize_request(db: Session, req: PurchaseRequest) -> dict:
     }
 
 
+def _append_request_note(raw_notes: str | None, message: str) -> str:
+    text = str(raw_notes or "").strip()
+    suffix = str(message or "").strip()
+    if not suffix:
+        return text
+    if not text:
+        return suffix
+    if suffix in text:
+        return text
+    return f"{text} | {suffix}"
+
+
 def _get_request_or_404(db: Session, request_id: int) -> PurchaseRequest:
     req = db.query(PurchaseRequest).filter(PurchaseRequest.id == request_id).first()
     if not req:
@@ -533,6 +545,83 @@ def request_client_payment_for_request(
         pass
 
     return {"ok": True, "request": _serialize_request(db, req), "payment": open_payment}
+
+
+def expire_overdue_purchase_requests(
+    db: Session,
+    *,
+    now: datetime | None = None,
+    user: dict | None = None,
+    user_id: int | None = None,
+) -> dict[str, Any]:
+    current_time = now or datetime.utcnow()
+    actor_id = user_id
+    if actor_id is None and user and user.get("user_id"):
+        actor_id = int(user.get("user_id"))
+
+    candidates = (
+        db.query(PurchaseRequest)
+        .filter(PurchaseRequest.status == "pending_payment")
+        .order_by(PurchaseRequest.updated_at.asc(), PurchaseRequest.id.asc())
+        .all()
+    )
+
+    expired_request_ids: list[int] = []
+
+    for req in candidates:
+        payment = (
+            db.query(Payment)
+            .filter(
+                Payment.purchase_request_id == req.id,
+                Payment.status == PaymentStatus.PENDING,
+            )
+            .order_by(Payment.id.desc())
+            .first()
+        )
+        if not payment or not payment.payment_due_date:
+            continue
+        if payment.payment_due_date >= current_time:
+            continue
+
+        previous_status = req.status
+        req.status = "cancelled"
+        req.notes = _append_request_note(
+            req.notes,
+            f"Reserva vencida: pago no recibido antes de {payment.payment_due_date.strftime('%Y-%m-%d %H:%M')}",
+        )
+
+        meta = _parse_notes_metadata(payment.notes)
+        meta["expired_at"] = current_time.isoformat()
+        meta["expiry_reason"] = "payment_due_date_exceeded"
+        payment.status = PaymentStatus.FAILED
+        payment.notes = json.dumps(meta, ensure_ascii=False)
+
+        _apply_request_stock_state(
+            db,
+            req,
+            previous_status=previous_status,
+            next_status=req.status,
+            user_id=actor_id,
+        )
+        expired_request_ids.append(int(req.id))
+
+    if not expired_request_ids:
+        return {"ok": True, "expired": 0, "request_ids": []}
+
+    db.commit()
+
+    for request_id in expired_request_ids:
+        try:
+            create_audit(
+                event_type="purchase_request.expired",
+                user_id=actor_id,
+                details={"request_id": request_id},
+                message=f"Purchase request #{request_id} expired by overdue payment",
+            )
+        except Exception:
+            pass
+
+    return {"ok": True, "expired": len(expired_request_ids), "request_ids": expired_request_ids}
 
 
 def confirm_client_payment_for_request(

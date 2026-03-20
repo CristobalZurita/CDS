@@ -33,8 +33,10 @@ export function useOtPaymentsPage() {
     busyIds.value = next
   }
 
-  function canSubmitProof(status) {
-    return ['pending_payment', 'requested', 'proof_submitted'].includes(normalizeStatus(status))
+  function canSubmitProof(request) {
+    const status = normalizeStatus(request?.status)
+    const hasPaymentRequest = Number(request?.latest_payment?.id || 0) > 0
+    return hasPaymentRequest && ['pending_payment', 'proof_submitted'].includes(status)
   }
 
   function ensureForm(request) {
@@ -104,13 +106,19 @@ export function useOtPaymentsPage() {
   }
 
   async function submitProof(request) {
-    setBusy(request.id, true)
+    ensureForm(request)
     error.value = ''
 
+    const form = forms.value[request.id]
+    const file = filesByRequest.value[request.id] || null
+    if (!file) {
+      error.value = 'Debes adjuntar un comprobante antes de enviarlo.'
+      return
+    }
+
+    setBusy(request.id, true)
+
     try {
-      ensureForm(request)
-      const form = forms.value[request.id]
-      const file = filesByRequest.value[request.id] || null
       const proofPath = await uploadProofImage(file)
 
       await api.post(`/client/purchase-requests/${request.id}/deposit-proof`, {

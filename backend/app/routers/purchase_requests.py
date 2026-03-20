@@ -8,12 +8,12 @@ from app.core.dependencies import require_permission, get_current_user
 from app.schemas import PaymentRead
 from app.schemas.purchase_request import PurchaseRequestCreate, PurchaseRequestOut
 from app.services.purchase_request_service import (
-    _apply_request_stock_state,
     _get_request_or_404,
     build_purchase_requests_board,
     confirm_client_payment_for_request,
     create_purchase_request_record,
     delete_purchase_request_record,
+    expire_overdue_purchase_requests,
     get_purchase_request_detail_payload,
     list_purchase_request_payments_for_request,
     list_purchase_requests_query,
@@ -92,6 +92,14 @@ def request_client_payment(
     user: dict = Depends(require_permission("purchase_requests", "update")),
 ):
     return request_client_payment_for_request(request_id, payload, db, user)
+
+
+@router.post("/maintenance/expire-overdue")
+def expire_overdue_purchase_requests_maintenance(
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("purchase_requests", "update")),
+):
+    return expire_overdue_purchase_requests(db, user=user)
 
 
 @router.post("/{request_id}/confirm-payment")

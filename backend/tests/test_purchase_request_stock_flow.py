@@ -1,6 +1,6 @@
 import importlib
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from fastapi.testclient import TestClient
 
@@ -9,9 +9,12 @@ from app.core.database import SessionLocal
 from app.models.category import Category
 from app.models.client import Client
 from app.models.inventory import Product
+from app.models.payment import Payment, PaymentStatus
+from app.models.purchase_request import PurchaseRequest
 from app.models.purchase_request import PurchaseRequestItem
 from app.models.stock import Stock
 from app.models.user import User
+from app.services.purchase_request_service import expire_overdue_purchase_requests
 
 
 importlib.reload(_main)
@@ -109,6 +112,8 @@ def test_store_request_reserves_and_received_consumes_stock():
     )
     assert create_res.status_code in (200, 201)
     request_id = int(create_res.json()["request"]["id"])
+    assert create_res.json()["request"]["status"] == "pending_payment"
+    assert create_res.json()["request"]["payment_due_date"]
 
     inventory_after_create = client.get(f"/api/v1/inventory/{product_id}")
     assert inventory_after_create.status_code == 200
@@ -142,6 +147,137 @@ def test_store_request_reserves_and_received_consumes_stock():
         assert int(item.reserved_quantity or 0) == 0
     finally:
         db.close()
+
+
+def test_store_request_ignores_client_unit_price_tampering():
+    _ensure_admin_user()
+    client = _build_client()
+    slug = datetime.utcnow().strftime("%H%M%S%f")
+    product_id = _create_store_product(slug, quantity=8, min_quantity=2)
+
+    create_res = client.post(
+        "/api/v1/client/store/purchase-requests",
+        json={
+            "shipping_key": "pickup",
+            "shipping_label": "Retiro en taller",
+            "items": [
+                {
+                    "product_id": product_id,
+                    "quantity": 1,
+                    "unit_price": 1,
+                }
+            ],
+        },
+    )
+    assert create_res.status_code in (200, 201)
+    payload = create_res.json()["request"]
+    request_id = int(payload["id"])
+
+    assert payload["status"] == "pending_payment"
+    assert payload["payment_due_date"]
+    assert payload["total_items_amount"] == 2490
+    assert payload["requested_amount"] == 2490
+
+    db = SessionLocal()
+    try:
+        item = db.query(PurchaseRequestItem).filter(PurchaseRequestItem.request_id == request_id).first()
+        assert item is not None
+        assert float(item.unit_price or 0) == 2490.0
+    finally:
+        db.close()
+
+
+def test_store_request_rejects_insufficient_sellable_stock():
+    _ensure_admin_user()
+    client = _build_client()
+    slug = datetime.utcnow().strftime("%H%M%S%f")
+    product_id = _create_store_product(slug, quantity=4, min_quantity=2)
+
+    create_res = client.post(
+        "/api/v1/client/store/purchase-requests",
+        json={
+            "shipping_key": "pickup",
+            "shipping_label": "Retiro en taller",
+            "items": [
+                {
+                    "product_id": product_id,
+                    "quantity": 3,
+                }
+            ],
+        },
+    )
+    assert create_res.status_code == 409
+    assert "Stock insuficiente" in create_res.text
+
+    inventory_after = client.get(f"/api/v1/inventory/{product_id}")
+    assert inventory_after.status_code == 200
+    payload = inventory_after.json()
+    assert payload["quantity_reserved"] == 0
+    assert payload["stock"] == 4
+
+    db = SessionLocal()
+    try:
+        item = db.query(PurchaseRequestItem).filter(PurchaseRequestItem.product_id == product_id).first()
+        assert item is None
+    finally:
+        db.close()
+
+
+def test_expire_overdue_purchase_requests_releases_reserved_stock():
+    _ensure_admin_user()
+    client = _build_client()
+    slug = datetime.utcnow().strftime("%H%M%S%f")
+    product_id = _create_store_product(slug, quantity=10, min_quantity=2)
+
+    create_res = client.post(
+        "/api/v1/client/store/purchase-requests",
+        json={
+            "shipping_key": "pickup",
+            "shipping_label": "Retiro en taller",
+            "items": [
+                {
+                    "product_id": product_id,
+                    "quantity": 2,
+                }
+            ],
+        },
+    )
+    assert create_res.status_code in (200, 201)
+    request_id = int(create_res.json()["request"]["id"])
+
+    db = SessionLocal()
+    try:
+        request = db.query(PurchaseRequest).filter(PurchaseRequest.id == request_id).first()
+        payment = (
+            db.query(Payment)
+            .filter(Payment.purchase_request_id == request_id)
+            .order_by(Payment.id.desc())
+            .first()
+        )
+        assert request is not None
+        assert payment is not None
+
+        payment.payment_due_date = datetime.utcnow() - timedelta(minutes=5)
+        db.add(payment)
+        db.commit()
+
+        result = expire_overdue_purchase_requests(db, user_id=1)
+        assert result["expired"] >= 1
+        assert request_id in result["request_ids"]
+
+        db.refresh(request)
+        db.refresh(payment)
+        assert request.status == "cancelled"
+        assert "Reserva vencida" in str(request.notes or "")
+        assert payment.status == PaymentStatus.FAILED
+    finally:
+        db.close()
+
+    inventory_after = client.get(f"/api/v1/inventory/{product_id}")
+    assert inventory_after.status_code == 200
+    payload = inventory_after.json()
+    assert payload["quantity_reserved"] == 0
+    assert payload["stock"] == 10
 
 
 def test_store_request_cancel_releases_reserved_stock():

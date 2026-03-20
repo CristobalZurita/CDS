@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <div v-if="canSubmitProof(request.status)" class="proof-form">
+        <div v-if="canSubmitProof(request)" class="proof-form">
           <h3>Subir comprobante de deposito</h3>
           <div class="form-grid">
             <input
