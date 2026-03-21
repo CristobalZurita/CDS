@@ -128,14 +128,15 @@ async function submitContact() {
 .contact-info-wrap {
   padding: clamp(1.3rem, 2vw, 2rem);
   border-radius: clamp(1.15rem, 2vw, 1.7rem);
-  background: var(--cds-white);
+  background: var(--cds-surface-1);
   border: 1px solid var(--cds-border-card);
   box-shadow: var(--cds-shadow-sm);
 }
 
 .contact-form-wrap h3 {
   margin: 0 0 1.25rem;
-  font-size: var(--cds-text-xl);
+  font-size: var(--layout-home-text-card-title, var(--cds-text-xl));
+  font-family: var(--layout-home-font-family-heading, var(--layout-home-font-family-base, var(--cds-font-family-base)), sans-serif);
   color: var(--cds-dark);
 }
 
@@ -147,14 +148,14 @@ async function submitContact() {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-home-text-meta, var(--cds-text-sm));
   font-weight: var(--cds-font-semibold);
   color: var(--cds-text-normal);
 }
 
 .form-field label i {
   color: var(--cds-primary);
-  font-size: var(--cds-text-sm);
+  font-size: 1.2em;
 }
 
 .form-field input,
@@ -164,7 +165,7 @@ async function submitContact() {
   padding: 0.3rem 1rem;
   border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-md);
-  font-size: clamp(1rem, 1.5rem + 0.34vw, 1.5rem);
+  font-size: var(--layout-home-text-body, clamp(1rem, 0.96rem + 0.22vw, 1.12rem));
   font-family: inherit;
   color: var(--cds-text-normal);
   background: var(--cds-white);
@@ -187,7 +188,7 @@ async function submitContact() {
   margin: 0;
   padding: 0.75rem 1rem;
   border-radius: var(--cds-radius-sm);
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-home-text-meta, var(--cds-text-sm));
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -216,7 +217,8 @@ async function submitContact() {
   border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
-  font-size: clamp(1rem, 0.92rem + 0.34vw, 1.16rem);
+  font-size: clamp(0.98rem, 0.94rem + 0.24vw, 1.08rem);
+  font-family: var(--layout-home-font-family-base, var(--cds-font-family-base), sans-serif);
   font-weight: var(--cds-font-semibold);
   cursor: pointer;
   transition: opacity 0.15s, transform 0.15s;
@@ -234,7 +236,7 @@ async function submitContact() {
 }
 
 .contact-card {
-  background: var(--cds-light);
+  background: var(--cds-surface-3);
   border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-lg);
   padding: 1.25rem;
@@ -249,12 +251,12 @@ async function submitContact() {
   display: flex;
   align-items: flex-start;
   gap: 0.6rem;
-  font-size: var(--cds-text-base);
+  font-size: var(--layout-home-text-body, var(--cds-text-base));
   color: var(--cds-text-normal);
 }
 
-.contact-card p i { color: var(--cds-primary); flex-shrink: 0; margin-top: 0.1rem; }
-.contact-card a { color: var(--cds-primary); text-decoration: none; }
+.contact-card p i { color: var(--cds-primary); flex-shrink: 0; margin-top: 0.1rem; font-size: 1.2em; }
+.contact-card a { color: var(--cds-dark); text-decoration: none; }
 
 .contact-channels {
   display: flex;
@@ -274,12 +276,16 @@ async function submitContact() {
   text-decoration: none;
 }
 
+.contact-channels a i {
+  font-size: 1.2em;
+}
+
 .contact-channels a:hover { color: var(--cds-primary); }
 
 .contact-map {
   border-radius: var(--cds-radius-lg);
   overflow: hidden;
-  height: 537px;
+  height: 510px;
   border: 1px solid var(--cds-border-card);
   box-shadow: var(--cds-shadow-sm);
 }

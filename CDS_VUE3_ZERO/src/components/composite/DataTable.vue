@@ -253,7 +253,7 @@ watch(() => props.currentPage, (newPage) => {
   gap: 1rem;
   padding: 1rem;
   border-bottom: 1px solid var(--cds-border-card);
-  background: color-mix(in srgb, var(--cds-light) 5%, white);
+  background: var(--cds-surface-2);
 }
 
 .toolbar-search {
@@ -287,7 +287,7 @@ watch(() => props.currentPage, (newPage) => {
   gap: 1rem;
   padding: 1rem;
   border-top: 1px solid var(--cds-border-card);
-  background: color-mix(in srgb, var(--cds-light) 3%, white);
+  background: var(--cds-surface-1);
 }
 
 .pagination-info {
@@ -324,7 +324,7 @@ watch(() => props.currentPage, (newPage) => {
 }
 
 .page-number:hover:not(.is-active) {
-  background: color-mix(in srgb, var(--cds-light) 15%, white);
+  background: var(--cds-surface-2);
 }
 
 .page-number.is-active {

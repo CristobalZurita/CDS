@@ -189,6 +189,7 @@ export function buildIntakeWizardValidationValues(form) {
     'device.model': form.device.model,
     'device.condition_notes': form.device.condition_notes,
     'repair.problem_reported': form.repair.problem_reported,
+    'repair.priority': form.repair.priority,
     'repair.paid_amount': form.repair.paid_amount,
     'intake.equipment_name': form.intake.equipment_name,
     'intake.failure_cause': form.intake.failure_cause

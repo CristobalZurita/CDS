@@ -138,7 +138,7 @@ const progressScale = computed(() => {
   font-size: var(--cds-text-lg);
   font-weight: 700;
   color: var(--cds-primary);
-  font-family: monospace;
+  font-family: var(--cds-font-family-mono, monospace);
 }
 
 @media (max-width: 768px) {

@@ -11,9 +11,7 @@ export function useHomePage() {
 
   const sections = computed(() => ([
     { id: 'hero', name: 'Inicio', icon: '' },
-    { id: 'about', name: 'Nosotros', icon: 'pi pi-box' },
     { id: 'services', name: 'Servicios', icon: 'pi pi-wrench' },
-    { id: 'diagnostic', name: 'Cotiza', icon: 'pi pi-calculator' },
     { id: 'featured', name: 'Trabajos', icon: 'pi pi-qrcode' },
     { id: 'faq', name: 'Preguntas', icon: 'pi pi-question-circle' },
     { id: 'reviews', name: 'Opiniones', icon: 'fa-regular fa-comment' },
@@ -22,26 +20,15 @@ export function useHomePage() {
 
   const contentSections = computed(() => ([
     {
-      id: 'about',
-      title: 'Nosotros',
-      description: 'Espacio de presentación del taller y su enfoque de reparación.',
-      links: [{ label: 'Ver términos', to: '/terminos' }]
-    },
-    {
       id: 'services',
       title: 'Servicios',
-      description: 'Resumen de servicios disponibles para diagnóstico, reparación y seguimiento.',
+      description: 'Presentación del taller y resumen de servicios disponibles para diagnóstico, reparación y seguimiento.',
       links: [
         { label: 'Agendar', to: '/agendar' },
         { label: 'Calculadoras', to: '/calculadoras' }
       ]
     },
-    {
-      id: 'diagnostic',
-      title: 'Cotizar',
-      description: 'Acceso a estimación inicial y flujo de evaluación técnica.',
-      links: [{ label: 'Ir al cotizador', to: '/cotizador' }]
-    },
+
     {
       id: 'featured',
       title: 'Trabajos',

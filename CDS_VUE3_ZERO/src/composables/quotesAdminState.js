@@ -67,6 +67,13 @@ export function resolveQuoteRepairCreationGuard(quote) {
     }
   }
 
+  if (!Number(quote?.device_id || 0)) {
+    return {
+      isValid: false,
+      error: 'No se pudo crear OT: la cotizacion no tiene un dispositivo vinculado.'
+    }
+  }
+
   return {
     isValid: true,
     error: ''

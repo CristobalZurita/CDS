@@ -117,10 +117,10 @@ export async function updateQuoteStatus(quoteId, status) {
 export async function createRepairFromQuoteData(quote) {
   const payload = {
     client_id: Number(quote.client_id),
+    device_id: Number(quote.device_id),
     quote_id: Number(quote.id),
     title: quote.quote_number ? `OT ${quote.quote_number}` : `OT ${quote.id}`,
     description: String(quote.problem_description || 'Sin descripcion'),
-    model: String(quote.device_model || quote?.device?.model || quote?.client?.name || 'SIN_MODELO'),
     diagnosis: quote.diagnosis || null,
     parts_cost: Number(quote.estimated_parts_cost || 0),
     labor_cost: Number(quote.estimated_labor_cost || 0),

@@ -377,3 +377,66 @@ def test_client_deposit_proof_rejects_expired_payment_request():
         assert payment.status == PaymentStatus.FAILED
     finally:
         db.close()
+
+
+def test_client_deposit_proof_rejects_gateway_payment_attempt():
+    _ensure_admin_user()
+    with _build_client() as client:
+        admin_client_id = _get_admin_client_id()
+        _, child_id = _create_grouped_repairs(client)
+
+    db = SessionLocal()
+    try:
+        created = create_purchase_request(
+            PurchaseRequestCreate(
+                client_id=admin_client_id,
+                repair_id=child_id,
+                notes="Compra OT gateway payment attempt",
+                items=[
+                    PurchaseRequestItemCreate(
+                        sku="OT-PR-GATEWAY-001",
+                        name="Gateway board",
+                        quantity=1,
+                        unit_price=5600,
+                    )
+                ],
+            ),
+            db,
+            {"user_id": "1", "role": "admin"},
+        )
+        request_id = int(created.id)
+
+        request_client_payment(
+            request_id,
+            {"amount": 5600, "due_days": 3},
+            db,
+            {"user_id": "1", "role": "admin"},
+        )
+
+        payment = (
+            db.query(Payment)
+            .filter(
+                Payment.purchase_request_id == request_id,
+                Payment.status == PaymentStatus.PENDING,
+            )
+            .order_by(Payment.id.desc())
+            .first()
+        )
+        assert payment is not None
+        payment.payment_method = "mercadopago"
+        payment.payment_processor = "mercadopago"
+        db.add(payment)
+        db.commit()
+
+        with pytest.raises(HTTPException) as exc_info:
+            submit_client_deposit_proof_record(
+                db,
+                user_id=1,
+                request_id=request_id,
+                payload={"proof_path": "uploads/proof-gateway.jpg"},
+            )
+
+        assert exc_info.value.status_code == 400
+        assert "transferencia" in str(exc_info.value.detail).lower()
+    finally:
+        db.close()

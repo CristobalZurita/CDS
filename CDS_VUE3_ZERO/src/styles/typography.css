@@ -2,30 +2,32 @@
   Tipografía fluida — mobile first.
   Todo con clamp(), sin media queries.
   Mínimo diseñado para 320px, máximo para 1280px.
-  Cervo Neue Condensed + Steelfish como fuentes de pantalla.
+  Base y títulos pensados para lectura web sostenida.
 */
 :root {
+  --cds-type-scale: 1.12;
+
   /* --- Texto funcional (UI, labels, cuerpo) --- */
-  --cds-text-xs:   clamp(1.1rem,   1.05rem + 0.25vw, 1.2rem);    /*  17.6–19.2px */
-  --cds-text-sm:   clamp(1.25rem,  1.2rem  + 0.3vw,  1.4rem);    /*  20–22.4px   */
-  --cds-text-base: clamp(1.4rem,   1.35rem + 0.45vw, 1.65rem);   /*  22.4–26.4px */
-  --cds-text-lg:   clamp(1.5rem,   1.4rem  + 0.6vw,  1.8rem);    /*  24–28.8px   */
+  --cds-text-xs:   clamp(calc(0.78rem * var(--cds-type-scale)), calc((0.75rem + 0.14vw) * var(--cds-type-scale)), calc(0.86rem * var(--cds-type-scale)));
+  --cds-text-sm:   clamp(calc(0.9rem * var(--cds-type-scale)),  calc((0.87rem + 0.16vw) * var(--cds-type-scale)), calc(0.98rem * var(--cds-type-scale)));
+  --cds-text-base: clamp(calc(1rem * var(--cds-type-scale)),    calc((0.97rem + 0.18vw) * var(--cds-type-scale)), calc(1.08rem * var(--cds-type-scale)));
+  --cds-text-lg:   clamp(calc(1.1rem * var(--cds-type-scale)),  calc((1.04rem + 0.32vw) * var(--cds-type-scale)), calc(1.24rem * var(--cds-type-scale)));
 
   /* --- Títulos y encabezados --- */
-  --cds-text-xl:   clamp(1.6rem,   1.35rem + 1.25vw, 2.1rem);    /*  25.6–33.6px */
-  --cds-text-2xl:  clamp(1.85rem,  1.45rem + 2vw,    2.55rem);   /*  29.6–40.8px */
-  --cds-text-3xl:  clamp(2.15rem,  1.55rem + 3vw,    3.1rem);    /*  34.4–49.6px */
-  --cds-text-4xl:  clamp(2.45rem,  1.65rem + 4vw,    3.6rem);    /*  39.2–57.6px */
-  --cds-text-5xl:  clamp(2.85rem,  1.75rem + 5.5vw,  4.35rem);   /*  45.6–69.6px */
+  --cds-text-xl:   clamp(calc(1.28rem * var(--cds-type-scale)), calc((1.16rem + 0.62vw) * var(--cds-type-scale)), calc(1.58rem * var(--cds-type-scale)));
+  --cds-text-2xl:  clamp(calc(1.56rem * var(--cds-type-scale)), calc((1.34rem + 1.1vw) * var(--cds-type-scale)),  calc(2rem * var(--cds-type-scale)));
+  --cds-text-3xl:  clamp(calc(1.92rem * var(--cds-type-scale)), calc((1.56rem + 1.8vw) * var(--cds-type-scale)),  calc(2.62rem * var(--cds-type-scale)));
+  --cds-text-4xl:  clamp(calc(2.34rem * var(--cds-type-scale)), calc((1.84rem + 2.5vw) * var(--cds-type-scale)),  calc(3.34rem * var(--cds-type-scale)));
+  --cds-text-5xl:  clamp(calc(2.86rem * var(--cds-type-scale)), calc((2.08rem + 3.9vw) * var(--cds-type-scale)),  calc(4.08rem * var(--cds-type-scale)));
 
   /* --- Pesos --- */
   --cds-font-normal:   400;
   --cds-font-medium:   500;
   --cds-font-semibold: 600;
-  --cds-font-bold:     700;
+  --cds-font-bold:     1000;
 
   /* --- Interlineado --- */
-  --cds-leading-tight:   1.2;
-  --cds-leading-normal:  1.55;
-  --cds-leading-relaxed: 1.7;
+  --cds-leading-tight:   1.18;
+  --cds-leading-normal:  1.6;
+  --cds-leading-relaxed: 1.72;
 }

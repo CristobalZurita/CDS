@@ -163,7 +163,7 @@ defineExpose({
 }
 
 .base-select:hover:not(:disabled) {
-  border-color: color-mix(in srgb, var(--cds-light) 40%, white);
+  border-color: var(--cds-border-input);
 }
 
 .base-select:focus {

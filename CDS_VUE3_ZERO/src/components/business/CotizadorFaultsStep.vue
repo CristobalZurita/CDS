@@ -115,13 +115,13 @@ const emit = defineEmits(['toggle-fault', 'quote-verify', 'back', 'continue'])
 }
 
 .fault-card:hover {
-  border-color: color-mix(in srgb, var(--cds-primary) 40%, white);
-  background: color-mix(in srgb, var(--cds-primary) 4%, white);
+  border-color: var(--cds-border-card);
+  background: var(--cds-surface-2);
 }
 
 .fault-card--selected {
   border-color: var(--cds-primary);
-  background: color-mix(in srgb, var(--cds-primary) 8%, white);
+  background: var(--cds-surface-1);
 }
 
 .fault-icon {

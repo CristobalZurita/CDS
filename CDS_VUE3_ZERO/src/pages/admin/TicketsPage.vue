@@ -149,6 +149,6 @@ async function submitMessage(ticket) {
 /* Filtro inline en filters-panel */
 /* Mensaje rápido inline */
 .inline-message { display: grid; gap: .45rem; grid-template-columns: 1fr; }
-.message-row td { background: color-mix(in srgb, var(--cds-light) 7%, white); }
+.message-row td { background: var(--cds-surface-2); }
 @media (min-width: 900px) { .inline-message { grid-template-columns: 1fr auto; } }
 </style>

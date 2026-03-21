@@ -1,6 +1,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api, { extractErrorMessage } from '@/services/api'
+import { extractErrorMessage } from '@/services/api'
+import {
+  cancelRepairSignatureRequest,
+  requestRepairPhotoUploadLink,
+  requestRepairSignatureLink
+} from '@/services/repairDetailAdminService'
 
 const WIZARD_CARDS = [
   {
@@ -69,6 +74,8 @@ export function useWizardsPage() {
 
   const signatureLink = ref('')
   const photoLink = ref('')
+  const signatureRequest = ref(null)
+  const photoRequest = ref(null)
 
   function clearFeedback() {
     error.value = ''
@@ -83,6 +90,7 @@ export function useWizardsPage() {
   async function requestSignatureLink() {
     clearFeedback()
     signatureLink.value = ''
+    signatureRequest.value = null
 
     const repairId = Number(signatureForm.value.repair_id || 0)
     if (!repairId) {
@@ -93,15 +101,15 @@ export function useWizardsPage() {
     loading.value = true
 
     try {
-      const response = await api.post('/signatures/requests', {
-        repair_id: repairId,
-        request_type: String(signatureForm.value.request_type || 'ingreso'),
-        expires_minutes: Number(signatureForm.value.expires_minutes || 5)
-      })
+      const nextRequest = await requestRepairSignatureLink(
+        repairId,
+        String(signatureForm.value.request_type || 'ingreso'),
+        { expiresMinutes: Number(signatureForm.value.expires_minutes || 5) }
+      )
 
-      const token = response?.data?.token || response?.token || ''
-      if (token) {
-        signatureLink.value = `${window.location.origin}/signature/${token}`
+      signatureRequest.value = nextRequest || null
+      if (nextRequest?.url) {
+        signatureLink.value = nextRequest.url
         success.value = 'Link de firma generado correctamente.'
       }
     } catch (requestError) {
@@ -114,6 +122,7 @@ export function useWizardsPage() {
   async function requestPhotoLink() {
     clearFeedback()
     photoLink.value = ''
+    photoRequest.value = null
 
     const repairId = Number(photoRequestForm.value.repair_id || 0)
     if (!repairId) {
@@ -124,19 +133,36 @@ export function useWizardsPage() {
     loading.value = true
 
     try {
-      const response = await api.post('/photo-requests/', null, {
-        params: {
-          repair_id: repairId,
-          photo_type: String(photoRequestForm.value.photo_type || 'client'),
-          expires_minutes: Number(photoRequestForm.value.expires_minutes || 10)
-        }
+      const nextRequest = await requestRepairPhotoUploadLink(repairId, {
+        photoType: String(photoRequestForm.value.photo_type || 'client'),
+        expiresMinutes: Number(photoRequestForm.value.expires_minutes || 10)
       })
-
-      const token = response?.data?.token || response?.token || ''
-      if (token) {
-        photoLink.value = `${window.location.origin}/photo-upload/${token}`
+      photoRequest.value = nextRequest || null
+      if (nextRequest?.url) {
+        photoLink.value = nextRequest.url
         success.value = 'Link de carga de foto generado correctamente.'
       }
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function cancelSignatureLink() {
+    const requestId = Number(signatureRequest.value?.id || 0)
+    if (!requestId) return
+
+    clearFeedback()
+    loading.value = true
+
+    try {
+      await cancelRepairSignatureRequest(requestId)
+      signatureRequest.value = signatureRequest.value
+        ? { ...signatureRequest.value, status: 'cancelled', url: '' }
+        : null
+      signatureLink.value = ''
+      success.value = 'Solicitud de firma cancelada.'
     } catch (requestError) {
       error.value = extractErrorMessage(requestError)
     } finally {
@@ -153,9 +179,12 @@ export function useWizardsPage() {
     photoRequestForm,
     signatureLink,
     photoLink,
+    signatureRequest,
+    photoRequest,
     openWizard,
     clearFeedback,
     requestSignatureLink,
-    requestPhotoLink
+    requestPhotoLink,
+    cancelSignatureLink
   }
 }

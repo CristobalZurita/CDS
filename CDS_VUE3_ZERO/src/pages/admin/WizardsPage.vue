@@ -34,7 +34,16 @@
         <button class="btn-primary" :disabled="loading" @click="requestSignatureLink">
           {{ loading ? 'Generando...' : 'Generar link de firma' }}
         </button>
+        <button
+          v-if="signatureRequest?.id && signatureRequest?.status === 'pending'"
+          class="btn-danger"
+          :disabled="loading"
+          @click="cancelSignatureLink"
+        >
+          Cancelar solicitud
+        </button>
       </div>
+      <p v-if="signatureRequest" class="link-line"><strong>Estado:</strong> {{ signatureRequest.request_type || 'ingreso' }} · {{ signatureRequest.status || 'pending' }}</p>
       <p v-if="signatureLink" class="link-line"><strong>Link:</strong> <a :href="signatureLink" target="_blank" rel="noopener">{{ signatureLink }}</a></p>
     </section>
 
@@ -56,6 +65,7 @@
           {{ loading ? 'Generando...' : 'Generar link de foto' }}
         </button>
       </div>
+      <p v-if="photoRequest" class="link-line"><strong>Estado:</strong> {{ photoRequest.photo_type || 'client' }} · {{ photoRequest.status || 'pending' }}</p>
       <p v-if="photoLink" class="link-line"><strong>Link:</strong> <a :href="photoLink" target="_blank" rel="noopener">{{ photoLink }}</a></p>
     </section>
   </main>
@@ -73,9 +83,12 @@ const {
   photoRequestForm,
   signatureLink,
   photoLink,
+  signatureRequest,
+  photoRequest,
   openWizard,
   requestSignatureLink,
-  requestPhotoLink
+  requestPhotoLink,
+  cancelSignatureLink
 } = useWizardsPage()
 </script>
 

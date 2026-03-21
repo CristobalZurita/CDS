@@ -1,5 +1,12 @@
 <template>
-  <article class="product-card" data-testid="store-product-card">
+  <article
+    class="product-card"
+    tabindex="0"
+    data-testid="store-product-card"
+    @click="$emit('view', product)"
+    @keydown.enter.prevent.self="$emit('view', product)"
+    @keydown.space.prevent.self="$emit('view', product)"
+  >
     <div class="product-visual">
       <img
         v-if="imageSrc"
@@ -17,6 +24,10 @@
         :class="['stock-badge', stockBadge.variant && `stock-badge--${stockBadge.variant}`]"
       >
         {{ stockBadge.text }}
+      </span>
+
+      <span v-if="qtyInCart > 0" class="cart-badge">
+        {{ qtyInCart }} en carrito
       </span>
     </div>
 
@@ -36,7 +47,7 @@
           class="btn-add"
           data-testid="store-add-to-cart"
           :disabled="!canAdd"
-          @click="$emit('add', product)"
+          @click.stop="$emit('add', product)"
         >
           {{ buttonLabel }}
         </button>
@@ -73,9 +84,13 @@ const props = defineProps({
     type: String,
     default: 'Agregar',
   },
+  qtyInCart: {
+    type: Number,
+    default: 0,
+  },
 })
 
-defineEmits(['add'])
+defineEmits(['add', 'view'])
 
 const placeholderText = computed(() => String(props.product?.sku || 'RP').slice(0, 3).toUpperCase())
 
@@ -104,8 +119,19 @@ const stockBadge = computed(() => {
   border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-lg);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--cds-surface-1);
   box-shadow: var(--cds-shadow-sm);
+  font-family: var(--layout-public-font-family-base, var(--cds-font-family-base), sans-serif);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.product-card:hover,
+.product-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(36, 21, 14, 0.2);
+  border-color: var(--cds-primary);
+  outline: none;
 }
 
 .product-visual {
@@ -114,7 +140,7 @@ const stockBadge = computed(() => {
   display: grid;
   place-items: center;
   border-bottom: 1px solid var(--cds-border-card);
-  background: linear-gradient(135deg, rgba(236, 107, 0, 0.10), #edf0e8);
+  background: var(--cds-surface-2);
 }
 
 .product-image {
@@ -130,7 +156,7 @@ const stockBadge = computed(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(236, 107, 0, 0.12);
+  background: var(--cds-surface-1);
   color: var(--cds-primary);
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -143,18 +169,33 @@ const stockBadge = computed(() => {
   left: 0.6rem;
   display: inline-flex;
   align-items: center;
-  min-height: 26px;
-  padding: 0.15rem 0.6rem;
+  min-height: calc(26px * var(--cds-type-scale, 1));
+  padding: calc(0.15rem * var(--cds-type-scale, 1)) calc(0.6rem * var(--cds-type-scale, 1));
   border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
-  font-size: 0.78rem;
+  font-size: var(--layout-public-text-label, 0.78rem);
+  font-weight: 700;
+}
+
+.cart-badge {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: calc(26px * var(--cds-type-scale, 1));
+  padding: calc(0.15rem * var(--cds-type-scale, 1)) calc(0.65rem * var(--cds-type-scale, 1));
+  border-radius: var(--cds-radius-pill);
+  background: #181b1f;
+  color: var(--cds-white);
+  font-size: var(--layout-public-text-label, 0.76rem);
   font-weight: 700;
 }
 
 .stock-badge--warning {
   background: var(--cds-warning);
-  color: var(--cds-dark);
+  color: #fff7eb;
 }
 
 .stock-badge--info {
@@ -163,17 +204,17 @@ const stockBadge = computed(() => {
 }
 
 .product-body {
-  padding: var(--cds-space-md);
+  padding: calc(var(--cds-space-md) * var(--cds-type-scale, 1));
   display: flex;
   flex-direction: column;
-  gap: var(--cds-space-xs);
+  gap: calc(var(--cds-space-xs) * var(--cds-type-scale, 1));
   flex: 1;
 }
 
 .product-family {
   margin: 0;
   color: var(--cds-primary);
-  font-size: 0.8rem;
+  font-size: var(--layout-public-text-label, 0.8rem);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -181,22 +222,24 @@ const stockBadge = computed(() => {
 
 .product-body h2 {
   margin: 0;
-  font-size: 1rem;
-  line-height: 1.3;
+  font-family: var(--layout-public-font-family-heading, var(--layout-public-font-family-base, var(--cds-font-family-base)));
+  font-size: var(--layout-public-text-brand, 1rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
   color: var(--cds-dark);
 }
 
 .product-sku {
   margin: 0;
   color: var(--cds-text-muted);
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-public-text-meta, var(--cds-text-sm));
 }
 
 .product-description {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: var(--layout-public-text-body, 0.9rem);
   color: var(--cds-text-muted);
-  line-height: 1.5;
+  line-height: 1.64;
 }
 
 .product-footer {
@@ -211,28 +254,28 @@ const stockBadge = computed(() => {
 .price-block {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: calc(0.15rem * var(--cds-type-scale, 1));
 }
 
 .price-block strong {
-  font-size: var(--cds-text-lg);
+  font-size: var(--layout-public-text-brand, var(--cds-text-lg));
   font-weight: 700;
   color: var(--cds-dark);
 }
 
 .price-block small {
-  font-size: 0.8rem;
+  font-size: var(--layout-public-text-label, 0.8rem);
   color: var(--cds-text-muted);
 }
 
 .btn-add {
-  min-height: 38px;
-  padding: 0.45rem 0.85rem;
+  min-height: calc(38px * var(--cds-type-scale, 1));
+  padding: calc(0.45rem * var(--cds-type-scale, 1)) calc(0.85rem * var(--cds-type-scale, 1));
   border-radius: var(--cds-radius-sm);
   border: none;
   background: var(--cds-primary);
   color: var(--cds-white);
-  font-size: 0.9rem;
+  font-size: var(--layout-public-text-meta, 0.9rem);
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -240,7 +283,7 @@ const stockBadge = computed(() => {
 }
 
 .btn-add:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--cds-primary) 85%, black);
+  background: var(--cds-dark);
   transform: translateY(-1px);
 }
 

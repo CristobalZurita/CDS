@@ -166,7 +166,7 @@ function updateLeadField({ field, value }) {
 /* Barra de progreso */
 .progress-bar {
   height: var(--layout-quotation-progress-height, 4px);
-  background: color-mix(in srgb, var(--cds-light) 60%, white);
+  background: var(--cds-surface-2);
   border-radius: var(--layout-quotation-progress-radius, 4px);
   overflow: hidden;
   max-width: var(--layout-quotation-shell-max, 920px);
@@ -188,8 +188,8 @@ function updateLeadField({ field, value }) {
   margin: 0 auto;
   width: 100%;
   padding: var(--layout-quotation-alert-padding-block, 0.75rem) var(--layout-quotation-alert-padding-inline, 1rem);
-  background: color-mix(in srgb, var(--cds-primary) 10%, white);
-  border: 1px solid color-mix(in srgb, var(--cds-primary) 35%, white);
+  background: var(--cds-surface-2);
+  border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-sm);
   color: var(--cds-primary);
   font-size: var(--cds-text-sm);

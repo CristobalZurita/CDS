@@ -5,15 +5,16 @@
   display: grid;
   place-items: center;
   padding: var(--cds-auth-page-padding, 1rem);
-  background: linear-gradient(180deg, var(--cds-dark) 0%, var(--cds-footer-bg-highlight-color) 100%);
+  background: var(--cds-background-color);
 }
 
 .auth-card {
   width: var(--cds-auth-card-width, min(100%, 620px));
   padding: var(--cds-auth-card-padding, 1.25rem);
   border-radius: 1rem;
-  background: color-mix(in srgb, var(--cds-white) 94%, transparent);
+  background: var(--cds-surface-1);
   border: 1px solid var(--cds-border-card);
+  box-shadow: var(--cds-shadow-md);
 }
 
 .auth-card--narrow {

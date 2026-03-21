@@ -142,48 +142,48 @@ defineExpose({
   --button-bg: var(--cds-primary);
   --button-border: var(--cds-primary);
   --button-text: var(--cds-white);
-  --button-hover-bg: #d86100;
-  --button-hover-border: #d86100;
+  --button-hover-bg: var(--cds-primary-hover);
+  --button-hover-border: var(--cds-primary-hover);
 }
 
 .variant-secondary {
   --button-bg: var(--cds-dark);
   --button-border: var(--cds-dark);
   --button-text: var(--cds-white);
-  --button-hover-bg: #302e2b;
-  --button-hover-border: #302e2b;
+  --button-hover-bg: var(--cds-dark-hover);
+  --button-hover-border: var(--cds-dark-hover);
 }
 
 .variant-ghost {
   --button-bg: transparent;
-  --button-border: var(--cds-light-5);
+  --button-border: var(--cds-border-card);
   --button-text: var(--cds-text-normal);
   --button-hover-bg: var(--cds-surface-2);
-  --button-hover-border: var(--cds-light-4);
+  --button-hover-border: var(--cds-border-input);
 }
 
 .variant-danger {
   --button-bg: var(--cds-danger);
   --button-border: var(--cds-danger);
   --button-text: var(--cds-white);
-  --button-hover-bg: #b91c1c;
-  --button-hover-border: #b91c1c;
+  --button-hover-bg: #8d412f;
+  --button-hover-border: #8d412f;
 }
 
 .variant-success {
   --button-bg: var(--cds-success);
   --button-border: var(--cds-success);
   --button-text: var(--cds-white);
-  --button-hover-bg: #026b00;
-  --button-hover-border: #026b00;
+  --button-hover-bg: #5d6738;
+  --button-hover-border: #5d6738;
 }
 
 .variant-warning {
   --button-bg: var(--cds-warning);
   --button-border: var(--cds-warning);
-  --button-text: var(--cds-dark);
-  --button-hover-bg: #d97706;
-  --button-hover-border: #d97706;
+  --button-text: var(--cds-white);
+  --button-hover-bg: #a47830;
+  --button-hover-border: #a47830;
 }
 
 .base-button:hover:not(:disabled) {

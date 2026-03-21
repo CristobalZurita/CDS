@@ -105,7 +105,7 @@ export function useSchedulePage() {
     const date = new Date(currentYear.value, currentMonth.value, day)
     const today = new Date()
     const todayAtMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    return date < todayAtMidnight || date.getDay() === 0
+    return date < todayAtMidnight || [0, 6].includes(date.getDay())
   }
 
   function isSameDate(date, day) {

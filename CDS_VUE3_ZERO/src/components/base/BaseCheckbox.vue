@@ -99,7 +99,7 @@ defineExpose({
 .checkbox-box {
   width: 1.25rem;
   height: 1.25rem;
-  border: 2px solid color-mix(in srgb, var(--cds-light) 50%, white);
+  border: 2px solid var(--cds-border-input);
   border-radius: 0.25rem;
   background: var(--cds-white);
   display: flex;

@@ -315,13 +315,7 @@ onUnmounted(() => {
 .oscilloscope-strip {
   width: 100%;
   height: var(--oscilloscope-height, clamp(4.2rem, 10vw, 6.6rem));
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.03),
-      rgba(0, 0, 0, 0.02)
-    ),
-    var(--cds-light);
+  background: var(--cds-light);
   overflow: hidden;
 }
 

@@ -87,11 +87,17 @@
         </button>
       </div>
     </div>
+
+    <div class="site-progress" aria-hidden="true">
+      <span class="site-progress__bar" :style="{ transform: `scaleX(${normalizedScrollProgress})` }"></span>
+    </div>
   </header>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   logoSrc: {
     type: String,
     required: true
@@ -115,10 +121,15 @@ defineProps({
   cartItemsCount: {
     type: Number,
     default: 0
+  },
+  scrollProgress: {
+    type: Number,
+    default: 0
   }
 })
 
 const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
+const normalizedScrollProgress = computed(() => Math.max(0, Math.min(1, Number(props.scrollProgress || 0) / 100)))
 </script>
 
 <style scoped>
@@ -126,11 +137,30 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--cds-dark);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  --nav-font-size: clamp(2rem, 1rem + 0.24vw, 1.2rem);
+  background: var(--cds-nav-background-color);
+  border-bottom: 1px solid rgba(203, 194, 183, 0.14);
+  font-family: var(--layout-public-font-family-base, var(--cds-font-family-base), sans-serif);
+  --nav-font-size: var(--layout-public-text-nav, clamp(0.96rem, 0.92rem + 0.18vw, 1.04rem));
   --nav-link-pad-y: clamp(0.56rem, 0.14vw + 0.52rem, 0.68rem);
   --nav-link-pad-x: clamp(0.68rem, 0.14vw + 0.64rem, 0.82rem);
+}
+
+.site-progress {
+  width: 100%;
+  height: 6px;
+  background: var(--layout-public-nav-progress-track);
+  overflow: hidden;
+  border-top: 1px solid var(--layout-public-nav-progress-border);
+}
+
+.site-progress__bar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--cds-primary);
+  box-shadow: 0 0 16px rgba(236, 107, 0, 0.48);
+  transform-origin: left center;
+  transition: transform 0.12s linear;
 }
 
 .site-header-inner {
@@ -148,11 +178,11 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   color: var(--cds-white);
   text-decoration: none;
   font-weight: var(--cds-font-semibold);
-  letter-spacing: 0.02em;
+  letter-spacing: -0.01em;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.52rem;
 }
 
 .brand-logo {
@@ -163,11 +193,13 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 }
 
 .brand-name {
-  font-size: clamp(1.5rem, 0.92rem + 0.22vw, 1.12rem);
-  line-height: 1.1;
-  text-transform: uppercase;
+  font-family: var(--layout-public-font-family-heading, var(--layout-public-font-family-base, var(--cds-font-family-base)));
+  font-size: var(--layout-public-text-brand, clamp(1rem, 0.95rem + 0.26vw, 1.16rem));
+  font-weight: var(--cds-font-semibold);
+  line-height: 1.05;
+  text-wrap: balance;
   display: none;
-  margin-top: 5px;
+  margin-top: 0;
 }
 
 @media (min-width: 480px) {
@@ -202,9 +234,10 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--cds-dark);
+  background: var(--cds-nav-background-color);
   padding: 0.75rem 1rem 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(203, 194, 183, 0.14);
+  box-shadow: 0 18px 40px rgba(15, 18, 21, 0.42);
   z-index: 99;
 }
 
@@ -215,24 +248,22 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   padding: var(--nav-link-pad-y) var(--nav-link-pad-x);
   border-radius: var(--cds-radius-sm);
   font-size: var(--nav-font-size);
-  font-family: var(--cds-font-family-base), sans-serif;
-  font-weight: var(--cds-font-medium);
-  text-transform: lowercase;
-  letter-spacing: 0.01em;
+  font-family: var(--layout-public-font-family-base, var(--cds-font-family-base), sans-serif);
+  font-weight: var(--cds-font-semibold);
+  letter-spacing: 0;
   display: inline-flex;
   align-items: center;
-  transition: background 0.15s, color 0.15s, letter-spacing 0.2s ease;
+  transition: background 0.15s, color 0.15s;
   white-space: nowrap;
 }
 
 .site-nav-link:hover,
 .site-nav-link.router-link-active:hover {
-  background: rgba(236, 107, 0, 0.2);
-  letter-spacing: 0.03em;
+  background: var(--layout-public-nav-link-hover);
 }
 
 .site-nav-link.router-link-active {
-  background: transparent;
+  background: var(--layout-public-nav-link-active);
 }
 
 .nav-cotizar {
@@ -244,16 +275,17 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   background: var(--cds-primary);
   color: var(--cds-white);
   text-decoration: none;
-  font-size: 0.96rem;
+  font-family: var(--layout-public-font-family-base, var(--cds-font-family-base), sans-serif);
+  font-size: var(--layout-public-text-meta, 0.96rem);
   font-weight: var(--cds-font-semibold);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   flex-shrink: 0;
   transition: background 0.15s, transform 0.15s;
 }
 
 .nav-cotizar:hover {
-  background: #d86100;
+  background: var(--cds-primary-hover);
   transform: translateY(-1px);
 }
 
@@ -274,13 +306,14 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   gap: 0.35rem;
   min-height: 48px;
   padding: 0.5rem 0.8rem;
-  border: none;
+  border: 1px solid rgba(203, 194, 183, 0.18);
   border-radius: var(--cds-radius-sm);
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--layout-public-nav-surface);
   color: var(--cds-white);
-  font-size: 0.96rem;
+  font-family: var(--layout-public-font-family-base, var(--cds-font-family-base), sans-serif);
+  font-size: var(--layout-public-text-meta, 0.96rem);
   font-weight: var(--cds-font-semibold);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.15s, transform 0.12s;
@@ -288,7 +321,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 }
 
 .nav-cart-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--layout-public-nav-surface-hover);
   transform: translateY(-1px);
 }
 
@@ -312,7 +345,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
   border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 800;
   display: inline-flex;
   align-items: center;
@@ -337,7 +370,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
 }
 
 .nav-toggle:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--layout-public-nav-toggle-hover);
 }
 
 @media (min-width: 1200px) {
@@ -359,7 +392,7 @@ const emit = defineEmits(['toggle-menu', 'close-menu', 'cart-click'])
     overflow: visible;
     padding: 0;
     border-top: none;
-    gap: 0.05rem;
+    gap: 0.12rem;
   }
 
   .nav-actions {

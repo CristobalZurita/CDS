@@ -57,6 +57,7 @@ export function useRepairManagement({ selectedClientId, contextLoading, error, d
     if (!clientId) return
 
     error.value = ''
+    const deviceId = Number(repairForm.value.device_id || 0)
 
     const problemReported = String(repairForm.value.problem_reported || '').trim()
     if (!problemReported) {
@@ -64,10 +65,14 @@ export function useRepairManagement({ selectedClientId, contextLoading, error, d
       return
     }
 
+    if (!deviceId) {
+      error.value = 'Selecciona un dispositivo real antes de crear la OT.'
+      return
+    }
+
     const payload = {
       client_id: clientId,
-      device_id: repairForm.value.device_id ? Number(repairForm.value.device_id) : undefined,
-      model: devices.value.find((d) => d.id === Number(repairForm.value.device_id))?.model || 'Equipo',
+      device_id: deviceId,
       problem_reported: problemReported,
       priority: Number(repairForm.value.priority || 2),
       paid_amount: Number(repairForm.value.paid_amount || 0),

@@ -2,60 +2,67 @@
   --cds-fa-font-path: "@fortawesome/fontawesome-free/webfonts";
   --cds-min-contrast-ratio: 1.5;
 
-  --cds-font-family-base: "Cervo Neue", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --cds-headings-font-family: "Steelfish", "Cervo Neue", "Oswald", serif;
+  --cds-font-family-ui: "Aptos", "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --cds-font-family-display: "Aptos Display", "Segoe UI Variable Display", "Aptos", "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --cds-font-family-mono: "JetBrains Mono", "Cascadia Code", "SFMono-Regular", "SF Mono", "Segoe UI Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --cds-font-family-base: var(--cds-font-family-ui);
+  --cds-headings-font-family: var(--cds-font-family-display);
 
   --cds-primary: #ec6b00;
-  --cds-dark: #484745;
-  --cds-success: #038600;
-  --cds-danger: #dc2626;
-  --cds-warning: #f59e0b;
-  --cds-info: #0ea5e9;
-  --cds-light: #d3d0c3;
+  --cds-primary-hover: #d86100;
+  --cds-dark: #101215;
+  --cds-dark-hover: #1d2329;
+  --cds-success: #667739;
+  --cds-danger: #9a402b;
+  --cds-warning: #af7a1f;
+  --cds-info: #556774;
+  --cds-light: #d4c6b4;
   --cds-white: white;
               
 
   
   /* Estados de validación */
-  --cds-valid-bg: #f0fdf4;
-  --cds-valid-border: #86efac;
-  --cds-valid-text: #166534;
+  --cds-valid-bg: #e4e6d4;
+  --cds-valid-border: #98aa63;
+  --cds-valid-text: #49552a;
   
-  --cds-invalid-bg: #fef2f2;
-  --cds-invalid-border: #fecaca;
-  --cds-invalid-text: #991b1b;
+  --cds-invalid-bg: #f2d6cd;
+  --cds-invalid-border: #cb8976;
+  --cds-invalid-text: #722f21;
   
-  --cds-warning-bg: #fffbeb;
-  --cds-warning-border: #fcd34d;
-  --cds-warning-text: #92400e;
+  --cds-warning-bg: #f1e0bd;
+  --cds-warning-border: #c38e31;
+  --cds-warning-text: #6d4d14;
   
   /* Focus states */
-  --cds-focus-ring: 0 0 0 3px rgba(236, 107, 0, 0.25);
-  --cds-focus-ring-danger: 0 0 0 3px rgba(220, 38, 38, 0.25);
+  --cds-focus-ring: 0 0 0 3px rgba(200, 100, 34, 0.24);
+  --cds-focus-ring-danger: 0 0 0 3px rgba(154, 64, 43, 0.28);
 
   --cds-fluor-green: #d9ff4e;
-  --cds-orange-pastel: #e8935a;
+  --cds-orange-pastel: #cf8452;
+  --cds-warm-support: #ae9067;
+  --cds-warm-support-strong: #896b48;
 
-  --cds-background-color: #d3d0c3;
-  --cds-nav-background-color: var(--cds-dark);
-  --cds-footer-bg-color: var(--cds-dark);
-  --cds-footer-bg-highlight-color: #393734;
+  --cds-background-color: #d5c7b1;
+  --cds-nav-background-color: #101215;
+  --cds-footer-bg-color: #15171a;
+  --cds-footer-bg-highlight-color: #0f1114;
 
   --cds-navbar-height: 71px;
 
   --cds-headings-color: var(--cds-dark);
-  --cds-text-normal: #3e3c38;
+  --cds-text-normal: #1f2327;
   --cds-text-normal-contrast: white;
-  --cds-text-muted: #5a5652;
-  --cds-border-soft: rgba(62, 60, 56, 0.15);
-  --cds-border-strong: rgba(62, 60, 56, 0.25);
-  --cds-border-card: #beb7a8;
-  --cds-border-input: #c7c0b4;
-  --cds-surface-1: #f7f5f0;
-  --cds-surface-2: #f1eee8;
-  --cds-surface-dark: #23221f;
-  --cds-glow-primary: rgba(236, 107, 0, 0.18);
-  --cds-glow-success: rgba(3, 134, 0, 0.14);
+  --cds-text-muted: #5c6066;
+  --cds-border-soft: rgba(38, 41, 45, 0.12);
+  --cds-border-strong: rgba(38, 41, 45, 0.2);
+  --cds-border-card: #ad8e65;
+  --cds-border-input: #b99b75;
+  --cds-surface-1: #eadfcf;
+  --cds-surface-2: #d7bf9c;
+  --cds-surface-dark: #1d2024;
+  --cds-glow-primary: rgba(86, 48, 17, 0.16);
+  --cds-glow-success: rgba(102, 119, 57, 0.18);
 
   --cds-light-1: #f8f9fa;
   --cds-light-2: #e9ecef;
@@ -84,29 +91,29 @@
   --cds-radius-xl: 1.4rem;
   --cds-radius-pill: 999px;
 
-  --cds-shadow-sm: 0 10px 20px rgba(35, 34, 31, 0.08);
-  --cds-shadow-md: 0 18px 34px rgba(35, 34, 31, 0.14);
-  --cds-shadow-lg: 0 28px 52px rgba(35, 34, 31, 0.2);
+  --cds-shadow-sm: 0 10px 20px rgba(15, 18, 21, 0.1);
+  --cds-shadow-md: 0 18px 34px rgba(15, 18, 21, 0.16);
+  --cds-shadow-lg: 0 28px 52px rgba(15, 18, 21, 0.22);
 
   --cds-auth-page-min-height: 100vh;
   --cds-auth-page-padding: var(--cds-space-md);
   --cds-auth-card-width: min(100%, 620px);
   --cds-auth-card-width-narrow: min(100%, 520px);
-  --cds-auth-card-padding: 1.25rem;
-  --cds-auth-form-gap: 0.9rem;
-  --cds-auth-feedback-padding: 0.75rem;
-  --cds-auth-links-gap: 0.4rem;
-  --cds-auth-reset-gap: var(--cds-space-md);
-  --cds-auth-mode-toggle-gap: 0.5rem;
-  --cds-auth-control-min-height: 44px;
+  --cds-auth-card-padding: calc(1.25rem * var(--cds-type-scale, 1));
+  --cds-auth-form-gap: calc(0.9rem * var(--cds-type-scale, 1));
+  --cds-auth-feedback-padding: calc(0.75rem * var(--cds-type-scale, 1));
+  --cds-auth-links-gap: calc(0.4rem * var(--cds-type-scale, 1));
+  --cds-auth-reset-gap: calc(var(--cds-space-md) * var(--cds-type-scale, 1));
+  --cds-auth-mode-toggle-gap: calc(0.5rem * var(--cds-type-scale, 1));
+  --cds-auth-control-min-height: calc(44px * var(--cds-type-scale, 1));
 
-  --cds-client-page-padding: var(--cds-space-md);
-  --cds-client-page-gap: var(--cds-space-md);
-  --cds-client-surface-padding: 0.9rem;
-  --cds-client-feedback-padding: 0.75rem;
-  --cds-client-panel-padding: var(--cds-space-md);
-  --cds-client-detail-padding: 0.95rem;
-  --cds-client-modal-overlay-padding: var(--cds-space-md);
+  --cds-client-page-padding: calc(var(--cds-space-md) * var(--cds-type-scale, 1));
+  --cds-client-page-gap: calc(var(--cds-space-md) * var(--cds-type-scale, 1));
+  --cds-client-surface-padding: calc(0.9rem * var(--cds-type-scale, 1));
+  --cds-client-feedback-padding: calc(0.75rem * var(--cds-type-scale, 1));
+  --cds-client-panel-padding: calc(var(--cds-space-md) * var(--cds-type-scale, 1));
+  --cds-client-detail-padding: calc(0.95rem * var(--cds-type-scale, 1));
+  --cds-client-modal-overlay-padding: calc(var(--cds-space-md) * var(--cds-type-scale, 1));
   --cds-client-modal-width: min(100%, 520px);
   --cds-client-notice-min-height: 100vh;
 

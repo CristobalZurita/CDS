@@ -57,7 +57,7 @@ const emit = defineEmits(['back', 'continue'])
   border: 1px solid var(--cds-border-input);
   border-radius: var(--layout-quotation-summary-radius, 0.7rem);
   padding: var(--layout-quotation-disclaimer-padding, 0.75rem);
-  background: color-mix(in srgb, var(--cds-light) 14%, white);
+  background: var(--cds-surface-2);
   font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
 }

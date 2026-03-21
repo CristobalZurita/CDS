@@ -244,6 +244,27 @@ def test_clients_crud_flow(api_client, admin_token, db):
     assert db.query(Client).filter(Client.id == client_id).first() is None
 
 
+def test_client_profile_persists_contact_preferences(api_client, customer_token):
+    update_response = api_client.put(
+        "/api/v1/client/profile",
+        headers=_auth_headers(customer_token),
+        json={
+            "preferred_contact": "email",
+            "service_preference": "sms",
+        },
+    )
+    assert update_response.status_code == 200, update_response.text
+    updated = update_response.json()
+    assert updated["preferred_contact"] == "email"
+    assert updated["service_preference"] == "sms"
+
+    get_response = api_client.get("/api/v1/client/profile", headers=_auth_headers(customer_token))
+    assert get_response.status_code == 200, get_response.text
+    payload = get_response.json()
+    assert payload["preferred_contact"] == "email"
+    assert payload["service_preference"] == "sms"
+
+
 def test_signature_request_flow_persists_signature(api_client, admin_token, sample_ot):
     repair_id = sample_ot["repair_id"]
     create_response = api_client.post(

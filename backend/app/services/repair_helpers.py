@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.models.repair import Repair
 from app.services.ot_code_service import repair_code as _repair_code
+from app.services.repair_state_machine import RepairStateID
 
 
 def auto_archive_repairs(db: Session) -> None:
@@ -26,7 +27,7 @@ def auto_archive_repairs(db: Session) -> None:
         return
     for repair in to_archive:
         repair.archived_at = datetime.utcnow()
-        repair.status_id = 9
+        repair.status_id = RepairStateID.ARCHIVADO
     db.commit()
 
 

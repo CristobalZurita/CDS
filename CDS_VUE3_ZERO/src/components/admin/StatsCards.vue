@@ -34,11 +34,10 @@ const formatNumber = (val) => {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(var(--admin-dashboard-stats-card-min, 320px), 1fr));
   gap: var(--admin-space-lg, 1.8rem);
-  margin-bottom: var(--admin-space-xl, 2.4rem);
 }
 
 .stat-card {
-  background: var(--cds-white);
+  background: var(--cds-surface-1);
   border-radius: var(--cds-radius-lg);
   padding: var(--admin-space-xl, 2.4rem);
   display: flex;
@@ -55,13 +54,14 @@ const formatNumber = (val) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--cds-primary) 0%, var(--cds-orange-pastel) 100%);
+  background: var(--cds-surface-2);
   border-radius: var(--cds-radius-lg);
 }
 
 .stat-info {
   display: flex;
   flex-direction: column;
+  gap: 0.2rem;
 }
 
 .stat-value {
@@ -76,7 +76,8 @@ const formatNumber = (val) => {
   font-size: var(--admin-text-sm, var(--cds-text-sm));
   color: var(--cds-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.09em;
   margin: 0;
+  font-weight: 700;
 }
 </style>

@@ -127,16 +127,16 @@ const badgeClasses = computed(() => ({
 
 /* Variantes */
 .variant-default {
-  --badge-bg: var(--cds-light-2);
+  --badge-bg: var(--cds-surface-2);
   --badge-text: var(--cds-text-normal);
-  --badge-outline-border: var(--cds-light-4);
+  --badge-outline-border: var(--cds-border-input);
   --badge-outline-text: var(--cds-text-normal);
 }
 
 .variant-primary {
-  --badge-bg: rgba(236, 107, 0, 0.14);
-  --badge-text: #9a4500;
-  --badge-outline-border: rgba(236, 107, 0, 0.38);
+  --badge-bg: #e3c09d;
+  --badge-text: #7c3911;
+  --badge-outline-border: #bf7b46;
   --badge-outline-text: var(--cds-primary);
 }
 
@@ -162,9 +162,9 @@ const badgeClasses = computed(() => ({
 }
 
 .variant-info {
-  --badge-bg: rgba(14, 165, 233, 0.14);
-  --badge-text: #0c4a6e;
-  --badge-outline-border: rgba(14, 165, 233, 0.32);
+  --badge-bg: #ccd5da;
+  --badge-text: #384751;
+  --badge-outline-border: #8797a1;
   --badge-outline-text: var(--cds-info);
 }
 

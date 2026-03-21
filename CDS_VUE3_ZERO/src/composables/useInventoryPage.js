@@ -1,12 +1,14 @@
 import { computed, onMounted, ref } from 'vue'
 import api, { extractErrorMessage } from '@/services/api'
-import { formatCurrency } from '@/utils/format'
+import { formatCurrency, formatDate } from '@/utils/format'
 
 function normalizeItem(entry) {
   return {
     id: entry?.id,
+    stock_id: entry?.stock_id || null,
     sku: String(entry?.sku || ''),
     name: String(entry?.name || ''),
+    description: String(entry?.description || ''),
     category_id: entry?.category_id || null,
     category: String(entry?.category || ''),
     family: String(entry?.family || ''),
@@ -16,9 +18,31 @@ function normalizeItem(entry) {
     available_stock: Number(entry?.available_stock || 0),
     sellable_stock: Number(entry?.sellable_stock || 0),
     min_stock: Number(entry?.min_stock || 0),
+    quantity_reserved: Number(entry?.quantity_reserved || 0),
+    quantity_in_transit: Number(entry?.quantity_in_transit || 0),
+    quantity_damaged: Number(entry?.quantity_damaged || 0),
+    quantity_in_work: Number(entry?.quantity_in_work || 0),
+    quantity_under_review: Number(entry?.quantity_under_review || 0),
+    quantity_internal_use: Number(entry?.quantity_internal_use || 0),
+    location: String(entry?.location || ''),
+    supplier: String(entry?.supplier || ''),
+    unit_cost: Number(entry?.unit_cost || 0),
     enabled: entry?.enabled !== false,
     store_visible: Boolean(entry?.store_visible),
     is_low_stock: Boolean(entry?.is_low_stock)
+  }
+}
+
+function normalizeMovement(entry) {
+  return {
+    id: Number(entry?.id || 0),
+    stock_id: Number(entry?.stock_id || 0),
+    movement_type: String(entry?.movement_type || ''),
+    quantity: Number(entry?.quantity || 0),
+    repair_id: Number(entry?.repair_id || 0),
+    notes: String(entry?.notes || ''),
+    performed_by: entry?.performed_by || null,
+    created_at: entry?.created_at || null
   }
 }
 
@@ -27,6 +51,10 @@ export function useInventoryPage() {
   const categories = ref([])
   const loading = ref(false)
   const error = ref('')
+  const detailLoading = ref(false)
+  const detailError = ref('')
+  const selectedItem = ref(null)
+  const stockMovements = ref([])
 
   const filters = ref({
     search: '',
@@ -79,19 +107,27 @@ export function useInventoryPage() {
     showForm.value = true
   }
 
-  function startEdit(item) {
-    editingId.value = Number(item.id)
+  async function startEdit(item) {
+    if (selectedItem.value?.id !== Number(item?.id || 0)) {
+      await openItemDetail(item)
+    }
+
+    const current = selectedItem.value?.id === Number(item?.id || 0)
+      ? selectedItem.value
+      : normalizeItem(item)
+
+    editingId.value = Number(current.id)
     form.value = {
-      name: String(item.name || ''),
-      sku: String(item.sku || ''),
-      category_id: item.category_id || '',
-      price: Number(item.price || 0),
-      stock: Number(item.stock || 0),
-      min_quantity: Number(item.min_stock || 5),
-      family: String(item.family || 'REPUESTO'),
-      origin_status: String(item.origin_status || 'USADO'),
-      store_visible: Boolean(item.store_visible),
-      enabled: item.enabled !== false
+      name: String(current.name || ''),
+      sku: String(current.sku || ''),
+      category_id: current.category_id || '',
+      price: Number(current.price || 0),
+      stock: Number(current.stock || 0),
+      min_quantity: Number(current.min_stock || 5),
+      family: String(current.family || 'REPUESTO'),
+      origin_status: String(current.origin_status || 'USADO'),
+      store_visible: Boolean(current.store_visible),
+      enabled: current.enabled !== false
     }
     showForm.value = true
   }
@@ -135,6 +171,45 @@ export function useInventoryPage() {
     }
   }
 
+  async function loadItemDetail(productId) {
+    const response = await api.get(`/inventory/${productId}`)
+    return normalizeItem(response?.data)
+  }
+
+  async function loadStockMovements(productId) {
+    const response = await api.get('/stock-movements/', {
+      params: {
+        product_id: Number(productId || 0),
+        limit: 50
+      }
+    })
+    const payload = Array.isArray(response?.data) ? response.data : []
+    return payload.map(normalizeMovement)
+  }
+
+  async function openItemDetail(item) {
+    const productId = Number(item?.id || 0)
+    if (!productId) return
+
+    detailLoading.value = true
+    detailError.value = ''
+
+    try {
+      const [detail, movements] = await Promise.all([
+        loadItemDetail(productId),
+        loadStockMovements(productId)
+      ])
+      selectedItem.value = detail
+      stockMovements.value = movements
+    } catch (requestError) {
+      detailError.value = extractErrorMessage(requestError)
+      selectedItem.value = null
+      stockMovements.value = []
+    } finally {
+      detailLoading.value = false
+    }
+  }
+
   async function saveItem() {
     loading.value = true
     error.value = ''
@@ -166,6 +241,9 @@ export function useInventoryPage() {
       showForm.value = false
       resetForm()
       await loadInventory()
+      if (selectedItem.value?.id) {
+        await openItemDetail({ id: selectedItem.value.id })
+      }
     } catch (requestError) {
       error.value = requestError?.message || extractErrorMessage(requestError)
     } finally {
@@ -179,6 +257,10 @@ export function useInventoryPage() {
 
     try {
       await api.delete(`/inventory/${item.id}`)
+      if (selectedItem.value?.id === Number(item.id)) {
+        selectedItem.value = null
+        stockMovements.value = []
+      }
       await loadInventory()
     } catch (requestError) {
       error.value = extractErrorMessage(requestError)
@@ -197,14 +279,20 @@ export function useInventoryPage() {
     categories,
     loading,
     error,
+    detailLoading,
+    detailError,
+    selectedItem,
+    stockMovements,
     filters,
     showForm,
     hasEditing,
     form,
     totalStock,
     lowStockCount,
+    formatDate,
     formatCurrency,
     loadInventory,
+    openItemDetail,
     toggleForm,
     startCreate,
     startEdit,

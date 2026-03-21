@@ -48,8 +48,8 @@ const { resolveSlotOr } = useMediaBinding()
   --hero-osc-height: clamp(8.8rem, 10vw, 7rem);
   --hero-logo-width: min(72vw, 1500px);
   --hero-logo-margin-bottom: -0.35rem;
-  --hero-service-size: clamp(3rem, 3.4vw, 2.35rem);
-  --hero-service-letter: 0.16em;
+  --hero-service-size: clamp(1.28rem, 1.08rem + 1.05vw, 1.92rem);
+  --hero-service-letter: 0.12em;
   --hero-btn-min-height: 72px;
   --hero-btn-pad-block: 1rem;
   --hero-btn-pad-inline: 2rem;
@@ -92,11 +92,12 @@ const { resolveSlotOr } = useMediaBinding()
 }
 
 .hero-tagline {
-  margin: 0;
-  max-width: 50ch;
+  margin-top: 1px;
+  max-width: 70ch;
   font-size: var(--hero-service-size);
-  font-weight: var(--cds-font-semibold);
-  line-height: 1.02;
+  font-family: var(--layout-home-font-family-heading, var(--layout-home-font-family-base, var(--cds-font-family-base)), sans-serif);
+  font-weight: var(--cds-font-bold );
+  line-height: 1.08;
   letter-spacing: var(--hero-service-letter);
   text-transform: uppercase;
   color: var(--cds-primary);
@@ -121,8 +122,9 @@ const { resolveSlotOr } = useMediaBinding()
   padding: var(--hero-btn-pad-block) var(--hero-btn-pad-inline);
   border-radius: var(--cds-radius-pill);
   font-size: var(--hero-btn-font-size);
+  font-family: var(--layout-home-font-family-base, var(--cds-font-family-base), sans-serif);
   font-weight: var(--cds-font-semibold);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   text-decoration: none;
   transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
@@ -141,9 +143,9 @@ const { resolveSlotOr } = useMediaBinding()
 }
 
 .btn-hero-outline {
-  background: var(--cds-white);
+  background: var(--cds-surface-1);
   color: var(--cds-dark);
-  border-color: var(--cds-dark);
+  border-color: var(--cds-border-card);
 }
 
 .hero-oscilloscope {
@@ -158,7 +160,7 @@ const { resolveSlotOr } = useMediaBinding()
 @media (min-width: 600px) and (max-width: 899px) {
   .home-hero {
     --hero-logo-width: min(76vw, 620px);
-    --hero-service-size: clamp(1.55rem, 3vw, 2rem);
+    --hero-service-size: clamp(1.3rem, 2.7vw, 1.72rem);
   }
 }
 
@@ -171,8 +173,8 @@ const { resolveSlotOr } = useMediaBinding()
     --hero-osc-height: clamp(3.8rem, 11vw, 4.8rem);
     --hero-logo-width: min(92vw, 440px);
     --hero-logo-margin-bottom: 0;
-    --hero-service-size: clamp(1.18rem, 5vw, 1.5rem);
-    --hero-service-letter: 0.08em;
+    --hero-service-size: clamp(1.05rem, 4.2vw, 1.28rem);
+    --hero-service-letter: 0.06em;
     --hero-btn-min-height: 3.7rem;
     --hero-btn-pad-block: 0.88rem;
     --hero-btn-pad-inline: 1.25rem;

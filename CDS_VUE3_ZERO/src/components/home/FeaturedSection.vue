@@ -48,21 +48,23 @@ const featuredInstruments = computed(() => resolveImageArray(featuredInstruments
 
 <style scoped>
 .home-featured {
-  background: var(--cds-light);
+  background: var(--cds-surface-dark);
 }
 
 .featured-grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
+  
 }
 
 .featured-card {
   border-radius: var(--cds-radius-lg);
   overflow: hidden;
   border: 1px solid var(--cds-border-card);
-  background: var(--cds-white);
+  background: var(--cds-surface-1);
   box-shadow: var(--cds-shadow-sm);
+  
 }
 
 .featured-card img {
@@ -75,7 +77,8 @@ const featuredInstruments = computed(() => resolveImageArray(featuredInstruments
 .featured-card p {
   margin: 0;
   padding: 0.95rem 1rem 1.05rem;
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-home-text-card-title, var(--cds-text-sm));
+  font-family: var(--layout-home-font-family-heading, var(--layout-home-font-family-base, var(--cds-font-family-base)), sans-serif);
   font-weight: var(--cds-font-semibold);
   color: var(--cds-text-normal);
   line-height: 1.3;

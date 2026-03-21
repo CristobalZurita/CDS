@@ -193,7 +193,7 @@ const countClass = computed(() => {
 /* Texto de ayuda */
 .help-text {
   padding: 0.75rem;
-  background: color-mix(in srgb, var(--cds-primary) 8%, white);
+  background: var(--cds-surface-2);
   border-left: 3px solid var(--cds-primary);
   border-radius: 0 0.35rem 0.35rem 0;
   font-size: var(--cds-text-sm);

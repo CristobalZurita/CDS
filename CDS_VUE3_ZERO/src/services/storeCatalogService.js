@@ -107,9 +107,36 @@ export function filterStoreCatalog(catalog, { searchTerm = '', selectedCategory 
       if (!normalizedSearch) return true
       return product._searchIndex.includes(normalizedSearch)
     })
-    .sort((a, b) =>
-      String(a.name || '').localeCompare(String(b.name || ''), 'es', { sensitivity: 'base' })
-    )
+}
+
+function compareStoreNames(a, b) {
+  return String(a?.name || '').localeCompare(String(b?.name || ''), 'es', { sensitivity: 'base' })
+}
+
+export function sortStoreCatalog(catalog, { sortKey = 'featured' } = {}) {
+  const rows = Array.isArray(catalog) ? [...catalog] : []
+
+  switch (String(sortKey || 'featured')) {
+    case 'name':
+      return rows.sort(compareStoreNames)
+    case 'price_asc':
+      return rows.sort((a, b) => {
+        const amountDiff = Number(a?.price || 0) - Number(b?.price || 0)
+        return amountDiff !== 0 ? amountDiff : compareStoreNames(a, b)
+      })
+    case 'price_desc':
+      return rows.sort((a, b) => {
+        const amountDiff = Number(b?.price || 0) - Number(a?.price || 0)
+        return amountDiff !== 0 ? amountDiff : compareStoreNames(a, b)
+      })
+    case 'stock_desc':
+      return rows.sort((a, b) => {
+        const stockDiff = Number(b?.sellable_stock || 0) - Number(a?.sellable_stock || 0)
+        return stockDiff !== 0 ? stockDiff : compareStoreNames(a, b)
+      })
+    default:
+      return rows
+  }
 }
 
 export function listStoreCategories(catalog) {
@@ -129,14 +156,107 @@ export function normalizeStoreCatalogPayload(payload) {
   return []
 }
 
-export async function fetchStoreCatalog({ isAuthenticated = false } = {}) {
+export async function fetchStoreCatalog({
+  isAuthenticated = false,
+  limit = 5000,
+  categoryId = null,
+  search = '',
+} = {}) {
   const endpoint = isAuthenticated ? '/inventory/' : '/inventory/public/'
   const params = isAuthenticated
-    ? { limit: 5000 }
-    : { limit: 5000, enabled_only: false, in_stock_only: false }
+    ? { limit }
+    : { limit, enabled_only: false, in_stock_only: false }
+
+  if (categoryId) params.category_id = categoryId
+  if (String(search || '').trim()) params.search = String(search || '').trim()
 
   const response = await api.get(endpoint, { params })
   return normalizeStoreCatalogPayload(response?.data)
+}
+
+export const STORE_FEATURED_LIMIT = 12
+
+// SKUs de productos destacados — verificados en la base de datos del inventario
+export const FEATURED_SEARCH_TERMS = [
+  'RES-10K-THT-AXIAL-0P25W',
+  'CAPE-1U-50P0V',
+  'OTROS-BOTON_PULSADOR_6X6X10MM_2PIN',
+  'TRANSISTORES-LM7805'
+]
+
+// Imágenes de Cloudinary para destacados — la DB aún no tiene image_url para estos SKUs.
+// El pulsador tiene extensión doble .jpg.webp: el SDK de Cloudinary la rompe (quita .webp →
+// public_id queda ...PULSADOR.jpg → Cloudinary lo parsea como formato jpg → 404).
+// Solución: URL directa construida desde la env, sin pasar por el SDK.
+const _CLOUD = String(import.meta.env?.VITE_CLOUDINARY_CLOUD_NAME || '').trim()
+
+const FEATURED_PRODUCT_IMAGE_OVERRIDES = {
+  'RES-10K-THT-AXIAL-0P25W':            '/images/INVENTARIO/RESISTENCIA.webp',
+  'CAPE-1U-50P0V':                       '/images/INVENTARIO/CAPACITOR_ELECTROLITICO.webp',
+  'OTROS-BOTON_PULSADOR_6X6X10MM_2PIN': _CLOUD
+    ? `https://res.cloudinary.com/${_CLOUD}/image/upload/INVENTARIO/PULSADOR_6X6_2_PIN.jpg.webp`
+    : '',
+  'TRANSISTORES-LM7805':                 '/images/INVENTARIO/TRANSISTOR_TO220.webp',
+}
+
+export async function fetchFeaturedProducts({ isAuthenticated = false } = {}) {
+  const endpoint = isAuthenticated ? '/inventory/' : '/inventory/public/'
+  const baseParams = isAuthenticated
+    ? {}
+    : { enabled_only: false, in_stock_only: false }
+
+  const results = await Promise.all(
+    FEATURED_SEARCH_TERMS.map(term =>
+      api.get(endpoint, { params: { ...baseParams, search: term, limit: 2 } })
+        .then(r => normalizeStoreCatalogPayload(r?.data))
+        .catch(() => [])
+    )
+  )
+
+  const seen = new Set()
+  return results.flat()
+    .filter(product => {
+      const id = String(product.id)
+      if (seen.has(id)) return false
+      seen.add(id)
+      return true
+    })
+    .map(product => {
+      const imageOverride = FEATURED_PRODUCT_IMAGE_OVERRIDES[product.sku]
+      if (imageOverride && !product.image_url) {
+        return { ...product, image_url: imageOverride }
+      }
+      return product
+    })
+}
+
+export async function searchStoreCatalog(query, { isAuthenticated = false, categoryId = null } = {}) {
+  const endpoint = isAuthenticated ? '/inventory/' : '/inventory/public/'
+  const params = { search: String(query || '').trim(), limit: 60 }
+  if (!isAuthenticated) {
+    params.enabled_only = false
+    params.in_stock_only = false
+  }
+  if (categoryId) params.category_id = categoryId
+  const response = await api.get(endpoint, { params })
+  return normalizeStoreCatalogPayload(response?.data)
+}
+
+export async function loadStoreFeaturedSnapshot({ isAuthenticated = false } = {}) {
+  try {
+    const rows = await fetchFeaturedProducts({ isAuthenticated })
+    return { rows, error: '' }
+  } catch (requestError) {
+    const cached = readStoreCatalogCache()
+    if (cached.length > 0) {
+      return {
+        rows: cached.slice(0, STORE_FEATURED_LIMIT),
+        error: 'No se pudo cargar. Mostrando productos guardados.',
+        fromCache: true
+      }
+    }
+    return { rows: [], error: extractErrorMessage(requestError) }
+  }
 }
 
 export async function loadStoreCatalogSnapshot({ isAuthenticated = false } = {}) {

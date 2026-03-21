@@ -172,6 +172,7 @@ def serialize_inventory_product(db: Session, product: Product) -> dict:
 
     return {
         "id": product.id,
+        "stock_id": stock.id if stock else None,
         "name": product.name,
         "sku": product.sku,
         "description": product.description,

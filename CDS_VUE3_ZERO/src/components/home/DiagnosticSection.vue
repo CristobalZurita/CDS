@@ -9,7 +9,7 @@
           <li><i class="fas fa-check"></i> Sin necesidad de registrarte</li>
           <li><i class="fas fa-check"></i> Compatible con todos los equipos de audio</li>
         </ul>
-        <router-link to="/cotizador" class="btn-section">
+     <router-link to="/cotizador" class="btn-section">
           <i class="fas fa-file-circle-check"></i> Ir al cotizador
         </router-link>
       </div>
@@ -43,7 +43,7 @@ const { resolveSlotOr } = useMediaBinding()
 
 .diagnostic-layout {
   display: grid;
-  gap: clamp(1.35rem, 2.5vw, 2.4rem);
+  gap: var(--layout-home-section-content-gap, clamp(1.45rem, 2.8vw, 2.4rem));
   align-items: stretch;
 }
 
@@ -53,14 +53,14 @@ const { resolveSlotOr } = useMediaBinding()
   gap: 1rem;
   padding: clamp(1.25rem, 2vw, 2rem);
   border-radius: clamp(1.1rem, 2vw, 1.7rem);
-  background: var(--cds-white);
+  background: var(--cds-surface-1);
   border: 1px solid var(--cds-border-card);
   box-shadow: var(--cds-shadow-sm);
 }
 
 .diagnostic-text p {
-  font-size: clamp(1rem, 0.92rem + 0.38vw, 1.22rem);
-  line-height: 1.65;
+  font-size: var(--layout-home-text-body, clamp(1rem, 0.96rem + 0.22vw, 1.12rem));
+  line-height: 1.72;
   color: var(--cds-text-normal);
   margin: 0;
 }
@@ -77,9 +77,9 @@ const { resolveSlotOr } = useMediaBinding()
   display: flex;
   align-items: flex-start;
   gap: 0.6rem;
-  font-size: clamp(1rem, 0.92rem + 0.32vw, 1.16rem);
+  font-size: var(--layout-home-text-body, clamp(1rem, 0.96rem + 0.22vw, 1.12rem));
   color: var(--cds-text-normal);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .diagnostic-list li i { color: var(--cds-primary); flex-shrink: 0; }
@@ -89,7 +89,7 @@ const { resolveSlotOr } = useMediaBinding()
   border-radius: clamp(1.1rem, 2vw, 1.7rem);
   overflow: hidden;
   border: 1px solid var(--cds-border-card);
-  background: var(--cds-white);
+  background: var(--cds-surface-2);
   box-shadow: var(--cds-shadow-md);
 }
 

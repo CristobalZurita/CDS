@@ -16,6 +16,10 @@
       <span>Abonado</span>
       <strong>{{ formatCurrency(repair?.paid_amount) }}</strong>
     </article>
+    <article class="summary-card">
+      <span>Pago</span>
+      <strong>{{ formatPaymentStatus(repair?.payment_status) }}</strong>
+    </article>
   </section>
 </template>
 
@@ -46,6 +50,18 @@ defineProps({
     required: true
   }
 })
+
+function formatPaymentStatus(value) {
+  const map = {
+    pending: 'Pendiente',
+    partial: 'Parcial',
+    paid: 'Pagado',
+    refunded: 'Reembolsado',
+    cancelled: 'Cancelado'
+  }
+
+  return map[String(value || '').toLowerCase()] || 'Sin estado'
+}
 </script>
 
 <style scoped src="../../pages/admin/commonAdminPage.css"></style>

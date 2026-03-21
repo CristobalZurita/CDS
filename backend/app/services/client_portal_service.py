@@ -1035,6 +1035,14 @@ def submit_client_deposit_proof_record(
             pass
         raise HTTPException(status_code=410, detail="La solicitud venció y ya no admite comprobante")
 
+    payment_method = str(payment.payment_method or "").strip().lower()
+    payment_processor = str(payment.payment_processor or "").strip().lower()
+    if payment_method != "transfer" or (payment_processor and payment_processor != "manual"):
+        raise HTTPException(
+            status_code=400,
+            detail="El comprobante manual solo aplica a pagos por transferencia",
+        )
+
     amount = int(payment.amount or 0)
     if amount <= 0:
         raise HTTPException(status_code=400, detail="Monto inválido")

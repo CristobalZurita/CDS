@@ -20,6 +20,13 @@ from app.crud.appointment import (
 )
 
 
+def _next_valid_slot(days_ahead: int = 1) -> datetime:
+    target = datetime.now(CL_TZ) + timedelta(days=days_ahead)
+    while target.weekday() >= 5:
+        target += timedelta(days=1)
+    return target.replace(hour=10, minute=0, second=0, microsecond=0)
+
+
 class TestAppointmentModel:
     """Test Appointment SQLAlchemy model"""
     
@@ -60,7 +67,7 @@ class TestAppointmentSchema:
     
     def test_valid_appointment_creation(self):
         """Test valid appointment data"""
-        future_date = datetime.now() + timedelta(days=1)
+        future_date = _next_valid_slot()
         
         apt = AppointmentCreate(
             nombre="Juan García Pérez",
@@ -75,7 +82,7 @@ class TestAppointmentSchema:
     
     def test_invalid_nombre_with_numbers(self):
         """Test nombre validation rejects numbers"""
-        future_date = datetime.now() + timedelta(days=1)
+        future_date = _next_valid_slot()
         
         with pytest.raises(ValueError):
             AppointmentCreate(
@@ -87,7 +94,7 @@ class TestAppointmentSchema:
     
     def test_invalid_nombre_special_chars(self):
         """Test nombre validation rejects special characters"""
-        future_date = datetime.now() + timedelta(days=1)
+        future_date = _next_valid_slot()
         
         with pytest.raises(ValueError):
             AppointmentCreate(
@@ -99,7 +106,7 @@ class TestAppointmentSchema:
     
     def test_valid_nombre_with_accents(self):
         """Test nombre allows accents"""
-        future_date = datetime.now() + timedelta(days=1)
+        future_date = _next_valid_slot()
         
         apt = AppointmentCreate(
             nombre="Juan José García Pérez",
@@ -113,7 +120,7 @@ class TestAppointmentSchema:
     
     def test_valid_nombre_with_ñ(self):
         """Test nombre allows Ñ"""
-        future_date = datetime.now() + timedelta(days=1)
+        future_date = _next_valid_slot()
         
         apt = AppointmentCreate(
             nombre="Peña González Niño",
@@ -126,7 +133,7 @@ class TestAppointmentSchema:
     
     def test_invalid_email_format(self):
         """Test email validation"""
-        future_date = datetime.now() + timedelta(days=1)
+        future_date = _next_valid_slot()
         
         with pytest.raises(ValueError):
             AppointmentCreate(
@@ -138,7 +145,7 @@ class TestAppointmentSchema:
     
     def test_invalid_telefono_no_plus(self):
         """Test telefono must start with +"""
-        future_date = datetime.now() + timedelta(days=1)
+        future_date = _next_valid_slot()
         
         with pytest.raises(ValueError):
             AppointmentCreate(
@@ -150,7 +157,7 @@ class TestAppointmentSchema:
     
     def test_invalid_telefono_with_letters(self):
         """Test telefono rejects letters"""
-        future_date = datetime.now() + timedelta(days=1)
+        future_date = _next_valid_slot()
         
         with pytest.raises(ValueError):
             AppointmentCreate(
@@ -171,10 +178,40 @@ class TestAppointmentSchema:
                 telefono="+56912345678",
                 fecha=past_date
             )
+
+    def test_invalid_saturday_fecha(self):
+        """Test fecha rejects Saturdays"""
+        future_base = datetime.now(CL_TZ) + timedelta(days=1)
+        saturday_offset = (5 - future_base.weekday()) % 7 or 7
+        saturday = future_base + timedelta(days=saturday_offset)
+        saturday = saturday.replace(hour=10, minute=0, second=0, microsecond=0)
+
+        with pytest.raises(ValueError):
+            AppointmentCreate(
+                nombre="Juan García",
+                email="juan@example.com",
+                telefono="+56912345678",
+                fecha=saturday
+            )
+
+    def test_invalid_off_hours_fecha(self):
+        """Test fecha rejects times outside public schedule blocks"""
+        future_base = datetime.now(CL_TZ) + timedelta(days=1)
+        if future_base.weekday() >= 5:
+            future_base = future_base + timedelta(days=(7 - future_base.weekday()))
+        off_hours = future_base.replace(hour=13, minute=0, second=0, microsecond=0)
+
+        with pytest.raises(ValueError):
+            AppointmentCreate(
+                nombre="Juan García",
+                email="juan@example.com",
+                telefono="+56912345678",
+                fecha=off_hours
+            )
     
     def test_mensaje_optional(self):
         """Test mensaje is optional"""
-        future_date = datetime.now() + timedelta(days=1)
+        future_date = _next_valid_slot()
         
         apt = AppointmentCreate(
             nombre="Juan García",
@@ -196,7 +233,7 @@ class TestAppointmentCRUD:
             nombre="Test User",
             email="test@example.com",
             telefono="+56912345678",
-            fecha=datetime.now() + timedelta(days=1),
+            fecha=_next_valid_slot(),
             mensaje="Test appointment"
         )
         
@@ -213,7 +250,7 @@ class TestAppointmentCRUD:
             nombre="Test User",
             email="test@example.com",
             telefono="+56912345678",
-            fecha=datetime.now() + timedelta(days=1)
+            fecha=_next_valid_slot()
         )
         
         created = await create_appointment(db, apt_data)
@@ -236,7 +273,7 @@ class TestAppointmentCRUD:
             nombre="Test User",
             email="test@example.com",
             telefono="+56912345678",
-            fecha=datetime.now() + timedelta(days=1)
+            fecha=_next_valid_slot()
         )
         
         created = await create_appointment(db, apt_data)
@@ -258,7 +295,7 @@ class TestAppointmentAPI:
                 "nombre": "Test User",
                 "email": "test@example.com",
                 "telefono": "+56912345678",
-                "fecha": (datetime.now() + timedelta(days=1)).isoformat(),
+                "fecha": _next_valid_slot().isoformat(),
                 "mensaje": "Test appointment"
             }
         )
@@ -277,11 +314,30 @@ class TestAppointmentAPI:
                 "nombre": "Test123",
                 "email": "test@example.com",
                 "telefono": "+56912345678",
-                "fecha": (datetime.now() + timedelta(days=1)).isoformat()
+                "fecha": _next_valid_slot().isoformat()
             }
         )
         
         assert response.status_code == 422  # Validation error
+
+    def test_create_appointment_rejects_saturday_slot(self, client: TestClient):
+        """Test POST rejects Saturdays from public booking UI"""
+        future_base = datetime.now(CL_TZ) + timedelta(days=1)
+        saturday_offset = (5 - future_base.weekday()) % 7 or 7
+        saturday = future_base + timedelta(days=saturday_offset)
+        saturday = saturday.replace(hour=10, minute=0, second=0, microsecond=0)
+
+        response = client.post(
+            "/api/v1/appointments/",
+            json={
+                "nombre": "Test User",
+                "email": "test@example.com",
+                "telefono": "+56912345678",
+                "fecha": saturday.isoformat()
+            }
+        )
+
+        assert response.status_code == 422
     
     def test_get_appointments_endpoint(self, client: TestClient):
         """Test GET /appointments/"""
@@ -312,6 +368,8 @@ class TestAppointmentAPI:
             second=0,
             microsecond=0,
         )
+        while target_local.weekday() >= 5:
+            target_local += timedelta(days=1)
 
         create_response = client.post(
             "/api/v1/appointments/",

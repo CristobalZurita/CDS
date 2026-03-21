@@ -79,17 +79,17 @@ const emit = defineEmits(['scroll-top'])
   font-size: 1rem;
   cursor: pointer;
   z-index: 999;
-  box-shadow: 0 4px 14px rgba(236, 107, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(179, 106, 60, 0.34);
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s, box-shadow 0.2s;
 }
 
 .scroll-top:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(236, 107, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(179, 106, 60, 0.46);
 }
 
 .scroll-top.scroll-top--cart-open {
-  right: calc(min(420px, 100vw) + 1rem);
+  right: calc(var(--layout-store-drawer-width, min(420px, 100vw)) + 1rem);
 }
 
 @media (min-width: 768px) {
@@ -109,7 +109,7 @@ const emit = defineEmits(['scroll-top'])
   }
 
   .scroll-top.scroll-top--cart-open {
-    right: calc(min(420px, 100vw) + 1.5rem);
+    right: calc(var(--layout-store-drawer-width, min(420px, 100vw)) + 1.5rem);
   }
 }
 </style>

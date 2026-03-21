@@ -3,6 +3,8 @@
   --inventory-summary-pad: 0.75rem;
   --inventory-filters-columns: repeat(1, minmax(0, 1fr));
   --inventory-form-columns: 1fr;
+  --inventory-detail-columns: repeat(1, minmax(0, 1fr));
+  --inventory-breakdown-columns: repeat(1, minmax(0, 1fr));
   --inventory-checkbox-gap: 0.5rem;
   --inventory-flag-gap: 0.35rem;
   --inventory-flag-pad-block: 0.2rem;
@@ -57,10 +59,39 @@
   color: var(--cds-valid-text);
 }
 
+.inventory-detail-grid p {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.inventory-detail-grid {
+  display: grid;
+  gap: calc(0.75rem * var(--cds-type-scale, 1));
+  grid-template-columns: var(--inventory-detail-columns);
+}
+
+.inventory-breakdown-grid {
+  margin-top: 0.75rem;
+  grid-template-columns: var(--inventory-breakdown-columns);
+}
+
+.inventory-breakdown-grid .summary-card {
+  min-height: calc(5.4rem * var(--cds-type-scale, 1));
+}
+
+.inventory-breakdown-grid .summary-card span,
+.inventory-breakdown-grid .summary-card strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 @media (min-width: 860px) {
   .admin-page {
     --inventory-filters-columns: repeat(2, minmax(0, 1fr));
     --inventory-form-columns: repeat(2, minmax(0, 1fr));
+    --inventory-detail-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    --inventory-breakdown-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
   }
 
   .summary-grid {

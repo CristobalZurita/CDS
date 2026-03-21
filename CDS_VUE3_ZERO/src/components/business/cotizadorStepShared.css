@@ -8,6 +8,7 @@
   padding: var(--layout-quotation-card-padding-mobile, 1.25rem 1rem);
   display: grid;
   gap: var(--layout-quotation-card-gap, 1rem);
+  font-family: var(--layout-public-font-family-base, var(--cds-font-family-base), sans-serif);
 }
 
 .form-grid {
@@ -21,7 +22,7 @@
 }
 
 .field > span {
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-public-text-meta, var(--cds-text-sm));
   font-weight: 500;
 }
 
@@ -45,8 +46,9 @@
 }
 
 .field-hint {
-  font-size: var(--cds-text-xs);
+  font-size: var(--layout-public-text-meta, var(--cds-text-xs));
   color: var(--cds-text-muted);
+  line-height: 1.5;
 }
 
 .required {
@@ -65,14 +67,14 @@
   align-items: center;
   gap: var(--layout-quotation-loading-gap, 0.5rem);
   color: var(--cds-text-muted);
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-public-text-meta, var(--cds-text-sm));
 }
 
 .spinner {
   display: inline-block;
   width: var(--layout-quotation-spinner-size, 18px);
   height: var(--layout-quotation-spinner-size, 18px);
-  border: 2px solid color-mix(in srgb, var(--cds-primary) 25%, white);
+  border: 2px solid var(--cds-border-card);
   border-top-color: var(--cds-primary);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -139,7 +141,7 @@
 }
 
 .btn-secondary:not(:disabled):hover {
-  background: color-mix(in srgb, var(--cds-light) 20%, white);
+  background: var(--cds-surface-2);
 }
 
 .not-found-toggle {
@@ -152,7 +154,7 @@
   border: none;
   padding: 0;
   color: var(--cds-text-muted);
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-public-text-meta, var(--cds-text-sm));
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -170,7 +172,8 @@
   display: flex;
   gap: var(--layout-quotation-checkbox-gap, 0.6rem);
   align-items: flex-start;
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-public-text-meta, var(--cds-text-sm));
+  line-height: 1.6;
   cursor: pointer;
 }
 

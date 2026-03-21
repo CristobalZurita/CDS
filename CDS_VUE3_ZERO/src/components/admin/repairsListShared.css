@@ -28,7 +28,7 @@
 }
 
 .mono {
-  font-family: var(--admin-list-mono-font-family, ui-monospace, monospace);
+  font-family: var(--admin-list-mono-font-family, var(--cds-font-family-mono, monospace));
   font-size: var(--cds-text-sm);
   color: var(--cds-text-muted);
 }

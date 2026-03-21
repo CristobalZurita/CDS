@@ -190,7 +190,7 @@ const bodyClasses = computed(() => ({
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-top: 1px solid var(--cds-border-card);
-  background: color-mix(in srgb, var(--cds-light) 5%, white);
+  background: var(--cds-surface-1);
 }
 
 .padding-sm .card-footer {

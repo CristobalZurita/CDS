@@ -9,7 +9,7 @@
     <header class="cart-drawer-header">
       <div class="cart-drawer-title">
         <i class="fas fa-shopping-cart"></i>
-        <span>Mi lista</span>
+        <span>Carrito</span>
         <span v-if="totals.itemsCount > 0" class="cart-badge-inline">{{ totals.itemsCount }}</span>
       </div>
       <button class="cart-close-btn" @click="$emit('close')" aria-label="Cerrar carrito">
@@ -31,22 +31,8 @@
           class="cart-item"
           data-testid="store-cart-item"
         >
-          <div class="cart-item-copy">
-            <strong>{{ item.name }}</strong>
-            <span>{{ item.sku }}</span>
-            <small>{{ formatLinePrice(item.price) }} c/u</small>
-          </div>
-
-          <div class="cart-item-actions">
-            <button class="qty-btn" @click="$emit('change-qty', { id: item.id, delta: -1 })">−</button>
-            <span class="qty-value">{{ item.qty }}</span>
-            <button
-              class="qty-btn"
-              :disabled="!canAddProduct(item)"
-              @click="$emit('change-qty', { id: item.id, delta: 1 })"
-            >+</button>
-            <button class="remove-btn" @click="$emit('remove', item.id)">Quitar</button>
-          </div>
+          <strong class="cart-item-name">{{ item.name }}</strong>
+          <span class="cart-item-qty">× {{ item.qty }}</span>
         </article>
       </div>
     </div>
@@ -71,6 +57,14 @@
         </div>
       </div>
 
+      <router-link
+        to="/carrito"
+        class="btn-view-cart"
+        @click="$emit('close')"
+      >
+        <i class="fas fa-basket-shopping"></i> Ver carrito completo
+      </router-link>
+
       <button
         class="btn-checkout"
         data-testid="store-checkout"
@@ -80,8 +74,17 @@
         {{ checkoutLabel }}
       </button>
 
+      <button
+        v-if="items.length > 0"
+        class="btn-clear-cart"
+        :disabled="submitting"
+        @click="$emit('clear-cart')"
+      >
+        <i class="fa-solid fa-trash"></i> Vaciar carrito
+      </button>
+
       <p class="cart-note">
-        Al iniciar sesión como cliente esta lista se convierte en una solicitud real.
+        Al confirmar se genera una solicitud real y el taller coordina pago, despacho o retiro.
       </p>
     </footer>
   </aside>
@@ -122,7 +125,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['close', 'change-qty', 'remove', 'checkout'])
+defineEmits(['close', 'change-qty', 'remove', 'checkout', 'clear-cart'])
 
 function formatLinePrice(value) {
   return formatStoreLinePrice(value)
@@ -150,28 +153,29 @@ function formatSummaryAmount(value) {
 }
 
 .cart-drawer {
-  --store-cart-drawer-width: min(420px, 100vw);
-  --store-cart-header-pad-block: 1.1rem;
-  --store-cart-section-pad-block: 1rem;
-  --store-cart-section-pad-inline: 1.25rem;
-  --store-cart-empty-gap: 0.5rem;
-  --store-cart-empty-pad-block: 2rem;
-  --store-cart-item-padding: 0.75rem;
-  --store-cart-summary-gap: 0.4rem;
-  --store-cart-action-gap: 0.4rem;
-  --store-cart-checkout-min-height: 44px;
-  --store-cart-checkout-pad-block: 0.7rem;
-  --store-cart-checkout-pad-inline: 1rem;
+  --store-cart-drawer-width: var(--layout-store-drawer-width, min(500px, 100vw));
+  --store-cart-header-pad-block: calc(1.1rem * var(--cds-type-scale, 1));
+  --store-cart-section-pad-block: calc(1rem * var(--cds-type-scale, 1));
+  --store-cart-section-pad-inline: calc(1.25rem * var(--cds-type-scale, 1));
+  --store-cart-empty-gap: calc(0.5rem * var(--cds-type-scale, 1));
+  --store-cart-empty-pad-block: calc(2rem * var(--cds-type-scale, 1));
+  --store-cart-item-padding: calc(0.85rem * var(--cds-type-scale, 1));
+  --store-cart-summary-gap: calc(0.5rem * var(--cds-type-scale, 1));
+  --store-cart-action-gap: calc(0.5rem * var(--cds-type-scale, 1));
+  --store-cart-checkout-min-height: calc(44px * var(--cds-type-scale, 1));
+  --store-cart-checkout-pad-block: calc(0.7rem * var(--cds-type-scale, 1));
+  --store-cart-checkout-pad-inline: calc(1rem * var(--cds-type-scale, 1));
   position: fixed;
   top: 0;
-  right: -440px;
+  right: -540px;
   width: var(--store-cart-drawer-width, min(420px, 100vw));
   height: 100dvh;
   z-index: 900;
   display: flex;
   flex-direction: column;
-  background: var(--cds-white);
-  box-shadow: -6px 0 32px rgba(0, 0, 0, 0.18);
+  background: var(--cds-surface-2);
+  font-family: var(--layout-public-font-family-base, var(--cds-font-family-base), sans-serif);
+  box-shadow: -6px 0 32px rgba(10, 12, 15, 0.28);
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -184,8 +188,8 @@ function formatSummaryAmount(value) {
   align-items: center;
   justify-content: space-between;
   padding: var(--store-cart-header-pad-block, 1.1rem) var(--store-cart-section-pad-inline, 1.25rem);
-  border-bottom: 1px solid var(--cds-footer-bg-highlight-color);
-  background: var(--cds-dark);
+  border-bottom: 1px solid rgba(198, 187, 176, 0.18);
+  background: var(--cds-nav-background-color);
   color: var(--cds-white);
   flex-shrink: 0;
 }
@@ -194,34 +198,34 @@ function formatSummaryAmount(value) {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: 1.05rem;
+  font-family: var(--layout-public-font-family-heading, var(--layout-public-font-family-base, var(--cds-font-family-base)));
+  font-size: var(--layout-public-text-brand, 1.05rem);
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: -0.01em;
 }
 
 .cart-badge-inline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 5px;
+  min-width: calc(22px * var(--cds-type-scale, 1));
+  height: calc(22px * var(--cds-type-scale, 1));
+  padding: 0 calc(5px * var(--cds-type-scale, 1));
   border-radius: var(--cds-radius-pill);
   background: var(--cds-primary);
   color: var(--cds-white);
-  font-size: 0.75rem;
+  font-size: var(--layout-public-text-label, 0.75rem);
   font-weight: 800;
 }
 
 .cart-close-btn {
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  width: calc(36px * var(--cds-type-scale, 1));
+  height: calc(36px * var(--cds-type-scale, 1));
+  border: 1px solid rgba(198, 187, 176, 0.24);
   border-radius: 50%;
   background: transparent;
   color: var(--cds-white);
-  font-size: 1rem;
+  font-size: var(--layout-public-text-meta, 1rem);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -230,7 +234,7 @@ function formatSummaryAmount(value) {
 }
 
 .cart-close-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: #25292e;
 }
 
 .cart-drawer-body {
@@ -239,6 +243,7 @@ function formatSummaryAmount(value) {
   padding: var(--store-cart-section-pad-block, 1rem) var(--store-cart-section-pad-inline, 1.25rem);
   display: flex;
   flex-direction: column;
+  background: var(--cds-surface-2);
 }
 
 .cart-empty {
@@ -255,90 +260,69 @@ function formatSummaryAmount(value) {
 }
 
 .cart-empty-icon {
-  font-size: 2.5rem;
+  font-size: clamp(calc(2rem * var(--cds-type-scale, 1)), calc((1.6rem + 1vw) * var(--cds-type-scale, 1)), calc(2.5rem * var(--cds-type-scale, 1)));
   opacity: 0.45;
   margin-bottom: 0.5rem;
 }
 
 .cart-empty p {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: var(--layout-public-text-body, 0.95rem);
+  line-height: 1.62;
 }
 
 .cart-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--cds-space-sm);
+  display: grid;
+  gap: calc(var(--cds-space-sm) * var(--cds-type-scale, 1));
 }
 
 .cart-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--cds-space-xs);
+  display: grid;
+  gap: calc(var(--cds-space-xs) * var(--cds-type-scale, 1));
   padding: var(--store-cart-item-padding, 0.75rem);
   border: 1px solid var(--cds-border-card);
-  border-radius: var(--cds-radius-sm);
+  border-radius: var(--cds-radius-md);
+  background: var(--cds-surface-1);
+  box-shadow: var(--cds-shadow-sm);
 }
 
-.cart-item-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.cart-item-copy strong {
-  font-size: 0.9rem;
+.cart-item-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--layout-public-font-family-heading, var(--layout-public-font-family-base, var(--cds-font-family-base)));
+  font-size: var(--layout-public-text-brand, 0.9rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
   color: var(--cds-dark);
 }
 
-.cart-item-copy span,
-.cart-item-copy small {
-  font-size: 0.82rem;
+.cart-item-qty {
+  flex-shrink: 0;
+  font-size: var(--layout-public-text-meta, 0.82rem);
   color: var(--cds-text-muted);
 }
 
-.cart-item-actions {
+.btn-view-cart {
   display: flex;
   align-items: center;
-  gap: var(--store-cart-action-gap, 0.4rem);
-}
-
-.qty-btn {
-  width: 34px;
-  height: 34px;
-  border: 1px solid var(--cds-border-input);
-  border-radius: var(--cds-radius-sm);
-  background: white;
-  color: var(--cds-dark);
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
-}
-
-.qty-btn:disabled {
-  opacity: 0.5;
-}
-
-.qty-value {
-  min-width: 28px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 1rem;
-  color: var(--cds-dark);
-}
-
-.remove-btn {
-  margin-left: auto;
-  padding: 0.25rem 0.6rem;
-  border: 1px solid var(--cds-invalid-border);
+  gap: calc(0.4rem * var(--cds-type-scale, 1));
+  width: 100%;
+  min-height: calc(40px * var(--cds-type-scale, 1));
+  padding: calc(0.6rem * var(--cds-type-scale, 1)) calc(1rem * var(--cds-type-scale, 1));
   border-radius: var(--cds-radius-sm);
-  background: transparent;
-  color: var(--cds-invalid-text);
-  font-size: 0.8rem;
-  cursor: pointer;
+  border: 1px solid var(--cds-border-card);
+  background: var(--cds-surface-1);
+  color: var(--cds-dark);
+  font-size: var(--layout-public-text-body, 0.9rem);
+  font-weight: var(--cds-font-semibold);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-view-cart:hover {
+  background: var(--cds-surface-2);
+  color: var(--cds-primary);
 }
 
 .cart-drawer-footer {
@@ -346,7 +330,7 @@ function formatSummaryAmount(value) {
   border-top: 1px solid var(--cds-border-card);
   display: flex;
   flex-direction: column;
-  gap: var(--cds-space-sm);
+  gap: calc(var(--cds-space-sm) * var(--cds-type-scale, 1));
   flex-shrink: 0;
   background: var(--cds-surface-2);
 }
@@ -360,14 +344,17 @@ function formatSummaryAmount(value) {
 .summary-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.9rem;
+  align-items: baseline;
+  gap: calc(0.8rem * var(--cds-type-scale, 1));
+  font-size: var(--layout-public-text-body, 0.9rem);
+  line-height: 1.5;
   color: var(--cds-dark);
 }
 
 .summary-row--total {
-  padding-top: var(--cds-space-xs);
+  padding-top: calc(var(--cds-space-xs) * var(--cds-type-scale, 1));
   border-top: 1px solid var(--cds-border-card);
-  font-size: 1rem;
+  font-size: var(--layout-public-text-brand, 1rem);
 }
 
 .btn-checkout {
@@ -378,14 +365,14 @@ function formatSummaryAmount(value) {
   border: none;
   background: var(--cds-primary);
   color: var(--cds-white);
-  font-size: 0.95rem;
+  font-size: var(--layout-public-text-body, 0.95rem);
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .btn-checkout:hover:not(:disabled) {
-  background: #d86100;
+  background: var(--cds-primary-hover);
 }
 
 .btn-checkout:disabled {
@@ -393,10 +380,44 @@ function formatSummaryAmount(value) {
   cursor: default;
 }
 
+.btn-clear-cart {
+  width: 100%;
+  min-height: calc(38px * var(--cds-type-scale, 1));
+  padding: calc(0.45rem * var(--cds-type-scale, 1)) calc(1rem * var(--cds-type-scale, 1));
+  border-radius: var(--cds-radius-sm);
+  border: 1px solid var(--cds-invalid-border);
+  background: transparent;
+  color: var(--cds-invalid-text);
+  font-size: var(--layout-public-text-meta, 0.85rem);
+  font-weight: var(--cds-font-semibold);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-clear-cart:hover:not(:disabled) {
+  background: var(--cds-invalid-border);
+  color: var(--cds-white);
+}
+
+.btn-clear-cart:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
 .cart-note {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: var(--layout-public-text-meta, 0.82rem);
   color: var(--cds-text-muted);
-  line-height: 1.5;
+  line-height: 1.62;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--cds-space-sm) * var(--cds-type-scale, 1));
 }
 </style>

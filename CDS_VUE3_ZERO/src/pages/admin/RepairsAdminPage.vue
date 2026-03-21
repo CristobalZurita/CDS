@@ -43,8 +43,19 @@
             </option>
           </select>
         </label>
-        <label><span>Modelo *</span><input v-model.trim="form.model" type="text" placeholder="Ej: Korg MS-20" /></label>
+        <label>
+          <span>Dispositivo *</span>
+          <select v-model="form.device_id" :disabled="!form.client_id || clientDevices.length === 0">
+            <option value="">Seleccionar</option>
+            <option v-for="device in clientDevices" :key="device.id" :value="device.id">
+              {{ device.brand_other ? `${device.brand_other} · ` : '' }}{{ device.model || `Dispositivo #${device.id}` }}{{ device.serial_number ? ` · ${device.serial_number}` : '' }}
+            </option>
+          </select>
+        </label>
         <label class="full"><span>Problema reportado *</span><textarea v-model.trim="form.problem_reported" rows="3"></textarea></label>
+        <p v-if="form.client_id && clientDevices.length === 0" class="helper-text full">
+          El cliente no tiene dispositivos. Crea el equipo primero en Clientes o mediante Intake antes de abrir una OT.
+        </p>
         <label><span>Prioridad</span><select v-model.number="form.priority"><option :value="1">Alta</option><option :value="2">Normal</option><option :value="3">Baja</option></select></label>
         <label><span>Abono (CLP)</span><input v-model.number="form.paid_amount" type="number" min="0" /></label>
         <label>
@@ -108,6 +119,7 @@ import { useRepairsAdminPage } from '@/composables/useRepairsAdminPage'
 const {
   repairs,
   clients,
+  clientDevices,
   loading,
   error,
   searchQuery,
@@ -128,5 +140,6 @@ const {
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
 .filters-panel { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.helper-text { margin: 0; color: var(--cds-text-soft); font-size: 0.92rem; }
 @media (min-width: 900px) { .filters-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>

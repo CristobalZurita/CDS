@@ -115,7 +115,7 @@
 .bg-white { background-color: var(--cds-white); }
 .bg-light { background-color: var(--cds-light); }
 .bg-primary { background-color: var(--cds-primary); }
-.bg-dark { background-color: var(--cds-dark); }
+.bg-dark { background-color: var(--cds-wh); }
 .bg-surface-1 { background-color: var(--cds-surface-1); }
 .bg-surface-2 { background-color: var(--cds-surface-2); }
 

@@ -2,6 +2,7 @@
 .privacy-page,
 .terms-page {
   padding: var(--layout-legal-page-padding, 1rem);
+  font-family: var(--layout-public-font-family-base, var(--cds-font-family-base), sans-serif);
 }
 
 .legal-card,
@@ -9,7 +10,7 @@
 .terms-container {
   max-width: var(--layout-legal-container-max, 980px);
   margin: 0 auto;
-  background: var(--cds-white);
+  background: var(--cds-surface-1);
   border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-md);
   padding: var(--layout-legal-card-padding, 1rem);
@@ -25,15 +26,18 @@
 .privacy-header h1,
 .terms-header h1 {
   margin: 0;
+  font-family: var(--layout-public-font-family-heading, var(--layout-public-font-family-base, var(--cds-font-family-base)));
   font-size: var(--cds-text-3xl);
   line-height: var(--cds-leading-tight);
+  letter-spacing: -0.03em;
 }
 
 .legal-header p,
 .last-updated {
   margin-top: 0.35rem;
   color: var(--cds-text-muted);
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-public-text-meta, var(--cds-text-sm));
+  line-height: 1.55;
 }
 
 .legal-section + .legal-section {
@@ -44,13 +48,17 @@
 .privacy-section h2,
 .terms-section h2 {
   margin: 0 0 0.6rem;
+  font-family: var(--layout-public-font-family-heading, var(--layout-public-font-family-base, var(--cds-font-family-base)));
   font-size: var(--cds-text-xl);
+  letter-spacing: -0.02em;
 }
 
 .privacy-section h3,
 .terms-section h3 {
   margin: 0.8rem 0 0.4rem;
+  font-family: var(--layout-public-font-family-heading, var(--layout-public-font-family-base, var(--cds-font-family-base)));
   font-size: var(--cds-text-lg);
+  letter-spacing: -0.01em;
 }
 
 .legal-section p,
@@ -77,22 +85,23 @@
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: calc(0.75rem * var(--cds-type-scale, 1));
   margin-top: 1rem;
 }
 
 .btn-back,
 .btn-next {
   border-radius: var(--cds-radius-sm);
-  min-height: 44px;
-  padding: 0.7rem 1rem;
-  font-size: var(--cds-text-base);
+  min-height: calc(44px * var(--cds-type-scale, 1));
+  padding: calc(0.7rem * var(--cds-type-scale, 1)) calc(1rem * var(--cds-type-scale, 1));
+  font-size: var(--layout-public-text-body, var(--cds-text-base));
   text-decoration: none;
 }
 
 .btn-back {
   color: var(--cds-primary);
   border: 1px solid var(--cds-primary);
+  background: var(--cds-surface-1);
 }
 
 .btn-next {
@@ -107,7 +116,7 @@
 
 .acceptance-box {
   margin-top: 1rem;
-  padding: 0.8rem;
+  padding: calc(0.8rem * var(--cds-type-scale, 1));
   border: 1px solid var(--cds-border-input);
   border-radius: var(--cds-radius-md);
   background: var(--cds-surface-2);
@@ -117,7 +126,8 @@
   display: flex;
   align-items: start;
   gap: var(--cds-space-sm);
-  font-size: var(--cds-text-base);
+  font-size: var(--layout-public-text-body, var(--cds-text-base));
+  line-height: 1.6;
 }
 
 .checkbox-input {

@@ -2,14 +2,14 @@
   min-height: var(--cds-chip-preview-min-height, 64px);
   border-radius: var(--cds-radius-md);
   border: 1px solid var(--cds-border-strong);
-  background: linear-gradient(135deg, #292a2d, #17181a);
+  background: var(--cds-surface-dark);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .chip-preview--active {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cds-primary) 45%, transparent) inset;
+  box-shadow: 0 0 0 1px rgba(183, 106, 45, 0.28) inset;
 }
 
 .chip-text {

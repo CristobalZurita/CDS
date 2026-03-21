@@ -152,7 +152,7 @@ const {
 
 <style scoped src="./commonAdminPage.css"></style>
 <style scoped>
-.notice-card { background: color-mix(in srgb, var(--cds-info) 10%, white); }
+.notice-card { background: var(--cds-surface-2); }
 .notice-card p { margin: 0; }
 .form-grid textarea { min-height: 88px; }
 .chip { border: 1px solid var(--cds-border-input); border-radius: var(--cds-radius-pill); padding: .15rem .55rem; font-size: var(--cds-text-sm); text-transform: uppercase; }

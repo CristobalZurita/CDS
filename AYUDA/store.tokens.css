@@ -1,0 +1,82 @@
+/* ============================================================
+   CDS STORE — Design Tokens
+   Extiende styles/tokens.css existente.
+   Importar DESPUÉS de tokens.css en main.css o en StorePage.vue
+   ============================================================ */
+
+:root {
+  /* — Tipografía tienda — */
+  --font-display: 'DM Mono', 'Fira Code', monospace;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+
+  /* — Paleta base (light) — */
+  --c-bg:          #f5f4f0;
+  --c-surface:     #ffffff;
+  --c-surface-2:   #f0eeea;
+  --c-border:      rgba(0, 0, 0, 0.08);
+  --c-border-mid:  rgba(0, 0, 0, 0.14);
+
+  /* — Textos — */
+  --c-text-primary:   #0d0d0d;
+  --c-text-secondary: #5a5753;
+  --c-text-muted:     #9b9893;
+
+  /* — Acento: verde técnico frío — */
+  --c-accent:         #00c17c;
+  --c-accent-dim:     rgba(0, 193, 124, 0.12);
+  --c-accent-border:  rgba(0, 193, 124, 0.35);
+  --c-accent-text:    #007a4e;
+
+  /* — Semánticos — */
+  --c-warning:        #e8a020;
+  --c-warning-dim:    rgba(232, 160, 32, 0.1);
+  --c-danger:         #e03535;
+  --c-danger-dim:     rgba(224, 53, 53, 0.1);
+
+  /* — Layout tienda — */
+  --store-sidebar-w:  260px;
+  --store-header-h:   58px;
+  --store-cart-w:     380px;
+  --store-radius:     6px;
+  --store-radius-lg:  10px;
+  --store-radius-xl:  16px;
+
+  /* — Sombras — */
+  --shadow-card:  0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-float: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-cart:  -4px 0 40px rgba(0,0,0,0.10);
+
+  /* — Transiciones — */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:  cubic-bezier(0.4, 0, 1, 1);
+  --t-fast:   120ms;
+  --t-mid:    240ms;
+  --t-slow:   400ms;
+}
+
+/* ── DARK MODE ──────────────────────────────────────────── */
+[data-theme='dark'] {
+  --c-bg:          #0e0e0e;
+  --c-surface:     #161616;
+  --c-surface-2:   #1e1e1e;
+  --c-border:      rgba(255, 255, 255, 0.07);
+  --c-border-mid:  rgba(255, 255, 255, 0.12);
+
+  --c-text-primary:   #f0ede8;
+  --c-text-secondary: #9b9893;
+  --c-text-muted:     #5a5753;
+
+  --c-accent:         #00d989;
+  --c-accent-dim:     rgba(0, 217, 137, 0.10);
+  --c-accent-border:  rgba(0, 217, 137, 0.25);
+  --c-accent-text:    #00d989;
+
+  --c-warning:        #f0b030;
+  --c-warning-dim:    rgba(240, 176, 48, 0.1);
+  --c-danger:         #f04040;
+  --c-danger-dim:     rgba(240, 64, 64, 0.1);
+
+  --shadow-card:  0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-float: 0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-cart:  -4px 0 40px rgba(0,0,0,0.4);
+}

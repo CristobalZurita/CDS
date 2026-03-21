@@ -36,7 +36,8 @@ export function useOtPaymentsPage() {
   function canSubmitProof(request) {
     const status = normalizeStatus(request?.status)
     const hasPaymentRequest = Number(request?.latest_payment?.id || 0) > 0
-    return hasPaymentRequest && ['pending_payment', 'proof_submitted'].includes(status)
+    const paymentMethod = normalizeStatus(request?.latest_payment?.payment_method)
+    return hasPaymentRequest && paymentMethod === 'transfer' && ['pending_payment', 'proof_submitted'].includes(status)
   }
 
   function ensureForm(request) {

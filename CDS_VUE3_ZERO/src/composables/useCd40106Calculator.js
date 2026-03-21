@@ -223,7 +223,7 @@ export function useCd40106Calculator() {
     ctx.lineTo(380, bottomY)
     ctx.stroke()
 
-    ctx.font = '14px sans-serif'
+    ctx.font = '14px "Aptos", "Segoe UI", Arial, sans-serif'
     ctx.fillStyle = palette.stroke
     ctx.fillText('Vcc', 48, topY - 12)
     ctx.fillText('Gnd', 48, bottomY + 10)

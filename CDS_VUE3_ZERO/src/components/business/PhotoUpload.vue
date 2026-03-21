@@ -250,7 +250,7 @@ function formatSize(bytes) {
 .photo-add:hover {
   border-color: var(--cds-primary);
   color: var(--cds-primary);
-  background: color-mix(in srgb, var(--cds-primary) 5%, white);
+  background: var(--cds-surface-2);
 }
 
 .add-icon {

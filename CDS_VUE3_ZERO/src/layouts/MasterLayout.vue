@@ -7,6 +7,7 @@
       :nav-sections="navSections"
       :is-authenticated="isAuthenticated"
       :cart-items-count="shopCart.totals.itemsCount"
+      :scroll-progress="scrollProgress"
       @toggle-menu="menuOpen = !menuOpen"
       @close-menu="menuOpen = false"
       @cart-click="onCartClick"
@@ -67,25 +68,84 @@ const menuOpen = ref(false)
 
 // Scroll-to-top
 const scrollY = ref(0)
+const scrollProgress = ref(0)
 const showScrollTop = computed(() => scrollY.value > 300)
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-function _onScroll() {
+function updateScrollState() {
   scrollY.value = window.scrollY
+  const doc = document.documentElement
+  const maxScrollable = Math.max(doc.scrollHeight - window.innerHeight, 0)
+  scrollProgress.value = maxScrollable > 0
+    ? Math.min(100, (window.scrollY / maxScrollable) * 100)
+    : 0
 }
 
-onMounted(() => window.addEventListener('scroll', _onScroll, { passive: true }))
-onUnmounted(() => window.removeEventListener('scroll', _onScroll))
+onMounted(() => {
+  window.addEventListener('scroll', updateScrollState, { passive: true })
+  window.addEventListener('resize', updateScrollState, { passive: true })
+  updateScrollState()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', updateScrollState)
+  window.removeEventListener('resize', updateScrollState)
+})
 </script>
 
 <style scoped>
 .master-layout {
+  --cds-white: #f5ebdd;
+  --cds-light: #cbc0b1;
+  --cds-dark: #2d221b;
+  --cds-dark-hover: #3a2c22;
+  --cds-background-color: #d2c1a9;
+  --cds-surface-1: hsl(34, 45%, 74%);
+  --cds-surface-2: #c49166;
+  --cds-surface-3: #f8e5d0;
+  --cds-surface-dark: #3f2917;
+  --cds-warm-support: #b98557;
+  --cds-warm-support-strong: #8f623e;
+  --cds-text-muted: #66513f;
+  --cds-border-soft: rgba(93, 67, 43, 0.15);
+  --cds-border-strong: rgba(93, 67, 43, 0.24);
+  --cds-border-card: #9d704b;
+  --cds-border-input: #ab7b54;
+  --layout-public-dark-panel: #3e3025;
+  --layout-public-dark-panel-alt: #4a392d;
+  --layout-public-dark-card: #574136;
+  --layout-public-dark-card-warm: #655045;
+  --layout-public-dark-border: rgba(216, 189, 160, 0.22);
+  --layout-public-dark-border-strong: rgba(216, 189, 160, 0.32);
+  --layout-public-dark-text: #f1e4d2;
+  --layout-public-dark-text-soft: #e1cab0;
+  --layout-public-icon-surface: #f6ede0;
+  --layout-public-icon-border: rgba(246, 237, 224, 0.92);
+  --layout-public-nav-progress-track: #1b1d21;
+  --layout-public-nav-progress-border: rgba(178, 154, 126, 0.28);
+  --layout-public-nav-link-hover: #1e2227;
+  --layout-public-nav-link-active: #1c2024;
+  --layout-public-nav-surface: #1a1d21;
+  --layout-public-nav-surface-hover: #262a2f;
+  --layout-public-nav-toggle-hover: #24282d;
+  --layout-public-footer-heading: #d3c4b1;
+  --layout-public-footer-text: #d7cec2;
+  --layout-public-footer-text-soft: #cabaa7;
+  --layout-public-footer-legal: #baa994;
   --layout-header-height: 96px;
   --layout-anchor-gap: 12px;
   --layout-content-max: 1440px;
+  --layout-public-font-family-base: var(--cds-font-family-base);
+  --layout-public-font-family-heading: var(--cds-headings-font-family);
+  --layout-public-text-body: clamp(calc(1rem * var(--cds-type-scale, 1)), calc((0.96rem + 0.22vw) * var(--cds-type-scale, 1)), calc(1.12rem * var(--cds-type-scale, 1)));
+  --layout-public-text-meta: clamp(calc(0.92rem * var(--cds-type-scale, 1)), calc((0.9rem + 0.12vw) * var(--cds-type-scale, 1)), calc(1rem * var(--cds-type-scale, 1)));
+  --layout-public-text-label: clamp(calc(0.82rem * var(--cds-type-scale, 1)), calc((0.8rem + 0.14vw) * var(--cds-type-scale, 1)), calc(0.9rem * var(--cds-type-scale, 1)));
+  --layout-public-text-nav: clamp(calc(0.96rem * var(--cds-type-scale, 1)), calc((0.92rem + 0.18vw) * var(--cds-type-scale, 1)), calc(1.04rem * var(--cds-type-scale, 1)));
+  --layout-public-text-brand: clamp(calc(1rem * var(--cds-type-scale, 1)), calc((0.95rem + 0.26vw) * var(--cds-type-scale, 1)), calc(1.16rem * var(--cds-type-scale, 1)));
+  --layout-public-text-footer-brand: clamp(calc(1.18rem * var(--cds-type-scale, 1)), calc((1.08rem + 0.44vw) * var(--cds-type-scale, 1)), calc(1.42rem * var(--cds-type-scale, 1)));
   --layout-section-scroll-margin-top: calc(
     var(--layout-header-height) +
     var(--layout-anchor-gap)
@@ -114,6 +174,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   --layout-catalog-container-max: var(--layout-content-max, var(--cds-content-max));
   --layout-store-page-padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
   --layout-store-shell-max: min(1440px, 98vw);
+  --layout-store-drawer-width: min(420px, 100vw);
   --layout-schedule-page-padding: 1rem;
   --layout-schedule-container-max: 1040px;
   --layout-schedule-container-gap: 1rem;
@@ -185,6 +246,7 @@ onUnmounted(() => window.removeEventListener('scroll', _onScroll))
   --layout-quotation-fault-card-column-gap: 0.6rem;
   --layout-quotation-fault-card-row-gap: 0.1rem;
   min-height: 100vh;
+  background: var(--cds-background-color);
   display: grid;
   grid-template-rows: auto 1fr auto;
 }

@@ -3,6 +3,44 @@ import { useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
 import { useAuthStore } from '@/stores/auth'
 
+const PROFILE_NOTIFICATION_CHANNELS = ['whatsapp', 'email', 'sms']
+
+function normalizeChannel(value) {
+  const channel = String(value || '').trim().toLowerCase()
+  return PROFILE_NOTIFICATION_CHANNELS.includes(channel) ? channel : ''
+}
+
+function buildPreferencesFromPayload(payload) {
+  const enabledChannels = new Set([
+    normalizeChannel(payload?.preferred_contact),
+    normalizeChannel(payload?.service_preference)
+  ].filter(Boolean))
+
+  return {
+    emailNotifications: enabledChannels.has('email'),
+    whatsappNotifications: enabledChannels.has('whatsapp'),
+    smsNotifications: enabledChannels.has('sms')
+  }
+}
+
+function buildPreferencePayload(preferences) {
+  const enabledChannels = PROFILE_NOTIFICATION_CHANNELS.filter((channel) => {
+    if (channel === 'email') return Boolean(preferences?.emailNotifications)
+    if (channel === 'whatsapp') return Boolean(preferences?.whatsappNotifications)
+    if (channel === 'sms') return Boolean(preferences?.smsNotifications)
+    return false
+  })
+
+  if (!enabledChannels.length) {
+    return null
+  }
+
+  return {
+    preferred_contact: enabledChannels[0],
+    service_preference: enabledChannels[1] || enabledChannels[0]
+  }
+}
+
 function normalizeProfilePayload(payload) {
   return {
     email: String(payload?.email || ''),
@@ -10,6 +48,7 @@ function normalizeProfilePayload(payload) {
     phone: String(payload?.phone || ''),
     address: String(payload?.address || ''),
     joinDate: payload?.member_since || null,
+    preferences: buildPreferencesFromPayload(payload),
     stats: {
       totalRepairs: Number(payload?.stats?.total_repairs || 0),
       totalSpent: Number(payload?.stats?.total_spent || 0),
@@ -131,6 +170,7 @@ export function useProfilePage() {
         totalSpent: normalized.stats.totalSpent,
         avgRepairDays: normalized.stats.avgRepairDays
       }
+      preferences.value = normalized.preferences
 
       syncFormData()
     } catch (requestError) {
@@ -168,6 +208,7 @@ export function useProfilePage() {
         totalSpent: normalized.stats.totalSpent,
         avgRepairDays: normalized.stats.avgRepairDays
       }
+      preferences.value = normalized.preferences
 
       syncFormData()
       editMode.value = false
@@ -194,9 +235,26 @@ export function useProfilePage() {
     resetMessages()
   }
 
-  function savePreferences() {
+  async function savePreferences() {
     resetMessages()
-    success.value = 'Preferencias guardadas localmente.'
+    const preferencePayload = buildPreferencePayload(preferences.value)
+    if (!preferencePayload) {
+      error.value = 'Debes mantener al menos un canal de contacto activo.'
+      return
+    }
+
+    isLoading.value = true
+
+    try {
+      const response = await api.put('/client/profile', preferencePayload)
+      const normalized = normalizeProfilePayload(response?.data || {})
+      preferences.value = normalized.preferences
+      success.value = 'Preferencias de contacto actualizadas.'
+    } catch (requestError) {
+      error.value = extractErrorMessage(requestError)
+    } finally {
+      isLoading.value = false
+    }
   }
 
   async function changePassword() {

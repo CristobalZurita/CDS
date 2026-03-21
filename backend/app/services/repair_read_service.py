@@ -9,6 +9,7 @@ from datetime import datetime
 from typing import Any, Optional
 
 from fastapi import HTTPException
+from sqlalchemy import Integer, String, cast, or_
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -355,19 +356,33 @@ class RepairReadService:
         return {"sheet": self.serialize_intake_sheet(sheet)}
 
     def list_repair_audit(self, repair_id: int):
-        logs = (
+        query = (
             self.db.query(AuditLog)
             .filter(AuditLog.event_type.like("repair.%"))
             .order_by(AuditLog.created_at.desc())
-            .limit(200)
-            .all()
         )
-        filtered = []
-        for log in logs:
-            details = log.details or {}
-            if details.get("repair_id") == repair_id:
-                filtered.append(log)
-        return filtered
+
+        try:
+            return (
+                query
+                .filter(
+                    or_(
+                        AuditLog.details["repair_id"].as_integer() == repair_id,
+                        cast(AuditLog.details["repair_id"].as_string(), Integer) == repair_id,
+                        cast(AuditLog.details["repair_id"].as_string(), String) == str(repair_id),
+                    )
+                )
+                .limit(200)
+                .all()
+            )
+        except Exception:
+            logs = query.limit(200).all()
+            filtered = []
+            for log in logs:
+                details = log.details or {}
+                if details.get("repair_id") == repair_id:
+                    filtered.append(log)
+            return filtered
 
     def list_repair_notes(self, repair_id: int):
         return (

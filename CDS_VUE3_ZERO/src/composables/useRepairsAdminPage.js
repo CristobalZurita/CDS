@@ -1,6 +1,7 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { extractErrorMessage } from '@/services/api'
+import { fetchClientDevices } from '@/services/deviceService'
 import { formatDate } from '@/utils/format'
 import { normalizeClient } from '@/utils/api-helpers'
 
@@ -23,7 +24,7 @@ function normalizeRepair(entry) {
 function baseForm() {
   return {
     client_id: '',
-    model: '',
+    device_id: '',
     problem_reported: '',
     priority: 2,
     paid_amount: 20000,
@@ -42,6 +43,7 @@ export function useRepairsAdminPage() {
 
   const repairs = ref([])
   const clients = ref([])
+  const clientDevices = ref([])
   const loading = ref(false)
   const error = ref('')
 
@@ -85,6 +87,28 @@ export function useRepairsAdminPage() {
 
   function resetForm() {
     form.value = baseForm()
+    clientDevices.value = []
+  }
+
+  async function loadClientDevices(clientId) {
+    const normalizedClientId = Number(clientId || 0)
+    if (!normalizedClientId) {
+      clientDevices.value = []
+      form.value.device_id = ''
+      return
+    }
+
+    try {
+      clientDevices.value = await fetchClientDevices(normalizedClientId)
+    } catch {
+      clientDevices.value = []
+    }
+
+    const currentDeviceId = Number(form.value.device_id || 0)
+    const hasCurrentDevice = clientDevices.value.some((device) => Number(device.id) === currentDeviceId)
+    if (!hasCurrentDevice) {
+      form.value.device_id = ''
+    }
   }
 
   async function loadClients() {
@@ -129,17 +153,26 @@ export function useRepairsAdminPage() {
   async function createRepair() {
     error.value = ''
 
+    const clientId = Number(form.value.client_id || 0)
+    const deviceId = Number(form.value.device_id || 0)
     const payload = {
-      client_id: Number(form.value.client_id || 0),
-      model: String(form.value.model || '').trim(),
+      client_id: clientId,
+      device_id: deviceId,
       problem_reported: String(form.value.problem_reported || '').trim(),
       priority: Number(form.value.priority || 2),
       paid_amount: Number(form.value.paid_amount || 0),
       payment_method: String(form.value.payment_method || 'cash')
     }
 
-    if (!payload.client_id || !payload.model || !payload.problem_reported) {
-      error.value = 'Completa cliente, modelo y problema reportado.'
+    if (!payload.client_id || !payload.problem_reported) {
+      error.value = 'Completa cliente y problema reportado.'
+      return
+    }
+
+    if (!payload.device_id) {
+      error.value = clientDevices.value.length
+        ? 'Selecciona un dispositivo real antes de crear la OT.'
+        : 'El cliente no tiene dispositivos. Crea el equipo primero en Clientes o por Intake.'
       return
     }
 
@@ -184,9 +217,17 @@ export function useRepairsAdminPage() {
     await Promise.all([loadClients(), loadRepairs()])
   })
 
+  watch(
+    () => form.value.client_id,
+    async (clientId) => {
+      await loadClientDevices(clientId)
+    }
+  )
+
   return {
     repairs: filteredRepairs,
     clients,
+    clientDevices,
     loading,
     error,
     searchQuery,

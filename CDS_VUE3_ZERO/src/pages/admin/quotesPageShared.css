@@ -55,19 +55,20 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.75rem 0.85rem;
-  border-bottom: 1px solid var(--cds-border-card);
+  border-bottom: 1px solid var(--admin-neo-line, var(--cds-border-card));
 }
 
 .column-head h2 {
   margin: 0;
-  font-size: var(--cds-text-lg);
+  font-size: var(--admin-text-lg, var(--cds-text-lg));
 }
 
 .chip {
-  border: 1px solid var(--cds-border-input);
+  border: 1px solid var(--admin-neo-line, var(--cds-border-input));
   border-radius: var(--cds-radius-pill);
   padding: 0.2rem 0.55rem;
-  font-size: var(--cds-text-sm);
+  font-size: var(--admin-text-sm, var(--cds-text-sm));
+  background: rgba(255, 255, 255, 0.82);
 }
 
 .column-body {
@@ -80,12 +81,13 @@
   --quotes-card-bg: var(--cds-surface-2);
   --quotes-card-highlight-border: rgba(236, 107, 0, 0.45);
   --quotes-card-highlight-ring: rgba(236, 107, 0, 0.14);
-  border: 1px solid var(--cds-border-card);
-  border-radius: var(--cds-radius-md);
-  background: var(--quotes-card-bg);
+  border: 1px solid var(--admin-neo-line, var(--cds-border-card));
+  border-radius: var(--admin-neo-radius-sm, var(--cds-radius-md));
+  background: rgba(250, 248, 244, 0.92);
   padding: 0.7rem;
   display: grid;
   gap: 0.45rem;
+  box-shadow: var(--admin-neo-shadow-sm, var(--cds-shadow-sm));
 }
 
 .quote-card.highlighted {
@@ -101,26 +103,27 @@
 }
 
 .status-chip {
-  border: 1px solid var(--cds-border-input);
+  border: 1px solid var(--admin-neo-line, var(--cds-border-input));
   border-radius: var(--cds-radius-pill);
   padding: 0.15rem 0.55rem;
-  font-size: var(--cds-text-xs);
+  font-size: var(--admin-text-xs, var(--cds-text-xs));
   text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.86);
 }
 
 .quote-meta {
   display: grid;
   gap: 0.25rem;
-  font-size: var(--cds-text-sm);
+  font-size: var(--admin-text-sm, var(--cds-text-sm));
 }
 
 .quote-meta span {
-  color: var(--cds-text-muted);
+  color: var(--admin-neo-muted, var(--cds-text-muted));
 }
 
 .quote-problem {
   margin: 0;
-  font-size: var(--cds-text-sm);
+  font-size: var(--admin-text-sm, var(--cds-text-sm));
   line-height: 1.5;
 }
 
@@ -142,13 +145,14 @@
 }
 
 .modal-content {
-  background: var(--cds-white);
-  border-radius: var(--cds-radius-lg);
+  background: var(--admin-neo-surface, var(--cds-white));
+  border-radius: var(--admin-neo-radius, var(--cds-radius-lg));
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: var(--cds-shadow-lg);
+  box-shadow: var(--admin-neo-shadow, var(--cds-shadow-lg));
+  border: 1px solid var(--admin-neo-line, var(--cds-border-card));
 }
 
 .modal-header {
@@ -156,12 +160,12 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--admin-space-lg-compact, 1.25rem);
-  border-bottom: 1px solid var(--cds-border-card);
+  border-bottom: 1px solid var(--admin-neo-line, var(--cds-border-card));
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: var(--cds-text-xl);
+  font-size: var(--admin-text-xl, var(--cds-text-xl));
 }
 
 .modal-close {
@@ -169,12 +173,12 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--cds-text-muted);
+  color: var(--admin-neo-muted, var(--cds-text-muted));
   padding: 0.25rem;
 }
 
 .modal-close:hover {
-  color: var(--cds-text-normal);
+  color: var(--admin-neo-ink, var(--cds-text-normal));
 }
 
 .modal-form {
@@ -198,19 +202,21 @@
 }
 
 .form-group label {
-  font-size: var(--cds-text-sm);
+  font-size: var(--admin-text-sm, var(--cds-text-sm));
   font-weight: 500;
-  color: var(--cds-text-normal);
+  color: var(--admin-neo-ink, var(--cds-text-normal));
 }
 
 .form-group input,
 .form-group textarea {
   min-height: 44px;
   padding: 0.65rem 0.9rem;
-  border: 1px solid var(--cds-border-input);
-  border-radius: var(--cds-radius-sm);
-  font-size: var(--cds-text-base);
+  border: 1px solid var(--admin-neo-line, var(--cds-border-input));
+  border-radius: 1.1rem;
+  font-size: var(--admin-text-base, var(--cds-text-base));
   font-family: inherit;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--admin-neo-ink, var(--cds-text-normal));
 }
 
 .form-group textarea {
@@ -222,7 +228,7 @@
 .form-group textarea:focus {
   outline: none;
   border-color: var(--cds-primary);
-  box-shadow: var(--cds-focus-ring);
+  box-shadow: 0 0 0 3px rgba(236, 107, 0, 0.14);
 }
 
 .modal-actions {
@@ -231,7 +237,7 @@
   justify-content: flex-end;
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--cds-border-card);
+  border-top: 1px solid var(--admin-neo-line, var(--cds-border-card));
 }
 
 @media (min-width: 900px) {

@@ -1,5 +1,6 @@
 .schedule-page {
   padding: var(--layout-schedule-page-padding, 1rem);
+  font-family: var(--layout-public-font-family-base, var(--cds-font-family-base), sans-serif);
 }
 
 .schedule-container {
@@ -19,12 +20,17 @@
 
 .schedule-header h1 {
   margin: 0;
+  font-family: var(--layout-public-font-family-heading, var(--layout-public-font-family-base, var(--cds-font-family-base)));
   font-size: var(--cds-text-3xl);
+  line-height: var(--cds-leading-tight);
+  letter-spacing: -0.03em;
 }
 
 .schedule-header p {
   margin: var(--layout-schedule-header-copy-margin-top, 0.4rem) 0 0;
   color: var(--cds-text-muted);
+  font-size: var(--layout-public-text-body, var(--cds-text-base));
+  line-height: 1.62;
 }
 
 .progress-bar {
@@ -81,7 +87,7 @@
   min-height: var(--layout-schedule-weekday-min-height, 32px);
   display: grid;
   place-items: center;
-  font-size: var(--cds-text-sm);
+  font-size: var(--layout-public-text-meta, var(--cds-text-sm));
   font-weight: var(--cds-font-semibold);
 }
 
@@ -111,7 +117,9 @@
 
 .timeslot-group h3 {
   margin: 0 0 var(--layout-schedule-timeslot-heading-margin-bottom, 0.45rem);
-  font-size: var(--cds-text-base);
+  font-family: var(--layout-public-font-family-heading, var(--layout-public-font-family-base, var(--cds-font-family-base)));
+  font-size: var(--layout-public-text-brand, var(--cds-text-base));
+  letter-spacing: -0.01em;
 }
 
 .timeslots {
@@ -170,6 +178,7 @@
 
 .label {
   color: var(--cds-text-muted);
+  font-size: var(--layout-public-text-meta, var(--cds-text-sm));
 }
 
 .value {
@@ -178,14 +187,16 @@
 
 .confirmation-info p {
   margin: var(--layout-schedule-info-copy-margin-block, 0.3rem) 0;
-  font-size: var(--cds-text-base);
+  font-size: var(--layout-public-text-body, var(--cds-text-base));
+  line-height: 1.62;
 }
 
 .checkbox-container {
   display: flex;
   gap: var(--cds-space-xs);
   align-items: flex-start;
-  font-size: var(--cds-text-base);
+  font-size: var(--layout-public-text-body, var(--cds-text-base));
+  line-height: 1.6;
 }
 
 .schedule-error {
@@ -237,7 +248,7 @@
 }
 
 .monospace {
-  font-family: monospace;
+  font-family: var(--cds-font-family-mono, monospace);
 }
 
 .step-actions {

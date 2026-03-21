@@ -17,6 +17,7 @@ ADITIVO: nuevo router, no modifica existentes.
 
 import logging
 from typing import Dict
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
@@ -25,6 +26,12 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.dependencies import require_permission
 from app.models.payment import Payment, PaymentStatus
+from app.services.purchase_request_service import (
+    _get_request_or_404,
+    attach_checkout_contract_to_payment,
+    sync_purchase_request_with_payment_result,
+    update_checkout_status_metadata,
+)
 from app.services.payment_gateway_service import PaymentGatewayService
 
 logger = logging.getLogger(__name__)
@@ -66,6 +73,17 @@ def initiate_payment(
         raise HTTPException(status_code=404, detail="Pago no encontrado")
     if not payment.amount or payment.amount <= 0:
         raise HTTPException(status_code=400, detail="El pago no tiene monto válido")
+    if payment.status != PaymentStatus.PENDING:
+        raise HTTPException(status_code=400, detail="Solo se pueden iniciar pagos pendientes")
+    if payment.payment_due_date and payment.payment_due_date < datetime.utcnow():
+        raise HTTPException(status_code=410, detail="El pago solicitado ya venció")
+    if payment.purchase_request_id:
+        req = _get_request_or_404(db, int(payment.purchase_request_id))
+        if req.status not in {"requested", "pending_payment"}:
+            raise HTTPException(
+                status_code=400,
+                detail="La solicitud no está disponible para iniciar checkout",
+            )
 
     svc = PaymentGatewayService()
     if not svc.is_configured:
@@ -96,6 +114,15 @@ def initiate_payment(
         payment.transaction_id = buy_order
     if not payment.currency:
         payment.currency = "CLP"
+    attach_checkout_contract_to_payment(
+        db,
+        payment,
+        provider=result.get("processor", svc.gateway),
+        origin_channel="admin_payment_gateway",
+        return_url=return_url,
+        notification_url=notification_url,
+        gateway_payload=result,
+    )
     db.commit()
 
     return {"ok": True, "gateway": svc.gateway, **result}
@@ -142,7 +169,23 @@ def transbank_confirm(
     if payment:
         payment.status = PaymentStatus.SUCCESS if approved else PaymentStatus.FAILED
         payment.payment_processor = "transbank"
-        db.commit()
+        if approved and not payment.payment_date:
+            payment.payment_date = datetime.utcnow()
+        update_checkout_status_metadata(
+            payment,
+            provider_status="approved" if approved else "failed",
+            provider_payload=result,
+            provider="transbank",
+        )
+        sync_purchase_request_with_payment_result(
+            db,
+            payment,
+            source="transbank_confirm",
+            provider="transbank",
+            provider_status="approved" if approved else "failed",
+        )
+        if not payment.purchase_request_id:
+            db.commit()
 
     return {
         "ok": approved,
@@ -225,12 +268,28 @@ async def mercadopago_ipn(request: Request, db: Session = Depends(get_db)):
         if payment:
             if provider_status == "approved":
                 payment.status = PaymentStatus.SUCCESS
+                if not payment.payment_date:
+                    payment.payment_date = datetime.utcnow()
             elif provider_status in {"rejected", "cancelled", "refunded", "charged_back"}:
                 payment.status = PaymentStatus.FAILED
             else:
                 payment.status = PaymentStatus.PENDING
             payment.payment_processor = "mercadopago"
-            db.commit()
+            update_checkout_status_metadata(
+                payment,
+                provider_status=provider_status or "pending",
+                provider_payload=provider_payment,
+                provider="mercadopago",
+            )
+            sync_purchase_request_with_payment_result(
+                db,
+                payment,
+                source="mercadopago_ipn",
+                provider="mercadopago",
+                provider_status=provider_status or "pending",
+            )
+            if not payment.purchase_request_id:
+                db.commit()
             logger.info(
                 "Payment %d updated via MercadoPago IPN (status=%s)",
                 payment.id,

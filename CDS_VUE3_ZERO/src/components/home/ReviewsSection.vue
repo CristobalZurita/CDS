@@ -29,7 +29,7 @@ const reviews = [
 
 <style scoped>
 .home-reviews {
-  background: var(--cds-dark);
+  background: var(--cds-surface-dark);
 }
 
 .reviews-grid { display: grid; gap: 1.25rem; }
@@ -37,8 +37,8 @@ const reviews = [
 .review-card {
   display: flex;
   flex-direction: column;
-  background: #4a4641;
-  border: 1px solid #5f5a54;
+  background: var(--layout-public-dark-card-warm);
+  border: 1px solid var(--layout-public-dark-border-strong);
   box-shadow: 0 18px 34px rgba(10, 10, 10, 0.18);
 }
 
@@ -53,15 +53,15 @@ const reviews = [
 .review-text {
   margin: 0 0 1rem;
   flex: 1;
-  font-size: clamp(1.7rem, 0.92rem + 0.34vw, 1.16rem);
-  line-height: 1.65;
-  color: #f2eee7;
+  font-size: var(--layout-home-text-card-body, clamp(0.98rem, 0.94rem + 0.22vw, 1.08rem));
+  line-height: 1.78;
+  color: var(--layout-public-dark-text);
   font-style: italic;
 }
 
 .review-author {
-  font-size: var(--cds-text-sm);
-  color: #cdc5bb;
+  font-size: var(--layout-home-text-meta, var(--cds-text-sm));
+  color: var(--layout-public-dark-text-soft);
   font-weight: var(--cds-font-semibold);
 }
 

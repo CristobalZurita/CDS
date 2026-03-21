@@ -24,6 +24,16 @@
       <label><span>Total</span><input :value="editForm.total_cost" type="number" min="0" @input="updateNumberField('total_cost', $event.target.value)" /></label>
       <label><span>Abonado</span><input :value="editForm.paid_amount" type="number" min="0" @input="updateNumberField('paid_amount', $event.target.value)" /></label>
       <label>
+        <span>Estado de pago</span>
+        <select :value="editForm.payment_status" @change="updateEditField('payment_status', $event.target.value)">
+          <option value="pending">Pendiente</option>
+          <option value="partial">Parcial</option>
+          <option value="paid">Pagado</option>
+          <option value="refunded">Reembolsado</option>
+          <option value="cancelled">Cancelado</option>
+        </select>
+      </label>
+      <label>
         <span>Medio de pago</span>
         <select :value="editForm.payment_method" @change="updateEditField('payment_method', $event.target.value)">
           <option value="">Sin definir</option>

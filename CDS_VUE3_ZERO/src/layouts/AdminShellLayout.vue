@@ -4,18 +4,25 @@
     :class="{ 'admin-shell-layout--dashboard': isDashboardRoute }"
   >
     <!-- Sidebar fijo siempre visible -->
-    <aside class="admin-sidebar">
+    <aside class="admin-sidebar" :class="{ 'admin-sidebar--dashboard': isDashboardRoute }">
       <div class="sidebar-brand">
         <span class="brand-icon">🎛️</span>
-        <span class="brand-text">Admin</span>
+        <template v-if="isDashboardRoute">
+          <span class="dashboard-brand-copy">
+            <strong>Control</strong>
+            <small>CDS Admin</small>
+          </span>
+        </template>
+        <span v-else class="brand-text">Admin</span>
       </div>
 
-      <nav class="sidebar-nav">
+      <nav class="sidebar-nav" :class="{ 'sidebar-nav--dashboard-grid': isDashboardRoute }">
         <router-link
           v-for="item in menuItems"
           :key="item.to"
           :to="item.to"
           class="nav-item"
+          :class="{ 'nav-item--dashboard-grid': isDashboardRoute }"
           :activeClass="item.exact ? '' : 'active'"
           exactActiveClass="active"
         >
@@ -40,14 +47,33 @@
     <main class="admin-main">
       <!-- Top bar contextual -->
       <header class="admin-topbar">
-        <div class="breadcrumb">
-          <h1 class="page-title">{{ pageTitle }}</h1>
-          <p v-if="pageSubtitle" class="page-subtitle">{{ pageSubtitle }}</p>
-        </div>
-        <div class="topbar-actions">
-          <AdminGlobalSearch />
-          <span class="user-badge">👤 {{ userName }}</span>
-        </div>
+        <template v-if="isDashboardRoute">
+          <div class="admin-dashboard-topbar-clock">
+            <strong class="admin-dashboard-topbar-time">{{ dashboardClockTime }}</strong>
+            <div class="admin-dashboard-topbar-date">
+              <span>{{ dashboardClockDay }}</span>
+              <span>{{ dashboardClockDate }}</span>
+            </div>
+          </div>
+          <div class="breadcrumb">
+            <h1 class="page-title">{{ pageTitle }}</h1>
+            <p v-if="pageSubtitle" class="page-subtitle">{{ pageSubtitle }}</p>
+          </div>
+          <div class="topbar-actions">
+            <AdminGlobalSearch />
+            <span class="user-badge">👤 {{ userName }}</span>
+          </div>
+        </template>
+        <template v-else>
+          <div class="breadcrumb">
+            <h1 class="page-title">{{ pageTitle }}</h1>
+            <p v-if="pageSubtitle" class="page-subtitle">{{ pageSubtitle }}</p>
+          </div>
+          <div class="topbar-actions">
+            <AdminGlobalSearch />
+            <span class="user-badge">👤 {{ userName }}</span>
+          </div>
+        </template>
       </header>
 
       <!-- Área de contenido -->
@@ -65,7 +91,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AdminGlobalSearch from '@/components/admin/AdminGlobalSearch.vue'
 import { useAuthStore } from '@/stores/auth'
@@ -78,7 +104,10 @@ const userName = computed(() => authStore.user?.full_name || authStore.user?.ema
 
 const pageTitle    = computed(() => route.meta.title    || 'Panel Admin')
 const pageSubtitle = computed(() => route.meta.subtitle || '')
-const isDashboardRoute = computed(() => route.path === '/admin')
+const isDashboardRoute = computed(() => route.path.startsWith('/admin'))
+const now = ref(new Date())
+
+let clockTimer = null
 
 const menuItems = [
   { to: '/admin', label: 'Dashboard',     icon: '📊', exact: true },
@@ -95,14 +124,63 @@ const menuItems = [
 
 const keepAlivePages = ['RepairsAdminPage', 'ClientsPage', 'InventoryPage', 'QuotesAdminPage']
 
+const dashboardClockTime = computed(() => {
+  return new Intl.DateTimeFormat('es-CL', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(now.value)
+})
+
+const dashboardClockDay = computed(() => {
+  return new Intl.DateTimeFormat('es-CL', {
+    weekday: 'long',
+  })
+    .format(now.value)
+    .replace(/^\p{L}/u, (letter) => letter.toUpperCase())
+})
+
+const dashboardClockDate = computed(() => {
+  return new Intl.DateTimeFormat('es-CL', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(now.value)
+})
+
 const handleLogout = () => {
   authStore.logout()
   router.push('/login')
 }
+
+onMounted(() => {
+  clockTimer = window.setInterval(() => {
+    now.value = new Date()
+  }, 30000)
+})
+
+onUnmounted(() => {
+  if (clockTimer) {
+    window.clearInterval(clockTimer)
+  }
+})
 </script>
 
 <style scoped>
 .admin-shell-layout {
+  --admin-neo-line: rgba(79, 74, 69, 0.24);
+  --admin-neo-line-strong: rgba(79, 74, 69, 0.38);
+  --admin-neo-surface: var(--cds-surface-1);
+  --admin-neo-surface-soft: var(--cds-surface-2);
+  --admin-neo-surface-tint: var(--cds-surface-2);
+  --admin-neo-ink: #464342;
+  --admin-neo-muted: #6a6661;
+  --admin-neo-shadow: 0 18px 40px rgba(39, 37, 34, 0.12);
+  --admin-neo-shadow-sm: 0 8px 18px rgba(39, 37, 34, 0.08);
+  --admin-neo-shadow-inset: inset 0 2px 3px rgba(17, 15, 13, 0.18);
+  --admin-neo-radius: 1.65rem;
+  --admin-neo-radius-sm: 1.2rem;
+  --admin-neo-font: var(--cds-font-family-base);
   --admin-space-3xs: 0.35rem;
   --admin-space-2xs: 0.6rem;
   --admin-space-xs: 0.66rem;
@@ -119,7 +197,7 @@ const handleLogout = () => {
   --admin-list-pill-pad-block: var(--cds-space-xs);
   --admin-list-pill-pad-inline: var(--cds-space-md);
   --admin-list-search-min-width: 26rem;
-  --admin-list-mono-font-family: ui-monospace, monospace;
+  --admin-list-mono-font-family: var(--cds-font-family-mono);
   --admin-list-info-bg: rgba(14, 165, 233, 0.14);
   --admin-list-info-color: #0c4a6e;
   --admin-table-cell-padding: var(--admin-space-md, 1.2rem);
@@ -140,7 +218,7 @@ const handleLogout = () => {
   --admin-sidebar-divider: rgba(255, 255, 255, 0.1);
   --admin-nav-text-muted: rgba(255, 255, 255, 0.72);
   --admin-nav-hover-bg: rgba(255, 255, 255, 0.05);
-  --admin-nav-active-bg: rgba(236, 107, 0, 0.15);
+  --admin-nav-active-bg: var(--cds-surface-2);
   --admin-back-link-color: rgba(255, 255, 255, 0.6);
   --admin-logout-text: #f2b7b7;
   --admin-logout-hover-bg: rgba(220, 38, 38, 0.15);
@@ -148,6 +226,7 @@ const handleLogout = () => {
   display: flex;
   min-height: 100vh;
   background: var(--cds-background-color);
+  font-family: var(--admin-neo-font);
 }
 
 .admin-shell-layout--dashboard {
@@ -210,6 +289,8 @@ const handleLogout = () => {
     calc((1.98rem + 4.8vw) * var(--admin-dashboard-scale)),
     calc(4.32rem * var(--admin-dashboard-scale))
   );
+  background: var(--cds-background-color);
+  --admin-user-badge-bg: rgba(255, 255, 255, 0.92);
 }
 
 .admin-sidebar {
@@ -223,6 +304,13 @@ const handleLogout = () => {
   z-index: 100;
 }
 
+.admin-shell-layout--dashboard .admin-sidebar {
+  width: clamp(16rem, 14rem + 3vw, 19rem);
+  background: transparent;
+  padding: var(--admin-space-lg) var(--admin-space-md);
+  gap: var(--admin-space-md);
+}
+
 .sidebar-brand {
   padding: var(--admin-space-lg) var(--admin-space-xl);
   display: flex;
@@ -231,8 +319,53 @@ const handleLogout = () => {
   border-bottom: 1px solid var(--admin-sidebar-divider);
 }
 
+.admin-shell-layout--dashboard .sidebar-brand,
+.admin-shell-layout--dashboard .sidebar-nav,
+.admin-shell-layout--dashboard .sidebar-footer {
+  border: 1px solid var(--admin-neo-line);
+  border-radius: var(--admin-neo-radius);
+  background: var(--admin-neo-surface);
+  box-shadow: var(--admin-neo-shadow);
+  backdrop-filter: blur(14px);
+}
+
+.admin-shell-layout--dashboard .sidebar-brand {
+  border-bottom: none;
+  color: var(--cds-dark);
+  padding: var(--admin-space-lg) var(--admin-space-lg);
+}
+
+.dashboard-brand-copy {
+  display: grid;
+  gap: 0.1rem;
+  line-height: 1;
+}
+
+.dashboard-brand-copy strong {
+  font-size: var(--admin-text-2xl);
+  letter-spacing: -0.05em;
+  color: var(--cds-dark);
+}
+
+.dashboard-brand-copy small {
+  font-size: var(--admin-text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--cds-text-muted);
+}
+
 .brand-icon {
   font-size: var(--admin-text-3xl);
+}
+
+.admin-shell-layout--dashboard .brand-icon {
+  width: 3.6rem;
+  height: 3.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--cds-surface-2);
 }
 
 .brand-text {
@@ -245,6 +378,17 @@ const handleLogout = () => {
   flex: 1;
   padding: var(--admin-space-md) 0;
   overflow-y: auto;
+}
+
+.admin-shell-layout--dashboard .sidebar-nav {
+  display: grid;
+  gap: var(--admin-space-sm);
+  padding: var(--admin-space-sm);
+  overflow: visible;
+}
+
+.sidebar-nav--dashboard-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .nav-item {
@@ -264,9 +408,35 @@ const handleLogout = () => {
   line-height: 1.2;
 }
 
+.admin-shell-layout--dashboard .nav-item {
+  border-left: none;
+  border-radius: var(--admin-neo-radius-sm);
+  padding: var(--admin-space-sm) var(--admin-space-md);
+  color: var(--admin-neo-ink);
+  background: transparent;
+}
+
+.nav-item--dashboard-grid {
+  min-height: 5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--admin-space-xs);
+  padding: var(--admin-space-md);
+  text-align: center;
+  border: 1px solid var(--admin-neo-line);
+  background: var(--cds-surface-1);
+  box-shadow: var(--admin-neo-shadow-sm);
+}
+
 .nav-item:hover {
   background: var(--admin-nav-hover-bg);
   color: var(--cds-white);
+}
+
+.admin-shell-layout--dashboard .nav-item:hover {
+  background: rgba(79, 74, 69, 0.06);
+  color: var(--cds-dark);
 }
 
 .nav-item.active {
@@ -275,14 +445,43 @@ const handleLogout = () => {
   border-left-color: var(--cds-primary);
 }
 
+.admin-shell-layout--dashboard .nav-item.active {
+  background: var(--cds-dark);
+  color: var(--cds-white);
+  box-shadow: var(--admin-neo-shadow);
+}
+
 .nav-icon {
   font-size: var(--admin-text-xl);
   width: 2.4rem;
   text-align: center;
 }
 
+.admin-shell-layout--dashboard .nav-icon {
+  width: 3.6rem;
+  height: 3.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--admin-neo-line);
+  box-shadow: var(--admin-neo-shadow-sm);
+}
+
 .nav-label {
   font-weight: var(--cds-font-medium);
+}
+
+.admin-shell-layout--dashboard .nav-label {
+  font-weight: var(--cds-font-semibold);
+  font-size: var(--admin-text-sm);
+  line-height: 1.25;
+}
+
+.admin-shell-layout--dashboard .nav-item.active .nav-icon {
+  background: var(--cds-surface-2);
+  border-color: var(--cds-border-card);
 }
 
 .sidebar-footer {
@@ -290,12 +489,37 @@ const handleLogout = () => {
   border-top: 1px solid var(--admin-sidebar-divider);
 }
 
+.admin-shell-layout--dashboard .sidebar-footer {
+  border-top: none;
+  padding: var(--admin-space-sm);
+  display: grid;
+  gap: var(--admin-space-sm);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-shell-layout--dashboard .sidebar-footer .nav-item {
+  min-height: 5.4rem;
+  flex-direction: row;
+  justify-content: flex-start;
+  text-align: left;
+}
+
 .back-link {
   color: var(--admin-back-link-color);
 }
 
+.admin-shell-layout--dashboard .back-link,
+.admin-shell-layout--dashboard .logout-btn {
+  color: var(--cds-text-normal);
+}
+
 .back-link:hover {
   color: var(--cds-white);
+}
+
+.admin-shell-layout--dashboard .back-link:hover,
+.admin-shell-layout--dashboard .logout-btn:hover {
+  color: var(--cds-dark);
 }
 
 .logout-btn {
@@ -315,6 +539,10 @@ const handleLogout = () => {
   min-height: 100vh;
 }
 
+.admin-shell-layout--dashboard .admin-main {
+  margin-left: clamp(16rem, 14rem + 3vw, 19rem);
+}
+
 .admin-topbar {
   background: var(--cds-white);
   padding: var(--admin-space-lg) var(--admin-space-2xl);
@@ -327,12 +555,61 @@ const handleLogout = () => {
   z-index: 50;
 }
 
+.admin-shell-layout--dashboard .admin-topbar {
+  background: var(--admin-neo-surface);
+  border: 1px solid var(--admin-neo-line);
+  border-radius: var(--admin-neo-radius);
+  margin: var(--admin-space-lg) var(--admin-space-lg) 0;
+  padding: var(--admin-space-md) var(--admin-space-lg);
+  box-shadow: var(--admin-neo-shadow);
+  backdrop-filter: blur(14px);
+  display: grid;
+  grid-template-columns: minmax(17rem, 0.78fr) minmax(0, 1fr) auto;
+  gap: var(--admin-space-md);
+  align-items: center;
+}
+
+.admin-dashboard-topbar-clock {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--admin-space-md);
+  padding: var(--admin-space-md);
+  border-radius: calc(var(--cds-radius-lg) * 0.95);
+  background: var(--cds-surface-2);
+  color: var(--cds-dark);
+  min-height: 100%;
+}
+
+.admin-dashboard-topbar-time {
+  font-size: calc(var(--admin-text-4xl) * 1.08);
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+}
+
+.admin-dashboard-topbar-date {
+  display: grid;
+  gap: 0.12rem;
+  font-size: var(--admin-text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--cds-text-muted);
+}
+
+.admin-shell-layout--dashboard .breadcrumb {
+  min-width: 0;
+}
+
 .page-title {
   margin: 0;
   font-size: var(--admin-text-3xl);
   font-weight: var(--cds-font-bold);
   color: var(--cds-text-normal);
   line-height: 1;
+}
+
+.admin-shell-layout--dashboard .page-title {
+  letter-spacing: -0.04em;
 }
 
 .page-subtitle {
@@ -349,6 +626,11 @@ const handleLogout = () => {
   min-width: min(42rem, 100%);
 }
 
+.admin-shell-layout--dashboard .topbar-actions {
+  justify-content: flex-end;
+  gap: var(--admin-space-md);
+}
+
 .user-badge {
   background: var(--admin-user-badge-bg);
   padding: var(--admin-space-sm) var(--cds-space-lg);
@@ -357,10 +639,19 @@ const handleLogout = () => {
   color: var(--cds-text-normal);
 }
 
+.admin-shell-layout--dashboard .user-badge {
+  border: 1px solid var(--admin-neo-line);
+  box-shadow: var(--admin-neo-shadow-sm);
+}
+
 .admin-content {
   flex: 1;
   padding: var(--admin-space-2xl);
   overflow-y: auto;
+}
+
+.admin-shell-layout--dashboard .admin-content {
+  padding: var(--admin-space-lg);
 }
 
 .admin-content :deep(.admin-page),
@@ -534,6 +825,35 @@ const handleLogout = () => {
     flex-wrap: wrap;
   }
 
+  .admin-shell-layout--dashboard .admin-sidebar {
+    width: var(--admin-sidebar-collapsed-width);
+  }
+
+  .admin-shell-layout--dashboard .admin-main {
+    margin-left: var(--admin-sidebar-collapsed-width);
+  }
+
+  .admin-shell-layout--dashboard .sidebar-nav--dashboard-grid,
+  .admin-shell-layout--dashboard .sidebar-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-shell-layout--dashboard .dashboard-brand-copy,
+  .admin-shell-layout--dashboard .nav-label {
+    display: none;
+  }
+
+  .admin-shell-layout--dashboard .nav-item--dashboard-grid,
+  .admin-shell-layout--dashboard .sidebar-footer .nav-item {
+    min-height: 4.8rem;
+    padding: var(--admin-space-sm);
+    justify-content: center;
+  }
+
+  .admin-shell-layout--dashboard .admin-topbar {
+    grid-template-columns: 1fr;
+  }
+
   .topbar-actions {
     width: 100%;
     min-width: 0;
@@ -590,6 +910,23 @@ const handleLogout = () => {
 
   .page-title {
     font-size: var(--admin-text-2xl);
+  }
+
+  .admin-shell-layout--dashboard .admin-sidebar {
+    width: 100%;
+    padding: var(--admin-space-xs);
+  }
+
+  .admin-shell-layout--dashboard .admin-main {
+    margin-left: 0;
+  }
+
+  .admin-shell-layout--dashboard .sidebar-nav--dashboard-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .admin-shell-layout--dashboard .sidebar-footer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

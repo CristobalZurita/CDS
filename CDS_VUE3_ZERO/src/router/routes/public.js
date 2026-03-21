@@ -9,6 +9,7 @@ const CotizadorIAPage = () => import('@/pages/public/CotizadorIAPage.vue')
 const CalculatorsPage = () => import('@/pages/public/CalculatorsPage.vue')
 const SimulatorPage = () => import('@/pages/public/SimulatorPage.vue')
 const StorePage = () => import('@/pages/public/StorePage.vue')
+const CartPage = () => import('@/pages/public/CartPage.vue')
 
 export const publicRoutes = [
   {
@@ -24,7 +25,8 @@ export const publicRoutes = [
       { path: 'cotizador', name: 'cotizador', component: CotizadorIAPage, meta: { requiresAuth: false } },
       { path: 'calculadoras', name: 'calculadoras', component: CalculatorsPage, meta: { requiresAuth: false } },
       { path: 'simulador', name: 'simulador', component: SimulatorPage, meta: { requiresAuth: false } },
-      { path: 'tienda', name: 'tienda', component: StorePage, meta: { requiresAuth: false } }
+      { path: 'tienda', name: 'tienda', component: StorePage, meta: { requiresAuth: false } },
+      { path: 'carrito', name: 'carrito', component: CartPage, meta: { requiresAuth: false } }
     ]
   }
 ]

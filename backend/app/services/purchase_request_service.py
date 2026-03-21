@@ -74,6 +74,43 @@ def _request_total(req: PurchaseRequest) -> float:
     return round(total, 2)
 
 
+def _request_shipping_snapshot(req: PurchaseRequest) -> dict[str, Any] | None:
+    raw_notes = str(req.notes or "").strip()
+    if not raw_notes:
+        return None
+
+    snapshot: dict[str, Any] = {"raw_notes": raw_notes}
+    for part in raw_notes.split("|"):
+        text = str(part or "").strip()
+        lowered = text.lower()
+        if lowered.startswith("despacho:"):
+            snapshot["shipping_label"] = text.split(":", 1)[1].strip() or None
+        elif lowered.startswith("canal:"):
+            snapshot["shipping_channel"] = text.split(":", 1)[1].strip() or None
+        elif lowered.startswith("nota cliente:"):
+            snapshot["client_note"] = text.split(":", 1)[1].strip() or None
+
+    return {key: value for key, value in snapshot.items() if value not in (None, "")}
+
+
+def _request_items_snapshot(req: PurchaseRequest) -> list[dict[str, Any]]:
+    payload: list[dict[str, Any]] = []
+    for item in req.items or []:
+        payload.append(
+            {
+                "id": item.id,
+                "product_id": item.product_id,
+                "sku": item.sku,
+                "name": item.name,
+                "quantity": int(item.quantity or 0),
+                "reserved_quantity": _request_item_reserved(item),
+                "unit_price": float(item.unit_price or 0),
+                "status": item.status,
+            }
+        )
+    return payload
+
+
 def _request_item_reserved(item: PurchaseRequestItem) -> int:
     return max(int(getattr(item, "reserved_quantity", 0) or 0), 0)
 
@@ -347,6 +384,200 @@ def _serialize_request(db: Session, req: PurchaseRequest) -> dict:
             else None
         ),
     }
+
+
+def _checkout_external_id(payload: dict[str, Any] | None) -> str | None:
+    raw = payload or {}
+    for key in ("preference_id", "token", "id", "buy_order"):
+        value = str(raw.get(key) or "").strip()
+        if value:
+            return value
+    return None
+
+
+def build_purchase_request_checkout_snapshot(
+    req: PurchaseRequest,
+    payment: Payment | None,
+) -> dict[str, Any]:
+    total_items_amount = _request_total(req)
+    return {
+        "request_id": req.id,
+        "client_id": req.client_id,
+        "repair_id": req.repair_id,
+        "repair_code": _resolved_repair_code(req),
+        "status": _normalize_status(req.status, fallback="draft"),
+        "notes": req.notes,
+        "total_items_amount": total_items_amount,
+        "requested_amount": int((payment.amount or 0) if payment else round(total_items_amount)),
+        "currency": str((payment.currency if payment else None) or "CLP"),
+        "payment_due_date": (
+            payment.payment_due_date.isoformat()
+            if payment and payment.payment_due_date
+            else None
+        ),
+        "items": _request_items_snapshot(req),
+        "shipping": _request_shipping_snapshot(req),
+    }
+
+
+def attach_checkout_contract_to_payment(
+    db: Session,
+    payment: Payment,
+    *,
+    provider: str,
+    origin_channel: str,
+    return_url: str,
+    notification_url: str | None,
+    gateway_payload: dict[str, Any] | None,
+) -> None:
+    metadata = _parse_notes_metadata(payment.notes)
+    checkout = metadata.get("checkout")
+    if not isinstance(checkout, dict):
+        checkout = {}
+
+    checkout["version"] = (
+        "purchase_request_checkout_v1"
+        if payment.purchase_request_id
+        else "payment_checkout_v1"
+    )
+    checkout["kind"] = "gateway_session"
+    checkout["provider"] = str(provider or payment.payment_processor or payment.payment_method or "").strip()
+    checkout["provider_status"] = "initiated"
+    checkout["origin_channel"] = str(origin_channel or "").strip() or "admin_payment_gateway"
+    checkout["gateway_reference"] = payment.transaction_id
+    checkout["gateway_external_id"] = _checkout_external_id(gateway_payload)
+    checkout["return_url"] = str(return_url or "").strip()
+    checkout["notification_url"] = str(notification_url or "").strip() or None
+    checkout["expires_at"] = payment.payment_due_date.isoformat() if payment.payment_due_date else None
+    checkout["initiated_at"] = datetime.utcnow().isoformat()
+    if gateway_payload:
+        checkout["gateway_payload"] = gateway_payload
+
+    if payment.purchase_request_id:
+        req = _get_request_or_404(db, int(payment.purchase_request_id))
+        checkout["request_snapshot"] = build_purchase_request_checkout_snapshot(req, payment)
+
+    metadata["checkout"] = checkout
+    payment.notes = json.dumps(metadata, ensure_ascii=False)
+
+
+def update_checkout_status_metadata(
+    payment: Payment,
+    *,
+    provider_status: str,
+    provider_payload: dict[str, Any] | None,
+    provider: str | None = None,
+) -> None:
+    metadata = _parse_notes_metadata(payment.notes)
+    checkout = metadata.get("checkout")
+    if not isinstance(checkout, dict):
+        checkout = {}
+
+    resolved_provider = str(
+        provider
+        or checkout.get("provider")
+        or payment.payment_processor
+        or payment.payment_method
+        or ""
+    ).strip()
+    checkout["provider"] = resolved_provider or None
+    checkout["provider_status"] = str(provider_status or "").strip() or "unknown"
+    checkout["gateway_external_id"] = (
+        _checkout_external_id(provider_payload) or checkout.get("gateway_external_id")
+    )
+    checkout["provider_payload"] = provider_payload or {}
+    checkout["last_sync_at"] = datetime.utcnow().isoformat()
+    if checkout["provider_status"] in {"approved", "success"}:
+        checkout["paid_at"] = datetime.utcnow().isoformat()
+
+    metadata["checkout"] = checkout
+    payment.notes = json.dumps(metadata, ensure_ascii=False)
+
+
+def sync_purchase_request_with_payment_result(
+    db: Session,
+    payment: Payment,
+    *,
+    source: str,
+    provider: str | None = None,
+    provider_status: str | None = None,
+    user_id: int | None = None,
+) -> dict[str, Any] | None:
+    if not payment.purchase_request_id:
+        return None
+
+    req = _get_request_or_404(db, int(payment.purchase_request_id))
+    previous_status = req.status
+    normalized_status = _normalize_status(req.status, fallback="draft")
+    resolved_provider = str(
+        provider or payment.payment_processor or payment.payment_method or "gateway"
+    ).strip() or "gateway"
+    resolved_provider_status = str(provider_status or "").strip().lower() or "unknown"
+
+    note_changed = False
+    audit_event = None
+    audit_message = None
+    audit_details: dict[str, Any] = {
+        "request_id": req.id,
+        "payment_id": payment.id,
+        "provider": resolved_provider,
+        "provider_status": resolved_provider_status,
+        "source": source,
+    }
+
+    if payment.status == PaymentStatus.SUCCESS:
+        if normalized_status != "paid_client":
+            req.status = "paid_client"
+        updated_notes = _append_request_note(
+            req.notes,
+            f"Pago confirmado por {resolved_provider} ({resolved_provider_status})",
+        )
+        note_changed = updated_notes != str(req.notes or "")
+        req.notes = updated_notes
+        audit_event = "purchase_request.payment_confirmed"
+        audit_message = f"Payment confirmed for purchase request #{req.id}"
+        audit_details["result"] = "success"
+    elif payment.status == PaymentStatus.FAILED:
+        if normalized_status not in {"cancelled", "received", "applied_ot", "paid_client"}:
+            req.status = "pending_payment"
+        updated_notes = _append_request_note(
+            req.notes,
+            f"Intento de pago {resolved_provider} fallido ({resolved_provider_status})",
+        )
+        note_changed = updated_notes != str(req.notes or "")
+        req.notes = updated_notes
+        audit_event = "purchase_request.payment_failed"
+        audit_message = f"Payment failed for purchase request #{req.id}"
+        audit_details["result"] = "failed"
+    else:
+        if normalized_status == "requested":
+            req.status = "pending_payment"
+
+    if req.status != previous_status:
+        _apply_request_stock_state(
+            db,
+            req,
+            previous_status=previous_status,
+            next_status=req.status,
+            user_id=user_id,
+        )
+
+    db.commit()
+    db.refresh(req)
+    db.refresh(payment)
+
+    if audit_event and (req.status != previous_status or note_changed):
+        try:
+            create_audit(
+                event_type=audit_event,
+                user_id=user_id,
+                details=audit_details,
+                message=audit_message,
+            )
+        except Exception:
+            pass
+
+    return {"ok": True, "request": _serialize_request(db, req), "payment": payment}
 
 
 def _append_request_note(raw_notes: str | None, message: str) -> str:
