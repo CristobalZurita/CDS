@@ -1,24 +1,24 @@
 import api from './api'
 
-const QUOTATION_BASE_PATH = '/quotations'
+// Catálogo servido desde keyboards_database.json — static-first, IA como fallback
 
 export async function listQuotationBrands() {
-  const { data } = await api.get(`${QUOTATION_BASE_PATH}/instruments/brands`)
+  const { data } = await api.get('/catalog/brands')
   return Array.isArray(data) ? data : []
 }
 
 export async function listQuotationModelsByBrand(brandId) {
-  const { data } = await api.get(`${QUOTATION_BASE_PATH}/instruments/models/${brandId}`)
+  const { data } = await api.get(`/catalog/models/${brandId}`)
   return Array.isArray(data) ? data : []
 }
 
 export async function listApplicableQuotationFaults(instrumentId) {
-  const { data } = await api.get(`${QUOTATION_BASE_PATH}/faults/applicable/${instrumentId}`)
+  const { data } = await api.get(`/catalog/faults/${instrumentId}`)
   return Array.isArray(data) ? data : []
 }
 
 export async function requestQuotationEstimate({ instrumentId, faultIds, turnstileToken }) {
-  const { data } = await api.post(`${QUOTATION_BASE_PATH}/estimate`, {
+  const { data } = await api.post('/catalog/quote', {
     instrument_id: instrumentId,
     faults: faultIds,
     turnstile_token: turnstileToken,
@@ -46,20 +46,25 @@ export async function submitQuotationLead({
 }
 
 export function normalizeQuotationEstimate(data, { selectedBrandName = '', selectedModelName = '' } = {}) {
-  const summaryFinalCost = data?.summary?.final_cost
-  const normalizedFinalCost = summaryFinalCost ?? data?.max_price ?? data?.min_price ?? 0
+  const finalCost = data?.summary?.final_cost ?? data?.final_cost ?? data?.min_price ?? 0
 
   return {
     equipment_info: {
       brand: data?.brand_name || selectedBrandName,
       model: selectedModelName,
     },
-    base_cost: Number(data?.base_total || 0),
-    complexity_factor: Number(data?.summary?.complexity_factor || data?.multiplier || 1),
+    from_db: Boolean(data?.from_db),
+    base_cost: Number(data?.min_price || 0),
+    complexity_factor: Number(data?.summary?.complexity_factor || 1),
     value_factor: Number(data?.summary?.value_factor || 1),
-    final_cost: Number(normalizedFinalCost),
+    final_cost: Number(finalCost),
     min_price: Number(data?.min_price || 0),
-    max_price: Number(data?.max_price || 0),
+    max_price: Number(data?.max_price || data?.min_price || 0),
+    complexity: data?.complexity || '',
+    valor_usd_min: Number(data?.valor_usd_min || 0),
+    valor_usd_max: Number(data?.valor_usd_max || 0),
+    tiempo_estimado: data?.tiempo_estimado || '',
+    fallas_seleccionadas: Array.isArray(data?.fallas_seleccionadas) ? data.fallas_seleccionadas : [],
     disclaimer: data?.disclaimer || '',
     summary: data?.summary || {},
   }

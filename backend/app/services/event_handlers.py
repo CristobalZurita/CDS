@@ -7,6 +7,10 @@ Registra los manejadores de eventos para el sistema de notificaciones
 import logging
 from app.services.event_system import event_bus, Events
 from app.services.email_service import email_service
+from app.services.clockify_service import ClockifyService
+from app.websocket.connection_manager import manager
+from app.services.repair_state_machine import RepairStateID
+from app.core.database import SessionLocal
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +27,8 @@ def setup_event_handlers():
     # Repair events
     event_bus.subscribe(Events.REPAIR_CREATED, handle_repair_created)
     event_bus.subscribe(Events.REPAIR_STATUS_CHANGED, handle_repair_status_changed)
+    event_bus.subscribe(Events.REPAIR_STATUS_CHANGED, handle_repair_clockify_integration)
+    event_bus.subscribe(Events.REPAIR_STATUS_CHANGED, handle_repair_websocket_broadcast)
     event_bus.subscribe(Events.REPAIR_COMPLETED, handle_repair_completed)
     
     # Appointment events
@@ -230,3 +236,100 @@ def handle_contact_message_received(data):
 
     except Exception as e:
         logger.error(f"Error handling contact message event: {str(e)}")
+
+
+# ============================================================================
+# CLOCKIFY INTEGRATION HANDLERS
+# ============================================================================
+
+def handle_repair_clockify_integration(data):
+    """
+    Maneja integración Clockify para cambios de estado OT.
+    Inicia/detiene time entries según estado.
+
+    Esperado: {
+        'repair_id': str,  # repair_number
+        'status': str,     # nombre del estado
+        'progress': int    # porcentaje de progreso
+    }
+    """
+    try:
+        from app.models.repair import Repair
+        from app.core.database import get_db_session
+
+        repair_number = data.get('repair_id')
+        status_name = data.get('status')
+
+        if not repair_number:
+            return
+
+        # Buscar repair por número
+        db = SessionLocal()
+        try:
+            repair = db.query(Repair).filter(Repair.repair_number == repair_number).first()
+            if not repair or not repair.clockify_project_id:
+                return
+
+            clockify = ClockifyService()
+
+            # Lógica según estado
+            if status_name == "En trabajo":
+                # Iniciar time entry si no hay uno activo
+                active_entry = clockify.get_active_time_entry(repair.clockify_project_id)
+                if not active_entry:
+                    clockify.start_time_entry(
+                        repair.clockify_project_id,
+                        f"Trabajo en OT {repair.repair_number}"
+                    )
+                    logger.info(f"Clockify: Started time entry for OT {repair_number}")
+
+            elif status_name in ["Listo", "Entregado"]:
+                # Detener time entry activo
+                if clockify.stop_current_time_entry(repair.clockify_project_id):
+                    logger.info(f"Clockify: Stopped time entry for OT {repair_number}")
+
+        finally:
+            db.close()
+
+    except Exception as e:
+        logger.error(f"Error handling Clockify integration: {str(e)}")
+
+
+# ============================================================================
+# WEBSOCKET BROADCAST HANDLERS
+# ============================================================================
+
+def handle_repair_websocket_broadcast(data):
+    """
+    Broadcast cambios de estado OT a todos los clientes conectados via WebSocket.
+
+    Esperado: {
+        'repair_id': str,
+        'status': str,
+        'progress': int,
+        'customer_name': str
+    }
+    """
+    try:
+        import asyncio
+        from app.websocket.connection_manager import MessageType
+
+        # Broadcast a todos los usuarios conectados
+        message = {
+            "type": MessageType.REPAIR_STATUS_CHANGE,
+            "data": {
+                "repair_id": data.get('repair_id'),
+                "status": data.get('status'),
+                "progress": data.get('progress', 0),
+                "customer_name": data.get('customer_name'),
+                "timestamp": data.get('timestamp')
+            }
+        }
+
+        # Ejecutar broadcast de forma asíncrona
+        asyncio.create_task(manager.broadcast_all(message))
+
+        logger.info(f"WebSocket broadcast: OT {data.get('repair_id')} status changed to {data.get('status')}")
+
+    except Exception as e:
+        logger.error(f"Error broadcasting repair status change: {str(e)}")

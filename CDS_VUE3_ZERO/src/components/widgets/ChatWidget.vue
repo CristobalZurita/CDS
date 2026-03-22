@@ -98,8 +98,9 @@
 
         <p v-if="error" class="chat-error">{{ error }}</p>
 
-        <form class="chat-input-row" @submit.prevent="send">
+        <form class="chat-input-row" @submit.prevent="handleSend">
           <input
+            ref="inputEl"
             v-model="input"
             class="chat-input"
             type="text"
@@ -115,14 +116,14 @@
       </div>
     </transition>
 
-    <!-- Trigger button -->
+    <!-- Trigger button — ocupa el lugar del botón WhatsApp -->
     <button
       class="chat-trigger"
       type="button"
-      :aria-label="open ? 'Cerrar chat' : 'Abrir chat'"
+      :aria-label="open ? 'Cerrar chat' : 'Chatea con nosotros'"
       @click="toggle"
     >
-      <i :class="open ? 'fa-solid fa-xmark' : 'fa-solid fa-comment-dots'"></i>
+      <i :class="open ? 'fa-solid fa-xmark' : 'fa-brands fa-whatsapp'"></i>
     </button>
   </div>
 </template>
@@ -139,6 +140,13 @@ const {
 } = useChatWidget()
 
 const messagesEl = ref(null)
+const inputEl = ref(null)
+
+async function handleSend() {
+  await send()
+  await nextTick()
+  inputEl.value?.focus()
+}
 
 function onHandoffClick() {
   confirmHandoff()
@@ -150,41 +158,48 @@ watch(messages, async () => {
     messagesEl.value.scrollTop = messagesEl.value.scrollHeight
   }
 }, { deep: true })
+
+watch(open, async (val) => {
+  if (val) {
+    await nextTick()
+    inputEl.value?.focus()
+  }
+})
 </script>
 
 <style scoped>
 .chat-widget {
   position: fixed;
-  right: 1rem;
-  bottom: 4.5rem;
+  left: 1rem;
+  bottom: 1.25rem;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 0.6rem;
 }
 
-/* ── Trigger ── */
+/* ── Trigger — posición, tamaño y color heredados del botón WhatsApp ── */
 .chat-trigger {
-  width: 46px;
-  height: 46px;
+  width: 50px;
+  height: 50px;
   border-radius: var(--cds-radius-pill, 999px);
   border: none;
-  background: var(--cds-primary);
+  background: #25d366;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
+  font-size: 1.55rem;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(179, 106, 60, 0.38);
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.45);
   transition: transform 0.2s, box-shadow 0.2s;
   flex-shrink: 0;
 }
 
 .chat-trigger:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(179, 106, 60, 0.5);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.55);
 }
 
 /* ── Panel ── */
@@ -484,14 +499,14 @@ watch(messages, async () => {
 /* ── Responsive ── */
 @media (min-width: 768px) {
   .chat-widget {
-    right: 1.5rem;
-    bottom: 5rem;
+    left: 1.5rem;
+    bottom: 1.5rem;
   }
 
   .chat-trigger {
-    width: 50px;
-    height: 50px;
-    font-size: 1.25rem;
+    width: 54px;
+    height: 54px;
+    font-size: 1.75rem;
   }
 
   .chat-messages {

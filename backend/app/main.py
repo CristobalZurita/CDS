@@ -210,11 +210,11 @@ if settings.environment and settings.environment.lower() in ("production", "prod
         
         csp = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-eval'; "  # Vue necesita eval para runtime
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-            "img-src 'self' data: https://res.cloudinary.com; "
+            "script-src 'self' 'unsafe-eval' https://maps.googleapis.com; "  # Vue + Google Maps
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://maps.googleapis.com; "
+            "img-src 'self' data: https://res.cloudinary.com https://maps.gstatic.com https://maps.googleapis.com; "
             f"font-src 'self' https://fonts.gstatic.com; "
-            f"connect-src {csp_connect_src}; "
+            f"connect-src {csp_connect_src} https://maps.googleapis.com; "
             "frame-ancestors 'none'; "
             "base-uri 'self'; "
             "form-action 'self';"

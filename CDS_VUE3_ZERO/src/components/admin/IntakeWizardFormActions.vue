@@ -56,11 +56,24 @@ defineEmits(['reset'])
 
 @media (max-width: 768px) {
   .form-actions {
-    flex-direction: column;
+    flex-direction: row;
+    padding: 0.55rem 0.75rem;
+    gap: 0.5rem;
   }
 
-  .form-actions :deep(.base-button) {
-    width: 100%;
+  /* Botón "Limpiar" — compacto, solo ocupa lo necesario */
+  .form-actions :deep(.base-button:first-child) {
+    flex: 0 0 auto;
+    min-height: 40px;
+    font-size: var(--cds-text-sm);
+    padding-inline: 0.9rem;
+  }
+
+  /* Botón "Crear OT" — ocupa el resto */
+  .form-actions :deep(.base-button:last-child) {
+    flex: 1;
+    min-height: 40px;
+    font-size: var(--cds-text-sm);
   }
 }
 </style>

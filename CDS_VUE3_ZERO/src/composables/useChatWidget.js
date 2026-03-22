@@ -38,8 +38,9 @@ export function useChatWidget() {
         handoff.value = res.handoff
         handoffUrl.value = res.handoff_url || null
       }
-    } catch {
-      error.value = 'Hubo un problema al conectar. Intenta de nuevo.'
+    } catch (e) {
+      const detail = e?.response?.data?.detail
+      error.value = detail || 'Hubo un problema al conectar. Intenta de nuevo.'
       messages.value.pop()
     } finally {
       loading.value = false

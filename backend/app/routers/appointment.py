@@ -14,6 +14,7 @@ from app.core.database import get_db, SessionLocal
 from app.core.ratelimit import limiter
 from app.core.dependencies import require_permission
 from app.core.timezone import CL_TZ, to_local, to_utc
+from app.core.config import settings
 from app.crud.appointment import (
     create_appointment,
     get_appointment,
@@ -85,9 +86,8 @@ async def _bg_update_calendar(appointment_id: int) -> None:
         if not service:
             return
 
-        calendar_id = os.getenv('GOOGLE_CALENDAR_ID', 'primary')
         service.update_event(
-            calendar_id=calendar_id,
+            calendar_id=settings.google_calendar_id,
             event_id=appointment.google_calendar_id,
             title=business_config.appointment_event_title(appointment.nombre),
             description=business_config.appointment_event_description(appointment.mensaje),
@@ -108,8 +108,7 @@ async def _bg_delete_calendar_event(event_id: str) -> None:
         service = get_calendar_service()
         if not service:
             return
-        calendar_id = os.getenv('GOOGLE_CALENDAR_ID', 'primary')
-        service.delete_event(calendar_id=calendar_id, event_id=event_id)
+        service.delete_event(calendar_id=settings.google_calendar_id, event_id=event_id)
     except Exception as e:
         print(f"Error deleting Google Calendar event (background): {e}")
 

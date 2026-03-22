@@ -1,0 +1,46 @@
+{
+  "name": "Cirujano de Sintetizadores",
+  "short_name": "CDS Admin",
+  "description": "Panel de administracion del taller CDS",
+  "start_url": "/admin/foto-firma",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#ec6b00",
+  "background_color": "#3e3c38",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/images/logo/logo_square_003.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo/logo_square_003.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nueva OT",
+      "short_name": "Nueva OT",
+      "url": "/admin/intake",
+      "icons": [{ "src": "/images/logo/logo_square_003.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Foto / Firma",
+      "short_name": "Foto Firma",
+      "url": "/admin/foto-firma",
+      "icons": [{ "src": "/images/logo/logo_square_003.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Reparaciones",
+      "short_name": "OTs",
+      "url": "/admin/repairs",
+      "icons": [{ "src": "/images/logo/logo_square_003.png", "sizes": "96x96" }]
+    }
+  ]
+}

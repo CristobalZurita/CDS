@@ -436,7 +436,51 @@
   }
 }
 
+/* Mobile quick-action bar: oculto en desktop, visible solo en movil */
+.mobile-quick-actions {
+  display: none;
+}
+
 @media (max-width: 640px) {
+  .mobile-quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .mobile-qa-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.25rem 0.75rem;
+    border-radius: var(--cds-radius-lg);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.2;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .mobile-qa-btn:active { opacity: 0.8; }
+
+  .mobile-qa-btn i {
+    font-size: 1.75rem;
+  }
+
+  .mobile-qa-btn--primary {
+    background: var(--cds-primary);
+    color: var(--cds-white);
+  }
+
+  .mobile-qa-btn--secondary {
+    background: var(--cds-dark);
+    color: var(--cds-white);
+  }
+
   .admin-dashboard-focus-metrics,
   .kpi-metrics {
     grid-template-columns: 1fr;

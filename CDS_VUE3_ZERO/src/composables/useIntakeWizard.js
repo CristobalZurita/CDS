@@ -9,6 +9,7 @@
 
 import { ref, computed, reactive } from 'vue'
 import { extractErrorMessage } from '@/services/api'
+import { useIntakeAI } from './useIntakeAI'
 import {
   applyExistingClientToForm,
   buildIntakeWizardValidationValues,
@@ -36,7 +37,10 @@ export function useIntakeWizard() {
   const activeSection = ref('client') // Para scroll spy
   
   const form = reactive(createIntakeWizardFormState())
-  
+
+  // IA para asistencia en ingreso
+  const { aiLoading, aiError, aiSuggestion, consultarIA, clearAI } = useIntakeAI()
+
   // Flags de modo
   const useExistingClient = ref(false)
   const existingClients = ref([])
@@ -212,6 +216,13 @@ export function useIntakeWizard() {
     canSubmit,
     progress,
     
+    // IA
+    aiLoading,
+    aiError,
+    aiSuggestion,
+    consultarIA,
+    clearAI,
+
     // Acciones
     loadExistingClients,
     fetchNextClientCode,

@@ -531,15 +531,21 @@ class RepairWriteService:
         if not note_text:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Missing field: note")
 
+        note_type = payload.get("note_type", "internal")
         note = RepairNote(
             repair_id=repair_id,
             user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
             note=note_text,
-            note_type=payload.get("note_type", "internal"),
+            note_type=note_type,
         )
         self.db.add(note)
         self.db.commit()
         self.db.refresh(note)
+
+        # Notificar al cliente si se pide explícitamente y la nota es visible
+        if payload.get("notify") and note_type != "internal":
+            self._notify_client_progress_update(repair_id)
+
         return note
 
     def add_repair_photo(
@@ -551,13 +557,48 @@ class RepairWriteService:
         if not photo_url:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Missing field: photo_url")
 
+        visible = payload.get("visible_to_client", 1)
         photo = RepairPhoto(
             repair_id=repair_id,
             photo_url=photo_url,
             photo_type=payload.get("photo_type", "general"),
             caption=payload.get("caption"),
+            visible_to_client=visible,
         )
         self.db.add(photo)
         self.db.commit()
         self.db.refresh(photo)
+
+        # Notificar al cliente si se pide explícitamente y la foto es visible
+        if payload.get("notify") and visible:
+            self._notify_client_progress_update(repair_id)
+
         return photo
+
+    def _notify_client_progress_update(self, repair_id: int) -> None:
+        """Envía email al cliente avisando que hay nuevo contenido en su OT."""
+        try:
+            from app.services.email_service import EmailService, build_email_html
+
+            repair = self.db.query(Repair).filter(Repair.id == repair_id).first()
+            if not repair:
+                return
+            device = self.db.query(Device).filter(Device.id == repair.device_id).first()
+            if not device:
+                return
+            client = self.db.query(Client).filter(Client.id == device.client_id).first()
+            if not client or not client.email:
+                return
+
+            instrument = f"{device.model}" if device else "tu equipo"
+            subject = f"Actualización en tu reparación {repair.repair_number} — {instrument}"
+            html = build_email_html(f"""
+                <h2>Hay novedades en tu reparación</h2>
+                <p>Hola {client.name},</p>
+                <p>Acabamos de agregar una actualización a tu OT <strong>{repair.repair_number}</strong>
+                ({instrument}).</p>
+                <p>Puedes ver fotos, comentarios y el progreso en tu portal de cliente.</p>
+            """)
+            EmailService().send_email(client.email, subject, html)
+        except Exception:
+            pass  # No romper flujo si el correo falla

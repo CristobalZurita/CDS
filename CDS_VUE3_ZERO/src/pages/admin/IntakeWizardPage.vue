@@ -36,7 +36,15 @@
       <IntakeWizardRepairSection
         :repair="form.repair"
         :errors="errors"
+        :device-brand="form.device.brand"
+        :device-model="form.device.model"
+        :ai-loading="aiLoading"
+        :ai-error="aiError"
+        :ai-suggestion="aiSuggestion"
         @validate-field="validateField"
+        @consultar-ia="consultarIA"
+        @clear-ai="clearAI"
+        @set-cobro="(v) => { form.repair.paid_amount = v }"
       />
 
       <IntakeWizardOperationsSection
@@ -103,7 +111,12 @@ const {
   addMaterial,
   removeMaterial,
   submit,
-  reset
+  reset,
+  aiLoading,
+  aiError,
+  aiSuggestion,
+  consultarIA,
+  clearAI
 } = useIntakeWizard()
 
 const { initAutocomplete } = usePlacesAutocomplete()

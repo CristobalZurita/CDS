@@ -169,3 +169,17 @@ try:
 	api_router.include_router(chat_router.router)
 except Exception:
 	pass
+
+# ADITIVO: Catálogo de instrumentos desde keyboards_database.json
+try:
+	from app.routers import catalog as catalog_router
+	api_router.include_router(catalog_router.router)
+except Exception:
+	pass
+
+# ADITIVO: WebSocket para notificaciones en tiempo real
+try:
+	from app.routers import websocket_router
+	api_router.include_router(websocket_router.router)
+except Exception:
+	pass

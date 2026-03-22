@@ -43,6 +43,25 @@
       </div>
     </aside>
 
+    <!-- Barra inferior — solo móvil -->
+    <nav class="mobile-bottom-nav" aria-label="Navegación admin">
+      <router-link
+        v-for="item in mobileNavItems"
+        :key="item.to"
+        :to="item.to"
+        class="mobile-nav-btn"
+        :activeClass="item.exact ? '' : 'mobile-nav-btn--active'"
+        exactActiveClass="mobile-nav-btn--active"
+      >
+        <span class="mobile-nav-icon">{{ item.icon }}</span>
+        <span class="mobile-nav-label">{{ item.label }}</span>
+      </router-link>
+      <button class="mobile-nav-btn mobile-nav-btn--logout" @click="handleLogout">
+        <span class="mobile-nav-icon">🚪</span>
+        <span class="mobile-nav-label">Salir</span>
+      </button>
+    </nav>
+
     <!-- Contenido principal -->
     <main class="admin-main">
       <!-- Top bar contextual -->
@@ -134,6 +153,15 @@ const menuItems = [
   { to: '/admin/tickets',   label: 'Tickets',       icon: '🎫' },
   { to: '/admin/stats',     label: 'Estadísticas',  icon: '📈' },
   { to: '/admin/media',     label: 'Medios',        icon: '🖼️' },
+]
+
+const mobileNavItems = [
+  { to: '/admin',            label: 'Inicio',   icon: '📊', exact: true },
+  { to: '/admin/intake',     label: 'Nueva OT', icon: '➕' },
+  { to: '/admin/repairs',    label: 'OTs',      icon: '🔧' },
+  { to: '/admin/foto-firma', label: 'Foto',     icon: '📷' },
+  { to: '/admin/clients',    label: 'Clientes', icon: '👥' },
+  { to: '/admin/inventory',  label: 'Stock',    icon: '📦' },
 ]
 
 const keepAlivePages = ['RepairsAdminPage', 'ClientsPage', 'InventoryPage', 'QuotesAdminPage']
@@ -820,6 +848,80 @@ onUnmounted(() => {
   font-size: var(--admin-text-xl);
 }
 
+/* ── Bottom nav móvil (base: oculta en desktop) ── */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: var(--admin-neo-surface);
+  border-top: 1px solid var(--admin-neo-line);
+  box-shadow: 0 -4px 20px rgba(17, 15, 13, 0.1);
+  padding: 0.45rem 0.25rem;
+  padding-bottom: calc(0.45rem + env(safe-area-inset-bottom, 0px));
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 0.1rem;
+}
+
+.mobile-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.22rem;
+  padding: 0.2rem 0.15rem;
+  text-decoration: none;
+  color: var(--admin-neo-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--admin-neo-font);
+  flex: 1;
+  min-width: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-nav-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  background: var(--cds-surface-2);
+  border: 1px solid var(--admin-neo-line);
+  box-shadow: 0 2px 4px rgba(17, 15, 13, 0.08);
+  transition: box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.mobile-nav-label {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--admin-neo-muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 52px;
+  transition: color 0.15s ease;
+}
+
+.mobile-nav-btn--active .mobile-nav-icon {
+  background: var(--cds-surface-1);
+  box-shadow: var(--admin-neo-shadow-inset);
+  border-color: var(--cds-primary);
+}
+
+.mobile-nav-btn--active .mobile-nav-label {
+  color: var(--cds-primary);
+  font-weight: 600;
+}
+
 /* Transitions */
 .fade-enter-active,
 .fade-leave-active {
@@ -906,74 +1008,74 @@ onUnmounted(() => {
 }
 
 @media (max-width: 640px) {
-  .admin-sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: var(--admin-space-xs);
+  /* Ocultar sidebar — la bottom nav lo reemplaza */
+  .admin-sidebar,
+  .admin-shell-layout--dashboard .admin-sidebar {
+    display: none;
   }
 
-  .sidebar-brand {
-    border-bottom: none;
-    padding: var(--admin-space-xs) var(--admin-space-md);
-  }
-
-  .sidebar-nav {
+  /* Mostrar bottom nav */
+  .mobile-bottom-nav {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 0;
-    flex: none;
   }
 
-  .nav-item {
-    padding: var(--admin-space-xs) var(--admin-space-md);
-    border-left: none;
-    border-bottom: 2px solid transparent;
-  }
-
-  .nav-item.active {
-    border-left-color: transparent;
-    border-bottom-color: var(--cds-primary);
-  }
-
-  .sidebar-footer {
-    display: flex;
-    border-top: none;
-    padding: 0;
-  }
-
-  .admin-main {
+  /* Main ocupa toda la pantalla sin margen de sidebar */
+  .admin-main,
+  .admin-shell-layout--dashboard .admin-main {
     margin-left: 0;
-    height: 100vh;
+    height: 100dvh;
+    /* espacio para la bottom nav (~72px) */
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
   }
 
+  /* Topbar compacta */
   .admin-topbar {
-    padding: var(--admin-space-md);
+    padding: var(--admin-space-sm) var(--admin-space-md);
+  }
+
+  .admin-shell-layout--dashboard .admin-topbar {
+    margin: var(--admin-space-sm) var(--admin-space-sm) 0;
+    padding: var(--admin-space-sm) var(--admin-space-md);
+    grid-template-columns: 1fr auto;
   }
 
   .page-title {
-    font-size: var(--admin-text-2xl);
+    font-size: var(--admin-text-xl);
   }
 
-  .admin-shell-layout--dashboard .admin-sidebar {
-    width: 100%;
-    padding: var(--admin-space-xs);
+  /* Escala del dashboard 25% menor en móvil */
+  .admin-shell-layout--dashboard {
+    --admin-dashboard-scale: 0.48;
   }
 
-  .admin-shell-layout--dashboard .admin-main {
-    margin-left: 0;
-    height: 100vh;
+  /* Ocultar reloj en topbar móvil — demasiado espacio */
+  .admin-dashboard-topbar-clock {
+    display: none;
   }
 
-  .admin-shell-layout--dashboard .sidebar-nav--dashboard-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* Topbar dashboard: una sola columna en móvil */
+  .admin-shell-layout--dashboard .admin-topbar {
+    grid-template-columns: 1fr auto;
   }
 
-  .admin-shell-layout--dashboard .sidebar-footer {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Ocultar user badge y buscador en topbar móvil */
+  .user-badge,
+  .topbar-actions :deep(.admin-global-search) {
+    display: none;
+  }
+
+  .topbar-actions {
+    min-width: 0;
+    width: auto;
+  }
+
+  /* Padding del contenido más ajustado */
+  .admin-content {
+    padding: var(--admin-space-md);
+  }
+
+  .admin-shell-layout--dashboard .admin-content {
+    padding: var(--admin-space-sm);
   }
 }
 </style>

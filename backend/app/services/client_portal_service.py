@@ -512,6 +512,90 @@ def get_repair_details_payload(db: Session, user_id: int, repair_id: int) -> dic
     }
 
 
+def get_repair_progress_payload(db: Session, user_id: int, repair_id: int) -> dict:
+    """
+    Progreso completo de una OT para el portal cliente.
+    Combina: timeline de estados + fotos visibles + notas cliente + horas Clockify.
+    Marca progress_last_viewed_at = now() en la reparación (flag de lectura).
+    """
+    from app.services.clockify_service import ClockifyService
+
+    user_obj = get_client_user_or_404(db, user_id)
+    client = ensure_client(db, user_obj)
+    repair = _get_client_repair_or_404(db, client.id, repair_id)
+
+    # Fotos visibles al cliente
+    photos = (
+        db.query(RepairPhoto)
+        .filter(RepairPhoto.repair_id == repair.id, RepairPhoto.visible_to_client == 1)
+        .order_by(RepairPhoto.sort_order.asc(), RepairPhoto.created_at.asc())
+        .all()
+    )
+
+    # Notas visibles al cliente (excluye "internal")
+    notes = (
+        db.query(RepairNote)
+        .filter(RepairNote.repair_id == repair.id, RepairNote.note_type != "internal")
+        .order_by(RepairNote.created_at.asc())
+        .all()
+    )
+
+    # Horas Clockify
+    clockify_seconds = 0
+    if repair.clockify_project_id:
+        try:
+            clockify_seconds = ClockifyService().get_project_total_seconds(repair.clockify_project_id)
+        except Exception:
+            pass
+
+    # Marcar como visto (flag de lectura)
+    repair.progress_last_viewed_at = datetime.utcnow()
+    db.commit()
+
+    raw_code = status_code(repair)
+    normalized = normalize_status_code(raw_code)
+
+    return {
+        "repair": {
+            "id": repair.id,
+            "repair_number": repair.repair_number,
+            "repair_code": _resolved_repair_code(repair, client.id),
+            "instrument": device_label(db, repair.device),
+            "status": raw_code,
+            "status_normalized": normalized,
+            "progress_pct": status_progress(normalized),
+            "problem_reported": repair.problem_reported,
+            "diagnosis": repair.diagnosis,
+            "work_performed": repair.work_performed,
+            "clockify_seconds": clockify_seconds,
+            "clockify_hours": round(clockify_seconds / 3600, 2) if clockify_seconds else 0,
+        },
+        "timeline": timeline_from_repair(repair),
+        "photos": [
+            {
+                "id": p.id,
+                "photo_url": p.photo_url if settings.enable_public_uploads else None,
+                "photo_download_url": f"/api/v1/files/repair-photos/{p.id}"
+                if not settings.enable_public_uploads
+                else None,
+                "photo_type": p.photo_type,
+                "caption": p.caption,
+                "created_at": p.created_at,
+            }
+            for p in photos
+        ],
+        "notes": [
+            {
+                "id": n.id,
+                "note": n.note,
+                "note_type": n.note_type,
+                "created_at": n.created_at,
+            }
+            for n in notes
+        ],
+    }
+
+
 def build_client_closure_pdf_payload(
     db: Session,
     user_id: int,

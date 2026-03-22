@@ -8,7 +8,7 @@
     </div>
 
     <div v-if="showPhotoUpload" class="form-grid two-cols panel-nested">
-      <label class="full"><span>Archivo</span><input type="file" accept="image/*" @change="emit('file-selected', $event)" /></label>
+      <label class="full"><span>Archivo</span><input type="file" accept="image/*" capture="environment" @change="emit('file-selected', $event)" /></label>
       <label>
         <span>Tipo</span>
         <select :value="newPhotoType" @change="emit('update-photo-field', { field: 'newPhotoType', value: $event.target.value })">

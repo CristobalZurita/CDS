@@ -67,6 +67,9 @@ class Repair(Base):
     # Integración Clockify (aditivo)
     clockify_project_id = Column(String, nullable=True, index=True)
 
+    # Portal progreso cliente: cuándo vio por última vez el progreso de su OT
+    progress_last_viewed_at = Column(DateTime, nullable=True)
+
     # Firmas (ingreso/retiro)
     signature_ingreso_path = Column(Text, nullable=True)
     signature_retiro_path = Column(Text, nullable=True)

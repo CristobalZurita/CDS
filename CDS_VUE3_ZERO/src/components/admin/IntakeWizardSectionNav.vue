@@ -206,8 +206,14 @@ const fillScale = computed(() => String(scrollProgress.value / 100))
 }
 
 @media (max-width: 768px) {
+  /* Mantener sticky — position: relative lo rompía */
   .wizard-section-bar {
-    position: relative;
+    position: sticky;
+    /* compensar el padding reducido de admin-content en móvil */
+    margin-left: calc(-1 * var(--admin-space-md, 1.2rem));
+    margin-right: calc(-1 * var(--admin-space-md, 1.2rem));
+    padding-left: var(--admin-space-md, 1.2rem);
+    padding-right: var(--admin-space-md, 1.2rem);
   }
 
   .wizard-bar-meta {

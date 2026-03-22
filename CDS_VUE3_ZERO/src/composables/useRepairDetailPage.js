@@ -28,6 +28,7 @@ export function useRepairDetailPage() {
   const timeline = ref([])
   const photos = ref([])
   const notes = ref([])
+  const clockifyHours = ref(0)
 
   const isLoading = ref(false)
   const loadingError = ref('')
@@ -39,7 +40,8 @@ export function useRepairDetailPage() {
     repair: repair.value,
     timeline: timeline.value,
     photos: photos.value,
-    notes: notes.value
+    notes: notes.value,
+    clockify_hours: clockifyHours.value,
   }))
 
   function formatPrice(value) {
@@ -65,6 +67,7 @@ export function useRepairDetailPage() {
     timeline.value = []
     photos.value = []
     notes.value = []
+    clockifyHours.value = 0
   }
 
   async function loadDetail() {
@@ -74,7 +77,7 @@ export function useRepairDetailPage() {
     loadingError.value = ''
 
     try {
-      const response = await api.get(`/client/repairs/${repairId.value}/details`)
+      const response = await api.get(`/client/repairs/${repairId.value}/progress`)
       const payload = response?.data || {}
 
       repair.value = payload.repair || null
@@ -86,6 +89,7 @@ export function useRepairDetailPage() {
         }))
         : []
       notes.value = Array.isArray(payload.notes) ? payload.notes : []
+      clockifyHours.value = payload.repair?.clockify_hours ?? 0
     } catch (error) {
       loadingError.value = extractErrorMessage(error)
       clearDetail()

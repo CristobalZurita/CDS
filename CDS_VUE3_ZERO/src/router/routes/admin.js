@@ -19,6 +19,7 @@ const IntakeWizardPage = () => import('@/pages/admin/IntakeWizardPage.vue')
 const ArchivePage = () => import('@/pages/admin/ArchivePage.vue')
 const MediaPage = () => import('@/pages/admin/MediaPage.vue')
 const LeadsAdminPage = () => import('@/pages/admin/LeadsAdminPage.vue')
+const MobileFotoFirmaPage = () => import('@/pages/admin/MobileFotoFirmaPage.vue')
 
 export const adminRoutes = [
   {
@@ -66,6 +67,8 @@ export const adminRoutes = [
         meta: { title: 'Gestión de Medios' } },
       { path: 'leads', name: 'admin-leads', component: LeadsAdminPage,
         meta: { title: 'Prospectos', subtitle: 'Leads del cotizador público' } },
+      { path: 'foto-firma', name: 'admin-foto-firma', component: MobileFotoFirmaPage,
+        meta: { title: 'Foto / Firma', subtitle: 'Agregar fotos y firma a OT activa' } },
     ]
   }
 ]

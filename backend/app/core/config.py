@@ -133,10 +133,32 @@ class Settings(BaseModel):
         "premium": 2.0,  # > 5000000 CLP
     }
 
-    # Gemini AI — Chat inteligente web
+    # ── Chat inteligente — cascada multi-proveedor ──────────────────────────
+    # Gemini (Google)
     gemini_api_key: Optional[str] = os.getenv("GEMINI_API_KEY")
-    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-lite")
+    # Groq (free tier: llama, gemma, mixtral)
+    groq_api_key: Optional[str] = os.getenv("GROQ_API_KEY")
+    # Mistral AI (free tier: mistral-small, open-mistral-7b)
+    mistral_api_key: Optional[str] = os.getenv("MISTRAL_API_KEY")
     chat_max_turns: int = int(os.getenv("CHAT_MAX_TURNS", "20"))
+    # Cascada: formato "proveedor:modelo" — se intenta en orden.
+    # Las entradas sin API key configurada se saltan automáticamente.
+    chat_model_cascade: list = [
+        m.strip() for m in os.getenv(
+            "CHAT_MODEL_CASCADE",
+            "gemini:gemini-2.0-flash-lite,"
+            "groq:llama-3.1-8b-instant,"
+            "groq:llama-3.3-70b-versatile,"
+            "mistral:mistral-small-latest,"
+            "gemini:gemini-2.0-flash,"
+            "gemini:gemini-2.5-flash"
+        ).split(",") if m.strip()
+    ]
+
+    # ── Google Calendar Configuration ──────────────────────────
+    google_calendar_credentials_file: Optional[str] = os.getenv("GOOGLE_CALENDAR_CREDENTIALS_FILE")
+    google_calendar_id: str = os.getenv("GOOGLE_CALENDAR_ID", "primary")
 
 
 # Instantiate settings with environment variables

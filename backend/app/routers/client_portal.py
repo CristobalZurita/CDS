@@ -15,6 +15,7 @@ from app.services.client_portal_service import (
     get_dashboard_payload,
     get_profile_payload,
     get_repair_details_payload,
+    get_repair_progress_payload,
     get_repair_timeline_payload,
     initiate_client_checkout_payload,
     list_client_purchase_requests_payload,
@@ -50,6 +51,19 @@ def get_repair_timeline(
     user: dict = Depends(require_permission("repairs", "read")),
 ):
     return get_repair_timeline_payload(db, int(user["user_id"]), repair_id)
+
+
+@router.get("/repairs/{repair_id}/progress")
+def get_repair_progress(
+    repair_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read")),
+):
+    """
+    Progreso completo de una OT: timeline + fotos + notas + horas Clockify.
+    Marca progress_last_viewed_at al llamarse (flag de lectura del cliente).
+    """
+    return get_repair_progress_payload(db, int(user["user_id"]), repair_id)
 
 
 @router.get("/repairs/{repair_id}/details")

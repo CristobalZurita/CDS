@@ -58,7 +58,9 @@ async function initAutocomplete(inputEl, onPlace, opts = {}) {
   }
 
   const options = {
-    componentRestrictions: { country: 'cl' },
+    componentRestrictions: { 
+      country: import.meta.env.VITE_GOOGLE_MAPS_COUNTRY || 'cl' 
+    },
     fields: ['formatted_address', 'address_components', 'geometry'],
     ...opts,
   }

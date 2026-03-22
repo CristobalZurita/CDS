@@ -32,6 +32,12 @@ export default defineConfig(({ mode }) => {
     server: {
       host: '0.0.0.0',
       port: 5174,
+      cors: {
+        origin: true,
+        credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      },
       proxy: {
         '/api': {
           target: 'http://127.0.0.1:8000',

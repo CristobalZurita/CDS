@@ -1,10 +1,10 @@
 """
-Orquesta la llamada a Gemini y detecta el marker de derivación [HANDOFF:X].
+Orquesta la llamada a la cascada multi-proveedor y detecta el marker [HANDOFF:X].
 """
 
 import re
 
-from app.core.gemini_client import send_chat
+from app.core.llm_cascade import send_chat
 from app.core.chat_context import get_handoff_url
 
 _HANDOFF_RE = re.compile(r"\[HANDOFF:(whatsapp|email)\]?", re.IGNORECASE)

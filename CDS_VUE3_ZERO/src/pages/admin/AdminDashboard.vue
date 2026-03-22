@@ -1,6 +1,19 @@
 <template>
   <div class="admin-dashboard-page">
     <p v-if="error" class="admin-error">{{ error }}</p>
+
+    <!-- Acceso rapido movil: solo visible en pantallas pequeñas -->
+    <section class="mobile-quick-actions">
+      <router-link class="mobile-qa-btn mobile-qa-btn--primary" to="/admin/intake">
+        <i class="fa-solid fa-plus"></i>
+        <span>Nueva OT</span>
+      </router-link>
+      <router-link class="mobile-qa-btn mobile-qa-btn--secondary" to="/admin/foto-firma">
+        <i class="fa-solid fa-camera"></i>
+        <span>Foto / Firma</span>
+      </router-link>
+    </section>
+
     <section v-if="isLoading" class="panel-card"><p class="empty-state">Cargando indicadores...</p></section>
     <template v-else>
       <section class="admin-dashboard-hero">

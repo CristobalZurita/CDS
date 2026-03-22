@@ -11,6 +11,8 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 from app.core.business_config import business_config
+from app.core.timezone import BUSINESS_TIMEZONE
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -64,11 +66,11 @@ class GoogleCalendarService:
                 'description': description,
                 'start': {
                     'dateTime': start_time.isoformat(),
-                    'timeZone': 'America/Santiago'  # Chile timezone
+                    'timeZone': BUSINESS_TIMEZONE
                 },
                 'end': {
                     'dateTime': end_time.isoformat(),
-                    'timeZone': 'America/Santiago'
+                    'timeZone': BUSINESS_TIMEZONE
                 }
             }
             
@@ -108,12 +110,12 @@ class GoogleCalendarService:
         if start_time is not None:
             event['start'] = {
                 'dateTime': start_time.isoformat(),
-                'timeZone': 'America/Santiago',
+                'timeZone': BUSINESS_TIMEZONE,
             }
         if end_time is not None:
             event['end'] = {
                 'dateTime': end_time.isoformat(),
-                'timeZone': 'America/Santiago',
+                'timeZone': BUSINESS_TIMEZONE,
             }
         if attendee_email is not None:
             event['attendees'] = [{'email': attendee_email}]
@@ -200,12 +202,12 @@ async def sync_to_google_calendar(appointment) -> Optional[str]:
         if not service:
             return None
         
-        # Get calendar ID from environment or use primary
-        calendar_id = os.getenv('GOOGLE_CALENDAR_ID', 'primary')
+        # Get calendar ID from settings
+        calendar_id = settings.google_calendar_id
         
-        # Create end time (1 hour after start)
-        from datetime import timedelta
-        end_time = appointment.fecha + timedelta(hours=1)
+        # Calculate end time using the same logic as appointment.py
+        from app.routers.appointment import _appointment_end_time
+        end_time = _appointment_end_time(appointment)
         
         # Create calendar event
         event_id = service.create_event(

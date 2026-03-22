@@ -3,6 +3,7 @@ Clockify Service for OT integration (aditivo, no destructivo)
 """
 import os
 import requests
+from datetime import datetime
 from typing import Optional
 from app.core.config import settings
 
@@ -54,11 +55,80 @@ class ClockifyService:
             return resp.json().get("id")
         return None
 
-    def get_project_time_entries(self, project_id: str):
+    def start_time_entry(self, project_id: str, description: str = "Trabajo en OT") -> Optional[str]:
+        """Iniciar time entry para proyecto Clockify"""
+        return self.create_time_entry(project_id, description, datetime.utcnow().isoformat())
+
+    def stop_current_time_entry(self, project_id: str) -> bool:
+        """Detener time entry activo en proyecto"""
+        workspace_id = self.get_workspace_id()
+        if not workspace_id:
+            return False
+
+        # Buscar time entry activo (sin end)
+        resp = requests.get(
+            f"{self.base_url}/workspaces/{workspace_id}/user/time-entries",
+            headers=self.headers,
+            params={"project": project_id}
+        )
+        if resp.ok:
+            entries = resp.json()
+            active_entry = next((e for e in entries if not e.get("timeInterval", {}).get("end")), None)
+            if active_entry:
+                entry_id = active_entry["id"]
+                update_resp = requests.put(
+                    f"{self.base_url}/workspaces/{workspace_id}/time-entries/{entry_id}",
+                    json={"end": datetime.utcnow().isoformat()},
+                    headers=self.headers
+                )
+                return update_resp.ok
+        return False
+
+    def get_project_time_entries(self, project_id: str) -> list:
+        """Obtener todas las entradas de tiempo de un proyecto Clockify"""
         workspace_id = self.get_workspace_id()
         if not workspace_id:
             return []
-        resp = requests.get(f"{self.base_url}/workspaces/{workspace_id}/projects/{project_id}/time-entries", headers=self.headers)
+        resp = requests.get(
+            f"{self.base_url}/workspaces/{workspace_id}/user/time-entries",
+            headers=self.headers,
+            params={"project": project_id, "page-size": 500},
+        )
         if resp.ok:
             return resp.json()
         return []
+
+    def get_project_total_seconds(self, project_id: str) -> int:
+        """Suma total de segundos trabajados en un proyecto Clockify"""
+        entries = self.get_project_time_entries(project_id)
+        total = 0
+        for entry in entries:
+            duration = entry.get("timeInterval", {}).get("duration")
+            if not duration:
+                continue
+            # ISO 8601 duration: PT1H30M, PT45M, etc.
+            try:
+                import re
+                h = int((re.search(r"(\d+)H", duration) or type("", (), {"group": lambda s, n: 0})()).group(1) or 0)
+                m = int((re.search(r"(\d+)M", duration) or type("", (), {"group": lambda s, n: 0})()).group(1) or 0)
+                s = int((re.search(r"(\d+)S", duration) or type("", (), {"group": lambda s, n: 0})()).group(1) or 0)
+                total += h * 3600 + m * 60 + s
+            except Exception:
+                pass
+        return total
+
+    def get_active_time_entry(self, project_id: str) -> Optional[dict]:
+        """Obtener time entry activo en proyecto"""
+        workspace_id = self.get_workspace_id()
+        if not workspace_id:
+            return None
+
+        resp = requests.get(
+            f"{self.base_url}/workspaces/{workspace_id}/user/time-entries",
+            headers=self.headers,
+            params={"project": project_id}
+        )
+        if resp.ok:
+            entries = resp.json()
+            return next((e for e in entries if not e.get("timeInterval", {}).get("end")), None)
+        return None
