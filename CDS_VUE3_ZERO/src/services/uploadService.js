@@ -82,7 +82,7 @@ export function resolveUploadPublicId(file, destination = 'uploads', relativePat
   }
 
   const normalizedDestination = String(destination || 'uploads').trim().replace(/^\/+|\/+$/g, '')
-  const destinationPrefix = DESTINATION_PREFIXES[normalizedDestination] || DESTINATION_PREFIXES.uploads
+  const destinationPrefix = DESTINATION_PREFIXES[normalizedDestination] || normalizedDestination
   const fileName = String(file?.name || '').trim()
   if (!fileName) return ''
   return localPathToPublicId(`/images/${destinationPrefix}/${fileName}`)

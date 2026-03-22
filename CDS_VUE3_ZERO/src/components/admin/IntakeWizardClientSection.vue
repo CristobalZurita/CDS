@@ -38,15 +38,23 @@
         @blur="$emit('validate-field', 'client.email', client.email)"
       />
 
-      <FormField
-        v-model="client.phone"
-        type="tel"
-        label="Teléfono / WhatsApp"
-        placeholder="+56912345678"
-        :error="errors['client.phone']"
-        required
-        @blur="$emit('validate-field', 'client.phone', client.phone)"
-      />
+      <div class="field-phone-wrap">
+        <label class="field-phone-label">Teléfono / WhatsApp <span class="req">*</span></label>
+        <div class="field-phone-input" :class="{ 'has-error': errors['client.phone'] }">
+          <span class="phone-prefix">+569</span>
+          <input
+            :value="phoneDigits"
+            type="tel"
+            inputmode="numeric"
+            maxlength="8"
+            placeholder="12345678"
+            class="phone-digits"
+            @input="onPhoneInput"
+            @blur="$emit('validate-field', 'client.phone', client.phone)"
+          />
+        </div>
+        <span v-if="errors['client.phone']" class="field-phone-error">{{ errors['client.phone'] }}</span>
+      </div>
 
       <FormField
         v-model="client.phone_alt"
@@ -97,9 +105,9 @@
         <FormField
           v-model="client.tax_id"
           label="RUT"
-          placeholder="12.345.678-9"
+          placeholder="12345678-9"
           :error="errors['client.tax_id']"
-          @blur="$emit('validate-field', 'client.tax_id', client.tax_id)"
+          @blur="onRutBlur"
         />
 
         <FormField
@@ -129,8 +137,17 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
+
+function formatRut(raw) {
+  const cleaned = String(raw).replace(/[^0-9kK]/g, '').toUpperCase()
+  if (cleaned.length < 2) return cleaned
+  const dv = cleaned.slice(-1)
+  const num = cleaned.slice(0, -1)
+  return num.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '-' + dv
+}
 import { FormField } from '@/components/composite'
+import { getRegionForCity } from '@/utils/chileRegions'
 
 const props = defineProps({
   client: {
@@ -180,8 +197,100 @@ const selectedClientIdModel = computed({
     }
   }
 })
+
+// Teléfono: prefijo +569 fijo, solo los 8 dígitos son editables
+const phoneDigits = computed(() => {
+  const val = String(props.client.phone || '')
+  return val.replace(/^\+?569?/, '')
+})
+function onPhoneInput(e) {
+  const digits = String(e.target.value).replace(/\D/g, '').slice(0, 8)
+  props.client.phone = '+569' + digits
+}
+
+// RUT: mientras escribe solo dígitos y K — no tocar si ya tiene formato (. o -)
+watch(
+  () => props.client.tax_id,
+  (val) => {
+    if (!val || val.includes('.') || val.includes('-')) return
+    const stripped = String(val).replace(/[^0-9kK]/g, '').toUpperCase()
+    if (stripped !== val) props.client.tax_id = stripped
+  }
+)
+
+function onRutBlur() {
+  if (props.client.tax_id) {
+    props.client.tax_id = formatRut(props.client.tax_id)
+  }
+  emit('validate-field', 'client.tax_id', props.client.tax_id)
+}
+
+// Auto-completar región al escribir ciudad
+watch(
+  () => props.client.city,
+  (city) => {
+    const region = getRegionForCity(city)
+    if (region) {
+      props.client.region = region
+    }
+  }
+)
 </script>
 
 <style scoped>
 @import './intakeWizardSection.css';
+
+.field-phone-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.field-phone-label {
+  font-size: var(--cds-text-sm);
+  font-weight: 600;
+  color: var(--cds-text-muted);
+}
+.field-phone-label .req { color: var(--cds-primary); }
+.field-phone-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--cds-border-card);
+  border-radius: var(--cds-radius-md);
+  overflow: hidden;
+  background: var(--cds-white);
+  height: 2.75rem;
+}
+.field-phone-input:focus-within {
+  border-color: var(--cds-primary);
+}
+.field-phone-input.has-error {
+  border-color: var(--cds-invalid-border, #dc2626);
+}
+.phone-prefix {
+  padding: 0 0.65rem;
+  font-size: var(--cds-text-sm);
+  font-weight: 600;
+  color: var(--cds-text-muted);
+  background: var(--cds-light-1);
+  border-right: 1px solid var(--cds-border-card);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  white-space: nowrap;
+}
+.phone-digits {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0 0.75rem;
+  font-size: 1rem;
+  background: transparent;
+  color: var(--cds-text-normal);
+  height: 100%;
+}
+.field-phone-error {
+  font-size: var(--cds-text-xs);
+  color: var(--cds-invalid-text, #dc2626);
+}
 </style>

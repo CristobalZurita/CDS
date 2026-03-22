@@ -133,6 +133,11 @@ class Settings(BaseModel):
         "premium": 2.0,  # > 5000000 CLP
     }
 
+    # Gemini AI — Chat inteligente web
+    gemini_api_key: Optional[str] = os.getenv("GEMINI_API_KEY")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    chat_max_turns: int = int(os.getenv("CHAT_MAX_TURNS", "20"))
+
 
 # Instantiate settings with environment variables
 settings = Settings()

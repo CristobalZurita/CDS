@@ -27,7 +27,11 @@ def _normalize_public_id_candidate(value: str) -> str:
     if not normalized:
         return ""
     parts = normalized.split("/")
-    parts[-1] = Path(parts[-1]).stem
+    # Strip ALL extensions (handles double extensions like .jpg.webp)
+    stem = parts[-1]
+    while Path(stem).suffix:
+        stem = Path(stem).stem
+    parts[-1] = stem
     return "/".join(part for part in parts if part)
 
 

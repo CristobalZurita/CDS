@@ -1,0 +1,24 @@
+@url = http://127.0.0.1:8000/api
+
+### Register
+
+POST {{url}}/register
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "Mr. Admin",
+    "email": "admin@gmail.com",
+    "password": "password",
+    "password_confirmation": "password"
+}
+
+### Login
+POST {{url}}/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password" : "password"
+}

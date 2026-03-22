@@ -1,0 +1,32 @@
+models:
+  ProductAttribute:
+    hasMany: ProductAttributeValue
+
+  ProductAttributeValue:
+    attribute_id: id foreign:product_attributes.id onDelete:cascade
+    value: string
+    display_value: string nullable
+    color_code: string nullable
+    deleted_at: softDeletes
+
+controllers:
+  ProductAttributeValue:
+    store:
+      validate:
+        - attribute_id
+        - value
+        - display_value
+        - color_code
+      save: productAttributeValue
+      redirect: product-attributes.show
+
+    update:
+      validate:
+        - value
+        - display_value
+        - color_code
+      update: productAttributeValue
+      redirect: product-attributes.show
+
+
+inertia_vue:

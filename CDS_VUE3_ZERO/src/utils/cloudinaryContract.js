@@ -24,7 +24,7 @@ export function localPathToPublicId(localPath) {
     ? normalized.slice(LOCAL_IMAGE_PREFIX.length)
     : normalized.replace(/^\/+/, '')
 
-  return withoutPrefix.replace(/\.[^.]+$/, '')
+  return withoutPrefix.replace(/(\.[^.]+)+$/, '')
 }
 
 export function encodePublicId(publicId) {

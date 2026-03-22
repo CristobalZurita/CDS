@@ -194,7 +194,7 @@ const FEATURED_PRODUCT_IMAGE_OVERRIDES = {
   'RES-10K-THT-AXIAL-0P25W':            '/images/INVENTARIO/RESISTENCIA.webp',
   'CAPE-1U-50P0V':                       '/images/INVENTARIO/CAPACITOR_ELECTROLITICO.webp',
   'OTROS-BOTON_PULSADOR_6X6X10MM_2PIN': _CLOUD
-    ? `https://res.cloudinary.com/${_CLOUD}/image/upload/INVENTARIO/PULSADOR_6X6_2_PIN.jpg.webp`
+    ? `https://res.cloudinary.com/${_CLOUD}/image/upload/INVENTARIO/PULSADOR_6X6_2_PIN.webp`
     : '',
   'TRANSISTORES-LM7805':                 '/images/INVENTARIO/TRANSISTOR_TO220.webp',
 }
@@ -245,7 +245,10 @@ export async function searchStoreCatalog(query, { isAuthenticated = false, categ
 export async function loadStoreFeaturedSnapshot({ isAuthenticated = false } = {}) {
   try {
     const rows = await fetchFeaturedProducts({ isAuthenticated })
-    return { rows, error: '' }
+    if (rows.length > 0) return { rows, error: '' }
+    // Los SKUs destacados no existen aún en esta DB — mostrar los primeros del catálogo público
+    const fallback = await fetchStoreCatalog({ isAuthenticated, limit: STORE_FEATURED_LIMIT })
+    return { rows: fallback, error: '' }
   } catch (requestError) {
     const cached = readStoreCatalogCache()
     if (cached.length > 0) {

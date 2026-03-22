@@ -40,6 +40,45 @@ export function useOtPaymentsPage() {
     return hasPaymentRequest && paymentMethod === 'transfer' && ['pending_payment', 'proof_submitted'].includes(status)
   }
 
+  function canPayOnline(request) {
+    const status = normalizeStatus(request?.status)
+    const payment = request?.latest_payment
+    if (!payment || Number(payment.id || 0) <= 0) return false
+    const paymentStatus = normalizeStatus(payment.status)
+    const paymentMethod = normalizeStatus(payment.payment_method)
+    return (
+      status === 'pending_payment' &&
+      paymentStatus === 'pending' &&
+      paymentMethod === 'transfer'
+    )
+  }
+
+  async function initiateGatewayPayment(request) {
+    const paymentId = request?.latest_payment?.id
+    if (!paymentId) return
+    setBusy(request.id, true)
+    error.value = ''
+    try {
+      const returnUrl = `${window.location.origin}/pago/resultado`
+      const notificationUrl = `${window.location.origin}/api/payment-gateway/mercadopago/ipn`
+      const res = await api.post('/client/checkout/initiate', {
+        payment_id: paymentId,
+        return_url: returnUrl,
+        notification_url: notificationUrl,
+      })
+      const initPoint = res?.data?.init_point || res?.data?.sandbox_init_point
+      if (initPoint) {
+        window.location.href = initPoint
+      } else {
+        error.value = 'No se pudo obtener el link de pago.'
+      }
+    } catch (err) {
+      error.value = extractErrorMessage(err)
+    } finally {
+      setBusy(request.id, false)
+    }
+  }
+
   function ensureForm(request) {
     if (!forms.value[request.id]) {
       forms.value[request.id] = {
@@ -151,11 +190,13 @@ export function useOtPaymentsPage() {
     forms,
     isBusy,
     canSubmitProof,
+    canPayOnline,
     toApiPath,
     formatCurrency,
     formatDate,
     onFileSelected,
     loadRequests,
-    submitProof
+    submitProof,
+    initiateGatewayPayment,
   }
 }

@@ -155,3 +155,17 @@ try:
 	api_router.include_router(payment_gateway_router.router)
 except Exception:
 	pass
+
+# ADITIVO: Checkout público de tienda con verificación de email
+try:
+	from app.routers import store_checkout as store_checkout_router
+	api_router.include_router(store_checkout_router.router)
+except Exception:
+	pass
+
+# ADITIVO: Chat inteligente web (Gemini Flash)
+try:
+	from app.routers import chat as chat_router
+	api_router.include_router(chat_router.router)
+except Exception:
+	pass

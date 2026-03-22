@@ -1,0 +1,63 @@
+<template>
+  <AppLayout :title="form.id ? `Edit {{ ModelName }}` : `Create {{ ModelName }}`">
+    <template #header>
+      <div class="flex justify-between">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+          {{ form.id ? `Edit {{ ModelName }}` : `Create {{ ModelName }}` }}
+        </h2>
+        <Link :href="route('{{ modelRouteName }}.index')" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
+          Back to List
+        </Link>
+      </div>
+    </template>
+
+    <div class="py-12">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+          <div class="p-6 bg-white border-b border-gray-200">
+            <form @submit.prevent="submit">
+              <{{ ModelName }}Form :form="form" />
+
+              <div class="flex items-center justify-end mt-4">
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                  :disabled="form.processing"
+                >
+                  {{ form.id ? 'Update' : 'Create' }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </AppLayout>
+</template>
+
+<script setup>
+import { Link, useForm } from '@inertiajs/vue3';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import {{ ModelName }}Form from './Form.vue';
+
+const props = defineProps({
+  {{ modelName }}: {
+    type: Object,
+    default: () => ({})
+  }
+});
+
+const form = useForm({
+  id: props.{{ modelName }}.id || null,
+  // Add all form fields based on your model
+  ...props.{{ modelName }}
+});
+
+const submit = () => {
+  if (form.id) {
+    form.put(route('{{ modelRouteName }}.update', form.id));
+  } else {
+    form.post(route('{{ modelRouteName }}.store'));
+  }
+};
+</script>

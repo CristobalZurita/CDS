@@ -62,7 +62,11 @@ export function useStorePage() {
     })
   })
 
-  const availableCategories = computed(() => listStoreCategories(catalog.value))
+  // Usa el índice completo si ya está disponible; si no, lo que hay en catalog.
+  // Así las categorías aparecen aunque el modo featured tenga 0 resultados.
+  const availableCategories = computed(() =>
+    listStoreCategories(catalogIndex.value.length > 0 ? catalogIndex.value : catalog.value)
+  )
 
   const activeSortKey = computed(() => {
     if (selectedSort.value !== 'featured') return selectedSort.value

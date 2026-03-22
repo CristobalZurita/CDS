@@ -61,13 +61,8 @@ export const INTAKE_WIZARD_VALIDATION_CONFIG = {
     numbersOnly: true,
     message: 'Monto de abono invalido'
   },
-  'intake.equipment_name': {
-    required: true,
-    message: 'Nombre del equipo es obligatorio'
-  },
   'intake.failure_cause': {
-    required: true,
-    message: 'Causa del problema es obligatoria'
+    required: false
   }
 }
 
@@ -76,7 +71,7 @@ function createDefaultClient() {
     id: null,
     name: '',
     email: '',
-    phone: '',
+    phone: '+569',
     phone_alt: '',
     address: '',
     city: '',
@@ -191,7 +186,6 @@ export function buildIntakeWizardValidationValues(form) {
     'repair.problem_reported': form.repair.problem_reported,
     'repair.priority': form.repair.priority,
     'repair.paid_amount': form.repair.paid_amount,
-    'intake.equipment_name': form.intake.equipment_name,
     'intake.failure_cause': form.intake.failure_cause
   }
 }

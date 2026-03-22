@@ -47,6 +47,9 @@
     <main class="admin-main">
       <!-- Top bar contextual -->
       <header class="admin-topbar">
+        <div class="topbar-scroll-track">
+          <div class="topbar-scroll-fill"></div>
+        </div>
         <template v-if="isDashboardRoute">
           <div class="admin-dashboard-topbar-clock">
             <strong class="admin-dashboard-topbar-time">{{ dashboardClockTime }}</strong>
@@ -77,7 +80,7 @@
       </header>
 
       <!-- Área de contenido -->
-      <div class="admin-content">
+      <div class="admin-content" ref="scrollContainer">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <keep-alive :include="keepAlivePages">
@@ -95,6 +98,17 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AdminGlobalSearch from '@/components/admin/AdminGlobalSearch.vue'
 import { useAuthStore } from '@/stores/auth'
+
+const scrollContainer = ref(null)
+const scrollProgress = ref(0)
+const scrollFillScale = computed(() => String(scrollProgress.value / 100))
+
+function onAdminScroll() {
+  const el = scrollContainer.value
+  if (!el) return
+  const max = el.scrollHeight - el.clientHeight
+  scrollProgress.value = max > 0 ? (el.scrollTop / max) * 100 : 0
+}
 
 const route = useRoute()
 const router = useRouter()
@@ -148,8 +162,8 @@ const dashboardClockDate = computed(() => {
   }).format(now.value)
 })
 
-const handleLogout = () => {
-  authStore.logout()
+const handleLogout = async () => {
+  await authStore.logout()
   router.push('/login')
 }
 
@@ -157,11 +171,17 @@ onMounted(() => {
   clockTimer = window.setInterval(() => {
     now.value = new Date()
   }, 30000)
+  if (scrollContainer.value) {
+    scrollContainer.value.addEventListener('scroll', onAdminScroll, { passive: true })
+  }
 })
 
 onUnmounted(() => {
   if (clockTimer) {
     window.clearInterval(clockTimer)
+  }
+  if (scrollContainer.value) {
+    scrollContainer.value.removeEventListener('scroll', onAdminScroll)
   }
 })
 </script>
@@ -536,11 +556,13 @@ onUnmounted(() => {
   margin-left: var(--admin-sidebar-width);
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .admin-shell-layout--dashboard .admin-main {
   margin-left: clamp(16rem, 14rem + 3vw, 19rem);
+  height: 100vh;
 }
 
 .admin-topbar {
@@ -553,6 +575,27 @@ onUnmounted(() => {
   position: sticky;
   top: 0;
   z-index: 50;
+  overflow: hidden;
+}
+
+.topbar-scroll-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: transparent;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.topbar-scroll-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--cds-primary);
+  transform: scaleX(v-bind(scrollFillScale));
+  transform-origin: left center;
+  transition: transform 0.1s linear;
 }
 
 .admin-shell-layout--dashboard .admin-topbar {
@@ -815,6 +858,7 @@ onUnmounted(() => {
 
   .admin-main {
     margin-left: var(--admin-sidebar-collapsed-width);
+    height: 100vh;
   }
 
   .admin-content {
@@ -831,6 +875,7 @@ onUnmounted(() => {
 
   .admin-shell-layout--dashboard .admin-main {
     margin-left: var(--admin-sidebar-collapsed-width);
+    height: 100vh;
   }
 
   .admin-shell-layout--dashboard .sidebar-nav--dashboard-grid,
@@ -902,6 +947,7 @@ onUnmounted(() => {
 
   .admin-main {
     margin-left: 0;
+    height: 100vh;
   }
 
   .admin-topbar {
@@ -919,6 +965,7 @@ onUnmounted(() => {
 
   .admin-shell-layout--dashboard .admin-main {
     margin-left: 0;
+    height: 100vh;
   }
 
   .admin-shell-layout--dashboard .sidebar-nav--dashboard-grid {

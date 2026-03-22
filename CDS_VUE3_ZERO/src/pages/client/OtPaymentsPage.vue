@@ -66,6 +66,17 @@
           </div>
         </div>
 
+        <div v-if="canPayOnline(request)" class="gateway-pay">
+          <button
+            class="btn-primary btn-pay-online"
+            :disabled="isBusy(request.id)"
+            @click="initiateGatewayPayment(request)"
+          >
+            <i class="fas fa-credit-card"></i>
+            {{ isBusy(request.id) ? 'Redirigiendo...' : 'Pagar ahora con Mercado Pago' }}
+          </button>
+        </div>
+
         <div v-if="canSubmitProof(request)" class="proof-form">
           <h3>Subir comprobante de deposito</h3>
           <div class="form-grid">
@@ -130,12 +141,14 @@ const {
   forms,
   isBusy,
   canSubmitProof,
+  canPayOnline,
   toApiPath,
   formatCurrency,
   formatDate,
   onFileSelected,
   loadRequests,
-  submitProof
+  submitProof,
+  initiateGatewayPayment,
 } = useOtPaymentsPage()
 </script>
 

@@ -51,6 +51,25 @@
   color: var(--admin-neo-ink, var(--cds-dark));
 }
 
+.destination-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.destination-custom {
+  min-height: var(--admin-control-min-height-sm, 40px);
+  border: 1px solid var(--admin-neo-line, var(--cds-border-input));
+  border-radius: 1.1rem;
+  padding: 0.4rem 0.75rem;
+  font-size: var(--admin-text-sm, var(--cds-text-sm));
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--admin-neo-ink, var(--cds-dark));
+  width: 220px;
+  font-family: var(--cds-font-family-mono, monospace);
+}
+
 .drop-zone {
   border: 2px dashed var(--cds-primary);
   border-radius: var(--admin-neo-radius-sm, var(--cds-radius-md));

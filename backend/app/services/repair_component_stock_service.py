@@ -55,24 +55,26 @@ class RepairComponentStockService:
         quantity: int,
         user_id: Optional[int],
         from_reserved: bool = False,
+        skip_stock_check: bool = False,
         notes: Optional[str] = None,
     ) -> RepairComponentUsage:
         repair = self._ensure_open_repair(repair_id)
         stock = self._get_stock_or_404(component_table, component_id)
 
-        available = stock.available_quantity
-        if from_reserved:
-            reserved_qty = stock.quantity_reserved or 0
-            if reserved_qty < quantity:
+        if not skip_stock_check:
+            available = stock.available_quantity
+            if from_reserved:
+                reserved_qty = stock.quantity_reserved or 0
+                if reserved_qty < quantity:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Reserva insuficiente. Reservado: {reserved_qty}, Requerido: {quantity}",
+                    )
+            elif available < quantity:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Reserva insuficiente. Reservado: {reserved_qty}, Requerido: {quantity}",
+                    detail=f"Stock insuficiente. Disponible: {available}, Requerido: {quantity}",
                 )
-        elif available < quantity:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Stock insuficiente. Disponible: {available}, Requerido: {quantity}",
-            )
 
         try:
             usage = RepairComponentUsage(
@@ -85,9 +87,10 @@ class RepairComponentStockService:
             )
             self.db.add(usage)
 
-            if from_reserved:
-                stock.quantity_reserved = max((stock.quantity_reserved or 0) - quantity, 0)
-            stock.quantity -= quantity
+            if not skip_stock_check:
+                if from_reserved:
+                    stock.quantity_reserved = max((stock.quantity_reserved or 0) - quantity, 0)
+                stock.quantity -= quantity
             stock.updated_at = datetime.utcnow()
 
             self.db.add(

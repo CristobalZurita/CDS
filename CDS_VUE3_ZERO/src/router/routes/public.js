@@ -10,6 +10,8 @@ const CalculatorsPage = () => import('@/pages/public/CalculatorsPage.vue')
 const SimulatorPage = () => import('@/pages/public/SimulatorPage.vue')
 const StorePage = () => import('@/pages/public/StorePage.vue')
 const CartPage = () => import('@/pages/public/CartPage.vue')
+const CheckEmailPage = () => import('@/pages/public/CheckEmailPage.vue')
+const StoreVerifyPage = () => import('@/pages/public/StoreVerifyPage.vue')
 
 export const publicRoutes = [
   {
@@ -26,7 +28,9 @@ export const publicRoutes = [
       { path: 'calculadoras', name: 'calculadoras', component: CalculatorsPage, meta: { requiresAuth: false } },
       { path: 'simulador', name: 'simulador', component: SimulatorPage, meta: { requiresAuth: false } },
       { path: 'tienda', name: 'tienda', component: StorePage, meta: { requiresAuth: false } },
-      { path: 'carrito', name: 'carrito', component: CartPage, meta: { requiresAuth: false } }
+      { path: 'carrito', name: 'carrito', component: CartPage, meta: { requiresAuth: false } },
+      { path: 'tienda/confirmar-email', name: 'check-email', component: CheckEmailPage, meta: { requiresAuth: false } },
+      { path: 'tienda/verificar/:token', name: 'store-verify', component: StoreVerifyPage, meta: { requiresAuth: false } }
     ]
   }
 ]

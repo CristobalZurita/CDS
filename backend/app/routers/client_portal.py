@@ -1,6 +1,6 @@
 from typing import Dict
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
@@ -16,6 +16,7 @@ from app.services.client_portal_service import (
     get_profile_payload,
     get_repair_details_payload,
     get_repair_timeline_payload,
+    initiate_client_checkout_payload,
     list_client_purchase_requests_payload,
     list_client_repairs_payload,
     submit_client_deposit_proof_record,
@@ -129,6 +130,28 @@ def create_store_purchase_request(
     user: dict = Depends(require_permission("repairs", "read")),
 ):
     return create_store_purchase_request_record(db, int(user["user_id"]), payload)
+
+
+@router.post("/checkout/initiate")
+def initiate_client_checkout(
+    payload: Dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read")),
+):
+    payment_id = payload.get("payment_id")
+    return_url = payload.get("return_url", "")
+    notification_url = payload.get("notification_url")
+    if not payment_id:
+        raise HTTPException(status_code=400, detail="payment_id es requerido")
+    if not return_url:
+        raise HTTPException(status_code=400, detail="return_url es requerido")
+    return initiate_client_checkout_payload(
+        db,
+        int(user["user_id"]),
+        int(payment_id),
+        return_url,
+        notification_url,
+    )
 
 
 @router.post("/purchase-requests/{request_id}/deposit-proof")

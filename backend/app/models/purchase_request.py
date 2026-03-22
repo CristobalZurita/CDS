@@ -3,7 +3,7 @@ PurchaseRequest models for internal cart/suggestions.
 ADITIVO: new tables.
 """
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, Text
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from datetime import datetime
 from app.core.database import Base
 
@@ -13,6 +13,7 @@ class PurchaseRequest(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     client_id = Column(Integer, ForeignKey("clients.id"), nullable=True, index=True)
+    lead_id = Column(Integer, ForeignKey("leads.id"), nullable=True, index=True)
     repair_id = Column(Integer, ForeignKey("repairs.id"), nullable=True, index=True)
     created_by = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
     status = Column(String(20), default="draft")  # draft | suggested | approved | purchased | received | cancelled
@@ -21,6 +22,7 @@ class PurchaseRequest(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     client = relationship("Client")
+    lead = relationship("Lead", backref=backref("purchase_requests", lazy="dynamic"))
     repair = relationship("Repair")
     creator = relationship("User", foreign_keys=[created_by])
     items = relationship("PurchaseRequestItem", back_populates="request", cascade="all, delete-orphan")

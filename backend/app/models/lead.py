@@ -2,7 +2,7 @@
 Lead model para capturar prospectos del cotizador público (NOT-clientes).
 """
 
-from sqlalchemy import Column, DateTime, Integer, JSON, String
+from sqlalchemy import Boolean, Column, DateTime, Integer, JSON, String
 from sqlalchemy.sql import func
 
 from app.core.database import Base
@@ -23,6 +23,11 @@ class Lead(Base):
 
     # Resultado del flujo canónico público (/quotations/estimate)
     quote_result = Column(JSON, nullable=True)  # {final_cost, base_cost, faults, ...}
+
+    # Verificación de email (tienda)
+    email_verified = Column(Boolean, default=False, nullable=False)
+    verification_token = Column(String(128), nullable=True, unique=True, index=True)
+    verification_token_expires_at = Column(DateTime(timezone=False), nullable=True)
 
     # Metadatos
     source = Column(String(50), default="cotizador", nullable=False)

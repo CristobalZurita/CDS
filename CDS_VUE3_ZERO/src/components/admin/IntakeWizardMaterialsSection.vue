@@ -1,71 +1,15 @@
 <template>
   <section id="materiales" class="form-section">
     <div class="section-header">
-      <h2>5. Materiales a Utilizar</h2>
-      <BaseButton
-        type="button"
-        variant="ghost"
-        size="sm"
-        @click="$emit('add-material')"
-      >
-        + Agregar material
-      </BaseButton>
+      <h2>5. Materiales</h2>
     </div>
-
-    <div v-if="materials.length === 0" class="empty-materials">
-      <p>No se han agregado materiales aún.</p>
-      <p class="hint">Puedes agregarlos ahora o más tarde desde la OT.</p>
-    </div>
-
-    <div v-for="(material, index) in materials" :key="material.id" class="material-item">
-      <div class="material-fields">
-        <FormField
-          v-model="material.sku"
-          label="SKU"
-          placeholder="Buscar por SKU..."
-          size="sm"
-        />
-
-        <FormField
-          v-model="material.quantity"
-          type="number"
-          label="Cantidad"
-          :min="1"
-          size="sm"
-        />
-
-        <FormField
-          v-model="material.notes"
-          label="Notas"
-          placeholder="Descripción..."
-          size="sm"
-        />
-      </div>
-
-      <BaseButton
-        type="button"
-        variant="ghost"
-        size="sm"
-        @click="$emit('remove-material', index)"
-      >
-        🗑️
-      </BaseButton>
+    <div class="materials-info">
+      <p>Los materiales y componentes se registran desde la OT una vez iniciado el trabajo, con stock en tiempo real del inventario.</p>
     </div>
   </section>
 </template>
 
 <script setup>
-import { BaseButton } from '@/components/base'
-import { FormField } from '@/components/composite'
-
-defineProps({
-  materials: {
-    type: Array,
-    default: () => []
-  }
-})
-
-defineEmits(['add-material', 'remove-material'])
 </script>
 
 <style scoped>

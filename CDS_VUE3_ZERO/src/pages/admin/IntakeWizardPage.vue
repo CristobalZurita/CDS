@@ -1,9 +1,12 @@
 <template>
   <main class="intake-wizard-page">
-    <IntakeWizardHeader
+    <IntakeWizardSectionNav
+      :sections="sections"
+      :active-section="activeSection"
+      :progress="progress"
       :next-client-code="nextClientCode"
       :next-ot-code="nextOtCode"
-      :progress="progress"
+      @navigate="scrollToSection"
     />
 
     <IntakeWizardErrorBanner
@@ -12,7 +15,7 @@
     />
 
     <!-- Formulario scroll único -->
-    <form class="wizard-form" @submit.prevent="handleSubmit">
+    <form class="wizard-form" @submit.prevent="handleSubmit" @focusin="onFocusIn">
       <IntakeWizardClientSection
         v-model:use-existing-client="useExistingClient"
         v-model:selected-client-id="selectedClientId"
@@ -55,12 +58,6 @@
       />
     </form>
 
-    <IntakeWizardSectionNav
-      :sections="sections"
-      :active-section="activeSection"
-      @navigate="scrollToSection"
-    />
-
     <BaseConfirmDialog
       :open="showResetDialog"
       title="Limpiar formulario"
@@ -78,7 +75,6 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import IntakeWizardErrorBanner from '@/components/admin/IntakeWizardErrorBanner.vue'
 import IntakeWizardFormActions from '@/components/admin/IntakeWizardFormActions.vue'
-import IntakeWizardHeader from '@/components/admin/IntakeWizardHeader.vue'
 import IntakeWizardClientSection from '@/components/admin/IntakeWizardClientSection.vue'
 import IntakeWizardDeviceSection from '@/components/admin/IntakeWizardDeviceSection.vue'
 import IntakeWizardMaterialsSection from '@/components/admin/IntakeWizardMaterialsSection.vue'
@@ -134,7 +130,7 @@ const sections = [
   { id: 'cliente', label: 'Cliente' },
   { id: 'equipo', label: 'Equipo' },
   { id: 'ot', label: 'OT' },
-  { id: 'operaciones', label: 'Operaciones' },
+  { id: 'operaciones', label: 'Planificación' },
   { id: 'materiales', label: 'Materiales' }
 ]
 
@@ -183,6 +179,13 @@ function scrollToSection(sectionId) {
   }
 }
 
+// Centrar viewport en el campo enfocado al navegar con Tab
+function onFocusIn(e) {
+  const target = e.target
+  if (!target || !['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return
+  target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
+}
+
 // Scroll spy
 onMounted(async () => {
   const observer = new IntersectionObserver(
@@ -218,13 +221,13 @@ onUnmounted(() => _cleanupAddressAc())
 
 <style scoped>
 .intake-wizard-page {
-  --intake-page-padding: var(--cds-space-md);
-  --intake-page-padding-mobile: 0.5rem;
+  --intake-page-padding: 0px;
+  --intake-page-padding-mobile: 0px;
   --intake-page-padding-bottom: 4rem;
-  --intake-page-max-width: 900px;
+  --intake-page-max-width: 100%;
   --intake-form-gap: var(--cds-space-xl);
   --intake-section-padding: var(--cds-space-lg);
-  --intake-section-scroll-margin-top: 120px;
+  --intake-section-scroll-margin-top: 56px;
   --intake-section-header-margin-bottom: var(--cds-space-lg);
   --intake-section-header-padding-bottom: 0.75rem;
   --intake-subsection-offset: var(--cds-space-lg);
@@ -252,8 +255,6 @@ onUnmounted(() => _cleanupAddressAc())
   --intake-nav-link-pad-inline: 0.75rem;
   padding: var(--intake-page-padding, 1rem);
   padding-bottom: var(--intake-page-padding-bottom, 4rem);
-  max-width: var(--intake-page-max-width, 900px);
-  margin: 0 auto;
 }
 
 /* Formulario */
@@ -261,6 +262,7 @@ onUnmounted(() => _cleanupAddressAc())
   display: flex;
   flex-direction: column;
   gap: var(--intake-form-gap, 2rem);
+  padding-top: var(--cds-space-md, 1rem);
 }
 
 /* Responsive */

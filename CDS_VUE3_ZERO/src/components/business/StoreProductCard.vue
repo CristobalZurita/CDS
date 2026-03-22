@@ -9,11 +9,12 @@
   >
     <div class="product-visual">
       <img
-        v-if="imageSrc"
+        v-if="imageSrc && !imgBroken"
         :src="imageSrc"
         :alt="product.name"
         class="product-image"
         loading="lazy"
+        @error="imgBroken = true"
       />
       <div v-else class="product-placeholder">
         {{ placeholderText }}
@@ -32,15 +33,15 @@
     </div>
 
     <div class="product-body">
-      <p class="product-family">{{ product.family || product.category || 'Repuesto' }}</p>
-      <h2>{{ product.name }}</h2>
-      <p class="product-sku">{{ product.sku }}</p>
-      <p class="product-description">{{ description }}</p>
+      <p class="product-family" v-fit-text>{{ product.category || 'Repuesto' }}</p>
+      <h2 v-fit-text>{{ product.name }}</h2>
+      <p class="product-sku" v-fit-text>{{ product.sku }}</p>
+      <p v-if="description && description !== 'Repuesto disponible'" class="product-description">{{ description }}</p>
 
       <div class="product-footer">
         <div class="price-block">
           <strong>{{ priceLabel }}</strong>
-          <small>{{ product.category || 'Sin categoría' }}</small>
+          <small v-if="product.origin_status">{{ product.origin_status === 'ALTERNATIVO' ? 'Alternativo' : 'Original' }}</small>
         </div>
 
         <button
@@ -57,7 +58,44 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+
+function _doFit(el) {
+  const parent = el.parentElement
+  if (!parent) return
+  if (!el.dataset.fitInitial) {
+    el.dataset.fitInitial = parseFloat(getComputedStyle(el).fontSize)
+  }
+  const initial = parseFloat(el.dataset.fitInitial)
+  const min = 9
+  el.style.fontSize = initial + 'px'
+  let size = initial
+  while (el.scrollWidth > parent.clientWidth + 1 && size > min) {
+    size -= 0.5
+    el.style.fontSize = size + 'px'
+  }
+}
+
+const vFitText = {
+  mounted(el) {
+    el.style.whiteSpace = 'nowrap'
+    el.style.display = 'block'
+    el.style.overflow = 'hidden'
+    requestAnimationFrame(() => {
+      _doFit(el)
+      el._fitRO = new ResizeObserver(() => _doFit(el))
+      el._fitRO.observe(el.parentElement || el)
+    })
+  },
+  updated(el) {
+    requestAnimationFrame(() => _doFit(el))
+  },
+  unmounted(el) {
+    el._fitRO?.disconnect()
+  },
+}
+
+const imgBroken = ref(false)
 
 const props = defineProps({
   product: {

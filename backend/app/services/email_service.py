@@ -387,6 +387,26 @@ class EmailService:
             logger.error(f"SMTP error sending email to {to_email}: {str(e)}")
             return False
 
+    def send_store_order_verification_email(
+        self, email: str, nombre: str, verification_url: str, order_id: int
+    ) -> bool:
+        subject = f"Confirma tu pedido #{order_id} — {business_config.business_name()}"
+        content = f"""
+        <h2>¡Hola {nombre}!</h2>
+        <p>Recibimos tu solicitud de compra <strong>#{order_id}</strong> en nuestra tienda.</p>
+        <p>Para confirmarla y reservar los productos, haz click en el siguiente botón:</p>
+
+        {_build_email_button(verification_url, "Confirmar mi pedido")}
+
+        <div class="email-panel">
+            <p><strong>Este link vence en 24 horas.</strong></p>
+            <p>Si no realizaste esta compra, ignora este mensaje. No se reservará nada.</p>
+        </div>
+
+        {_build_email_footer(self.from_email)}
+        """
+        return self._send_email(email, subject, build_email_html(content))
+
     def send_email(self, to_email: str, subject: str, html_content: str) -> bool:
         return self._send_email(to_email, subject, html_content)
 

@@ -58,10 +58,14 @@ class Repair(Base):
     discount = Column(Float, default=0)
     total_cost = Column(Float, default=0)
 
+
     # Pago
     payment_status = Column(String, default='pending')
     payment_method = Column(String, nullable=True)
     paid_amount = Column(Float, default=0)
+
+    # Integración Clockify (aditivo)
+    clockify_project_id = Column(String, nullable=True, index=True)
 
     # Firmas (ingreso/retiro)
     signature_ingreso_path = Column(Text, nullable=True)

@@ -1,0 +1,15 @@
+type Category {
+    categoryId: ID!
+    categoryName: String!
+    productIds: [String!]!
+}
+
+type Query {
+    getCategory(categoryId: ID!): Category
+    getAllCategories: [Category!]!
+}
+
+type Mutation {
+    createCategory(categoryId: ID!, categoryName: String!): Category
+    addProductToCategory(categoryId: ID!, productId: ID!): Category
+}

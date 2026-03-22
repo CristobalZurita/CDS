@@ -92,6 +92,66 @@
               </div>
             </div>
 
+            <!-- Formulario de contacto para guest checkout -->
+            <div v-if="showContactForm && !isAuthenticated" class="guest-form">
+              <p class="guest-form-intro">
+                <i class="fas fa-user"></i> Ingresa tus datos para confirmar el pedido
+              </p>
+
+              <div class="guest-field">
+                <input
+                  v-model="guestNombre"
+                  type="text"
+                  class="guest-input"
+                  :class="{ 'guest-input--error': guestErrors.nombre }"
+                  placeholder="Nombre completo *"
+                  autocomplete="name"
+                  maxlength="80"
+                  @input="sanitizeGuestNombre"
+                />
+                <span v-if="guestErrors.nombre" class="guest-field-error">{{ guestErrors.nombre }}</span>
+              </div>
+
+              <div class="guest-field">
+                <input
+                  v-model="guestEmail"
+                  type="email"
+                  class="guest-input"
+                  :class="{ 'guest-input--error': guestErrors.email }"
+                  placeholder="Email *"
+                  autocomplete="email"
+                  maxlength="120"
+                  @input="sanitizeGuestEmail"
+                />
+                <span v-if="guestErrors.email" class="guest-field-error">{{ guestErrors.email }}</span>
+              </div>
+
+              <div class="guest-field">
+                <div class="guest-phone-row">
+                  <select
+                    v-model="guestPhoneCode"
+                    class="guest-input guest-select"
+                    aria-label="Código de país"
+                  >
+                    <option v-for="c in COUNTRY_CODES" :key="c.iso" :value="c.code">
+                      {{ c.flag }} {{ c.code }} {{ c.name }}
+                    </option>
+                  </select>
+                  <input
+                    v-model="guestTelefono"
+                    type="tel"
+                    class="guest-input guest-input--phone"
+                    :class="{ 'guest-input--error': guestErrors.phone }"
+                    placeholder="9 8765 4321 *"
+                    autocomplete="tel-national"
+                    maxlength="20"
+                    @input="sanitizeGuestPhone"
+                  />
+                </div>
+                <span v-if="guestErrors.phone" class="guest-field-error">{{ guestErrors.phone }}</span>
+              </div>
+            </div>
+
             <p v-if="feedbackError" class="cart-feedback cart-feedback--error">{{ feedbackError }}</p>
             <p v-if="feedbackSuccess" class="cart-feedback cart-feedback--success">{{ feedbackSuccess }}</p>
 
@@ -101,7 +161,7 @@
               @click="handleCheckout"
             >
               <i class="fas fa-paper-plane"></i>
-              {{ submitting ? 'Enviando...' : 'Enviar solicitud' }}
+              {{ checkoutLabel }}
             </button>
 
             <button
@@ -121,18 +181,114 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useShopCartStore } from '@/stores/shopCart'
 import { formatStoreLinePrice, formatStoreSummaryAmount } from '@/services/storeCatalogService'
+import { resolveStoreCheckoutGuard } from '@/composables/storePageState'
+import { useAuth } from '@/composables/useAuth'
+import api from '@/services/api'
 
 const shopCart = useShopCartStore()
+const router = useRouter()
+const { isAuthenticated, isAdmin } = useAuth()
 
 const feedbackError = ref('')
 const feedbackSuccess = ref('')
+const submittingGuest = ref(false)
+
+const COUNTRY_CODES = [
+  { iso: 'CL', name: 'Chile',           code: '+56',   flag: '🇨🇱' },
+  { iso: 'AR', name: 'Argentina',       code: '+54',   flag: '🇦🇷' },
+  { iso: 'PE', name: 'Perú',            code: '+51',   flag: '🇵🇪' },
+  { iso: 'BO', name: 'Bolivia',         code: '+591',  flag: '🇧🇴' },
+  { iso: 'CO', name: 'Colombia',        code: '+57',   flag: '🇨🇴' },
+  { iso: 'VE', name: 'Venezuela',       code: '+58',   flag: '🇻🇪' },
+  { iso: 'EC', name: 'Ecuador',         code: '+593',  flag: '🇪🇨' },
+  { iso: 'UY', name: 'Uruguay',         code: '+598',  flag: '🇺🇾' },
+  { iso: 'PY', name: 'Paraguay',        code: '+595',  flag: '🇵🇾' },
+  { iso: 'BR', name: 'Brasil',          code: '+55',   flag: '🇧🇷' },
+  { iso: 'MX', name: 'México',          code: '+52',   flag: '🇲🇽' },
+  { iso: 'CU', name: 'Cuba',            code: '+53',   flag: '🇨🇺' },
+  { iso: 'DO', name: 'Rep. Dominicana', code: '+1809', flag: '🇩🇴' },
+  { iso: 'GT', name: 'Guatemala',       code: '+502',  flag: '🇬🇹' },
+  { iso: 'SV', name: 'El Salvador',     code: '+503',  flag: '🇸🇻' },
+  { iso: 'HN', name: 'Honduras',        code: '+504',  flag: '🇭🇳' },
+  { iso: 'NI', name: 'Nicaragua',       code: '+505',  flag: '🇳🇮' },
+  { iso: 'CR', name: 'Costa Rica',      code: '+506',  flag: '🇨🇷' },
+  { iso: 'PA', name: 'Panamá',          code: '+507',  flag: '🇵🇦' },
+  { iso: 'US', name: 'EE.UU.',          code: '+1',    flag: '🇺🇸' },
+  { iso: 'CA', name: 'Canadá',          code: '+1',    flag: '🇨🇦' },
+  { iso: 'ES', name: 'España',          code: '+34',   flag: '🇪🇸' },
+  { iso: 'GB', name: 'Reino Unido',     code: '+44',   flag: '🇬🇧' },
+  { iso: 'DE', name: 'Alemania',        code: '+49',   flag: '🇩🇪' },
+  { iso: 'FR', name: 'Francia',         code: '+33',   flag: '🇫🇷' },
+  { iso: 'IT', name: 'Italia',          code: '+39',   flag: '🇮🇹' },
+  { iso: 'PT', name: 'Portugal',        code: '+351',  flag: '🇵🇹' },
+  { iso: 'NL', name: 'Países Bajos',    code: '+31',   flag: '🇳🇱' },
+  { iso: 'CH', name: 'Suiza',           code: '+41',   flag: '🇨🇭' },
+  { iso: 'SE', name: 'Suecia',          code: '+46',   flag: '🇸🇪' },
+  { iso: 'ZA', name: 'Sudáfrica',       code: '+27',   flag: '🇿🇦' },
+  { iso: 'EG', name: 'Egipto',          code: '+20',   flag: '🇪🇬' },
+  { iso: 'NG', name: 'Nigeria',         code: '+234',  flag: '🇳🇬' },
+  { iso: 'MA', name: 'Marruecos',       code: '+212',  flag: '🇲🇦' },
+  { iso: 'JP', name: 'Japón',           code: '+81',   flag: '🇯🇵' },
+  { iso: 'CN', name: 'China',           code: '+86',   flag: '🇨🇳' },
+  { iso: 'IN', name: 'India',           code: '+91',   flag: '🇮🇳' },
+  { iso: 'KR', name: 'Corea del Sur',   code: '+82',   flag: '🇰🇷' },
+  { iso: 'IL', name: 'Israel',          code: '+972',  flag: '🇮🇱' },
+  { iso: 'AE', name: 'Emiratos Árabes', code: '+971',  flag: '🇦🇪' },
+  { iso: 'SA', name: 'Arabia Saudita',  code: '+966',  flag: '🇸🇦' },
+  { iso: 'TR', name: 'Turquía',         code: '+90',   flag: '🇹🇷' },
+]
+
+// Guest checkout form
+const showContactForm = ref(false)
+const guestNombre = ref('')
+const guestEmail = ref('')
+const guestPhoneCode = ref('+56')
+const guestTelefono = ref('')
+const guestErrors = ref({ nombre: '', email: '', phone: '' })
+
+function sanitizeGuestNombre() {
+  guestNombre.value = guestNombre.value.replace(/[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\s\-]/g, '')
+}
+function sanitizeGuestEmail() {
+  guestEmail.value = guestEmail.value.replace(/[^a-zA-Z0-9._\-@]/g, '')
+}
+function sanitizeGuestPhone() {
+  guestTelefono.value = guestTelefono.value.replace(/[^0-9\s\-]/g, '')
+}
+
+function validateGuestForm() {
+  guestErrors.value = { nombre: '', email: '', phone: '' }
+  let ok = true
+  if (guestNombre.value.trim().length < 2) {
+    guestErrors.value.nombre = 'Ingresa tu nombre'
+    ok = false
+  }
+  const emailRe = /^[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/
+  if (!emailRe.test(guestEmail.value.trim())) {
+    guestErrors.value.email = 'Ingresa un correo válido'
+    ok = false
+  }
+  if (guestTelefono.value.replace(/\D/g, '').length < 6) {
+    guestErrors.value.phone = 'Teléfono requerido (mínimo 6 dígitos)'
+    ok = false
+  }
+  return ok
+}
 
 const items = computed(() => shopCart.items)
 const totals = computed(() => shopCart.totals)
 const currentShipping = computed(() => shopCart.currentShipping)
-const submitting = computed(() => shopCart.submitting)
+const submitting = computed(() => shopCart.submitting || submittingGuest.value)
+
+const checkoutLabel = computed(() => {
+  if (submitting.value) return 'Enviando...'
+  if (!isAuthenticated.value && !showContactForm.value) return 'Continuar'
+  if (!isAuthenticated.value && showContactForm.value) return 'Confirmar pedido'
+  return 'Enviar solicitud'
+})
 
 function formatLinePrice(value) {
   return formatStoreLinePrice(value)
@@ -145,11 +301,62 @@ function formatSummary(value) {
 async function handleCheckout() {
   feedbackError.value = ''
   feedbackSuccess.value = ''
+
+  const guard = resolveStoreCheckoutGuard({
+    cartItemsCount: shopCart.items.length,
+    isAdmin: isAdmin.value,
+    isAuthenticated: isAuthenticated.value,
+  })
+
+  if (guard.kind === 'error') {
+    feedbackError.value = guard.message
+    return
+  }
+
+  // Cliente logueado → flujo normal autenticado
+  if (guard.kind === 'submit') {
+    try {
+      await shopCart.submitRequest()
+      await router.push('/ot-payments')
+    } catch (err) {
+      feedbackError.value = err?.response?.data?.detail || err?.message || 'Error al enviar la solicitud.'
+    }
+    return
+  }
+
+  // Guest → mostrar formulario primero
+  if (!showContactForm.value) {
+    showContactForm.value = true
+    return
+  }
+
+  // Guest → formulario visible, enviar checkout público
+  if (!validateGuestForm()) return
+
+  submittingGuest.value = true
   try {
-    await shopCart.submitRequest()
-    feedbackSuccess.value = 'Solicitud enviada. El taller se pondrá en contacto contigo.'
+    const telefono = `${guestPhoneCode.value} ${guestTelefono.value.trim()}`
+    const res = await api.post('/store/checkout', {
+      nombre: guestNombre.value.trim(),
+      email: guestEmail.value.trim().toLowerCase(),
+      telefono,
+      shipping_key: currentShipping.value.key,
+      shipping_label: currentShipping.value.name,
+      items: items.value.map((item) => ({
+        product_id: item.id,
+        quantity: item.qty,
+      })),
+    })
+    shopCart.clear()
+    const emailOk = res?.data?.email_sent !== false
+    await router.push({
+      name: 'check-email',
+      query: { email: guestEmail.value.trim(), warn: emailOk ? undefined : '1' }
+    })
   } catch (err) {
-    feedbackError.value = err?.response?.data?.detail || err?.message || 'Error al enviar la solicitud.'
+    feedbackError.value = err?.response?.data?.detail || err?.message || 'Error al enviar el pedido.'
+  } finally {
+    submittingGuest.value = false
   }
 }
 
@@ -533,5 +740,77 @@ onMounted(() => {
 .btn-clear-cart:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+/* ── Guest checkout form ─────────────────────────────────── */
+.guest-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cds-space-sm);
+  padding: var(--cds-space-md);
+  background: var(--cds-surface-2);
+  border-radius: var(--cds-radius-md);
+  border: 1px solid var(--cds-border-card);
+}
+
+.guest-form-intro {
+  margin: 0;
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--cds-space-xs);
+}
+
+.guest-input {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--cds-space-sm) var(--cds-space-md);
+  border: 1px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-sm);
+  background: var(--cds-white);
+  color: var(--cds-dark);
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.guest-input:focus {
+  outline: 2px solid var(--cds-primary);
+  outline-offset: 1px;
+}
+
+.guest-input--error {
+  border-color: var(--cds-invalid-border);
+  outline-color: var(--cds-invalid-border);
+}
+
+.guest-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.guest-field-error {
+  font-size: 0.82rem;
+  color: var(--cds-invalid-text);
+  line-height: 1.3;
+}
+
+.guest-phone-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.guest-select {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 155px;
+  cursor: pointer;
+  padding-right: 0.5rem;
+}
+
+.guest-input--phone {
+  flex: 1 1 0;
+  min-width: 0;
 }
 </style>

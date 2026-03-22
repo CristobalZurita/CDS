@@ -15,11 +15,41 @@ from app.core.database import get_db
 from app.core.dependencies import require_permission
 from app.services.pdf_generator import generate_repair_closure_pdf_bytes
 from app.services.repair_helpers import safe_pdf_filename as _safe_pdf_filename
+from app.models.repair import Repair as RepairModel
+from app.services.clockify_service import ClockifyService
 from app.services.repair_read_service import RepairReadService
 from app.services.repair_service import RepairService
 from app.services.repair_write_service import RepairWriteService
 
 router = APIRouter(prefix="/repairs", tags=["repairs"])
+
+
+@router.get("/{repair_id}/clockify")
+def get_repair_clockify_progress(
+    repair_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "read"))
+):
+    import re
+    repair = db.query(RepairModel).filter(RepairModel.id == repair_id).first()
+    if not repair or not repair.clockify_project_id:
+        return {"ok": False, "detail": "No Clockify project linked to this OT."}
+    clockify = ClockifyService()
+    entries = clockify.get_project_time_entries(repair.clockify_project_id)
+    total_seconds = 0
+    for entry in entries:
+        duration = entry.get("timeInterval", {}).get("duration") or ""
+        m = re.fullmatch(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?", duration)
+        if m:
+            h, mi, s = m.group(1), m.group(2), m.group(3)
+            total_seconds += int(h or 0) * 3600 + int(mi or 0) * 60 + int(float(s or 0))
+    return {
+        "ok": True,
+        "clockify_project_id": repair.clockify_project_id,
+        "entries": entries,
+        "total_seconds": total_seconds,
+        "total_hours": round(total_seconds / 3600, 2),
+    }
 
 
 @router.get("")
@@ -199,6 +229,7 @@ def add_component_usage(repair_id: int, payload: Dict, db: Session = Depends(get
     svc = RepairService(db)
     try:
         from_reserved = str(payload.get("from_reserved", "false")).strip().lower() in ("1", "true", "yes", "on")
+        skip_stock_check = str(payload.get("skip_stock_check", "false")).strip().lower() in ("1", "true", "yes", "on")
         usage = svc.add_component_usage(
             repair_id=repair_id,
             component_table=str(payload["component_table"]),
@@ -206,6 +237,7 @@ def add_component_usage(repair_id: int, payload: Dict, db: Session = Depends(get
             quantity=int(payload["quantity"]),
             user_id=int(user.get("user_id")) if user and user.get("user_id") else None,
             from_reserved=from_reserved,
+            skip_stock_check=skip_stock_check,
             notes=payload.get("notes")
         )
         return usage

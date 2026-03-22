@@ -1,0 +1,32 @@
+<?php
+
+namespace {{ namespace }};
+
+{{ imports }}
+use App\Models\{{ modelClass }};
+// use App\Exports\{{ modelClass }}Export;
+use App\Utils\CrudConfig;
+use App\Traits\HasCrud;
+use App\Http\Requests\{{ modelClass }}StoreRequest;
+use App\Http\Requests\{{ modelClass }}UpdateRequest;
+
+class {{ class }} extends Controller
+{
+    use HasCrud;
+
+    public function __construct()
+    {
+        $this->init(new CrudConfig(
+            resource: '{{ resource }}',
+            modelClass: {{ modelClass }}::class,
+            storeRequestClass: {{ modelClass }}StoreRequest::class,
+            updateRequestClass: {{ modelClass }}UpdateRequest::class,
+            componentPath: '{{ modelClassPlural }}/Index',
+            searchColumns: [],
+            // exportClass: {{ modelClass }}Export::class,
+            withRelations: [],
+        ));
+    }
+
+    {{ methods }}
+}

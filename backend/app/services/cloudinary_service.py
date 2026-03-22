@@ -21,6 +21,7 @@ from app.services.cloudinary_upload_service import (
     delete_image,
     generate_upload_signature,
     get_optimized_url,
+    rename_image,
     upload_image,
 )
 
@@ -34,6 +35,7 @@ __all__ = [
     "get_optimized_url",
     "is_cloudinary_enabled",
     "local_path_to_public_id",
+    "rename_image",
     "resolve_cloudinary_config",
     "resolve_image_url",
     "upload_image",

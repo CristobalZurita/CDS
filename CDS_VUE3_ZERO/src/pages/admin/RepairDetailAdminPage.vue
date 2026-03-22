@@ -44,6 +44,10 @@
         @save-repair-fields="saveRepairFields"
       />
 
+      <RepairDetailComponentsPanel
+        :repair-id="repair.id"
+      />
+
       <RepairDetailCommercialPanel
         :warranty="warranty"
         :invoice="invoice"
@@ -134,6 +138,7 @@
 import RepairDetailActionsPanel from '@/components/admin/RepairDetailActionsPanel.vue'
 import RepairDetailAuditPanel from '@/components/admin/RepairDetailAuditPanel.vue'
 import RepairDetailCommercialPanel from '@/components/admin/RepairDetailCommercialPanel.vue'
+import RepairDetailComponentsPanel from '@/components/admin/RepairDetailComponentsPanel.vue'
 import RepairDetailInfoPanel from '@/components/admin/RepairDetailInfoPanel.vue'
 import RepairDetailNotesPanel from '@/components/admin/RepairDetailNotesPanel.vue'
 import RepairDetailPhotosPanel from '@/components/admin/RepairDetailPhotosPanel.vue'

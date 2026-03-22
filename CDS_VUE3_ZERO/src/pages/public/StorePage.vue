@@ -3,7 +3,7 @@
     <div class="store-shell">
       <header class="store-hero">
         <div class="store-hero__copy">
-          <p class="store-eyebrow">catalogo cds</p>
+          <p class="store-eyebrow">catálogo cirujano de sintetizadores</p>
           <h1>Arsenal Electrónico, Repuestos Multimarca</h1>
           <p class="store-hero__lede">
             Insumos para tus teclados, sintetizadores, pedales, módulos, pianos elécticos, kits de armado
@@ -28,32 +28,6 @@
               Ver catálogo completo
             </button>
           </div>
-        </div>
-
-        <div class="store-hero__metrics">
-          <article class="store-metric-card">
-            <span class="store-metric-card__label">Modo</span>
-            <strong>{{ modeLabel }}</strong>
-            <small>{{ modeDetail }}</small>
-          </article>
-
-          <article class="store-metric-card">
-            <span class="store-metric-card__label">Resultados</span>
-            <strong>{{ filteredProducts.length }}</strong>
-            <small>{{ activeCategoryLabel }}</small>
-          </article>
-
-          <article class="store-metric-card">
-            <span class="store-metric-card__label">Despacho</span>
-            <strong>{{ currentShipping.name }}</strong>
-            <small>{{ shippingPriceLabel }}</small>
-          </article>
-
-          <article class="store-metric-card">
-            <span class="store-metric-card__label">Carrito</span>
-            <strong>{{ cartItemsCount }}</strong>
-            <small>{{ grandTotalLabel }}</small>
-          </article>
         </div>
       </header>
 
@@ -99,14 +73,6 @@
             </button>
           </section>
 
-          <section class="store-sidebar__section store-sidebar__section--compact">
-            <p class="store-sidebar__title">Lectura rápida</p>
-            <ul class="store-sidebar__facts">
-              <li>{{ modeDetail }}</li>
-              <li>{{ availabilityFact }}</li>
-              <li>{{ quotedProductsFact }}</li>
-            </ul>
-          </section>
         </aside>
 
         <div v-if="mobileFiltersOpen" class="store-sidebar-backdrop" @click="mobileFiltersOpen = false"></div>
@@ -173,32 +139,7 @@
             </div>
           </section>
 
-          <div class="store-context">
-            <div class="store-context__crumbs">
-              <button class="store-context__root" @click="resetFilters">Tienda</button>
-              <span v-if="selectedCategory" class="store-context__sep">/</span>
-              <span v-if="selectedCategory" class="store-context__current">{{ selectedCategory }}</span>
-              <span v-if="searchTerm" class="store-context__sep">/</span>
-              <span v-if="searchTerm" class="store-context__current">“{{ searchTerm }}”</span>
-            </div>
-
-            <div class="store-context__meta">
-              <span>{{ filteredProducts.length }} resultados</span>
-              <span>{{ selectedAvailabilityLabel }}</span>
-            </div>
-          </div>
-
-          <div v-if="showExpandBanner" class="store-banner">
-            <div>
-              <strong>Estás viendo una selección curada.</strong>
-              <p>Úsala para explorar rápido o carga todo el catálogo cuando quieras recorrerlo completo.</p>
-            </div>
-            <button class="store-btn store-btn--ghost" :disabled="loading" @click="loadFullCatalog">
-              Mostrar todo
-            </button>
-          </div>
-
-          <div v-if="availableCategories.length" class="store-chip-row">
+          <div v-if="availableCategories.length > 0" class="store-chip-row">
             <button
               class="store-chip-row__chip"
               :class="{ 'store-chip-row__chip--active': selectedCategory === '' }"
@@ -353,26 +294,11 @@
       </Transition>
     </Teleport>
 
-    <StoreCartDrawer
-      :open="cartOpen"
-      :items="cartItems"
-      :totals="totals"
-      :current-shipping="currentShipping"
-      :checkout-label="checkoutLabel"
-      :submitting="cartSubmitting"
-      :can-add-product="canAddProduct"
-      @close="closeCartDrawer"
-      @change-qty="onDrawerChangeQty"
-      @remove="removeFromCart"
-      @checkout="submitCheckout"
-      @clear-cart="clearCart"
-    />
   </section>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import StoreCartDrawer from '@/components/business/StoreCartDrawer.vue'
 import StoreProductCard from '@/components/business/StoreProductCard.vue'
 import { useStorePage } from '@/composables/useStorePage'
 
@@ -428,6 +354,42 @@ const {
   onDrawerChangeQty,
   submitCheckout,
 } = useStorePage()
+
+const CATEGORY_ICONS = {
+  resistencia: 'fa-wave-square',
+  resistor: 'fa-wave-square',
+  capacitor: 'fa-bolt',
+  condensador: 'fa-bolt',
+  transistor: 'fa-microchip',
+  integrado: 'fa-microchip',
+  ic: 'fa-microchip',
+  circuito: 'fa-microchip',
+  conector: 'fa-plug',
+  cable: 'fa-circle-nodes',
+  pcb: 'fa-layer-group',
+  placa: 'fa-layer-group',
+  herramienta: 'fa-screwdriver-wrench',
+  led: 'fa-lightbulb',
+  diodo: 'fa-arrow-right',
+  bobina: 'fa-rotate',
+  inductor: 'fa-rotate',
+  potenciometro: 'fa-sliders',
+  switch: 'fa-toggle-on',
+  interruptor: 'fa-toggle-on',
+  pulsador: 'fa-hand-pointer',
+  boton: 'fa-hand-pointer',
+  display: 'fa-display',
+  sensor: 'fa-satellite-dish',
+  modulo: 'fa-puzzle-piece',
+}
+
+function categoryIcon(name) {
+  const lower = String(name || '').toLowerCase()
+  for (const [key, icon] of Object.entries(CATEGORY_ICONS)) {
+    if (lower.includes(key)) return icon
+  }
+  return 'fa-tag'
+}
 
 const mobileFiltersOpen = ref(false)
 const selectedProduct = ref(null)
@@ -596,31 +558,22 @@ onBeforeUnmount(() => {
 <style scoped>
 .store-page {
   min-height: 100vh;
-  padding: var(--cds-space-xl) var(--cds-space-md) var(--cds-space-2xl);
+  padding: var(--cds-space-xl) clamp(1rem, 2.5vw, 2.5rem) var(--cds-space-2xl);
   background: var(--cds-background-color);
 }
 
 .store-shell {
-  max-width: var(--cds-content-max);
-  margin: 0 auto;
+  width: 100%;
   display: grid;
   gap: var(--cds-space-lg);
 }
 
 .store-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(340px, 0.9fr);
-  gap: var(--cds-space-lg);
-  padding: var(--cds-space-xl);
-  border: 1px solid var(--cds-border-card);
-  border-radius: var(--cds-radius-xl);
-  background: var(--cds-surface-1);
-  box-shadow: var(--cds-shadow-md);
+  padding-block: var(--cds-space-lg) var(--cds-space-md);
 }
 
 .store-eyebrow,
 .store-special-order__eyebrow,
-.store-metric-card__label,
 .store-sidebar__label,
 .store-sidebar__title {
   margin: 0;
@@ -631,8 +584,7 @@ onBeforeUnmount(() => {
 }
 
 .store-eyebrow,
-.store-special-order__eyebrow,
-.store-metric-card__label {
+.store-special-order__eyebrow {
   color: var(--cds-primary);
 }
 
@@ -693,7 +645,6 @@ onBeforeUnmount(() => {
 .store-btn--primary {
   background: var(--cds-primary);
   color: var(--cds-white);
-  box-shadow: 0 14px 28px rgba(200, 100, 34, 0.24);
 }
 
 .store-btn--secondary {
@@ -724,31 +675,6 @@ onBeforeUnmount(() => {
   color: var(--cds-white);
 }
 
-.store-hero__metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--cds-space-sm);
-}
-
-.store-metric-card {
-  display: grid;
-  gap: var(--cds-space-2xs);
-  padding: var(--cds-space-md);
-  border-radius: var(--cds-radius-lg);
-  border: 1px solid var(--cds-border-card);
-  background: var(--cds-surface-2);
-}
-
-.store-metric-card strong {
-  font-size: var(--cds-text-xl);
-  line-height: 1.1;
-  color: var(--cds-dark);
-}
-
-.store-metric-card small {
-  color: var(--cds-text-muted);
-  line-height: var(--cds-leading-normal);
-}
 
 .store-layout {
   position: relative;
@@ -791,11 +717,6 @@ onBeforeUnmount(() => {
   gap: var(--cds-space-xs);
 }
 
-.store-sidebar__section--compact {
-  padding-top: var(--cds-space-xs);
-  border-top: 1px solid var(--cds-border-card);
-}
-
 .store-filter-chip {
   width: 100%;
   padding: var(--cds-space-sm) var(--cds-space-md);
@@ -820,14 +741,6 @@ onBeforeUnmount(() => {
   color: var(--cds-primary);
 }
 
-.store-sidebar__facts {
-  margin: 0;
-  padding-left: var(--cds-space-md);
-  display: grid;
-  gap: var(--cds-space-xs);
-  color: var(--cds-text-muted);
-  line-height: var(--cds-leading-normal);
-}
 
 .store-sidebar-backdrop {
   display: none;
@@ -841,11 +754,7 @@ onBeforeUnmount(() => {
 .store-toolbar {
   display: grid;
   gap: var(--cds-space-sm);
-  padding: var(--cds-space-md);
-  border: 1px solid var(--cds-border-card);
-  border-radius: var(--cds-radius-xl);
-  background: var(--cds-surface-1);
-  box-shadow: var(--cds-shadow-sm);
+  padding-block: var(--cds-space-xs);
 }
 
 .store-toolbar__main {
@@ -938,52 +847,17 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 
-.store-context {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--cds-space-sm);
-  color: var(--cds-text-muted);
-  font-size: var(--cds-text-sm);
-}
-
-.store-context__crumbs,
-.store-context__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--cds-space-2xs);
-  align-items: center;
-}
-
-.store-context__root {
-  padding: 0;
-  color: var(--cds-primary);
-  font-weight: var(--cds-font-bold);
-}
-
-.store-banner,
 .store-special-order,
 .store-empty {
   border: 1px solid var(--cds-border-card);
   border-radius: var(--cds-radius-xl);
 }
 
-.store-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--cds-space-md);
-  padding: var(--cds-space-md) var(--cds-space-lg);
-  background: var(--cds-surface-2);
-}
-
-.store-banner strong,
 .store-empty h2,
 .store-special-order h2 {
   color: var(--cds-dark);
 }
 
-.store-banner p,
 .store-empty p,
 .store-special-order p {
   margin: 0;
@@ -1025,7 +899,7 @@ onBeforeUnmount(() => {
 .store-grid {
   display: grid;
   gap: var(--cds-space-md);
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
 }
 
 .store-grid--skeleton {
@@ -1282,10 +1156,6 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 1180px) {
-  .store-hero {
-    grid-template-columns: 1fr;
-  }
-
   .store-layout {
     grid-template-columns: 1fr;
   }
@@ -1325,7 +1195,6 @@ onBeforeUnmount(() => {
     grid-template-columns: 1fr;
   }
 
-  .store-banner,
   .store-special-order {
     grid-template-columns: 1fr;
   }
@@ -1349,19 +1218,13 @@ onBeforeUnmount(() => {
     font-size: var(--cds-text-4xl);
   }
 
-  .store-hero__metrics,
   .store-modal__stats {
     grid-template-columns: 1fr;
   }
 
-  .store-context,
   .store-toolbar__actions {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .store-grid {
-    grid-template-columns: 1fr;
   }
 }
 </style>

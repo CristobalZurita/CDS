@@ -78,6 +78,23 @@ def get_optimized_url(public_id: str, width: Optional[int] = None, quality: str 
     return url
 
 
+def rename_image(old_public_id: str, new_public_id: str) -> dict:
+    client = get_cloudinary_client()
+    if not client:
+        raise RuntimeError("Cloudinary not configured")
+
+    import cloudinary.uploader
+
+    try:
+        result = cloudinary.uploader.rename(
+            old_public_id, new_public_id, overwrite=True, invalidate=True
+        )
+        return result
+    except Exception as exc:
+        logger.error(f"Failed to rename image {old_public_id} -> {new_public_id}: {exc}")
+        raise
+
+
 def delete_image(public_id: str) -> bool:
     client = get_cloudinary_client()
     if not client:

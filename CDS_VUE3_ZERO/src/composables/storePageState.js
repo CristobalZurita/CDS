@@ -1,7 +1,7 @@
 export function resolveStoreCheckoutLabel({ isAdmin = false, isAuthenticated = false, submitting = false } = {}) {
   if (isAdmin) return 'Cuenta admin no compra'
-  if (!isAuthenticated) return 'Inicia sesión para solicitar'
   if (submitting) return 'Enviando solicitud...'
+  if (!isAuthenticated) return 'Enviar solicitud'
   return 'Enviar solicitud'
 }
 

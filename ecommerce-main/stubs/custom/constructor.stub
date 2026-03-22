@@ -1,0 +1,15 @@
+
+    use use \App\Traits\HasCrud;
+    public function __construct()
+    {
+        $this->init(new CrudConfig(
+            resource: '{{ modelVariable }}',
+            modelClass: Category::class,
+            storeRequestClass: CategoryStoreRequest::class,
+            updateRequestClass: CategoryUpdateRequest::class,
+            searchColumns: ['name'],
+            exportClass: CategoryExport::class,
+            componentPath: 'Categories/Index',
+            withRelations: [],
+        ));
+    }

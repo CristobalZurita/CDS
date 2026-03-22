@@ -38,7 +38,9 @@ from app.services.ot_code_service import (
 )
 from app.services.repair_helpers import resolved_repair_code as _resolved_repair_code
 from app.services.whatsapp_service import WhatsAppService
+
 from app.services.repair_service import RepairService
+from app.services.clockify_service import ClockifyService
 
 
 class RepairWriteService:
@@ -163,6 +165,18 @@ class RepairWriteService:
         )
         self.db.add(db_repair)
         self.db.flush()
+
+        # Integración Clockify: crear proyecto para la OT si no existe
+        try:
+            clockify = ClockifyService()
+            project_name = f"OT-{db_repair.repair_number}"
+            project_id = clockify.create_project(name=project_name)
+            if project_id:
+                db_repair.clockify_project_id = project_id
+                self.db.commit()
+        except Exception as e:
+            # No romper flujo si Clockify falla
+            pass
 
         device = self.db.query(Device).filter(Device.id == db_repair.device_id).first()
         client_id = device.client_id if device else None

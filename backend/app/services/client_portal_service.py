@@ -29,6 +29,7 @@ from app.services.logging_service import create_audit
 from app.services.purchase_request_service import (
     _apply_request_stock_state,
     _request_total,
+    attach_checkout_contract_to_payment,
     request_client_payment_for_request,
 )
 from app.services.repair_helpers import (
@@ -1090,3 +1091,77 @@ def submit_client_deposit_proof_record(
         "ok": True,
         "request": build_client_purchase_request_payload(req, payment, client.id),
     }
+
+
+def initiate_client_checkout_payload(
+    db: Session,
+    user_id: int,
+    payment_id: int,
+    return_url: str,
+    notification_url: str | None,
+) -> dict:
+    from app.services.payment_gateway_service import PaymentGatewayService
+
+    user_obj = get_client_user_or_404(db, user_id)
+    client = ensure_client(db, user_obj)
+
+    payment = db.query(Payment).filter(Payment.id == payment_id).first()
+    if not payment:
+        raise HTTPException(status_code=404, detail="Pago no encontrado")
+
+    owned = int(payment.user_id or 0) == user_id or (
+        payment.purchase_request_id is not None
+        and db.query(PurchaseRequest)
+        .filter(
+            PurchaseRequest.id == payment.purchase_request_id,
+            PurchaseRequest.client_id == client.id,
+        )
+        .first()
+        is not None
+    )
+    if not owned:
+        raise HTTPException(status_code=403, detail="No tienes acceso a este pago")
+
+    if payment.status != PaymentStatus.PENDING:
+        raise HTTPException(status_code=400, detail="Solo se pueden iniciar pagos pendientes")
+    if payment.payment_due_date and payment.payment_due_date < datetime.utcnow():
+        raise HTTPException(status_code=410, detail="El pago solicitado ya venció")
+    if not payment.amount or payment.amount <= 0:
+        raise HTTPException(status_code=400, detail="El pago no tiene monto válido")
+
+    svc = PaymentGatewayService()
+    if not svc.is_configured:
+        raise HTTPException(status_code=503, detail="Pasarela de pago no configurada. Contacte al administrador.")
+
+    buy_order = payment.transaction_id or f"REQ-{payment.purchase_request_id or payment.id}-{payment.id}"
+    title = f"Solicitud #{payment.purchase_request_id or payment.id}"
+
+    try:
+        result = svc.initiate(
+            amount=int(payment.amount),
+            buy_order=buy_order,
+            title=title,
+            return_url=return_url,
+            notification_url=notification_url,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
+
+    payment.payment_processor = result.get("processor", svc.gateway)
+    payment.payment_method = svc.gateway
+    if not payment.transaction_id:
+        payment.transaction_id = buy_order
+    if not payment.currency:
+        payment.currency = "CLP"
+    attach_checkout_contract_to_payment(
+        db,
+        payment,
+        provider=result.get("processor", svc.gateway),
+        origin_channel="client_portal_checkout",
+        return_url=return_url,
+        notification_url=notification_url,
+        gateway_payload=result,
+    )
+    db.commit()
+
+    return {"ok": True, "gateway": svc.gateway, **result}

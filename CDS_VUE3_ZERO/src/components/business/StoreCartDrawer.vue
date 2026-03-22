@@ -31,8 +31,14 @@
           class="cart-item"
           data-testid="store-cart-item"
         >
-          <strong class="cart-item-name">{{ item.name }}</strong>
-          <span class="cart-item-qty">× {{ item.qty }}</span>
+          <div class="cart-item-thumb">
+            <img v-if="item.image_url" :src="item.image_url" :alt="item.name" loading="lazy" />
+            <i v-else class="fas fa-microchip"></i>
+          </div>
+          <div class="cart-item-info">
+            <strong class="cart-item-name">{{ item.name }}</strong>
+            <span class="cart-item-qty">× {{ item.qty }}</span>
+          </div>
         </article>
       </div>
     </div>
@@ -419,5 +425,34 @@ function formatSummaryAmount(value) {
   display: flex;
   align-items: center;
   gap: calc(var(--cds-space-sm) * var(--cds-type-scale, 1));
+}
+
+.cart-item-thumb {
+  flex-shrink: 0;
+  width: calc(44px * var(--cds-type-scale, 1));
+  height: calc(44px * var(--cds-type-scale, 1));
+  border-radius: var(--cds-radius-sm);
+  border: 1px solid var(--cds-border-card);
+  background: var(--cds-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--cds-border-card);
+  font-size: 1.1rem;
+}
+
+.cart-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cart-item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 </style>

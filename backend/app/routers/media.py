@@ -17,6 +17,7 @@ import re
 from typing import List
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import IntegrityError
 
@@ -191,6 +192,55 @@ def import_from_cloudinary(
         raise HTTPException(status_code=500, detail="Error al guardar los assets importados.")
 
     return {"inserted": inserted, "updated": updated, "total": inserted + updated}
+
+
+class _RenamePayload(BaseModel):
+    new_public_id: str
+
+
+@router.put("/assets/{asset_id}/rename", response_model=MediaAssetOut)
+def rename_asset(
+    asset_id: int,
+    data: _RenamePayload,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("media", "update")),
+):
+    """
+    Renombra un asset: actualiza el public_id en Cloudinary y en la BD.
+    El nuevo public_id debe ser la ruta completa sin extensiones
+    (ej: "INVENTARIO/RESISTENCIA_10K").
+    """
+    asset = db.query(MediaAsset).filter(MediaAsset.id == asset_id).first()
+    if not asset:
+        raise HTTPException(status_code=404, detail="Asset no encontrado")
+
+    new_public_id = re.sub(r"(\.[^.]+)+$", "", data.new_public_id.strip().strip("/"))
+    if not new_public_id:
+        raise HTTPException(status_code=422, detail="new_public_id inválido")
+
+    if new_public_id == asset.public_id:
+        return asset
+
+    try:
+        from app.services.cloudinary_service import rename_image
+        result = rename_image(asset.public_id, new_public_id)
+        new_secure_url = _strip_version(result.get("secure_url") or result.get("url") or "")
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Error en Cloudinary al renombrar: {exc}")
+
+    asset.public_id = new_public_id
+    asset.folder = new_public_id.rsplit("/", 1)[0] if "/" in new_public_id else ""
+    asset.original_filename = new_public_id.split("/")[-1]
+    if new_secure_url:
+        asset.secure_url = new_secure_url
+
+    try:
+        db.commit()
+        db.refresh(asset)
+    except Exception:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Error al guardar el cambio en la BD.")
+    return asset
 
 
 @router.delete("/assets/{asset_id}", status_code=status.HTTP_204_NO_CONTENT)

@@ -25,6 +25,29 @@
       @scroll-top="scrollToTop"
     />
 
+    <StoreCartDrawer
+      :open="shopCart.cartOpen"
+      :items="shopCart.items"
+      :totals="shopCart.totals"
+      :current-shipping="shopCart.currentShipping"
+      :submitting="shopCart.submitting"
+      :can-add-product="shopCart.canAddProduct"
+      checkout-label="Enviar solicitud"
+      @close="shopCart.closeCart()"
+      @change-qty="(id, delta) => shopCart.changeQty(id, delta)"
+      @remove="(id) => shopCart.removeItem(id)"
+      @checkout="handleCheckout"
+      @clear-cart="shopCart.clear()"
+    />
+
+    <StoreCheckoutModal
+      :open="checkoutModalOpen"
+      @close="checkoutModalOpen = false"
+      @success="checkoutModalOpen = false"
+    />
+
+    <ChatWidget />
+
   </div>
 </template>
 
@@ -33,7 +56,10 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import SiteFloatingActions from '@/components/layout/SiteFloatingActions.vue'
 import SiteFooter from '@/components/layout/SiteFooter.vue'
 import SiteHeaderNav from '@/components/layout/SiteHeaderNav.vue'
-import { useRoute, useRouter } from 'vue-router'
+import StoreCartDrawer from '@/components/business/StoreCartDrawer.vue'
+import StoreCheckoutModal from '@/components/business/StoreCheckoutModal.vue'
+import ChatWidget from '@/components/widgets/ChatWidget.vue'
+import { useRoute } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import { useHomePage } from '@/composables/useHomePage'
 import { useShopCartStore } from '@/stores/shopCart'
@@ -44,7 +70,6 @@ const { resolveSlotOr } = useMediaBinding()
 const { isAuthenticated } = useAuth()
 const { sections } = useHomePage()
 const route = useRoute()
-const router = useRouter()
 const shopCart = useShopCartStore()
 const logoSrc = computed(() => resolveSlotOr(
   'site.logo.square',
@@ -52,10 +77,28 @@ const logoSrc = computed(() => resolveSlotOr(
 ))
 
 function onCartClick() {
-  if (route.path === '/tienda') {
-    shopCart.openCart()
-  } else {
-    router.push('/tienda')
+  shopCart.openCart()
+}
+
+// ── Checkout ──────────────────────────────────────────────────────────────────
+const checkoutModalOpen = ref(false)
+
+async function handleCheckout() {
+  if (!shopCart.items.length) return
+
+  if (!isAuthenticated.value) {
+    // Guest flow: collect contact data via modal → POST /store/checkout
+    checkoutModalOpen.value = true
+    return
+  }
+
+  // Authenticated flow: direct submit
+  try {
+    await shopCart.submitRequest()
+    shopCart.closeCart()
+  } catch (err) {
+    const msg = err?.response?.data?.detail || err?.message || 'No se pudo enviar la solicitud.'
+    alert(msg)
   }
 }
 
@@ -84,15 +127,19 @@ function updateScrollState() {
     : 0
 }
 
+function noContextMenu(e) { e.preventDefault() }
+
 onMounted(() => {
   window.addEventListener('scroll', updateScrollState, { passive: true })
   window.addEventListener('resize', updateScrollState, { passive: true })
   updateScrollState()
+  document.addEventListener('contextmenu', noContextMenu)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', updateScrollState)
   window.removeEventListener('resize', updateScrollState)
+  document.removeEventListener('contextmenu', noContextMenu)
 })
 </script>
 

@@ -23,39 +23,40 @@
 
 <style scoped>
 .sim-page {
-  min-height: 100vh;
-  padding: var(--cds-space-sm);
-  background-color: var(--cds-background-color);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--cds-dark);
 }
 
 .sim-container {
-  max-width: min(98vw, 1600px);
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
 }
 
 .sim-note {
   display: none;
-  margin: 0 0 var(--cds-space-sm);
+  margin: 0;
   padding: 0.7rem 0.9rem;
-  border: 1px solid rgba(236, 107, 0, 0.2);
-  border-radius: var(--cds-radius-md);
   background: rgba(236, 107, 0, 0.08);
-  color: var(--cds-dark);
+  color: var(--cds-light);
   font-size: var(--cds-text-sm);
   line-height: 1.45;
+  border-bottom: 1px solid rgba(236, 107, 0, 0.2);
+  flex-shrink: 0;
 }
 
 .sim-frame-wrap {
-  border: 1px solid var(--cds-border-strong);
-  border-radius: var(--cds-radius-md);
+  flex: 1;
   overflow: hidden;
-  box-shadow: var(--cds-shadow-sm);
   background: var(--cds-dark);
 }
 
 .sim-frame {
   width: 100%;
-  height: calc(100vh - var(--cds-navbar-height) - 1rem);
+  height: calc(96.2dvh - var(--cds-navbar-height, 64px));
   min-height: 700px;
   border: 0;
   display: block;
@@ -67,8 +68,8 @@
   }
 
   .sim-frame {
-    height: calc(100vh - var(--cds-navbar-height) - 1rem);
-    min-height: 78vh;
+    height: calc(100dvh - var(--cds-navbar-height, 64px) - 2.5rem);
+    min-height: 78dvh;
   }
 }
 </style>

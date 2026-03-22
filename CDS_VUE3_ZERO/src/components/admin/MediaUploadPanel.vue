@@ -4,12 +4,23 @@
 
     <div class="upload-controls">
       <label>
-        <span>Destino</span>
-        <select :value="destination" @change="emit('update:destination', $event.target.value)">
-          <option value="uploads">General</option>
-          <option value="instrumentos">Instrumentos</option>
-          <option value="inventario">Inventario</option>
-        </select>
+        <span>Carpeta de destino</span>
+        <div class="destination-row">
+          <select :value="destinationPreset" @change="onPresetChange">
+            <option value="uploads">General</option>
+            <option value="instrumentos">Instrumentos</option>
+            <option value="inventario">Inventario</option>
+            <option value="__custom">Personalizada...</option>
+          </select>
+          <input
+            v-if="destinationPreset === '__custom'"
+            :value="destination"
+            type="text"
+            placeholder="ej: INVENTARIO/subfolder"
+            class="destination-custom"
+            @input="emit('update:destination', $event.target.value)"
+          />
+        </div>
       </label>
     </div>
 
@@ -58,9 +69,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-defineProps({
+const PRESETS = ['uploads', 'instrumentos', 'inventario']
+
+const props = defineProps({
   destination: {
     type: String,
     default: 'uploads'
@@ -100,6 +113,17 @@ const emit = defineEmits(['update:destination', 'files-selected', 'upload-all', 
 const isDragging = ref(false)
 const fileInput = ref(null)
 const folderInput = ref(null)
+
+const destinationPreset = computed(() =>
+  PRESETS.includes(props.destination) ? props.destination : '__custom'
+)
+
+function onPresetChange(event) {
+  const value = event.target.value
+  if (value !== '__custom') {
+    emit('update:destination', value)
+  }
+}
 
 function emitImageFiles(fileList) {
   const files = Array.from(fileList || []).filter(file => file.type.startsWith('image/'))

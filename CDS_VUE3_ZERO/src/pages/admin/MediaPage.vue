@@ -74,12 +74,20 @@
     <MediaCatalogPanel
       v-model:search="search"
       v-model:folder-filter="folderFilter"
+      v-model:delete-from-cloudinary="deleteFromCloudinary"
       :images="images"
       :filtered="filtered"
       :loading-catalog="loadingCatalog"
+      :flat-folder-tree="flatFolderTree"
+      :asset-pending-delete="assetPendingDelete"
+      :deleting-asset="deletingAsset"
       :thumb="thumb"
       :short-name="shortName"
       :format-bytes="formatBytes"
+      @rename="renameAsset"
+      @request-delete="requestDeleteAsset"
+      @cancel-delete="cancelDeleteAsset"
+      @confirm-delete="confirmDeleteAsset"
     />
   </main>
 </template>
@@ -97,6 +105,7 @@ const {
   success,
   search,
   folderFilter,
+  flatFolderTree,
   importing,
   importProgress,
   destination,
@@ -104,6 +113,9 @@ const {
   uploading,
   uploadProgress,
   uploadValidationError,
+  assetPendingDelete,
+  deletingAsset,
+  deleteFromCloudinary,
   bindings,
   loadingBindings,
   showBindingForm,
@@ -121,6 +133,10 @@ const {
   addToQueue,
   uploadAll,
   clearQueue,
+  renameAsset,
+  requestDeleteAsset,
+  cancelDeleteAsset,
+  confirmDeleteAsset,
   saveBinding,
   toggleBindingForm,
   editBinding,

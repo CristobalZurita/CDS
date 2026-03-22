@@ -60,3 +60,9 @@ google-api-python-client==2.104.0
 
 # Optional: For Celery async tasks
 celery==5.3.4
+
+# Payment gateways
+mercadopago==2.3.0
+
+# Gemini AI (Chat inteligente web)
+google-genai

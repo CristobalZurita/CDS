@@ -1,16 +1,20 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import {
+  buildFolderTree,
   countMediaAssetsByGroup,
   createMediaBindingForm,
   createMediaQueueItem,
+  deleteMediaAsset,
   filterBindingPickerAssets,
   filterMediaAssets,
+  flattenFolderTree,
   importMediaAssetsFromCloudinary,
   listMediaAssets,
   listMediaBindings,
   MEDIA_MAX_FILE_SIZE,
   normalizeMediaAssetGroup,
   removeMediaBinding,
+  renameMediaAsset,
   saveMediaBinding,
   uploadMediaQueueItem,
 } from '@/services/mediaAdminService.js'
@@ -32,6 +36,10 @@ export function useMediaAdminPage() {
   const uploadProgress = ref(0)
   const uploadValidationError = ref('')
 
+  const assetPendingDelete = ref(null) // { id, public_id }
+  const deletingAsset = ref(false)
+  const deleteFromCloudinary = ref(false)
+
   const bindings = ref([])
   const loadingBindings = ref(false)
   const showBindingForm = ref(false)
@@ -41,6 +49,9 @@ export function useMediaAdminPage() {
   const bindingPendingDelete = ref('')
   const deletingBinding = ref(false)
   const bindingForm = ref(createMediaBindingForm())
+
+  const folderTree = computed(() => buildFolderTree(images.value))
+  const flatFolderTree = computed(() => flattenFolderTree(folderTree.value))
 
   const filtered = computed(() => filterMediaAssets(images.value, {
     folderFilter: folderFilter.value,
@@ -148,6 +159,50 @@ export function useMediaAdminPage() {
 
   function clearQueue() {
     queue.value = queue.value.filter((item) => item.status === 'uploading')
+  }
+
+  async function renameAsset(assetId, newPublicId) {
+    error.value = null
+    success.value = ''
+    try {
+      const updated = await renameMediaAsset(assetId, newPublicId)
+      const idx = images.value.findIndex((img) => img.id === assetId)
+      if (idx !== -1) images.value[idx] = updated
+      success.value = 'Imagen renombrada correctamente.'
+    } catch (e) {
+      error.value = `Error al renombrar: ${e?.response?.data?.detail || e.message || 'desconocido'}`
+    }
+  }
+
+  function requestDeleteAsset(asset) {
+    assetPendingDelete.value = asset
+    deleteFromCloudinary.value = false
+  }
+
+  function cancelDeleteAsset() {
+    if (deletingAsset.value) return
+    assetPendingDelete.value = null
+    deleteFromCloudinary.value = false
+  }
+
+  async function confirmDeleteAsset() {
+    if (!assetPendingDelete.value || deletingAsset.value) return
+    deletingAsset.value = true
+    error.value = null
+    success.value = ''
+    try {
+      await deleteMediaAsset(assetPendingDelete.value.id, deleteFromCloudinary.value)
+      images.value = images.value.filter((img) => img.id !== assetPendingDelete.value.id)
+      success.value = deleteFromCloudinary.value
+        ? 'Imagen eliminada de la BD y de Cloudinary.'
+        : 'Imagen eliminada del catálogo local.'
+      assetPendingDelete.value = null
+      deleteFromCloudinary.value = false
+    } catch (e) {
+      error.value = `Error al eliminar: ${e?.response?.data?.detail || e.message || 'desconocido'}`
+    } finally {
+      deletingAsset.value = false
+    }
   }
 
   async function loadBindings() {
@@ -288,6 +343,8 @@ export function useMediaAdminPage() {
     success,
     search,
     folderFilter,
+    folderTree,
+    flatFolderTree,
     importing,
     importProgress,
     destination,
@@ -295,6 +352,9 @@ export function useMediaAdminPage() {
     uploading,
     uploadProgress,
     uploadValidationError,
+    assetPendingDelete,
+    deletingAsset,
+    deleteFromCloudinary,
     bindings,
     loadingBindings,
     showBindingForm,
@@ -313,6 +373,10 @@ export function useMediaAdminPage() {
     uploadAll,
     clearQueue,
     loadBindings,
+    renameAsset,
+    requestDeleteAsset,
+    cancelDeleteAsset,
+    confirmDeleteAsset,
     saveBinding,
     toggleBindingForm,
     editBinding,

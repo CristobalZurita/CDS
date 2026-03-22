@@ -1,0 +1,1379 @@
+<script setup>
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { router, usePage } from "@inertiajs/vue3";
+import { useToast } from "primevue/usetoast";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { useI18n } from 'vue-i18n';
+
+import { resolveImagePath } from "@/Helpers/imageHelper";
+
+const { t } = useI18n();
+
+// PrimeVue
+import SessionBar from "@/Components/POS/SessionBar.vue";
+import AutoComplete from "primevue/autocomplete";
+import Badge from "primevue/badge";
+import Button from "primevue/button";
+import Dialog from "primevue/dialog";
+import Select from "primevue/select";
+import InputGroup from "primevue/inputgroup";
+import InputGroupAddon from "primevue/inputgroupaddon";
+import InputNumber from "primevue/inputnumber";
+import InputText from "primevue/inputtext";
+import Textarea from "primevue/textarea";
+
+const props = defineProps({
+    products: { type: Array, default: () => [] },
+    customers: { type: Array, default: () => [] }, // not required now, but ok
+    paymentMethods: { type: Array, default: () => [] },
+    currentSession: { type: Object, default: null },
+    warehouses: { type: Array, default: () => [] },
+    branches: { type: Array, default: () => [] },
+    order: { type: Object, default: null }, // ✅ Edit Draft Order
+    lastWarrantyInfo: { type: String, default: "" },
+    warrantyTemplates: { type: Array, default: () => [] },
+});
+
+const toast = useToast();
+const page = usePage();
+
+const currentBranchId = computed(() => page.props.auth?.user?.branch_id);
+
+const branchMismatch = computed(() => {
+    if (!posSession.value) return false;
+    return posSession.value.branch_id !== currentBranchId.value;
+});
+
+// session + clock
+const posSession = ref(props.currentSession);
+const now = ref(new Date());
+const showWarrantyDialog = ref(false);
+
+const selectWarrantyTemplate = (template) => {
+    warranty_info.value = template.description;
+    showWarrantyDialog.value = false;
+    toast.add({ severity: 'info', summary: 'Template Applied', detail: template.name, life: 1500 });
+};
+
+const suggestedTemplates = computed(() => {
+    const templates = props.warrantyTemplates || [];
+    if (cartItems.value.length === 0) return templates;
+
+    // Get categories of items in cart
+    const cartCategoryIds = [...new Set(cartItems.value.map(item => {
+        const product = props.products.find(p => p.id === item.product_id);
+        return product?.category_id;
+    }).filter(Boolean))];
+
+    if (cartCategoryIds.length === 0) return templates;
+
+    // Sort: templates matching cart categories first, then those with null category, then others
+    return [...templates].sort((a, b) => {
+        const aMatch = cartCategoryIds.includes(a.category_id);
+        const bMatch = cartCategoryIds.includes(b.category_id);
+
+        if (aMatch && !bMatch) return -1;
+        if (!aMatch && bMatch) return 1;
+
+        if (a.category_id === null && b.category_id !== null) return -1;
+        if (a.category_id !== null && b.category_id === null) return 1;
+
+        return 0;
+    });
+});
+let timer = null;
+
+onMounted(() => {
+    timer = setInterval(() => (now.value = new Date()), 1000);
+});
+onUnmounted(() => {
+    if (timer) clearInterval(timer);
+});
+
+
+
+
+// product search
+// product search
+const search = ref("");
+const warranty_info = ref(props.order ? (props.order.warranty_info || "") : (props.lastWarrantyInfo || ""));
+
+
+// -----------------------------
+// ✅ Customer Remote Search (Backend)
+// -----------------------------
+const selectedCustomer = ref(null); // object or null (walk-in)
+const customerSuggestions = ref([]);
+const customerLoading = ref(false);
+
+let customerSearchTimer = null;
+let customerAbort = null;
+
+function customerLabel(c) {
+    if (!c) return "Walk-in customer";
+    const phone = c.phone ? ` • ${c.phone}` : "";
+    const email = c.email ? ` • ${c.email}` : "";
+    return `${c.name || "Customer"}${phone}${email}`;
+}
+
+// Called by PrimeVue AutoComplete
+function onCustomerComplete(event) {
+    const q = (event.query || "").trim();
+
+    // allow clearing suggestions when empty
+    if (!q) {
+        customerSuggestions.value = [];
+        return;
+    }
+
+    // debounce
+    if (customerSearchTimer) clearTimeout(customerSearchTimer);
+    customerSearchTimer = setTimeout(() => {
+        fetchCustomers(q);
+    }, 300);
+}
+
+watch(selectedCustomer, (v) => console.log("selectedCustomer =", v));
+
+async function fetchCustomers(q) {
+    try {
+        customerLoading.value = true;
+
+        // cancel previous request
+        if (customerAbort) customerAbort.abort();
+        customerAbort = new AbortController();
+
+        // ✅ backend route (create this route in Laravel)
+        // Example: route('pos.customers.search', { q })
+        const url = route("pos.customers.search", { q });
+
+        const res = await fetch(url, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+            },
+            signal: customerAbort.signal,
+        });
+
+        if (!res.ok) throw new Error("Customer search failed");
+        const data = await res.json();
+
+        // Expect: { data: [ {id,name,phone,email}, ... ] } OR just array
+        customerSuggestions.value = Array.isArray(data)
+            ? data
+            : data.data || [];
+    } catch (e) {
+        // ignore abort errors
+        if (String(e?.name) === "AbortError") return;
+
+        toast.add({
+            severity: "warn",
+            summary: "Search error",
+            detail: "Could not load customers",
+            life: 2000,
+        });
+    } finally {
+        customerLoading.value = false;
+    }
+}
+
+// cart
+const cartItems = ref([]);
+
+// order discount
+const discountMode = ref("none"); // none | percent | fixed
+const discountValue = ref(0);
+
+// -----------------------------
+// Quick Stock Adjust
+// -----------------------------
+const showAdjustStockDialog = ref(false);
+const adjustSku = ref(null); // which product/variation is being adjusted
+const adjustProduct = ref(null);
+const adjustVariation = ref(null);
+const adjustmentForm = ref({}); // { warehouse_id: new_qty }
+
+function openAdjustStock(product, variation = null) {
+    adjustProduct.value = product;
+    adjustVariation.value = variation;
+    adjustSku.value = variation ? variation.sku : product.sku;
+
+    // reset form
+    const form = {};
+    props.warehouses.forEach(wh => {
+        const stockRecord = product.stocks?.find(s =>
+            s.warehouse_id === wh.id &&
+            s.variation_id === (variation ? variation.id : null)
+        );
+        form[wh.id] = stockRecord ? Number(stockRecord.quantity) : 0;
+    });
+    adjustmentForm.value = form;
+    showAdjustStockDialog.value = true;
+}
+
+function submitQuickAdjust(warehouseId) {
+    const qty = adjustmentForm.value[warehouseId];
+    router.post(route("pos.stock.adjust"), {
+        product_id: adjustProduct.value.id,
+        variation_id: adjustVariation.value?.id || null,
+        warehouse_id: warehouseId,
+        branch_id: posSession.value?.branch_id || props.branches[0]?.id || 1,
+        quantity: qty,
+        note: "Quick adjustment from POS catalog",
+    }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            // we don't close dialog, just show success
+            toast.add({ severity: 'success', summary: 'Updated', detail: 'Stock updated', life: 1500 });
+        }
+    });
+}
+
+
+// -----------------------------
+// Price helpers
+// -----------------------------
+const n = (v) => Number(v || 0);
+
+const getProductUnitPrice = (p) => n(p.base_price);
+
+const getProductDiscountPrice = (p) => {
+    const up = getProductUnitPrice(p);
+    const dp = n(p.base_discount_price);
+    return dp > 0 && dp < up ? dp : null;
+};
+
+const productDiscountPercent = (p) => {
+    const up = getProductUnitPrice(p);
+    const dp = getProductDiscountPrice(p);
+    if (!dp || up <= 0) return 0;
+    return Math.round(((up - dp) / up) * 100);
+};
+
+const getVariationUnitPrice = (v) => n(v.price);
+
+const getVariationDiscountPrice = (v) => {
+    const up = getVariationUnitPrice(v);
+    const dp = n(v.discount_price);
+    return dp > 0 && dp < up ? dp : null;
+};
+
+const variationDiscountPercent = (v) => {
+    const up = getVariationUnitPrice(v);
+    const dp = getVariationDiscountPrice(v);
+    if (!dp || up <= 0) return 0;
+    return Math.round(((up - dp) / up) * 100);
+};
+
+// -----------------------------
+// Stock helpers
+// -----------------------------
+const getProductStockTotal = (p) => {
+    if (!p.stocks) return 0;
+    // For simple products, variation_id is null
+    return p.stocks.reduce((sum, s) => {
+        if (!s.variation_id) return sum + Number(s.quantity);
+        return sum;
+    }, 0);
+};
+
+const getVariationStockTotal = (v, p) => {
+    if (!p.stocks) return 0;
+    return p.stocks.reduce((sum, s) => {
+        if (s.variation_id === v.id) return sum + Number(s.quantity);
+        return sum;
+    }, 0);
+};
+
+const getStockTooltip = (stocks, variationId = null) => {
+    if (!stocks || stocks.length === 0) return "No stock info";
+    const filtered = stocks.filter(s => s.variation_id === variationId);
+    if (filtered.length === 0) return "Out of stock";
+
+    return filtered.map(s => {
+        const whName = s.warehouse?.name || `Warehouse #${s.warehouse_id}`;
+        return `${whName}: ${Number(s.quantity).toFixed(0)}`;
+    }).join('\n');
+};
+
+const getProductWarehouseNames = (stocks, variationId = null) => {
+    if (!stocks || stocks.length === 0) return [];
+    const filtered = stocks.filter(s => s.variation_id === variationId && Number(s.quantity) > 0);
+    return filtered.map(s => s.warehouse?.name || `WH#${s.warehouse_id}`);
+};
+
+// -----------------------------
+// filtered products
+// -----------------------------
+const filteredProducts = computed(() => {
+    let list = props.products || [];
+    if (!search.value) return list;
+
+    const t = search.value.toLowerCase();
+    return list.filter(
+        (p) =>
+            (p.name && p.name.toLowerCase().includes(t)) ||
+            (p.sku && p.sku.toLowerCase().includes(t)) ||
+            (p.barcode && p.barcode.toLowerCase().includes(t))
+    );
+});
+
+// -----------------------------
+// variation picker dialog
+// -----------------------------
+const showVariationDialog = ref(false);
+const dialogProduct = ref(null);
+const selectedVariationId = ref(null);
+
+const dialogVariations = computed(() => {
+    const p = dialogProduct.value;
+    if (!p) return [];
+    return (p.variations || []).map((v) => ({
+        label: v.sku || `Variation #${v.id}`,
+        value: v.id,
+        raw: v,
+    }));
+});
+
+const selectedVariation = computed(() => {
+    const p = dialogProduct.value;
+    if (!p || !selectedVariationId.value) return null;
+    return (p.variations || []).find((v) => v.id === selectedVariationId.value);
+});
+
+// ✅ Populate if editing draft
+watch(() => props.order, (newOrder) => {
+    if (newOrder) {
+        // Customer
+        if (newOrder.customer) {
+            selectedCustomer.value = newOrder.customer;
+        }
+        if (newOrder.warranty_info) {
+            warranty_info.value = newOrder.warranty_info;
+        }
+
+        let totalLineDiscount = 0;
+
+        // Cart Items
+        if (newOrder.items && Array.isArray(newOrder.items)) {
+            cartItems.value = newOrder.items.map((i) => {
+                const qty = Number(i.quantity) || 1;
+                const unitPrice = Number(i.unit_price) || 0;
+
+                // if we strictly assume unit_price is what was sold
+                const sellPrice = unitPrice;
+
+                // discount_amount in table is total for the line? or per unit?
+                // Usually line_total = (unit * qty) - discount + tax.
+                // But here let's assume discount_amount is TOTAL line discount
+                const lineDisc = Number(i.discount_amount) || 0;
+                const lineTax = Number(i.tax_amount) || 0;
+
+                totalLineDiscount += lineDisc;
+
+                return {
+                    product_id: i.product_id,
+                    variation_id: i.variation_id,
+                    name: i.name,
+                    sku: i.sku,
+                    unit_price: unitPrice,
+                    sell_price: sellPrice,
+                    quantity: qty,
+
+                    // we can't easily revert to original base price if not stored
+                    // so we assume discount_price is 0 for editing purpose unless we refetch product
+                    discount_price: 0,
+
+                    line_discount_amount: lineDisc,
+                    tax_amount: lineTax,
+                };
+            });
+        }
+
+        // Order Discount
+        // Total discount stored in order = sum(line discounts) + order_discount
+        const totalOrderDiscount = Number(newOrder.discount_amount) || 0;
+        const diff = totalOrderDiscount - totalLineDiscount;
+
+        if (diff > 0.01) {
+            discountMode.value = 'fixed';
+            discountValue.value = diff;
+        } else {
+            discountMode.value = 'none';
+            discountValue.value = 0;
+        }
+    }
+}, { immediate: true });
+
+function formatCurrency(value) {
+    if (value === undefined || value === null) {
+        return "";
+    }
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: page.props.currency || "BDT",
+    }).format(value);
+}
+function ensureSession() {
+    if (posSession.value) return true;
+    toast.add({
+        severity: "warn",
+        summary: "No session",
+        detail: "Please open POS session first",
+        life: 2500,
+    });
+    return false;
+}
+
+// -----------------------------
+// Add to cart
+// -----------------------------
+function addProduct(product) {
+    if (!ensureSession()) return;
+
+    if (product.type === "variable") {
+        dialogProduct.value = product;
+        selectedVariationId.value = null;
+        showVariationDialog.value = true;
+        return;
+    }
+
+    addSimpleToCart(product);
+}
+
+function addSimpleToCart(product) {
+    const sellPrice =
+        getProductDiscountPrice(product) ?? getProductUnitPrice(product);
+
+    const found = cartItems.value.find(
+        (i) => i.product_id === product.id && !i.variation_id
+    );
+
+    if (found) {
+        found.quantity += 1;
+        return;
+    }
+
+    cartItems.value.push({
+        product_id: product.id,
+        variation_id: null,
+        name: product.name,
+        sku: product.sku,
+        unit_price: getProductUnitPrice(product),
+        discount_price: getProductDiscountPrice(product),
+        sell_price: sellPrice,
+        quantity: 1,
+        line_discount_amount: 0,
+        tax_amount: 0,
+    });
+}
+
+function confirmAddVariation() {
+    const p = dialogProduct.value;
+    const v = selectedVariation.value;
+
+    if (!p || !v) {
+        toast.add({
+            severity: "warn",
+            summary: "Select variation",
+            detail: "Please select a variation first",
+            life: 2000,
+        });
+        return;
+    }
+
+    const sellPrice = getVariationDiscountPrice(v) ?? getVariationUnitPrice(v);
+
+    const found = cartItems.value.find(
+        (i) => i.product_id === p.id && i.variation_id === v.id
+    );
+
+    if (found) {
+        found.quantity += 1;
+    } else {
+        cartItems.value.push({
+            product_id: p.id,
+            variation_id: v.id,
+            name: `${p.name} (${v.sku})`,
+            sku: v.sku || p.sku,
+            unit_price: getVariationUnitPrice(v),
+            discount_price: getVariationDiscountPrice(v),
+            sell_price: sellPrice,
+            quantity: 1,
+            line_discount_amount: 0,
+            tax_amount: 0,
+        });
+    }
+
+    showVariationDialog.value = false;
+    dialogProduct.value = null;
+    selectedVariationId.value = null;
+}
+
+function removeFromCart(index) {
+    cartItems.value.splice(index, 1);
+}
+
+// -----------------------------
+// Totals
+// -----------------------------
+const subtotal = computed(() =>
+    cartItems.value.reduce((sum, item) => {
+        const price = n(item.sell_price || item.unit_price);
+        return sum + price * n(item.quantity);
+    }, 0)
+);
+
+const lineDiscountTotal = computed(() =>
+    cartItems.value.reduce((sum, item) => sum + n(item.line_discount_amount), 0)
+);
+
+const orderDiscount = computed(() => {
+    const base = subtotal.value;
+    const val = n(discountValue.value);
+
+    if (discountMode.value === "percent") {
+        const p = Math.min(Math.max(val, 0), 100);
+        return (base * p) / 100;
+    }
+    if (discountMode.value === "fixed") {
+        return Math.min(Math.max(val, 0), base);
+    }
+    return 0;
+});
+
+const discountTotal = computed(
+    () => lineDiscountTotal.value + orderDiscount.value
+);
+
+const taxTotal = computed(() =>
+    cartItems.value.reduce((sum, item) => sum + n(item.tax_amount), 0)
+);
+
+const total = computed(
+    () => subtotal.value - discountTotal.value + taxTotal.value
+);
+
+// -----------------------------
+// Payments (✅ partial allowed)
+// -----------------------------
+let paymentRowId = 1;
+const payments = ref([
+    {
+        id: paymentRowId++,
+        payment_method_id: null,
+        amount: 0,
+
+        transaction_ref: null,
+        notes: null,
+
+        meta: {
+            customer_bank_name: null,
+            customer_account_no: null,
+            received_to_bank_account_id: null,
+            txn_ref: null,
+        },
+    },
+]);
+
+function blankPaymentRow() {
+    return {
+        id: paymentRowId++,
+        payment_method_id: null,
+        amount: 0,
+        transaction_ref: null,
+        notes: null,
+        meta: {
+            customer_bank_name: null,
+            customer_account_no: null,
+            received_to_bank_account_id: null,
+            txn_ref: null,
+        },
+    };
+}
+
+function addPaymentRow() {
+    payments.value.push(blankPaymentRow());
+}
+
+function removePaymentRow(index) {
+    if (payments.value.length === 1) {
+        payments.value = [blankPaymentRow()];
+        return;
+    }
+    payments.value.splice(index, 1);
+}
+
+const totalPaid = computed(() =>
+    payments.value.reduce((sum, row) => sum + n(row.amount), 0)
+);
+const due = computed(() => Math.max(0, total.value - totalPaid.value));
+const change = computed(() => Math.max(0, totalPaid.value - total.value));
+
+// --- helpers for Bank method detection ---
+const bankMethodIds = computed(() => {
+    // detect by name (adjust if your method name is different)
+    const list = props.paymentMethods || [];
+    return list
+        .filter((m) => (m.name || "").toLowerCase().includes("bank"))
+        .map((m) => m.id);
+});
+
+function isBankRow(row) {
+    if (!row?.payment_method_id) return false;
+    return bankMethodIds.value.includes(row.payment_method_id);
+}
+
+// clear meta when method changes away from Bank
+watch(
+    () => payments.value.map(p => p.payment_method_id),
+    () => {
+        payments.value.forEach(row => {
+            if (!isBankRow(row)) {
+                row.meta = null;
+            }
+        });
+    }
+);
+
+
+// -----------------------------
+// Submit
+// -----------------------------
+function submitOrder(action = "complete") {
+    if (!ensureSession()) return;
+
+    if (branchMismatch.value) {
+        toast.add({
+            severity: "error",
+            summary: "Branch Mismatch",
+            detail: "Your current branch has changed. Please close this session and open a new one.",
+            life: 4000,
+        });
+        return;
+    }
+
+    if (!cartItems.value.length) {
+        toast.add({
+            severity: "warn",
+            summary: "Empty cart",
+            detail: "Add items first",
+            life: 2000,
+        });
+        return;
+    }
+
+    const validPayments = payments.value.filter(
+        (p) => p.payment_method_id && n(p.amount) > 0
+    );
+
+    // ✅ payments required only for complete / complete_print
+    if (action !== "draft") {
+        if (!validPayments.length) {
+            toast.add({
+                severity: "warn",
+                summary: "Payment required",
+                detail: "Add at least one payment",
+                life: 2200,
+            });
+            return;
+        }
+        if (totalPaid.value <= 0) {
+            toast.add({
+                severity: "warn",
+                summary: "Payment required",
+                detail: "Payment must be greater than 0",
+                life: 2200,
+            });
+            return;
+        }
+        // ✅ no "insufficient" block; partial is allowed
+    }
+
+    const payload = {
+        action,
+
+        pos_session_id: posSession.value.id,
+        branch_id: currentBranchId.value,
+        warehouse_id: posSession.value.warehouse_id,
+
+        // ✅ allow order without customer
+        customer_id: selectedCustomer.value?.id ?? null,
+
+        items: cartItems.value.map((item) => ({
+            product_id: item.product_id,
+            variation_id: item.variation_id,
+            quantity: item.quantity,
+            unit_price: item.sell_price,
+            discount_amount: item.line_discount_amount || 0,
+            tax_amount: item.tax_amount || 0,
+        })),
+
+        payments:
+            action === "draft"
+                ? []
+                : validPayments.map((p) => ({
+                    payment_method_id: p.payment_method_id,
+                    amount: p.amount,
+
+                    transaction_ref: p.transaction_ref || null,
+                    notes: p.notes || null,
+
+                    meta: isBankRow(p)
+                        ? {
+                            customer_bank_name:
+                                p.meta?.customer_bank_name || null,
+                            customer_account_no:
+                                p.meta?.customer_account_no || null,
+                            received_to_bank_account_id:
+                                p.meta?.received_to_bank_account_id || null,
+                            txn_ref: p.meta?.txn_ref || null,
+                        }
+                        : null,
+                })),
+
+        order_discount_type: discountMode.value,
+        order_discount_value: discountValue.value,
+
+        // ✅ optional helpers for backend
+        total_amount: total.value,
+        paid_amount: totalPaid.value,
+        due_amount: due.value,
+
+        notes: null,
+        warranty_info: warranty_info.value,
+    };
+
+    if (props.order?.id && props.order.status === 'draft') {
+        router.put(route("pos.orders.update", props.order.id), payload, {
+            preserveScroll: true,
+            onSuccess: handleSuccess,
+        });
+    } else {
+        router.post(route("pos.orders.store"), payload, {
+            preserveScroll: true,
+            onSuccess: handleSuccess,
+        });
+    }
+}
+
+function handleSuccess(page) {
+    toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Order saved",
+        life: 2000,
+    });
+
+    // Checking flash or prop? router.reload might clear flash.
+    // But usually we get the result.
+    // If action was complete_print, redirect happens in controller likely, or handled here.
+
+    // Logic handled in controller redirect usually.
+    // But if we stayed on page (draft save), clear cart.
+
+    // However, if we edited a draft, we might want to stay or go to keys?
+    // If user clicked "Save Draft", we stay?
+    cartItems.value = [];
+    selectedCustomer.value = null;
+    discountMode.value = "none";
+    discountValue.value = 0;
+    warranty_info.value = "";
+    payments.value = [
+        { id: paymentRowId++, payment_method_id: null, amount: 0 },
+    ];
+}
+</script>
+
+<template>
+    <AuthenticatedLayout>
+        <div class="h-[95vh] flex overflow-y-auto">
+            <main
+                class="flex-1 flex flex-col overflow-hidden bg-white rounded-xl shadow-sm border border-slate-200">
+                <!-- Header -->
+                <header class="h-14 bg-white border-b border-slate-100 flex items-center justify-between px-5">
+                    <div class="flex items-center gap-6">
+                        <div>
+                            <h1 class="text-base font-semibold text-slate-800">
+                                {{ t('menu.pos') }}
+                            </h1>
+                            <p class="text-xs text-slate-400">
+                                {{
+                                    posSession
+                                        ? `${t('pos.current_session')} #${posSession.id}`
+                                        : t('pos.no_customer')
+                                }}
+                            </p>
+                        </div>
+                        <SessionBar :currentSession="props.currentSession" :branches="props.branches"
+                                :warehouses="props.warehouses" />
+                        <div v-if="branchMismatch"
+                            class="px-3 py-1.5 rounded-lg text-sm bg-amber-50 text-amber-700 flex items-center gap-2 font-medium border border-amber-200">
+                            <i class="pi pi-exclamation-triangle text-sm" />
+                            Branch changed - close & reopen session
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 text-xs text-slate-500">
+                        <span
+                            class="px-3 py-1.5 rounded-lg text-sm bg-emerald-50 text-emerald-600 flex items-center gap-2 font-medium">
+                            <i class="pi pi-clock text-sm" />
+                            {{ now.toLocaleTimeString() }}
+                        </span>
+                    </div>
+                </header>
+
+                <!-- BODY -->
+                <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+                    <!-- PRODUCTS -->
+                    <section class="flex-1 p-4 overflow-y-auto">
+                        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
+                            <div>
+                                <h2 class="text-lg font-semibold text-slate-800">
+                                    {{ t('menu.products') }}
+                                </h2>
+                                <p class="text-xs text-slate-400">
+                                    {{ t('pos.search_product') }}
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <InputGroup class="w-full max-w-md">
+                                    <InputText type="search" v-model="search"
+                                        :placeholder="t('pos.search_product')"
+                                        class="w-full !w-[320px]" />
+                                    <InputGroupAddon><i class="pi pi-search"></i></InputGroupAddon>
+                                </InputGroup>
+                            </div>
+                        </div>
+
+                        <div class="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                            <div v-for="product in filteredProducts" :key="product.id"
+                                class="col-12 sm:col-6 md:col-4 xl:col-3">
+                                <div class="rounded-xl shadow-sm border border-slate-200 bg-white p-4 flex flex-col h-full cursor-pointer hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all"
+                                    @click="addProduct(product)">
+                                    <div
+                                        class="relative rounded-lg bg-slate-50 mb-3 h-24 flex items-center justify-center overflow-hidden">
+                                        <span v-if="!product.thumbnail"
+                                            class="text-slate-300 text-xs uppercase tracking-wide">Image</span>
+
+                                        <img v-else :src="resolveImagePath(
+                                            product.thumbnail
+                                        )
+                                            " alt="" class="h-full object-contain" />
+
+                                        <div class="absolute top-2 left-2">
+                                            <Badge :severity="product.type === 'variable'
+                                                ? 'info'
+                                                : 'secondary'
+                                                " :value="product.type" class="!text-[10px] !px-2 !py-0" />
+                                        </div>
+
+                                        <div v-if="
+                                            getProductDiscountPrice(product)
+                                        "
+                                            class="absolute top-2 right-2 bg-rose-600 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                                            -{{
+                                                productDiscountPercent(product)
+                                            }}%
+                                        </div>
+
+                                        <!-- Stock Badge -->
+                                        <div class="absolute bottom-2 right-2 flex flex-col gap-1 items-end">
+                                            <div :title="getStockTooltip(product.stocks, null)">
+                                                <Badge
+                                                    :value="product.type === 'variable' ? 'Multi' : getProductStockTotal(product)"
+                                                    :severity="product.type === 'variable' ? 'info' : (getProductStockTotal(product) > 0 ? 'success' : 'danger')"
+                                                    class="!text-[10px] !px-2 !py-0" />
+                                            </div>
+                                            <Button v-if="product.type !== 'variable'" icon="pi pi-pencil"
+                                                class="p-button-rounded p-button-xs p-button-secondary !h-5 !w-5"
+                                                @click.stop="openAdjustStock(product)"
+                                                v-tooltip.top="'Quick Adjust Stock'" type="button" />
+                                        </div>
+                                    </div>
+
+                                    <div class="flex-1 flex flex-col justify-between gap-2">
+                                        <div>
+                                            <div class="text-sm font-semibold text-slate-800 truncate">
+                                                {{ product.name }}
+                                            </div>
+                                            <div class="text-xs text-slate-400 mt-0.5 truncate">
+                                                {{ product.sku }}
+                                            </div>
+
+                                            <!-- Warehouse Info -->
+                                            <div v-if="getProductWarehouseNames(product.stocks, null).length" class="mt-2 flex flex-wrap gap-1">
+                                                <span v-for="whName in getProductWarehouseNames(product.stocks, null).slice(0, 3)" :key="whName"
+                                                    class="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200">
+                                                    {{ whName }}
+                                                </span>
+                                                <span v-if="getProductWarehouseNames(product.stocks, null).length > 3"
+                                                    class="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded border border-slate-200">
+                                                    +{{ getProductWarehouseNames(product.stocks, null).length - 3 }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-end justify-between mt-2 gap-2">
+                                            <div class="min-w-0">
+                                                <div class="text-base font-bold text-emerald-600">
+                                                    {{
+                                                        (
+                                                            getProductDiscountPrice(
+                                                                product
+                                                            ) ??
+                                                            getProductUnitPrice(
+                                                                product
+                                                            )
+                                                        ).toFixed(2)
+                                                    }}
+                                                </div>
+
+                                                <div v-if="
+                                                    getProductDiscountPrice(
+                                                        product
+                                                    )
+                                                " class="text-xs text-slate-400 flex items-center gap-1">
+                                                    <span class="line-through">{{
+                                                        getProductUnitPrice(
+                                                            product
+                                                        ).toFixed(2)
+                                                    }}</span>
+                                                    <span class="text-rose-600 font-semibold">-
+                                                        {{
+                                                            productDiscountPercent(
+                                                                product
+                                                            )
+                                                        }}%</span>
+                                                </div>
+                                            </div>
+
+                                            <Button icon="pi pi-plus"
+                                                class="p-button-rounded p-button-sm p-button-success" type="button" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div v-if="!filteredProducts.length"
+                                class="col-12 text-center text-slate-400 text-sm py-10">
+                                No products found
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ORDER PANEL -->
+                    <aside
+                        class="w-full lg:w-[380px] bg-white border-l border-slate-200 p-4 flex flex-col overflow-y-auto h-1/2 lg:h-auto border-t lg:border-t-0">
+                        <div class="flex flex-col flex-1">
+                            <!-- header -->
+                            <div class="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
+                                <div>
+                                    <h3 class="text-sm font-semibold text-slate-800">
+                                        {{ t('orders.order') }} {{ t('common.total') }}
+                                    </h3>
+                                    <p class="text-xs text-slate-400">
+                                        {{
+                                            selectedCustomer
+                                                ? selectedCustomer.name
+                                                : t('pos.no_customer')
+                                        }}
+                                    </p>
+                                </div>
+
+                                <span
+                                    class="px-2 py-1 rounded-lg text-xs bg-emerald-50 text-emerald-600 font-medium">
+                                    {{ cartItems.length }} {{ t('common.quantity') }}
+                                </span>
+                            </div>
+
+                            <!-- ✅ customer remote search -->
+                            <div class="mb-3">
+                                <p class="text-xs text-slate-500 mb-1.5">
+                                    {{ t('pos.customer') }}
+                                </p>
+                                <AutoComplete v-model="selectedCustomer" :suggestions="customerSuggestions"
+                                    :optionLabel="customerLabel" class="w-full" inputClass="w-full text-xs"
+                                    placeholder="Search by name or phone" :loading="customerLoading"
+                                    @complete="onCustomerComplete">
+                                    <template #option="slotProps">
+                                        <div class="flex flex-col">
+                                            <span class="font-medium">{{ slotProps.option.name }}</span>
+                                            <span class="text-xs text-gray-500">{{ slotProps.option.phone || 'No phone'
+                                                }}</span>
+                                        </div>
+                                    </template>
+                                </AutoComplete>
+                                <!-- warranty info -->
+                                <div class="mt-3">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label class="text-xs text-slate-500">Warranty Info</label>
+                                        <Button label="Select Template" icon="pi pi-list"
+                                            class="p-button-text p-button-xs !py-0 !px-1 text-[10px]"
+                                            @click="showWarrantyDialog = true" type="button" />
+                                    </div>
+                                    <Textarea v-model="warranty_info" rows="2" class="w-full text-sm"
+                                        placeholder="Warranty details..." />
+                                </div>
+                            </div>
+
+
+                            <!-- cart items -->
+                            <div class="flex-1 overflow-y-auto space-y-2 pr-1 mb-3">
+                                <div v-for="(item, index) in cartItems" :key="`${item.product_id}-${item.variation_id || 'simple'
+                                    }`"
+                                    class="flex items-start justify-between bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5">
+                                    <div class="flex-1">
+                                        <div class="text-xs font-semibold text-slate-800 truncate">
+                                            {{ item.name }}
+                                        </div>
+                                        <div class="text-[10px] text-slate-400 mb-1.5">
+                                            {{ item.sku }}
+                                        </div>
+
+                                        <div class="text-[11px] text-slate-500 mb-1">
+                                            <span class="font-semibold text-slate-700">{{
+                                                Number(
+                                                    item.sell_price || 0
+                                                ).toFixed(2)
+                                            }}</span>
+                                            <span v-if="item.discount_price" class="ml-1 text-rose-600">
+                                                ({{
+                                                    Number(
+                                                        item.unit_price || 0
+                                                    ).toFixed(2)
+                                                }})
+                                            </span>
+                                        </div>
+
+                                        <div class="flex items-center gap-2">
+                                            <InputNumber v-model="item.quantity" :min="1" inputClass="!w-12 !text-xs"
+                                                showButtons buttonLayout="horizontal" incrementButtonIcon="pi pi-plus"
+                                                decrementButtonIcon="pi pi-minus"
+                                                incrementButtonClass="p-button-text p-button-sm"
+                                                decrementButtonClass="p-button-text p-button-sm" />
+
+                                            <span class="text-[10px] text-slate-400">
+                                                x
+                                                {{
+                                                    Number(
+                                                        item.sell_price || 0
+                                                    ).toFixed(2)
+                                                }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-right ml-2">
+                                        <div class="text-xs font-semibold text-slate-800">
+                                            {{
+                                                (
+                                                    Number(
+                                                        item.sell_price || 0
+                                                    ) *
+                                                    Number(item.quantity || 0)
+                                                ).toFixed(2)
+                                            }}
+                                        </div>
+
+                                        <Button icon="pi pi-trash"
+                                            class="p-button-text p-button-danger p-button-sm mt-1"
+                                            @click="removeFromCart(index)" type="button" />
+                                    </div>
+                                </div>
+
+                                <div v-if="!cartItems.length" class="text-center text-xs text-slate-400 py-6">
+                                    No items in order yet
+                                </div>
+                            </div>
+
+                            <!-- ORDER DISCOUNT -->
+                            <div class="mb-3 p-3 rounded-2xl bg-white border border-slate-200">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-semibold text-slate-800">Order Discount</span>
+                                    <span v-if="orderDiscount > 0" class="text-sm font-semibold text-rose-600">
+                                        -{{ orderDiscount.toFixed(2) }}
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center gap-2 mb-1 min-w-0">
+                                    <Select v-model="discountMode" :options="[
+                                        { label: 'None', value: 'none' },
+                                        {
+                                            label: 'Percent %',
+                                            value: 'percent',
+                                        },
+                                        { label: 'Fixed', value: 'fixed' },
+                                    ]" optionLabel="label" optionValue="value" class="flex-1 min-w-0 text-xs" />
+                                    <InputNumber v-model="discountValue" :min="0" class="w-24 shrink-0"
+                                        inputClass="!text-xs !w-full" :suffix="discountMode === 'percent'
+                                            ? '%'
+                                            : ''
+                                            " :disabled="discountMode === 'none'" />
+                                </div>
+                            </div>
+
+                            <!-- totals -->
+                            <div class="border-t border-slate-200 pt-3 space-y-1">
+                                <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <span>{{ t('orders.subtotal') }}</span>
+                                    <span class="font-medium text-slate-700">{{
+                                        subtotal.toFixed(2)
+                                        }}</span>
+                                </div>
+
+                                <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <span>{{ t('pos.discount') }}</span>
+                                    <span class="font-medium text-rose-600">-{{ discountTotal.toFixed(2) }}</span>
+                                </div>
+
+                                <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <span>{{ t('pos.tax') }}</span>
+                                    <span class="font-medium text-slate-700">{{
+                                        taxTotal.toFixed(2)
+                                        }}</span>
+                                </div>
+
+                                <div class="flex items-center justify-between text-sm mt-2">
+                                    <span class="font-semibold text-slate-800">{{ t('orders.grand_total') }}</span>
+                                    <span class="text-lg font-bold text-emerald-600">{{ total.toFixed(2) }}</span>
+                                </div>
+                            </div>
+
+                            <!-- payments -->
+                            <div class="mt-3 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs text-slate-500">{{ t('pos.payment') }}</span>
+                                    <Button icon="pi pi-plus" class="p-button-text p-button-sm" :label="t('common.create')"
+                                        @click="addPaymentRow" type="button" />
+                                </div>
+
+                                <div class="space-y-3 max-h-72 overflow-y-auto pr-1">
+                                    <div v-for="(row, index) in payments" :key="row.id"
+                                        class="bg-white border border-slate-200 rounded-xl p-3">
+                                        <div class="flex items-center gap-2">
+                                            <Select v-model="row.payment_method_id" :options="paymentMethods"
+                                                optionLabel="name" optionValue="id" placeholder="Method" filter
+                                                class="flex-1 text-xs" />
+                                            <InputNumber v-model="row.amount" :min="0" class="w-28"
+                                                inputClass="!text-xs" />
+                                            <Button icon="pi pi-times" class="p-button-text p-button-danger p-button-sm"
+                                                @click="removePaymentRow(index)" type="button" />
+                                        </div>
+
+                                        <!-- common extra fields -->
+                                        <div class="grid grid-cols-1 gap-2 mt-2">
+                                            <InputText v-model="row.transaction_ref"
+                                                placeholder="Transaction ref (optional)" class="w-full text-xs" />
+                                            <InputText v-model="row.notes" placeholder="Notes (optional)"
+                                                class="w-full text-xs" />
+                                        </div>
+
+                                        <!-- ✅ BANK META FIELDS -->
+                                        <div v-if="isBankRow(row)"
+                                            class="mt-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                                            <div
+                                                class="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                                <i class="pi pi-building"></i>
+                                                Bank Details
+                                            </div>
+
+                                            <div class="grid grid-cols-1 gap-2">
+                                                <InputText v-model="row.meta
+                                                    .customer_bank_name
+                                                    " placeholder="Customer bank name" class="w-full text-xs" />
+                                                <InputText v-model="row.meta
+                                                    .customer_account_no
+                                                    " placeholder="Customer account no" class="w-full text-xs" />
+
+                                                <!-- If you don't have bank accounts list yet, keep it as InputText or InputNumber -->
+                                                <InputNumber v-model="row.meta
+                                                    .received_to_bank_account_id
+                                                    " :min="1" placeholder="Received to bank account ID" class="w-full"
+                                                    inputClass="!text-xs" />
+
+                                                <InputText v-model="row.meta.txn_ref"
+                                                    placeholder="Bank txn ref / cheque no" class="w-full text-xs" />
+                                            </div>
+
+                                            <div class="text-[11px] text-slate-400 mt-2">
+                                                These fields go to
+                                                <b>payments.*.meta</b> in
+                                                backend.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between text-xs text-slate-500 mt-1">
+                                    <span>{{ t('pos.payment') }} {{ t('common.total') }}</span>
+                                    <span class="font-semibold text-slate-800">{{ totalPaid.toFixed(2) }}</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <span>{{ t('pos.change') }}</span>
+                                    <span class="font-semibold text-slate-800">{{ change.toFixed(2) }}</span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <span>{{ t('orders.order_total') }}</span>
+                                    <span class="font-semibold text-rose-600">{{
+                                        due.toFixed(2)
+                                        }}</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-2 mt-4">
+                                <Button label="Save Draft" icon="pi pi-save" class="w-full" severity="war"
+                                    :disabled="!cartItems.length || !posSession" @click="submitOrder('draft')"
+                                    type="button" />
+
+                                <Button label="Complete" icon="pi pi-check" class="w-full" severity="info"
+                                    :disabled="!cartItems.length || !posSession" @click="submitOrder('complete')"
+                                    type="button" />
+
+                                <Button label="Complete & Print" icon="pi pi-print" class="w-full"
+                                    :disabled="!cartItems.length || !posSession" @click="submitOrder('complete_print')"
+                                    type="button" severity="success" />
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </main>
+        </div>
+
+        <!-- Variation Dialog -->
+        <Dialog v-model:visible="showVariationDialog" modal header="Select Variation" :style="{ width: '420px' }">
+            <div v-if="dialogProduct" class="space-y-3">
+                <div class="text-sm font-semibold text-slate-800">
+                    {{ dialogProduct.name }}
+                </div>
+                <div class="text-xs text-slate-500">
+                    Choose a variation to add to cart.
+                </div>
+
+                <Select v-model="selectedVariationId" :options="dialogVariations" optionLabel="label"
+                    optionValue="value" placeholder="Select variation" class="w-full" showClear filter>
+                    <template #option="slotProps">
+                        <div class="flex justify-between items-center w-full">
+                            <span>{{ slotProps.option.label }}</span>
+                            <div class="flex items-center gap-2">
+                                <Badge :value="getVariationStockTotal(slotProps.option.raw, dialogProduct)"
+                                    :severity="getVariationStockTotal(slotProps.option.raw, dialogProduct) > 0 ? 'success' : 'danger'" />
+                                <Button icon="pi pi-pencil"
+                                    class="p-button-text p-button-secondary p-button-xs !w-6 !h-6"
+                                    @click.stop="openAdjustStock(dialogProduct, slotProps.option.raw)"
+                                    v-tooltip.top="'Quick Adjust Stock'" type="button" />
+                            </div>
+                        </div>
+                    </template>
+                </Select>
+
+                <div v-if="selectedVariation" class="p-3 rounded-xl border border-slate-200 bg-slate-50">
+                    <div class="text-xs text-slate-500">Price</div>
+                    <div class="flex items-end gap-2">
+                        <div class="text-lg font-bold text-emerald-600">
+                            {{
+                                (
+                                    getVariationDiscountPrice(
+                                        selectedVariation
+                                    ) ??
+                                    getVariationUnitPrice(selectedVariation)
+                                ).toFixed(2)
+                            }}
+                        </div>
+
+                        <div v-if="getVariationDiscountPrice(selectedVariation)"
+                            class="text-sm text-slate-400 line-through">
+                            {{
+                                getVariationUnitPrice(
+                                    selectedVariation
+                                ).toFixed(2)
+                            }}
+                        </div>
+
+                        <div v-if="getVariationDiscountPrice(selectedVariation)"
+                            class="text-xs text-rose-600 font-semibold">
+                            -{{ variationDiscountPercent(selectedVariation) }}%
+                        </div>
+                    </div>
+
+                    <!-- Warehouse breakdown for variation -->
+                    <div class="mt-2 pt-2 border-t border-slate-200">
+                        <div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Stock by
+                            Warehouse</div>
+                        <div class="grid grid-cols-2 gap-1">
+                            <div v-for="s in dialogProduct.stocks.filter(s => s.variation_id === selectedVariation.id)"
+                                :key="s.id"
+                                class="flex items-center justify-between bg-white p-1.5 rounded-lg border border-slate-100">
+                                <span class="text-[11px] text-slate-600 truncate">{{ s.warehouse?.name }}</span>
+                                <span class="text-xs font-bold text-slate-800">{{ Number(s.quantity).toFixed(0)
+                                }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <template #footer>
+                <Button label="Close" icon="pi pi-times" @click="showVariationDialog = false" class="p-button-text" />
+                <Button label="Add to Cart" icon="pi pi-shopping-cart" @click="addSelectedVariation"
+                    :disabled="!selectedVariationId" />
+            </template>
+        </Dialog>
+
+        <!-- Quick Stock Adjust Dialog -->
+        <Dialog v-model:visible="showAdjustStockDialog" modal :header="'Quick Stock Adjust: ' + (adjustSku || '')"
+            :style="{ width: '400px' }" class="stock-adjust-dialog">
+            <div class="space-y-4">
+                <div class="text-xs text-slate-400 mb-2">
+                    {{ adjustProduct?.name }}
+                    <span v-if="adjustVariation" class="font-semibold text-slate-600">
+                        ({{ adjustVariation.sku }})
+                    </span>
+                </div>
+
+                <div v-for="wh in props.warehouses" :key="wh.id"
+                    class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                    <span class="text-sm font-medium text-slate-700">{{ wh.name }}</span>
+                    <div class="flex items-center gap-2">
+                        <InputNumber v-model="adjustmentForm[wh.id]" :min="0" inputClass="!w-20 !text-sm text-center" />
+                        <Button icon="pi pi-save" class="p-button-sm p-button-success h-8 w-8"
+                            @click="submitQuickAdjust(wh.id)" />
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <Button label="Done" icon="pi pi-check" @click="showAdjustStockDialog = false" />
+            </template>
+        </Dialog>
+
+        <!-- Warranty Selection Dialog -->
+        <Dialog v-model:visible="showWarrantyDialog" modal header="Select Warranty Template"
+            :style="{ width: '450px' }">
+            <div class="space-y-3">
+                <p class="text-xs text-slate-500 mb-2 italic">
+                    * Suggested templates based on your cart are shown first.
+                </p>
+                <div v-for="template in suggestedTemplates" :key="template.id"
+                    class="p-3 border rounded-xl hover:bg-slate-50 cursor-pointer transition flex flex-col gap-1"
+                    @click="selectWarrantyTemplate(template)">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-bold text-slate-800">{{ template.name }}</span>
+                        <Badge v-if="template.category_id" value="Relevant" severity="info" class="!text-[10px]" />
+                    </div>
+                    <p class="text-xs text-slate-600">{{ template.description }}</p>
+                </div>
+            </div>
+            <template #footer>
+                <Button label="Cancel" icon="pi pi-times" @click="showWarrantyDialog = false" class="p-button-text" />
+            </template>
+        </Dialog>
+    </AuthenticatedLayout>
+</template>
+
+<style scoped>
+.stock-adjust-dialog :deep(.p-dialog-content) {
+    padding-top: 0.5rem;
+}
+</style>
