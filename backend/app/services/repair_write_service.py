@@ -481,6 +481,63 @@ class RepairWriteService:
 
         return {"ok": True}
 
+    def activate_repair(
+        self,
+        repair_id: int,
+        *,
+        signature_data: str | None = None,
+        terms_accepted: bool = False,
+    ) -> dict:
+        """
+        Activa una OT recién creada: guarda firma de ingreso, marca
+        approval_date y envía email de confirmación de T&C al cliente.
+        No cambia el estado (ese flujo sigue por la state machine normal).
+        """
+        repair = self.repo.get_by_id(repair_id)
+        if not repair:
+            raise HTTPException(status_code=404, detail="Repair not found")
+
+        if signature_data:
+            repair.signature_ingreso_path = signature_data
+
+        repair.approval_date = datetime.utcnow()
+        self.db.commit()
+
+        # Email de confirmación T&C al cliente (best-effort)
+        try:
+            device = self.db.query(Device).filter(Device.id == repair.device_id).first()
+            client = (
+                self.db.query(Client).filter(Client.id == device.client_id).first()
+                if device
+                else None
+            )
+            if client and client.email:
+                from app.core.business_config import business_config
+                body_html = f"""
+                <h2>Confirmación de ingreso — {repair.repair_number}</h2>
+                <p>Hola <strong>{client.name}</strong>,</p>
+                <p>Tu equipo <strong>{device.model if device else 'instrumento'}</strong>
+                ha ingresado al taller de {business_config.business_name}.</p>
+                <p>Los términos y condiciones han sido aceptados y la orden de trabajo
+                está activa. Te avisaremos cuando tengamos novedades.</p>
+                <p>Código OT: <strong>{repair.repair_number}</strong></p>
+                """
+                EmailService().send_email(
+                    to_email=client.email,
+                    subject=f"Ingreso confirmado — {repair.repair_number}",
+                    html_content=build_email_html(body_html),
+                )
+        except Exception:
+            pass  # No bloquear si el email falla
+
+        return {
+            "ok": True,
+            "repair_id": repair_id,
+            "repair_number": repair.repair_number,
+            "approval_date": repair.approval_date.isoformat(),
+            "signature_saved": bool(signature_data),
+        }
+
     def reactivate_repair(self, repair_id: int) -> dict:
         repair = self.repo.get_by_id(repair_id)
         if not repair:

@@ -325,6 +325,14 @@ export async function reactivateRepairById(repairId) {
   await api.post(`/repairs/${repairId}/reactivate`)
 }
 
+export async function activateRepairById(repairId, { signatureData = null, termsAccepted = false } = {}) {
+  const { data } = await api.post(`/repairs/${repairId}/activate`, {
+    signature_data: signatureData,
+    terms_accepted: termsAccepted,
+  })
+  return data
+}
+
 export async function fetchRepairWarranty(repairId) {
   try {
     const response = await api.get(`/warranties/by-repair/${repairId}`)

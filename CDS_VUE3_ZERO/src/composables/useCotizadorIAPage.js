@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { extractErrorMessage } from '@/services/api'
 import {
@@ -173,6 +173,11 @@ export function useCotizadorIAPage() {
     error.value = ''
   }
 
+  const selectedModelImage = computed(() => {
+    const m = models.value.find(m => m.id === selectedModel.value)
+    return m?.image || ''
+  })
+
   function goToSchedule() {
     router.push('/agendar')
   }
@@ -202,6 +207,7 @@ export function useCotizadorIAPage() {
     formattedFinalCost,
     selectedBrandName,
     selectedModelName,
+    selectedModelImage,
     selectedFaultNames,
     quoteTurnstileToken,
     quoteTurnstileRenderKey,

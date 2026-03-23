@@ -76,7 +76,7 @@ def get_models(brand_id: str):
 def get_faults(instrument_key: str):
     """
     Zonas de falla de un instrumento.
-    Cada zona incluye fallas_comunes como sub-lista para la UI.
+    Cada zona incluye fallas_comunes y coords (% sobre la imagen) para el overlay SVG.
     """
     db = _load_db()
     entry = db.get(instrument_key)
@@ -88,9 +88,40 @@ def get_faults(instrument_key: str):
             "name": zone.get("label", zone["id"]),
             "cobro_base": zone.get("cobro_base", 20000),
             "fallas_comunes": zone.get("fallas_comunes", []),
+            "coords": zone.get("coords", {}),
         }
         for zone in entry.get("fault_zones", [])
     ]
+
+
+@router.get("/detail/{instrument_key}")
+def get_detail(instrument_key: str):
+    """Datos completos de un instrumento: imagen, complejidad, precio, zonas."""
+    db = _load_db()
+    entry = db.get(instrument_key)
+    if not entry:
+        raise HTTPException(status_code=404, detail="Instrumento no encontrado en catálogo")
+    return {
+        "id": instrument_key,
+        "brand": entry.get("brand", ""),
+        "model": entry.get("model", instrument_key),
+        "type": entry.get("type", ""),
+        "image": entry.get("image", ""),
+        "keys": entry.get("keys", 0),
+        "key_type": entry.get("key_type", ""),
+        "complexity": entry.get("complexity", "media"),
+        "precio_usd_mercado": entry.get("precio_usd_mercado", []),
+        "fault_zones": [
+            {
+                "id": z["id"],
+                "name": z.get("label", z["id"]),
+                "cobro_base": z.get("cobro_base", 20000),
+                "fallas_comunes": z.get("fallas_comunes", []),
+                "coords": z.get("coords", {}),
+            }
+            for z in entry.get("fault_zones", [])
+        ],
+    }
 
 
 # ── Cotización ────────────────────────────────────────────────────────────────

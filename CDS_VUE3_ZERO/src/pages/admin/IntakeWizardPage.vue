@@ -75,12 +75,47 @@
       @cancel="showResetDialog = false"
       @confirm="confirmReset"
     />
+
+    <!-- Modal T&C + firma de ingreso -->
+    <div v-if="showActivateModal" class="tc-overlay" role="dialog" aria-modal="true" aria-labelledby="tc-title">
+      <div class="tc-modal">
+        <h2 id="tc-title" class="tc-title">Orden de Trabajo — Términos de ingreso</h2>
+        <div class="tc-body">
+          <p>El cliente declara que el equipo es de su propiedad y autoriza al taller a realizar el diagnóstico y las reparaciones acordadas. El costo final se confirma tras la revisión. El taller no se responsabiliza por daños preexistentes no informados ni por equipos no retirados en 90 días.</p>
+          <p>Al firmar, el cliente acepta estos términos y condiciones de servicio.</p>
+        </div>
+        <div class="tc-canvas-wrap">
+          <p class="tc-canvas-label"><i class="fas fa-signature"></i> Firma del cliente (opcional)</p>
+          <canvas
+            ref="signatureCanvas"
+            class="tc-canvas"
+            width="480"
+            height="160"
+            @pointerdown="startDraw"
+            @pointermove="draw"
+            @pointerup="endDraw"
+            @pointerleave="endDraw"
+          ></canvas>
+          <button type="button" class="tc-clear-btn" @click="clearSignature">Borrar firma</button>
+        </div>
+        <div class="tc-actions">
+          <button type="button" class="btn-secondary" :disabled="isActivating" @click="skipActivate">
+            Omitir firma
+          </button>
+          <button type="button" class="btn-primary" :disabled="isActivating" @click="confirmActivate">
+            <span v-if="isActivating"><span class="spinner spinner--sm"></span> Activando…</span>
+            <span v-else><i class="fas fa-check"></i> Activar OT</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { activateRepairById } from '@/services/repairDetailAdminService'
 import IntakeWizardErrorBanner from '@/components/admin/IntakeWizardErrorBanner.vue'
 import IntakeWizardFormActions from '@/components/admin/IntakeWizardFormActions.vue'
 import IntakeWizardClientSection from '@/components/admin/IntakeWizardClientSection.vue'
@@ -128,6 +163,13 @@ const selectedClientId = ref('')
 const activeSection = ref('cliente')
 const showResetDialog = ref(false)
 
+// Estado modal T&C / firma
+const showActivateModal = ref(false)
+const pendingRepairId = ref(null)
+const isActivating = ref(false)
+const signatureCanvas = ref(null)
+let _drawing = false
+
 const errors = computed(() => validation.errors.value)
 
 // Opciones para selector de clientes
@@ -164,14 +206,84 @@ function setAddressFieldRef(element) {
 
 async function handleSubmit() {
   const result = await submit()
-  
+
   if (result.success) {
-    // Redirigir a la OT creada
-    router.push({
-      name: 'admin-repair-detail',
-      params: { id: result.data.repairId }
-    })
+    pendingRepairId.value = result.data.repairId
+    showActivateModal.value = true
   }
+}
+
+// ── Firma sobre canvas ──────────────────────────────────────────────
+function _getCanvasPos(e) {
+  const rect = signatureCanvas.value.getBoundingClientRect()
+  const scaleX = signatureCanvas.value.width / rect.width
+  const scaleY = signatureCanvas.value.height / rect.height
+  return {
+    x: (e.clientX - rect.left) * scaleX,
+    y: (e.clientY - rect.top) * scaleY,
+  }
+}
+
+function startDraw(e) {
+  e.preventDefault()
+  _drawing = true
+  const ctx = signatureCanvas.value.getContext('2d')
+  const { x, y } = _getCanvasPos(e)
+  ctx.beginPath()
+  ctx.moveTo(x, y)
+  signatureCanvas.value.setPointerCapture(e.pointerId)
+}
+
+function draw(e) {
+  if (!_drawing) return
+  e.preventDefault()
+  const ctx = signatureCanvas.value.getContext('2d')
+  ctx.strokeStyle = '#3e3c38'
+  ctx.lineWidth = 2
+  ctx.lineCap = 'round'
+  const { x, y } = _getCanvasPos(e)
+  ctx.lineTo(x, y)
+  ctx.stroke()
+}
+
+function endDraw() {
+  _drawing = false
+}
+
+function clearSignature() {
+  const canvas = signatureCanvas.value
+  if (canvas) {
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+  }
+}
+
+function _canvasIsBlank() {
+  if (!signatureCanvas.value) return true
+  const ctx = signatureCanvas.value.getContext('2d')
+  const data = ctx.getImageData(0, 0, signatureCanvas.value.width, signatureCanvas.value.height).data
+  return !data.some(v => v !== 0)
+}
+
+async function confirmActivate() {
+  isActivating.value = true
+  const signatureData = _canvasIsBlank() ? null : signatureCanvas.value.toDataURL('image/png')
+  try {
+    await activateRepairById(pendingRepairId.value, {
+      signatureData,
+      termsAccepted: true,
+    })
+  } catch {
+    // Best-effort — activate no bloquea el flujo
+  } finally {
+    isActivating.value = false
+    showActivateModal.value = false
+    router.push({ name: 'admin-repair-detail', params: { id: pendingRepairId.value } })
+  }
+}
+
+function skipActivate() {
+  showActivateModal.value = false
+  router.push({ name: 'admin-repair-detail', params: { id: pendingRepairId.value } })
 }
 
 function resetForm() {
@@ -283,5 +395,90 @@ onUnmounted(() => _cleanupAddressAc())
   .intake-wizard-page {
     padding: var(--intake-page-padding-mobile, 0.5rem);
   }
+}
+
+/* ── Modal T&C / Firma ─────────────────────────────────────────── */
+.tc-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+  padding: 1rem;
+}
+
+.tc-modal {
+  background: var(--cds-surface-1);
+  border-radius: var(--cds-radius-md);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 560px;
+  display: grid;
+  gap: 1.25rem;
+  box-shadow: var(--cds-shadow-lg);
+}
+
+.tc-title {
+  font-size: var(--cds-text-lg);
+  font-weight: 700;
+  color: var(--cds-text-heading);
+  margin: 0;
+}
+
+.tc-body {
+  font-size: var(--cds-text-sm);
+  color: var(--cds-text-muted);
+  line-height: 1.6;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tc-body p { margin: 0; }
+
+.tc-canvas-wrap {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tc-canvas-label {
+  font-size: var(--cds-text-xs);
+  font-weight: 600;
+  color: var(--cds-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tc-canvas {
+  width: 100%;
+  height: 120px;
+  border: 1.5px solid var(--cds-border-input);
+  border-radius: var(--cds-radius-sm);
+  background: var(--cds-white, #fff);
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.tc-clear-btn {
+  align-self: start;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: var(--cds-text-xs);
+  color: var(--cds-text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tc-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 </style>

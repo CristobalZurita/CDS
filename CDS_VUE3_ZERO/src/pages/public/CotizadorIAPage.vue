@@ -36,6 +36,7 @@
       :loading="loading"
       :selected-brand-name="selectedBrandName"
       :selected-model-name="selectedModelName"
+      :model-image="selectedModelImage"
       :faults="faults"
       :selected-fault-ids="selectedFaultIds"
       :quote-turnstile-render-key="quoteTurnstileRenderKey"
@@ -113,6 +114,7 @@ const {
   formattedFinalCost,
   selectedBrandName,
   selectedModelName,
+  selectedModelImage,
   selectedFaultNames,
   quoteTurnstileRenderKey,
   leadTurnstileRenderKey,

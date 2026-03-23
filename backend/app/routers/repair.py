@@ -184,6 +184,24 @@ def reactivate_repair(
     return RepairWriteService(db).reactivate_repair(repair_id)
 
 
+@router.post("/{repair_id}/activate")
+def activate_repair(
+    repair_id: int,
+    payload: Dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(require_permission("repairs", "update"))
+):
+    """
+    Activa una OT post-ingreso: guarda firma de intake y envía email T&C.
+    Body: { signature_data?: str, terms_accepted?: bool }
+    """
+    return RepairWriteService(db).activate_repair(
+        repair_id,
+        signature_data=payload.get("signature_data"),
+        terms_accepted=bool(payload.get("terms_accepted", False)),
+    )
+
+
 @router.put("/{repair_id}")
 def update_repair(
     repair_id: int,
